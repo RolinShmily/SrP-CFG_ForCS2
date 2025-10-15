@@ -339,6 +339,11 @@
 - 06.cfg
 - - 准星代码: `CSGO-LpB26-mhWAt-srQVK-fEE34-BWxTC`
 
+## 下载地址
+
+- [Github-Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
+- [SrP-Cloud](https://cloud.srprolin.top)
+
 ### 仓库活动
 
 ![仓库活动](https://repobeats.axiom.co/api/embed/55700fe0f86a32b2418b023fa87c8ec214153ef0.svg "Repobeats analytics image")
