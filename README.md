@@ -1,5 +1,5 @@
 <h1 align="center">SrP-CFG</h1>
-<h4 align="center">适用于CS2各场景的CFG预设文件</h3>
+<h4 align="center">适用于CS2各场景的CFG预设文件</h4>
 
 <div align="center">
 
@@ -344,6 +344,6 @@
 - [Github-Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
 - [SrP-Cloud](https://cloud.srprolin.top)
 
-### 仓库活动
+## 仓库活动
 
 ![仓库活动](https://repobeats.axiom.co/api/embed/55700fe0f86a32b2418b023fa87c8ec214153ef0.svg "Repobeats analytics image")
