@@ -1,10 +1,19 @@
+# 2025-10-30
+
+## autoexec
+- 添加游戏延迟总结、详情展示功能
+
+```
+alias "ps" "cl_ticktiming print summary;echo 显示服务器tick信息!"
+alias "pd" "cl_ticktiming print detail;echo 显示服务器tick详细信息!"
+```
+
+
 # 2025-10-25
 
-## main
+## practice
 
-### practice
-
-- 添加死亡不掉落：
+- 添加死亡不掉落
 
 ```
 mp_death_drop_gun 1                    //死亡后掉落枪械（避免无法丢弃装备）
@@ -21,9 +30,7 @@ mp_death_drop_defuser 0                //死亡不掉钳子
 
 # 2025-10-17
 
-## custom/yszh
-
-### autoexec
+## autoexec for yszh
 
 - 默认显示对局头像
 
