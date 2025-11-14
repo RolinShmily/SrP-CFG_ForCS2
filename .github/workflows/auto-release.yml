@@ -1,0 +1,52 @@
+name: AutoRelease
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: zip package
+        run: |
+          ZIP_Allcfgs="Allcfgs_${{ github.ref_name }}.zip"
+          PACK_PATHS_Allcfgs=$(grep -v "^#" .github/SrP-pack-paths_allcfgs.txt | grep -v "^$")
+          zip -r ZIP_Allcfgs PACK_PATHS_Allcfgs
+
+          ZIP_echo="Allcfgs_echo_${{ github.ref_name }}.zip"
+          PACK_PATHS_echo=$(grep -v "^#" .github/echo/pack-paths_echo.txt | grep -v "^$")
+          Custom_PACK_PATHS_echo=$(grep -v "^#" .github/echo/custom_pack-paths_echo.txt | grep -v "^$")
+          zip -r ZIP_echo PACK_PATHS_echo
+          zip -j ZIP_echo $Custom_PACK_PATHS_echo
+
+          ZIP_yszh="Allcfgs_yszh_${{ github.ref_name }}.zip"
+          PACK_PATHS_yszh=$(grep -v "^#" .github/yszh/pack-paths_yszh.txt | grep -v "^$")
+          Custom_PACK_PATHS_yszh=$(grep -v "^#" .github/yszh/custom_pack-paths_yszh.txt | grep -v "^$")
+          zip -r ZIP_yszh PACK_PATHS_yszh
+          zip -j ZIP_yszh $Custom_PACK_PATHS_yszh
+
+      - name: release notes
+        run: |
+          RELEASE_BODY=$(cat .github/release.md)
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_BODY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: SrP-CFG_${{ github.ref_name }}
+          body: ${{ env.RELEASE_BODY }}
+          files: |
+            ${{ env.ZIP_Allcfgs }}
+            ${{ env.ZIP_echo }}
+            ${{ env.ZIP_yszh }}
+          prerelease: true

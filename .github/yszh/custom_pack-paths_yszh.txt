@@ -1,0 +1,2 @@
+yszh/autoexec.cfg
+yszh/crosshair_view.cfg
