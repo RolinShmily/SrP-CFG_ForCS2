@@ -32,6 +32,10 @@ jobs:
           zip -r $ZIP_yszh $PACK_PATHS_yszh
           zip -j $ZIP_yszh $Custom_PACK_PATHS_yszh
 
+          echo "ZIP_Allcfgs=$ZIP_Allcfgs" >> $GITHUB_ENV
+          echo "ZIP_echo=$ZIP_echo" >> $GITHUB_ENV
+          echo "ZIP_yszh=$ZIP_yszh" >> $GITHUB_ENV
+
       - name: release notes
         run: |
           RELEASE_BODY=$(cat .github/release.md)
