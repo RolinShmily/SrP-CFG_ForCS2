@@ -1,5 +1,5 @@
 autoexec.cfg
-crosshari_view.cfg
+crosshair_view.cfg
 cs2_video.txt
 demo_hlae.cfg
 knife.cfg
