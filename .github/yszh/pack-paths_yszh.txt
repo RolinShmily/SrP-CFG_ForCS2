@@ -1,3 +1,5 @@
+crosshari_view.cfg
+cs2_video.txt
 demo_hlae.cfg
 knife.cfg
 practice.cfg
