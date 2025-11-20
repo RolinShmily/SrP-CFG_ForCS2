@@ -1,6 +1,3 @@
-# v1.1.0
-- 全部导航栏与部分代码添加大字符画与文档链接
-- 为准星视角CFG添加一键轮换与查询功能
-- 修改默认灵敏度为0.5625：在 1600DPI 时，EDPI 为 1000；
-- 标识出自定义准星替换区
-- 优化边边角角
+# v1.1.1
+- HLAE录制demo位置修改为`F:\SteamLibrary\steamapps\common\Counter-Strike Global Offensive\game\csgo\replays`
+- demo模式CFG下使用大准星和标准持枪视角，避免自己的游戏设置覆盖。
