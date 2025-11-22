@@ -14,6 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build Installer.exe
+        run: |
+          dotnet publish Installer/Installer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -o .
+          mv Installer.exe SrP-CFG_Installer_${{ github.ref_name }}.exe
+          echo "EXE_NAME=SrP-CFG_Installer_${{ github.ref_name }}.exe" >> $GITHUB_ENV
+
       - name: zip package
         run: |
           ZIP_Allcfgs="Allcfgs_${{ github.ref_name }}.zip"
@@ -53,4 +64,5 @@ jobs:
             ${{ env.ZIP_Allcfgs }}
             ${{ env.ZIP_echo }}
             ${{ env.ZIP_yszh }}
+            ${{ env.EXE_NAME }}
           prerelease: false
