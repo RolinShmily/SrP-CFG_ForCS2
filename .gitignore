@@ -2,4 +2,7 @@
 bin/
 obj/
 
+CLAUDE.md
+.claude
+
 *.sln

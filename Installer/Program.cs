@@ -21,7 +21,7 @@ class Program
         string? cs2Cfg = FindCS2CfgPath(steamPath);
         if (cs2Cfg == null)
         {
-            Console.WriteLine("[!] 未找到 CS2 CFG 路径，请手动输入（或拖入）：");
+            Console.WriteLine("[!] 未找到 全局CFG 路径，请手动输入（或拖入）：");
             cs2Cfg = Console.ReadLine()?.Trim('"');
         }
 
@@ -31,7 +31,7 @@ class Program
             return;
         }
 
-        Console.WriteLine($"CS2 CFG 路径：{cs2Cfg}\n");
+        Console.WriteLine($" 全局CFG 路径：{cs2Cfg}\n");
 
         Console.WriteLine("请将 ZIP 或一个/多个 CFG 文件拖入此窗口：");
         string input = Console.ReadLine()?.Trim('"') ?? "";
@@ -133,15 +133,51 @@ class Program
 
     static string? GetSteamPath()
     {
-        try
+        // 常见的 Steam 注册表路径
+        (RegistryHive hive, string subKey, string valueName)[] registryPaths = new[]
         {
-            return Registry.GetValue(
-                @"HKEY_CURRENT_USER\Software\Valve\Steam",
-                "SteamPath",
-                null
-            )?.ToString();
+            // HKCU - 当前用户
+            (RegistryHive.CurrentUser, @"Software\Valve\Steam", "SteamPath"),
+            (RegistryHive.CurrentUser, @"Software\Valve\Steam", "InstallPath"),
+            // HKLM - 本地机器
+            (RegistryHive.LocalMachine, @"SOFTWARE\Valve\Steam", "InstallPath"),
+            (RegistryHive.LocalMachine, @"SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath"),
+        };
+
+        foreach (var registryPath in registryPaths)
+        {
+            try
+            {
+                using var key = RegistryKey.OpenBaseKey(registryPath.hive, RegistryView.Default).OpenSubKey(registryPath.subKey);
+                if (key != null)
+                {
+                    var value = key.GetValue(registryPath.valueName);
+                    if (value != null)
+                    {
+                        string path = value.ToString()!;
+                        // 如果是 SteamExe，需要获取目录
+                        if (registryPath.valueName.Equals("SteamExe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            path = Path.GetDirectoryName(path)!;
+                        }
+                        // 标准化路径分隔符
+                        path = path.Replace('/', '\\').TrimEnd('\\');
+
+                        // 验证路径是否存在且包含 steam.exe
+                        if (Directory.Exists(path) && File.Exists(Path.Combine(path, "steam.exe")))
+                        {
+                            return path;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($" 检查注册表 {registryPath.hive}\\{registryPath.subKey} 失败：{ex.Message}");
+            }
         }
-        catch { return null; }
+
+        return null;
     }
 
     static string? FindCS2CfgPath(string steamRoot)
