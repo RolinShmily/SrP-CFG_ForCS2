@@ -1,0 +1,105 @@
+<Window x:Class="SrPInstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SrP-CFG 安装器" Height="650" Width="700"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="SrP-CFG 安装器" FontSize="22" FontWeight="Bold"
+                   Margin="0,0,0,20" HorizontalAlignment="Left"/>
+
+        <!-- Options -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,15">
+            <CheckBox x:Name="InstallCfgCheckBox" IsChecked="True" Content="安装 CFG 文件（全局配置）" />
+            <Grid Margin="25,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12"/>
+                <TextBox Grid.Column="1" Text="{Binding Cs2CfgPath, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap"
+                         Height="30" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <CheckBox x:Name="InstallVideoCheckBox" IsChecked="True" Content="安装视频配置文件（cs2_video.txt）" />
+            <Grid Margin="25,0,0,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Steam 用户:" VerticalAlignment="Center" FontSize="12"/>
+                <ComboBox x:Name="SteamUserComboBox" Grid.Row="0" Grid.Column="1" SelectionChanged="SteamUserComboBox_SelectionChanged"
+                          Height="30"/>
+                <Button x:Name="RefreshUsersButton" Grid.Row="0" Grid.Column="2" Content="刷新" Padding="5"
+                        Click="RefreshUsersButton_Click" Height="30"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12" Margin="0,5,0,0"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VideoCfgPath, Mode=OneWay}" IsReadOnly="True"
+                         TextWrapping="Wrap" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,0"/>
+            </Grid>
+
+            <!-- 备份位置显示 -->
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12" FontWeight="Bold"/>
+                <TextBox Grid.Column="1" x:Name="BackupLocationTextBox" IsReadOnly="True" TextWrapping="Wrap"
+                         Height="30" VerticalContentAlignment="Center" Text="安装前将自动备份至 cfg_backup.zip"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Drag & Drop Area -->
+        <GroupBox Grid.Row="2" Header="文件选择" Margin="0,0,0,15">
+            <Grid Margin="10">
+                <Border x:Name="DropZoneBorder" BorderBrush="#CCCCCC" BorderThickness="2"
+                        Background="#FAFAFA" CornerRadius="5" Padding="20" Height="80"
+                        AllowDrop="True" Drop="DropZone_Drop" DragOver="DropZone_DragOver"
+                        DragLeave="DropZone_DragLeave">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="📁 将 ZIP 或 CFG/TXT 文件拖放到此处" FontSize="14"
+                                   HorizontalAlignment="Center" Foreground="#666666"/>
+                        <TextBlock x:Name="SelectedFileTextBlock" Text="" FontSize="12"
+                                   HorizontalAlignment="Center" Foreground="#0078D4" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </GroupBox>
+
+        <!-- Log Output -->
+        <GroupBox Grid.Row="3" Header="日志输出">
+            <TextBox x:Name="LogTextBox" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                     TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" Background="#FAFAFA"/>
+        </GroupBox>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button x:Name="InstallButton" Content="开始安装" Click="InstallButton_Click"
+                    Background="#0078D4" Foreground="White" BorderBrush="#005A9E"/>
+        </StackPanel>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="5">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusTextBlock" Text="就绪"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

@@ -2,6 +2,8 @@
 bin/
 obj/
 
+Installer/Installer.exe
+Installer/Installer.pdb
 CLAUDE.md
 .claude
 
