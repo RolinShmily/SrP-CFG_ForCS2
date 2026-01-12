@@ -1,9 +1,8 @@
 <Window x:Class="SrPInstaller.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SrP-CFG 安装器" Height="650" Width="700"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize">
+        Title="SrP-CFG 安装器" Height="800" Width="800"
+        WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -11,11 +10,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Grid.Row="0" Text="SrP-CFG 安装器" FontSize="22" FontWeight="Bold"
+        <TextBlock Grid.Row="0" Text="SrP-CFG 安装器 v2" FontSize="22" FontWeight="Bold"
                    Margin="0,0,0,20" HorizontalAlignment="Left"/>
 
         <!-- Options -->
@@ -25,44 +23,55 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12"/>
-                <TextBox Grid.Column="1" Text="{Binding Cs2CfgPath, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap"
+                <TextBox Grid.Column="1" Text="{Binding Cs2CfgPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测或手动选择'}" IsReadOnly="True" TextWrapping="Wrap"
                          Height="30" VerticalContentAlignment="Center"/>
+                <Button Grid.Column="2" x:Name="SelectCfgFolderButton" Content="..." Padding="10,3" Margin="5,0,0,0"
+                        Click="SelectCfgFolderButton_Click" Width="40" Height="30"/>
+            </Grid>
+            <Grid Margin="25,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12"/>
+                <TextBox Grid.Column="1" x:Name="CfgBackupTextBox" IsReadOnly="True" TextWrapping="Wrap"
+                         Height="30" VerticalContentAlignment="Center" Text="{Binding CfgBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                <Button Grid.Column="2" x:Name="OpenCfgBackupButton" Content="打开文件夹" Padding="8,3" Margin="5,0,0,0"
+                        Click="OpenCfgBackupButton_Click" Height="30"/>
             </Grid>
 
-            <CheckBox x:Name="InstallVideoCheckBox" IsChecked="True" Content="安装视频配置文件（cs2_video.txt）" />
+            <CheckBox x:Name="InstallVideoCheckBox" IsChecked="True" Content="安装 视频预设文件（用户配置）" Margin="0,10,0,0"/>
             <Grid Margin="25,0,0,5">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Steam 用户:" VerticalAlignment="Center" FontSize="12"/>
                 <ComboBox x:Name="SteamUserComboBox" Grid.Row="0" Grid.Column="1" SelectionChanged="SteamUserComboBox_SelectionChanged"
                           Height="30"/>
-                <Button x:Name="RefreshUsersButton" Grid.Row="0" Grid.Column="2" Content="刷新" Padding="5"
-                        Click="RefreshUsersButton_Click" Height="30"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12" Margin="0,5,0,0"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VideoCfgPath, Mode=OneWay}" IsReadOnly="True"
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding VideoCfgPath, Mode=OneWay, TargetNullValue='请选择 Steam 用户'}" IsReadOnly="True"
                          TextWrapping="Wrap" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,0"/>
-            </Grid>
+                <Button Grid.Row="1" Grid.Column="2" x:Name="SelectVideoFolderButton" Content="..." Padding="10,3" Margin="5,5,0,0"
+                        Click="SelectVideoFolderButton_Click" Width="40" Height="30"/>
 
-            <!-- 备份位置显示 -->
-            <Grid Margin="0,10,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12" FontWeight="Bold"/>
-                <TextBox Grid.Column="1" x:Name="BackupLocationTextBox" IsReadOnly="True" TextWrapping="Wrap"
-                         Height="30" VerticalContentAlignment="Center" Text="安装前将自动备份至 cfg_backup.zip"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12" Margin="0,5,0,0"/>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="VideoBackupTextBox" IsReadOnly="True" TextWrapping="Wrap"
+                         Height="30" VerticalContentAlignment="Center" Margin="0,5,0,0" Text="{Binding VideoBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                <Button Grid.Row="2" Grid.Column="2" x:Name="OpenVideoBackupButton" Content="打开文件夹" Padding="8,3" Margin="5,5,0,0"
+                        Click="OpenVideoBackupButton_Click" Height="30"/>
             </Grid>
         </StackPanel>
 
@@ -90,16 +99,13 @@
         </GroupBox>
 
         <!-- Action Buttons -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button x:Name="RefreshButton" Content="刷新路径" Click="RefreshButton_Click"
+                    Margin="10,0,0,0" Background="#dddddd" Foreground="White" BorderBrush="#707070" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button x:Name="BackupButton" Content="进行备份" Click="BackupButton_Click"
+                    Margin="10,0,0,0" Background="#6B8E23" Foreground="White" BorderBrush="#556B2F" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <Button x:Name="InstallButton" Content="开始安装" Click="InstallButton_Click"
-                    Background="#0078D4" Foreground="White" BorderBrush="#005A9E"/>
+                    Margin="10,0,0,0" Background="#0078D4" Foreground="White" BorderBrush="#005A9E" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
         </StackPanel>
-
-        <!-- Status Bar -->
-        <StatusBar Grid.Row="5">
-            <StatusBarItem>
-                <TextBlock x:Name="StatusTextBlock" Text="就绪"/>
-            </StatusBarItem>
-        </StatusBar>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -6,18 +7,51 @@ using Microsoft.Win32;
 
 namespace SrPInstaller;
 
-public class InstallerService
+public class InstallerService : INotifyPropertyChanged
 {
     public event Action<string>? OnLog;
     public event Action<string?>? OnSteamPathDetected;
     public event Action<string?>? OnCs2CfgPathDetected;
     public event Action<string?>? OnSteamUserIdDetected;
     public event Action<string?>? OnVideoCfgPathDetected;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string? _cs2CfgPath;
+    private string? _videoCfgPath;
 
     public string? SteamPath { get; private set; }
-    public string? Cs2CfgPath { get; private set; }
     public string? SteamUserId { get; private set; }
-    public string? VideoCfgPath { get; private set; }
+
+    public string? Cs2CfgPath
+    {
+        get => _cs2CfgPath;
+        set
+        {
+            if (_cs2CfgPath != value)
+            {
+                _cs2CfgPath = value;
+                OnPropertyChanged(nameof(Cs2CfgPath));
+                OnPropertyChanged(nameof(CfgBackupPath));
+            }
+        }
+    }
+
+    public string? VideoCfgPath
+    {
+        get => _videoCfgPath;
+        set
+        {
+            if (_videoCfgPath != value)
+            {
+                _videoCfgPath = value;
+                OnPropertyChanged(nameof(VideoCfgPath));
+                OnPropertyChanged(nameof(VideoBackupPath));
+            }
+        }
+    }
+
+    public string? CfgBackupPath => Cs2CfgPath != null ? Path.Combine(Directory.GetParent(Cs2CfgPath)!.FullName, "cfg_backup.zip") : null;
+    public string? VideoBackupPath => VideoCfgPath != null ? Path.Combine(Directory.GetParent(VideoCfgPath)!.FullName, "video_cfg_backup.zip") : null;
 
     public string? DetectSteamPath()
     {
@@ -122,11 +156,11 @@ public class InstallerService
         string videoCfgPath = Path.Combine(steamRoot, "userdata", userId, "730", "local", "cfg");
         if (Directory.Exists(videoCfgPath))
         {
-            Log($"[OK] 视频配置路径：{videoCfgPath}");
+            Log($"[OK] 用户CFG(视频预设)路径：{videoCfgPath}");
             return videoCfgPath;
         }
 
-        Log("[!] 未找到视频配置路径");
+        Log("[!] 未找到用户CFG(视频预设)路径");
         return null;
     }
 
@@ -151,18 +185,18 @@ public class InstallerService
     public string CreateVideoCfgBackup(string videoCfgDir)
     {
         if (!Directory.Exists(videoCfgDir))
-            throw new DirectoryNotFoundException("视频配置目录不存在。");
+            throw new DirectoryNotFoundException("用户CFG(视频预设)目录不存在。");
 
         string parent = Directory.GetParent(videoCfgDir)!.FullName;
-        string backupPath = Path.Combine(parent, "video_cfg_backup.zip");
+        string backupPath = Path.Combine(parent, "user_cfg_backup.zip");
 
         if (File.Exists(backupPath))
             File.Delete(backupPath);
 
-        Log("正在备份视频配置文件...");
+        Log("正在备份用户CFG(视频预设)文件...");
         ZipFile.CreateFromDirectory(videoCfgDir, backupPath, CompressionLevel.Optimal, false);
 
-        Log($"[OK] 已备份视频配置：{backupPath}");
+        Log($"[OK] 已备份用户CFG(视频预设)至：{backupPath}");
         return backupPath;
     }
 
@@ -190,15 +224,15 @@ public class InstallerService
             // 安装视频配置
             if (installVideo && VideoCfgPath != null)
             {
-                Log("正在复制视频配置文件...");
+                Log("正在复制用户CFG(视频预设)文件...");
                 int txtCount = CopyTxtFiles(tempDir, VideoCfgPath);
                 if (txtCount > 0)
                 {
-                    Log($"[OK] 视频配置复制完成！（已复制 {txtCount} 个 .txt 文件）");
+                    Log($"[OK] 用户CFG(视频预设)复制完成！（已复制 {txtCount} 个 .txt 文件）");
                 }
                 else
                 {
-                    Log("[!] 未找到视频配置文件。");
+                    Log("[!] 未找到用户CFG(视频预设)文件。");
                 }
             }
         }
@@ -248,7 +282,7 @@ public class InstallerService
                     {
                         string dest = Path.Combine(VideoCfgPath, fileName);
                         File.Copy(file, dest, true);
-                        Log($"  [OK] 已复制视频配置：{fileName}");
+                        Log($"  [OK] 已复制用户CFG(视频预设)：{fileName}");
                     }
                     catch (Exception ex)
                     {
@@ -257,7 +291,7 @@ public class InstallerService
                 }
                 else
                 {
-                    Log($"  [!] 跳过 {fileName}（未找到视频配置路径）");
+                    Log($"  [!] 跳过 {fileName}（未找到用户CFG(视频预设)路径）");
                 }
             }
             else
@@ -311,5 +345,10 @@ public class InstallerService
     private void Log(string message)
     {
         OnLog?.Invoke(message);
+    }
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

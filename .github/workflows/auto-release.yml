@@ -22,8 +22,8 @@ jobs:
       - name: Build Installer.exe
         run: |
           dotnet publish Installer/Installer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -o .
-          mv Installer.exe SrP-CFG_Installer_${{ github.ref_name }}.exe
-          echo "EXE_NAME=SrP-CFG_Installer_${{ github.ref_name }}.exe" >> $GITHUB_ENV
+          mv Installer.exe SrP-CFG_Installer.exe
+          echo "EXE_NAME=SrP-CFG_Installer.exe" >> $GITHUB_ENV
 
       - name: zip package
         run: |

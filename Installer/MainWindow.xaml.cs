@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
+using Forms = System.Windows.Forms;
 
 namespace SrPInstaller;
 
@@ -23,6 +24,11 @@ public partial class MainWindow : Window
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        RefreshAllPaths();
+    }
+
+    private void RefreshAllPaths()
+    {
         // 检测 Steam 路径
         Log("正在检测 Steam 路径...");
         _installer.DetectSteamPath();
@@ -36,8 +42,8 @@ public partial class MainWindow : Window
             // 加载 Steam 用户列表
             RefreshSteamUsers();
 
-            // 仅当只有 1 个用户时自动选中，多个用户需用户手动选择
-            if (SteamUserComboBox.Items.Count == 1)
+            // 默认选中第一个用户（如果有的话）
+            if (SteamUserComboBox.Items.Count > 0)
             {
                 SteamUserComboBox.SelectedIndex = 0;
             }
@@ -45,7 +51,6 @@ public partial class MainWindow : Window
         else
         {
             Log("[!] 未找到 Steam 路径，部分功能将不可用。");
-            StatusTextBlock.Text = "未找到 Steam 路径";
         }
     }
 
@@ -85,9 +90,80 @@ public partial class MainWindow : Window
         }
     }
 
-    private void RefreshUsersButton_Click(object sender, RoutedEventArgs e)
+    private void SelectCfgFolderButton_Click(object sender, RoutedEventArgs e)
     {
-        RefreshSteamUsers();
+        var dialog = new Forms.FolderBrowserDialog();
+        dialog.Description = "选择全局CFG目录";
+        dialog.ShowNewFolderButton = false;
+
+        if (dialog.ShowDialog() == Forms.DialogResult.OK)
+        {
+            string selectedPath = dialog.SelectedPath;
+            _installer.Cs2CfgPath = selectedPath;
+            Log($"[OK] 已设置全局CFG路径：{selectedPath}");
+        }
+    }
+
+    private void SelectVideoFolderButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Forms.FolderBrowserDialog();
+        dialog.Description = "选择用户CFG(视频预设)目录";
+        dialog.ShowNewFolderButton = false;
+
+        if (dialog.ShowDialog() == Forms.DialogResult.OK)
+        {
+            string selectedPath = dialog.SelectedPath;
+            _installer.VideoCfgPath = selectedPath;
+            Log($"[OK] 已设置用户CFG(视频预设)路径：{selectedPath}");
+        }
+    }
+
+    private void RefreshButton_Click(object sender, RoutedEventArgs e)
+    {
+        Log("=== 刷新路径 ===");
+        RefreshAllPaths();
+    }
+
+    private async void BackupButton_Click(object sender, RoutedEventArgs e)
+    {
+        BackupButton.IsEnabled = false;
+
+        try
+        {
+            Log("=== 开始手动备份 ===");
+
+            if (_installer.Cs2CfgPath != null)
+            {
+                string cfgBackupPath = _installer.CreateCfgBackup(_installer.Cs2CfgPath);
+                CfgBackupTextBox.Text = cfgBackupPath;
+                Log($"[OK] CFG 备份已创建: {cfgBackupPath}");
+            }
+            else
+            {
+                Log("[!] 未设置全局CFG路径，跳过CFG备份");
+            }
+
+            if (_installer.VideoCfgPath != null)
+            {
+                string videoBackupPath = _installer.CreateVideoCfgBackup(_installer.VideoCfgPath);
+                VideoBackupTextBox.Text = videoBackupPath;
+                Log($"[OK] 用户CFG(视频预设)备份已创建: {videoBackupPath}");
+            }
+            else
+            {
+                Log("[!] 未设置用户CFG(视频预设)路径，跳过用户CFG(视频预设)备份");
+            }
+
+            Log("[OK] 手动备份完成！");
+        }
+        catch (Exception ex)
+        {
+            Log($"[!] 备份失败：{ex.Message}");
+        }
+        finally
+        {
+            BackupButton.IsEnabled = true;
+        }
     }
 
     private void DropZone_DragOver(object sender, DragEventArgs e)
@@ -130,8 +206,32 @@ public partial class MainWindow : Window
                     SelectedFileTextBlock.Text = $"已选择: {files.Length} 个文件";
                     Log($"已选择 {files.Length} 个文件");
                 }
+            }
+        }
+    }
 
-                StatusTextBlock.Text = "已选择文件，可以开始安装";
+    private void OpenCfgBackupButton_Click(object sender, RoutedEventArgs e)
+    {
+        var backupPath = CfgBackupTextBox.Text;
+        if (!string.IsNullOrEmpty(backupPath) && backupPath != "安装前将自动备份")
+        {
+            var dir = Path.GetDirectoryName(backupPath);
+            if (dir != null)
+            {
+                System.Diagnostics.Process.Start("explorer.exe", dir);
+            }
+        }
+    }
+
+    private void OpenVideoBackupButton_Click(object sender, RoutedEventArgs e)
+    {
+        var backupPath = VideoBackupTextBox.Text;
+        if (!string.IsNullOrEmpty(backupPath) && backupPath != "安装前将自动备份")
+        {
+            var dir = Path.GetDirectoryName(backupPath);
+            if (dir != null)
+            {
+                System.Diagnostics.Process.Start("explorer.exe", dir);
             }
         }
     }
@@ -140,7 +240,7 @@ public partial class MainWindow : Window
     {
         if (_selectedFiles == null || _selectedFiles.Length == 0)
         {
-            MessageBox.Show("请先选择要安装的文件。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            Log("[!] 请先选择要安装的文件。");
             return;
         }
 
@@ -149,19 +249,19 @@ public partial class MainWindow : Window
 
         if (!installCfg && !installVideo)
         {
-            MessageBox.Show("请至少选择一项安装选项。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            Log("[!] 请至少选择一项安装选项。");
             return;
         }
 
         if (installCfg && _installer.Cs2CfgPath == null)
         {
-            MessageBox.Show("未检测到 全局CFG 路径，无法安装 CFG 文件。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            Log("[!] 未检测到 全局CFG 路径，无法安装 CFG 文件。");
             return;
         }
 
         if (installVideo && _installer.VideoCfgPath == null)
         {
-            MessageBox.Show("未检测到视频配置路径，无法安装视频配置。\n请选择正确的 Steam 用户。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            Log("[!] 未检测到用户CFG(视频预设)路径，无法安装用户CFG(视频预设)。请选择正确的 Steam 用户。");
             return;
         }
 
@@ -174,16 +274,17 @@ public partial class MainWindow : Window
             if (installCfg && _installer.Cs2CfgPath != null)
             {
                 string cfgBackupPath = _installer.CreateCfgBackup(_installer.Cs2CfgPath);
-                BackupLocationTextBox.Text = cfgBackupPath;
+                CfgBackupTextBox.Text = cfgBackupPath;
+                Log($"[OK] CFG 备份已创建: {cfgBackupPath}");
             }
             if (installVideo && _installer.VideoCfgPath != null)
             {
                 string videoBackupPath = _installer.CreateVideoCfgBackup(_installer.VideoCfgPath);
-                BackupLocationTextBox.Text += $" | {Path.GetFileName(videoBackupPath)}";
+                VideoBackupTextBox.Text = videoBackupPath;
+                Log($"[OK] 用户CFG(视频预设)备份已创建: {videoBackupPath}");
             }
 
             Log("\n=== 开始安装 ===");
-            StatusTextBlock.Text = "正在安装...";
 
             // 安装
             await System.Threading.Tasks.Task.Run(() =>
@@ -198,15 +299,11 @@ public partial class MainWindow : Window
                 }
             });
 
-            StatusTextBlock.Text = "安装完成";
             Log("\n[OK] 所有操作完成！");
-            MessageBox.Show("安装完成！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
             Log($"[!] 安装失败：{ex.Message}");
-            StatusTextBlock.Text = "安装失败";
-            MessageBox.Show($"安装失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {
