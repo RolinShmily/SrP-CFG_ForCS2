@@ -13,8 +13,18 @@
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Grid.Row="0" Text="SrP-CFG 安装器 v2" FontSize="22" FontWeight="Bold"
-                   Margin="0,0,0,20" HorizontalAlignment="Left"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+            <Image x:Name="AppIconImage" Width="32" Height="32" Margin="0,0,10,0" VerticalAlignment="Center"
+                   Source="/Resources/app.ico" Stretch="Uniform"
+                   Visibility="Visible"/>
+            <TextBlock VerticalAlignment="Center">
+                <Run Text="SrP-CFG 安装器 v2" FontSize="22" FontWeight="Bold"/>
+                <Run Text=" | " FontSize="16" Foreground="#999"/>
+                <Hyperlink NavigateUri="https://blog.srprolin.top/posts/srp-cfg/#srp-cfg_forcs2" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#0078D4" FontSize="14">
+                    <Run Text="项目博客地址" TextDecorations="None"/>
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
 
         <!-- Options -->
         <StackPanel Grid.Row="1" Margin="0,0,0,15">
@@ -94,14 +104,14 @@
 
         <!-- Log Output -->
         <GroupBox Grid.Row="3" Header="日志输出">
-            <TextBox x:Name="LogTextBox" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
-                     TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" Background="#FAFAFA"/>
+            <RichTextBox x:Name="LogTextBox" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                     FontFamily="Consolas" FontSize="11" Background="#FAFAFA" BorderThickness="0" Padding="5"/>
         </GroupBox>
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button x:Name="RefreshButton" Content="刷新路径" Click="RefreshButton_Click"
-                    Margin="10,0,0,0" Background="#dddddd" Foreground="White" BorderBrush="#707070" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                    Margin="10,0,0,0" Background="#3b3b3b" Foreground="White" BorderBrush="#707070" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <Button x:Name="BackupButton" Content="进行备份" Click="BackupButton_Click"
                     Margin="10,0,0,0" Background="#6B8E23" Foreground="White" BorderBrush="#556B2F" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <Button x:Name="InstallButton" Content="开始安装" Click="InstallButton_Click"

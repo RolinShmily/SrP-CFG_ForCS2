@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
@@ -51,7 +52,7 @@ public class InstallerService : INotifyPropertyChanged
     }
 
     public string? CfgBackupPath => Cs2CfgPath != null ? Path.Combine(Directory.GetParent(Cs2CfgPath)!.FullName, "cfg_backup.zip") : null;
-    public string? VideoBackupPath => VideoCfgPath != null ? Path.Combine(Directory.GetParent(VideoCfgPath)!.FullName, "video_cfg_backup.zip") : null;
+    public string? VideoBackupPath => VideoCfgPath != null ? Path.Combine(Directory.GetParent(VideoCfgPath)!.FullName, "user_cfg_backup.zip") : null;
 
     public string? DetectSteamPath()
     {
@@ -145,22 +146,33 @@ public class InstallerService : INotifyPropertyChanged
 
         if (SteamPath != null)
         {
-            var videoPath = DetectVideoCfgPath(SteamPath, userId);
-            VideoCfgPath = videoPath;
-            OnVideoCfgPathDetected?.Invoke(videoPath);
+            var videoPath = DetectVideoCfgPath(SteamPath, userId, silent: true);
+            // 仅当路径实际变化时才触发事件和输出日志
+            if (videoPath != _videoCfgPath)
+            {
+                VideoCfgPath = videoPath;
+                OnVideoCfgPathDetected?.Invoke(videoPath);
+                // 只有在这里输出日志，避免 DetectVideoCfgPath 内部重复输出
+                if (videoPath != null)
+                {
+                    Log($"[OK] 用户CFG(视频预设)路径：{videoPath}");
+                }
+            }
         }
     }
 
-    public string? DetectVideoCfgPath(string steamRoot, string userId)
+    public string? DetectVideoCfgPath(string steamRoot, string userId, bool silent = false)
     {
         string videoCfgPath = Path.Combine(steamRoot, "userdata", userId, "730", "local", "cfg");
         if (Directory.Exists(videoCfgPath))
         {
-            Log($"[OK] 用户CFG(视频预设)路径：{videoCfgPath}");
+            if (!silent)
+                Log($"[OK] 用户CFG(视频预设)路径：{videoCfgPath}");
             return videoCfgPath;
         }
 
-        Log("[!] 未找到用户CFG(视频预设)路径");
+        if (!silent)
+            Log("[!] 未找到用户CFG(视频预设)路径");
         return null;
     }
 
@@ -175,10 +187,9 @@ public class InstallerService : INotifyPropertyChanged
         if (File.Exists(backupPath))
             File.Delete(backupPath);
 
-        Log("正在备份当前 cfg 文件夹...");
+        Log("[~] 正在备份当前 cfg 文件夹...");
         ZipFile.CreateFromDirectory(cfgDir, backupPath, CompressionLevel.Optimal, false);
 
-        Log($"[OK] 已将 cfg 文件夹备份至：{backupPath}");
         return backupPath;
     }
 
@@ -193,38 +204,42 @@ public class InstallerService : INotifyPropertyChanged
         if (File.Exists(backupPath))
             File.Delete(backupPath);
 
-        Log("正在备份用户CFG(视频预设)文件...");
+        Log("[~] 正在备份用户CFG(视频预设)文件...");
         ZipFile.CreateFromDirectory(videoCfgDir, backupPath, CompressionLevel.Optimal, false);
 
-        Log($"[OK] 已备份用户CFG(视频预设)至：{backupPath}");
         return backupPath;
     }
 
     public void InstallFromZip(string zipPath, bool installCfg, bool installVideo)
     {
-        Log($"开始安装：{Path.GetFileName(zipPath)}");
+        Log($"[~] 开始安装：{Path.GetFileName(zipPath)}");
 
         string tempDir = Path.Combine(Path.GetTempPath(), "CS2Installer_" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDir);
 
         try
         {
-            Log("解压 ZIP 中...");
+            Log("[~] 解压 ZIP 中...");
             ZipFile.ExtractToDirectory(zipPath, tempDir, true);
-            Log("解压完成。");
+            Log("[OK] 解压完成。");
 
             // 安装 CFG
             if (installCfg && Cs2CfgPath != null)
             {
-                Log("正在复制 CFG 文件...");
-                CopyCfgFiles(tempDir, Cs2CfgPath);
-                Log("[OK] CFG 复制完成！");
+                int cfgCount = CopyCfgFiles(tempDir, Cs2CfgPath);
+                if (cfgCount > 0)
+                {
+                    Log($"[OK] CFG 复制完成！（已复制 {cfgCount} 个 .cfg 文件）");
+                }
+                else
+                {
+                    Log("[!] 未找到 CFG 文件。");
+                }
             }
 
             // 安装视频配置
             if (installVideo && VideoCfgPath != null)
             {
-                Log("正在复制用户CFG(视频预设)文件...");
                 int txtCount = CopyTxtFiles(tempDir, VideoCfgPath);
                 if (txtCount > 0)
                 {
@@ -247,7 +262,12 @@ public class InstallerService : INotifyPropertyChanged
 
     public void InstallFromFiles(string[] files, bool installCfg, bool installVideo)
     {
-        Log($"开始安装 {files.Length} 个文件...");
+        Log($"[~] 开始安装 {files.Length} 个文件...");
+
+        int cfgCount = 0;
+        int txtCount = 0;
+        var skippedFiles = 0;
+        var failedFiles = new List<string>();
 
         foreach (var file in files)
         {
@@ -265,11 +285,11 @@ public class InstallerService : INotifyPropertyChanged
                     {
                         string dest = Path.Combine(Cs2CfgPath, fileName);
                         File.Copy(file, dest, true);
-                        Log($"  [OK] 已复制 CFG：{fileName}");
+                        cfgCount++;
                     }
                     catch (Exception ex)
                     {
-                        Log($"  [!] 复制失败：{fileName} → {ex.Message}");
+                        failedFiles.Add($"CFG：{fileName} ({ex.Message})");
                     }
                 }
             }
@@ -282,29 +302,45 @@ public class InstallerService : INotifyPropertyChanged
                     {
                         string dest = Path.Combine(VideoCfgPath, fileName);
                         File.Copy(file, dest, true);
-                        Log($"  [OK] 已复制用户CFG(视频预设)：{fileName}");
+                        txtCount++;
                     }
                     catch (Exception ex)
                     {
-                        Log($"  [!] 复制失败：{fileName} → {ex.Message}");
+                        failedFiles.Add($"视频预设：{fileName} ({ex.Message})");
                     }
-                }
-                else
-                {
-                    Log($"  [!] 跳过 {fileName}（未找到用户CFG(视频预设)路径）");
                 }
             }
             else
             {
-                Log($"  [~] 跳过非 CFG/TXT 文件：{fileName}");
+                skippedFiles++;
+            }
+        }
+
+        // 批量输出统计信息
+        if (cfgCount > 0)
+            Log($"  [OK] 已复制 {cfgCount} 个 CFG 文件");
+        if (txtCount > 0)
+            Log($"  [OK] 已复制 {txtCount} 个视频预设文件");
+        if (skippedFiles > 0)
+            Log($"  [~] 跳过 {skippedFiles} 个非 CFG/TXT 文件");
+
+        // 输出失败信息
+        if (failedFiles.Count > 0)
+        {
+            foreach (var failed in failedFiles)
+            {
+                Log($"  [!] 复制失败：{failed}");
             }
         }
 
         Log("[OK] 文件复制完成！");
     }
 
-    private void CopyCfgFiles(string src, string dst)
+    private int CopyCfgFiles(string src, string dst)
     {
+        int copiedCount = 0;
+        var failedFiles = new List<string>();
+
         foreach (string file in Directory.GetFiles(src, "*", SearchOption.AllDirectories))
         {
             if (!file.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
@@ -313,14 +349,34 @@ public class InstallerService : INotifyPropertyChanged
             string relative = Path.GetRelativePath(src, file);
             string target = Path.Combine(dst, relative);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-            File.Copy(file, target, true);
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                File.Copy(file, target, true);
+                copiedCount++;
+            }
+            catch (Exception ex)
+            {
+                failedFiles.Add($"{relative} ({ex.Message})");
+            }
         }
+
+        // 批量输出失败信息
+        if (failedFiles.Count > 0)
+        {
+            foreach (var failed in failedFiles)
+            {
+                Log($"  [!] 复制失败：{failed}");
+            }
+        }
+
+        return copiedCount;
     }
 
     private int CopyTxtFiles(string src, string dst)
     {
         int copiedCount = 0;
+        var failedFiles = new List<string>();
 
         foreach (string file in Directory.GetFiles(src, "*.txt", SearchOption.AllDirectories))
         {
@@ -330,12 +386,20 @@ public class InstallerService : INotifyPropertyChanged
             try
             {
                 File.Copy(file, target, true);
-                Log($"  已复制：{fileName}");
                 copiedCount++;
             }
             catch (Exception ex)
             {
-                Log($"  复制失败：{fileName} → {ex.Message}");
+                failedFiles.Add($"{fileName} ({ex.Message})");
+            }
+        }
+
+        // 批量输出失败信息，减少日志冗余
+        if (failedFiles.Count > 0)
+        {
+            foreach (var failed in failedFiles)
+            {
+                Log($"  [!] 复制失败：{failed}");
             }
         }
 

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Navigation;
 using Microsoft.Win32;
 using Forms = System.Windows.Forms;
 
@@ -30,13 +32,13 @@ public partial class MainWindow : Window
     private void RefreshAllPaths()
     {
         // 检测 Steam 路径
-        Log("正在检测 Steam 路径...");
+        Log("[~] 正在检测 Steam 路径...");
         _installer.DetectSteamPath();
 
         if (_installer.SteamPath != null)
         {
             // 检测 CFG 路径
-            Log("正在检测 全局CFG 路径...");
+            Log("[~] 正在检测 全局CFG 路径...");
             _installer.DetectCS2CfgPath(_installer.SteamPath);
 
             // 加载 Steam 用户列表
@@ -120,7 +122,7 @@ public partial class MainWindow : Window
 
     private void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
-        Log("=== 刷新路径 ===");
+        Log("[~] === 刷新路径 ===");
         RefreshAllPaths();
     }
 
@@ -130,7 +132,7 @@ public partial class MainWindow : Window
 
         try
         {
-            Log("=== 开始手动备份 ===");
+            Log("[~] === 开始手动备份 ===");
 
             if (_installer.Cs2CfgPath != null)
             {
@@ -199,12 +201,12 @@ public partial class MainWindow : Window
                 if (files.Length == 1 && files[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                 {
                     SelectedFileTextBlock.Text = $"已选择: {Path.GetFileName(files[0])} (ZIP)";
-                    Log($"已选择 ZIP 文件: {files[0]}");
+                    Log($"[OK] 已选择 ZIP 文件: {files[0]}");
                 }
                 else
                 {
                     SelectedFileTextBlock.Text = $"已选择: {files.Length} 个文件";
-                    Log($"已选择 {files.Length} 个文件");
+                    Log($"[OK] 已选择 {files.Length} 个文件");
                 }
             }
         }
@@ -213,27 +215,33 @@ public partial class MainWindow : Window
     private void OpenCfgBackupButton_Click(object sender, RoutedEventArgs e)
     {
         var backupPath = CfgBackupTextBox.Text;
-        if (!string.IsNullOrEmpty(backupPath) && backupPath != "安装前将自动备份")
+        if (string.IsNullOrEmpty(backupPath) || backupPath == "安装前将自动备份")
         {
-            var dir = Path.GetDirectoryName(backupPath);
-            if (dir != null)
-            {
-                System.Diagnostics.Process.Start("explorer.exe", dir);
-            }
+            LogError("目标文件无法选中，请预先备份或安装");
+            return;
         }
+        if (!File.Exists(backupPath))
+        {
+            LogError("目标文件无法选中，请预先备份或安装");
+            return;
+        }
+        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{backupPath}\"");
     }
 
     private void OpenVideoBackupButton_Click(object sender, RoutedEventArgs e)
     {
         var backupPath = VideoBackupTextBox.Text;
-        if (!string.IsNullOrEmpty(backupPath) && backupPath != "安装前将自动备份")
+        if (string.IsNullOrEmpty(backupPath) || backupPath == "安装前将自动备份")
         {
-            var dir = Path.GetDirectoryName(backupPath);
-            if (dir != null)
-            {
-                System.Diagnostics.Process.Start("explorer.exe", dir);
-            }
+            LogError("目标文件无法选中，请预先备份或安装");
+            return;
         }
+        if (!File.Exists(backupPath))
+        {
+            LogError("目标文件无法选中，请预先备份或安装");
+            return;
+        }
+        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{backupPath}\"");
     }
 
     private async void InstallButton_Click(object sender, RoutedEventArgs e)
@@ -270,7 +278,7 @@ public partial class MainWindow : Window
         try
         {
             // 先备份
-            Log("=== 开始备份 ===");
+            Log("[~] === 开始备份 ===");
             if (installCfg && _installer.Cs2CfgPath != null)
             {
                 string cfgBackupPath = _installer.CreateCfgBackup(_installer.Cs2CfgPath);
@@ -284,7 +292,7 @@ public partial class MainWindow : Window
                 Log($"[OK] 用户CFG(视频预设)备份已创建: {videoBackupPath}");
             }
 
-            Log("\n=== 开始安装 ===");
+            Log("\n[~] === 开始安装 ===");
 
             // 安装
             await System.Threading.Tasks.Task.Run(() =>
@@ -313,19 +321,52 @@ public partial class MainWindow : Window
 
     private void Installer_OnLog(string message)
     {
+        // 根据消息前缀判断颜色
+        string color = message.StartsWith("[OK]") ? "Green" :
+                     message.StartsWith("[!]") ? "Red" : "Black";
+
+        // 添加时间戳
+        string timestamp = DateTime.Now.ToString("HH:mm:ss");
+        string logMessage = $"[{timestamp}] {message}";
+
         Dispatcher.Invoke(() =>
         {
-            LogTextBox.AppendText(message + Environment.NewLine);
+            var range = new System.Windows.Documents.TextRange(
+                LogTextBox.Document.ContentEnd,
+                LogTextBox.Document.ContentEnd);
+            range.Text = logMessage + Environment.NewLine;
+            range.ApplyPropertyValue(System.Windows.Documents.TextElement.ForegroundProperty,
+                new System.Windows.Media.SolidColorBrush(
+                    color == "Green" ? System.Windows.Media.Color.FromRgb(34, 139, 34) :
+                    color == "Red" ? System.Windows.Media.Color.FromRgb(220, 20, 60) :
+                    System.Windows.Media.Colors.Black));
             LogTextBox.ScrollToEnd();
         });
     }
 
     private void Log(string message)
     {
-        Dispatcher.Invoke(() =>
+        Installer_OnLog(message);
+    }
+
+    private void LogSuccess(string message)
+    {
+        Log($"[OK] {message}");
+    }
+
+    private void LogError(string message)
+    {
+        Log($"[!] {message}");
+    }
+
+    private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+    {
+        // 打开浏览器访问链接
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
         {
-            LogTextBox.AppendText(message + Environment.NewLine);
-            LogTextBox.ScrollToEnd();
+            FileName = e.Uri.AbsoluteUri,
+            UseShellExecute = true
         });
+        e.Handled = true;
     }
 }
