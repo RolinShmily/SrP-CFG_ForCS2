@@ -1,3 +1,4 @@
+autoview.cfg
 crosshair_view.cfg
 cs2_video.txt
 demo_hlae.cfg
