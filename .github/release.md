@@ -1,10 +1,2 @@
-# v2.1.0
-- 更新犬升视角和准星
-- 将默认雷达缩放与换手按键互换
-- 修复aying视角预设
-- 将准星视角从auto移至crosshair_view
-- 删除auto中的HUD颜色别名
-- 默认启用crosshair_view,默认关闭zeus电击枪cfg
-- 添加新cfg:autoview;实现自适应武器视角切换，按`[`启用
-- 为autoexec添加别名`back`;为zeus添加别名`zeus`以便于快速启用。
-- 内容格式修修补补
+# v2.1.1
+- 更新画面设置文件`cs2_video.txt`
