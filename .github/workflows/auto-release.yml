@@ -208,28 +208,6 @@ jobs:
           echo "✅ All packages built"
 
       # ============================================
-      # 生成校验和
-      # ============================================
-      - name: Generate checksums
-        run: |
-          echo "🔐 Generating checksums..."
-          echo "# SHA256 Checksums" > checksums.txt
-          echo "" >> checksums.txt
-          echo "Generated for SrP-CFG_${{ github.ref_name }}" >> checksums.txt
-          echo "" >> checksums.txt
-
-          # 为所有发布文件生成校验和
-          for file in SrP-CFG_Installer.exe ${{ env.ZIP_FILES }}; do
-            if [ -f "$file" ]; then
-              checksum=$(sha256sum "$file" | awk '{print $1}')
-              echo "$checksum  $file" >> checksums.txt
-              echo "  ✓ $file"
-            fi
-          done
-
-          echo "✅ Checksums generated"
-
-      # ============================================
       # 生成 Release Notes
       # ============================================
       - name: Generate Release Notes
@@ -247,23 +225,17 @@ jobs:
           # 生成 changelog
           if [ -n "$PREV_TAG" ]; then
             CHANGELOG="### 🔄 自 $PREV_TAG 以来的变更\n\n"
-            git log --pretty=format="- %s (%h)" ${PREV_TAG}..${CURRENT_TAG} > changelog.txt 2>/dev/null || echo "无提交记录" > changelog.txt
+            git log --pretty=format:"- %s (%h)" ${PREV_TAG}..${CURRENT_TAG} > changelog.txt 2>/dev/null || echo "无提交记录" > changelog.txt
             CHANGELOG_CONTENT=$(cat changelog.txt)
           else
             CHANGELOG="### 🎊 首次发布\n\n感谢使用 SrP-CFG！\n"
             CHANGELOG_CONTENT="这是项目的首次发布。"
           fi
 
-          # 生成校验和表格
-          CHECKSUMS_TABLE="\`\`\`\n$(cat checksums.txt)\n\`\`\`"
-
           # 读取模板并替换变量
           RELEASE_BODY=$(cat .github/release/template.md)
           RELEASE_BODY="${RELEASE_BODY//\{\{VERSION\}\}/$CURRENT_TAG}"
-          RELEASE_BODY="${RELEASE_BODY//\{\{REPO_OWNER\}\}/$REPO_OWNER}"
-          RELEASE_BODY="${RELEASE_BODY//\{\{REPO_NAME\}\}/$REPO_NAME}"
           RELEASE_BODY="${RELEASE_BODY//\{\{CHANGELOG\}\}/$CHANGELOG_CONTENT}"
-          RELEASE_BODY="${RELEASE_BODY//\{\{CHECKSUMS\}\}/$CHECKSUMS_TABLE}"
 
           # 保存到环境变量
           {
@@ -286,7 +258,6 @@ jobs:
           files: |
             SrP-CFG_Installer.exe
             *.zip
-            checksums.txt
           prerelease: false
           draft: false
 
@@ -301,6 +272,5 @@ jobs:
           path: |
             SrP-CFG_Installer.exe
             *.zip
-            checksums.txt
             packages.json
           retention-days: 30
