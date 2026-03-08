@@ -49,7 +49,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-          cache: true  # 缓存 NuGet 包
 
       # ============================================
       # 验证配置文件
