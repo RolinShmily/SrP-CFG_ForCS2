@@ -225,7 +225,7 @@ jobs:
           # 生成 changelog
           if [ -n "$PREV_TAG" ]; then
             CHANGELOG="### 🔄 自 $PREV_TAG 以来的变更\n\n"
-            git log --pretty=format:"- %s (%h)" ${PREV_TAG}..${CURRENT_TAG} > changelog.txt 2>/dev/null || echo "无提交记录" > changelog.txt
+            git log --pretty=format:"- %s" ${PREV_TAG}..${CURRENT_TAG} > changelog.txt 2>/dev/null || echo "无提交记录" > changelog.txt
             CHANGELOG_CONTENT=$(cat changelog.txt)
           else
             CHANGELOG="### 🎊 首次发布\n\n感谢使用 SrP-CFG！\n"
