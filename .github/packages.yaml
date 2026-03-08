@@ -1,0 +1,108 @@
+# ============================================
+# SrP-CFG 包配置
+# ============================================
+#
+# 设计理念：
+# - 根目录文件/文件夹：保持原有结构打包
+# - 用户目录文件：提取到 zip 根目录，替换同名文件
+# - 新增用户：添加配置块即可
+#
+# ============================================
+
+packages:
+  # ============================================
+  # 官方完整版
+  # ============================================
+  allcfgs:
+    display_name: "官方完整版"
+    zip_name: "Allcfgs"
+    description: "包含官方配置的完整版本，包含官方 autoexec.cfg"
+    # 根目录文件（相对路径）
+    files:
+      - "autoexec.cfg"
+      - "autoview.cfg"
+      - "crosshair_view.cfg"
+      - "cs2_video.txt"
+      - "demo_hlae.cfg"
+      - "knife.cfg"
+      - "practice.cfg"
+      - "zeus.cfg"
+      - "crosshair_library/"
+      - "spawn/"
+    overrides: []  # 无替换文件
+
+  # ============================================
+  # 用户定制版
+  # ============================================
+  # 说明：
+  # - base: 继承指定包的 files 配置
+  # - overrides: 用户目录下的文件，会提取到 zip 根目录并替换同名文件
+  # - 未来扩展：在 overrides 中添加更多文件即可
+  # ============================================
+
+  echo:
+    display_name: "Echo 定制版"
+    zip_name: "Allcfgs_echo"
+    description: "使用 echo 的自定义 autoexec.cfg，其他配置与官方版相同"
+    base: "allcfgs"  # 继承 allcfgs 的所有文件
+    # 这些文件会被提取到 zip 根目录，替换同名文件
+    overrides:
+      - "echo/autoexec.cfg"
+    # 未来扩展示例：
+    # overrides:
+    #   - "echo/autoexec.cfg"
+    #   - "echo/practice.cfg"
+    #   - "echo/custom_view.cfg"
+
+  yszh:
+    display_name: "yszh 定制版"
+    zip_name: "Allcfgs_yszh"
+    description: "使用 yszh 的自定义 autoexec.cfg，其他配置与官方版相同"
+    base: "allcfgs"
+    overrides:
+      - "yszh/autoexec.cfg"
+
+  visionl:
+    display_name: "visionl 定制版"
+    zip_name: "Allcfgs_visionl"
+    description: "使用 visionl 的自定义 autoexec.cfg，其他配置与官方版相同"
+    base: "allcfgs"
+    overrides:
+      - "visionl/autoexec.cfg"
+
+  # ============================================
+  # 未来新增用户模板
+  # ============================================
+  # 添加新用户时，复制以下模板并修改：
+  #
+  # newuser:
+  #   display_name: "新用户定制版"
+  #   zip_name: "Allcfgs_newuser"
+  #   description: "使用 newuser 的自定义配置"
+  #   base: "allcfgs"
+  #   overrides:
+  #     - "newuser/autoexec.cfg"
+  #     - "newuser/other_file.cfg"  # 支持多个文件替换
+  # ============================================
+
+# ============================================
+# 全局配置
+# ============================================
+settings:
+  # 默认文件列表（供 allcfgs 使用）
+  default_files:
+    - "autoexec.cfg"
+    - "autoview.cfg"
+    - "crosshair_view.cfg"
+    - "cs2_video.txt"
+    - "demo_hlae.cfg"
+    - "knife.cfg"
+    - "practice.cfg"
+    - "zeus.cfg"
+    - "crosshair_library/"
+    - "spawn/"
+
+  # 发布配置
+  release:
+    installer_name: "SrP-CFG_Installer.exe"
+    checksums_file: "checksums.txt"

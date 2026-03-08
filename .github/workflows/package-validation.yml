@@ -1,0 +1,140 @@
+name: Package Validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/packages.yaml'
+      - '.github/**'
+      - 'echo/**'
+      - 'yszh/**'
+      - 'visionl/**'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/packages.yaml'
+      - '.github/**'
+      - 'echo/**'
+      - 'yszh/**'
+      - 'visionl/**'
+  workflow_dispatch:
+
+jobs:
+  validate-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Validate packages.yaml
+        run: |
+          echo "🔍 Validating packages.yaml..."
+          python3 << 'EOF'
+          import yaml
+          import json
+          import os
+          import sys
+
+          try:
+              # 读取配置
+              with open('.github/packages.yaml', 'r', encoding='utf-8') as f:
+                  config = yaml.safe_load(f)
+
+              packages = config.get('packages', {})
+              settings = config.get('settings', {})
+
+              print(f"✅ YAML syntax valid")
+              print(f"📦 Found {len(packages)} packages")
+
+              # 验证每个包的配置
+              errors = []
+              warnings = []
+
+              for pkg_name, pkg_config in packages.items():
+                  # 检查必需字段
+                  if 'zip_name' not in pkg_config:
+                      errors.append(f"Package '{pkg_name}': missing 'zip_name' field")
+
+                  # 检查基础包引用
+                  if 'base' in pkg_config:
+                      base_name = pkg_config['base']
+                      if base_name not in packages:
+                          errors.append(f"Package '{pkg_name}': base package '{base_name}' not found")
+
+                  # 检查文件是否存在
+                  if 'files' in pkg_config:
+                      for file_path in pkg_config['files']:
+                          if file_path.endswith('/') and not os.path.isdir(file_path):
+                              warnings.append(f"Package '{pkg_name}': directory '{file_path}' not found")
+                          elif not file_path.endswith('/') and not os.path.isfile(file_path):
+                              warnings.append(f"Package '{pkg_name}': file '{file_path}' not found")
+
+                  # 检查覆盖文件是否存在
+                  if 'overrides' in pkg_config:
+                      for override_file in pkg_config['overrides']:
+                          if not os.path.exists(override_file):
+                              errors.append(f"Package '{pkg_name}': override file '{override_file}' not found")
+
+              # 输出结果
+              if warnings:
+                  print("\n⚠️  Warnings:")
+                  for warning in warnings:
+                      print(f"  - {warning}")
+
+              if errors:
+                  print("\n❌ Errors:")
+                  for error in errors:
+                      print(f"  - {error}")
+                  sys.exit(1)
+              else:
+                  print("\n✅ All packages validated successfully!")
+
+          except yaml.YAMLError as e:
+              print(f"❌ YAML syntax error: {e}")
+              sys.exit(1)
+          except Exception as e:
+              print(f"❌ Validation error: {e}")
+              sys.exit(1)
+          EOF
+
+      - name: Validate user directories
+        run: |
+          echo "🔍 Validating user directories..."
+          python3 << 'EOF'
+          import yaml
+          import os
+
+          with open('.github/packages.yaml', 'r', encoding='utf-8') as f:
+              config = yaml.safe_load(f)
+
+          packages = config.get('packages', {})
+
+          # 检查用户目录
+          user_dirs = set()
+          for pkg_name, pkg_config in packages.items():
+              if 'overrides' in pkg_config:
+                  for override_file in pkg_config['overrides']:
+                      # 提取用户目录名（如 echo/autoexec.cfg -> echo）
+                      if '/' in override_file:
+                          user_dir = override_file.split('/')[0]
+                          user_dirs.add(user_dir)
+
+          print(f"📁 Found {len(user_dirs)} user directories:")
+          for user_dir in sorted(user_dirs):
+              if os.path.isdir(user_dir):
+                  file_count = len([f for f in os.listdir(user_dir) if os.path.isfile(os.path.join(user_dir, f))])
+                  print(f"  ✓ {user_dir}/ ({file_count} files)")
+              else:
+                  print(f"  ❌ {user_dir}/ (not found)")
+
+          print("\n✅ User directories validated")
+          EOF

@@ -6,61 +6,278 @@ on:
       - 'v*'
 
 jobs:
+  # ============================================
+  # 验证标签格式
+  # ============================================
+  validate-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.validate.outputs.version }}
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+    steps:
+      - name: Validate tag format
+        id: validate
+        run: |
+          TAG="${{ github.ref_name }}"
+          # 移除 v 前缀并验证语义化版本格式
+          VERSION="${TAG#v}"
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "::error::Tag format must be v*.*.* (e.g., v1.0.0, v2.1.3-beta)"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "is_valid=true" >> $GITHUB_OUTPUT
+          echo "✅ Tag validated: $TAG"
+
+  # ============================================
+  # 构建和发布
+  # ============================================
   build-and-release:
+    needs: validate-tag
+    if: needs.validate-tag.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史，用于生成 changelog
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          cache: true  # 缓存 NuGet 包
 
+      # ============================================
+      # 验证配置文件
+      # ============================================
+      - name: Validate configuration
+        run: |
+          echo "🔍 Validating configuration files..."
+          REQUIRED_FILES=(
+            ".github/packages.yaml"
+            "Installer/Installer.csproj"
+            ".github/release/template.md"
+          )
+
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "::error::Required file not found: $file"
+              exit 1
+            fi
+            echo "  ✓ $file"
+          done
+          echo "✅ All required files present"
+
+      # ============================================
+      # 解析包配置
+      # ============================================
+      - name: Parse packages configuration
+        id: parse_packages
+        run: |
+          echo "📋 Parsing packages configuration..."
+
+          # 使用 Python 解析 YAML 并生成包列表
+          python3 << 'EOF'
+          import yaml
+          import json
+          import os
+
+          # 读取配置
+          with open('.github/packages.yaml', 'r', encoding='utf-8') as f:
+              config = yaml.safe_load(f)
+
+          packages = config.get('packages', {})
+          settings = config.get('settings', {})
+
+          # 处理每个包
+          package_list = []
+          for pkg_name, pkg_config in packages.items():
+              # 获取文件列表
+              if 'base' in pkg_config:
+                  # 继承基础包的文件
+                  base_name = pkg_config['base']
+                  base_config = packages.get(base_name, {})
+                  files = base_config.get('files', [])
+              else:
+                  files = pkg_config.get('files', [])
+
+              overrides = pkg_config.get('overrides', [])
+
+              package_list.append({
+                  'name': pkg_name,
+                  'zip_name': pkg_config.get('zip_name', pkg_name),
+                  'display_name': pkg_config.get('display_name', pkg_name),
+                  'description': pkg_config.get('description', ''),
+                  'files': files,
+                  'overrides': overrides
+              })
+
+          # 输出为 JSON（供 shell 使用）
+          with open('packages.json', 'w', encoding='utf-8') as f:
+              json.dump(package_list, f, ensure_ascii=False, indent=2)
+
+          print(f"✅ Parsed {len(package_list)} packages")
+          EOF
+
+          echo "✅ Packages configuration parsed"
+
+      # ============================================
+      # 构建 Installer.exe
+      # ============================================
       - name: Build Installer.exe
         run: |
-          dotnet publish Installer/Installer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:EnableWindowsTargeting=true -o .
+          echo "🔨 Building Installer..."
+          dotnet publish Installer/Installer.csproj -c Release -r win-x64 \
+            --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:EnableCompressionInSingleFile=true \
+            -p:EnableWindowsTargeting=true \
+            -o .
+
+          if [ ! -f "Installer.exe" ]; then
+            echo "::error::Installer.exe build failed"
+            exit 1
+          fi
+
           mv Installer.exe SrP-CFG_Installer.exe
-          echo "EXE_NAME=SrP-CFG_Installer.exe" >> $GITHUB_ENV
+          echo "EXE_PATH=SrP-CFG_Installer.exe" >> $GITHUB_ENV
+          echo "✅ Installer built successfully"
 
-      - name: zip package
+      # ============================================
+      # 打包所有配置
+      # ============================================
+      - name: Build packages
         run: |
-          ZIP_Allcfgs="Allcfgs_${{ github.ref_name }}.zip"
-          PACK_PATHS_Allcfgs=$(grep -v "^#" .github/SrP-pack-paths_allcfgs.txt | grep -v "^$")
-          zip -r $ZIP_Allcfgs $PACK_PATHS_Allcfgs
+          echo "📦 Building packages..."
 
-          ZIP_echo="Allcfgs_echo_${{ github.ref_name }}.zip"
-          PACK_PATHS_echo=$(grep -v "^#" .github/echo/pack-paths_echo.txt | grep -v "^$")
-          Custom_PACK_PATHS_echo=$(grep -v "^#" .github/echo/custom_pack-paths_echo.txt | grep -v "^$")
-          zip -r $ZIP_echo $PACK_PATHS_echo
-          zip -j $ZIP_echo $Custom_PACK_PATHS_echo
+          TAG="${{ github.ref_name }}"
 
-          ZIP_yszh="Allcfgs_yszh_${{ github.ref_name }}.zip"
-          PACK_PATHS_yszh=$(grep -v "^#" .github/yszh/pack-paths_yszh.txt | grep -v "^$")
-          Custom_PACK_PATHS_yszh=$(grep -v "^#" .github/yszh/custom_pack-paths_yszh.txt | grep -v "^$")
-          zip -r $ZIP_yszh $PACK_PATHS_yszh
-          zip -j $ZIP_yszh $Custom_PACK_PATHS_yszh
+          # 读取包配置并打包
+          python3 << 'EOF'
+          import json
+          import subprocess
+          import os
 
-          ZIP_visionl="Allcfgs_visionl_${{ github.ref_name }}.zip"
-          PACK_PATHS_visionl=$(grep -v "^#" .github/visionl/pack-paths_visionl.txt | grep -v "^$")
-          Custom_PACK_PATHS_visionl=$(grep -v "^#" .github/visionl/custom_pack-paths_visionl.txt | grep -v "^$")
-          zip -r $ZIP_visionl $PACK_PATHS_visionl
-          zip -j $ZIP_visionl $Custom_PACK_PATHS_visionl
+          with open('packages.json', 'r', encoding='utf-8') as f:
+              packages = json.load(f)
 
-          echo "ZIP_Allcfgs=$ZIP_Allcfgs" >> $GITHUB_ENV
-          echo "ZIP_echo=$ZIP_echo" >> $GITHUB_ENV
-          echo "ZIP_yszh=$ZIP_yszh" >> $GITHUB_ENV
-          echo "ZIP_visionl=$ZIP_visionl" >> $GITHUB_ENV
+          tag = os.environ.get('GITHUB_REF_NAME', '')
+          zip_files = []
 
-      - name: release notes
+          for pkg in packages:
+              pkg_name = pkg['name']
+              zip_name = pkg['zip_name']
+              files = pkg['files']
+              overrides = pkg['overrides']
+
+              # 构建输出文件名
+              output_zip = f"{zip_name}_{tag}.zip"
+              zip_files.append(output_zip)
+
+              print(f"  📦 Building {pkg_name} -> {output_zip}")
+
+              # 打包基础文件（保留目录结构）
+              if files:
+                  file_list = ' '.join(files)
+                  subprocess.run(f'zip -r {output_zip} {file_list}', shell=True, check=False)
+
+              # 添加覆盖文件（提取到根目录）
+              if overrides:
+                  for override_file in overrides:
+                      if os.path.exists(override_file):
+                          subprocess.run(f'zip -j {output_zip} {override_file}', shell=True, check=False)
+                          print(f"    ✓ Added override: {override_file}")
+                      else:
+                          print(f"    ⚠ Override file not found: {override_file}")
+
+              print(f"  ✅ Created {output_zip}")
+
+          # 保存 zip 文件列表
+          with open('zip_files.txt', 'w') as f:
+              f.write(' '.join(zip_files))
+
+          print(f"\n✅ Built {len(zip_files)} packages")
+          EOF
+
+          # 读取 zip 文件列表到环境变量
+          ZIP_FILES=$(cat zip_files.txt)
+          echo "ZIP_FILES=$ZIP_FILES" >> $GITHUB_ENV
+          echo "✅ All packages built"
+
+      # ============================================
+      # 生成校验和
+      # ============================================
+      - name: Generate checksums
         run: |
-          RELEASE_BODY=$(cat .github/release.md)
-          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
-          echo "$RELEASE_BODY" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "🔐 Generating checksums..."
+          echo "# SHA256 Checksums" > checksums.txt
+          echo "" >> checksums.txt
+          echo "Generated for SrP-CFG_${{ github.ref_name }}" >> checksums.txt
+          echo "" >> checksums.txt
 
+          # 为所有发布文件生成校验和
+          for file in SrP-CFG_Installer.exe ${{ env.ZIP_FILES }}; do
+            if [ -f "$file" ]; then
+              checksum=$(sha256sum "$file" | awk '{print $1}')
+              echo "$checksum  $file" >> checksums.txt
+              echo "  ✓ $file"
+            fi
+          done
+
+          echo "✅ Checksums generated"
+
+      # ============================================
+      # 生成 Release Notes
+      # ============================================
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          echo "📝 Generating release notes..."
+
+          CURRENT_TAG="${{ github.ref_name }}"
+          REPO_OWNER="${{ github.repository_owner }}"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+
+          # 获取上一个标签
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          # 生成 changelog
+          if [ -n "$PREV_TAG" ]; then
+            CHANGELOG="### 🔄 自 $PREV_TAG 以来的变更\n\n"
+            git log --pretty=format="- %s (%h)" ${PREV_TAG}..${CURRENT_TAG} > changelog.txt 2>/dev/null || echo "无提交记录" > changelog.txt
+            CHANGELOG_CONTENT=$(cat changelog.txt)
+          else
+            CHANGELOG="### 🎊 首次发布\n\n感谢使用 SrP-CFG！\n"
+            CHANGELOG_CONTENT="这是项目的首次发布。"
+          fi
+
+          # 生成校验和表格
+          CHECKSUMS_TABLE="\`\`\`\n$(cat checksums.txt)\n\`\`\`"
+
+          # 读取模板并替换变量
+          RELEASE_BODY=$(cat .github/release/template.md)
+          RELEASE_BODY="${RELEASE_BODY//\{\{VERSION\}\}/$CURRENT_TAG}"
+          RELEASE_BODY="${RELEASE_BODY//\{\{REPO_OWNER\}\}/$REPO_OWNER}"
+          RELEASE_BODY="${RELEASE_BODY//\{\{REPO_NAME\}\}/$REPO_NAME}"
+          RELEASE_BODY="${RELEASE_BODY//\{\{CHANGELOG\}\}/$CHANGELOG_CONTENT}"
+          RELEASE_BODY="${RELEASE_BODY//\{\{CHECKSUMS\}\}/$CHECKSUMS_TABLE}"
+
+          # 保存到环境变量
+          {
+            echo 'RELEASE_BODY<<EOF'
+            echo "$RELEASE_BODY"
+            echo 'EOF'
+          } >> $GITHUB_ENV
+
+          echo "✅ Release notes generated"
+
+      # ============================================
+      # 创建 GitHub Release
+      # ============================================
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -68,9 +285,23 @@ jobs:
           name: SrP-CFG_${{ github.ref_name }}
           body: ${{ env.RELEASE_BODY }}
           files: |
-            ${{ env.ZIP_Allcfgs }}
-            ${{ env.ZIP_echo }}
-            ${{ env.ZIP_yszh }}
-            ${{ env.ZIP_visionl }}
-            ${{ env.EXE_NAME }}
+            SrP-CFG_Installer.exe
+            *.zip
+            checksums.txt
           prerelease: false
+          draft: false
+
+      # ============================================
+      # 上传构建产物（用于调试）
+      # ============================================
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-assets-${{ github.ref_name }}
+          path: |
+            SrP-CFG_Installer.exe
+            *.zip
+            checksums.txt
+            packages.json
+          retention-days: 30
