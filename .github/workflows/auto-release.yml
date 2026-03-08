@@ -43,9 +43,16 @@ jobs:
           zip -r $ZIP_yszh $PACK_PATHS_yszh
           zip -j $ZIP_yszh $Custom_PACK_PATHS_yszh
 
+          ZIP_visionl="Allcfgs_visionl_${{ github.ref_name }}.zip"
+          PACK_PATHS_visionl=$(grep -v "^#" .github/visionl/pack-paths_visionl.txt | grep -v "^$")
+          Custom_PACK_PATHS_visionl=$(grep -v "^#" .github/visionl/custom_pack-paths_visionl.txt | grep -v "^$")
+          zip -r $ZIP_visionl $PACK_PATHS_visionl
+          zip -j $ZIP_visionl $Custom_PACK_PATHS_visionl
+
           echo "ZIP_Allcfgs=$ZIP_Allcfgs" >> $GITHUB_ENV
           echo "ZIP_echo=$ZIP_echo" >> $GITHUB_ENV
           echo "ZIP_yszh=$ZIP_yszh" >> $GITHUB_ENV
+          echo "ZIP_visionl=$ZIP_visionl" >> $GITHUB_ENV
 
       - name: release notes
         run: |
@@ -64,5 +71,6 @@ jobs:
             ${{ env.ZIP_Allcfgs }}
             ${{ env.ZIP_echo }}
             ${{ env.ZIP_yszh }}
+            ${{ env.ZIP_visionl }}
             ${{ env.EXE_NAME }}
           prerelease: false
