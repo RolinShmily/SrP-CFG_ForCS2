@@ -8,8 +8,7 @@
 .github/
 ├── packages.yaml              # 包配置（唯一配置文件！）
 ├── release/                   # 发布相关资源
-│   ├── template.md           # Release Notes 模板
-│   └── checksums.md          # 校验和使用说明
+│   └── template.md           # Release Notes 模板
 └── workflows/                 # GitHub Actions 工作流
     ├── auto-release.yml      # 自动发布流程
     └── package-validation.yml # 配置验证
@@ -130,14 +129,6 @@ Release Notes 模板，支持变量替换：
 - `{{REPO_OWNER}}`: 仓库所有者
 - `{{REPO_NAME}}`: 仓库名称
 - `{{CHANGELOG}}`: 自动生成的变更日志
-- `{{CHECKSUMS}}`: SHA256 校验和
-
-### checksums.md
-
-校验和使用说明文档，包含：
-- 什么是校验和
-- 如何验证文件完整性
-- 各平台的验证方法
 
 ## 🔄 迁移说明
 

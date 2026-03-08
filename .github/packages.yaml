@@ -105,4 +105,3 @@ settings:
   # 发布配置
   release:
     installer_name: "SrP-CFG_Installer.exe"
-    checksums_file: "checksums.txt"
