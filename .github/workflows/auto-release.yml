@@ -224,11 +224,47 @@ jobs:
 
           # 生成 changelog
           if [ -n "$PREV_TAG" ]; then
-            CHANGELOG="### 🔄 自 $PREV_TAG 以来的变更\n\n"
-            git log --pretty=format:"- %s" ${PREV_TAG}..${CURRENT_TAG} > changelog.txt 2>/dev/null || echo "无提交记录" > changelog.txt
-            CHANGELOG_CONTENT=$(cat changelog.txt)
+            # 使用 Python 生成格式化的更新日志
+            CHANGELOG_CONTENT=$(python3 << 'EOF'
+import subprocess
+import os
+
+prev_tag = os.environ.get('PREV_TAG', '')
+current_tag = os.environ.get('CURRENT_TAG', '')
+
+# 获取提交信息
+result = subprocess.run(
+    ['git', 'log', f'{prev_tag}..{current_tag}', '--pretty=format:%s|||%b'],
+    capture_output=True,
+    text=True
+)
+
+commits = result.stdout.strip()
+
+if not commits:
+    print("无提交记录")
+else:
+    lines = []
+    for commit in commits.split('\n'):
+        if '|||' in commit:
+            subject, body = commit.split('|||', 1)
+            # 三级标题：commit 主题
+            lines.append(f"### {subject}")
+            # 如果有详细内容，转为无序列表
+            if body.strip():
+                for line in body.strip().split('\n'):
+                    line = line.strip()
+                    if line and not line.startswith('Co-Authored-By'):
+                        # 确保以 '-' 开头
+                        if not line.startswith('-'):
+                            line = f"- {line}"
+                        lines.append(line)
+            lines.append("")  # 空行分隔
+
+    print('\n'.join(lines))
+EOF
+)
           else
-            CHANGELOG="### 🎊 首次发布\n\n感谢使用 SrP-CFG！\n"
             CHANGELOG_CONTENT="这是项目的首次发布。"
           fi
 
