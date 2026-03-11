@@ -225,7 +225,7 @@ jobs:
           # 生成 changelog
           if [ -n "$PREV_TAG" ]; then
             # 使用 Python 脚本生成格式化的更新日志
-            CHANGELOG_CONTENT=$(python3 .github/scripts/generate_changelog.py)
+            CHANGELOG_CONTENT=$(export PREV_TAG="$PREV_TAG" && export CURRENT_TAG="$CURRENT_TAG" && python3 .github/scripts/generate_changelog.py)
           else
             CHANGELOG_CONTENT="这是项目的首次发布。"
           fi
