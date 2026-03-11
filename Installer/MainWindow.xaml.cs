@@ -1,7 +1,11 @@
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Microsoft.Win32;
 using Forms = System.Windows.Forms;
@@ -212,6 +216,36 @@ public partial class MainWindow : Window
         }
     }
 
+    private void DropZoneBorder_Click(object sender, MouseButtonEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "选择要安装的文件",
+            Filter = "支持的文件|*.zip;*.cfg;*.txt|ZIP 文件 (*.zip)|*.zip|CFG 文件 (*.cfg)|*.cfg|TXT 文件 (*.txt)|*.txt|所有文件 (*.*)|*.*",
+            Multiselect = true
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            var files = dialog.FileNames;
+            if (files.Length > 0)
+            {
+                _selectedFiles = files;
+
+                if (files.Length == 1 && files[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                {
+                    SelectedFileTextBlock.Text = $"已选择: {Path.GetFileName(files[0])} (ZIP)";
+                    Log($"[OK] 已选择 ZIP 文件: {files[0]}");
+                }
+                else
+                {
+                    SelectedFileTextBlock.Text = $"已选择: {files.Length} 个文件";
+                    Log($"[OK] 已选择 {files.Length} 个文件");
+                }
+            }
+        }
+    }
+
     private void OpenCfgBackupButton_Click(object sender, RoutedEventArgs e)
     {
         var backupPath = CfgBackupTextBox.Text;
@@ -368,5 +402,52 @@ public partial class MainWindow : Window
             UseShellExecute = true
         });
         e.Handled = true;
+    }
+
+    private void SteamGuideImage_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            // 获取原图的 Source
+            var originalSource = SteamGuideImage.Source;
+            if (originalSource == null)
+            {
+                Log("[!] 无法获取图片源");
+                return;
+            }
+
+            // 创建新窗口显示大图
+            var imageWindow = new Window
+            {
+                Title = "Steam 好友ID 查找指南",
+                Width = 1000,
+                Height = 800,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = this,
+                ResizeMode = ResizeMode.CanResize,
+                Background = new SolidColorBrush(Color.FromRgb(250, 250, 250))
+            };
+
+            var scrollViewer = new ScrollViewer
+            {
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Padding = new Thickness(10)
+            };
+
+            var image = new Image
+            {
+                Source = originalSource,
+                Stretch = Stretch.Uniform
+            };
+
+            scrollViewer.Content = image;
+            imageWindow.Content = scrollViewer;
+            imageWindow.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            Log($"[!] 打开图片失败：{ex.Message}");
+        }
     }
 }

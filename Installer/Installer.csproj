@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\app.ico" />
+    <Resource Include="Resources\navi.png" />
   </ItemGroup>
 
 </Project>
