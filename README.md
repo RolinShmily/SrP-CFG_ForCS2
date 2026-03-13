@@ -27,6 +27,7 @@
 |                         匕首模型切换                          |     `knife.cfg`      |
 |                        电击枪快速切换                         |      `zeus.cfg`      |
 |                       武器自适应视角切换                       |    `autoview.cfg`    |
+|                       饰品预览检视工具模式                    |    `previewmodecfg`    |
 |                           视频设置                            |   `cs2_video.txt`    |
 
 你会需要的链接：
