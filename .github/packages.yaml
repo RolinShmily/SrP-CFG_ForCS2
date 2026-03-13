@@ -26,6 +26,7 @@ packages:
       - "demo_hlae.cfg"
       - "knife.cfg"
       - "practice.cfg"
+      - "previewmode.cfg"
       - "zeus.cfg"
       - "crosshair_library/"
       - "spawn/"
