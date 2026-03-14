@@ -142,9 +142,11 @@ jobs:
             exit 1
           fi
 
-          mv Installer.exe SrP-CFG_Installer.exe
-          echo "EXE_PATH=SrP-CFG_Installer.exe" >> $GITHUB_ENV
-          echo "✅ Installer built successfully"
+          # 添加版本号到文件名
+          TAG="${{ github.ref_name }}"
+          mv Installer.exe SrP-CFG_Installer_${TAG}.exe
+          echo "EXE_PATH=SrP-CFG_Installer_${TAG}.exe" >> $GITHUB_ENV
+          echo "✅ Installer built successfully: SrP-CFG_Installer_${TAG}.exe"
 
       # ============================================
       # 打包所有配置
@@ -341,10 +343,12 @@ jobs:
               if remove_version:
                   version_pattern = settings.get('version_pattern', '_[vV][0-9]+\\.[0-9]+\\.[0-9]+(-[a-zA-Z0-9.]+)?')
                   base_name = os.path.basename(source_file)
-                  final_target = re.sub(version_pattern + '(\\.[^.]+)?$', '', base_name)
-                  if not final_target.endswith('.zip') and not final_target.endswith('.exe'):
-                      ext = os.path.splitext(base_name)[1]
-                      final_target += ext
+                  # 先分离文件名和扩展名
+                  name_without_ext, ext = os.path.splitext(base_name)
+                  # 移除版本号后缀
+                  name_without_ext = re.sub(version_pattern + '$', '', name_without_ext)
+                  # 重新组合
+                  final_target = name_without_ext + ext
 
               print(f"  📦 {display_name}")
               print(f"     Source: {source_file}")
