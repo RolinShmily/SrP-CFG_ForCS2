@@ -260,15 +260,269 @@ jobs:
           draft: false
 
       # ============================================
-      # 上传构建产物（用于调试）
+      # 上传到阿里云 OSS
       # ============================================
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: release-assets-${{ github.ref_name }}
-          path: |
-            SrP-CFG_Installer.exe
-            *.zip
-            packages.json
-          retention-days: 30
+      - name: Upload to Aliyun OSS
+        env:
+          OSS_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          OSS_BUCKET: ${{ secrets.OSS_BUCKET }}
+          OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
+          OSS_PREFIX: ${{ secrets.OSS_PREFIX || '' }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          echo "☁️ Uploading to Aliyun OSS..."
+          echo "  📌 Tag: $TAG"
+
+          # 1. 下载并安装 ossutil
+          wget https://gosspublic.alicdn.com/ossutil/1.7.18/ossutil64 -q
+          chmod +x ossutil64
+          sudo mv ossutil64 /usr/local/bin/ossutil
+
+          # 2. 配置 ossutil
+          ossutil config \
+            -e "$OSS_ENDPOINT" \
+            -i "$OSS_ACCESS_KEY_ID" \
+            -k "$OSS_ACCESS_KEY_SECRET" \
+            -L CH \
+            --loglevel info
+
+          # 3. 读取 OSS 上传配置
+          python3 << 'EOF'
+          import yaml
+          import json
+          import os
+
+          config_file = '.github/oss-upload.yaml'
+
+          with open(config_file, 'r', encoding='utf-8') as f:
+              config = yaml.safe_load(f)
+
+          upload_files = config.get('upload_files', [])
+          settings = config.get('settings', {})
+
+          # 过滤启用的文件
+          enabled_files = [f for f in upload_files if f.get('enabled', True)]
+
+          # 输出为 JSON
+          output = {
+              'files': enabled_files,
+              'settings': settings,
+              'total_count': len(enabled_files)
+          }
+
+          with open('oss_config.json', 'w', encoding='utf-8') as f:
+              json.dump(output, f, ensure_ascii=False, indent=2)
+
+          print(f"✅ Loaded {len(enabled_files)} file configurations")
+          EOF
+
+          # 4. 根据配置执行上传
+          python3 << 'PYEOF'
+          import json
+          import os
+          import subprocess
+          import re
+          import glob
+
+          # 读取配置
+          with open('oss_config.json', 'r', encoding='utf-8') as f:
+              config = json.load(f)
+
+          upload_files = config['files']
+          settings = config['settings']
+          oss_prefix = os.environ.get('OSS_PREFIX', '')
+          oss_bucket = os.environ.get('OSS_BUCKET', '')
+          oss_endpoint = os.environ.get('OSS_ENDPOINT', '')
+          tag = os.environ.get('TAG', '')
+
+          print(f"\n📦 Processing {len(upload_files)} files...\n")
+
+          success_count = 0
+          failed_count = 0
+          results = []
+
+          for file_config in upload_files:
+              display_name = file_config.get('display_name', 'Unknown')
+              source_pattern = file_config.get('source_pattern', '')
+              target_name = file_config.get('target_name', '')
+              remove_version = file_config.get('remove_version', False)
+
+              # 查找匹配的文件
+              matching_files = glob.glob(source_pattern)
+
+              if not matching_files:
+                  print(f"  ⚠️  {display_name}: No files found matching '{source_pattern}'")
+                  results.append({
+                      'display': display_name,
+                      'source': '-',
+                      'target': target_name,
+                      'status': '⚠️ Not Found',
+                      'success': False,
+                      'overwritten': False
+                  })
+                  continue
+
+              # 使用第一个匹配的文件
+              source_file = matching_files[0]
+              final_target = target_name
+
+              # 如果需要删除版本号后缀
+              if remove_version:
+                  version_pattern = settings.get('version_pattern', '_[vV][0-9]+\\.[0-9]+\\.[0-9]+(-[a-zA-Z0-9.]+)?')
+                  # 从源文件中提取版本号并删除
+                  base_name = os.path.basename(source_file)
+                  # 移除版本号后缀
+                  final_target = re.sub(version_pattern + '(\\.[^.]+)?$', '', base_name)
+                  # 确保有扩展名
+                  if not final_target.endswith('.zip') and not final_target.endswith('.exe'):
+                      ext = os.path.splitext(base_name)[1]
+                      final_target += ext
+
+              print(f"  📦 {display_name}")
+              print(f"     Source: {source_file}")
+              print(f"     Target: {final_target}")
+
+              # 复制文件到目标名称
+              subprocess.run(['cp', source_file, final_target], check=True)
+
+              # 上传到 OSS（强制覆盖同名文件）
+              oss_path = f"{oss_prefix}{final_target}"
+              oss_uri = f"oss://{oss_bucket}/{oss_path}"
+
+              # 检查 OSS 上是否已存在该文件
+              check_result = subprocess.run(
+                  ['ossutil', 'ls', oss_uri],
+                  capture_output=True,
+                  text=True
+              )
+
+              file_exists = check_result.returncode == 0 and 'ObjectNum' in check_result.stdout
+
+              if file_exists:
+                  print(f"     🔄 File exists on OSS, overwriting...")
+
+              # 执行上传（使用 -f 强制覆盖，--update 确保最新版本）
+              result = subprocess.run(
+                  ['ossutil', 'cp', final_target, oss_uri, '-f', '--update'],
+                  capture_output=True,
+                  text=True
+              )
+
+              if result.returncode == 0:
+                  if file_exists:
+                      print(f"     ✅ Overwritten: {oss_uri}")
+                  else:
+                      print(f"     ✅ Uploaded to: {oss_uri}")
+
+                  success_count += 1
+
+                  # 生成公共访问链接
+                  if oss_endpoint.startswith('https://'):
+                      public_url = f"{oss_endpoint}/{oss_bucket}/{oss_path}"
+                  else:
+                      public_url = f"https://{oss_bucket}.{oss_endpoint}/{oss_path}"
+
+                  results.append({
+                      'display': display_name,
+                      'source': os.path.basename(source_file),
+                      'target': final_target,
+                      'oss_path': oss_path,
+                      'public_url': public_url,
+                      'status': '✅ Success' if not file_exists else '✅ Overwritten',
+                      'success': True,
+                      'overwritten': file_exists
+                  })
+              else
+                  print(f"     ❌ Upload failed")
+                  print(f"     Error: {result.stderr}")
+                  failed_count += 1
+                  results.append({
+                      'display': display_name,
+                      'source': os.path.basename(source_file),
+                      'target': final_target,
+                      'status': '❌ Failed',
+                      'success': False,
+                      'overwritten': False
+                  })
+
+                  # 根据配置决定是否继续
+                  if settings.get('on_error', 'stop') == 'stop':
+                      print("\n❌ Upload failed, stopping...")
+                      break
+
+              print()
+
+          # 保存结果
+          with open('upload_results.json', 'w', encoding='utf-8') as f:
+              json.dump({
+                  'success': success_count,
+                  'failed': failed_count,
+                  'total': success_count + failed_count,
+                  'results': results
+              }, f, ensure_ascii=False, indent=2)
+
+          print(f"✅ Upload completed: {success_count} success, {failed_count} failed")
+          PYEOF
+
+          # 5. 生成 GitHub Summary
+          python3 << 'PYEOF'
+          import json
+          import os
+
+          with open('upload_results.json', 'r', encoding='utf-8') as f:
+              data = json.load(f)
+
+          tag = os.environ.get('TAG', '')
+
+          summary = []
+          summary.append("## ✅ OSS Upload Result\n")
+          summary.append(f"**Tag:** {tag}  \n")
+          summary.append(f"**Total Files:** {data['total']}  \n")
+          summary.append(f"**✅ Success:** {data['success']}  \n")
+
+          if data['failed'] > 0:
+              summary.append(f"**❌ Failed:** {data['failed']}  \n")
+
+          summary.append("\n### Upload Details\n")
+          summary.append("| File | Source | Target | Status |\n")
+          summary.append("|------|--------|--------|--------|\n")
+
+          for result in data['results']:
+              source = result.get('source', '-')
+              target = result.get('target', '-')
+              status = result.get('status', 'Unknown')
+              overwritten = result.get('overwritten', False)
+
+              if result.get('success', False):
+                  oss_path = result.get('oss_path', '')
+                  public_url = result.get('public_url', '')
+                  source_display = f"`{source}`"
+                  target_display = f"[{target}]({public_url})"
+                  if overwritten:
+                      status_display = "✅ (覆盖)"
+                  else:
+                      status_display = "✅"
+              else:
+                  source_display = f"`{source}`"
+                  target_display = f"`{target}`"
+                  status_display = "❌"
+
+              summary.append(f"| **{result['display']}** | {source_display} | {target_display} | {status_display} |\n")
+
+          # 写入 GitHub Summary
+          with open(os.environ.get('GITHUB_STEP_SUMMARY', '/dev/null'), 'a') as f:
+              f.write(''.join(summary))
+          PYEOF
+
+          # 6. 检查是否全部成功
+          FAILED=$(python3 -c "import json; print(json.load(open('upload_results.json'))['failed'])")
+
+          if [ "$FAILED" -gt 0 ]; then
+            echo ""
+            echo "::error::Some files failed to upload to OSS"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ All files uploaded to OSS successfully"

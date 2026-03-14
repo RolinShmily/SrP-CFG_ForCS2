@@ -1,0 +1,84 @@
+# ============================================
+# SrP-CFG OSS 上传配置
+# ============================================
+#
+# 设计理念：
+# - 使用配置文件管理上传规则，易于扩展
+# - 支持文件重命名和版本号处理
+# - 与 packages.yaml 保持一致的设计风格
+#
+# ============================================
+
+# ============================================
+# 上传文件配置
+# ============================================
+upload_files:
+  # ============================================
+  # 配置包（zip 文件）
+  # ============================================
+  # 说明：
+  # - source_pattern: 源文件匹配模式（支持通配符）
+  # - target_name: 上传到 OSS 的目标名称
+  # - remove_version: 是否自动删除版本号后缀（_vX.Y.Z）
+  # - enabled: 是否启用上传
+  # ============================================
+
+  - display_name: "官方完整版"
+    source_pattern: "Allcfgs_*.zip"
+    target_name: "Allcfgs.zip"
+    remove_version: true
+    enabled: true
+
+  - display_name: "Echo 定制版"
+    source_pattern: "Allcfgs_echo_*.zip"
+    target_name: "Allcfgs_echo.zip"
+    remove_version: true
+    enabled: true
+
+  - display_name: "yszh 定制版"
+    source_pattern: "Allcfgs_yszh_*.zip"
+    target_name: "Allcfgs_yszh.zip"
+    remove_version: true
+    enabled: true
+
+  - display_name: "visionl 定制版"
+    source_pattern: "Allcfgs_visionl_*.zip"
+    target_name: "Allcfgs_visionl.zip"
+    remove_version: true
+    enabled: true
+
+  # ============================================
+  # 安装器
+  # ============================================
+  - display_name: "安装器"
+    source_pattern: "SrP-CFG_Installer.exe"
+    target_name: "SrP-CFG_Installer.exe"
+    remove_version: false
+    enabled: true
+
+  # ============================================
+  # 未来扩展示例
+  # ============================================
+  # 添加新文件时，复制以下模板并修改：
+  #
+  # - display_name: "新文件"
+  #   source_pattern: "filename_*.zip"
+  #   target_name: "filename.zip"
+  #   remove_version: true
+  #   enabled: true
+  # ============================================
+
+# ============================================
+# 全局配置
+# ============================================
+settings:
+  # OSS 路径前缀（会被 GitHub Secrets 中的 OSS_PREFIX 覆盖）
+  # default_prefix: "cfgs/"
+
+  # 版本号匹配正则表达式（用于删除版本号后缀）
+  version_pattern: "_[vV][0-9]+\\.[0-9]+\\.[0-9]+(-[a-zA-Z0-9.]+)?"
+
+  # 上传失败时的行为
+  # - continue: 继续上传其他文件
+  # - stop: 停止上传并返回错误
+  on_error: "stop"
