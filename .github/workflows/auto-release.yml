@@ -284,8 +284,7 @@ jobs:
             -e "$OSS_ENDPOINT" \
             -i "$OSS_ACCESS_KEY_ID" \
             -k "$OSS_ACCESS_KEY_SECRET" \
-            -L CH \
-            --loglevel info
+            -L CH
 
           # 3. 读取 OSS 上传配置
           python3 << 'EOF'
