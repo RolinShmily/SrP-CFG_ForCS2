@@ -256,7 +256,7 @@ jobs:
           name: SrP-CFG_${{ github.ref_name }}
           body: ${{ env.RELEASE_BODY }}
           files: |
-            SrP-CFG_Installer.exe
+            SrP-CFG_Installer_*.exe
             *.zip
           prerelease: false
           draft: false
