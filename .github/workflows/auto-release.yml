@@ -283,7 +283,7 @@ jobs:
           ossutil config -e "$OSS_ENDPOINT" -i "$OSS_ACCESS_KEY_ID" -k "$OSS_ACCESS_KEY_SECRET" -L CH
 
           # 3. 执行上传脚本
-          python3 /usr/bin/python3 << 'ENDOFSCRIPT'
+          python3 << 'ENDOFSCRIPT'
           import yaml
           import json
           import os
