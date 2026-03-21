@@ -330,6 +330,11 @@ jobs:
               # 查找匹配的文件
               matching_files = glob.glob(source_pattern)
 
+              # 按修改时间排序，选择最新的文件
+              if matching_files:
+                  matching_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+                  print(f"     DEBUG: Found {len(matching_files)} matching files, using newest: {matching_files[0]}")
+
               if not matching_files:
                   print(f"  ⚠️  {display_name}: No files found matching '{source_pattern}'")
                   results.append({
