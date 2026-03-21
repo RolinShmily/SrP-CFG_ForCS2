@@ -195,6 +195,11 @@ jobs:
                       else:
                           print(f"    ⚠ Override file not found: {override_file}")
 
+              # 添加版本更新说明
+              if os.path.exists('版本更新说明.md'):
+                  subprocess.run(f'zip -j {output_zip} 版本更新说明.md', shell=True, check=False)
+                  print(f"    ✓ Added: 版本更新说明.md")
+
               print(f"  ✅ Created {output_zip}")
 
           # 保存 zip 文件列表
@@ -244,6 +249,8 @@ jobs:
             echo 'EOF'
           } >> $GITHUB_ENV
 
+          # 保存为版本更新说明.md（供打包使用）
+          echo "$RELEASE_BODY" > "版本更新说明.md"
           echo "✅ Release notes generated"
 
       # ============================================

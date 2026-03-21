@@ -32,9 +32,9 @@
 
 你会需要的链接：
 
-- [项目说明书](https://doc.srprolin.top/posts/SrP-CFG_CS2/srpcfg-1.html) | 本项目的一些废话
-- [下载地址](https://doc.srprolin.top/posts/SrP-CFG_CS2/srpcfg-2.html) | 顾名思义
-- [关于CFG你要了解的二三事](https://blog.srprolin.top/posts/srp-cfg/) | 个人博客页
+- [项目说明书](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html) 
+- [下载地址](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html) 
+- [关于CFG你要了解的二三事](https://blog.srprolin.top/posts/srp-cfg/) 
 
 ## Installer 安装器
 

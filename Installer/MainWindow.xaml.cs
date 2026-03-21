@@ -33,6 +33,18 @@ public partial class MainWindow : Window
         RefreshAllPaths();
     }
 
+    private void SteamGuideExpander_Expanded(object sender, RoutedEventArgs e)
+    {
+        // Expander展开时，窗口会自动根据SizeToContent="Height"调整高度
+        // 不需要额外处理
+    }
+
+    private void SteamGuideExpander_Collapsed(object sender, RoutedEventArgs e)
+    {
+        // Expander折叠时，窗口会自动根据SizeToContent="Height"调整高度
+        // 不需要额外处理
+    }
+
     private void RefreshAllPaths()
     {
         // 检测 Steam 路径
