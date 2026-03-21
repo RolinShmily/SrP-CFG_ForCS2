@@ -19,40 +19,78 @@ def generate_changelog(prev_tag: str, current_tag: str) -> str:
     Returns:
         格式化的更新日志字符串
     """
-    # 获取提交信息
+    # 获取完整的提交信息（包括每个commit的所有行）
     result = subprocess.run(
-        ['git', 'log', f'{prev_tag}..{current_tag}', '--pretty=format:%s|||%b'],
+        ['git', 'log', f'{prev_tag}..{current_tag}', '--pretty=fuller'],
         capture_output=True,
-        text=True
+        text=True,
+        encoding='utf-8',
+        errors='replace'
     )
 
-    commits = result.stdout.strip()
+    commits_raw = result.stdout.strip()
 
-    if not commits:
+    if not commits_raw:
         return "无提交记录"
 
+    # 更简单的方式：直接解析每个commit
+    # 按 "commit <hash>" 分割
+    import re
+
     lines = []
-    for commit in commits.split('\n'):
-        if '|||' in commit:
-            subject, body = commit.split('|||', 1)
-            # 三级标题：commit 主题
-            lines.append(f"### {subject}")
 
-            # 如果有详细内容，转为无序列表
-            if body.strip():
-                for line in body.strip().split('\n'):
-                    line = line.strip()
-                    # 过滤掉协作者信息和空行
-                    if line and not line.startswith('Co-Authored-By'):
-                        # 确保以 '-' 开头
-                        if not line.startswith('-'):
-                            line = f"- {line}"
-                        lines.append(line)
+    # 使用 findall 找到所有 commit 内容
+    pattern = r'commit ([a-f0-9]{40,})\n(.*?)(?=\ncommit [a-f0-9]{40,}|\Z)'
+    matches = re.findall(pattern, commits_raw, re.DOTALL)
 
-            # 空行分隔
-            lines.append("")
+    for commit_hash, content in matches:
+        lines.append("")
+        process_single_commit(commit_hash, content, lines)
+
+    if not lines:
+        return "无提交记录"
 
     return '\n'.join(lines)
+
+
+def process_single_commit(commit_hash: str, block_content: str, lines: list):
+    """处理单个commit的内容"""
+    block_lines = block_content.strip().split('\n')
+    message_lines = []
+
+    for line in block_lines:
+        line_stripped = line.strip()
+
+        if line_stripped.startswith('Author:') or line_stripped.startswith('AuthorDate:'):
+            continue
+        elif line_stripped.startswith('Commit:') or line_stripped.startswith('CommitDate:'):
+            continue
+        elif line_stripped:
+            # 这应该是commit message
+            message_lines.append(line_stripped)
+
+    # 输出commit信息
+    if message_lines:
+        subject = message_lines[0]
+        body = '\n'.join(message_lines[1:]) if len(message_lines) > 1 else ""
+
+        # 使用commit hash作为引用
+        short_hash = commit_hash[:7] if commit_hash else ""
+
+        # 格式化为三级标题，更清晰
+        lines.append(f"### {subject}")
+        lines.append(f"> `{short_hash}`")
+
+        # 如果有详细内容，完整展示
+        if body.strip():
+            # 将body的每行作为列表项展示
+            for bline in body.strip().split('\n'):
+                bline = bline.strip()
+                if bline and not bline.startswith('Co-Authored-By'):
+                    # 确保以列表格式展示
+                    if not bline.startswith('-') and not bline.startswith('*'):
+                        bline = f"- {bline}"
+                    lines.append(bline)
 
 
 def main():
