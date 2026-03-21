@@ -6,5 +6,6 @@ Installer/Installer.exe
 Installer/Installer.pdb
 CLAUDE.md
 .claude
+.spec-workflow/
 
 *.sln
