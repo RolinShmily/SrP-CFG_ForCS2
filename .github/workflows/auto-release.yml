@@ -149,6 +149,45 @@ jobs:
           echo "✅ Installer built successfully: SrP-CFG_Installer_${TAG}.exe"
 
       # ============================================
+      # 生成 Release Notes（必须在打包之前生成，以便打包进zip）
+      # ============================================
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          echo "📝 Generating release notes..."
+
+          CURRENT_TAG="${{ github.ref_name }}"
+          REPO_OWNER="${{ github.repository_owner }}"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+
+          # 获取上一个标签
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          # 生成 changelog
+          if [ -n "$PREV_TAG" ]; then
+            # 使用 Python 脚本生成格式化的更新日志
+            CHANGELOG_CONTENT=$(export PREV_TAG="$PREV_TAG" && export CURRENT_TAG="$CURRENT_TAG" && python3 .github/scripts/generate_changelog.py)
+          else
+            CHANGELOG_CONTENT="这是项目的首次发布。"
+          fi
+
+          # 读取模板并替换变量
+          RELEASE_BODY=$(cat .github/release/template.md)
+          RELEASE_BODY="${RELEASE_BODY//\{\{VERSION\}\}/$CURRENT_TAG}"
+          RELEASE_BODY="${RELEASE_BODY//\{\{CHANGELOG\}\}/$CHANGELOG_CONTENT}"
+
+          # 保存到环境变量
+          {
+            echo 'RELEASE_BODY<<EOF'
+            echo "$RELEASE_BODY"
+            echo 'EOF'
+          } >> $GITHUB_ENV
+
+          # 保存为版本更新说明.md（供打包使用）
+          echo "$RELEASE_BODY" > "版本更新说明.md"
+          echo "✅ Release notes generated"
+
+      # ============================================
       # 打包所有配置
       # ============================================
       - name: Build packages
@@ -213,45 +252,6 @@ jobs:
           ZIP_FILES=$(cat zip_files.txt)
           echo "ZIP_FILES=$ZIP_FILES" >> $GITHUB_ENV
           echo "✅ All packages built"
-
-      # ============================================
-      # 生成 Release Notes
-      # ============================================
-      - name: Generate Release Notes
-        id: release_notes
-        run: |
-          echo "📝 Generating release notes..."
-
-          CURRENT_TAG="${{ github.ref_name }}"
-          REPO_OWNER="${{ github.repository_owner }}"
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-
-          # 获取上一个标签
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-
-          # 生成 changelog
-          if [ -n "$PREV_TAG" ]; then
-            # 使用 Python 脚本生成格式化的更新日志
-            CHANGELOG_CONTENT=$(export PREV_TAG="$PREV_TAG" && export CURRENT_TAG="$CURRENT_TAG" && python3 .github/scripts/generate_changelog.py)
-          else
-            CHANGELOG_CONTENT="这是项目的首次发布。"
-          fi
-
-          # 读取模板并替换变量
-          RELEASE_BODY=$(cat .github/release/template.md)
-          RELEASE_BODY="${RELEASE_BODY//\{\{VERSION\}\}/$CURRENT_TAG}"
-          RELEASE_BODY="${RELEASE_BODY//\{\{CHANGELOG\}\}/$CHANGELOG_CONTENT}"
-
-          # 保存到环境变量
-          {
-            echo 'RELEASE_BODY<<EOF'
-            echo "$RELEASE_BODY"
-            echo 'EOF'
-          } >> $GITHUB_ENV
-
-          # 保存为版本更新说明.md（供打包使用）
-          echo "$RELEASE_BODY" > "版本更新说明.md"
-          echo "✅ Release notes generated"
 
       # ============================================
       # 创建 GitHub Release
