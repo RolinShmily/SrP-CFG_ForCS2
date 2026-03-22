@@ -2099,3 +2099,4 @@
 		MasterNodeId = "9cc6b757-89d7-42ea-b109-b4ece161137c"
 		DistanceThreshold = 80.0
 	}
+}
