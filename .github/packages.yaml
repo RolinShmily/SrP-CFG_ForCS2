@@ -27,9 +27,11 @@ packages:
       - "knife.cfg"
       - "practice.cfg"
       - "previewmode.cfg"
+      - "guidemake.cfg"
       - "zeus.cfg"
       - "crosshair_library/"
       - "spawn/"
+      - "annotations/"  # 包含地图指南相关文件夹
     overrides: []  # 无替换文件
 
   # ============================================
@@ -99,9 +101,12 @@ settings:
     - "demo_hlae.cfg"
     - "knife.cfg"
     - "practice.cfg"
+    - "previewmode.cfg"
+    - "guidemake.cfg"
     - "zeus.cfg"
     - "crosshair_library/"
     - "spawn/"
+    - "annotations/"  # 包含地图指南相关文件夹
 
   # 发布配置
   release:
