@@ -181,7 +181,10 @@ public class InstallerService : INotifyPropertyChanged
                 catch (Exception ex)
                 {
                     Log($"[!] 无法创建地图指南目录：{ex.Message}");
-                    Log("[!] 请手动创建目录或启动一次游戏后再试");
+                    Log("[!] 请手动创建以下文件夹结构：");
+                    Log("    [盘符]:\\...\\Counter-Strike Global Offensive\\game\\csgo\\annotations\\local");
+                    Log("  （具体路径请根据您的 Steam 库位置调整）");
+                    Log("  提示：软件没有权限自动创建此目录，需要您手动创建后重试");
                     return null;
                 }
             }
@@ -256,7 +259,10 @@ public class InstallerService : INotifyPropertyChanged
         {
             if (!silent)
                 Log($"[!] 无法创建用户CFG目录：{ex.Message}");
-            Log("[!] 请手动创建目录或启动一次游戏后再试");
+            Log("[!] 请手动创建以下文件夹结构：");
+            Log("    [盘符]:\\...\\userdata\\123456789\\730\\local\\cfg");
+            Log("  （具体路径请根据您的 Steam 路径和账户ID调整）");
+            Log("  提示：软件没有权限自动创建此目录，需要您手动创建后重试");
             return null;
         }
     }
