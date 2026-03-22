@@ -29,6 +29,7 @@
 |                       武器自适应视角切换                       |    `autoview.cfg`    |
 |                       饰品预览检视工具模式                    |    `previewmode.cfg`    |
 |                       地图指南制作模式                        |    `guidemake.cfg`    |
+|                       各大地图指南预设                        | `annotations/dust2`等  |
 |                           视频设置                            |   `cs2_video.txt`    |
 
 你会需要的链接：
@@ -41,7 +42,7 @@
 
 ![SrP-Installer](https://blog.srprolin.top/_astro/2026-01-12-14-18.B_NaQ9kB_Z2ns26w.webp)
 
-在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目下载地址](https://doc.srprolin.top/posts/SrP-CFG_CS2/srpcfg-2.html)中均发布了便携版，无须任何依赖，一键启用。
+在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目下载地址](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html)中均发布了便携版，无须任何依赖，一键启用。
 
 WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/TXT 文件即可安装本预设。
 
