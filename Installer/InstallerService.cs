@@ -15,10 +15,12 @@ public class InstallerService : INotifyPropertyChanged
     public event Action<string?>? OnCs2CfgPathDetected;
     public event Action<string?>? OnSteamUserIdDetected;
     public event Action<string?>? OnVideoCfgPathDetected;
+    public event Action<string?>? OnAnnotationsPathDetected;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private string? _cs2CfgPath;
     private string? _videoCfgPath;
+    private string? _annotationsPath;
 
     public string? SteamPath { get; private set; }
     public string? SteamUserId { get; private set; }
@@ -51,8 +53,23 @@ public class InstallerService : INotifyPropertyChanged
         }
     }
 
+    public string? AnnotationsPath
+    {
+        get => _annotationsPath;
+        set
+        {
+            if (_annotationsPath != value)
+            {
+                _annotationsPath = value;
+                OnPropertyChanged(nameof(AnnotationsPath));
+                OnPropertyChanged(nameof(AnnotationsBackupPath));
+            }
+        }
+    }
+
     public string? CfgBackupPath => Cs2CfgPath != null ? Path.Combine(Directory.GetParent(Cs2CfgPath)!.FullName, "cfg_backup.zip") : null;
     public string? VideoBackupPath => VideoCfgPath != null ? Path.Combine(Directory.GetParent(VideoCfgPath)!.FullName, "user_cfg_backup.zip") : null;
+    public string? AnnotationsBackupPath => AnnotationsPath != null ? Path.Combine(Directory.GetParent(AnnotationsPath)!.FullName, "annotations_backup.zip") : null;
 
     public string? DetectSteamPath()
     {
@@ -122,6 +139,58 @@ public class InstallerService : INotifyPropertyChanged
         return null;
     }
 
+    public string? DetectAnnotationsPath(string steamRoot)
+    {
+        if (!Directory.Exists(steamRoot)) return null;
+
+        string libraryVdf = Path.Combine(steamRoot, "steamapps", "libraryfolders.vdf");
+        if (!File.Exists(libraryVdf)) return null;
+
+        string content = File.ReadAllText(libraryVdf);
+        var matches = Regex.Matches(content, "\"path\"\\s*\"([^\"]+)\"");
+
+        foreach (Match m in matches)
+        {
+            string library = m.Groups[1].Value.Replace("\\\\", "\\");
+            string cs2 = Path.Combine(library, "steamapps", "common", "Counter-Strike Global Offensive");
+            string annotations = Path.Combine(cs2, "game", "csgo", "annotations", "local");
+
+            // 检查 csgo 目录是否存在
+            string csgoDir = Path.GetDirectoryName(annotations);
+            if (csgoDir != null && Directory.Exists(csgoDir))
+            {
+                // 目录存在，直接返回
+                if (Directory.Exists(annotations))
+                {
+                    AnnotationsPath = annotations;
+                    OnAnnotationsPathDetected?.Invoke(annotations);
+                    Log($"[OK] 地图指南 路径：{annotations}");
+                    return annotations;
+                }
+
+                // 目录不存在，尝试创建
+                try
+                {
+                    Directory.CreateDirectory(annotations);
+                    AnnotationsPath = annotations;
+                    OnAnnotationsPathDetected?.Invoke(annotations);
+                    Log($"[OK] 地图指南 路径（已自动创建）：{annotations}");
+                    Log("[!] 提示：首次创建可能需要启动一次游戏");
+                    return annotations;
+                }
+                catch (Exception ex)
+                {
+                    Log($"[!] 无法创建地图指南目录：{ex.Message}");
+                    Log("[!] 请手动创建目录或启动一次游戏后再试");
+                    return null;
+                }
+            }
+        }
+
+        Log("[!] 未找到 CS2 游戏目录");
+        return null;
+    }
+
     public string[] GetAvailableSteamUsers(string steamRoot)
     {
         string userData = Path.Combine(steamRoot, "userdata");
@@ -164,6 +233,7 @@ public class InstallerService : INotifyPropertyChanged
     public string? DetectVideoCfgPath(string steamRoot, string userId, bool silent = false)
     {
         string videoCfgPath = Path.Combine(steamRoot, "userdata", userId, "730", "local", "cfg");
+
         if (Directory.Exists(videoCfgPath))
         {
             if (!silent)
@@ -171,9 +241,24 @@ public class InstallerService : INotifyPropertyChanged
             return videoCfgPath;
         }
 
-        if (!silent)
-            Log("[!] 未找到用户CFG(视频预设)路径");
-        return null;
+        // 目录不存在，尝试创建
+        try
+        {
+            Directory.CreateDirectory(videoCfgPath);
+            if (!silent)
+            {
+                Log($"[OK] 用户CFG(视频预设)路径（已自动创建）：{videoCfgPath}");
+                Log("[!] 提示：首次创建可能需要启动一次游戏");
+            }
+            return videoCfgPath;
+        }
+        catch (Exception ex)
+        {
+            if (!silent)
+                Log($"[!] 无法创建用户CFG目录：{ex.Message}");
+            Log("[!] 请手动创建目录或启动一次游戏后再试");
+            return null;
+        }
     }
 
     public string CreateCfgBackup(string cfgDir)
@@ -210,7 +295,24 @@ public class InstallerService : INotifyPropertyChanged
         return backupPath;
     }
 
-    public void InstallFromZip(string zipPath, bool installCfg, bool installVideo)
+    public string CreateAnnotationsBackup(string annotationsDir)
+    {
+        if (!Directory.Exists(annotationsDir))
+            throw new DirectoryNotFoundException("地图指南目录不存在。");
+
+        string parent = Directory.GetParent(annotationsDir)!.FullName;
+        string backupPath = Path.Combine(parent, "annotations_backup.zip");
+
+        if (File.Exists(backupPath))
+            File.Delete(backupPath);
+
+        Log("[~] 正在备份地图指南文件...");
+        ZipFile.CreateFromDirectory(annotationsDir, backupPath, CompressionLevel.Optimal, false);
+
+        return backupPath;
+    }
+
+    public void InstallFromZip(string zipPath, bool installCfg, bool installVideo, bool installAnnotations)
     {
         Log($"[~] 开始安装：{Path.GetFileName(zipPath)}");
 
@@ -237,17 +339,31 @@ public class InstallerService : INotifyPropertyChanged
                 }
             }
 
-            // 安装视频配置
+            // 安装视频配置 - 仅识别 cs2_video.txt
             if (installVideo && VideoCfgPath != null)
             {
-                int txtCount = CopyTxtFiles(tempDir, VideoCfgPath);
+                int txtCount = CopyVideoTxtFile(tempDir, VideoCfgPath);
                 if (txtCount > 0)
                 {
-                    Log($"[OK] 用户CFG(视频预设)复制完成！（已复制 {txtCount} 个 .txt 文件）");
+                    Log($"[OK] 用户CFG(视频预设)复制完成！（已复制 {txtCount} 个文件）");
                 }
                 else
                 {
-                    Log("[!] 未找到用户CFG(视频预设)文件。");
+                    Log("[!] 未找到 cs2_video.txt 文件。");
+                }
+            }
+
+            // 安装 annotations 目录
+            if (installAnnotations && AnnotationsPath != null)
+            {
+                int annotationsCount = CopyAnnotationsFiles(tempDir, AnnotationsPath);
+                if (annotationsCount > 0)
+                {
+                    Log($"[OK] 地图指南复制完成！（已复制 {annotationsCount} 个文件）");
+                }
+                else
+                {
+                    Log("[!] 未找到地图指南文件。");
                 }
             }
         }
@@ -260,12 +376,13 @@ public class InstallerService : INotifyPropertyChanged
         Log("[OK] 安装完成！");
     }
 
-    public void InstallFromFiles(string[] files, bool installCfg, bool installVideo)
+    public void InstallFromFiles(string[] files, bool installCfg, bool installVideo, bool installAnnotations)
     {
         Log($"[~] 开始安装 {files.Length} 个文件...");
 
         int cfgCount = 0;
         int txtCount = 0;
+        int annotationsCount = 0;
         var skippedFiles = 0;
         var failedFiles = new List<string>();
 
@@ -293,8 +410,8 @@ public class InstallerService : INotifyPropertyChanged
                     }
                 }
             }
-            // .txt 文件
-            else if (installVideo && fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+            // cs2_video.txt 文件 - 仅识别该特定文件
+            else if (installVideo && fileName.Equals("cs2_video.txt", StringComparison.OrdinalIgnoreCase))
             {
                 if (VideoCfgPath != null)
                 {
@@ -310,6 +427,32 @@ public class InstallerService : INotifyPropertyChanged
                     }
                 }
             }
+            // annotations 目录文件（从 ZIP 解压后的临时目录复制）
+            else if (installAnnotations && AnnotationsPath != null)
+            {
+                // 检查是否是 annotations 子目录中的文件
+                string? annotationsDir = FindAnnotationsDirInFile(file);
+                if (annotationsDir != null)
+                {
+                    try
+                    {
+                        string relative = Path.GetRelativePath(annotationsDir, file);
+                        string targetDir = Path.Combine(AnnotationsPath, Path.GetDirectoryName(relative) ?? "");
+                        Directory.CreateDirectory(targetDir);
+                        string target = Path.Combine(targetDir, Path.GetFileName(file));
+                        File.Copy(file, target, true);
+                        annotationsCount++;
+                    }
+                    catch (Exception ex)
+                    {
+                        failedFiles.Add($"地图指南：{fileName} ({ex.Message})");
+                    }
+                }
+                else
+                {
+                    skippedFiles++;
+                }
+            }
             else
             {
                 skippedFiles++;
@@ -320,9 +463,11 @@ public class InstallerService : INotifyPropertyChanged
         if (cfgCount > 0)
             Log($"  [OK] 已复制 {cfgCount} 个 CFG 文件");
         if (txtCount > 0)
-            Log($"  [OK] 已复制 {txtCount} 个视频预设文件");
+            Log($"  [OK] 已复制 {txtCount} 个 cs2_video.txt 文件");
+        if (annotationsCount > 0)
+            Log($"  [OK] 已复制 {annotationsCount} 个地图指南文件");
         if (skippedFiles > 0)
-            Log($"  [~] 跳过 {skippedFiles} 个非 CFG/TXT 文件");
+            Log($"  [~] 跳过 {skippedFiles} 个非目标文件");
 
         // 输出失败信息
         if (failedFiles.Count > 0)
@@ -334,6 +479,19 @@ public class InstallerService : INotifyPropertyChanged
         }
 
         Log("[OK] 文件复制完成！");
+    }
+
+    private string? FindAnnotationsDirInFile(string file)
+    {
+        // 检查文件是否在 annotations 子目录中
+        string dir = Path.GetDirectoryName(file) ?? "";
+        if (dir.Contains("annotations"))
+        {
+            // 找到 annotations 目录
+            int idx = dir.IndexOf("annotations", StringComparison.OrdinalIgnoreCase);
+            return dir.Substring(0, idx + "annotations".Length);
+        }
+        return null;
     }
 
     private int CopyCfgFiles(string src, string dst)
@@ -395,6 +553,76 @@ public class InstallerService : INotifyPropertyChanged
         }
 
         // 批量输出失败信息，减少日志冗余
+        if (failedFiles.Count > 0)
+        {
+            foreach (var failed in failedFiles)
+            {
+                Log($"  [!] 复制失败：{failed}");
+            }
+        }
+
+        return copiedCount;
+    }
+
+    private int CopyVideoTxtFile(string src, string dst)
+    {
+        // 仅复制 cs2_video.txt 文件
+        string srcFile = Path.Combine(src, "cs2_video.txt");
+        if (!File.Exists(srcFile))
+            return 0;
+
+        try
+        {
+            string target = Path.Combine(dst, "cs2_video.txt");
+            File.Copy(srcFile, target, true);
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            Log($"  [!] 复制失败：cs2_video.txt ({ex.Message})");
+            return 0;
+        }
+    }
+
+    private int CopyAnnotationsFiles(string src, string annotationsPath)
+    {
+        // annotationsPath 已经是 csgo/annotations/local
+        int copiedCount = 0;
+        var failedFiles = new List<string>();
+
+        // 确保目标目录存在
+        Directory.CreateDirectory(annotationsPath);
+
+        // 检查是否存在 annotations 子目录
+        string annotationsSrc = Path.Combine(src, "annotations");
+        if (!Directory.Exists(annotationsSrc))
+            return 0;
+
+        // 复制 annotations 下的所有子目录和文件（不带 annotations 父文件夹）
+        foreach (string dir in Directory.GetDirectories(annotationsSrc))
+        {
+            string dirName = Path.GetFileName(dir);
+            string targetDir = Path.Combine(annotationsPath, dirName);
+            Directory.CreateDirectory(targetDir);
+
+            foreach (string file in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
+            {
+                string relative = Path.GetRelativePath(dir, file);
+                string target = Path.Combine(targetDir, relative);
+
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                    File.Copy(file, target, true);
+                    copiedCount++;
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"{dirName}/{relative} ({ex.Message})");
+                }
+            }
+        }
+
         if (failedFiles.Count > 0)
         {
             foreach (var failed in failedFiles)

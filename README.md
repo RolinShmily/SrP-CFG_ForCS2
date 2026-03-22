@@ -27,7 +27,8 @@
 |                         匕首模型切换                          |     `knife.cfg`      |
 |                        电击枪快速切换                         |      `zeus.cfg`      |
 |                       武器自适应视角切换                       |    `autoview.cfg`    |
-|                       饰品预览检视工具模式                    |    `previewmodecfg`    |
+|                       饰品预览检视工具模式                    |    `previewmode.cfg`    |
+|                       地图指南制作模式                        |    `guidemake.cfg`    |
 |                           视频设置                            |   `cs2_video.txt`    |
 
 你会需要的链接：
@@ -45,12 +46,16 @@
 WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/TXT 文件即可安装本预设。
 
 ### ✏️ 功能说明 (Features)
-- 自动检测 Steam 路径和游戏全局 CFG 路径
+- 自动检测 Steam 路径、游戏全局 CFG 路径和地图指南路径
 - 自动检测 Steam 用户并支持手动选择
 - 自动备份全局 CFG 文件夹为 `cfg_backup.zip`
 - 自动备份用户视频预设文件为 `user_cfg_backup.zip`
-- 支持安装全局 CFG 文件和用户视频预设文件（可单独选择）
-- 拖入 `zip`、`cfg` 单文件、`txt` 单文件或文件夹自动检测并安装
+- 自动备份地图指南文件为 `annotations_backup.zip`（新增）
+- 支持安装全局 CFG 文件（可单独选择）
+- 支持安装用户视频预设文件（仅识别 `cs2_video.txt`，可单独选择）
+- 支持安装地图指南预设文件（复制 annotations 子目录到 `csgo/annotations/local/`，可单独选择）
+- 目标目录不存在时自动创建（需游戏至少运行过一次）
+- 拖入 `zip`、`cfg` 单文件或文件夹自动检测并安装
 - 实时日志输出，清晰的安装进度反馈
 - 一键打开备份文件位置，直接定位到备份文件
 ### 📦 运行环境（Runtime Requirements）

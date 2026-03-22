@@ -57,6 +57,10 @@ public partial class MainWindow : Window
             Log("[~] 正在检测 全局CFG 路径...");
             _installer.DetectCS2CfgPath(_installer.SteamPath);
 
+            // 检测 Annotations 路径
+            Log("[~] 正在检测 地图指南 路径...");
+            _installer.DetectAnnotationsPath(_installer.SteamPath);
+
             // 加载 Steam 用户列表
             RefreshSteamUsers();
 
@@ -136,6 +140,20 @@ public partial class MainWindow : Window
         }
     }
 
+    private void SelectAnnotationsFolderButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Forms.FolderBrowserDialog();
+        dialog.Description = "选择地图指南目录";
+        dialog.ShowNewFolderButton = false;
+
+        if (dialog.ShowDialog() == Forms.DialogResult.OK)
+        {
+            string selectedPath = dialog.SelectedPath;
+            _installer.AnnotationsPath = selectedPath;
+            Log($"[OK] 已设置地图指南路径：{selectedPath}");
+        }
+    }
+
     private void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
         Log("[~] === 刷新路径 ===");
@@ -170,6 +188,17 @@ public partial class MainWindow : Window
             else
             {
                 Log("[!] 未设置用户CFG(视频预设)路径，跳过用户CFG(视频预设)备份");
+            }
+
+            if (_installer.AnnotationsPath != null)
+            {
+                string annotationsBackupPath = _installer.CreateAnnotationsBackup(_installer.AnnotationsPath);
+                AnnotationsBackupTextBox.Text = annotationsBackupPath;
+                Log($"[OK] 地图指南备份已创建: {annotationsBackupPath}");
+            }
+            else
+            {
+                Log("[!] 未设置地图指南路径，跳过地图指南备份");
             }
 
             Log("[OK] 手动备份完成！");
@@ -290,6 +319,22 @@ public partial class MainWindow : Window
         System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{backupPath}\"");
     }
 
+    private void OpenAnnotationsBackupButton_Click(object sender, RoutedEventArgs e)
+    {
+        var backupPath = AnnotationsBackupTextBox.Text;
+        if (string.IsNullOrEmpty(backupPath) || backupPath == "安装前将自动备份")
+        {
+            LogError("目标文件无法选中，请预先备份或安装");
+            return;
+        }
+        if (!File.Exists(backupPath))
+        {
+            LogError("目标文件无法选中，请预先备份或安装");
+            return;
+        }
+        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{backupPath}\"");
+    }
+
     private async void InstallButton_Click(object sender, RoutedEventArgs e)
     {
         if (_selectedFiles == null || _selectedFiles.Length == 0)
@@ -300,8 +345,9 @@ public partial class MainWindow : Window
 
         bool installCfg = InstallCfgCheckBox.IsChecked == true;
         bool installVideo = InstallVideoCheckBox.IsChecked == true;
+        bool installAnnotations = InstallAnnotationsCheckBox.IsChecked == true;
 
-        if (!installCfg && !installVideo)
+        if (!installCfg && !installVideo && !installAnnotations)
         {
             Log("[!] 请至少选择一项安装选项。");
             return;
@@ -316,6 +362,12 @@ public partial class MainWindow : Window
         if (installVideo && _installer.VideoCfgPath == null)
         {
             Log("[!] 未检测到用户CFG(视频预设)路径，无法安装用户CFG(视频预设)。请选择正确的 Steam 用户。");
+            return;
+        }
+
+        if (installAnnotations && _installer.AnnotationsPath == null)
+        {
+            Log("[!] 未检测到地图指南路径，无法安装地图指南。请先刷新路径检测。");
             return;
         }
 
@@ -337,6 +389,12 @@ public partial class MainWindow : Window
                 VideoBackupTextBox.Text = videoBackupPath;
                 Log($"[OK] 用户CFG(视频预设)备份已创建: {videoBackupPath}");
             }
+            if (installAnnotations && _installer.AnnotationsPath != null)
+            {
+                string annotationsBackupPath = _installer.CreateAnnotationsBackup(_installer.AnnotationsPath);
+                AnnotationsBackupTextBox.Text = annotationsBackupPath;
+                Log($"[OK] 地图指南备份已创建: {annotationsBackupPath}");
+            }
 
             Log("\n[~] === 开始安装 ===");
 
@@ -345,11 +403,11 @@ public partial class MainWindow : Window
             {
                 if (_selectedFiles.Length == 1 && _selectedFiles[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                 {
-                    _installer.InstallFromZip(_selectedFiles[0], installCfg, installVideo);
+                    _installer.InstallFromZip(_selectedFiles[0], installCfg, installVideo, installAnnotations);
                 }
                 else
                 {
-                    _installer.InstallFromFiles(_selectedFiles, installCfg, installVideo);
+                    _installer.InstallFromFiles(_selectedFiles, installCfg, installVideo, installAnnotations);
                 }
             });
 
