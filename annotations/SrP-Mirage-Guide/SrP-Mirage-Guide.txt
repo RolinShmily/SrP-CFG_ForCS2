@@ -1,0 +1,3928 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	MapName = "de_mirage"
+	WorkshopSubmissionID = ""
+	ScreenText = 
+	{
+	}
+	MapAnnotationNode0 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "837d45de-220d-4029-b66f-64c1a6aad02d"
+		SubType = "main"
+		Position = [ 1085.972778, -1018.068848, -258.18103 ]
+		Angles = [ 0.0, -143.79422, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "1"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode1 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "68acc201-4693-4b6b-864f-cbf0dbeb194c"
+		SubType = "aim_target"
+		Position = [ 1015.40448, -1069.728149, -147.808044 ]
+		Angles = [ -29.006933, -143.794083, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "警家烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "837d45de-220d-4029-b66f-64c1a6aad02d"
+	}
+	MapAnnotationNode2 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "854d138a-b0d6-4ff5-b94d-ae3e3300c4c2"
+		SubType = "destination"
+		Position = [ -876.687378, -2437.081299, -107.639038 ]
+		Angles = [ -29.006933, -143.794083, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "837d45de-220d-4029-b66f-64c1a6aad02d"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode3 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "12110885-6d99-4879-ac8f-33a68c7f0d2e"
+		SubType = "main"
+		Position = [ 833.041443, -1255.136475, -108.96875 ]
+		Angles = [ 0.0, -164.10141, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "2"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode4 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f3f22a59-a43a-4cdb-b4e0-373f4833af56"
+		SubType = "aim_target"
+		Position = [ 737.97937, -1282.212891, -29.80093 ]
+		Angles = [ -8.724193, -164.101532, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "跳台烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "双键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "12110885-6d99-4879-ac8f-33a68c7f0d2e"
+	}
+	MapAnnotationNode5 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c26c4e6a-4ec3-44c5-b034-83a36e810743"
+		SubType = "destination"
+		Position = [ -491.458923, -1632.411255, -37.96875 ]
+		Angles = [ -8.724193, -164.101532, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "12110885-6d99-4879-ac8f-33a68c7f0d2e"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode6 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "98ecb223-56b2-4e91-b776-7a991a040208"
+		SubType = "main"
+		Position = [ 833.041443, -1255.136475, -108.96875 ]
+		Angles = [ 0.0, -168.296814, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "3"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode7 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "e0e86bfc-5ba4-451d-b5b8-6c83e69033ea"
+		SubType = "aim_target"
+		Position = [ 735.686157, -1275.303589, -34.233704 ]
+		Angles = [ -6.162603, -168.296722, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "跳台下隔断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "98ecb223-56b2-4e91-b776-7a991a040208"
+	}
+	MapAnnotationNode8 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f1e9835f-6bd7-4c52-b363-7d8b6121f660"
+		SubType = "destination"
+		Position = [ -227.131622, -1474.749756, 298.875397 ]
+		Angles = [ -6.162603, -168.296722, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "98ecb223-56b2-4e91-b776-7a991a040208"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode9 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "4fecee9a-ba87-4465-971a-a91ac6074144"
+		SubType = "main"
+		Position = [ 907.030823, -1036.057983, -251.96875 ]
+		Angles = [ 0.0, -159.980499, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "4"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode10 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "636ec119-dfe9-4dc3-9f1e-c48befc30db9"
+		SubType = "aim_target"
+		Position = [ 867.073669, -1050.616577, -100.273079 ]
+		Angles = [ -64.832405, -159.98053, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "跳台烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "4fecee9a-ba87-4465-971a-a91ac6074144"
+	}
+	MapAnnotationNode11 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b9ad7cd2-7885-4334-b2f6-4cd52931fba2"
+		SubType = "destination"
+		Position = [ -499.891418, -1548.70166, -37.96875 ]
+		Angles = [ -64.832405, -159.98053, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "4fecee9a-ba87-4465-971a-a91ac6074144"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode12 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "690b4a7e-445a-43f3-b7fd-0010f9f0863e"
+		SubType = "main"
+		Position = [ 907.030823, -1036.057983, -251.96875 ]
+		Angles = [ 0.0, -161.527527, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "5"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode13 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "66c427f3-1f7b-4cf2-97e2-bb9d496e58d4"
+		SubType = "aim_target"
+		Position = [ 853.615173, -1053.902222, -108.146027 ]
+		Angles = [ -55.724407, -161.52739, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "跳台下隔断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "690b4a7e-445a-43f3-b7fd-0010f9f0863e"
+	}
+	MapAnnotationNode14 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b0bddd64-5deb-4d95-9f14-07a8453652cf"
+		SubType = "destination"
+		Position = [ 366.759216, -1216.533691, 823.134338 ]
+		Angles = [ -55.724407, -161.52739, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "690b4a7e-445a-43f3-b7fd-0010f9f0863e"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode15 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "204fb84f-c7c9-4ce5-b02d-54b418a8e09b"
+		SubType = "main"
+		Position = [ 936.010681, -1032.03125, -255.468201 ]
+		Angles = [ 0.0, -148.645706, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "6"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode16 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "4d07b830-3459-4d20-a752-c68cce29e1b7"
+		SubType = "aim_target"
+		Position = [ 860.260925, -1078.186523, -148.529617 ]
+		Angles = [ -27.496876, -148.645538, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "长箱警家隔断瀑布烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "204fb84f-c7c9-4ce5-b02d-54b418a8e09b"
+	}
+	MapAnnotationNode17 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "276899e3-b901-4d6b-bd6e-f7cade0b78f9"
+		SubType = "destination"
+		Position = [ -832.56958, -2184.48291, 18.03125 ]
+		Angles = [ -27.496876, -148.645538, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "204fb84f-c7c9-4ce5-b02d-54b418a8e09b"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode18 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "76269017-c39c-4e4b-8815-7dfcfe6cb2c4"
+		SubType = "main"
+		Position = [ 807.906738, -1032.060059, -255.439514 ]
+		Angles = [ 0.0, -137.633972, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "7"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "flash"
+	}
+	MapAnnotationNode19 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b7cdad68-f33e-41c8-97c2-053e95e846a0"
+		SubType = "aim_target"
+		Position = [ 745.38739, -1082.477539, -134.700333 ]
+		Angles = [ -36.567509, -141.116241, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "A1辅助闪"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "76269017-c39c-4e4b-8815-7dfcfe6cb2c4"
+	}
+	MapAnnotationNode20 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b0a2e924-9284-4c4d-b006-fcc13db6f662"
+		SubType = "destination"
+		Position = [ 163.209778, -1551.954834, 134.096344 ]
+		Angles = [ -36.567509, -141.116241, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "76269017-c39c-4e4b-8815-7dfcfe6cb2c4"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode21 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "0a24f13a-f74b-43f4-98c9-2a1d5da2cd9c"
+		SubType = "main"
+		Position = [ 1239.969482, -1159.958618, -246.3974 ]
+		Angles = [ 0.0, -173.353958, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "8"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode22 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "08dc7a9c-662d-4fa7-a178-6f194ad082b0"
+		SubType = "aim_target"
+		Position = [ 1169.773071, -1168.137817, -117.916122 ]
+		Angles = [ -45.03191, -173.353928, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "Jungle烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "0a24f13a-f74b-43f4-98c9-2a1d5da2cd9c"
+	}
+	MapAnnotationNode23 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "caaa4d53-31a5-489b-b1e1-0c3f01424ef4"
+		SubType = "destination"
+		Position = [ -1117.41272, -1430.538208, -163.486725 ]
+		Angles = [ -45.03191, -173.353928, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "0a24f13a-f74b-43f4-98c9-2a1d5da2cd9c"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode24 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "a5a47859-bda8-4375-b2e5-1faf5b6f2215"
+		SubType = "main"
+		Position = [ 1422.968262, 36.454445, -167.96875 ]
+		Angles = [ 0.0, 163.245514, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "9"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode25 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c7633663-7be9-4256-be10-7d8266d994ee"
+		SubType = "aim_target"
+		Position = [ 1333.382812, 63.424507, -68.654884 ]
+		Angles = [ -20.679411, 163.245361, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "vip烟(magixx)"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "A向左走快到红墙边缘+左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "a5a47859-bda8-4375-b2e5-1faf5b6f2215"
+	}
+	MapAnnotationNode26 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "921cdaef-c9da-4ecc-a8f9-9755085ecfea"
+		SubType = "destination"
+		Position = [ -1139.2323, -636.728943, -165.968643 ]
+		Angles = [ -20.679411, 163.245361, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "a5a47859-bda8-4375-b2e5-1faf5b6f2215"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode27 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "d7397382-287b-484c-bc92-3ccee85299ec"
+		SubType = "main"
+		Position = [ 1422.931274, 36.442493, -167.96875 ]
+		Angles = [ 0.0, -150.187561, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "10"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode28 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "e98b9951-daa9-453f-a0d1-c8e3a29f775c"
+		SubType = "aim_target"
+		Position = [ 1346.805908, -7.176968, -73.986755 ]
+		Angles = [ -28.673645, -150.1875, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "拱门内侧隔断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "蹲下W向前走到毯子边缘+左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "d7397382-287b-484c-bc92-3ccee85299ec"
+	}
+	MapAnnotationNode29 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "0665aef8-9de6-4f8e-9c1f-f82f77b2d486"
+		SubType = "destination"
+		Position = [ -679.735413, -1341.257324, -165.96875 ]
+		Angles = [ -28.673645, -150.1875, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "d7397382-287b-484c-bc92-3ccee85299ec"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode30 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "d592e8bd-dcab-4107-95df-20f1de89ec19"
+		SubType = "main"
+		Position = [ 1389.439697, 70.96875, -167.96875 ]
+		Angles = [ 0.0, -163.8992, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "11"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode31 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f2d320ea-41c9-407e-9d52-c84f0384ed02"
+		SubType = "aim_target"
+		Position = [ 1311.772095, 48.549747, -45.103416 ]
+		Angles = [ -36.061504, -163.899048, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "vip烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "同时按D+左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "d592e8bd-dcab-4107-95df-20f1de89ec19"
+	}
+	MapAnnotationNode32 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "2effe992-0798-4ea3-9772-c0dc9c1a370c"
+		SubType = "destination"
+		Position = [ -1175.362427, -634.882507, -165.96875 ]
+		Angles = [ -36.061504, -163.899048, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "d592e8bd-dcab-4107-95df-20f1de89ec19"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode33 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "77e953c4-93eb-4a41-afc7-f6111c881cd2"
+		SubType = "main"
+		Position = [ 1422.942871, -367.959045, -167.96875 ]
+		Angles = [ 0.0, 170.163116, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "12"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode34 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "1ed5ee21-e707-4543-af20-1b48cf5d7f9c"
+		SubType = "aim_target"
+		Position = [ 1345.318115, -354.499329, -60.379585 ]
+		Angles = [ -38.016739, 170.163025, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "B小上下烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "蹲下+左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "77e953c4-93eb-4a41-afc7-f6111c881cd2"
+	}
+	MapAnnotationNode35 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "eb61864a-0873-43aa-9f5f-aaf717d84f12"
+		SubType = "destination"
+		Position = [ -867.183777, 51.17231, -52.70858 ]
+		Angles = [ -38.016739, 170.163025, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "77e953c4-93eb-4a41-afc7-f6111c881cd2"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode36 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "67554a3a-1a50-4c70-b9e8-6168def021bf"
+		SubType = "main"
+		Position = [ 1422.96875, 36.46035, -167.96875 ]
+		Angles = [ 0.0, -155.963974, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "13"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode37 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "5b822fa7-4316-451c-b64e-65e48d9613c6"
+		SubType = "aim_target"
+		Position = [ 1353.403687, 11.805773, -36.49395 ]
+		Angles = [ -42.434586, -160.485153, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "匪口保护烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "67554a3a-1a50-4c70-b9e8-6168def021bf"
+	}
+	MapAnnotationNode38 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "d591a761-d1b1-453a-8b6d-a1eadb2a152d"
+		SubType = "destination"
+		Position = [ 710.589966, -216.013016, 296.543488 ]
+		Angles = [ -42.434586, -160.485153, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "67554a3a-1a50-4c70-b9e8-6168def021bf"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode39 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "53f79fb6-db9a-45a5-8cb1-dcf26e69f652"
+		SubType = "main"
+		Position = [ 16.078749, -2359.988281, -39.96875 ]
+		Angles = [ 0.0, 66.07486, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "14"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode40 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c8ac8eff-1345-4db8-be4c-895155ef4ea8"
+		SubType = "aim_target"
+		Position = [ 80.11087, -2289.37793, 54.264709 ]
+		Angles = [ -17.597878, 47.797089, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "A2辅助瀑布烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "双键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "53f79fb6-db9a-45a5-8cb1-dcf26e69f652"
+	}
+	MapAnnotationNode41 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b5bcae51-53ee-43f1-b7af-e64261ffe678"
+		SubType = "destination"
+		Position = [ -54.886158, -2074.668457, -36.96875 ]
+		Angles = [ -17.597878, 47.797089, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "53f79fb6-db9a-45a5-8cb1-dcf26e69f652"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode42 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "5af6e19d-8840-4921-b6f6-8ebcfb2fe784"
+		SubType = "main"
+		Position = [ -30.439819, -1418.03125, -167.96875 ]
+		Angles = [ 0.0, -106.840668, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "15"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "molotov"
+	}
+	MapAnnotationNode43 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f9e7af45-0983-451b-8226-833b1931a104"
+		SubType = "aim_target"
+		Position = [ -58.499924, -1511.25061, -81.181229 ]
+		Angles = [ -13.217237, -106.752403, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "死点短箱三烧火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "5af6e19d-8840-4921-b6f6-8ebcfb2fe784"
+	}
+	MapAnnotationNode44 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b37b71c0-07b4-4184-aac0-7b2bc6bd3ca3"
+		SubType = "destination"
+		Position = [ -310.701294, -2349.094482, -89.318748 ]
+		Angles = [ -13.217237, -106.752403, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "5af6e19d-8840-4921-b6f6-8ebcfb2fe784"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode45 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "9421863d-c92e-45e3-9e4d-d024e91354d9"
+		SubType = "main"
+		Position = [ -30.439819, -1418.03125, -167.96875 ]
+		Angles = [ 0.0, -106.840668, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "16"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "incendiary"
+	}
+	MapAnnotationNode46 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "142e84e8-9474-4360-a5f0-03b848713094"
+		SubType = "aim_target"
+		Position = [ -58.499924, -1511.25061, -81.181229 ]
+		Angles = [ -13.217237, -106.752403, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "死点短箱三烧火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "9421863d-c92e-45e3-9e4d-d024e91354d9"
+	}
+	MapAnnotationNode47 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "21dcc98f-ed18-43b0-9dd6-72bcb926a0dc"
+		SubType = "destination"
+		Position = [ -310.701294, -2349.094482, -89.318748 ]
+		Angles = [ -13.217237, -106.752403, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "9421863d-c92e-45e3-9e4d-d024e91354d9"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode48 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "ebdd2a06-0ad5-4ac4-ba90-110b8a91e69c"
+		SubType = "main"
+		Position = [ -30.45752, -1418.03125, -167.96875 ]
+		Angles = [ 0.0, -136.501343, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "17"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "molotov"
+	}
+	MapAnnotationNode49 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "203eab9b-dcbf-4825-8276-46aa84112935"
+		SubType = "aim_target"
+		Position = [ -101.191895, -1485.152344, -126.211441 ]
+		Angles = [ 12.807467, -136.501404, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "长箱警家阻断火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "ebdd2a06-0ad5-4ac4-ba90-110b8a91e69c"
+	}
+	MapAnnotationNode50 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b441cf41-79b8-4e90-988e-64c2991e1607"
+		SubType = "destination"
+		Position = [ -721.368286, -2219.02124, -177.96875 ]
+		Angles = [ 12.807467, -136.501404, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "ebdd2a06-0ad5-4ac4-ba90-110b8a91e69c"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode51 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "4a7524f6-a127-456d-bed1-dff863ce1001"
+		SubType = "main"
+		Position = [ -30.45752, -1418.03125, -167.96875 ]
+		Angles = [ 0.0, -136.501343, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "18"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "incendiary"
+	}
+	MapAnnotationNode52 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f05ac4b8-7662-46b3-b59f-104037c18f7a"
+		SubType = "aim_target"
+		Position = [ -101.191895, -1485.152344, -126.211441 ]
+		Angles = [ 12.807467, -136.501404, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "长箱警家阻断火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "4a7524f6-a127-456d-bed1-dff863ce1001"
+	}
+	MapAnnotationNode53 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c2261487-2b77-4ea2-ae03-99b639a7b700"
+		SubType = "destination"
+		Position = [ -721.368286, -2219.02124, -177.96875 ]
+		Angles = [ 12.807467, -136.501404, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "4a7524f6-a127-456d-bed1-dff863ce1001"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode54 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "068ed211-44ec-4ab6-9e8a-6d4d2fcab012"
+		SubType = "main"
+		Position = [ -30.45752, -1418.03125, -167.96875 ]
+		Angles = [ 0.0, -130.746918, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "19"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "molotov"
+	}
+	MapAnnotationNode55 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "6231f261-6aff-4556-b8f3-a0074f701263"
+		SubType = "aim_target"
+		Position = [ -95.617836, -1493.661499, -109.89257 ]
+		Angles = [ 3.352963, -130.74704, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "警亭火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "068ed211-44ec-4ab6-9e8a-6d4d2fcab012"
+	}
+	MapAnnotationNode56 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "1102f54d-f2fc-4161-a5f6-e058c9c65567"
+		SubType = "destination"
+		Position = [ -759.343506, -2264.030518, 62.842827 ]
+		Angles = [ 3.352963, -130.74704, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "068ed211-44ec-4ab6-9e8a-6d4d2fcab012"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode57 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "d09fd4ec-fead-4ffc-9cf9-eca3646b3080"
+		SubType = "main"
+		Position = [ -30.45752, -1418.03125, -167.96875 ]
+		Angles = [ 0.0, -130.746918, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "20"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "incendiary"
+	}
+	MapAnnotationNode58 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "e9f8476f-bf5c-4277-8e6a-05ad78211d1e"
+		SubType = "aim_target"
+		Position = [ -95.617836, -1493.661499, -109.89257 ]
+		Angles = [ 3.352963, -130.74704, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "警亭火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "d09fd4ec-fead-4ffc-9cf9-eca3646b3080"
+	}
+	MapAnnotationNode59 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f024ca4c-2360-441a-86d7-ba350df81fdb"
+		SubType = "destination"
+		Position = [ -759.343506, -2264.030518, 62.842827 ]
+		Angles = [ 3.352963, -130.74704, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "d09fd4ec-fead-4ffc-9cf9-eca3646b3080"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode60 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "23e53ea3-3356-481c-a575-4d752bec970d"
+		SubType = "main"
+		Position = [ -30.46875, -1418.048462, -167.96875 ]
+		Angles = [ 0.0, -175.941925, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "21"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode61 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "05ed3c0e-aec9-4e01-a3a2-0a192cc3f398"
+		SubType = "aim_target"
+		Position = [ -61.392937, -1419.660645, -8.958107 ]
+		Angles = [ -71.961151, -177.015793, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "Jungle阻断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "23e53ea3-3356-481c-a575-4d752bec970d"
+	}
+	MapAnnotationNode62 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b31b0b28-b299-47ef-87ce-3353de8bbcf5"
+		SubType = "destination"
+		Position = [ -869.500854, -1461.77771, -165.96875 ]
+		Angles = [ -71.961151, -177.015793, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "23e53ea3-3356-481c-a575-4d752bec970d"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode63 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "5282d10b-a37c-4861-a109-b793b17553d6"
+		SubType = "main"
+		Position = [ 163.988403, -1418.08606, -175.96875 ]
+		Angles = [ 0.0, -119.906502, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "22"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "molotov"
+	}
+	MapAnnotationNode64 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c49b8317-c7ab-43e4-bd5d-908cf13169a2"
+		SubType = "aim_target"
+		Position = [ 114.251251, -1504.559204, -104.99659 ]
+		Angles = [ -3.997996, -119.90641, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "A2楼下火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "5282d10b-a37c-4861-a109-b793b17553d6"
+	}
+	MapAnnotationNode65 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "8c895592-fe48-46c2-945f-af27fe6948d3"
+		SubType = "destination"
+		Position = [ 45.479561, -1920.312012, -165.96875 ]
+		Angles = [ -3.997996, -119.90641, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "5282d10b-a37c-4861-a109-b793b17553d6"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode66 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "5d1f45b2-a3c0-4680-9c14-8d74eac2bc8f"
+		SubType = "main"
+		Position = [ 163.988403, -1418.08606, -175.96875 ]
+		Angles = [ 0.0, -119.906502, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "22"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "incendiary"
+	}
+	MapAnnotationNode67 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "5b1dcd91-d3b5-4bc3-801e-610514c419d2"
+		SubType = "aim_target"
+		Position = [ 114.251251, -1504.559204, -104.99659 ]
+		Angles = [ -3.997996, -119.90641, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "A2楼下火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "5d1f45b2-a3c0-4680-9c14-8d74eac2bc8f"
+	}
+	MapAnnotationNode68 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c27eb9ec-9cf5-467f-9077-ae91a77d1ace"
+		SubType = "destination"
+		Position = [ 45.479561, -1920.312012, -165.96875 ]
+		Angles = [ -3.997996, -119.90641, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "5d1f45b2-a3c0-4680-9c14-8d74eac2bc8f"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode69 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c381d964-08cb-4bdd-8bfd-9ab3c2ee622c"
+		SubType = "main"
+		Position = [ -1011.338501, -2566.144531, -167.96875 ]
+		Angles = [ 0.0, 57.390518, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "23"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode70 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "09c14db9-eef1-4148-bfb7-934a8194b9ea"
+		SubType = "aim_target"
+		Position = [ -957.607666, -2482.158691, -96.264214 ]
+		Angles = [ -4.418755, 57.390499, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "A2楼烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "c381d964-08cb-4bdd-8bfd-9ab3c2ee622c"
+	}
+	MapAnnotationNode71 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "d701c9c6-3754-47c0-97d0-6855618b400e"
+		SubType = "destination"
+		Position = [ 103.660889, -2182.494385, -35.96875 ]
+		Angles = [ -4.418755, 57.390499, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "c381d964-08cb-4bdd-8bfd-9ab3c2ee622c"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode72 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c8a85828-5cd9-48d8-b01e-bebb4cb0c693"
+		SubType = "main"
+		Position = [ -1046.526489, -2232.058838, -167.96875 ]
+		Angles = [ 0.0, 1.739273, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "24"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "flash"
+	}
+	MapAnnotationNode73 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "22c0ee90-b6ed-4a43-93b1-67e5da277bea"
+		SubType = "aim_target"
+		Position = [ -1028.989746, -2230.216064, -5.535706 ]
+		Angles = [ -79.843727, 5.998656, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "警家回瞬闪"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "双键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "c8a85828-5cd9-48d8-b01e-bebb4cb0c693"
+	}
+	MapAnnotationNode74 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "2f69e141-1fbd-4d0b-99d9-71a9df3b813c"
+		SubType = "destination"
+		Position = [ -931.697998, -2220.004395, 186.075684 ]
+		Angles = [ -79.843727, 5.998656, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "c8a85828-5cd9-48d8-b01e-bebb4cb0c693"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode75 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "61e17798-0a14-406d-93e1-4874342f2988"
+		SubType = "main"
+		Position = [ -1710.967773, -1208.030518, -255.076843 ]
+		Angles = [ 0.0, 52.645447, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "25"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "flash"
+	}
+	MapAnnotationNode76 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "93ec354b-cc76-4ee8-ad17-5df54416d012"
+		SubType = "aim_target"
+		Position = [ -1654.359619, -1153.312866, -132.509094 ]
+		Angles = [ -38.065498, 44.0271, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "vip近点瞬闪"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "61e17798-0a14-406d-93e1-4874342f2988"
+	}
+	MapAnnotationNode77 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b4a2e812-267f-4543-adbf-b6c5819fd14a"
+		SubType = "destination"
+		Position = [ -1128.32251, -644.83728, 153.248322 ]
+		Angles = [ -38.065498, 44.0271, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "61e17798-0a14-406d-93e1-4874342f2988"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode78 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "92014f4d-a791-4ee5-ad5a-c04629952b37"
+		SubType = "main"
+		Position = [ -992.044861, -1304.832397, -155.617249 ]
+		Angles = [ 0.0, -116.231575, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "26"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "flash"
+	}
+	MapAnnotationNode79 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "87c0d33b-5f90-4076-af98-08da2806cd86"
+		SubType = "aim_target"
+		Position = [ -1035.870239, -1385.535156, -55.790318 ]
+		Angles = [ -23.314419, -118.504044, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "拱门瞬闪"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "92014f4d-a791-4ee5-ad5a-c04629952b37"
+	}
+	MapAnnotationNode80 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "72505332-2894-45f1-a79c-a3330dee123f"
+		SubType = "destination"
+		Position = [ -645.933411, -1261.904175, -165.943985 ]
+		Angles = [ -23.314419, -118.504044, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "92014f4d-a791-4ee5-ad5a-c04629952b37"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode81 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "7a4d1764-9994-4c7c-93de-ab51949bc3ad"
+		SubType = "main"
+		Position = [ -1247.963257, -759.913879, -128.96875 ]
+		Angles = [ 0.0, -0.323761, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "27"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "he"
+	}
+	MapAnnotationNode82 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "085cc7f6-0b73-42ee-8129-fe90c67dcdbc"
+		SubType = "aim_target"
+		Position = [ -1168.311768, -781.532654, -121.433594 ]
+		Angles = [ 34.37788, -15.185247, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "vip炸烟雷"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "7a4d1764-9994-4c7c-93de-ab51949bc3ad"
+	}
+	MapAnnotationNode83 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "a49ae2e2-3800-4db0-911e-89c01db707ec"
+		SubType = "destination"
+		Position = [ -1192.804565, -824.791382, -165.96875 ]
+		Angles = [ 34.37788, -15.185247, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "7a4d1764-9994-4c7c-93de-ab51949bc3ad"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode84 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "718ec4c7-c4fb-40fa-82ec-420b600342ee"
+		SubType = "main"
+		Position = [ 343.322266, -621.640442, -162.332764 ]
+		Angles = [ 0.0, 178.878723, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "28"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode85 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "4a45eb50-87c3-4997-be73-cd11ff446f84"
+		SubType = "aim_target"
+		Position = [ 266.445862, -619.235779, -53.139427 ]
+		Angles = [ -39.723274, 178.208405, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "vip烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "蹲下+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "718ec4c7-c4fb-40fa-82ec-420b600342ee"
+	}
+	MapAnnotationNode86 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "1f17b60f-5a65-4208-a680-8c276149af6f"
+		SubType = "destination"
+		Position = [ -1205.986084, -569.668152, -165.96875 ]
+		Angles = [ -39.723274, 178.208405, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "718ec4c7-c4fb-40fa-82ec-420b600342ee"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode87 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "73e69e98-b37c-4f91-be9b-630abf4a3dc2"
+		SubType = "main"
+		Position = [ 360.075562, -691.96875, -163.355286 ]
+		Angles = [ 0.0, 168.642212, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "29"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode88 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "c5216f95-b3ad-4bd4-85f8-37da857f25bd"
+		SubType = "aim_target"
+		Position = [ 274.320435, -662.162109, -58.143307 ]
+		Angles = [ -24.786625, 160.833633, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "B小隔断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "73e69e98-b37c-4f91-be9b-630abf4a3dc2"
+	}
+	MapAnnotationNode89 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "d7169885-a0ef-4438-a5f7-b3c730e20979"
+		SubType = "destination"
+		Position = [ -801.337585, -201.762436, -165.10437 ]
+		Angles = [ -24.786625, 160.833633, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "73e69e98-b37c-4f91-be9b-630abf4a3dc2"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode90 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "87f72a33-7890-47a2-8f0d-4d946eb9b60d"
+		SubType = "main"
+		Position = [ 360.075562, -691.96875, -163.355286 ]
+		Angles = [ 0.0, -158.728409, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "30"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode91 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "bd19b524-0c1f-4ef4-9e2e-ba74994f69af"
+		SubType = "aim_target"
+		Position = [ 294.869415, -724.458008, -31.56472 ]
+		Angles = [ -43.237652, -153.514999, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "拱门内侧烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "87f72a33-7890-47a2-8f0d-4d946eb9b60d"
+	}
+	MapAnnotationNode92 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "2ff08ebe-3898-4bc3-8f67-2e995b14797d"
+		SubType = "destination"
+		Position = [ -658.511108, -1370.341553, -165.96875 ]
+		Angles = [ -43.237652, -153.514999, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "87f72a33-7890-47a2-8f0d-4d946eb9b60d"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode93 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "2c7eaf7b-bb35-4fc4-9484-330d5ef37b58"
+		SubType = "main"
+		Position = [ -160.03125, 887.953003, -135.32782 ]
+		Angles = [ 0.0, -128.829803, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "31"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode94 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "6b6efedc-ef29-4ef9-850c-fa50874f1e23"
+		SubType = "aim_target"
+		Position = [ -209.031586, 838.142517, -0.105278 ]
+		Angles = [ -45.67548, -134.530243, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "B小隔断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "2c7eaf7b-bb35-4fc4-9484-330d5ef37b58"
+	}
+	MapAnnotationNode95 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "a4403eb1-5ef4-41a2-82d8-29c0c83c4998"
+		SubType = "destination"
+		Position = [ -1215.650879, 230.951447, -167.201431 ]
+		Angles = [ -45.67548, -134.530243, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "2c7eaf7b-bb35-4fc4-9484-330d5ef37b58"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode96 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b2a9b991-fded-4fd0-aeb9-829140cc91be"
+		SubType = "main"
+		Position = [ -160.03125, 887.953003, -135.32782 ]
+		Angles = [ 0.0, -146.521576, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "32"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode97 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "ee54e820-883a-42b9-bdc3-6f29affe28fb"
+		SubType = "aim_target"
+		Position = [ -215.34375, 851.372314, 3.204399 ]
+		Angles = [ -48.459789, -146.5215, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "B点超市烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "b2a9b991-fded-4fd0-aeb9-829140cc91be"
+	}
+	MapAnnotationNode98 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "b50877bc-7140-4db3-8750-4d1148ef5c91"
+		SubType = "destination"
+		Position = [ -722.968506, 515.650574, 870.378174 ]
+		Angles = [ -48.459789, -146.5215, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "b2a9b991-fded-4fd0-aeb9-829140cc91be"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode99 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "30930d13-9c9d-4648-aa57-444e5b5c978d"
+		SubType = "main"
+		Position = [ -2050.647705, 425.859161, -159.96875 ]
+		Angles = [ 0.0, 29.017303, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "33"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "molotov"
+	}
+	MapAnnotationNode100 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "963be5ef-0e03-4d61-ba1a-36974142b3c3"
+		SubType = "aim_target"
+		Position = [ -1967.017822, 472.249115, -66.745247 ]
+		Angles = [ -16.99181, 29.017368, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "B2楼阻断火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "30930d13-9c9d-4648-aa57-444e5b5c978d"
+	}
+	MapAnnotationNode101 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "e01811cd-4873-43d4-9526-82f8002ee443"
+		SubType = "destination"
+		Position = [ -1068.508301, 689.252686, -77.96875 ]
+		Angles = [ -16.99181, 29.017368, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "30930d13-9c9d-4648-aa57-444e5b5c978d"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode102 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "94530b4c-2567-48ce-ab4a-276de7c34373"
+		SubType = "main"
+		Position = [ -2050.647705, 425.859161, -159.96875 ]
+		Angles = [ 0.0, 29.017303, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "34"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "incendiary"
+	}
+	MapAnnotationNode103 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "504602d4-375d-409c-9ae1-8cd7287eaf78"
+		SubType = "aim_target"
+		Position = [ -1967.017822, 472.249115, -66.745247 ]
+		Angles = [ -16.99181, 29.017368, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "B2楼阻断火"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "94530b4c-2567-48ce-ab4a-276de7c34373"
+	}
+	MapAnnotationNode104 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "29a32119-31bd-4d48-91ff-a614d1078fbe"
+		SubType = "destination"
+		Position = [ -1068.508301, 689.252686, -77.96875 ]
+		Angles = [ -16.99181, 29.017368, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "94530b4c-2567-48ce-ab4a-276de7c34373"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode105 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "7af43470-d916-434f-9b4b-82337bcf863b"
+		SubType = "main"
+		Position = [ -1003.323914, 295.901947, -165.478821 ]
+		Angles = [ 0.0, -62.5383, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "35"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "he"
+	}
+	MapAnnotationNode106 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "cdd43a8c-7c4c-43c5-87ee-b691f89516a1"
+		SubType = "aim_target"
+		Position = [ -954.663208, 211.130157, -82.214027 ]
+		Angles = [ -12.190226, -60.143307, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "中路L位满炸雷"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走两步+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "7af43470-d916-434f-9b4b-82337bcf863b"
+	}
+	MapAnnotationNode107 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "1aafcede-de4f-4c65-a926-5e80772c3a87"
+		SubType = "destination"
+		Position = [ -480.620728, -614.694397, -134.403687 ]
+		Angles = [ -12.190226, -60.143307, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "7af43470-d916-434f-9b4b-82337bcf863b"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode108 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "951fed9b-b137-4800-8613-b32198b0289c"
+		SubType = "main"
+		Position = [ -2415.96875, -88.021179, -111.918945 ]
+		Angles = [ 0.0, -39.725876, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "36"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode109 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "bd746142-4f7a-4518-a0fb-3ec8e4e65697"
+		SubType = "aim_target"
+		Position = [ -2354.168701, -139.375671, 11.133892 ]
+		Angles = [ -36.531883, -39.725826, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "A2楼烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W走一步+左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "951fed9b-b137-4800-8613-b32198b0289c"
+	}
+	MapAnnotationNode110 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "371589ee-43d0-4dff-9cdd-ae8cc5a8acf4"
+		SubType = "destination"
+		Position = [ 4.147446, -2268.510742, -37.96875 ]
+		Angles = [ -36.531883, -39.725826, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "951fed9b-b137-4800-8613-b32198b0289c"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode111 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "e181f2a5-37f7-4e39-8da3-1f1606da8461"
+		SubType = "main"
+		Position = [ -1047.936401, -380.00708, -345.961548 ]
+		Angles = [ 0.0, -51.046265, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "37"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode112 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f2d93d0a-718e-43d1-97b0-a8c7321c2ec2"
+		SubType = "aim_target"
+		Position = [ -990.617432, -454.387115, -253.709518 ]
+		Angles = [ -20.110006, -52.381332, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "拱门内侧烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "e181f2a5-37f7-4e39-8da3-1f1606da8461"
+	}
+	MapAnnotationNode113 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "3cba2a6d-059e-4982-b41d-2360d9941f9d"
+		SubType = "destination"
+		Position = [ -663.187988, -1287.547119, -165.96875 ]
+		Angles = [ -20.110006, -52.381332, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "e181f2a5-37f7-4e39-8da3-1f1606da8461"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode114 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "ba0f89db-8b0c-4290-987b-b54bafa3f59c"
+		SubType = "main"
+		Position = [ -1047.936401, -380.00708, -345.961548 ]
+		Angles = [ 0.0, -90.013733, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "38"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "smoke"
+	}
+	MapAnnotationNode115 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "da05aaaa-bac0-4e11-b29c-cb0df49d84f8"
+		SubType = "aim_target"
+		Position = [ -1047.943359, -409.284332, -192.473679 ]
+		Angles = [ -72.975983, -90.013626, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "Jungle隔断烟"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "左键跳投"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "ba0f89db-8b0c-4290-987b-b54bafa3f59c"
+	}
+	MapAnnotationNode116 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "6fa7f871-1816-4f44-8907-086ac1d06b0e"
+		SubType = "destination"
+		Position = [ -1040.992554, -1405.944336, -164.406311 ]
+		Angles = [ -72.975983, -90.013626, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "ba0f89db-8b0c-4290-987b-b54bafa3f59c"
+		DistanceThreshold = 80.0
+	}
+	MapAnnotationNode117 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "67bc285b-bdc0-4e13-8413-deb9183e57c2"
+		SubType = "main"
+		Position = [ 8.492681, -2165.964355, -167.96875 ]
+		Angles = [ 0.0, 135.492676, 0.0 ]
+		VisiblePfx = true
+		Color = [ 255, 255, 255 ]
+		TextPositionOffset = [ 0.0, 0.0, 60.0 ]
+		TextFacePlayer = true
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "39"
+			FontSize = 125
+			FadeInDist = 600.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "standing instructions"
+			FontSize = 75
+			FadeInDist = 300.0
+			FadeOutDist = 40.0
+			ShowBackground = true
+		}
+		StreakLimitGuidesOn = 2
+		StreakLimitGuidesOff = 2
+		JumpThrow = false
+		GrenadeType = "flash"
+	}
+	MapAnnotationNode118 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "f7d45ea7-13c2-4315-916e-c547494d0a58"
+		SubType = "aim_target"
+		Position = [ -50.533955, -2088.802246, -80.264709 ]
+		Angles = [ -13.711929, 127.414917, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 30.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = "拱门辅助瞬闪"
+			FontSize = 125
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = "W+左键投掷"
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "67bc285b-bdc0-4e13-8413-deb9183e57c2"
+	}
+	MapAnnotationNode119 = 
+	{
+		Enabled = true
+		Type = "grenade"
+		Id = "05071f65-3eb2-4ce5-90f4-5f9127f560e2"
+		SubType = "destination"
+		Position = [ -553.716187, -1431.022461, -30.363668 ]
+		Angles = [ -13.711929, 127.414917, 0.0 ]
+		VisiblePfx = true
+		TextPositionOffset = [ 0.0, 0.0, 0.0 ]
+		TextFacePlayer = false
+		TextHorizontalAlign = "center"
+		RevealOnSuccess = false
+		Title = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		Desc = 
+		{
+			Text = ""
+			FontSize = 75
+			FadeInDist = 50.0
+			FadeOutDist = -1.0
+			ShowBackground = true
+		}
+		MasterNodeId = "67bc285b-bdc0-4e13-8413-deb9183e57c2"
+		DistanceThreshold = 80.0
+	}
+}
