@@ -31,10 +31,42 @@ jobs:
           echo "✅ Tag validated: $TAG"
 
   # ============================================
+  # 构建 MSI 安装包（需要 Windows 环境）
+  # ============================================
+  build-msi:
+    needs: validate-tag
+    if: needs.validate-tag.outputs.is_valid == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build MSI
+        run: dotnet build Setup/Setup.wixproj -c Release
+
+      - name: Rename MSI with version
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          mv Setup/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
+          echo "✅ MSI built: SrP-CFG_Installer_${TAG}.msi"
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: msi-installer
+          path: SrP-CFG_Installer_*.msi
+
+  # ============================================
   # 构建和发布
   # ============================================
   build-and-release:
-    needs: validate-tag
+    needs: [validate-tag, build-msi]
     if: needs.validate-tag.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -125,28 +157,13 @@ jobs:
           echo "✅ Packages configuration parsed"
 
       # ============================================
-      # 构建 Installer.exe
+      # 下载 MSI 安装包
       # ============================================
-      - name: Build Installer.exe
-        run: |
-          echo "🔨 Building Installer..."
-          dotnet publish Installer/Installer.csproj -c Release -r win-x64 \
-            --self-contained true \
-            -p:PublishSingleFile=true \
-            -p:EnableCompressionInSingleFile=true \
-            -p:EnableWindowsTargeting=true \
-            -o .
-
-          if [ ! -f "Installer.exe" ]; then
-            echo "::error::Installer.exe build failed"
-            exit 1
-          fi
-
-          # 添加版本号到文件名
-          TAG="${{ github.ref_name }}"
-          mv Installer.exe SrP-CFG_Installer_${TAG}.exe
-          echo "EXE_PATH=SrP-CFG_Installer_${TAG}.exe" >> $GITHUB_ENV
-          echo "✅ Installer built successfully: SrP-CFG_Installer_${TAG}.exe"
+      - name: Download MSI artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: msi-installer
+          path: .
 
       # ============================================
       # 生成 Release Notes（必须在打包之前生成，以便打包进zip）
@@ -263,7 +280,7 @@ jobs:
           name: SrP-CFG_${{ github.ref_name }}
           body: ${{ env.RELEASE_BODY }}
           files: |
-            SrP-CFG_Installer_*.exe
+            SrP-CFG_Installer_*.msi
             *.zip
           prerelease: false
           draft: false

@@ -84,7 +84,10 @@ WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/T
 
 ### 💻 构建（Build）
 ```bash
-dotnet build
+# 构建安装器
+dotnet build Installer
+# 构建 MSI 安装包
+dotnet build Setup -c Release
 ```
 
 ### 🚀 发布（Publish）
@@ -93,6 +96,21 @@ dotnet publish -c Release
 ```
 
 > 项目已配置默认发布参数（Self-Contained + SingleFile + win-x64），直接运行 `dotnet publish` 即可生成独立运行的安装器。
+
+### 📀 MSI 安装包
+
+基于 [WiX Toolset v6](https://wixtoolset.org/) 构建 MSI 安装包，通过 Windows 原生安装机制提升系统信任度，解决网吧等受控环境中杀毒软件/SmartScreen 静默拦截的问题。
+
+```bash
+dotnet build Setup -c Release
+```
+
+输出：`Setup/bin/Release/SrP-CFG_Installer_Setup.msi`
+
+特性：
+- 标准安装向导（欢迎 → 许可协议 → 安装路径 → 进度 → 完成）
+- 安装到 `Program Files`，创建开始菜单和桌面快捷方式
+- 支持"程序与功能"卸载
 
 ## 仓库活动
 

@@ -51,8 +51,8 @@ upload_files:
   # 安装器
   # ============================================
   - display_name: "安装器"
-    source_pattern: "SrP-CFG_Installer_*.exe"
-    target_name: "SrP-CFG_Installer.exe"
+    source_pattern: "SrP-CFG_Installer_*.msi"
+    target_name: "SrP-CFG_Installer.msi"
     remove_version: true
     enabled: true
 

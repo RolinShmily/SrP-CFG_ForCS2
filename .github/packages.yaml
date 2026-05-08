@@ -110,4 +110,4 @@ settings:
 
   # 发布配置
   release:
-    installer_name: "SrP-CFG_Installer.exe"
+    installer_name: "SrP-CFG_Installer.msi"
