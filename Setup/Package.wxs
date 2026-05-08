@@ -4,6 +4,7 @@
   <Package Name="SrP-CFG 安装器"
            Manufacturer="SrP"
            Version="2.0.0"
+           ProductCode="A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D"
            UpgradeCode="B5D3A1F2-7E4C-4D8F-9A2B-3C5E6F8D1A24"
            Scope="perMachine"
            Compressed="yes">
