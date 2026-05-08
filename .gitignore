@@ -8,4 +8,7 @@ CLAUDE.md
 .claude
 .spec-workflow/
 
-*.sln
+# Setup build output
+Setup/bin/
+Setup/obj/
+Setup/*.wixpdb

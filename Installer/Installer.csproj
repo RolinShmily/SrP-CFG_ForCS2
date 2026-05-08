@@ -7,6 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <AssemblyName>SrP-CFG_Installer</AssemblyName>
+    <PublishProfile>FolderProfile</PublishProfile>
 
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>

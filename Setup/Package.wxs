@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package Name="SrP-CFG 安装器"
+           Manufacturer="SrP"
+           Version="2.0.0"
+           UpgradeCode="B5D3A1F2-7E4C-4D8F-9A2B-3C5E6F8D1A24"
+           Scope="perMachine"
+           Compressed="yes">
+
+    <MajorUpgrade DowngradeErrorMessage="已安装更新版本，无需降级。" />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="app.ico" SourceFile="..\Installer\Resources\app.ico" />
+    <Property Id="ARPPRODUCTICON" Value="app.ico" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="SrP-CFG_Installer" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="SrP-CFG" />
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="SrP-CFG 安装器" Level="1">
+      <ComponentGroupRef Id="ApplicationComponents" />
+    </Feature>
+
+    <ComponentGroup Id="ApplicationComponents">
+      <!-- Main exe (64-bit) -->
+      <Component Directory="INSTALLFOLDER" Bitness="always64" Id="AppExeComponent">
+        <File Id="AppExe"
+              Source="!(bindpath.Installer)\SrP-CFG_Installer.exe"
+              KeyPath="yes" />
+      </Component>
+
+      <!-- Start menu shortcut -->
+      <Component Directory="ApplicationProgramsFolder" Id="StartMenuComponent">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="SrP-CFG 安装器"
+                  Target="[#AppExe]"
+                  Icon="app.ico"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="RemoveStartMenuFolder" On="uninstall" />
+        <RegistryKey Root="HKCU" Key="Software\SrP\SrP-CFG_Installer">
+          <RegistryValue Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+
+      <!-- Desktop shortcut -->
+      <Component Directory="DesktopFolder" Id="DesktopComponent">
+        <Shortcut Id="DesktopShortcut"
+                  Name="SrP-CFG 安装器"
+                  Target="[#AppExe]"
+                  Icon="app.ico"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RegistryKey Root="HKCU" Key="Software\SrP\SrP-CFG_Installer">
+          <RegistryValue Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+  </Package>
+</Wix>

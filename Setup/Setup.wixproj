@@ -1,0 +1,15 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+  <PropertyGroup>
+    <OutputName>SrP-CFG_Installer_Setup</OutputName>
+    <Cultures>zh-CN</Cultures>
+    <InstallerPlatform>x64</InstallerPlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Installer\Installer.csproj"
+                      ReferenceOutputAssembly="false"
+                      Publish="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
+  </ItemGroup>
+</Project>
