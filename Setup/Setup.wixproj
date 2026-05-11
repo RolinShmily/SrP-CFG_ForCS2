@@ -1,8 +1,10 @@
 <Project Sdk="WixToolset.Sdk/6.0.2">
+  <Import Project="..\Installer\Directory.Build.props" />
   <PropertyGroup>
     <OutputName>SrP-CFG_Installer_Setup</OutputName>
     <Cultures>zh-CN</Cultures>
     <InstallerPlatform>x64</InstallerPlatform>
+    <DefineConstants>Version=$(Version)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Installer\Installer.csproj"

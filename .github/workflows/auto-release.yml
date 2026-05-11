@@ -47,7 +47,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build MSI
-        run: dotnet build Setup/Setup.wixproj -c Release
+        run: dotnet build Setup/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
 
       - name: Rename MSI with version
         shell: bash
