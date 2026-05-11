@@ -4,7 +4,8 @@
     <OutputName>SrP-CFG_Installer_Setup</OutputName>
     <Cultures>zh-CN</Cultures>
     <InstallerPlatform>x64</InstallerPlatform>
-    <DefineConstants>Version=$(Version)</DefineConstants>
+    <ProductCode Condition="'$(ProductCode)' == ''">$([System.Guid]::NewGuid().ToString("B").ToUpperInvariant())</ProductCode>
+    <DefineConstants>Version=$(Version);ProductCode=$(ProductCode)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Installer\Installer.csproj"
