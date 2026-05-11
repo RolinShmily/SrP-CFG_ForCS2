@@ -11,6 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title -->
@@ -31,8 +32,35 @@
             </TextBlock>
         </StackPanel>
 
+        <!-- Update Notification Banner -->
+        <Border x:Name="UpdateBanner" Grid.Row="1"
+                Background="#FFF3CD" BorderBrush="#FFEEBA" BorderThickness="1"
+                CornerRadius="4" Padding="12,8" Margin="0,0,0,15"
+                Visibility="Collapsed">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="13">
+                    <Run Text="&#x26A0;"/>
+                    <Run x:Name="UpdateMessage" Foreground="#856404"/>
+                </TextBlock>
+                <Button Grid.Column="1" x:Name="OpenReleaseButton"
+                        Content="查看更新" FontSize="12" Padding="12,4" Margin="10,0,0,0"
+                        Background="#0078D4" Foreground="White" BorderBrush="#005A9E"
+                        Click="OpenReleaseButton_Click" Cursor="Hand"/>
+                <Button Grid.Column="2" x:Name="DismissUpdateButton"
+                        Content="&#x2715;" FontSize="12" Padding="8,4" Margin="5,0,0,0"
+                        Background="Transparent" Foreground="#856404" BorderThickness="0"
+                        Click="DismissUpdateButton_Click" Cursor="Hand"
+                        ToolTip="忽略此版本更新"/>
+            </Grid>
+        </Border>
+
         <!-- Options -->
-        <StackPanel Grid.Row="1" Margin="0,0,0,15">
+        <StackPanel Grid.Row="2" Margin="0,0,0,15">
             <CheckBox x:Name="InstallCfgCheckBox" IsChecked="True" Content="安装 CFG 文件（全局配置）" />
             <Grid Margin="25,0,0,10">
                 <Grid.ColumnDefinitions>
@@ -159,7 +187,7 @@
         </StackPanel>
 
         <!-- Drag & Drop Area -->
-        <GroupBox Grid.Row="2" Header="文件选择" Margin="0,0,0,15">
+        <GroupBox Grid.Row="3" Header="文件选择" Margin="0,0,0,15">
             <Grid Margin="10">
                 <Border x:Name="DropZoneBorder" BorderBrush="#CCCCCC" BorderThickness="2"
                         Background="#FAFAFA" CornerRadius="5" Padding="20" Height="80"
@@ -178,7 +206,7 @@
         </GroupBox>
 
         <!-- Log Output -->
-        <GroupBox Grid.Row="3" Header="日志输出" Margin="0,15,0,0">
+        <GroupBox Grid.Row="4" Header="日志输出" Margin="0,15,0,0">
             <RichTextBox x:Name="LogTextBox" IsReadOnly="True"
                      VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                      FontFamily="Consolas" FontSize="11" Background="#FAFAFA" BorderThickness="0" Padding="5"
@@ -186,7 +214,7 @@
         </GroupBox>
 
         <!-- Action Buttons -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button x:Name="RefreshButton" Content="刷新路径" Click="RefreshButton_Click"
                     Margin="10,0,0,0" Background="#3b3b3b" Foreground="White" BorderBrush="#707070" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <Button x:Name="BackupButton" Content="进行备份" Click="BackupButton_Click"

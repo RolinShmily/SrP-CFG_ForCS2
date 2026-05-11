@@ -9,12 +9,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Microsoft.Win32;
 using Forms = System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace SrPInstaller;
 
 public partial class MainWindow : Window
 {
     private readonly InstallerService _installer;
+    private readonly UpdateService _updateService = new();
+    private UpdateService.UpdateInfo? _latestUpdateInfo;
     private string[]? _selectedFiles;
 
     public MainWindow()
@@ -28,9 +31,52 @@ public partial class MainWindow : Window
         Loaded += MainWindow_Loaded;
     }
 
-    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         RefreshAllPaths();
+        await CheckForUpdatesAsync();
+    }
+
+    private async Task CheckForUpdatesAsync()
+    {
+        try
+        {
+            var updateInfo = await _updateService.CheckForUpdateAsync();
+            if (updateInfo != null)
+            {
+                _latestUpdateInfo = updateInfo;
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateMessage.Text = $"发现新版本：v{updateInfo.LatestVersion}（当前 v{updateInfo.CurrentVersion}）";
+                    UpdateBanner.Visibility = Visibility.Visible;
+                });
+            }
+        }
+        catch
+        {
+            // 更新检查失败不影响主流程
+        }
+    }
+
+    private void OpenReleaseButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_latestUpdateInfo != null)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = _latestUpdateInfo.HtmlUrl,
+                UseShellExecute = true
+            });
+        }
+    }
+
+    private void DismissUpdateButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_latestUpdateInfo != null)
+        {
+            _updateService.SaveDismissedVersion(_latestUpdateInfo.LatestVersion);
+        }
+        UpdateBanner.Visibility = Visibility.Collapsed;
     }
 
     private void SteamGuideExpander_Expanded(object sender, RoutedEventArgs e)
