@@ -51,7 +51,7 @@ WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/T
 - 自动检测 Steam 用户并支持手动选择
 - 自动备份全局 CFG 文件夹为 `cfg_backup.zip`
 - 自动备份用户视频预设文件为 `user_cfg_backup.zip`
-- 自动备份地图指南文件为 `annotations_backup.zip`（新增）
+- 自动备份地图指南文件为 `annotations_backup.zip`
 - 支持安装全局 CFG 文件（可单独选择）
 - 支持安装用户视频预设文件（仅识别 `cs2_video.txt`，可单独选择）
 - 支持安装地图指南预设文件（复制 annotations 子目录到 `csgo/annotations/local/`，可单独选择）
@@ -99,7 +99,7 @@ dotnet publish -c Release
 
 ### 📀 MSI 安装包
 
-基于 [WiX Toolset v6](https://wixtoolset.org/) 构建 MSI 安装包，通过 Windows 原生安装机制提升系统信任度，解决网吧等受控环境中杀毒软件/SmartScreen 静默拦截的问题。
+基于 [WiX Toolset v6](https://wixtoolset.org/) 构建 MSI 安装包，通过 Windows 原生安装机制提升系统信任度。
 
 ```bash
 dotnet build Setup -c Release
