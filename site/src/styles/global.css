@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════
+   SrP-CFG Site — Global Styles
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --c-bg:       #0b0d14;
+  --c-bg-card:  #10131c;
+  --c-bg-hover: #161b28;
+  --c-bg-raised:#1a2030;
+  --c-border:   #1c2236;
+  --c-border-hi:#2a3352;
+
+  --c-accent:   #e8790c;
+  --c-accent-l: #f59e0b;
+  --c-accent-bg:rgba(232,121,12,.08);
+  --c-accent-gl:rgba(232,121,12,.25);
+
+  --c-green:    #22c55e;
+  --c-red:      #ef4444;
+  --c-teal:     #2dd4bf;
+
+  --c-text:     #eae8e4;
+  --c-text-2:   #9ca3b8;
+  --c-text-3:   #5e657e;
+  --c-text-4:   #343a52;
+
+  --f-display:  'Chakra Petch', sans-serif;
+  --f-body:     'Noto Sans SC', sans-serif;
+  --f-mono:     'JetBrains Mono', monospace;
+
+  --radius:     10px;
+  --radius-sm:  6px;
+  --shadow:     0 4px 24px rgba(0,0,0,.4);
+
+  --nav-height: 64px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--f-body);
+  background: var(--c-bg);
+  color: var(--c-text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ─── Utility ─── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--f-display);
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 16px;
+  color: var(--c-text-2);
+  font-weight: 300;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--f-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 13px 32px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all .25s ease;
+}
+
+.btn-accent {
+  background: var(--c-accent);
+  color: #0b0d14;
+}
+.btn-accent:hover {
+  background: var(--c-accent-l);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px var(--c-accent-gl);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--c-text-2);
+  border: 1px solid var(--c-border-hi);
+}
+.btn-ghost:hover {
+  border-color: var(--c-text-3);
+  color: var(--c-text);
+}
+
+.btn-lg {
+  font-size: 17px;
+  padding: 16px 44px;
+}
+
+/* ─── Page Transition ─── */
+.page-enter-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.page-leave-active {
+  transition: opacity 0.2s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.page-leave-to {
+  opacity: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .section-title { font-size: 32px; }
+  .btn { width: 100%; justify-content: center; text-align: center; }
+}
