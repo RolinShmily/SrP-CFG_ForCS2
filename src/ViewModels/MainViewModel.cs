@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -14,6 +13,8 @@ namespace SrPInstaller.ViewModels;
 
 public class MainViewModel : INotifyPropertyChanged
 {
+    private const int MaxLogEntries = 500;
+
     private readonly InstallerService _installer;
     private readonly UpdateService _updateService;
     private UpdateService.UpdateInfo? _latestUpdateInfo;
@@ -28,7 +29,6 @@ public class MainViewModel : INotifyPropertyChanged
 
     #region Bindable Properties
 
-    // Proxy properties from InstallerService
     public string? Cs2CfgPath => _installer.Cs2CfgPath;
     public string? VideoCfgPath => _installer.VideoCfgPath;
     public string? AnnotationsPath => _installer.AnnotationsPath;
@@ -36,7 +36,6 @@ public class MainViewModel : INotifyPropertyChanged
     public string? VideoBackupPath => _installer.VideoBackupPath;
     public string? AnnotationsBackupPath => _installer.AnnotationsBackupPath;
 
-    // Steam users
     public ObservableCollection<string> SteamUsers { get; }
 
     private int _selectedSteamUserIndex = -1;
@@ -54,7 +53,6 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
-    // Install target checkboxes
     private bool _installCfgChecked = true;
     public bool InstallCfgChecked
     {
@@ -76,7 +74,6 @@ public class MainViewModel : INotifyPropertyChanged
         set { if (_installAnnotationsChecked != value) { _installAnnotationsChecked = value; OnPropertyChanged(); } }
     }
 
-    // Selected file display
     private string _selectedFileDisplay = "";
     public string SelectedFileDisplay
     {
@@ -84,7 +81,6 @@ public class MainViewModel : INotifyPropertyChanged
         set { if (_selectedFileDisplay != value) { _selectedFileDisplay = value; OnPropertyChanged(); } }
     }
 
-    // Progress flags
     private bool _isBackupInProgress;
     public bool IsBackupInProgress
     {
@@ -109,7 +105,6 @@ public class MainViewModel : INotifyPropertyChanged
 
     public string InstallButtonText => IsInstallInProgress ? "安装中..." : "开始安装";
 
-    // Update notification
     private bool _isUpdateAvailable;
     public bool IsUpdateAvailable
     {
@@ -124,7 +119,6 @@ public class MainViewModel : INotifyPropertyChanged
         set { if (_updateMessage != value) { _updateMessage = value; OnPropertyChanged(); } }
     }
 
-    // Log entries
     public ObservableCollection<LogEntry> LogEntries { get; }
 
     #endregion
@@ -158,7 +152,6 @@ public class MainViewModel : INotifyPropertyChanged
         SteamUsers = new ObservableCollection<string>();
         LogEntries = new ObservableCollection<LogEntry>();
 
-        // Initialize commands
         RefreshCommand = new RelayCommand(_ => RefreshAllPaths());
         BackupCommand = new RelayCommand(_ => BackupAll(), _ => !IsBackupInProgress);
         InstallCommand = new AsyncRelayCommand(_ => InstallSelectedFilesAsync(), _ => !IsInstallInProgress);
@@ -184,7 +177,7 @@ public class MainViewModel : INotifyPropertyChanged
             if (updateInfo != null)
             {
                 _latestUpdateInfo = updateInfo;
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     UpdateMessage = $"发现新版本：v{updateInfo.LatestVersion}（当前 v{updateInfo.CurrentVersion}）";
                     IsUpdateAvailable = true;
@@ -193,59 +186,44 @@ public class MainViewModel : INotifyPropertyChanged
         }
         catch
         {
-            // Update check failure does not affect main flow
         }
     }
 
     public void HandleDroppedFiles(string[] files)
     {
         _selectedFiles = files;
-
-        if (files.Length == 1 && files[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-        {
-            SelectedFileDisplay = $"已选择: {Path.GetFileName(files[0])} (ZIP)";
-            Log($"[OK] 已选择 ZIP 文件: {files[0]}");
-        }
-        else
-        {
-            SelectedFileDisplay = $"已选择: {files.Length} 个文件";
-            Log($"[OK] 已选择 {files.Length} 个文件");
-        }
+        UpdateFileDisplay(files);
     }
-
-    #endregion
-
-    #region Private Logic
 
     public void RefreshAllPaths()
     {
         Log("[~] 正在检测 Steam 路径...");
         _installer.DetectSteamPath();
 
-        if (_installer.SteamPath != null)
-        {
-            Log("[~] 正在检测 全局CFG 路径...");
-            _installer.DetectCS2CfgPath(_installer.SteamPath);
-
-            Log("[~] 正在检测 地图指南 路径...");
-            _installer.DetectAnnotationsPath(_installer.SteamPath);
-
-            RefreshSteamUsers();
-
-            // Default select first user
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                if (SteamUsers.Count > 0)
-                {
-                    SelectedSteamUserIndex = 0;
-                }
-            });
-        }
-        else
+        if (_installer.SteamPath == null)
         {
             Log("[!] 未找到 Steam 路径，部分功能将不可用。");
+            return;
         }
+
+        Log("[~] 正在检测 全局CFG 路径...");
+        _installer.DetectCS2CfgPath(_installer.SteamPath);
+
+        Log("[~] 正在检测 地图指南 路径...");
+        _installer.DetectAnnotationsPath(_installer.SteamPath);
+
+        RefreshSteamUsers();
+
+        Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            if (SteamUsers.Count > 0)
+                SelectedSteamUserIndex = 0;
+        });
     }
+
+    #endregion
+
+    #region Private Logic
 
     private void RefreshSteamUsers()
     {
@@ -255,7 +233,7 @@ public class MainViewModel : INotifyPropertyChanged
         {
             var users = _installer.GetAvailableSteamUsers(_installer.SteamPath);
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 SteamUsers.Clear();
                 foreach (var user in users)
@@ -263,17 +241,11 @@ public class MainViewModel : INotifyPropertyChanged
             });
 
             if (users.Length == 1)
-            {
                 Log($"[OK] 检测到 1 个 Steam 用户");
-            }
             else if (users.Length > 1)
-            {
                 Log($"[OK] 检测到 {users.Length} 个 Steam 用户");
-            }
             else
-            {
                 Log("[!] 未检测到 Steam 用户");
-            }
         }
         catch (Exception ex)
         {
@@ -296,37 +268,7 @@ public class MainViewModel : INotifyPropertyChanged
         try
         {
             Log("[~] === 开始手动备份 ===");
-
-            if (_installer.Cs2CfgPath != null)
-            {
-                string cfgBackupPath = _installer.CreateCfgBackup(_installer.Cs2CfgPath);
-                Log($"[OK] CFG 备份已创建: {cfgBackupPath}");
-            }
-            else
-            {
-                Log("[!] 未设置全局CFG路径，跳过CFG备份");
-            }
-
-            if (_installer.VideoCfgPath != null)
-            {
-                string videoBackupPath = _installer.CreateVideoCfgBackup(_installer.VideoCfgPath);
-                Log($"[OK] 用户CFG(视频预设)备份已创建: {videoBackupPath}");
-            }
-            else
-            {
-                Log("[!] 未设置用户CFG(视频预设)路径，跳过用户CFG(视频预设)备份");
-            }
-
-            if (_installer.AnnotationsPath != null)
-            {
-                string annotationsBackupPath = _installer.CreateAnnotationsBackup(_installer.AnnotationsPath);
-                Log($"[OK] 地图指南备份已创建: {annotationsBackupPath}");
-            }
-            else
-            {
-                Log("[!] 未设置地图指南路径，跳过地图指南备份");
-            }
-
+            PerformBackup(true, true, true);
             Log("[OK] 手动备份完成！");
         }
         catch (Exception ex)
@@ -375,23 +317,8 @@ public class MainViewModel : INotifyPropertyChanged
 
         try
         {
-            // Backup first
             Log("[~] === 开始备份 ===");
-            if (InstallCfgChecked && _installer.Cs2CfgPath != null)
-            {
-                string cfgBackupPath = _installer.CreateCfgBackup(_installer.Cs2CfgPath);
-                Log($"[OK] CFG 备份已创建: {cfgBackupPath}");
-            }
-            if (InstallVideoChecked && _installer.VideoCfgPath != null)
-            {
-                string videoBackupPath = _installer.CreateVideoCfgBackup(_installer.VideoCfgPath);
-                Log($"[OK] 用户CFG(视频预设)备份已创建: {videoBackupPath}");
-            }
-            if (InstallAnnotationsChecked && _installer.AnnotationsPath != null)
-            {
-                string annotationsBackupPath = _installer.CreateAnnotationsBackup(_installer.AnnotationsPath);
-                Log($"[OK] 地图指南备份已创建: {annotationsBackupPath}");
-            }
+            PerformBackup(InstallCfgChecked, InstallVideoChecked, InstallAnnotationsChecked);
 
             Log("\n[~] === 开始安装 ===");
 
@@ -403,13 +330,9 @@ public class MainViewModel : INotifyPropertyChanged
             await Task.Run(() =>
             {
                 if (files!.Length == 1 && files[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-                {
                     _installer.InstallFromZip(files[0], installCfg, installVideo, installAnnotations);
-                }
                 else
-                {
                     _installer.InstallFromFiles(files, installCfg, installVideo, installAnnotations);
-                }
             });
 
             Log("\n[OK] 所有操作完成！");
@@ -424,23 +347,44 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    private void PerformBackup(bool cfg, bool video, bool annotations)
+    {
+        if (cfg && _installer.Cs2CfgPath != null)
+            Log($"[OK] CFG 备份已创建: {_installer.CreateCfgBackup(_installer.Cs2CfgPath)}");
+        else if (cfg)
+            Log("[!] 未设置全局CFG路径，跳过CFG备份");
+
+        if (video && _installer.VideoCfgPath != null)
+            Log($"[OK] 用户CFG(视频预设)备份已创建: {_installer.CreateVideoCfgBackup(_installer.VideoCfgPath)}");
+        else if (video)
+            Log("[!] 未设置用户CFG(视频预设)路径，跳过用户CFG(视频预设)备份");
+
+        if (annotations && _installer.AnnotationsPath != null)
+            Log($"[OK] 地图指南备份已创建: {_installer.CreateAnnotationsBackup(_installer.AnnotationsPath)}");
+        else if (annotations)
+            Log("[!] 未设置地图指南路径，跳过地图指南备份");
+    }
+
     private void SelectFiles()
     {
         var files = BrowseFilesFunc?.Invoke();
-        if (files != null && files.Length > 0)
-        {
-            _selectedFiles = files;
+        if (files == null || files.Length == 0) return;
 
-            if (files.Length == 1 && files[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-            {
-                SelectedFileDisplay = $"已选择: {Path.GetFileName(files[0])} (ZIP)";
-                Log($"[OK] 已选择 ZIP 文件: {files[0]}");
-            }
-            else
-            {
-                SelectedFileDisplay = $"已选择: {files.Length} 个文件";
-                Log($"[OK] 已选择 {files.Length} 个文件");
-            }
+        _selectedFiles = files;
+        UpdateFileDisplay(files);
+    }
+
+    private void UpdateFileDisplay(string[] files)
+    {
+        if (files.Length == 1 && files[0].EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+        {
+            SelectedFileDisplay = $"已选择: {Path.GetFileName(files[0])} (ZIP)";
+            Log($"[OK] 已选择 ZIP 文件: {files[0]}");
+        }
+        else
+        {
+            SelectedFileDisplay = $"已选择: {files.Length} 个文件";
+            Log($"[OK] 已选择 {files.Length} 个文件");
         }
     }
 
@@ -489,20 +433,13 @@ public class MainViewModel : INotifyPropertyChanged
     private void DismissUpdate()
     {
         if (_latestUpdateInfo != null)
-        {
             _updateService.SaveDismissedVersion(_latestUpdateInfo.LatestVersion);
-        }
         IsUpdateAvailable = false;
     }
 
     private void OpenBackupInExplorer(string? backupPath)
     {
-        if (string.IsNullOrEmpty(backupPath) || backupPath == "安装前将自动备份")
-        {
-            Log("[!] 目标文件无法选中，请预先备份或安装");
-            return;
-        }
-        if (!File.Exists(backupPath))
+        if (string.IsNullOrEmpty(backupPath) || !File.Exists(backupPath))
         {
             Log("[!] 目标文件无法选中，请预先备份或安装");
             return;
@@ -521,20 +458,19 @@ public class MainViewModel : INotifyPropertyChanged
                    message.StartsWith("[~]") ? LogType.Info :
                    LogType.Info;
 
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current.Dispatcher.InvokeAsync(() =>
         {
+            while (LogEntries.Count >= MaxLogEntries)
+                LogEntries.RemoveAt(0);
+
             LogEntries.Add(new LogEntry { Message = message, Type = type });
         });
     }
 
-    private void Log(string message)
-    {
-        OnInstallerLog(message);
-    }
+    private void Log(string message) => OnInstallerLog(message);
 
     private void OnInstallerServicePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        // Forward property change notifications from InstallerService
         switch (e.PropertyName)
         {
             case nameof(InstallerService.Cs2CfgPath):

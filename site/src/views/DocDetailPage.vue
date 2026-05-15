@@ -2,12 +2,7 @@
 import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import MarkdownIt from 'markdown-it'
-
-interface DocMeta {
-  title: string
-  desc: string
-  category: 'project' | 'config'
-}
+import { projectDocs, configDocs, getDocMeta } from '@/data/docs'
 
 const props = defineProps<{
   slug: string
@@ -21,44 +16,15 @@ const showBackTop = ref(false)
 const headings = ref<{ id: string; text: string; level: number }[]>([])
 const mobileNavOpen = ref(false)
 
-const docMetaMap: Record<string, DocMeta> = {
-  'srpcfg-1': { title: '项目说明', desc: 'SrP-CFG 完整功能介绍与项目概览', category: 'project' },
-  'srpcfg-2': { title: '下载地址', desc: '各版本安装包与配置文件下载', category: 'project' },
-  'srpcfg-3': { title: '使用指南', desc: '安装器使用方法与配置说明', category: 'project' },
-  autoexec: { title: 'autoexec.cfg', desc: '自启动基础设置', category: 'config' },
-  crosshair_view: { title: 'crosshair_view.cfg', desc: '准星预设系统与持枪视角配置', category: 'config' },
-  practice: { title: 'practice.cfg', desc: '个人自建房跑图', category: 'config' },
-  demo_hlae: { title: 'demo_hlae.cfg', desc: '使用 HLAE 观看 demo', category: 'config' },
-  knife: { title: 'knife.cfg', desc: '匕首模型切换', category: 'config' },
-  zeus: { title: 'zeus.cfg', desc: '电击枪快速切换', category: 'config' },
-  autoview: { title: 'autoview.cfg', desc: '武器自适应视角切换', category: 'config' },
-  previewmode: { title: 'previewmode.cfg', desc: '饰品预览检视工具模式', category: 'config' },
-  guidemake: { title: 'guidemake.cfg', desc: '地图指南制作模式', category: 'config' },
-  cs2_video: { title: 'cs2_video.txt', desc: '视频设置配置', category: 'config' },
-}
+const mdFiles = import.meta.glob('@/content/*.md', { query: '?raw', import: 'default', eager: false })
 
 const sidebarDocs = {
-  project: [
-    { slug: 'srpcfg-1', title: '项目说明' },
-    { slug: 'srpcfg-2', title: '下载地址' },
-    { slug: 'srpcfg-3', title: '使用指南' },
-  ],
-  config: [
-    { slug: 'autoexec', title: 'autoexec.cfg' },
-    { slug: 'crosshair_view', title: 'crosshair_view.cfg' },
-    { slug: 'practice', title: 'practice.cfg' },
-    { slug: 'demo_hlae', title: 'demo_hlae.cfg' },
-    { slug: 'knife', title: 'knife.cfg' },
-    { slug: 'zeus', title: 'zeus.cfg' },
-    { slug: 'autoview', title: 'autoview.cfg' },
-    { slug: 'previewmode', title: 'previewmode.cfg' },
-    { slug: 'guidemake', title: 'guidemake.cfg' },
-    { slug: 'cs2_video', title: 'cs2_video.txt' },
-  ],
+  project: projectDocs.map(d => ({ slug: d.slug, title: d.title })),
+  config: configDocs.map(d => ({ slug: d.slug, title: d.title })),
 }
 
 const currentSlug = computed(() => props.slug || (route.params.slug as string))
-const currentMeta = computed(() => docMetaMap[currentSlug.value])
+const currentMeta = computed(() => getDocMeta(currentSlug.value))
 const categoryLabel = computed(() => currentMeta.value?.category === 'project' ? '项目文档' : '配置文档')
 
 const md = new MarkdownIt({
@@ -89,7 +55,7 @@ async function loadDoc(slug: string) {
   headings.value = []
 
   try {
-    const modules = import.meta.glob('@/content/*.md', { query: '?raw', import: 'default', eager: false })
+    const modules = mdFiles
     const modKey = Object.keys(modules).find((k) => k.endsWith(`/${slug}.md`))
 
     if (!modKey) {

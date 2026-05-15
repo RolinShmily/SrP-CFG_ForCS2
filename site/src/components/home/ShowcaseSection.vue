@@ -5,7 +5,6 @@ interface LogLine {
   type: 'ok' | 'info' | 'warn'
   prefix: string
   text: string
-  warn?: boolean
 }
 
 const logLines: LogLine[] = [
@@ -24,7 +23,7 @@ const logLines: LogLine[] = [
   { type: 'info', prefix: '[~]  ', text: '正在安装地图指南预设...' },
   { type: 'ok', prefix: '[OK]', text: 'annotations/dust2 → csgo/annotations/local/dust2' },
   { type: 'ok', prefix: '[OK]', text: 'annotations/mirage → csgo/annotations/local/mirage' },
-  { type: 'warn', prefix: '[!]  ', text: '发现新版本：v2.6.0 → 前往下载', warn: true },
+  { type: 'warn', prefix: '[!]  ', text: '发现新版本：v2.6.0 → 前往下载' },
 ]
 
 const termBody = ref<HTMLElement | null>(null)
@@ -74,7 +73,7 @@ onUnmounted(() => {
             :style="termAnimated ? { animationDelay: `${i * 75}ms` } : undefined"
           >
             <span class="log-p" :class="line.type">{{ line.prefix }}</span>
-            <span :class="{ 'log-warn': line.warn }">{{ line.text }}</span>
+            <span :class="{ 'log-warn': line.type === 'warn' }">{{ line.text }}</span>
           </div>
         </div>
       </div>

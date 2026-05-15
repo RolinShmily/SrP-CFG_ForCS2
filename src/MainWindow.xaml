@@ -6,9 +6,6 @@
         SizeToContent="Height" MaxHeight="1200"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BgPrimary}">
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>

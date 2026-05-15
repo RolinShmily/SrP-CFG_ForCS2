@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,6 +11,8 @@ namespace SrPInstaller;
 
 public partial class MainWindow : Window
 {
+    private static readonly Brush DropZoneHighlight = new SolidColorBrush(Color.FromArgb(40, 232, 121, 12));
+
     private readonly MainViewModel _viewModel;
 
     public MainWindow()
@@ -17,19 +20,20 @@ public partial class MainWindow : Window
         InitializeComponent();
         _viewModel = new MainViewModel();
 
-        // Set up dialog callbacks
         _viewModel.BrowseFolderFunc = BrowseFolder;
         _viewModel.BrowseFilesFunc = BrowseFiles;
 
         DataContext = _viewModel;
 
-        // Auto-scroll log on new entries
-        _viewModel.LogEntries.CollectionChanged += (s, e) =>
-        {
-            Dispatcher.InvokeAsync(() => LogScrollViewer.ScrollToEnd());
-        };
+        _viewModel.LogEntries.CollectionChanged += LogEntries_CollectionChanged;
 
         Loaded += OnLoaded;
+    }
+
+    private void LogEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+            Dispatcher.InvokeAsync(() => LogScrollViewer.ScrollToEnd());
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -59,13 +63,12 @@ public partial class MainWindow : Window
         return dialog.ShowDialog() == true ? dialog.FileNames : null;
     }
 
-    // Drag-drop handlers (cannot easily bind to ICommand)
     private void DropZone_DragOver(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
             e.Effects = DragDropEffects.Copy;
-            ((System.Windows.Controls.Border)sender).Background = new SolidColorBrush(Color.FromArgb(40, 232, 121, 12)); // Accent with low alpha
+            ((System.Windows.Controls.Border)sender).Background = DropZoneHighlight;
         }
         else
         {
@@ -118,7 +121,7 @@ public partial class MainWindow : Window
                 Height = 800,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
-                Background = new SolidColorBrush(Color.FromRgb(15, 17, 23)) // Dark theme background
+                Background = new SolidColorBrush(Color.FromRgb(15, 17, 23))
             };
 
             var sv = new System.Windows.Controls.ScrollViewer
