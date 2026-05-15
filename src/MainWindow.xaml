@@ -4,6 +4,9 @@
         Title="SrP-CFG 安装器" Height="680" Width="1000" MinHeight="680"
         SizeToContent="Height" MaxHeight="1200"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -37,10 +40,10 @@
         </StackPanel>
 
         <!-- Update Notification Banner -->
-        <Border x:Name="UpdateBanner" Grid.Row="1"
+        <Border Grid.Row="1"
                 Background="#FFF3CD" BorderBrush="#FFEEBA" BorderThickness="1"
                 CornerRadius="4" Padding="12,8" Margin="0,0,0,15"
-                Visibility="Collapsed">
+                Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVis}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -49,23 +52,23 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="13">
                     <Run Text="&#x26A0;"/>
-                    <Run x:Name="UpdateMessage" Foreground="#856404"/>
+                    <Run Text="{Binding UpdateMessage, Mode=OneWay}" Foreground="#856404"/>
                 </TextBlock>
-                <Button Grid.Column="1" x:Name="OpenReleaseButton"
+                <Button Grid.Column="1"
                         Content="查看更新" FontSize="12" Padding="12,4" Margin="10,0,0,0"
                         Background="#0078D4" Foreground="White" BorderBrush="#005A9E"
-                        Click="OpenReleaseButton_Click" Cursor="Hand"/>
-                <Button Grid.Column="2" x:Name="DismissUpdateButton"
+                        Command="{Binding OpenReleaseCommand}" Cursor="Hand"/>
+                <Button Grid.Column="2"
                         Content="&#x2715;" FontSize="12" Padding="8,4" Margin="5,0,0,0"
                         Background="Transparent" Foreground="#856404" BorderThickness="0"
-                        Click="DismissUpdateButton_Click" Cursor="Hand"
+                        Command="{Binding DismissUpdateCommand}" Cursor="Hand"
                         ToolTip="忽略此版本更新"/>
             </Grid>
         </Border>
 
         <!-- Options -->
         <StackPanel Grid.Row="2" Margin="0,0,0,15">
-            <CheckBox x:Name="InstallCfgCheckBox" IsChecked="True" Content="安装 CFG 文件（全局配置）" />
+            <CheckBox IsChecked="{Binding InstallCfgChecked}" Content="安装 CFG 文件（全局配置）" />
             <Grid Margin="25,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
@@ -75,8 +78,8 @@
                 <TextBlock Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12"/>
                 <TextBox Grid.Column="1" Text="{Binding Cs2CfgPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测或手动选择'}" IsReadOnly="True" TextWrapping="Wrap"
                          Height="30" VerticalContentAlignment="Center"/>
-                <Button Grid.Column="2" x:Name="SelectCfgFolderButton" Content="..." Padding="10,3" Margin="5,0,0,0"
-                        Click="SelectCfgFolderButton_Click" Width="40" Height="30"/>
+                <Button Grid.Column="2" Content="..." Padding="10,3" Margin="5,0,0,0"
+                        Command="{Binding SelectCfgFolderCommand}" Width="40" Height="30"/>
             </Grid>
             <Grid Margin="25,0,0,10">
                 <Grid.ColumnDefinitions>
@@ -85,17 +88,16 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12"/>
-                <TextBox Grid.Column="1" x:Name="CfgBackupTextBox" IsReadOnly="True" TextWrapping="Wrap"
+                <TextBox Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap"
                          Height="30" VerticalContentAlignment="Center" Text="{Binding CfgBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
-                <Button Grid.Column="2" x:Name="OpenCfgBackupButton" Content="打开文件夹" Padding="8,3" Margin="5,0,0,0"
-                        Click="OpenCfgBackupButton_Click" Height="30"/>
+                <Button Grid.Column="2" Content="打开文件夹" Padding="8,3" Margin="5,0,0,0"
+                        Command="{Binding OpenCfgBackupCommand}" Height="30"/>
             </Grid>
 
-            <CheckBox x:Name="InstallVideoCheckBox" IsChecked="False" Content="安装 视频预设文件（用户配置）" Margin="0,10,0,0"/>
+            <CheckBox IsChecked="{Binding InstallVideoChecked}" Content="安装 视频预设文件（用户配置）" Margin="0,10,0,0"/>
 
             <!-- Steam ID 查找指南 -->
-            <Expander x:Name="SteamGuideExpander" Margin="25,10,0,0" ExpandDirection="Down"
-                      Expanded="SteamGuideExpander_Expanded" Collapsed="SteamGuideExpander_Collapsed">
+            <Expander Margin="25,10,0,0" ExpandDirection="Down">
                 <Expander.Header>
                     <TextBlock Foreground="#0078D4" FontWeight="Bold" FontSize="12">
                         📖 如何查找我的 Steam 用户 (好友代码)？
@@ -145,23 +147,25 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Steam 用户:" VerticalAlignment="Center" FontSize="12"/>
-                <ComboBox x:Name="SteamUserComboBox" Grid.Row="0" Grid.Column="1" SelectionChanged="SteamUserComboBox_SelectionChanged"
+                <ComboBox Grid.Row="0" Grid.Column="1"
+                          ItemsSource="{Binding SteamUsers}"
+                          SelectedIndex="{Binding SelectedSteamUserIndex}"
                           Height="30"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12" Margin="0,5,0,0"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding VideoCfgPath, Mode=OneWay, TargetNullValue='请选择 Steam 用户'}" IsReadOnly="True"
                          TextWrapping="Wrap" Height="30" VerticalContentAlignment="Center" Margin="0,5,0,0"/>
-                <Button Grid.Row="1" Grid.Column="2" x:Name="SelectVideoFolderButton" Content="..." Padding="10,3" Margin="5,5,0,0"
-                        Click="SelectVideoFolderButton_Click" Width="40" Height="30"/>
+                <Button Grid.Row="1" Grid.Column="2" Content="..." Padding="10,3" Margin="5,5,0,0"
+                        Command="{Binding SelectVideoFolderCommand}" Width="40" Height="30"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12" Margin="0,5,0,0"/>
-                <TextBox Grid.Row="2" Grid.Column="1" x:Name="VideoBackupTextBox" IsReadOnly="True" TextWrapping="Wrap"
+                <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap"
                          Height="30" VerticalContentAlignment="Center" Margin="0,5,0,0" Text="{Binding VideoBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
-                <Button Grid.Row="2" Grid.Column="2" x:Name="OpenVideoBackupButton" Content="打开文件夹" Padding="8,3" Margin="5,5,0,0"
-                        Click="OpenVideoBackupButton_Click" Height="30"/>
+                <Button Grid.Row="2" Grid.Column="2" Content="打开文件夹" Padding="8,3" Margin="5,5,0,0"
+                        Command="{Binding OpenVideoBackupCommand}" Height="30"/>
             </Grid>
 
-            <CheckBox x:Name="InstallAnnotationsCheckBox" IsChecked="False" Content="安装 地图指南预设文件" Margin="0,10,0,0"/>
+            <CheckBox IsChecked="{Binding InstallAnnotationsChecked}" Content="安装 地图指南预设文件" Margin="0,10,0,0"/>
             <Grid Margin="25,0,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
@@ -170,10 +174,10 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="目标路径:" VerticalAlignment="Center" FontSize="12"/>
-                <TextBox Grid.Column="1" x:Name="AnnotationsPathTextBox" Text="{Binding AnnotationsPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测'}" IsReadOnly="True"
+                <TextBox Grid.Column="1" Text="{Binding AnnotationsPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测'}" IsReadOnly="True"
                          TextWrapping="Wrap" Height="30" VerticalContentAlignment="Center"/>
-                <Button Grid.Column="2" x:Name="SelectAnnotationsFolderButton" Content="..." Padding="10,3" Margin="5,0,0,0"
-                        Click="SelectAnnotationsFolderButton_Click" Width="40" Height="30"/>
+                <Button Grid.Column="2" Content="..." Padding="10,3" Margin="5,0,0,0"
+                        Command="{Binding SelectAnnotationsFolderCommand}" Width="40" Height="30"/>
             </Grid>
             <Grid Margin="25,0,0,5">
                 <Grid.ColumnDefinitions>
@@ -183,10 +187,10 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="备份位置:" VerticalAlignment="Center" FontSize="12"/>
-                <TextBox Grid.Column="1" x:Name="AnnotationsBackupTextBox" IsReadOnly="True" TextWrapping="Wrap"
+                <TextBox Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap"
                          Height="30" VerticalContentAlignment="Center" Text="{Binding AnnotationsBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
-                <Button Grid.Column="2" x:Name="OpenAnnotationsBackupButton" Content="打开文件夹" Padding="8,3" Margin="5,0,0,0"
-                        Click="OpenAnnotationsBackupButton_Click" Height="30"/>
+                <Button Grid.Column="2" Content="打开文件夹" Padding="8,3" Margin="5,0,0,0"
+                        Command="{Binding OpenAnnotationsBackupCommand}" Height="30"/>
             </Grid>
         </StackPanel>
 
@@ -202,7 +206,7 @@
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="📁 点击选择或拖放 ZIP/CFG 文件到此" FontSize="14"
                                    HorizontalAlignment="Center" Foreground="#666666"/>
-                        <TextBlock x:Name="SelectedFileTextBlock" Text="" FontSize="12"
+                        <TextBlock Text="{Binding SelectedFileDisplay, Mode=OneWay}" FontSize="12"
                                    HorizontalAlignment="Center" Foreground="#0078D4" Margin="0,5,0,0"/>
                     </StackPanel>
                 </Border>
@@ -219,11 +223,14 @@
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button x:Name="RefreshButton" Content="刷新路径" Click="RefreshButton_Click"
+            <Button Content="刷新路径"
+                    Command="{Binding RefreshCommand}"
                     Margin="10,0,0,0" Background="#3b3b3b" Foreground="White" BorderBrush="#707070" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button x:Name="BackupButton" Content="进行备份" Click="BackupButton_Click"
+            <Button Content="进行备份"
+                    Command="{Binding BackupCommand}"
                     Margin="10,0,0,0" Background="#6B8E23" Foreground="White" BorderBrush="#556B2F" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button x:Name="InstallButton" Content="开始安装" Click="InstallButton_Click"
+            <Button Content="{Binding InstallButtonText, Mode=OneWay}"
+                    Command="{Binding InstallCommand}"
                     Margin="10,0,0,0" Background="#0078D4" Foreground="White" BorderBrush="#005A9E" Padding="20,5" Height="32" MinWidth="100" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
