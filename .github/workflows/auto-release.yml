@@ -47,13 +47,13 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build MSI
-        run: dotnet build Setup/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
+        run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
 
       - name: Rename MSI with version
         shell: bash
         run: |
           TAG="${{ github.ref_name }}"
-          mv Setup/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
+          mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
           echo "✅ MSI built: SrP-CFG_Installer_${TAG}.msi"
 
       - name: Upload MSI artifact
@@ -90,7 +90,7 @@ jobs:
           echo "🔍 Validating configuration files..."
           REQUIRED_FILES=(
             ".github/packages.yaml"
-            "Installer/Installer.csproj"
+            "src/Installer.csproj"
             ".github/release/template.md"
           )
 
@@ -110,50 +110,7 @@ jobs:
         id: parse_packages
         run: |
           echo "📋 Parsing packages configuration..."
-
-          # 使用 Python 解析 YAML 并生成包列表
-          python3 << 'EOF'
-          import yaml
-          import json
-          import os
-
-          # 读取配置
-          with open('.github/packages.yaml', 'r', encoding='utf-8') as f:
-              config = yaml.safe_load(f)
-
-          packages = config.get('packages', {})
-          settings = config.get('settings', {})
-
-          # 处理每个包
-          package_list = []
-          for pkg_name, pkg_config in packages.items():
-              # 获取文件列表
-              if 'base' in pkg_config:
-                  # 继承基础包的文件
-                  base_name = pkg_config['base']
-                  base_config = packages.get(base_name, {})
-                  files = base_config.get('files', [])
-              else:
-                  files = pkg_config.get('files', [])
-
-              overrides = pkg_config.get('overrides', [])
-
-              package_list.append({
-                  'name': pkg_name,
-                  'zip_name': pkg_config.get('zip_name', pkg_name),
-                  'display_name': pkg_config.get('display_name', pkg_name),
-                  'description': pkg_config.get('description', ''),
-                  'files': files,
-                  'overrides': overrides
-              })
-
-          # 输出为 JSON（供 shell 使用）
-          with open('packages.json', 'w', encoding='utf-8') as f:
-              json.dump(package_list, f, ensure_ascii=False, indent=2)
-
-          print(f"✅ Parsed {len(package_list)} packages")
-          EOF
-
+          python3 .github/scripts/parse_packages.py
           echo "✅ Packages configuration parsed"
 
       # ============================================
@@ -210,62 +167,7 @@ jobs:
       - name: Build packages
         run: |
           echo "📦 Building packages..."
-
-          TAG="${{ github.ref_name }}"
-
-          # 读取包配置并打包
-          python3 << 'EOF'
-          import json
-          import subprocess
-          import os
-
-          with open('packages.json', 'r', encoding='utf-8') as f:
-              packages = json.load(f)
-
-          tag = os.environ.get('GITHUB_REF_NAME', '')
-          zip_files = []
-
-          for pkg in packages:
-              pkg_name = pkg['name']
-              zip_name = pkg['zip_name']
-              files = pkg['files']
-              overrides = pkg['overrides']
-
-              # 构建输出文件名
-              output_zip = f"{zip_name}_{tag}.zip"
-              zip_files.append(output_zip)
-
-              print(f"  📦 Building {pkg_name} -> {output_zip}")
-
-              # 打包基础文件（保留目录结构）
-              if files:
-                  file_list = ' '.join(files)
-                  subprocess.run(f'zip -r {output_zip} {file_list}', shell=True, check=False)
-
-              # 添加覆盖文件（提取到根目录）
-              if overrides:
-                  for override_file in overrides:
-                      if os.path.exists(override_file):
-                          subprocess.run(f'zip -j {output_zip} {override_file}', shell=True, check=False)
-                          print(f"    ✓ Added override: {override_file}")
-                      else:
-                          print(f"    ⚠ Override file not found: {override_file}")
-
-              # 添加版本更新说明
-              if os.path.exists('版本更新说明.md'):
-                  subprocess.run(f'zip -j {output_zip} 版本更新说明.md', shell=True, check=False)
-                  print(f"    ✓ Added: 版本更新说明.md")
-
-              print(f"  ✅ Created {output_zip}")
-
-          # 保存 zip 文件列表
-          with open('zip_files.txt', 'w') as f:
-              f.write(' '.join(zip_files))
-
-          print(f"\n✅ Built {len(zip_files)} packages")
-          EOF
-
-          # 读取 zip 文件列表到环境变量
+          python3 .github/scripts/build_packages.py
           ZIP_FILES=$(cat zip_files.txt)
           echo "ZIP_FILES=$ZIP_FILES" >> $GITHUB_ENV
           echo "✅ All packages built"
@@ -308,195 +210,11 @@ jobs:
           # 2. 配置 ossutil
           ossutil config -e "$OSS_ENDPOINT" -i "$OSS_ACCESS_KEY_ID" -k "$OSS_ACCESS_KEY_SECRET" -L CH
 
-          # 3. 执行上传脚本
-          python3 << 'ENDOFSCRIPT'
-          import yaml
-          import json
-          import os
-          import subprocess
-          import re
-          import glob
-
-          # 读取配置
-          with open('.github/oss-upload.yaml', 'r', encoding='utf-8') as f:
-              config = yaml.safe_load(f)
-
-          upload_files = config.get('upload_files', [])
-          settings = config.get('settings', {})
-
-          # 过滤启用的文件
-          enabled_files = [f for f in upload_files if f.get('enabled', True)]
-
-          oss_prefix = os.environ.get('OSS_PREFIX', '')
-          oss_bucket = os.environ.get('OSS_BUCKET', '')
-          oss_endpoint = os.environ.get('OSS_ENDPOINT', '')
-          tag = os.environ.get('TAG', '')
-
-          print(f"\n📦 Processing {len(enabled_files)} files...\n")
-
-          success_count = 0
-          failed_count = 0
-          results = []
-
-          for file_config in enabled_files:
-              display_name = file_config.get('display_name', 'Unknown')
-              source_pattern = file_config.get('source_pattern', '')
-              target_name = file_config.get('target_name', '')
-              remove_version = file_config.get('remove_version', False)
-
-              # 查找匹配的文件
-              matching_files = glob.glob(source_pattern)
-
-              # 按修改时间排序，选择最新的文件
-              if matching_files:
-                  matching_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
-                  print(f"     DEBUG: Found {len(matching_files)} matching files, using newest: {matching_files[0]}")
-
-              if not matching_files:
-                  print(f"  ⚠️  {display_name}: No files found matching '{source_pattern}'")
-                  results.append({
-                      'display': display_name,
-                      'source': '-',
-                      'target': target_name,
-                      'status': '⚠️ Not Found',
-                      'success': False,
-                      'overwritten': False
-                  })
-                  continue
-
-              # 使用第一个匹配的文件
-              source_file = matching_files[0]
-              final_target = target_name
-
-              # 如果需要删除版本号后缀
-              if remove_version:
-                  version_pattern = settings.get('version_pattern', '_[vV][0-9]+\\.[0-9]+\\.[0-9]+(-[a-zA-Z0-9.]+)?')
-                  base_name = os.path.basename(source_file)
-                  # 先分离文件名和扩展名
-                  name_without_ext, ext = os.path.splitext(base_name)
-                  # 移除版本号后缀
-                  name_without_ext = re.sub(version_pattern + '$', '', name_without_ext)
-                  # 重新组合
-                  final_target = name_without_ext + ext
-
-              print(f"  📦 {display_name}")
-              print(f"     Source: {source_file}")
-              print(f"     Target: {final_target}")
-
-              # 复制文件到目标名称
-              subprocess.run(['cp', source_file, final_target], check=True)
-
-              # 上传到 OSS
-              oss_path = f"{oss_prefix}{final_target}"
-              oss_uri = f"oss://{oss_bucket}/{oss_path}"
-
-              # 检查文件是否存在
-              check_result = subprocess.run(['ossutil', 'ls', oss_uri], capture_output=True, text=True)
-              file_exists = check_result.returncode == 0 and 'ObjectNum' in check_result.stdout
-
-              if file_exists:
-                  print(f"     🔄 Overwriting existing file...")
-
-              # 执行上传
-              result = subprocess.run(['ossutil', 'cp', final_target, oss_uri, '-f', '--update'], capture_output=True, text=True)
-
-              if result.returncode == 0:
-                  if file_exists:
-                      print(f"     ✅ Overwritten: {oss_uri}")
-                  else:
-                      print(f"     ✅ Uploaded: {oss_uri}")
-                  success_count += 1
-
-                  # 生成访问链接
-                  if oss_endpoint.startswith('https://'):
-                      public_url = f"{oss_endpoint}/{oss_bucket}/{oss_path}"
-                  else:
-                      public_url = f"https://{oss_bucket}.{oss_endpoint}/{oss_path}"
-
-                  results.append({
-                      'display': display_name,
-                      'source': os.path.basename(source_file),
-                      'target': final_target,
-                      'oss_path': oss_path,
-                      'public_url': public_url,
-                      'status': '✅ Success' if not file_exists else '✅ Overwritten',
-                      'success': True,
-                      'overwritten': file_exists
-                  })
-              else:
-                  print(f"     ❌ Upload failed")
-                  print(f"     Error: {result.stderr}")
-                  failed_count += 1
-                  results.append({
-                      'display': display_name,
-                      'source': os.path.basename(source_file),
-                      'target': final_target,
-                      'status': '❌ Failed',
-                      'success': False,
-                      'overwritten': False
-                  })
-                  if settings.get('on_error', 'stop') == 'stop':
-                      print("\n❌ Upload failed, stopping...")
-                      break
-
-              print()
-
-          # 保存结果
-          with open('upload_results.json', 'w', encoding='utf-8') as f:
-              json.dump({
-                  'success': success_count,
-                  'failed': failed_count,
-                  'total': success_count + failed_count,
-                  'results': results
-              }, f, ensure_ascii=False, indent=2)
-
-          print(f"✅ Upload completed: {success_count} success, {failed_count} failed")
-          ENDOFSCRIPT
+          # 3. 执行上传
+          python3 .github/scripts/upload_oss.py
 
           # 4. 生成 GitHub Summary
-          python3 << 'ENDOFSCRIPT'
-          import json
-          import os
-
-          with open('upload_results.json', 'r', encoding='utf-8') as f:
-              data = json.load(f)
-
-          tag = os.environ.get('TAG', '')
-
-          summary_parts = []
-          summary_parts.append("## ✅ OSS Upload Result\n")
-          summary_parts.append(f"**Tag:** {tag}  \n")
-          summary_parts.append(f"**Total Files:** {data['total']}  \n")
-          summary_parts.append(f"**✅ Success:** {data['success']}  \n")
-
-          if data['failed'] > 0:
-              summary_parts.append(f"**❌ Failed:** {data['failed']}  \n")
-
-          summary_parts.append("\n### Upload Details\n")
-          summary_parts.append("| File | Source | Target | Status |\n")
-          summary_parts.append("|------|--------|--------|--------|\n")
-
-          for result in data['results']:
-              source = result.get('source', '-')
-              target = result.get('target', '-')
-              overwritten = result.get('overwritten', False)
-
-              if result.get('success', False):
-                  public_url = result.get('public_url', '')
-                  source_display = f"`{source}`"
-                  target_display = f"[{target}]({public_url})"
-                  status_display = "✅ (覆盖)" if overwritten else "✅"
-              else:
-                  source_display = f"`{source}`"
-                  target_display = f"`{target}`"
-                  status_display = "❌"
-
-              summary_parts.append(f"| **{result['display']}** | {source_display} | {target_display} | {status_display} |\n")
-
-          # 写入 Summary
-          with open(os.environ.get('GITHUB_STEP_SUMMARY', '/dev/null'), 'a') as f:
-              f.write(''.join(summary_parts))
-          ENDOFSCRIPT
+          python3 .github/scripts/oss_summary.py
 
           # 5. 检查结果
           FAILED=$(python3 -c "import json; print(json.load(open('upload_results.json'))['failed'])")

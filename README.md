@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/Installer/Resources/app.ico" alt="图标">
+<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/src/Resources/app.ico" alt="图标">
 
 [![stars](https://img.shields.io/github/stars/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=green)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
 [![fork](https://img.shields.io/github/forks/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=critical)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
@@ -59,6 +59,47 @@ WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/T
 - 拖入 `zip`、`cfg` 单文件或文件夹自动检测并安装
 - 实时日志输出，清晰的安装进度反馈
 - 一键打开备份文件位置，直接定位到备份文件
+
+## 🌳项目结构
+
+```
+SrP-CFG_ForCS2/
+├── default/                  # 默认配置（官方完整版）
+│   ├── autoexec.cfg          # 自启动基础设置
+│   ├── crosshair_view.cfg    # 准星与持枪视角
+│   ├── practice.cfg          # 个人自建房跑图
+│   ├── demo_hlae.cfg         # HLAE 观看 demo
+│   ├── knife.cfg             # 匕首模型切换
+│   ├── zeus.cfg              # 电击枪快速切换
+│   ├── autoview.cfg          # 武器自适应视角切换
+│   ├── previewmode.cfg       # 饰品预览检视工具模式
+│   ├── guidemake.cfg         # 地图指南制作模式
+│   ├── cs2_video.txt         # 视频设置
+│   ├── annotations/          # 各大地图指南预设
+│   ├── crosshair_library/    # 准星库
+│   └── spawn/                # 出生点配置
+├── custom/                   # 定制版配置（基于 default 覆盖）
+│   ├── echo/autoexec.cfg     # Echo 定制版
+│   ├── yszh/autoexec.cfg     # yszh 定制版
+│   └── visionl/autoexec.cfg  # VisionL 定制版
+├── src/                      # WPF 安装器（.NET 8）
+│   ├── MainWindow.xaml(.cs)  # 主界面 UI 逻辑
+│   ├── InstallerService.cs   # 安装核心业务逻辑
+│   ├── UpdateService.cs      # 自动更新服务
+│   └── Resources/            # 应用图标等资源
+├── msi/                      # WiX v6 MSI 安装包项目
+│   ├── Package.wxs           # MSI 包定义
+│   └── Setup.wixproj         # WiX 项目文件
+├── .github/                  # CI/CD 与发布配置
+│   ├── workflows/            # GitHub Actions 工作流
+│   ├── scripts/              # 构建/发布辅助脚本
+│   ├── packages.yaml         # 打包配置
+│   ├── oss-upload.yaml       # OSS 上传配置
+│   └── release/template.md   # Release Notes 模板
+├── CLAUDE.md                 # Claude Code 项目指引
+└── README.md
+```
+
 ### 📦 运行环境（Runtime Requirements）
 
 本安装器基于 `.NET 8` 和 WPF 构建。
@@ -85,9 +126,9 @@ WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/T
 ### 💻 构建（Build）
 ```bash
 # 构建安装器
-dotnet build Installer
+dotnet build src
 # 构建 MSI 安装包
-dotnet build Setup -c Release
+dotnet build msi -c Release
 ```
 
 ### 🚀 发布（Publish）
@@ -102,10 +143,10 @@ dotnet publish -c Release
 基于 [WiX Toolset v6](https://wixtoolset.org/) 构建 MSI 安装包，通过 Windows 原生安装机制提升系统信任度。
 
 ```bash
-dotnet build Setup -c Release
+dotnet build msi -c Release
 ```
 
-输出：`Setup/bin/Release/SrP-CFG_Installer_Setup.msi`
+输出：`msi/bin/Release/SrP-CFG_Installer_Setup.msi`
 
 特性：
 - 标准安装向导（欢迎 → 许可协议 → 安装路径 → 进度 → 完成）
