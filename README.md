@@ -40,7 +40,7 @@
 
 ## Installer 安装器
 
-![SrP-Installer](https://blog.srprolin.top/_astro/2026-01-12-14-18.B_NaQ9kB_Z2ns26w.webp)
+![SrP-Installer](site/img.webp)
 
 在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目下载地址](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html)中均发布了便携版，无须任何依赖，一键启用。
 

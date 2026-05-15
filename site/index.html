@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SrP-CFG Installer — 一键部署 CS2 配置预设</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico">
+</head>
+<body>
+
+  <!-- Noise Overlay -->
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Ambient Glow Orbs -->
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner container">
+      <a href="#" class="nav-brand">
+        <img src="favicon.ico" alt="" class="brand-icon">
+        <span class="brand-text">SrP-CFG</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#features" class="nav-link active">功能</a>
+        <a href="#steps" class="nav-link">使用</a>
+        <a href="#showcase" class="nav-link">展示</a>
+        <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="打开菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features">功能</a>
+      <a href="#steps">使用</a>
+      <a href="#showcase">展示</a>
+      <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="hero" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          COUNTER-STRIKE 2 TOOL
+        </div>
+        <h1 class="hero-title">
+          SrP-CFG
+          <span class="title-accent">Installer</span>
+        </h1>
+        <p class="hero-desc">
+          一键部署 CS2 配置预设。自动检测路径、智能备份、拖拽安装——<br>
+          将繁琐的手动配置流程简化为一次拖放操作。
+        </p>
+        <div class="hero-actions">
+          <a href="https://drive.srprolin.top/SrP-CFG/SrP-CFG_Installer.msi" target="_blank" rel="noopener" class="btn btn-accent">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            下载安装器
+          </a>
+          <a href="https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html" target="_blank" rel="noopener" class="btn btn-ghost">
+            查看文档
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="screenshot-placeholder hero-shot">
+          <img src="img.webp" alt="SrP-CFG 安装器主界面">
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <span class="stat-num">3</span>
+          <span class="stat-label">独立安装目标</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">10+</span>
+          <span class="stat-label">预设配置文件</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">0</span>
+          <span class="stat-label">运行库依赖</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Features ═══ -->
+  <section class="features" id="features">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-tag">Core Features</span>
+        <h2 class="section-title">核心功能</h2>
+        <p class="section-sub">覆盖从路径检测到备份恢复的完整安装链路，每一步都自动化处理</p>
+      </header>
+
+      <div class="features-grid">
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <h3>路径自动检测</h3>
+          <p>自动扫描注册表与 Steam 库文件，精准定位游戏全局 CFG 路径和地图指南路径，无需手动翻找</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <h3>用户自动识别</h3>
+          <p>自动枚举 Steam 用户列表并识别当前登录用户，多账号环境支持手动切换选择</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></div>
+          <h3>智能备份</h3>
+          <p>安装前自动将全局 CFG、用户视频预设、地图指南分别打包为独立 ZIP 备份，随时可回滚</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <h3>拖拽安装</h3>
+          <p>将 ZIP 配置包、CFG 单文件或整个文件夹直接拖入窗口，自动识别类型并完成安装</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+          <h3>多安装目标</h3>
+          <p>全局 CFG、用户视频设置、地图指南三个独立目标，通过复选框自由组合安装范围</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+          <h3>实时日志</h3>
+          <p>颜色编码的实时日志输出，安装进度清晰可辨：绿色成功、橙色警告、默认信息</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          <h3>自动更新</h3>
+          <p>启动时后台检查 GitHub Releases 新版本，有更新自动提醒，支持忽略当前版本</p>
+        </article>
+        <article class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3>零依赖运行</h3>
+          <p>自包含单文件发布，无需安装 .NET 运行时或任何其他依赖，下载即可直接运行</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Steps ═══ -->
+  <section class="steps" id="steps">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-tag">Quick Start</span>
+        <h2 class="section-title">四步上手</h2>
+        <p class="section-sub">从下载到安装完成，全程不超过一分钟</p>
+      </header>
+      <div class="steps-row">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <h3>下载</h3>
+          <p>从 GitHub Releases<br>获取便携版安装器</p>
+        </div>
+        <div class="step-arrow">
+          <svg width="40" height="16" viewBox="0 0 40 16"><path d="M0 8h36M30 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <h3>启动</h3>
+          <p>双击运行，自动检测<br>Steam 和 CS2 路径</p>
+        </div>
+        <div class="step-arrow">
+          <svg width="40" height="16" viewBox="0 0 40 16"><path d="M0 8h36M30 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <h3>拖入</h3>
+          <p>拖入 ZIP 配置包<br>自动备份并安装</p>
+        </div>
+        <div class="step-arrow">
+          <svg width="40" height="16" viewBox="0 0 40 16"><path d="M0 8h36M30 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <h3>完成</h3>
+          <p>启动游戏即刻生效<br>所有配置已就位</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Showcase ═══ -->
+  <section class="showcase" id="showcase">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-tag">In Action</span>
+        <h2 class="section-title">实际使用</h2>
+        <p class="section-sub">安装器的完整工作流程，从路径检测到文件部署</p>
+      </header>
+
+      <div class="showcase-list">
+        <div class="info-item">
+          <div class="info-diamond"></div>
+          <div>
+            <h4>路径检测</h4>
+            <p>自动读取注册表获取 Steam 安装路径，解析 libraryfolders.vdf 定位 CS2 游戏目录，枚举 userdata 下的用户列表</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-diamond"></div>
+          <div>
+            <h4>备份机制</h4>
+            <p>安装前自动将现有配置打包为 ZIP 备份文件，支持一键打开备份所在目录，可随时回滚到之前的状态</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-diamond"></div>
+          <div>
+            <h4>拖拽识别</h4>
+            <p>自动判断输入类型：ZIP 包执行解压安装，单文件直接复制到位，文件夹递归部署所有内容</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-diamond"></div>
+          <div>
+            <h4>实时反馈</h4>
+            <p>安装过程中实时显示操作日志，颜色编码区分操作状态：绿色成功、橙色异常、默认信息</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-diamond"></div>
+          <div>
+            <h4>独立控制</h4>
+            <p>全局 CFG、视频设置、地图指南三个目标通过复选框独立控制，按需选择安装范围</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-diamond"></div>
+          <div>
+            <h4>更新通知</h4>
+            <p>启动时后台检查新版本，有更新时显示通知横幅，可忽略当前版本或一键跳转下载页</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log Terminal -->
+      <div class="terminal">
+        <div class="term-bar">
+          <span class="term-dot" style="background:#ff5f57"></span>
+          <span class="term-dot" style="background:#febc2e"></span>
+          <span class="term-dot" style="background:#28c840"></span>
+          <span class="term-title">SrP-CFG Installer — 实时日志示例</span>
+        </div>
+        <div class="term-body" id="termBody">
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>检测到 Steam 路径：D:\Steam</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>检测到 CS2 游戏目录：D:\Steam\steamapps\common\Counter-Strike Global Offensive</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>检测到 Steam 用户：RolinShmily (76561198xxxxxxxxx)</span></div>
+          <div class="log-ln"><span class="log-p info">[~]&nbsp;&nbsp;</span><span>正在创建备份：cfg_backup.zip</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>备份完成：cfg_backup.zip (2.4 MB)</span></div>
+          <div class="log-ln"><span class="log-p info">[~]&nbsp;&nbsp;</span><span>正在安装全局 CFG 文件 (8 个文件)...</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>autoexec.cfg → csgo/cfg/autoexec.cfg</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>crosshair_view.cfg → csgo/cfg/crosshair_view.cfg</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>practice.cfg → csgo/cfg/practice.cfg</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>custom.cfg → csgo/cfg/custom.cfg</span></div>
+          <div class="log-ln"><span class="log-p info">[~]&nbsp;&nbsp;</span><span>正在安装用户视频设置...</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>cs2_video.txt → userdata/.../730/local/cfg/cs2_video.txt</span></div>
+          <div class="log-ln"><span class="log-p info">[~]&nbsp;&nbsp;</span><span>正在安装地图指南预设...</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>annotations/dust2 → csgo/annotations/local/dust2</span></div>
+          <div class="log-ln"><span class="log-p ok">[OK]</span><span>annotations/mirage → csgo/annotations/local/mirage</span></div>
+          <div class="log-ln"><span class="log-p warn">[!]&nbsp;&nbsp;</span><span class="log-warn">发现新版本：v2.6.0 → 前往下载</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta" id="cta">
+    <div class="container">
+      <div class="cta-card">
+        <span class="section-tag">Get Started</span>
+        <h2 class="cta-title">立即开始使用</h2>
+        <p class="cta-desc">下载便携版安装器，拖入配置包，即刻体验预设配置带来的竞技优势</p>
+        <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases" target="_blank" rel="noopener" class="btn btn-accent btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          前往下载
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="favicon.ico" alt="" class="brand-icon">
+        <span>SrP-CFG Installer</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html" target="_blank" rel="noopener">项目文档</a>
+        <a href="https://drive.srprolin.top/SrP-CFG/SrP-CFG_Installer.msi" target="_blank" rel="noopener">点击下载</a>
+        <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2" target="_blank" rel="noopener" class="gh-link">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
