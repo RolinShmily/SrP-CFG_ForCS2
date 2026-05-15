@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Specialized;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
-using SrPInstaller.Models;
 using SrPInstaller.ViewModels;
 using Forms = System.Windows.Forms;
 
@@ -26,8 +23,11 @@ public partial class MainWindow : Window
 
         DataContext = _viewModel;
 
-        // Subscribe to log entries for RichTextBox rendering
-        _viewModel.LogEntries.CollectionChanged += LogEntries_CollectionChanged;
+        // Auto-scroll log on new entries
+        _viewModel.LogEntries.CollectionChanged += (s, e) =>
+        {
+            Dispatcher.InvokeAsync(() => LogScrollViewer.ScrollToEnd());
+        };
 
         Loaded += OnLoaded;
     }
@@ -57,30 +57,6 @@ public partial class MainWindow : Window
             Multiselect = true
         };
         return dialog.ShowDialog() == true ? dialog.FileNames : null;
-    }
-
-    private void LogEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.NewItems == null) return;
-
-        foreach (LogEntry entry in e.NewItems)
-        {
-            string timestamp = entry.Timestamp.ToString("HH:mm:ss");
-            string logMessage = $"[{timestamp}] {entry.Message}";
-
-            var range = new TextRange(LogTextBox.Document.ContentEnd, LogTextBox.Document.ContentEnd);
-            range.Text = logMessage + Environment.NewLine;
-
-            var color = entry.Type == LogType.Success
-                ? Color.FromRgb(40, 200, 64)    // Green #28c840
-                : entry.Type == LogType.Warning || entry.Type == LogType.Error
-                    ? Color.FromRgb(231, 76, 60) // Red #e74c3c
-                    : Color.FromRgb(224, 224, 224); // Light text #e0e0e0
-
-            range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
-        }
-
-        LogTextBox.ScrollToEnd();
     }
 
     // Drag-drop handlers (cannot easily bind to ICommand)

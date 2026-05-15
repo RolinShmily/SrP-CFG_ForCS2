@@ -143,6 +143,7 @@ public class MainViewModel : INotifyPropertyChanged
     public ICommand OpenCfgBackupCommand { get; }
     public ICommand OpenVideoBackupCommand { get; }
     public ICommand OpenAnnotationsBackupCommand { get; }
+    public ICommand ClearLogCommand { get; }
 
     #endregion
 
@@ -170,6 +171,7 @@ public class MainViewModel : INotifyPropertyChanged
         OpenCfgBackupCommand = new RelayCommand(_ => OpenBackupInExplorer(CfgBackupPath));
         OpenVideoBackupCommand = new RelayCommand(_ => OpenBackupInExplorer(VideoBackupPath));
         OpenAnnotationsBackupCommand = new RelayCommand(_ => OpenBackupInExplorer(AnnotationsBackupPath));
+        ClearLogCommand = new RelayCommand(_ => LogEntries.Clear());
     }
 
     #region Public Methods (called from View)

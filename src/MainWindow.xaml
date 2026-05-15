@@ -398,19 +398,90 @@
                 Background="#0d0f15"
                 BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="1"
-                CornerRadius="8"
-                Padding="2">
-            <RichTextBox x:Name="LogTextBox"
-                         IsReadOnly="True"
-                         VerticalScrollBarVisibility="Auto"
-                         HorizontalScrollBarVisibility="Auto"
-                         FontFamily="Consolas"
-                         FontSize="12"
-                         Background="Transparent"
-                         Foreground="{DynamicResource TextPrimary}"
-                         BorderThickness="0"
-                         Padding="10,8"
-                         MinHeight="150" MaxHeight="300" Height="180"/>
+                CornerRadius="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header bar with clear button -->
+                <Border Grid.Row="0"
+                        Background="{DynamicResource BgRaised}"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="0,0,0,1"
+                        CornerRadius="8,8,0,0"
+                        Padding="12,6">
+                    <Grid>
+                        <TextBlock Text="日志输出"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSecondary}"
+                                   VerticalAlignment="Center"/>
+                        <Button Grid.Column="1"
+                                Content="清除"
+                                Style="{StaticResource ButtonSmall}"
+                                FontSize="11"
+                                Padding="8,2"
+                                HorizontalAlignment="Right"
+                                Command="{Binding ClearLogCommand}"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer x:Name="LogScrollViewer"
+                              Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              MaxHeight="280" MinHeight="150">
+                    <ItemsControl ItemsSource="{Binding LogEntries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Timestamp -->
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"
+                                               FontFamily="Consolas"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource TextTertiary}"
+                                               Margin="0,0,8,0"
+                                               VerticalAlignment="Center"/>
+
+                                    <!-- Message with color based on type -->
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Message}"
+                                               FontFamily="Consolas"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Success">
+                                                        <Setter Property="Foreground" Value="#28c840"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                                        <Setter Property="Foreground" Value="#e74c3c"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Error">
+                                                        <Setter Property="Foreground" Value="#e74c3c"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Info">
+                                                        <Setter Property="Foreground" Value="#e0e0e0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
         </Border>
 
         <!-- ========== Row 5: Action Buttons ========== -->
