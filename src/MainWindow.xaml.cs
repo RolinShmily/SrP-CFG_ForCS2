@@ -72,10 +72,10 @@ public partial class MainWindow : Window
             range.Text = logMessage + Environment.NewLine;
 
             var color = entry.Type == LogType.Success
-                ? Color.FromRgb(34, 139, 34)
+                ? Color.FromRgb(40, 200, 64)    // Green #28c840
                 : entry.Type == LogType.Warning || entry.Type == LogType.Error
-                    ? Color.FromRgb(220, 20, 60)
-                    : Colors.Black;
+                    ? Color.FromRgb(231, 76, 60) // Red #e74c3c
+                    : Color.FromRgb(224, 224, 224); // Light text #e0e0e0
 
             range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
         }
@@ -89,7 +89,7 @@ public partial class MainWindow : Window
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
             e.Effects = DragDropEffects.Copy;
-            ((System.Windows.Controls.Border)sender).Background = Brushes.LightBlue;
+            ((System.Windows.Controls.Border)sender).Background = new SolidColorBrush(Color.FromArgb(40, 232, 121, 12)); // Accent with low alpha
         }
         else
         {
@@ -100,12 +100,12 @@ public partial class MainWindow : Window
 
     private void DropZone_DragLeave(object sender, DragEventArgs e)
     {
-        ((System.Windows.Controls.Border)sender).Background = Brushes.WhiteSmoke;
+        ((System.Windows.Controls.Border)sender).Background = (Brush)FindResource("BgInput");
     }
 
     private void DropZone_Drop(object sender, DragEventArgs e)
     {
-        ((System.Windows.Controls.Border)sender).Background = Brushes.WhiteSmoke;
+        ((System.Windows.Controls.Border)sender).Background = (Brush)FindResource("BgInput");
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
             var files = (string[]?)e.Data.GetData(DataFormats.FileDrop);
@@ -142,7 +142,7 @@ public partial class MainWindow : Window
                 Height = 800,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
-                Background = new SolidColorBrush(Color.FromRgb(250, 250, 250))
+                Background = new SolidColorBrush(Color.FromRgb(15, 17, 23)) // Dark theme background
             };
 
             var sv = new System.Windows.Controls.ScrollViewer
