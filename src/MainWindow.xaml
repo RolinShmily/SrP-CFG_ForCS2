@@ -29,6 +29,10 @@
                 <Hyperlink NavigateUri="https://blog.srprolin.top/posts/srp-cfg/#srp-cfg_forcs2" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#0078D4" FontSize="14">
                     <Run Text="作者的博客空间" TextDecorations="None"/>
                 </Hyperlink>
+                <Run Text="  " FontSize="14"/>
+                <Hyperlink NavigateUri="https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#0078D4" FontSize="14">
+                    <Run Text="最新CFG文件下载" TextDecorations="None"/>
+                </Hyperlink>
             </TextBlock>
         </StackPanel>
 

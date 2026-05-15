@@ -66,6 +66,7 @@ WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/T
 SrP-CFG_ForCS2/
 ├── default/                  # 默认配置（官方完整版）
 │   ├── autoexec.cfg          # 自启动基础设置
+│   ├── custom.cfg            # 用户定制化覆盖占位（默认为空）
 │   ├── crosshair_view.cfg    # 准星与持枪视角
 │   ├── practice.cfg          # 个人自建房跑图
 │   ├── demo_hlae.cfg         # HLAE 观看 demo
@@ -78,10 +79,10 @@ SrP-CFG_ForCS2/
 │   ├── annotations/          # 各大地图指南预设
 │   ├── crosshair_library/    # 准星库
 │   └── spawn/                # 出生点配置
-├── custom/                   # 定制版配置（基于 default 覆盖）
-│   ├── echo/autoexec.cfg     # Echo 定制版
-│   ├── yszh/autoexec.cfg     # yszh 定制版
-│   └── visionl/autoexec.cfg  # VisionL 定制版
+├── custom/                   # 定制版覆盖配置（替换 default/custom.cfg）
+│   ├── echo/custom.cfg       # Echo 定制版覆盖
+│   ├── yszh/custom.cfg       # yszh 定制版覆盖
+│   └── visionl/custom.cfg    # VisionL 定制版覆盖
 ├── src/                      # WPF 安装器（.NET 8）
 │   ├── MainWindow.xaml(.cs)  # 主界面 UI 逻辑
 │   ├── InstallerService.cs   # 安装核心业务逻辑
@@ -96,7 +97,6 @@ SrP-CFG_ForCS2/
 │   ├── packages.yaml         # 打包配置
 │   ├── oss-upload.yaml       # OSS 上传配置
 │   └── release/template.md   # Release Notes 模板
-├── CLAUDE.md                 # Claude Code 项目指引
 └── README.md
 ```
 

@@ -13,6 +13,7 @@ packages:
     # 根目录文件（相对路径）
     files:
       - "default/autoexec.cfg"
+      - "default/custom.cfg"
       - "default/autoview.cfg"
       - "default/crosshair_view.cfg"
       - "default/cs2_video.txt"
@@ -38,30 +39,24 @@ packages:
   custom_echo:
     display_name: "Echo 定制版"
     zip_name: "Allcfgs_echo"
-    description: "使用 echo 的自定义 autoexec.cfg，其他配置与官方版相同"
+    description: "使用 echo 的自定义 custom.cfg，其他配置与官方版相同"
     base: "default"  # 继承 allcfgs 的所有文件
-    # 这些文件会被提取到 zip 根目录，替换同名文件
     overrides:
-      - "custom/echo/autoexec.cfg"
-    # 未来扩展示例：
-    # overrides:
-    #   - "custom/echo/autoexec.cfg"
-    #   - "custom/echo/practice.cfg"
-    #   - "custom/echo/custom_view.cfg"
+      - "custom/echo/custom.cfg"
 
   custom_yszh:
     display_name: "yszh 定制版"
     zip_name: "Allcfgs_yszh"
-    description: "使用 yszh 的自定义 autoexec.cfg，其他配置与官方版相同"
+    description: "使用 yszh 的自定义 custom.cfg，其他配置与官方版相同"
     base: "default"
     overrides:
-      - "custom/yszh/autoexec.cfg"
+      - "custom/yszh/custom.cfg"
 
   custom_visionl:
     display_name: "visionl 定制版"
     zip_name: "Allcfgs_visionl"
-    description: "使用 visionl 的自定义 autoexec.cfg，其他配置与官方版相同"
+    description: "使用 visionl 的自定义 custom.cfg，其他配置与官方版相同"
     base: "default"
     overrides:
-      - "custom/visionl/autoexec.cfg"
+      - "custom/visionl/custom.cfg"
 
