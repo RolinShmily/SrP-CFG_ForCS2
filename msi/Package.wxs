@@ -12,7 +12,7 @@
     <MajorUpgrade DowngradeErrorMessage="已安装更新版本，无需降级。" />
     <MediaTemplate EmbedCab="yes" />
 
-    <Icon Id="app.ico" SourceFile="..\Installer\Resources\app.ico" />
+    <Icon Id="app.ico" SourceFile="..\src\Resources\app.ico" />
     <Property Id="ARPPRODUCTICON" Value="app.ico" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
