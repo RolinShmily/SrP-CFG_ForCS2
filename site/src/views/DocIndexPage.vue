@@ -1,24 +1,33 @@
 <script setup lang="ts">
-export interface DocItem {
+export interface DocMeta {
   slug: string
   title: string
-  description: string
+  desc: string
+  category: 'project' | 'config'
 }
 
-const docs: DocItem[] = [
-  { slug: 'autoexec', title: 'autoexec.cfg', description: '自动执行配置，游戏启动时自动加载的基础配置文件' },
-  { slug: 'crosshair_view', title: 'crosshair_view.cfg', description: '准星与视角设置，自定义准星样式和观战视角' },
-  { slug: 'practice', title: 'practice.cfg', description: '练习模式配置，提供跑图和战术练习的便捷指令' },
-  { slug: 'demo_hlae', title: 'demo_hlae.cfg', description: 'Demo 观看与 HLAE 配置，用于制作精彩集锦' },
-  { slug: 'knife', title: 'knife.cfg', description: '刀战模式配置，快速切换至刀战专属设置' },
-  { slug: 'zeus', title: 'zeus.cfg', description: '电击枪模式配置，电击枪专属玩法设置' },
-  { slug: 'autoview', title: 'autoview.cfg', description: '自动观战配置，自定义自动观战行为' },
-  { slug: 'previewmode', title: 'previewmode.cfg', description: '预览模式配置，用于展示和截图的专用模式' },
-  { slug: 'guidemake', title: 'guidemake.cfg', description: '地图指南制作配置，辅助创建地图标注和指南' },
-  { slug: 'cs2_video', title: 'cs2_video.txt', description: '视频设置文件，控制游戏的画面和显示选项' },
-  { slug: 'srpcfg-1', title: 'SrP-CFG 使用指南 (一)', description: '安装器基本介绍与快速上手教程' },
-  { slug: 'srpcfg-2', title: 'SrP-CFG 使用指南 (二)', description: '安装器功能详解与配置说明' },
-  { slug: 'srpcfg-3', title: 'SrP-CFG 使用指南 (三)', description: '进阶用法与常见问题解答' },
+const projectDocs: DocMeta[] = [
+  { slug: 'srpcfg-1', title: '项目说明', desc: 'SrP-CFG 完整功能介绍与项目概览', category: 'project' },
+  { slug: 'srpcfg-2', title: '下载地址', desc: '各版本安装包与配置文件下载', category: 'project' },
+  { slug: 'srpcfg-3', title: '使用指南', desc: '安装器使用方法与配置说明', category: 'project' },
+]
+
+const configDocs: DocMeta[] = [
+  { slug: 'autoexec', title: 'autoexec.cfg', desc: '自启动基础设置，包含完整的按键绑定和导航系统', category: 'config' },
+  { slug: 'crosshair_view', title: 'crosshair_view.cfg', desc: '准星预设系统与持枪视角配置', category: 'config' },
+  { slug: 'practice', title: 'practice.cfg', desc: '个人自建房跑图，包含各地图出生点预设', category: 'config' },
+  { slug: 'demo_hlae', title: 'demo_hlae.cfg', desc: '使用 HLAE 观看 demo 的完整控制', category: 'config' },
+  { slug: 'knife', title: 'knife.cfg', desc: '匕首模型切换，20+ 种刀具选择', category: 'config' },
+  { slug: 'zeus', title: 'zeus.cfg', desc: '电击枪快速切换战术配置', category: 'config' },
+  { slug: 'autoview', title: 'autoview.cfg', desc: '武器自适应视角切换', category: 'config' },
+  { slug: 'previewmode', title: 'previewmode.cfg', desc: '饰品预览检视工具模式', category: 'config' },
+  { slug: 'guidemake', title: 'guidemake.cfg', desc: '地图指南制作模式，支持手雷标记和工坊提交', category: 'config' },
+  { slug: 'cs2_video', title: 'cs2_video.txt', desc: '视频设置配置（NVIDIA RTX 4060 优化）', category: 'config' },
+]
+
+const sections = [
+  { key: 'project', label: '项目文档', docs: projectDocs },
+  { key: 'config', label: '配置文档', docs: configDocs },
 ]
 </script>
 
@@ -31,30 +40,32 @@ const docs: DocItem[] = [
         <p class="section-sub">SrP-CFG 所有配置文件的详细说明与使用指南</p>
       </header>
 
-      <div class="doc-grid">
-        <router-link
-          v-for="doc in docs"
-          :key="doc.slug"
-          :to="`/docs/${doc.slug}`"
-          class="doc-card"
-        >
-          <div class="doc-card-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
+      <section v-for="sec in sections" :key="sec.key" class="doc-section">
+        <h2 class="section-group-title">
+          <span class="group-accent" :class="sec.key" />
+          {{ sec.label }}
+        </h2>
+        <div class="doc-grid">
+          <router-link
+            v-for="doc in sec.docs"
+            :key="doc.slug"
+            :to="`/docs/${doc.slug}`"
+            class="doc-card"
+          >
+            <span class="card-accent" :class="doc.category" />
+            <div class="doc-card-body">
+              <span class="doc-card-badge" :class="doc.category">
+                {{ doc.category === 'project' ? '项目' : '配置' }}
+              </span>
+              <h3 class="doc-card-title">{{ doc.title }}</h3>
+              <p class="doc-card-desc">{{ doc.desc }}</p>
+            </div>
+            <svg class="doc-card-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
             </svg>
-          </div>
-          <div class="doc-card-body">
-            <h3 class="doc-card-title">{{ doc.title }}</h3>
-            <p class="doc-card-desc">{{ doc.description }}</p>
-          </div>
-          <svg class="doc-card-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </router-link>
-      </div>
+          </router-link>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -64,77 +75,117 @@ const docs: DocItem[] = [
   padding: 80px 0 120px;
 }
 
+.doc-section {
+  margin-bottom: 48px;
+}
+.doc-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+  color: var(--c-text);
+}
+
+.group-accent {
+  display: inline-block;
+  width: 4px;
+  height: 22px;
+  border-radius: 2px;
+}
+.group-accent.project {
+  background: var(--c-accent);
+}
+.group-accent.config {
+  background: #3b82f6;
+}
+
 .doc-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
 .doc-card {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  align-items: stretch;
+  gap: 0;
   background: var(--c-bg-card);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  padding: 24px 28px;
+  border-radius: 8px;
+  padding: 0;
   transition: all 0.3s ease;
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
-.doc-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--c-accent), var(--c-accent-l));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s ease;
+
+.card-accent {
+  flex-shrink: 0;
+  width: 4px;
+  border-radius: 8px 0 0 8px;
+  transition: width 0.3s;
 }
+.card-accent.project {
+  background: var(--c-accent);
+}
+.card-accent.config {
+  background: #3b82f6;
+}
+
 .doc-card:hover {
   border-color: var(--c-border-hi);
-  background: var(--c-bg-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
-.doc-card:hover::before {
-  transform: scaleX(1);
-}
-
-.doc-card-icon {
-  flex-shrink: 0;
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-sm);
-  background: var(--c-accent-bg);
-  border: 1px solid rgba(232, 121, 12, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--c-accent);
-  transition: all 0.3s;
-}
-.doc-card:hover .doc-card-icon {
-  background: rgba(232, 121, 12, 0.14);
-  border-color: rgba(232, 121, 12, 0.25);
+.doc-card:hover .card-accent {
+  width: 6px;
 }
 
 .doc-card-body {
   flex: 1;
   min-width: 0;
+  padding: 24px 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.doc-card-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.doc-card-badge.project {
+  background: var(--c-accent-bg);
+  color: var(--c-accent);
+}
+.doc-card-badge.config {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
 }
 
 .doc-card-title {
   font-family: var(--f-display);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  margin-bottom: 4px;
   color: var(--c-text);
+  margin-bottom: 2px;
 }
 
 .doc-card-desc {
@@ -146,6 +197,8 @@ const docs: DocItem[] = [
 
 .doc-card-arrow {
   flex-shrink: 0;
+  align-self: center;
+  margin-right: 16px;
   color: var(--c-text-4);
   transition: all 0.3s;
 }
@@ -154,20 +207,21 @@ const docs: DocItem[] = [
   transform: translateX(4px);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .doc-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
-  .doc-card {
-    padding: 20px;
-    gap: 14px;
+  .doc-grid {
+    grid-template-columns: 1fr;
   }
-  .doc-card-icon {
-    width: 40px;
-    height: 40px;
+  .doc-card-body {
+    padding: 20px 16px 20px 16px;
+  }
+  .section-group-title {
+    font-size: 20px;
   }
 }
 </style>

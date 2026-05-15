@@ -12,3 +12,7 @@ CLAUDE.md
 Setup/bin/
 Setup/obj/
 Setup/*.wixpdb
+
+# Site build output
+site/node_modules/
+site/dist/
