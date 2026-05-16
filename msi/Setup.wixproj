@@ -1,5 +1,5 @@
 <Project Sdk="WixToolset.Sdk/6.0.2">
-  <Import Project="..\src\Directory.Build.props" />
+  <Import Project="..\wpf\Directory.Build.props" />
   <PropertyGroup>
     <OutputName>SrP-CFG_Installer_Setup</OutputName>
     <Cultures>zh-CN</Cultures>
@@ -8,7 +8,7 @@
     <DefineConstants>Version=$(Version);ProductCode=$(ProductCode)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Installer.csproj"
+    <ProjectReference Include="..\wpf\Installer.csproj"
                       ReferenceOutputAssembly="false"
                       Publish="true" />
   </ItemGroup>

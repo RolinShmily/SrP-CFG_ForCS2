@@ -1,33 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using SrPInstaller.Commands;
 using SrPInstaller.Models;
+using SrPInstaller.Services;
 
 namespace SrPInstaller.ViewModels;
 
-public enum AppPage { Install, Download, About }
-
-public class MainViewModel : INotifyPropertyChanged
+public class InstallViewModel : INotifyPropertyChanged
 {
     private const int MaxLogEntries = 500;
 
-    public const string GitHubReleasesUrl = "https://github.com/RolinShmily/SrP-CFG_ForCS2/releases";
-    public const string MsiDownloadUrl = "https://drive.srprolin.top/SrP-CFG/SrP-CFG_Installer.msi";
-    public const string GitHubRepoUrl = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
-    public const string WebsiteUrl = "https://blog.srprolin.top/posts/srp-cfg/";
-    public const string DocUrl = "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html";
-
     private readonly InstallerService _installer;
-    private readonly UpdateService _updateService;
-    private UpdateService.UpdateInfo? _latestUpdateInfo;
     private string[]? _selectedFiles;
 
     #region Dialog Callbacks (set by View)
@@ -115,46 +106,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     public string InstallButtonText => IsInstallInProgress ? "安装中..." : "开始安装";
 
-    private bool _isUpdateAvailable;
-    public bool IsUpdateAvailable
-    {
-        get => _isUpdateAvailable;
-        set { if (_isUpdateAvailable != value) { _isUpdateAvailable = value; OnPropertyChanged(); } }
-    }
-
-    private string _updateMessage = "";
-    public string UpdateMessage
-    {
-        get => _updateMessage;
-        set { if (_updateMessage != value) { _updateMessage = value; OnPropertyChanged(); } }
-    }
-
     public ObservableCollection<LogEntry> LogEntries { get; }
-
-    private AppPage _currentPage = AppPage.Install;
-    public AppPage CurrentPage
-    {
-        get => _currentPage;
-        set { if (_currentPage != value) { _currentPage = value; OnPropertyChanged(); } }
-    }
-
-    private bool _isSidebarCollapsed;
-    public bool IsSidebarCollapsed
-    {
-        get => _isSidebarCollapsed;
-        set { if (_isSidebarCollapsed != value) { _isSidebarCollapsed = value; OnPropertyChanged(); } }
-    }
-
-    public string AppVersion
-    {
-        get
-        {
-            var v = Assembly.GetExecutingAssembly().GetName().Version!;
-            return v.Build >= 0 ? $"v{v.Major}.{v.Minor}.{v.Build}" : $"v{v.Major}.{v.Minor}";
-        }
-    }
-
-    public ObservableCollection<DownloadItem> DownloadItems { get; }
 
     #endregion
 
@@ -167,29 +119,21 @@ public class MainViewModel : INotifyPropertyChanged
     public ICommand SelectCfgFolderCommand { get; }
     public ICommand SelectVideoFolderCommand { get; }
     public ICommand SelectAnnotationsFolderCommand { get; }
-    public ICommand OpenReleaseCommand { get; }
-    public ICommand DismissUpdateCommand { get; }
     public ICommand OpenCfgBackupCommand { get; }
     public ICommand OpenVideoBackupCommand { get; }
     public ICommand OpenAnnotationsBackupCommand { get; }
     public ICommand ClearLogCommand { get; }
-    public ICommand NavigateCommand { get; }
-    public ICommand ToggleSidebarCommand { get; }
-    public ICommand OpenUrlCommand { get; }
 
     #endregion
 
-    public MainViewModel()
+    public InstallViewModel(InstallerService installer)
     {
-        _installer = new InstallerService();
-        _updateService = new UpdateService();
-
+        _installer = installer;
         _installer.OnLog += OnInstallerLog;
         _installer.PropertyChanged += OnInstallerServicePropertyChanged;
 
         SteamUsers = new ObservableCollection<string>();
         LogEntries = new ObservableCollection<LogEntry>();
-        DownloadItems = new ObservableCollection<DownloadItem>(BuildDownloadItems());
 
         RefreshCommand = new RelayCommand(_ => RefreshAllPaths());
         BackupCommand = new RelayCommand(_ => BackupAll(), _ => !IsBackupInProgress);
@@ -198,38 +142,13 @@ public class MainViewModel : INotifyPropertyChanged
         SelectCfgFolderCommand = new RelayCommand(_ => SelectCfgFolder());
         SelectVideoFolderCommand = new RelayCommand(_ => SelectVideoFolder());
         SelectAnnotationsFolderCommand = new RelayCommand(_ => SelectAnnotationsFolder());
-        OpenReleaseCommand = new RelayCommand(_ => OpenRelease());
-        DismissUpdateCommand = new RelayCommand(_ => DismissUpdate());
         OpenCfgBackupCommand = new RelayCommand(_ => OpenBackupInExplorer(CfgBackupPath));
         OpenVideoBackupCommand = new RelayCommand(_ => OpenBackupInExplorer(VideoBackupPath));
         OpenAnnotationsBackupCommand = new RelayCommand(_ => OpenBackupInExplorer(AnnotationsBackupPath));
         ClearLogCommand = new RelayCommand(_ => LogEntries.Clear());
-        NavigateCommand = new RelayCommand(p => { if (p is AppPage page) CurrentPage = page; });
-        ToggleSidebarCommand = new RelayCommand(_ => IsSidebarCollapsed = !IsSidebarCollapsed);
-        OpenUrlCommand = new RelayCommand(p => OpenUrl(p?.ToString()));
     }
 
-    #region Public Methods (called from View)
-
-    public async Task CheckForUpdatesAsync()
-    {
-        try
-        {
-            var updateInfo = await _updateService.CheckForUpdateAsync();
-            if (updateInfo != null)
-            {
-                _latestUpdateInfo = updateInfo;
-                Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    UpdateMessage = $"发现新版本：v{updateInfo.LatestVersion}（当前 v{updateInfo.CurrentVersion}）";
-                    IsUpdateAvailable = true;
-                });
-            }
-        }
-        catch
-        {
-        }
-    }
+    #region Public Methods
 
     public void HandleDroppedFiles(string[] files)
     {
@@ -460,25 +379,6 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
-    private void OpenRelease()
-    {
-        if (_latestUpdateInfo != null)
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = _latestUpdateInfo.HtmlUrl,
-                UseShellExecute = true
-            });
-        }
-    }
-
-    private void DismissUpdate()
-    {
-        if (_latestUpdateInfo != null)
-            _updateService.SaveDismissedVersion(_latestUpdateInfo.LatestVersion);
-        IsUpdateAvailable = false;
-    }
-
     private void OpenBackupInExplorer(string? backupPath)
     {
         if (string.IsNullOrEmpty(backupPath) || !File.Exists(backupPath))
@@ -488,26 +388,6 @@ public class MainViewModel : INotifyPropertyChanged
         }
         System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{backupPath}\"");
     }
-
-    private static void OpenUrl(string? url)
-    {
-        if (string.IsNullOrEmpty(url)) return;
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = url,
-            UseShellExecute = true
-        });
-    }
-
-    private static List<DownloadItem> BuildDownloadItems() =>
-    [
-        new("官方完整版", "Allcfgs.zip", "包含所有官方配置文件的完整版本", null, GitHubReleasesUrl),
-        new("Echo 定制版", "Allcfgs_echo.zip", "基于官方版，使用 Echo 的自定义 custom.cfg", "仅替换 custom.cfg", GitHubReleasesUrl),
-        new("yszh 定制版", "Allcfgs_yszh.zip", "基于官方版，使用 yszh 的自定义 custom.cfg", "仅替换 custom.cfg", GitHubReleasesUrl),
-        new("VisionL 定制版", "Allcfgs_visionl.zip", "基于官方版，使用 VisionL 的自定义 custom.cfg", "仅替换 custom.cfg", GitHubReleasesUrl),
-        new("MSI 安装器", "SrP-CFG_Installer.msi", "Windows 标准安装包，自动创建快捷方式，支持系统级卸载", null, MsiDownloadUrl),
-        new("便携版", "SrP-CFG_Installer.exe", "单文件自包含发布，无需安装，下载即可直接运行", "需 .NET 8 Runtime", GitHubReleasesUrl),
-    ];
 
     #endregion
 
@@ -561,7 +441,6 @@ public class MainViewModel : INotifyPropertyChanged
     #region INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
-
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

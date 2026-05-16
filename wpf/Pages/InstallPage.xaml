@@ -1,0 +1,223 @@
+<Page x:Class="SrPInstaller.Pages.InstallPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      d:DesignHeight="700" d:DesignWidth="800"
+      Title="安装">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20,16,20,20">
+
+            <!-- 1. File selection (drop zone) -->
+            <Border x:Name="DropZoneBorder"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="2" CornerRadius="8" Padding="20" Height="80"
+                    AllowDrop="True"
+                    Drop="DropZone_Drop" DragOver="DropZone_DragOver" DragLeave="DropZone_DragLeave"
+                    MouseLeftButtonUp="DropZoneBorder_Click" Cursor="Hand">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="点击选择或拖放 ZIP/CFG 文件到此处" FontSize="14"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="{Binding SelectedFileDisplay, Mode=OneWay}" FontSize="12"
+                               HorizontalAlignment="Center" Margin="0,6,0,0"
+                               Foreground="{DynamicResource TextFillColorAccentBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 2. Install options (compact checkboxes) -->
+            <ui:Card Padding="12" Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <CheckBox IsChecked="{Binding InstallCfgChecked}" FontWeight="SemiBold" FontSize="13">
+                        <TextBlock Text="全局配置"/>
+                    </CheckBox>
+                    <Separator Width="1" Margin="20,4" Background="{DynamicResource ControlStrokeColorDefaultBrush}"/>
+                    <CheckBox IsChecked="{Binding InstallVideoChecked}" FontWeight="SemiBold" FontSize="13">
+                        <TextBlock Text="用户视频预设"/>
+                    </CheckBox>
+                    <Separator Width="1" Margin="20,4" Background="{DynamicResource ControlStrokeColorDefaultBrush}"/>
+                    <CheckBox IsChecked="{Binding InstallAnnotationsChecked}" FontWeight="SemiBold" FontSize="13">
+                        <TextBlock Text="地图指南预设"/>
+                    </CheckBox>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- 3. Configuration (collapsible) -->
+            <ui:CardExpander Margin="0,12,0,0" IsExpanded="False">
+                <ui:CardExpander.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0"/>
+                        <TextBlock Text="安装配置" FontWeight="SemiBold" FontSize="13"/>
+                        <TextBlock Text="（路径与备份）" Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Margin="6,0,0,0" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardExpander.Header>
+                <StackPanel Margin="4,8,4,4">
+
+                    <!-- Global CFG -->
+                    <TextBlock Text="全局配置 (CFG)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6"/>
+                    <TextBlock Text="目标路径" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,2,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" Text="{Binding Cs2CfgPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测或手动选择'}" IsReadOnly="True"/>
+                        <ui:Button Grid.Column="1" Content="..." Command="{Binding SelectCfgFolderCommand}" Width="36" Height="34" Margin="6,0,0,0" Appearance="Secondary"/>
+                    </Grid>
+                    <TextBlock Text="备份位置" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,6,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding CfgBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                        <ui:Button Grid.Column="1" Content="打开" Command="{Binding OpenCfgBackupCommand}" Height="34" Margin="6,0,0,0" Appearance="Secondary"/>
+                    </Grid>
+
+                    <Separator Margin="0,12"/>
+
+                    <!-- User Video -->
+                    <TextBlock Text="用户视频预设" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6"/>
+                    <TextBlock Text="Steam 用户" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,2,0,4"/>
+                    <ComboBox ItemsSource="{Binding SteamUsers}" SelectedIndex="{Binding SelectedSteamUserIndex}" Height="34"/>
+                    <TextBlock Text="目标路径" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,6,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" Text="{Binding VideoCfgPath, Mode=OneWay, TargetNullValue='请选择 Steam 用户'}" IsReadOnly="True"/>
+                        <ui:Button Grid.Column="1" Content="..." Command="{Binding SelectVideoFolderCommand}" Width="36" Height="34" Margin="6,0,0,0" Appearance="Secondary"/>
+                    </Grid>
+                    <TextBlock Text="备份位置" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,6,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding VideoBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                        <ui:Button Grid.Column="1" Content="打开" Command="{Binding OpenVideoBackupCommand}" Height="34" Margin="6,0,0,0" Appearance="Secondary"/>
+                    </Grid>
+
+                    <Separator Margin="0,12"/>
+
+                    <!-- Annotations -->
+                    <TextBlock Text="地图指南预设" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6"/>
+                    <TextBlock Text="目标路径" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,2,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" Text="{Binding AnnotationsPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测'}" IsReadOnly="True"/>
+                        <ui:Button Grid.Column="1" Content="..." Command="{Binding SelectAnnotationsFolderCommand}" Width="36" Height="34" Margin="6,0,0,0" Appearance="Secondary"/>
+                    </Grid>
+                    <TextBlock Text="备份位置" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,6,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding AnnotationsBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                        <ui:Button Grid.Column="1" Content="打开" Command="{Binding OpenAnnotationsBackupCommand}" Height="34" Margin="6,0,0,0" Appearance="Secondary"/>
+                    </Grid>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- 4. Steam ID Guide -->
+            <ui:CardExpander Margin="0,12,0,0" IsExpanded="False">
+                <ui:CardExpander.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE7BC;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="如何查找我的 Steam 用户 (好友代码)？" FontWeight="SemiBold" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardExpander.Header>
+                <StackPanel Margin="10,8,10,10">
+                    <Border BorderThickness="1" CornerRadius="6" Padding="5" MaxWidth="600">
+                        <Image x:Name="SteamGuideImage" Source="/Resources/navi.png" Stretch="Uniform"
+                               MaxHeight="450" HorizontalAlignment="Left"
+                               MouseLeftButtonUp="SteamGuideImage_MouseUp" Cursor="Hand"/>
+                    </Border>
+                    <TextBlock Margin="0,10,0,0" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorTertiaryBrush}">
+                        <Run Text="按照图中步骤操作，找到你的Steam好友ID后，"/>
+                        <LineBreak/>
+                        <Run Text="在上方的下拉框中选择对应的数字ID即可。"/>
+                    </TextBlock>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- 5. Log output -->
+            <Border Background="{DynamicResource ControlFillColorDisabledBrush}"
+                    CornerRadius="8" Margin="0,12,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Padding="12,6" BorderThickness="0,0,0,1"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
+                        <Grid>
+                            <TextBlock Text="日志输出" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       VerticalAlignment="Center"/>
+                            <ui:Button Content="清除" FontSize="11" Padding="8,2"
+                                       HorizontalAlignment="Right" Appearance="Secondary"
+                                       Command="{Binding ClearLogCommand}"/>
+                        </Grid>
+                    </Border>
+                    <ScrollViewer x:Name="LogScrollViewer" Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto" MaxHeight="220" MinHeight="80"
+                                  PreviewMouseWheel="LogScrollViewer_PreviewMouseWheel">
+                        <ItemsControl ItemsSource="{Binding LogEntries}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"
+                                                   FontFamily="Consolas" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Message}" FontFamily="Consolas" FontSize="12"
+                                                   TextWrapping="Wrap" VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Success">
+                                                            <Setter Property="Foreground" Value="#28c840"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                                            <Setter Property="Foreground" Value="#e74c3c"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Error">
+                                                            <Setter Property="Foreground" Value="#e74c3c"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- 6. Action buttons -->
+            <StackPanel Margin="0,12,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Content="刷新路径" Command="{Binding RefreshCommand}"
+                           Padding="20,8" Height="36" MinWidth="100" Appearance="Secondary"/>
+                <ui:Button Content="进行备份" Command="{Binding BackupCommand}"
+                           Margin="10,0,0,0" Padding="20,8" Height="36" MinWidth="100" Appearance="Secondary"/>
+                <ui:Button Content="{Binding InstallButtonText, Mode=OneWay}" Command="{Binding InstallCommand}"
+                           Margin="10,0,0,0" Padding="24,8" Height="38" MinWidth="120" Appearance="Primary"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

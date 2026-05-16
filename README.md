@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/src/Resources/app.ico" alt="图标">
+<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/wpf/Resources/app.ico" alt="图标">
 
 [![stars](https://img.shields.io/github/stars/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=green)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
 [![fork](https://img.shields.io/github/forks/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=critical)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
@@ -83,7 +83,7 @@ SrP-CFG_ForCS2/
 │   ├── echo/custom.cfg       # Echo 定制版覆盖
 │   ├── yszh/custom.cfg       # yszh 定制版覆盖
 │   └── visionl/custom.cfg    # VisionL 定制版覆盖
-├── src/                      # WPF 安装器（.NET 8）
+├── wpf/                      # WPF 安装器（.NET 8）
 │   ├── MainWindow.xaml(.cs)  # 主界面 UI 逻辑
 │   ├── InstallerService.cs   # 安装核心业务逻辑
 │   ├── UpdateService.cs      # 自动更新服务
@@ -126,7 +126,7 @@ SrP-CFG_ForCS2/
 ### 💻 构建（Build）
 ```bash
 # 构建安装器
-dotnet build src
+dotnet build wpf
 # 构建 MSI 安装包
 dotnet build msi -c Release
 ```

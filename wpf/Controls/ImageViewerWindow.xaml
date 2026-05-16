@@ -1,0 +1,59 @@
+<ui:FluentWindow x:Class="SrPInstaller.Controls.ImageViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        WindowStartupLocation="CenterOwner"
+        Width="800" Height="600"
+        MinWidth="400" MinHeight="300"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica">
+
+    <DockPanel>
+        <ui:TitleBar x:Name="ViewerTitleBar" DockPanel.Dock="Top"
+                     Title="{Binding Title}"/>
+
+        <!-- Zoom toolbar -->
+        <Border DockPanel.Dock="Top" Padding="8,4"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ui:Button x:Name="BtnZoomOut" Content="&#xE71D;" FontFamily="Segoe MDL2 Assets"
+                           FontSize="12" Padding="8,4" Appearance="Transparent"
+                           ToolTip="缩小" Click="BtnZoomOut_Click"/>
+                <TextBlock x:Name="ZoomLabel" Text="100%"
+                           FontSize="12" VerticalAlignment="Center" Margin="8,0"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Width="48" TextAlignment="Center"/>
+                <ui:Button x:Name="BtnZoomIn" Content="&#xE71E;" FontFamily="Segoe MDL2 Assets"
+                           FontSize="12" Padding="8,4" Appearance="Transparent"
+                           ToolTip="放大" Click="BtnZoomIn_Click"/>
+                <Separator Width="1" Margin="8,2" Background="{DynamicResource ControlStrokeColorDefaultBrush}"/>
+                <ui:Button Content="适应窗口" FontSize="11" Padding="8,4" Appearance="Transparent"
+                           ToolTip="适应窗口" Click="BtnFit_Click"/>
+                <ui:Button Content="1:1" FontSize="11" Padding="8,4" Appearance="Transparent"
+                           ToolTip="原始大小" Click="BtnActual_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Image area -->
+        <Grid x:Name="ImageContainer" ClipToBounds="True"
+              Background="{DynamicResource ApplicationBackgroundBrush}"
+              PreviewMouseWheel="ImageContainer_PreviewMouseWheel">
+            <Image x:Name="ZoomableImage"
+                   RenderTransformOrigin="0.5,0.5"
+                   Stretch="Uniform"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   MouseLeftButtonDown="ZoomableImage_MouseLeftButtonDown"
+                   MouseLeftButtonUp="ZoomableImage_MouseLeftButtonUp"
+                   MouseMove="ZoomableImage_MouseMove">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ImageScale" ScaleX="1" ScaleY="1"/>
+                        <TranslateTransform x:Name="ImageTranslate" X="0" Y="0"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
+    </DockPanel>
+</ui:FluentWindow>

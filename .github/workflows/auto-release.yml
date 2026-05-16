@@ -90,7 +90,7 @@ jobs:
           echo "🔍 Validating configuration files..."
           REQUIRED_FILES=(
             ".github/packages.yaml"
-            "src/Installer.csproj"
+            "wpf/Installer.csproj"
             ".github/release/template.md"
           )
 

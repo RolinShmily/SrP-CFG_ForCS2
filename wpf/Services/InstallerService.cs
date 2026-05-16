@@ -6,7 +6,7 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
-namespace SrPInstaller;
+namespace SrPInstaller.Services;
 
 public class InstallerService : INotifyPropertyChanged
 {

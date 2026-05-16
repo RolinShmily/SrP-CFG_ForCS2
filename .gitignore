@@ -16,3 +16,6 @@ Setup/*.wixpdb
 # Site build output
 site/node_modules/
 site/dist/
+
+# Temp files
+tmp/
