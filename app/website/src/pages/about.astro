@@ -1,0 +1,115 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import GitHubIcon from "../components/icons/GitHubIcon.astro";
+import ExternalLinkIcon from "../components/icons/ExternalLinkIcon.astro";
+import { REPO_URL } from "../data/navigation";
+
+const techStack = [
+  { name: "Astro", desc: "静态站点生成框架" },
+  { name: "Electron", desc: "桌面应用框架（开发中）" },
+  { name: "React", desc: "共享 UI 组件库" },
+  { name: "TailwindCSS", desc: "原子化 CSS 框架" },
+  { name: "Node.js", desc: "运行时环境" },
+  { name: "TypeScript", desc: "类型安全的开发语言" },
+];
+
+const links = [
+  { label: "GitHub 仓库", url: REPO_URL, icon: "github" as const },
+  { label: "项目说明书", url: "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html", icon: "external" as const },
+  { label: "下载地址", url: "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html", icon: "external" as const },
+  { label: "关于 CFG 你要了解的二三事", url: "https://blog.srprolin.top/posts/srp-cfg/", icon: "external" as const },
+];
+
+const contributors = [
+  { name: "RoL1n", role: "开发维护", github: "RolinShmily" },
+];
+---
+
+<MainLayout title="关于 — SrP-CFG" description="SrP-CFG 项目介绍与开源信息">
+  <section class="pt-[120px] pb-20">
+    <div class="max-w-[1200px] mx-auto px-7">
+
+      <SectionHeader label="About" title="关于 SrP-CFG" description="适用于 CS2（Counter-Strike 2）各场景的 CFG 预设文件，由 RoL1n 开发维护" />
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 max-w-[1000px] mx-auto">
+        <div>
+          <h2 class="font-display text-2xl font-semibold mb-6">项目简介</h2>
+          <div class="space-y-4 text-text-secondary font-light leading-[1.8] mb-10">
+            <p>
+              SrP-CFG 是一套为 CS2 玩家打造的全套预设 CFG 配置文件。项目提供多种实用功能，包括准星视角设置、跑图练习、demo 录制、饰品预览等，旨在提升游戏体验。
+            </p>
+            <p>
+              所有的 CFG 在运行后都会在控制台输出导航信息，通过 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">autoexec.cfg</code> 自启动加载，
+              并通过 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">exec custom</code> 链式加载用户定制配置。
+            </p>
+          </div>
+
+          <h2 class="font-display text-2xl font-semibold mb-6">快速链接</h2>
+          <div class="space-y-3">
+            {links.map((link) => (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener"
+                class="group flex items-center gap-3 p-4 bg-bg-card border border-border rounded-[10px] no-underline transition-all duration-300 hover:border-border-highlight hover:bg-bg-hover"
+              >
+                <div class="w-8 h-8 rounded-[6px] bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center flex-shrink-0 text-accent">
+                  {link.icon === "github" ? <GitHubIcon size={16} /> : <ExternalLinkIcon size={16} />}
+                </div>
+                <span class="font-display text-sm font-medium text-text-secondary group-hover:text-accent transition-colors">
+                  {link.label}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-display text-2xl font-semibold mb-6">技术栈</h2>
+          <div class="grid grid-cols-2 gap-3 mb-12">
+            {techStack.map((tech) => (
+              <div class="p-4 bg-bg-card border border-border rounded-[10px]">
+                <div class="font-display text-base font-semibold text-text mb-1">{tech.name}</div>
+                <div class="text-xs text-text-muted font-light">{tech.desc}</div>
+              </div>
+            ))}
+          </div>
+
+          <h2 class="font-display text-2xl font-semibold mb-6">贡献者</h2>
+          <div class="space-y-3">
+            {contributors.map((c) => (
+              <div class="flex items-center gap-4 p-4 bg-bg-card border border-border rounded-[10px]">
+                <div class="w-12 h-12 rounded-full bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center font-display text-lg font-bold text-accent">
+                  {c.name.charAt(0)}
+                </div>
+                <div>
+                  <div class="font-display text-base font-semibold">{c.name}</div>
+                  <div class="text-xs text-text-muted">{c.role}</div>
+                </div>
+                <a
+                  href={`https://github.com/${c.github}`}
+                  target="_blank"
+                  rel="noopener"
+                  class="ml-auto text-text-muted hover:text-accent transition-colors"
+                >
+                  <GitHubIcon size={18} />
+                </a>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-8 p-5 bg-bg-card border border-border rounded-[10px] flex items-center gap-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <div>
+              <div class="font-display text-sm font-semibold">开源许可</div>
+              <div class="text-xs text-text-muted">本仓库代码以自定义许可证发布，详见仓库根目录 LICENSE 文件</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>

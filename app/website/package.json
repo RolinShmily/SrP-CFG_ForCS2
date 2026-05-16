@@ -1,0 +1,28 @@
+{
+  "name": "@srp-cfg/website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@srp-cfg/ui": "workspace:*",
+    "astro": "^5.7.13",
+    "@astrojs/react": "^4.2.7",
+    "@astrojs/mdx": "^4.2.6",
+    "@astrojs/sitemap": "^3.3.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.6",
+    "tailwindcss": "^4.1.6",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "~5.8.3"
+  }
+}

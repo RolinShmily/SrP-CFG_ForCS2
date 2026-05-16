@@ -1,0 +1,58 @@
+---
+import ButtonLink from "./ButtonLink.astro";
+import DownloadIcon from "./icons/DownloadIcon.astro";
+---
+
+<section class="pt-[140px] min-h-screen flex flex-col relative">
+  <div class="max-w-[1200px] mx-auto px-7 relative z-1 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-16 items-center flex-1">
+    <div class="pb-12">
+      <div class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.28em] uppercase text-teal mb-6">
+        <span class="w-[7px] h-[7px] bg-teal rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.3)]"></span>
+        COUNTER-STRIKE 2 TOOL
+      </div>
+      <h1 class="font-display text-[64px] lg:text-[72px] font-bold leading-none tracking-[0.02em] mb-6">
+        SrP-CFG
+        <span class="block text-accent">Installer</span>
+      </h1>
+      <p class="text-lg text-text-secondary font-light leading-[1.9] mb-10 max-w-[500px]">
+        一键部署 CS2 配置预设。自动检测路径、智能备份、拖拽安装——<br>
+        将繁琐的手动配置流程简化为一次拖放操作。
+      </p>
+      <div class="flex gap-4 flex-wrap">
+        <ButtonLink href="/download" size="lg">
+          <DownloadIcon />下载安装器
+        </ButtonLink>
+        <ButtonLink href="/docs" variant="ghost" size="lg">
+          查看文档
+        </ButtonLink>
+      </div>
+    </div>
+    <div class="order-[-1] lg:order-none max-w-[580px] mx-auto lg:max-w-none w-full">
+      <div class="bg-bg-card border border-border rounded-[10px] overflow-hidden aspect-video relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-accent-bg to-transparent"></div>
+        <div class="w-full h-full flex items-center justify-center text-text-faint font-display text-lg">
+          SrP-CFG 安装器
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-16 py-10 border-t border-b border-border bg-gradient-to-b from-bg-card/60 to-transparent">
+    <div class="max-w-[1200px] mx-auto px-7 flex items-center justify-center gap-12">
+      <div class="text-center">
+        <span class="block font-display text-4xl font-bold text-accent leading-none mb-1.5">3</span>
+        <span class="text-sm text-text-muted">独立安装目标</span>
+      </div>
+      <div class="w-px h-10 bg-border"></div>
+      <div class="text-center">
+        <span class="block font-display text-4xl font-bold text-accent leading-none mb-1.5">10+</span>
+        <span class="text-sm text-text-muted">预设配置文件</span>
+      </div>
+      <div class="w-px h-10 bg-border"></div>
+      <div class="text-center">
+        <span class="block font-display text-4xl font-bold text-accent leading-none mb-1.5">0</span>
+        <span class="text-sm text-text-muted">运行库依赖</span>
+      </div>
+    </div>
+  </div>
+</section>

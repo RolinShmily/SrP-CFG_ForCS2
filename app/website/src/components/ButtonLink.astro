@@ -1,0 +1,32 @@
+---
+interface Props {
+  href: string;
+  variant?: "accent" | "ghost";
+  size?: "md" | "lg";
+}
+
+const { href, variant = "accent", size = "md" } = Astro.props;
+
+const variants = {
+  accent:
+    "bg-accent text-bg hover:bg-accent-light hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(232,121,12,0.25)]",
+  ghost:
+    "bg-transparent text-text-secondary border border-border-highlight hover:border-text-muted hover:text-text",
+};
+
+const sizes = {
+  md: "text-base px-8 py-3.5",
+  lg: "text-lg px-11 py-4",
+};
+---
+
+<a
+  href={href}
+  class:list={[
+    "inline-flex items-center gap-2.5 font-display font-semibold tracking-wide rounded-[6px] transition-all duration-250 no-underline",
+    variants[variant],
+    sizes[size],
+  ]}
+>
+  <slot />
+</a>

@@ -1,0 +1,38 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+
+const steps = [
+  { num: "01", title: "下载", desc: "从 GitHub Releases<br>获取便携版安装器" },
+  { num: "02", title: "启动", desc: "双击运行，自动检测<br>Steam 和 CS2 路径" },
+  { num: "03", title: "拖入", desc: "拖入 ZIP 配置包<br>自动备份并安装" },
+  { num: "04", title: "完成", desc: "启动游戏即刻生效<br>所有配置已就位" },
+];
+---
+
+<section class="py-[120px] relative">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[radial-gradient(ellipse,rgba(45,212,191,0.05)0%,transparent70%)] pointer-events-none"></div>
+  <div class="max-w-[1200px] mx-auto px-7 relative z-1">
+    <SectionHeader label="Quick Start" title="四步上手" description="从下载到安装完成，全程不超过一分钟" />
+
+    <div class="flex flex-wrap justify-center gap-6 lg:gap-0">
+      {steps.map((step, i) => (
+        <div class="flex items-start">
+          <div class="text-center flex-1 max-w-[220px] px-4">
+            <div class="w-[72px] h-[72px] mx-auto mb-6 border-2 border-border rounded-[10px] flex items-center justify-center font-display text-[22px] font-bold text-text-faint bg-bg-card transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_24px_rgba(232,121,12,0.25)]">
+              {step.num}
+            </div>
+            <h3 class="font-display text-[22px] font-semibold mb-2.5 tracking-[0.02em]">{step.title}</h3>
+            <p class="text-[15px] text-text-secondary font-light leading-[1.7]" set:html={step.desc} />
+          </div>
+          {i < steps.length - 1 && (
+            <div class="hidden lg:block text-text-faint pt-[26px] w-12 text-center flex-shrink-0">
+              <svg width="40" height="16" viewBox="0 0 40 16">
+                <path d="M0 8h36M30 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

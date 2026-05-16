@@ -1,0 +1,25 @@
+{
+  "name": "srp-cfg-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "dev:web": "pnpm --filter @srp-cfg/website dev",
+    "build:web": "pnpm --filter @srp-cfg/website build",
+    "preview:web": "pnpm --filter @srp-cfg/website preview",
+    "dev:desktop": "pnpm --filter @srp-cfg/desktop start",
+    "build:desktop": "pnpm --filter @srp-cfg/desktop make"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "electron",
+      "electron-winstaller"
+    ]
+  },
+  "dependencies": {
+    "@electron-forge/plugin-vite": "^7.11.1",
+    "@vitejs/plugin-react": "^5.2.0",
+    "rehype-slug": "^6.0.0"
+  }
+}

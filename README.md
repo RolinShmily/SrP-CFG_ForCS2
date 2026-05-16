@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/wpf/Resources/app.ico" alt="图标">
+<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/app/Resources/app.ico" alt="图标">
 
 [![stars](https://img.shields.io/github/stars/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=green)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
 [![fork](https://img.shields.io/github/forks/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=critical)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
@@ -44,21 +44,23 @@
 
 在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目下载地址](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html)中均发布了便携版，无须任何依赖，一键启用。
 
-WPF 图形界面安装器，运行后直接拖入下载好的 `zip` 包或 CFG/TXT 文件即可安装本预设。
+Electron 桌面应用，基于 React + TypeScript，运行后直接拖入下载好的 `zip` 包或 `CFG`/`TXT` 文件即可安装本预设。
 
 ### ✏️ 功能说明 (Features)
-- 自动检测 Steam 路径、游戏全局 CFG 路径和地图指南路径
+- 自动检测 Steam 路径、游戏全局 CFG 路径和地图指南路径（支持一键刷新）
 - 自动检测 Steam 用户并支持手动选择
 - 自动备份全局 CFG 文件夹为 `cfg_backup.zip`
 - 自动备份用户视频预设文件为 `user_cfg_backup.zip`
 - 自动备份地图指南文件为 `annotations_backup.zip`
+- 独立备份功能：不安装、仅备份当前配置
+- 一键恢复：从备份 ZIP 还原配置到游戏目录
 - 支持安装全局 CFG 文件（可单独选择）
 - 支持安装用户视频预设文件（仅识别 `cs2_video.txt`，可单独选择）
 - 支持安装地图指南预设文件（复制 annotations 子目录到 `csgo/annotations/local/`，可单独选择）
 - 目标目录不存在时自动创建（需游戏至少运行过一次）
 - 拖入 `zip`、`cfg` 单文件或文件夹自动检测并安装
 - 实时日志输出，清晰的安装进度反馈
-- 一键打开备份文件位置，直接定位到备份文件
+- 内置预设包快捷下载（无需手动访问网页）
 
 ## 🌳项目结构
 
@@ -83,11 +85,13 @@ SrP-CFG_ForCS2/
 │   ├── echo/custom.cfg       # Echo 定制版覆盖
 │   ├── yszh/custom.cfg       # yszh 定制版覆盖
 │   └── visionl/custom.cfg    # VisionL 定制版覆盖
-├── wpf/                      # WPF 安装器（.NET 8）
-│   ├── MainWindow.xaml(.cs)  # 主界面 UI 逻辑
-│   ├── InstallerService.cs   # 安装核心业务逻辑
-│   ├── UpdateService.cs      # 自动更新服务
-│   └── Resources/            # 应用图标等资源
+├── app/                      # Monorepo 应用层（pnpm workspaces）
+│   ├── website/              # Astro 静态站点（官网，VitePress 风格文档）
+│   ├── desktop/              # Electron 桌面安装器（Vite + React + TS）
+│   └── shared/               # 共享代码
+│       ├── content/          # MDX 文档内容
+│       ├── types/            # 共享类型定义
+│       └── ui/               # React UI 组件库
 ├── msi/                      # WiX v6 MSI 安装包项目
 │   ├── Package.wxs           # MSI 包定义
 │   └── Setup.wixproj         # WiX 项目文件
@@ -102,49 +106,47 @@ SrP-CFG_ForCS2/
 
 ### 📦 运行环境（Runtime Requirements）
 
-本安装器基于 `.NET 8` 和 WPF 构建。
+本项目为 pnpm monorepo，包含 Astro 官网和 Electron 桌面应用。
 
-用户运行 `Installer` 需要满足以下条件：
+**用户运行：**
 
-✔ 若使用"独立运行"（Self-Contained）发布
+Release 发布包为便携版，无需安装任何运行库，直接运行即可。
 
-无需安装任何运行库，直接运行发布的 `SrP-CFG_Installer.exe` 即可。
+**开发者环境：**
 
-✔ 若使用"框架依赖"（Framework-Dependent）方式发布
+- [Node.js](https://nodejs.org/) 22+
+- [pnpm](https://pnpm.io/) 10+
+- (可选) [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) — 仅构建 MSI 时需要
 
-用户需要安装：
+### 💻 开发
 
-`.NET 8 Desktop Runtime`（Windows x64）
-[点击跳转下载](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-
-开发者需要安装：
-
-`.NET 8 SDK`（推荐）
-用于编译/发布项目
-[点击跳转下载](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-
-### 💻 构建（Build）
 ```bash
-# 构建安装器
-dotnet build wpf
-# 构建 MSI 安装包
+# 安装依赖
+pnpm install
+
+# 启动官网开发服务器
+cd app/website && pnpm dev
+
+# 启动桌面应用
+cd app/desktop && pnpm start
+```
+
+### 🚀 构建（Build）
+
+```bash
+# 构建官网
+cd app/website && pnpm build
+
+# 打包桌面应用
+cd app/desktop && pnpm package
+
+# 构建 MSI 安装包（需要 .NET 8 SDK + WiX Toolset v6）
 dotnet build msi -c Release
 ```
-
-### 🚀 发布（Publish）
-```bash
-dotnet publish -c Release
-```
-
-> 项目已配置默认发布参数（Self-Contained + SingleFile + win-x64），直接运行 `dotnet publish` 即可生成独立运行的安装器。
 
 ### 📀 MSI 安装包
 
 基于 [WiX Toolset v6](https://wixtoolset.org/) 构建 MSI 安装包，通过 Windows 原生安装机制提升系统信任度。
-
-```bash
-dotnet build msi -c Release
-```
 
 输出：`msi/bin/Release/SrP-CFG_Installer_Setup.msi`
 

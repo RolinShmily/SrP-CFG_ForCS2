@@ -13,9 +13,16 @@ Setup/bin/
 Setup/obj/
 Setup/*.wixpdb
 
-# Site build output
-site/node_modules/
-site/dist/
+# Node
+node_modules/
+dist/
+.vite/
+.webpack/
+.astro/
+
+# Legacy (removed)
+site/
+wpf/
 
 # Temp files
 tmp/

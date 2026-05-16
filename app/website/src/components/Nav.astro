@@ -1,0 +1,43 @@
+---
+import { navLinks, REPO_URL } from "../data/navigation";
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav transition:name="nav" transition:animate="none" class="fixed top-0 left-0 right-0 z-200 bg-bg/82 backdrop-blur-xl border-b border-border">
+  <div class="max-w-[1200px] mx-auto px-7 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2.5 no-underline">
+      <span class="font-display text-xl font-bold text-accent tracking-widest">SrP-CFG</span>
+    </a>
+
+    <div class="hidden md:flex gap-2 items-center">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] transition-all duration-200 no-underline",
+            currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
+              ? "text-accent bg-accent-bg"
+              : "text-text-muted hover:text-text",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <a
+        href={REPO_URL}
+        target="_blank"
+        rel="noopener"
+        class="font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] text-text-muted hover:text-text transition-all duration-200 no-underline"
+      >
+        GitHub
+      </a>
+    </div>
+
+    <button class="md:hidden flex flex-col gap-1.5 bg-transparent border-none cursor-pointer p-1.5" aria-label="打开菜单">
+      <span class="block w-[22px] h-0.5 bg-text-secondary rounded-sm transition-all duration-300"></span>
+      <span class="block w-[22px] h-0.5 bg-text-secondary rounded-sm transition-all duration-300"></span>
+      <span class="block w-[22px] h-0.5 bg-text-secondary rounded-sm transition-all duration-300"></span>
+    </button>
+  </div>
+</nav>

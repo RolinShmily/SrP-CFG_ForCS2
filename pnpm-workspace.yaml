@@ -1,0 +1,4 @@
+packages:
+  - "app/website"
+  - "app/desktop"
+  - "app/shared/*"

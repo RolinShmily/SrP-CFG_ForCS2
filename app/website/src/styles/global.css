@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ── */
+@theme {
+  --color-bg: #0b0d14;
+  --color-bg-card: #10131c;
+  --color-bg-hover: #161b28;
+  --color-bg-raised: #1a2030;
+  --color-border: #1c2236;
+  --color-border-highlight: #2a3352;
+
+  --color-accent: #e8790c;
+  --color-accent-light: #f59e0b;
+  --color-accent-bg: rgba(232, 121, 12, 0.08);
+  --color-accent-glow: rgba(232, 121, 12, 0.25);
+
+  --color-green: #22c55e;
+  --color-red: #ef4444;
+  --color-teal: #2dd4bf;
+
+  --color-text: #eae8e4;
+  --color-text-secondary: #9ca3b8;
+  --color-text-muted: #5e657e;
+  --color-text-faint: #343a52;
+
+  --font-display: "Chakra Petch", sans-serif;
+  --font-body: "Noto Sans SC", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Noise Overlay ── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 -0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+}
+
+/* ── Ambient Glow Orbs ── */
+.ambient-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-orbs::before {
+  content: "";
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  top: -15%;
+  right: -8%;
+  border-radius: 50%;
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(232, 121, 12, 0.12) 0%, transparent 70%);
+}
+
+.ambient-orbs::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  bottom: 10%;
+  left: -5%;
+  border-radius: 50%;
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
+}

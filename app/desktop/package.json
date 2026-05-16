@@ -1,0 +1,40 @@
+{
+  "name": "@srp-cfg/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SrP-CFG Installer — CS2 配置预设管理器",
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "build": "electron-forge package"
+  },
+  "dependencies": {
+    "@srp-cfg/ui": "workspace:*",
+    "archiver": "^7.0.1",
+    "electron-squirrel-startup": "^1.0.1",
+    "extract-zip": "^2.0.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.1",
+    "winreg": "^1.2.5"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-squirrel": "^7.8.1",
+    "@electron-forge/maker-zip": "^7.8.1",
+    "@electron-forge/plugin-vite": "^7.11.1",
+    "@tailwindcss/postcss": "^4.1.6",
+    "@types/archiver": "^7.0.0",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "@types/winreg": "^1.2.36",
+    "@vitejs/plugin-react": "^5.1.2",
+    "electron": "^36.3.2",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.6",
+    "typescript": "~5.8.3"
+  }
+}

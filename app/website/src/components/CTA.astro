@@ -1,0 +1,21 @@
+---
+import ButtonLink from "./ButtonLink.astro";
+import DownloadIcon from "./icons/DownloadIcon.astro";
+---
+
+<section class="py-[120px] text-center">
+  <div class="max-w-[1200px] mx-auto px-7">
+    <div class="py-20 px-12 bg-bg-card border border-border rounded-2xl relative overflow-hidden">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[360px] h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[360px] h-0.5 bg-gradient-to-r from-transparent via-teal/30 to-transparent"></div>
+      <span class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.22em] uppercase text-accent mb-4">Get Started</span>
+      <h2 class="font-display text-[40px] font-bold tracking-[0.03em] mt-4 mb-4">立即开始使用</h2>
+      <p class="text-lg text-text-secondary font-light max-w-[500px] mx-auto leading-[1.8] mb-11">
+        下载便携版安装器，拖入配置包，即刻体验预设配置带来的竞技优势
+      </p>
+      <ButtonLink href="/download" size="lg">
+        <DownloadIcon />前往下载
+      </ButtonLink>
+    </div>
+  </div>
+</section>
