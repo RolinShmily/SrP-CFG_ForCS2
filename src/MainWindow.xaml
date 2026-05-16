@@ -146,21 +146,26 @@
                                 <Run Text="{Binding UpdateMessage, Mode=OneWay}"/>
                             </TextBlock>
                             <Button Content="查看" Style="{StaticResource ButtonSmall}" FontSize="10" Padding="8,2"
-                                    Command="{Binding OpenReleaseCommand}"/>
+                                    Command="{Binding OpenReleaseCommand}"
+                                    WindowChrome.IsHitTestVisibleInChrome="True"/>
                             <Button Content="✕" FontSize="10" Padding="4,2" Margin="3,0,0,0"
                                     Background="Transparent" Foreground="{DynamicResource TextTertiary}"
-                                    BorderThickness="0" Command="{Binding DismissUpdateCommand}" Cursor="Hand"/>
+                                    BorderThickness="0" Command="{Binding DismissUpdateCommand}" Cursor="Hand"
+                                    WindowChrome.IsHitTestVisibleInChrome="True"/>
                         </StackPanel>
                     </StackPanel>
 
                     <!-- Window control buttons -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <Button Style="{StaticResource TitleBarButton}" Content="─"
-                                Click="MinimizeButton_Click" ToolTip="最小化"/>
+                                Click="MinimizeButton_Click" ToolTip="最小化"
+                                WindowChrome.IsHitTestVisibleInChrome="True"/>
                         <Button Style="{StaticResource TitleBarButton}" Content="□"
-                                Click="MaximizeButton_Click" ToolTip="最大化"/>
+                                Click="MaximizeButton_Click" ToolTip="最大化"
+                                WindowChrome.IsHitTestVisibleInChrome="True"/>
                         <Button Style="{StaticResource TitleBarClose}" Content="✕"
-                                Click="CloseButton_Click" ToolTip="关闭"/>
+                                Click="CloseButton_Click" ToolTip="关闭"
+                                WindowChrome.IsHitTestVisibleInChrome="True"/>
                     </StackPanel>
                 </Grid>
             </Border>
