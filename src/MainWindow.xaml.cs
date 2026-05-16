@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using SrPInstaller.ViewModels;
 using Forms = System.Windows.Forms;
@@ -28,6 +30,41 @@ public partial class MainWindow : Window
         _viewModel.LogEntries.CollectionChanged += LogEntries_CollectionChanged;
 
         Loaded += OnLoaded;
+        SetWindowSizeByScreen();
+    }
+
+    private void SetWindowSizeByScreen()
+    {
+        var screen = System.Windows.Forms.Screen.FromHandle(
+            new System.Windows.Interop.WindowInteropHelper(this).Handle);
+
+        // Fallback: if handle not available yet, use primary screen
+        var bounds = screen?.Bounds ?? System.Windows.Forms.Screen.PrimaryScreen?.Bounds
+                     ?? new System.Drawing.Rectangle(0, 0, 1920, 1080);
+
+        var screenH = bounds.Height;
+
+        // Target window height = half the screen height, width = height * 16/9
+        double winH, winW;
+        if (screenH >= 2160)
+        {
+            winH = 1080; winW = 1920;
+        }
+        else if (screenH >= 1440)
+        {
+            winH = 720; winW = 1280;
+        }
+        else
+        {
+            winH = 540; winW = 960;
+        }
+
+        // Clamp to 90% of screen to leave room for taskbar
+        winH = Math.Min(winH, bounds.Height * 0.9);
+        winW = Math.Min(winW, bounds.Width * 0.9);
+
+        Width = winW;
+        Height = winH;
     }
 
     private void LogEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -68,7 +105,7 @@ public partial class MainWindow : Window
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
             e.Effects = DragDropEffects.Copy;
-            ((System.Windows.Controls.Border)sender).Background = DropZoneHighlight;
+            ((Border)sender).Background = DropZoneHighlight;
         }
         else
         {
@@ -79,12 +116,12 @@ public partial class MainWindow : Window
 
     private void DropZone_DragLeave(object sender, DragEventArgs e)
     {
-        ((System.Windows.Controls.Border)sender).Background = (Brush)FindResource("BgInput");
+        ((Border)sender).Background = (Brush)FindResource("BgInput");
     }
 
     private void DropZone_Drop(object sender, DragEventArgs e)
     {
-        ((System.Windows.Controls.Border)sender).Background = (Brush)FindResource("BgInput");
+        ((Border)sender).Background = (Brush)FindResource("BgInput");
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
             var files = (string[]?)e.Data.GetData(DataFormats.FileDrop);
@@ -101,33 +138,45 @@ public partial class MainWindow : Window
     {
         try
         {
-            var source = ((System.Windows.Controls.Image)sender).Source;
+            var source = ((Image)sender).Source as BitmapSource;
             if (source == null) return;
+
+            // Use natural pixel dimensions, DPI-aware
+            var imgW = source.PixelWidth / (source.DpiX / 96.0);
+            var imgH = source.PixelHeight / (source.DpiY / 96.0);
+
+            // Clamp to 90% of current window
+            var maxW = ActualWidth * 0.9;
+            var maxH = ActualHeight * 0.9;
+
+            var winW = Math.Min(imgW + 24, maxW);
+            var winH = Math.Min(imgH + 24, maxH);
 
             var w = new Window
             {
                 Title = "Steam 好友ID 查找指南",
-                Width = 1000,
-                Height = 800,
+                Width = winW,
+                Height = winH,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
-                Background = new SolidColorBrush(Color.FromRgb(15, 17, 23))
+                Background = new SolidColorBrush(Color.FromRgb(15, 17, 23)),
+                ResizeMode = ResizeMode.NoResize
             };
 
-            var sv = new System.Windows.Controls.ScrollViewer
-            {
-                HorizontalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
-                VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
-                Padding = new Thickness(10)
-            };
-
-            sv.Content = new System.Windows.Controls.Image
+            var img = new Image
             {
                 Source = source,
-                Stretch = Stretch.Uniform
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
             };
 
-            w.Content = sv;
+            w.Content = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(15, 17, 23)),
+                Child = img,
+                Padding = new Thickness(8)
+            };
             w.ShowDialog();
         }
         catch { }

@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:SrPInstaller.ViewModels"
         Title="SrP-CFG 安装器"
-        Width="1100" Height="720"
-        MinWidth="900" MinHeight="600"
+        MinWidth="780" MinHeight="520"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BgPrimary}">
 
