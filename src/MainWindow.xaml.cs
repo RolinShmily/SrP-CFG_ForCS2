@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shell;
 using Microsoft.Win32;
 using SrPInstaller.ViewModels;
 using Forms = System.Windows.Forms;
@@ -20,6 +21,16 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        // Apply WindowChrome for custom title bar
+        WindowChrome.SetWindowChrome(this, new WindowChrome
+        {
+            CaptionHeight = 42,
+            CornerRadius = new CornerRadius(8, 8, 0, 0),
+            GlassFrameThickness = new Thickness(0),
+            ResizeBorderThickness = new Thickness(5)
+        });
+
         _viewModel = new MainViewModel();
 
         _viewModel.BrowseFolderFunc = BrowseFolder;
@@ -35,31 +46,30 @@ public partial class MainWindow : Window
 
     private void SetWindowSizeByScreen()
     {
-        var screen = System.Windows.Forms.Screen.FromHandle(
+        var screen = Forms.Screen.FromHandle(
             new System.Windows.Interop.WindowInteropHelper(this).Handle);
 
-        // Fallback: if handle not available yet, use primary screen
-        var bounds = screen?.Bounds ?? System.Windows.Forms.Screen.PrimaryScreen?.Bounds
+        var bounds = screen?.Bounds ?? Forms.Screen.PrimaryScreen?.Bounds
                      ?? new System.Drawing.Rectangle(0, 0, 1920, 1080);
 
         var screenH = bounds.Height;
 
-        // Target window height = half the screen height, width = height * 16/9
+        // 4:3 ratio, half the screen height
         double winH, winW;
         if (screenH >= 2160)
         {
-            winH = 1080; winW = 1920;
+            winH = 1080; winW = 1440;
         }
         else if (screenH >= 1440)
         {
-            winH = 720; winW = 1280;
+            winH = 720; winW = 960;
         }
         else
         {
-            winH = 540; winW = 960;
+            winH = 540; winW = 720;
         }
 
-        // Clamp to 90% of screen to leave room for taskbar
+        // Clamp to 90% of screen
         winH = Math.Min(winH, bounds.Height * 0.9);
         winW = Math.Min(winW, bounds.Width * 0.9);
 
@@ -78,6 +88,16 @@ public partial class MainWindow : Window
         _viewModel.RefreshAllPaths();
         await _viewModel.CheckForUpdatesAsync();
     }
+
+    // Title bar button handlers
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+    private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
     private string? BrowseFolder(string description)
     {
@@ -141,11 +161,9 @@ public partial class MainWindow : Window
             var source = ((Image)sender).Source as BitmapSource;
             if (source == null) return;
 
-            // Use natural pixel dimensions, DPI-aware
             var imgW = source.PixelWidth / (source.DpiX / 96.0);
             var imgH = source.PixelHeight / (source.DpiY / 96.0);
 
-            // Clamp to 90% of current window
             var maxW = ActualWidth * 0.9;
             var maxH = ActualHeight * 0.9;
 
