@@ -1,503 +1,500 @@
 <Window x:Class="SrPInstaller.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:SrPInstaller.ViewModels"
         Title="SrP-CFG 安装器"
-        Width="1050" MinHeight="680"
-        SizeToContent="Height" MaxHeight="1200"
+        Width="1100" Height="720"
+        MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BgPrimary}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- ========== Row 0: Header Bar ========== -->
-        <Border Grid.Row="0"
+        <!-- ========== Sidebar ========== -->
+        <Border Grid.Column="0"
                 Background="{DynamicResource BgSurface}"
                 BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="0,0,0,1"
-                Padding="24,14">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- App title -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Image Width="28" Height="28" Margin="0,0,10,0"
-                           Source="/Resources/app.ico" Stretch="Uniform"
-                           VerticalAlignment="Center"/>
-                    <TextBlock VerticalAlignment="Center" FontSize="18" FontWeight="Bold"
-                               Foreground="{DynamicResource TextPrimary}">
-                        <Run Text="SrP-CFG"/>
-                        <Run Text="安装器" Foreground="{DynamicResource AccentBrush}"/>
-                        <Run Text="v2" FontSize="13" Foreground="{DynamicResource TextSecondary}"/>
-                    </TextBlock>
-                </StackPanel>
-
-                <!-- Header link buttons -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock VerticalAlignment="Center" Margin="0,0,16,0">
-                        <Hyperlink NavigateUri="https://github.com/RolinShmily/SrP-CFG_ForCS2"
-                                   RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource LinkBrush}"
-                                   FontSize="12" TextDecorations="None">
-                            <Run Text="GitHub"/>
-                        </Hyperlink>
-                    </TextBlock>
-                    <TextBlock VerticalAlignment="Center" Margin="0,0,16,0">
-                        <Hyperlink NavigateUri="https://blog.srprolin.top/posts/srp-cfg/#srp-cfg_forcs2"
-                                   RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource LinkBrush}"
-                                   FontSize="12" TextDecorations="None">
-                            <Run Text="文档"/>
-                        </Hyperlink>
-                    </TextBlock>
-                    <TextBlock VerticalAlignment="Center">
-                        <Hyperlink NavigateUri="https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html"
-                                   RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource LinkBrush}"
-                                   FontSize="12" TextDecorations="None">
-                            <Run Text="下载"/>
-                        </Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!-- ========== Row 1: Update Banner (collapsed by default) ========== -->
-        <Border Grid.Row="1"
-                Background="#2a2210"
-                BorderBrush="#3d3418"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="16,10"
-                Margin="24,12,24,0"
-                Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVis}}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="13"
-                           Foreground="{DynamicResource WarningBrush}">
-                    <Run Text="&#x26A0;"/>
-                    <Run Text=" "/>
-                    <Run Text="{Binding UpdateMessage, Mode=OneWay}" Foreground="{DynamicResource TextPrimary}"/>
-                </TextBlock>
-
-                <Button Grid.Column="1"
-                        Content="查看更新"
-                        Style="{StaticResource ButtonDefault}"
-                        FontSize="12"
-                        Padding="14,5"
-                        Margin="12,0,0,0"
-                        Command="{Binding OpenReleaseCommand}"/>
-
-                <Button Grid.Column="2"
-                        Content="&#x2715;"
-                        FontSize="12"
-                        Padding="8,4"
-                        Margin="6,0,0,0"
-                        Background="Transparent"
-                        Foreground="{DynamicResource TextTertiary}"
-                        BorderThickness="0"
-                        Command="{Binding DismissUpdateCommand}"
-                        Cursor="Hand"
-                        ToolTip="忽略此版本更新">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="Transparent" Padding="{TemplateBinding Padding}" CornerRadius="4">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-            </Grid>
-        </Border>
-
-        <!-- ========== Row 2: Installation Options — Card Layout ========== -->
-        <Grid Grid.Row="2" Margin="24,16,24,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Card 1: Global CFG -->
-            <Border Grid.Column="0"
-                    Background="{DynamicResource BgSurface}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <StackPanel>
-                    <!-- Card header -->
-                    <CheckBox IsChecked="{Binding InstallCfgChecked}"
-                              FontWeight="SemiBold" FontSize="13">
-                        <CheckBox.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="全局配置" Foreground="{DynamicResource TextPrimary}"/>
-                                <TextBlock Text=" (CFG)" Foreground="{DynamicResource TextSecondary}" Margin="2,0,0,0"/>
-                            </StackPanel>
-                        </CheckBox.Content>
-                    </CheckBox>
-
-                    <Separator Background="{DynamicResource BorderBrush}" Margin="0,10"/>
-
-                    <!-- Path -->
-                    <TextBlock Text="目标路径" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,6,0,4"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 Text="{Binding Cs2CfgPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测或手动选择'}"
-                                 IsReadOnly="True" TextWrapping="NoWrap" Height="32"/>
-                        <Button Grid.Column="1" Content="..."
-                                Style="{StaticResource ButtonSmall}"
-                                Command="{Binding SelectCfgFolderCommand}"
-                                Width="36" Height="32" Margin="4,0,0,0"/>
-                    </Grid>
-
-                    <!-- Backup -->
-                    <TextBlock Text="备份位置" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 IsReadOnly="True" TextWrapping="NoWrap" Height="32"
-                                 Text="{Binding CfgBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
-                        <Button Grid.Column="1" Content="打开"
-                                Style="{StaticResource ButtonSmall}"
-                                Command="{Binding OpenCfgBackupCommand}"
-                                Height="32" Margin="4,0,0,0"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <!-- Card 2: User Video Preset -->
-            <Border Grid.Column="2"
-                    Background="{DynamicResource BgSurface}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <StackPanel>
-                    <!-- Card header -->
-                    <CheckBox IsChecked="{Binding InstallVideoChecked}"
-                              FontWeight="SemiBold" FontSize="13">
-                        <CheckBox.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="用户视频预设" Foreground="{DynamicResource TextPrimary}"/>
-                            </StackPanel>
-                        </CheckBox.Content>
-                    </CheckBox>
-
-                    <Separator Background="{DynamicResource BorderBrush}" Margin="0,10"/>
-
-                    <!-- Steam user dropdown -->
-                    <TextBlock Text="Steam 用户" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,6,0,4"/>
-                    <ComboBox ItemsSource="{Binding SteamUsers}"
-                              SelectedIndex="{Binding SelectedSteamUserIndex}"
-                              Height="32"/>
-
-                    <!-- Path -->
-                    <TextBlock Text="目标路径" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 Text="{Binding VideoCfgPath, Mode=OneWay, TargetNullValue='请选择 Steam 用户'}"
-                                 IsReadOnly="True" TextWrapping="NoWrap" Height="32"/>
-                        <Button Grid.Column="1" Content="..."
-                                Style="{StaticResource ButtonSmall}"
-                                Command="{Binding SelectVideoFolderCommand}"
-                                Width="36" Height="32" Margin="4,0,0,0"/>
-                    </Grid>
-
-                    <!-- Backup -->
-                    <TextBlock Text="备份位置" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 IsReadOnly="True" TextWrapping="NoWrap" Height="32"
-                                 Text="{Binding VideoBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
-                        <Button Grid.Column="1" Content="打开"
-                                Style="{StaticResource ButtonSmall}"
-                                Command="{Binding OpenVideoBackupCommand}"
-                                Height="32" Margin="4,0,0,0"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <!-- Card 3: Map Annotations -->
-            <Border Grid.Column="4"
-                    Background="{DynamicResource BgSurface}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <StackPanel>
-                    <!-- Card header -->
-                    <CheckBox IsChecked="{Binding InstallAnnotationsChecked}"
-                              FontWeight="SemiBold" FontSize="13">
-                        <CheckBox.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="地图指南预设" Foreground="{DynamicResource TextPrimary}"/>
-                            </StackPanel>
-                        </CheckBox.Content>
-                    </CheckBox>
-
-                    <Separator Background="{DynamicResource BorderBrush}" Margin="0,10"/>
-
-                    <!-- Path -->
-                    <TextBlock Text="目标路径" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,6,0,4"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 Text="{Binding AnnotationsPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测'}"
-                                 IsReadOnly="True" TextWrapping="NoWrap" Height="32"/>
-                        <Button Grid.Column="1" Content="..."
-                                Style="{StaticResource ButtonSmall}"
-                                Command="{Binding SelectAnnotationsFolderCommand}"
-                                Width="36" Height="32" Margin="4,0,0,0"/>
-                    </Grid>
-
-                    <!-- Backup -->
-                    <TextBlock Text="备份位置" FontSize="11"
-                               Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 IsReadOnly="True" TextWrapping="NoWrap" Height="32"
-                                 Text="{Binding AnnotationsBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
-                        <Button Grid.Column="1" Content="打开"
-                                Style="{StaticResource ButtonSmall}"
-                                Command="{Binding OpenAnnotationsBackupCommand}"
-                                Height="32" Margin="4,0,0,0"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-        </Grid>
-
-        <!-- Steam ID Guide Expander (full-width below cards) -->
-        <Expander Margin="24,12,24,0" ExpandDirection="Down">
-            <Expander.Header>
-                <TextBlock Foreground="{DynamicResource LinkBrush}" FontWeight="SemiBold" FontSize="12">
-                    &#x1F4D6; 如何查找我的 Steam 用户 (好友代码)？
-                </TextBlock>
-            </Expander.Header>
-            <StackPanel Margin="10,8,10,10">
-                <!-- Image display area -->
-                <Border BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="6"
-                        Background="{DynamicResource BgInput}"
-                        Padding="5">
-                    <Image x:Name="SteamGuideImage"
-                           Source="/Resources/navi.png"
-                           Stretch="Uniform"
-                           MaxWidth="600"
-                           MaxHeight="450"
-                           HorizontalAlignment="Left"
-                           MouseLeftButtonUp="SteamGuideImage_MouseUp"
-                           Cursor="Hand"/>
-                </Border>
-
-                <!-- Tip text -->
-                <TextBlock Margin="0,10,0,0"
-                           FontSize="11"
-                           Foreground="{DynamicResource TextTertiary}"
-                           TextWrapping="Wrap">
-                    <Run Text="按照图中步骤操作，找到你的Steam好友ID后，"/>
-                    <LineBreak/>
-                    <Run Text="在上方的下拉框中选择对应的数字ID即可。如果userdata文件夹中只有一个账号，"/>
-                    <LineBreak/>
-                    <Run Text="系统通常会自动选中它。"/>
-                </TextBlock>
-            </StackPanel>
-        </Expander>
-
-        <!-- ========== Row 3: Drop Zone ========== -->
-        <Grid Margin="24,16,24,0">
-            <Border x:Name="DropZoneBorder"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="2"
-                    Background="{DynamicResource BgInput}"
-                    CornerRadius="8"
-                    Padding="20"
-                    Height="80"
-                    AllowDrop="True"
-                    Drop="DropZone_Drop"
-                    DragOver="DropZone_DragOver"
-                    DragLeave="DropZone_DragLeave"
-                    MouseLeftButtonUp="DropZoneBorder_Click"
-                    Cursor="Hand">
-                <!-- Dashed border workaround: use a nested border -->
-                <Border BorderBrush="{DynamicResource TextTertiary}"
-                        BorderThickness="0"
-                        CornerRadius="6">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="点击选择或拖放 ZIP/CFG 文件到此处"
-                                   FontSize="14"
-                                   HorizontalAlignment="Center"
-                                   Foreground="{DynamicResource TextSecondary}"/>
-                        <TextBlock Text="{Binding SelectedFileDisplay, Mode=OneWay}"
-                                   FontSize="12"
-                                   HorizontalAlignment="Center"
-                                   Foreground="{DynamicResource AccentBrush}"
-                                   Margin="0,6,0,0"/>
-                    </StackPanel>
-                </Border>
-            </Border>
-        </Grid>
-
-        <!-- ========== Row 4: Log Output ========== -->
-        <Border Margin="24,16,24,0"
-                Background="#0d0f15"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="8">
+                BorderThickness="0,0,1,0"
+                Width="{Binding IsSidebarCollapsed, Converter={StaticResource SidebarWidthConverter}, FallbackValue=200}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header bar with clear button -->
-                <Border Grid.Row="0"
-                        Background="{DynamicResource BgRaised}"
-                        BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="0,0,0,1"
-                        CornerRadius="8,8,0,0"
-                        Padding="12,6">
-                    <Grid>
-                        <TextBlock Text="日志输出"
-                                   FontSize="12"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextSecondary}"
-                                   VerticalAlignment="Center"/>
-                        <Button Grid.Column="1"
-                                Content="清除"
-                                Style="{StaticResource ButtonSmall}"
-                                FontSize="11"
-                                Padding="8,2"
-                                HorizontalAlignment="Right"
-                                Command="{Binding ClearLogCommand}"/>
-                    </Grid>
-                </Border>
+                <!-- Toggle button -->
+                <Button Grid.Row="0"
+                        Content="☰"
+                        FontSize="18"
+                        Foreground="{DynamicResource TextSecondary}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="14,12"
+                        HorizontalAlignment="Left"
+                        Cursor="Hand"
+                        Command="{Binding ToggleSidebarCommand}"/>
 
-                <ScrollViewer x:Name="LogScrollViewer"
-                              Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              MaxHeight="280" MinHeight="150">
-                    <ItemsControl ItemsSource="{Binding LogEntries}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="10,2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                <!-- Navigation items -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="0,8,0,0">
+                    <RadioButton Style="{StaticResource NavButton}"
+                                 IsChecked="True"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static local:AppPage.Install}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📦" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InvBoolToVis}}"/>
+                            <TextBlock Text="安装" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource NavButton}"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static local:AppPage.Download}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⬇" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InvBoolToVis}}"/>
+                            <TextBlock Text="下载" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource NavButton}"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static local:AppPage.About}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ℹ" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InvBoolToVis}}"/>
+                            <TextBlock Text="关于" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
 
-                                    <!-- Timestamp -->
-                                    <TextBlock Grid.Column="0"
-                                               Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"
-                                               FontFamily="Consolas"
-                                               FontSize="12"
-                                               Foreground="{DynamicResource TextTertiary}"
-                                               Margin="0,0,8,0"
-                                               VerticalAlignment="Center"/>
-
-                                    <!-- Message with color based on type -->
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding Message}"
-                                               FontFamily="Consolas"
-                                               FontSize="12"
-                                               TextWrapping="Wrap"
-                                               VerticalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Type}" Value="Success">
-                                                        <Setter Property="Foreground" Value="#28c840"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}" Value="Warning">
-                                                        <Setter Property="Foreground" Value="#e74c3c"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}" Value="Error">
-                                                        <Setter Property="Foreground" Value="#e74c3c"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}" Value="Info">
-                                                        <Setter Property="Foreground" Value="#e0e0e0"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <!-- Quick links at bottom -->
+                <StackPanel Grid.Row="2" Margin="0,0,0,12">
+                    <Separator Background="{DynamicResource BorderBrush}" Margin="12,8"/>
+                    <Button Style="{StaticResource LinkButton}"
+                            Command="{Binding OpenUrlCommand}"
+                            CommandParameter="{x:Static local:MainViewModel.DocUrl}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📄" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InvBoolToVis}}"/>
+                            <TextBlock Text="文档" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource LinkButton}"
+                            Command="{Binding OpenUrlCommand}"
+                            CommandParameter="{x:Static local:MainViewModel.WebsiteUrl}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🌐" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InvBoolToVis}}"/>
+                            <TextBlock Text="官网" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource LinkButton}"
+                            Command="{Binding OpenUrlCommand}"
+                            CommandParameter="{x:Static local:MainViewModel.GitHubRepoUrl}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🐙" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InvBoolToVis}}"/>
+                            <TextBlock Text="GitHub" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
 
-        <!-- ========== Row 5: Action Buttons ========== -->
-        <StackPanel Margin="0,16,24,20"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top">
-            <Button Content="刷新路径"
-                    Style="{StaticResource ButtonDefault}"
-                    Command="{Binding RefreshCommand}"
-                    Padding="20,8" Height="36" MinWidth="100" FontSize="13"/>
-            <Button Content="进行备份"
-                    Style="{StaticResource ButtonDefault}"
-                    Command="{Binding BackupCommand}"
-                    Margin="10,0,0,0" Padding="20,8" Height="36" MinWidth="100" FontSize="13"/>
-            <Button Content="{Binding InstallButtonText, Mode=OneWay}"
-                    Style="{StaticResource ButtonPrimary}"
-                    Command="{Binding InstallCommand}"
-                    Margin="10,0,0,0" Padding="24,8" Height="38" MinWidth="120" FontSize="14"/>
-        </StackPanel>
+        <!-- ========== Main Content Area ========== -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header bar -->
+            <Border Grid.Row="0"
+                    Background="{DynamicResource BgSurface}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,0,0,1"
+                    Padding="24,14">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Width="24" Height="24" Margin="0,0,10,0"
+                               Source="/Resources/app.ico" Stretch="Uniform"
+                               VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center" FontSize="16" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimary}">
+                            <Run Text="SrP-CFG"/>
+                            <Run Text="安装器" Foreground="{DynamicResource AccentBrush}"/>
+                            <Run Text="{Binding AppVersion, Mode=OneWay}" FontSize="12" Foreground="{DynamicResource TextSecondary}"/>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!-- Update indicator in header -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVis}}">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource WarningBrush}" VerticalAlignment="Center" Margin="0,0,8,0">
+                            <Run Text="{Binding UpdateMessage, Mode=OneWay}"/>
+                        </TextBlock>
+                        <Button Content="查看" Style="{StaticResource ButtonSmall}" FontSize="11" Padding="10,3"
+                                Command="{Binding OpenReleaseCommand}"/>
+                        <Button Content="✕" FontSize="11" Padding="6,3" Margin="4,0,0,0"
+                                Background="Transparent" Foreground="{DynamicResource TextTertiary}"
+                                BorderThickness="0" Command="{Binding DismissUpdateCommand}" Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Page content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+
+                    <!-- ===== Install Page ===== -->
+                    <StackPanel Margin="24,16,24,20"
+                                Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter={x:Static local:AppPage.Install}}">
+
+                        <!-- 3-card grid -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Card 1: Global CFG -->
+                            <Border Grid.Column="0"
+                                    Background="{DynamicResource BgSurface}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding InstallCfgChecked}" FontWeight="SemiBold" FontSize="13">
+                                        <CheckBox.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="全局配置" Foreground="{DynamicResource TextPrimary}"/>
+                                                <TextBlock Text=" (CFG)" Foreground="{DynamicResource TextSecondary}" Margin="2,0,0,0"/>
+                                            </StackPanel>
+                                        </CheckBox.Content>
+                                    </CheckBox>
+                                    <Separator Background="{DynamicResource BorderBrush}" Margin="0,10"/>
+                                    <TextBlock Text="目标路径" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,6,0,4"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding Cs2CfgPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测或手动选择'}" IsReadOnly="True" TextWrapping="NoWrap" Height="32"/>
+                                        <Button Grid.Column="1" Content="..." Style="{StaticResource ButtonSmall}" Command="{Binding SelectCfgFolderCommand}" Width="36" Height="32" Margin="4,0,0,0"/>
+                                    </Grid>
+                                    <TextBlock Text="备份位置" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" IsReadOnly="True" TextWrapping="NoWrap" Height="32" Text="{Binding CfgBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                                        <Button Grid.Column="1" Content="打开" Style="{StaticResource ButtonSmall}" Command="{Binding OpenCfgBackupCommand}" Height="32" Margin="4,0,0,0"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Card 2: User Video -->
+                            <Border Grid.Column="2"
+                                    Background="{DynamicResource BgSurface}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding InstallVideoChecked}" FontWeight="SemiBold" FontSize="13">
+                                        <CheckBox.Content>
+                                            <TextBlock Text="用户视频预设" Foreground="{DynamicResource TextPrimary}"/>
+                                        </CheckBox.Content>
+                                    </CheckBox>
+                                    <Separator Background="{DynamicResource BorderBrush}" Margin="0,10"/>
+                                    <TextBlock Text="Steam 用户" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,6,0,4"/>
+                                    <ComboBox ItemsSource="{Binding SteamUsers}" SelectedIndex="{Binding SelectedSteamUserIndex}" Height="32"/>
+                                    <TextBlock Text="目标路径" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding VideoCfgPath, Mode=OneWay, TargetNullValue='请选择 Steam 用户'}" IsReadOnly="True" TextWrapping="NoWrap" Height="32"/>
+                                        <Button Grid.Column="1" Content="..." Style="{StaticResource ButtonSmall}" Command="{Binding SelectVideoFolderCommand}" Width="36" Height="32" Margin="4,0,0,0"/>
+                                    </Grid>
+                                    <TextBlock Text="备份位置" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" IsReadOnly="True" TextWrapping="NoWrap" Height="32" Text="{Binding VideoBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                                        <Button Grid.Column="1" Content="打开" Style="{StaticResource ButtonSmall}" Command="{Binding OpenVideoBackupCommand}" Height="32" Margin="4,0,0,0"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Card 3: Annotations -->
+                            <Border Grid.Column="4"
+                                    Background="{DynamicResource BgSurface}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding InstallAnnotationsChecked}" FontWeight="SemiBold" FontSize="13">
+                                        <CheckBox.Content>
+                                            <TextBlock Text="地图指南预设" Foreground="{DynamicResource TextPrimary}"/>
+                                        </CheckBox.Content>
+                                    </CheckBox>
+                                    <Separator Background="{DynamicResource BorderBrush}" Margin="0,10"/>
+                                    <TextBlock Text="目标路径" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,6,0,4"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding AnnotationsPath, Mode=OneWay, TargetNullValue='请点击刷新路径检测'}" IsReadOnly="True" TextWrapping="NoWrap" Height="32"/>
+                                        <Button Grid.Column="1" Content="..." Style="{StaticResource ButtonSmall}" Command="{Binding SelectAnnotationsFolderCommand}" Width="36" Height="32" Margin="4,0,0,0"/>
+                                    </Grid>
+                                    <TextBlock Text="备份位置" FontSize="11" Foreground="{DynamicResource TextTertiary}" Margin="0,8,0,4"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" IsReadOnly="True" TextWrapping="NoWrap" Height="32" Text="{Binding AnnotationsBackupPath, Mode=OneWay, TargetNullValue='安装前将自动备份'}"/>
+                                        <Button Grid.Column="1" Content="打开" Style="{StaticResource ButtonSmall}" Command="{Binding OpenAnnotationsBackupCommand}" Height="32" Margin="4,0,0,0"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- Steam ID Guide Expander -->
+                        <Expander Margin="0,12,0,0" ExpandDirection="Down">
+                            <Expander.Header>
+                                <TextBlock Foreground="{DynamicResource LinkBrush}" FontWeight="SemiBold" FontSize="12">
+                                    📖 如何查找我的 Steam 用户 (好友代码)？
+                                </TextBlock>
+                            </Expander.Header>
+                            <StackPanel Margin="10,8,10,10">
+                                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6"
+                                        Background="{DynamicResource BgInput}" Padding="5">
+                                    <Image x:Name="SteamGuideImage" Source="/Resources/navi.png" Stretch="Uniform"
+                                           MaxWidth="600" MaxHeight="450" HorizontalAlignment="Left"
+                                           MouseLeftButtonUp="SteamGuideImage_MouseUp" Cursor="Hand"/>
+                                </Border>
+                                <TextBlock Margin="0,10,0,0" FontSize="11" Foreground="{DynamicResource TextTertiary}" TextWrapping="Wrap">
+                                    <Run Text="按照图中步骤操作，找到你的Steam好友ID后，"/>
+                                    <LineBreak/>
+                                    <Run Text="在上方的下拉框中选择对应的数字ID即可。"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Drop zone -->
+                        <Grid Margin="0,16,0,0">
+                            <Border x:Name="DropZoneBorder"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2"
+                                    Background="{DynamicResource BgInput}" CornerRadius="8" Padding="20" Height="80"
+                                    AllowDrop="True"
+                                    Drop="DropZone_Drop" DragOver="DropZone_DragOver" DragLeave="DropZone_DragLeave"
+                                    MouseLeftButtonUp="DropZoneBorder_Click" Cursor="Hand">
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="点击选择或拖放 ZIP/CFG 文件到此处" FontSize="14"
+                                               HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondary}"/>
+                                    <TextBlock Text="{Binding SelectedFileDisplay, Mode=OneWay}" FontSize="12"
+                                               HorizontalAlignment="Center" Foreground="{DynamicResource AccentBrush}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- Log output -->
+                        <Border Margin="0,16,0,0" Background="#0d0f15" BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1" CornerRadius="8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Background="{DynamicResource BgRaised}"
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"
+                                        CornerRadius="8,8,0,0" Padding="12,6">
+                                    <Grid>
+                                        <TextBlock Text="日志输出" FontSize="12" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" Content="清除" Style="{StaticResource ButtonSmall}"
+                                                FontSize="11" Padding="8,2" HorizontalAlignment="Right"
+                                                Command="{Binding ClearLogCommand}"/>
+                                    </Grid>
+                                </Border>
+                                <ScrollViewer x:Name="LogScrollViewer" Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto" MaxHeight="220" MinHeight="120">
+                                    <ItemsControl ItemsSource="{Binding LogEntries}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="10,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"
+                                                               FontFamily="Consolas" FontSize="12" Foreground="{DynamicResource TextTertiary}"
+                                                               Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Message}" FontFamily="Consolas" FontSize="12"
+                                                               TextWrapping="Wrap" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Type}" Value="Success">
+                                                                        <Setter Property="Foreground" Value="#28c840"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                                                        <Setter Property="Foreground" Value="#e74c3c"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Type}" Value="Error">
+                                                                        <Setter Property="Foreground" Value="#e74c3c"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Type}" Value="Info">
+                                                                        <Setter Property="Foreground" Value="#e0e0e0"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- Action buttons -->
+                        <StackPanel Margin="0,16,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="刷新路径" Style="{StaticResource ButtonDefault}"
+                                    Command="{Binding RefreshCommand}" Padding="20,8" Height="36" MinWidth="100" FontSize="13"/>
+                            <Button Content="进行备份" Style="{StaticResource ButtonDefault}"
+                                    Command="{Binding BackupCommand}" Margin="10,0,0,0" Padding="20,8" Height="36" MinWidth="100" FontSize="13"/>
+                            <Button Content="{Binding InstallButtonText, Mode=OneWay}" Style="{StaticResource ButtonPrimary}"
+                                    Command="{Binding InstallCommand}" Margin="10,0,0,0" Padding="24,8" Height="38" MinWidth="120" FontSize="14"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- ===== Download Page ===== -->
+                    <StackPanel Margin="24,16,24,20"
+                                Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter={x:Static local:AppPage.Download}}">
+
+                        <TextBlock Text="配置包下载" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="从 GitHub Releases 获取最新配置包，下载后拖入安装页即可安装" FontSize="13"
+                                   Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,20"/>
+
+                        <ItemsControl ItemsSource="{Binding DownloadItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource BgSurface}"
+                                            BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1" CornerRadius="8"
+                                            Padding="20" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,2"/>
+                                                <TextBlock Text="{Binding FileName}" FontSize="11" FontFamily="Consolas"
+                                                           Foreground="{DynamicResource TextTertiary}" Margin="0,0,0,4"/>
+                                                <TextBlock Text="{Binding Description}" FontSize="12"
+                                                           Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Note}" FontSize="11" FontStyle="Italic"
+                                                           Foreground="{DynamicResource TextTertiary}" Margin="0,2,0,0"
+                                                           Visibility="{Binding Note, Converter={StaticResource NullToCollapsed}}"/>
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Content="⬇ 下载"
+                                                    Style="{StaticResource ButtonPrimary}"
+                                                    FontSize="12" Padding="16,6"
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding DownloadUrl}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <!-- Tip -->
+                        <Border Background="{DynamicResource BgSurface}" BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,12,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="💡" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="下载 ZIP 后，切换到「安装」页面将文件拖入即可完成配置部署" FontSize="12"
+                                           Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- ===== About Page ===== -->
+                    <StackPanel Margin="24,16,24,20"
+                                Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter={x:Static local:AppPage.About}}">
+
+                        <StackPanel HorizontalAlignment="Center" Margin="0,40,0,0">
+                            <Image Source="/Resources/app.ico" Width="64" Height="64"
+                                   HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                            <TextBlock HorizontalAlignment="Center" FontSize="28" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimary}">
+                                <Run Text="SrP-CFG"/>
+                                <Run Text="安装器" Foreground="{DynamicResource AccentBrush}"/>
+                            </TextBlock>
+                            <TextBlock Text="{Binding AppVersion, Mode=OneWay, StringFormat='版本 {0}'}"
+                                       HorizontalAlignment="Center" FontSize="14"
+                                       Foreground="{DynamicResource TextSecondary}" Margin="0,4,0,0"/>
+
+                            <TextBlock Text="CS2 配置预设管理器 — 一键部署、自动备份、版本更新"
+                                       HorizontalAlignment="Center" FontSize="14"
+                                       Foreground="{DynamicResource TextSecondary}" Margin="0,24,0,0"
+                                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="400"/>
+
+                            <Border Background="{DynamicResource BgSurface}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1" CornerRadius="8"
+                                    Margin="0,32,0,0" Width="360" HorizontalAlignment="Center">
+                                <StackPanel>
+                                    <Button Content="🐙  GitHub 仓库" Style="{StaticResource LinkButton}"
+                                            HorizontalContentAlignment="Left"
+                                            Command="{Binding OpenUrlCommand}"
+                                            CommandParameter="{x:Static local:MainViewModel.GitHubRepoUrl}"/>
+                                    <Separator Background="{DynamicResource BorderBrush}" Margin="14,0"/>
+                                    <Button Content="🌐  官方网站" Style="{StaticResource LinkButton}"
+                                            HorizontalContentAlignment="Left"
+                                            Command="{Binding OpenUrlCommand}"
+                                            CommandParameter="{x:Static local:MainViewModel.WebsiteUrl}"/>
+                                    <Separator Background="{DynamicResource BorderBrush}" Margin="14,0"/>
+                                    <Button Content="📄  在线文档" Style="{StaticResource LinkButton}"
+                                            HorizontalContentAlignment="Left"
+                                            Command="{Binding OpenUrlCommand}"
+                                            CommandParameter="{x:Static local:MainViewModel.DocUrl}"/>
+                                    <Separator Background="{DynamicResource BorderBrush}" Margin="14,0"/>
+                                    <Button Content="⬇  最新下载" Style="{StaticResource LinkButton}"
+                                            HorizontalContentAlignment="Left"
+                                            Command="{Binding OpenUrlCommand}"
+                                            CommandParameter="{x:Static local:MainViewModel.GitHubReleasesUrl}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock HorizontalAlignment="Center" Margin="0,32,0,0"
+                                       Foreground="{DynamicResource TextTertiary}" FontSize="11" TextWrapping="Wrap"
+                                       TextAlignment="Center">
+                                <Run Text="由 RolinShmily 开发维护"/>
+                                <LineBreak/>
+                                <Run Text="源代码基于 MIT 协议开源"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>
