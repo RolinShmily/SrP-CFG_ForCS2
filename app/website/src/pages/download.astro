@@ -2,7 +2,7 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import Card from "../components/Card.astro";
-import DownloadIcon from "../components/icons/DownloadIcon.astro";
+import { Download, FileText, Info, Package } from "lucide-astro";
 import { installers, packages } from "../data/downloads";
 import { RELEASES_URL } from "../data/navigation";
 ---
@@ -14,7 +14,7 @@ import { RELEASES_URL } from "../data/navigation";
 
       <div class="mb-20">
         <h2 class="font-display text-2xl font-semibold mb-8 flex items-center gap-3">
-          <DownloadIcon size={24} />
+          <Download class="w-6 h-6 text-accent" />
           安装器
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -31,7 +31,7 @@ import { RELEASES_URL } from "../data/navigation";
               </div>
               <p class="text-sm text-text-secondary font-light leading-[1.75] mb-6">{item.desc}</p>
               <div class="flex items-center gap-2 text-accent font-display text-sm font-semibold">
-                <DownloadIcon size={16} />点击下载
+                <Download class="w-4 h-4" />点击下载
               </div>
             </Card>
           ))}
@@ -40,11 +40,7 @@ import { RELEASES_URL } from "../data/navigation";
 
       <div>
         <h2 class="font-display text-2xl font-semibold mb-8 flex items-center gap-3">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-            <polyline points="17 21 17 13 7 13 7 21" />
-            <polyline points="7 3 7 8 15 8" />
-          </svg>
+          <Package class="w-6 h-6 text-teal" />
           配置预设包
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -55,12 +51,7 @@ import { RELEASES_URL } from "../data/navigation";
                   "w-10 h-10 rounded-[6px] flex items-center justify-center",
                   pkg.featured ? "bg-accent-bg border border-[rgba(232,121,12,0.12)]" : "bg-bg-raised border border-border",
                 ]}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-                    class:list={[pkg.featured ? "stroke-accent" : "stroke-text-muted"]}>
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
+                  <Download class:list={["w-[18px] h-[18px]", pkg.featured ? "text-accent" : "text-text-muted"]} stroke-width="1.8" />
                 </div>
                 {pkg.featured && (
                   <span class="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-accent text-bg">DEFAULT</span>
@@ -76,11 +67,7 @@ import { RELEASES_URL } from "../data/navigation";
 
       <div class="mt-12 p-6 bg-bg-card border border-border rounded-[10px] flex gap-4">
         <div class="w-10 h-10 rounded-[6px] bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center flex-shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="16" x2="12" y2="12" />
-            <line x1="12" y1="8" x2="12.01" y2="8" />
-          </svg>
+          <Info class="w-[18px] h-[18px] text-accent" stroke-width="1.8" />
         </div>
         <div>
           <h4 class="font-display text-base font-semibold mb-1">使用说明</h4>

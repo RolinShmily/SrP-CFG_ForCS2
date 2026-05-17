@@ -2,11 +2,10 @@
   "name": "@srp-cfg/desktop",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "SrP-CFG Installer — CS2 配置预设管理器",
   "main": ".vite/build/main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "cmd /c \"chcp 65001 >nul && electron-forge start\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "build": "electron-forge package"
@@ -16,6 +15,7 @@
     "archiver": "^7.0.1",
     "electron-squirrel-startup": "^1.0.1",
     "extract-zip": "^2.0.1",
+    "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.1",

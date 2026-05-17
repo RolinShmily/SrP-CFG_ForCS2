@@ -1,34 +1,44 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import SectionHeader from "../components/SectionHeader.astro";
-import GitHubIcon from "../components/icons/GitHubIcon.astro";
-import ExternalLinkIcon from "../components/icons/ExternalLinkIcon.astro";
-import { REPO_URL } from "../data/navigation";
+import { Github, ExternalLink, Boxes, Shield, User, PenLine, Zap, Monitor, Atom, Paintbrush, Server, Code } from "lucide-astro";
+import { REPO_URL, RELEASES_URL } from "../data/navigation";
+import BilibiliIcon from "../components/icons/BilibiliIcon.astro";
 
 const techStack = [
-  { name: "Astro", desc: "静态站点生成框架" },
-  { name: "Electron", desc: "桌面应用框架（开发中）" },
-  { name: "React", desc: "共享 UI 组件库" },
-  { name: "TailwindCSS", desc: "原子化 CSS 框架" },
-  { name: "Node.js", desc: "运行时环境" },
-  { name: "TypeScript", desc: "类型安全的开发语言" },
+  { name: "Astro", desc: "静态站点生成框架", icon: Zap },
+  { name: "Electron", desc: "桌面应用框架", icon: Monitor },
+  { name: "React", desc: "共享 UI 组件库", icon: Atom },
+  { name: "TailwindCSS", desc: "原子化 CSS 框架", icon: Paintbrush },
+  { name: "Node.js", desc: "运行时环境", icon: Server },
+  { name: "TypeScript", desc: "类型安全的开发语言", icon: Code },
 ];
 
 const links = [
-  { label: "GitHub 仓库", url: REPO_URL, icon: "github" as const },
-  { label: "项目说明书", url: "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html", icon: "external" as const },
-  { label: "下载地址", url: "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html", icon: "external" as const },
-  { label: "关于 CFG 你要了解的二三事", url: "https://blog.srprolin.top/posts/srp-cfg/", icon: "external" as const },
+  { label: "GitHub 仓库", url: REPO_URL, icon: Github },
+  { label: "GitHub Release", url: RELEASES_URL, icon: Github },
+  { label: "SrP-CFG 视频系列", url: "https://space.bilibili.com/422744280/lists/6770542", icon: BilibiliIcon },
+  { label: "关于 CFG 你要了解的二三事", url: "https://blog.srprolin.top/posts/srp-cfg/", icon: ExternalLink },
 ];
 
 const contributors = [
-  { name: "RoL1n", role: "开发维护", github: "RolinShmily" },
+  {
+    name: "RoL1n",
+    role: "开发维护",
+    github: "RolinShmily",
+    blog: "https://blog.srprolin.top",
+    bilibili: "https://space.bilibili.com/422744280",
+  },
 ];
 ---
 
 <MainLayout title="关于 — SrP-CFG" description="SrP-CFG 项目介绍与开源信息">
   <section class="pt-[120px] pb-20">
     <div class="max-w-[1200px] mx-auto px-7">
+
+      <div class="flex justify-center mb-10">
+        <img src="/favicon.ico" alt="SrP-CFG Logo" class="w-28 h-28 rounded-2xl border border-border shadow-[0_0_40px_rgba(232,121,12,0.15)]" />
+      </div>
 
       <SectionHeader label="About" title="关于 SrP-CFG" description="适用于 CS2（Counter-Strike 2）各场景的 CFG 预设文件，由 RoL1n 开发维护" />
 
@@ -47,62 +57,80 @@ const contributors = [
 
           <h2 class="font-display text-2xl font-semibold mb-6">快速链接</h2>
           <div class="space-y-3">
-            {links.map((link) => (
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener"
-                class="group flex items-center gap-3 p-4 bg-bg-card border border-border rounded-[10px] no-underline transition-all duration-300 hover:border-border-highlight hover:bg-bg-hover"
-              >
-                <div class="w-8 h-8 rounded-[6px] bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center flex-shrink-0 text-accent">
-                  {link.icon === "github" ? <GitHubIcon size={16} /> : <ExternalLinkIcon size={16} />}
-                </div>
-                <span class="font-display text-sm font-medium text-text-secondary group-hover:text-accent transition-colors">
-                  {link.label}
-                </span>
-              </a>
-            ))}
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener"
+                  class="group flex items-center gap-3 p-4 bg-bg-card border border-border rounded-[10px] no-underline transition-all duration-300 hover:border-border-highlight hover:bg-bg-hover"
+                >
+                  <div class="w-8 h-8 rounded-[6px] bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center flex-shrink-0 text-accent">
+                    <Icon class="w-4 h-4" />
+                  </div>
+                  <span class="font-display text-sm font-medium text-text-secondary group-hover:text-accent transition-colors">
+                    {link.label}
+                  </span>
+                </a>
+              );
+            })}
           </div>
         </div>
 
         <div>
-          <h2 class="font-display text-2xl font-semibold mb-6">技术栈</h2>
+          <h2 class="font-display text-2xl font-semibold mb-6 flex items-center gap-3">
+            <Boxes class="w-6 h-6 text-teal" />
+            技术栈
+          </h2>
           <div class="grid grid-cols-2 gap-3 mb-12">
-            {techStack.map((tech) => (
-              <div class="p-4 bg-bg-card border border-border rounded-[10px]">
-                <div class="font-display text-base font-semibold text-text mb-1">{tech.name}</div>
-                <div class="text-xs text-text-muted font-light">{tech.desc}</div>
-              </div>
-            ))}
+            {techStack.map((tech) => {
+              const Icon = tech.icon;
+              return (
+                <div class="p-4 bg-bg-card border border-border rounded-[10px]">
+                  <div class="flex items-center gap-2 mb-1">
+                    <Icon class="w-4 h-4 text-text-muted" />
+                    <div class="font-display text-base font-semibold text-text">{tech.name}</div>
+                  </div>
+                  <div class="text-xs text-text-muted font-light">{tech.desc}</div>
+                </div>
+              );
+            })}
           </div>
 
-          <h2 class="font-display text-2xl font-semibold mb-6">贡献者</h2>
+          <h2 class="font-display text-2xl font-semibold mb-6 flex items-center gap-3">
+            <User class="w-6 h-6 text-accent" />
+            贡献者
+          </h2>
           <div class="space-y-3">
             {contributors.map((c) => (
               <div class="flex items-center gap-4 p-4 bg-bg-card border border-border rounded-[10px]">
-                <div class="w-12 h-12 rounded-full bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center font-display text-lg font-bold text-accent">
-                  {c.name.charAt(0)}
-                </div>
+                <img
+                  src="/avatar.jpg"
+                  alt={c.name}
+                  class="w-12 h-12 rounded-full border border-[rgba(232,121,12,0.12)] object-cover"
+                />
                 <div>
                   <div class="font-display text-base font-semibold">{c.name}</div>
                   <div class="text-xs text-text-muted">{c.role}</div>
                 </div>
-                <a
-                  href={`https://github.com/${c.github}`}
-                  target="_blank"
-                  rel="noopener"
-                  class="ml-auto text-text-muted hover:text-accent transition-colors"
-                >
-                  <GitHubIcon size={18} />
-                </a>
+                <div class="ml-auto flex items-center gap-2">
+                  <a href={c.blog} target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors" title="Blog">
+                    <PenLine class="w-[18px] h-[18px]" />
+                  </a>
+                  <a href={c.bilibili} target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors" title="Bilibili">
+                    <BilibiliIcon class="w-[18px] h-[18px]" />
+                  </a>
+                  <a href={`https://github.com/${c.github}`} target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors" title="GitHub">
+                    <Github class="w-[18px] h-[18px]" />
+                  </a>
+                </div>
               </div>
             ))}
           </div>
 
           <div class="mt-8 p-5 bg-bg-card border border-border rounded-[10px] flex items-center gap-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+            <Shield class="w-5 h-5 text-text-muted" stroke-width="1.8" />
             <div>
               <div class="font-display text-sm font-semibold">开源许可</div>
               <div class="text-xs text-text-muted">本仓库代码以自定义许可证发布，详见仓库根目录 LICENSE 文件</div>

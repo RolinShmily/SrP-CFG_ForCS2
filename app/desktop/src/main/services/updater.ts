@@ -2,23 +2,19 @@ import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
 import { app } from "electron";
+import type { GitHubRelease, UpdateCheckResult } from "../../renderer/types";
 
-const RELEASES_API = "https://api.github.com/repos/RolinShmily/SrP-CFG_ForCS2/releases/latest";
+const RELEASES_API =
+  "https://api.github.com/repos/RolinShmily/SrP-CFG_ForCS2/releases";
 const CACHE_DIR = path.join(app.getPath("userData"), "update-cache");
 const CACHE_FILE = path.join(CACHE_DIR, "cache.json");
 const CHECK_INTERVAL = 4 * 60 * 60 * 1000; // 4 hours
-const HTTP_TIMEOUT = 5000;
+const HTTP_TIMEOUT = 8000;
 
 interface UpdateCache {
-  latestVersion?: string;
-  dismissedVersion?: string;
   lastCheckTime?: number;
-}
-
-export interface UpdateInfo {
-  latestVersion: string;
-  currentVersion: string;
-  htmlUrl: string;
+  dismissedVersion?: string;
+  cachedReleases?: GitHubRelease[];
 }
 
 function getCurrentVersion(): string {
@@ -53,38 +49,37 @@ function saveCache(cache: UpdateCache): void {
   }
 }
 
-function evaluateFromCache(cache: UpdateCache, currentVersion: string): UpdateInfo | null {
-  if (!cache.latestVersion) return null;
-  if (cache.dismissedVersion === cache.latestVersion) return null;
-  if (compareVersions(cache.latestVersion, currentVersion) <= 0) return null;
-
-  return {
-    latestVersion: cache.latestVersion,
-    currentVersion,
-    htmlUrl: `https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/tag/v${cache.latestVersion}`,
-  };
+function isDismissed(
+  releases: GitHubRelease[],
+  dismissedVersion?: string,
+): boolean {
+  if (!dismissedVersion || releases.length === 0) return false;
+  return compareVersions(releases[0].tagName, dismissedVersion) <= 0;
 }
 
-function fetchLatestRelease(): Promise<{ tagName: string; htmlUrl: string }> {
+interface GitHubReleaseRaw {
+  tag_name: string;
+  name: string;
+  body: string;
+  html_url: string;
+  published_at: string;
+}
+
+function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
   return new Promise((resolve, reject) => {
     const req = https.get(
-      RELEASES_API,
+      `${RELEASES_API}?per_page=10`,
       { headers: { "User-Agent": "SrP-CFG-Installer" } },
       (res) => {
         if (res.statusCode !== 200) {
           reject(new Error(`HTTP ${res.statusCode}`));
           return;
         }
-
         let data = "";
-        res.on("data", (chunk) => (data += chunk));
+        res.on("data", (chunk: string) => (data += chunk));
         res.on("end", () => {
           try {
-            const json = JSON.parse(data);
-            resolve({
-              tagName: json.tag_name.replace(/^v/, ""),
-              htmlUrl: json.html_url,
-            });
+            resolve(JSON.parse(data));
           } catch (e) {
             reject(e);
           }
@@ -101,41 +96,80 @@ function fetchLatestRelease(): Promise<{ tagName: string; htmlUrl: string }> {
   });
 }
 
-export async function checkForUpdate(): Promise<UpdateInfo | null> {
+function filterNewer(
+  releases: GitHubRelease[],
+  currentVersion: string,
+): GitHubRelease[] {
+  return releases.filter(
+    (r) => compareVersions(r.tagName, currentVersion) > 0,
+  );
+}
+
+function buildResult(
+  current: string,
+  releases: GitHubRelease[],
+): UpdateCheckResult {
+  return {
+    currentVersion: current,
+    hasUpdate: releases.length > 0,
+    releases,
+  };
+}
+
+export async function checkForUpdate(
+  force = false,
+): Promise<UpdateCheckResult> {
   const current = getCurrentVersion();
   const cache = loadCache();
 
-  // Throttle: use cache if checked within 4 hours
-  if (cache?.lastCheckTime && Date.now() - cache.lastCheckTime < CHECK_INTERVAL) {
-    return evaluateFromCache(cache, current);
+  // Auto-check with cache throttle
+  if (
+    !force &&
+    cache?.lastCheckTime &&
+    Date.now() - cache.lastCheckTime < CHECK_INTERVAL
+  ) {
+    const newer = filterNewer(cache.cachedReleases || [], current);
+    if (isDismissed(newer, cache.dismissedVersion)) {
+      return buildResult(current, []);
+    }
+    return buildResult(current, newer);
   }
 
   try {
-    const release = await fetchLatestRelease();
+    const raw = await fetchAllReleases();
 
-    const newCache: UpdateCache = {
-      latestVersion: release.tagName,
-      dismissedVersion: cache?.dismissedVersion,
+    const newer: GitHubRelease[] = raw
+      .filter(
+        (r) => compareVersions(r.tag_name.replace(/^v/, ""), current) > 0,
+      )
+      .map((r) => ({
+        tagName: r.tag_name.replace(/^v/, ""),
+        name: r.name || "",
+        body: r.body || "",
+        htmlUrl: r.html_url,
+        publishedAt: r.published_at || "",
+      }))
+      .sort((a, b) => compareVersions(b.tagName, a.tagName));
+
+    saveCache({
       lastCheckTime: Date.now(),
-    };
-    saveCache(newCache);
+      dismissedVersion: cache?.dismissedVersion,
+      cachedReleases: newer,
+    });
 
-    if (
-      compareVersions(release.tagName, current) > 0 &&
-      cache?.dismissedVersion !== release.tagName
-    ) {
-      return {
-        latestVersion: release.tagName,
-        currentVersion: current,
-        htmlUrl: release.htmlUrl,
-      };
+    // Auto-check respects dismissal
+    if (!force && isDismissed(newer, cache?.dismissedVersion)) {
+      return buildResult(current, []);
     }
 
-    return null;
+    return buildResult(current, newer);
   } catch {
-    // Network failure, fall back to cache
-    if (cache) return evaluateFromCache(cache, current);
-    return null;
+    // Network failure, use cache
+    const newer = filterNewer(cache?.cachedReleases || [], current);
+    if (!force && isDismissed(newer, cache?.dismissedVersion)) {
+      return buildResult(current, []);
+    }
+    return buildResult(current, newer);
   }
 }
 

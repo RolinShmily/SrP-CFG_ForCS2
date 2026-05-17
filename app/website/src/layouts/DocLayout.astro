@@ -2,6 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import { Menu, TableOfContents } from "lucide-astro";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -24,6 +25,102 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
 
 <BaseLayout title={title} description={description}>
   <Nav />
+
+  <!-- Mobile doc nav bar (visible below lg) -->
+  <div class="lg:hidden sticky top-16 z-190 border-b border-border bg-bg-card/90 backdrop-blur-xl">
+    <div class="flex">
+      <button id="mobile-doc-menu-btn" class="flex-1 flex items-center justify-center gap-2 py-3 font-display text-sm text-text-muted hover:text-text transition-colors" aria-label="文档菜单">
+        <Menu class="w-4 h-4" />
+        菜单
+      </button>
+      <div class="w-px bg-border"></div>
+      <button id="mobile-toc-btn" class="flex-1 flex items-center justify-center gap-2 py-3 font-display text-sm text-text-muted hover:text-text transition-colors" aria-label="本页目录">
+        <TableOfContents class="w-4 h-4" />
+        本页目录
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile doc menu panel -->
+  <div id="mobile-doc-menu" class="hidden lg:hidden fixed inset-0 top-[calc(4rem+2.75rem)] z-180 bg-bg/95 backdrop-blur-xl overflow-y-auto">
+    <div class="p-6">
+      <a href="/docs/srpcfg-1" class="block font-display text-sm font-semibold text-text-muted hover:text-text transition-colors no-underline mb-3 tracking-wider">
+        文档中心
+      </a>
+      <ul class="flex flex-col gap-0.5 mb-4">
+        {guideDocs.map((doc) => {
+          const isActive = doc.id === currentSlug;
+          return (
+            <li>
+              <a
+                href={`/docs/${doc.id}`}
+                class:list={[
+                  "block py-2.5 px-4 rounded-[6px] text-sm transition-colors no-underline font-display",
+                  isActive
+                    ? "bg-accent-bg text-accent font-medium"
+                    : "text-text-muted hover:text-text hover:bg-bg-hover",
+                ]}
+              >
+                {doc.data.title}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      <div class="h-px bg-border my-3"></div>
+      <span class="block font-display text-[11px] font-semibold text-text-faint tracking-widest mb-2 px-4">CFG 文件</span>
+      <ul class="flex flex-col gap-0.5">
+        {cfgDocs.map((doc) => {
+          const isActive = doc.id === currentSlug;
+          return (
+            <li>
+              <a
+                href={`/docs/${doc.id}`}
+                class:list={[
+                  "block py-2.5 px-4 rounded-[6px] text-sm transition-colors no-underline font-display",
+                  isActive
+                    ? "bg-accent-bg text-accent font-medium"
+                    : "text-text-muted hover:text-text hover:bg-bg-hover",
+                ]}
+              >
+                {doc.data.title}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mobile TOC panel -->
+  <div id="mobile-toc-panel" class="hidden lg:hidden fixed inset-0 top-[calc(4rem+2.75rem)] z-180 bg-bg/95 backdrop-blur-xl overflow-y-auto">
+    <div class="p-6">
+      {toc.length > 0 && (
+        <nav>
+          <span class="block font-display text-xs font-semibold text-text-faint tracking-widest mb-3 px-4">本页目录</span>
+          <ul class="flex flex-col gap-0">
+            {toc.map((item) => (
+              <li>
+                <a
+                  href={`#${item.slug}`}
+                  data-toc-link
+                  data-toc-target={item.slug}
+                  class:list={[
+                    "block py-2 px-4 text-sm transition-colors no-underline rounded-[6px]",
+                    item.depth === 3 && "pl-8",
+                    "text-text-muted hover:text-text hover:bg-bg-hover",
+                  ]}
+                >
+                  {item.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  </div>
+
   <div class="max-w-[1440px] mx-auto pt-20">
     <div class="flex">
       <!-- Left Sidebar — Doc Navigation -->
@@ -343,4 +440,74 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
       t.forEach((el) => obs.observe(el));
     }
   });
+
+  // Mobile doc nav panels
+  let mobileDocCleanup: (() => void) | null = null;
+
+  function initMobileDocNav() {
+    mobileDocCleanup?.();
+
+    const menuBtn = document.getElementById("mobile-doc-menu-btn");
+    const tocBtn = document.getElementById("mobile-toc-btn");
+    const menuPanel = document.getElementById("mobile-doc-menu");
+    const tocPanel = document.getElementById("mobile-toc-panel");
+    if (!menuBtn || !tocBtn || !menuPanel || !tocPanel) return;
+
+    let activePanel: "none" | "menu" | "toc" = "none";
+
+    function closeAll() {
+      activePanel = "none";
+      menuPanel!.classList.add("hidden");
+      tocPanel!.classList.add("hidden");
+      menuBtn!.classList.remove("text-accent", "bg-accent-bg");
+      tocBtn!.classList.remove("text-accent", "bg-accent-bg");
+      document.body.style.overflow = "";
+    }
+
+    function openPanel(which: "menu" | "toc") {
+      if (activePanel === which) {
+        closeAll();
+        return;
+      }
+      menuPanel!.classList.toggle("hidden", which !== "menu");
+      tocPanel!.classList.toggle("hidden", which !== "toc");
+      menuBtn!.classList.toggle("text-accent", which === "menu");
+      menuBtn!.classList.toggle("bg-accent-bg", which === "menu");
+      tocBtn!.classList.toggle("text-accent", which === "toc");
+      tocBtn!.classList.toggle("bg-accent-bg", which === "toc");
+      activePanel = which;
+      document.body.style.overflow = "hidden";
+    }
+
+    const onMenuBtn = () => openPanel("menu");
+    const onTocBtn = () => openPanel("toc");
+
+    const onDocClick = (e: MouseEvent) => {
+      if (activePanel === "none") return;
+      const t = e.target as Node;
+      if (!menuPanel!.contains(t) && !tocPanel!.contains(t) && !menuBtn!.contains(t) && !tocBtn!.contains(t)) {
+        closeAll();
+      }
+    };
+
+    const onPanelLink = () => closeAll();
+
+    menuBtn.addEventListener("click", onMenuBtn);
+    tocBtn.addEventListener("click", onTocBtn);
+    document.addEventListener("click", onDocClick);
+    menuPanel.querySelectorAll("a").forEach((a) => a.addEventListener("click", onPanelLink));
+    tocPanel.querySelectorAll("a").forEach((a) => a.addEventListener("click", onPanelLink));
+
+    mobileDocCleanup = () => {
+      menuBtn.removeEventListener("click", onMenuBtn);
+      tocBtn.removeEventListener("click", onTocBtn);
+      document.removeEventListener("click", onDocClick);
+      menuPanel.querySelectorAll("a").forEach((a) => a.removeEventListener("click", onPanelLink));
+      tocPanel.querySelectorAll("a").forEach((a) => a.removeEventListener("click", onPanelLink));
+      closeAll();
+    };
+  }
+
+  initMobileDocNav();
+  document.addEventListener("astro:page-load", initMobileDocNav);
 </script>

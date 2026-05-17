@@ -1,4 +1,4 @@
-import { DRIVE_BASE, RELEASES_URL } from "./navigation";
+import { DRIVE_BASE } from "./navigation";
 
 export const installers = [
   {
@@ -12,7 +12,7 @@ export const installers = [
     name: "便携版 (Portable)",
     desc: "自包含单文件 EXE，无需安装任何运行库，下载即可直接运行",
     file: "SrP-CFG_Installer.exe",
-    url: RELEASES_URL,
+    url: `${DRIVE_BASE}/SrP-CFG_Installer.exe`,
     badge: "Portable",
   },
 ];

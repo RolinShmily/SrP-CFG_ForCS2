@@ -27,12 +27,14 @@ export default function TitleBar() {
           className="w-10 h-8 flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
         >
           {maximized ? (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2">
+            // Restore down: two overlapping rectangles
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <rect x="2" y="0" width="8" height="8" rx="1" />
               <rect x="0" y="2" width="8" height="8" rx="1" />
             </svg>
           ) : (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2">
+            // Maximize: single rectangle
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <rect x="0.5" y="0.5" width="9" height="9" rx="1" />
             </svg>
           )}
@@ -41,7 +43,7 @@ export default function TitleBar() {
           onClick={() => window.api.close()}
           className="w-10 h-8 flex items-center justify-center text-text-muted hover:text-red hover:bg-red/10 transition-colors"
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <line x1="0" y1="0" x2="10" y2="10" /><line x1="10" y1="0" x2="0" y2="10" />
           </svg>
         </button>

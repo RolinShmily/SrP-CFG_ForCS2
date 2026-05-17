@@ -24,7 +24,8 @@
   --color-text-faint: #343a52;
 
   --font-display: "Chakra Petch", sans-serif;
-  --font-body: "Noto Sans SC", sans-serif;
+  --font-body: "Noto Serif SC", "JetBrains Mono", monospace;
+  --font-serif: "Noto Serif SC", serif;
   --font-mono: "JetBrains Mono", monospace;
 
   --radius: 10px;

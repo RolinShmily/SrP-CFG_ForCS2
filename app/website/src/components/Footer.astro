@@ -1,29 +1,35 @@
 ---
 import { REPO_URL } from "../data/navigation";
+import { BookOpen, Download, Github } from "lucide-astro";
 
 const footerLinks = [
-  { href: "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html", label: "项目文档" },
-  { href: "/download", label: "前往下载" },
-  { href: REPO_URL, label: "GitHub", external: true },
+  { href: "https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html", label: "项目文档", icon: BookOpen },
+  { href: "/download", label: "前往下载", icon: Download },
+  { href: REPO_URL, label: "GitHub", external: true, icon: Github },
 ];
 ---
 
 <footer class="py-12 border-t border-border">
   <div class="max-w-[1200px] mx-auto px-7 flex flex-col md:flex-row items-center justify-between gap-5">
     <div class="flex items-center gap-2.5 font-display text-base font-semibold text-text-faint tracking-wider">
+      <img src="/favicon.ico" alt="SrP-CFG" class="w-6 h-6" />
       <span>SrP-CFG Installer</span>
     </div>
     <div class="flex gap-6 items-center">
-      {footerLinks.map((link) => (
-        <a
-          href={link.href}
-          target={link.external ? "_blank" : undefined}
-          rel={link.external ? "noopener" : undefined}
-          class="font-display text-sm font-medium text-text-muted hover:text-accent transition-colors duration-200 no-underline"
-        >
-          {link.label}
-        </a>
-      ))}
+      {footerLinks.map((link) => {
+        const Icon = link.icon;
+        return (
+          <a
+            href={link.href}
+            target={link.external ? "_blank" : undefined}
+            rel={link.external ? "noopener" : undefined}
+            class="inline-flex items-center gap-1.5 font-display text-sm font-medium text-text-muted hover:text-accent transition-colors duration-200 no-underline"
+          >
+            <Icon class="w-4 h-4" />
+            {link.label}
+          </a>
+        );
+      })}
     </div>
   </div>
 </footer>

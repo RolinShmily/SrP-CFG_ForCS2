@@ -1,6 +1,7 @@
 ---
 import ButtonLink from "./ButtonLink.astro";
-import DownloadIcon from "./icons/DownloadIcon.astro";
+import TerminalDemo from "./TerminalDemo.astro";
+import { Download, BookOpen } from "lucide-astro";
 ---
 
 <section class="pt-[140px] min-h-screen flex flex-col relative">
@@ -20,19 +21,16 @@ import DownloadIcon from "./icons/DownloadIcon.astro";
       </p>
       <div class="flex gap-4 flex-wrap">
         <ButtonLink href="/download" size="lg">
-          <DownloadIcon />下载安装器
+          <Download class="w-5 h-5" />下载安装器
         </ButtonLink>
         <ButtonLink href="/docs" variant="ghost" size="lg">
-          查看文档
+          <BookOpen class="w-5 h-5" />查看文档
         </ButtonLink>
       </div>
     </div>
     <div class="order-[-1] lg:order-none max-w-[580px] mx-auto lg:max-w-none w-full">
-      <div class="bg-bg-card border border-border rounded-[10px] overflow-hidden aspect-video relative">
-        <div class="absolute inset-0 bg-gradient-to-br from-accent-bg to-transparent"></div>
-        <div class="w-full h-full flex items-center justify-center text-text-faint font-display text-lg">
-          SrP-CFG 安装器
-        </div>
+      <div class="bg-bg-card border border-border rounded-[10px] overflow-hidden aspect-video relative shadow-[0_0_60px_rgba(232,121,12,0.06)]">
+        <TerminalDemo />
       </div>
     </div>
   </div>

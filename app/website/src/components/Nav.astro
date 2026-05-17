@@ -1,43 +1,150 @@
 ---
 import { navLinks, REPO_URL } from "../data/navigation";
+import { Home, Download, BookOpen, Info, Github, Menu, X } from "lucide-astro";
 
 const currentPath = Astro.url.pathname;
+
+const navIcons: Record<string, typeof Home> = {
+  "/": Home,
+  "/download": Download,
+  "/docs": BookOpen,
+  "/about": Info,
+};
 ---
 
 <nav transition:name="nav" transition:animate="none" class="fixed top-0 left-0 right-0 z-200 bg-bg/82 backdrop-blur-xl border-b border-border">
   <div class="max-w-[1200px] mx-auto px-7 flex items-center justify-between h-16">
     <a href="/" class="flex items-center gap-2.5 no-underline">
+      <img src="/favicon.ico" alt="SrP-CFG" class="w-7 h-7" />
       <span class="font-display text-xl font-bold text-accent tracking-widest">SrP-CFG</span>
     </a>
 
     <div class="hidden md:flex gap-2 items-center">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class:list={[
-            "font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] transition-all duration-200 no-underline",
-            currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
-              ? "text-accent bg-accent-bg"
-              : "text-text-muted hover:text-text",
-          ]}
-        >
-          {link.label}
-        </a>
-      ))}
+      {navLinks.map((link) => {
+        const Icon = navIcons[link.href];
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              "inline-flex items-center gap-1.5 font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] transition-all duration-200 no-underline",
+              currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
+                ? "text-accent bg-accent-bg"
+                : "text-text-muted hover:text-text",
+            ]}
+          >
+            {Icon && <Icon class="w-4 h-4" />}
+            {link.label}
+          </a>
+        );
+      })}
       <a
         href={REPO_URL}
         target="_blank"
         rel="noopener"
-        class="font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] text-text-muted hover:text-text transition-all duration-200 no-underline"
+        class="inline-flex items-center gap-1.5 font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] text-text-muted hover:text-text transition-all duration-200 no-underline"
       >
+        <Github class="w-4 h-4" />
         GitHub
       </a>
     </div>
 
-    <button class="md:hidden flex flex-col gap-1.5 bg-transparent border-none cursor-pointer p-1.5" aria-label="打开菜单">
-      <span class="block w-[22px] h-0.5 bg-text-secondary rounded-sm transition-all duration-300"></span>
-      <span class="block w-[22px] h-0.5 bg-text-secondary rounded-sm transition-all duration-300"></span>
-      <span class="block w-[22px] h-0.5 bg-text-secondary rounded-sm transition-all duration-300"></span>
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden flex items-center justify-center bg-transparent border-none cursor-pointer p-1.5 text-text-secondary"
+      aria-label="打开菜单"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <Menu data-icon-menu class="w-6 h-6" />
+      <X data-icon-close class="w-6 h-6 hidden" />
     </button>
   </div>
+
+  <!-- Mobile menu dropdown -->
+  <div id="mobile-menu" class="hidden md:hidden fixed left-0 right-0 top-16 z-199 bg-bg-card/95 backdrop-blur-xl border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto" aria-hidden="true">
+    <div class="px-7 py-4 flex flex-col gap-1">
+      {navLinks.map((link) => {
+        const Icon = navIcons[link.href];
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              "flex items-center gap-3 py-3 px-4 rounded-[6px] font-display text-[15px] font-medium transition-all duration-200 no-underline",
+              currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
+                ? "text-accent bg-accent-bg"
+                : "text-text-muted hover:text-text hover:bg-bg-hover",
+            ]}
+          >
+            {Icon && <Icon class="w-[18px] h-[18px]" />}
+            {link.label}
+          </a>
+        );
+      })}
+      <a
+        href={REPO_URL}
+        target="_blank"
+        rel="noopener"
+        class="flex items-center gap-3 py-3 px-4 rounded-[6px] font-display text-[15px] font-medium text-text-muted hover:text-text hover:bg-bg-hover transition-all duration-200 no-underline"
+      >
+        <Github class="w-[18px] h-[18px]" />
+        GitHub
+      </a>
+    </div>
+  </div>
 </nav>
+
+<style>
+  #mobile-menu-btn.menu-open [data-icon-menu] {
+    display: none;
+  }
+  #mobile-menu-btn.menu-open [data-icon-close] {
+    display: block;
+  }
+</style>
+
+<script>
+  let cleanupFn: (() => void) | null = null;
+
+  function initMobileMenu() {
+    cleanupFn?.();
+
+    const btn = document.getElementById("mobile-menu-btn");
+    const menu = document.getElementById("mobile-menu");
+    if (!btn || !menu) return;
+
+    let open = false;
+
+    function setOpen(value: boolean) {
+      open = value;
+      menu!.classList.toggle("hidden", !open);
+      btn!.classList.toggle("menu-open", open);
+      btn!.setAttribute("aria-expanded", String(open));
+      menu!.setAttribute("aria-hidden", String(!open));
+      document.body.style.overflow = open ? "hidden" : "";
+    }
+
+    const onBtnClick = () => setOpen(!open);
+
+    const onDocClick = (e: MouseEvent) => {
+      if (open && !menu!.contains(e.target as Node) && !btn!.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    const onLinkClick = () => setOpen(false);
+
+    btn.addEventListener("click", onBtnClick);
+    document.addEventListener("click", onDocClick);
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", onLinkClick));
+
+    cleanupFn = () => {
+      btn.removeEventListener("click", onBtnClick);
+      document.removeEventListener("click", onDocClick);
+      menu.querySelectorAll("a").forEach((a) => a.removeEventListener("click", onLinkClick));
+      setOpen(false);
+    };
+  }
+
+  initMobileMenu();
+  document.addEventListener("astro:page-load", initMobileMenu);
+</script>

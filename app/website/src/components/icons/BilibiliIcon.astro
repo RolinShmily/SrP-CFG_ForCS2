@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className = "w-4 h-4" } = Astro.props;
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+>
+  {/* antenna */}
+  <path d="M7.5 4L6 2" />
+  <path d="M16.5 4L18 2" />
+  {/* trapezoid body */}
+  <path d="M3 8L5 5h14l2 3v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z" />
+  {/* eyes */}
+  <circle cx="9" cy="11" r="1" fill="currentColor" stroke="none" />
+  <circle cx="15" cy="11" r="1" fill="currentColor" stroke="none" />
+  {/* mouth */}
+  <path d="M10 14.5c.6.5 3.4.5 4 0" />
+</svg>

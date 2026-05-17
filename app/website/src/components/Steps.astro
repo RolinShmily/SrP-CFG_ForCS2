@@ -1,5 +1,6 @@
 ---
 import SectionHeader from "./SectionHeader.astro";
+import { ChevronRight } from "lucide-astro";
 
 const steps = [
   { num: "01", title: "下载", desc: "从 GitHub Releases<br>获取便携版安装器" },
@@ -25,10 +26,8 @@ const steps = [
             <p class="text-[15px] text-text-secondary font-light leading-[1.7]" set:html={step.desc} />
           </div>
           {i < steps.length - 1 && (
-            <div class="hidden lg:block text-text-faint pt-[26px] w-12 text-center flex-shrink-0">
-              <svg width="40" height="16" viewBox="0 0 40 16">
-                <path d="M0 8h36M30 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
+            <div class="hidden lg:flex items-center justify-center text-text-faint pt-[26px] w-12 flex-shrink-0">
+              <ChevronRight class="w-8 h-8" />
             </div>
           )}
         </div>

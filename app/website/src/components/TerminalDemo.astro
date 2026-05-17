@@ -1,0 +1,212 @@
+---
+---
+<div class="terminal-window">
+  <div class="terminal-bar">
+    <span class="terminal-dot terminal-dot--red"></span>
+    <span class="terminal-dot terminal-dot--yellow"></span>
+    <span class="terminal-dot terminal-dot--green"></span>
+    <span class="terminal-title">SrP-CFG Installer</span>
+  </div>
+  <div class="terminal-body" id="terminal-body"></div>
+</div>
+
+<style>
+  .terminal-window {
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--color-bg-raised);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-dot--red { background: var(--color-red); opacity: 0.75; }
+  .terminal-dot--yellow { background: var(--color-accent-light); opacity: 0.75; }
+  .terminal-dot--green { background: var(--color-green); opacity: 0.75; }
+
+  .terminal-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-faint);
+    margin-left: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .terminal-body {
+    flex: 1;
+    padding: 16px 18px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .terminal-body::-webkit-scrollbar { width: 4px; }
+  .terminal-body::-webkit-scrollbar-track { background: transparent; }
+  .terminal-body::-webkit-scrollbar-thumb {
+    background: var(--color-border-highlight);
+    border-radius: 2px;
+  }
+
+  .terminal-line {
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeIn 0.15s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 14px;
+    background: var(--color-text-muted);
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+</style>
+
+<script>
+  (function () {
+    const container = document.getElementById("terminal-body");
+    if (!container) return;
+
+    const ts = (h: number, m: number, s: number) =>
+      `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+
+    const LINES: { ts: string; src: string; srcColor: string; msg: string; msgColor: string }[] = [
+      { ts: ts(14,32,1), src: "INIT", srcColor: "color:var(--color-teal)", msg: "SrP-CFG Installer v0.1.0 启动中...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(14,32,1), src: "INIT", srcColor: "color:var(--color-teal)", msg: "正在加载配置模块...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(14,32,2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "正在检测 Steam 安装路径...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(14,32,2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "注册表 HKCU\\Software\\Valve\\Steam", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(14,32,3), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "Steam 根目录: D:\\Steam", msgColor: "color:var(--color-text)" },
+      { ts: ts(14,32,3), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "解析 libraryfolders.vdf ...", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(14,32,4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "CS2 路径: D:\\Steam\\steamapps\\common\\Counter-Strike Global Offensive", msgColor: "color:var(--color-text)" },
+      { ts: ts(14,32,5), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "全局 CFG: ...\\game\\csgo\\cfg\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(14,32,5), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "用户视频: ...\\userdata\\76561198...\\730\\local\\cfg\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(14,32,6), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "地图指南: ...\\game\\csgo\\annotations\\local\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(14,32,7), src: "OK", srcColor: "color:var(--color-green)", msg: "路径检测完成 — 3 个目标可用", msgColor: "color:var(--color-green)" },
+      { ts: ts(14,32,18), src: "BACKUP", srcColor: "color:var(--color-accent-light)", msg: "正在备份现有配置...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(14,32,19), src: "BACKUP", srcColor: "color:var(--color-accent-light)", msg: "已创建 backup_20260517_143219.zip", msgColor: "color:var(--color-text)" },
+      { ts: ts(14,32,20), src: "OK", srcColor: "color:var(--color-green)", msg: "备份完成", msgColor: "color:var(--color-green)" },
+      { ts: ts(14,32,21), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "正在安装全局 CFG 文件...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(14,32,22), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ autoexec.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(14,32,22), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ crosshair_view.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(14,32,23), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ practice.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(14,32,23), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ custom.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(14,32,24), src: "OK", srcColor: "color:var(--color-green)", msg: "安装完成 — 4 个文件已部署", msgColor: "color:var(--color-green)" },
+    ];
+
+    let typingTimer: number | null = null;
+    let doneTimer: number | null = null;
+
+    function createCursor(): HTMLSpanElement {
+      const c = document.createElement("span");
+      c.className = "cursor";
+      return c;
+    }
+
+    function clearTimers() {
+      if (typingTimer !== null) { clearInterval(typingTimer); typingTimer = null; }
+      if (doneTimer !== null) { clearTimeout(doneTimer); doneTimer = null; }
+    }
+
+    function typeLine(
+      line: typeof LINES[number],
+      parent: HTMLElement,
+      cursor: HTMLSpanElement,
+      cb: () => void
+    ) {
+      const el = document.createElement("div");
+      el.className = "terminal-line";
+
+      const tsSpan = document.createElement("span");
+      tsSpan.style.cssText = line.tsColor;
+      tsSpan.textContent = `[${line.ts}] `;
+
+      const srcSpan = document.createElement("span");
+      srcSpan.style.cssText = line.srcColor;
+      srcSpan.textContent = `[${line.src}] `;
+
+      const msgSpan = document.createElement("span");
+      msgSpan.style.cssText = line.msgColor;
+
+      el.appendChild(tsSpan);
+      el.appendChild(srcSpan);
+      el.appendChild(msgSpan);
+      parent.appendChild(el);
+      el.appendChild(cursor);
+      container!.scrollTop = container!.scrollHeight;
+
+      const fullText = line.msg;
+      let i = 0;
+
+      typingTimer = window.setInterval(() => {
+        if (i < fullText.length) {
+          msgSpan.textContent += fullText[i];
+          i++;
+          container!.scrollTop = container!.scrollHeight;
+        } else {
+          clearTimers();
+          cb();
+        }
+      }, 18);
+    }
+
+    function runSequence(index: number) {
+      if (index >= LINES.length) {
+        doneTimer = window.setTimeout(() => start(), 4000);
+        return;
+      }
+
+      const line = LINES[index];
+      const cursor = (container.querySelector(".cursor") as HTMLSpanElement | null) || createCursor();
+
+      typeLine(line, container, cursor, () => {
+        const isLast = index === LINES.length - 1;
+        const pause = isLast ? 2200 : (line.msg.length < 10 ? 100 : 200);
+        doneTimer = window.setTimeout(() => runSequence(index + 1), pause);
+      });
+    }
+
+    function start() {
+      clearTimers();
+      container.innerHTML = "";
+      runSequence(0);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          start();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(container);
+  })();
+</script>
