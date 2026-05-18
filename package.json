@@ -20,8 +20,6 @@
     ]
   },
   "dependencies": {
-    "@electron-forge/plugin-vite": "^7.11.1",
-    "@vitejs/plugin-react": "^5.2.0",
     "rehype-slug": "^6.0.0"
   }
 }
