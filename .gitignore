@@ -14,4 +14,5 @@ tmp/
 
 msi/obj/
 msi/bin/
+msi/ElectronAppFiles.wxs
 
