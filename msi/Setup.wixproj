@@ -9,14 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
+    <Compile Include="$(MSBuildProjectDirectory)\ElectronAppFiles.wxs" />
   </ItemGroup>
-
-  <!-- Generate ElectronAppFiles.wxs from Electron app output -->
-  <Target Name="HarvestElectronApp" BeforeTargets="Compile">
-    <Exec Command="node &quot;$(MSBuildProjectDirectory)\harvest.js&quot; &quot;$(MSBuildProjectDirectory)\..\app\desktop\out\SrP-CFG Installer-win32-x64&quot; &quot;$(MSBuildProjectDirectory)\ElectronAppFiles.wxs&quot;"
-          ConsoleToMSBuild="true" />
-    <ItemGroup>
-      <Compile Include="$(MSBuildProjectDirectory)\ElectronAppFiles.wxs" />
-    </ItemGroup>
-  </Target>
 </Project>

@@ -4,13 +4,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const srcDir = process.argv[2];
-const outFile = process.argv[3];
-
-if (!srcDir || !outFile) {
-  console.error("Usage: node harvest.js <sourceDir> <outputFile>");
-  process.exit(1);
-}
+const srcDir = process.argv[2] || path.join(__dirname, "..", "app", "desktop", "out", "SrP-CFG Installer-win32-x64");
+const outFile = process.argv[3] || path.join(__dirname, "ElectronAppFiles.wxs");
 
 let idCounter = 0;
 function nextId(prefix) {
