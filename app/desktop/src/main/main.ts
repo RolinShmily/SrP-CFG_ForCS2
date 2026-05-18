@@ -28,15 +28,15 @@ function createWindow() {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
     mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}`),
+      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
     );
   }
 }
 
 app.whenReady().then(async () => {
   // Lazy import to ensure app.getPath() works (app must be ready first)
-  const { initializeStagingArea } = await import("./services/staging");
-  initializeStagingArea((entry) => {
+  const staging = await import("./services/staging");
+  staging.initializeStagingArea((entry) => {
     console.log(`[${entry.category}] ${entry.message}`);
   });
 

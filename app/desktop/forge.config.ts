@@ -1,3 +1,6 @@
+// Bypass SSL verification for proxy/corporate networks during packaging
+process.env.NODE_TLS_REJECT_UNAUTHORIZED ??= "0";
+
 import type { ForgeConfig } from "@electron-forge/shared-types";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";

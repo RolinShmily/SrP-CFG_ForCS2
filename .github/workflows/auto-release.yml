@@ -31,9 +31,9 @@ jobs:
           echo "✅ Tag validated: $TAG"
 
   # ============================================
-  # 构建 MSI 安装包（需要 Windows 环境）
+  # 构建桌面应用 + MSI 安装包 + 便携版 ZIP（需要 Windows 环境）
   # ============================================
-  build-msi:
+  build-app:
     needs: validate-tag
     if: needs.validate-tag.outputs.is_valid == 'true'
     runs-on: windows-latest
@@ -46,27 +46,64 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Inject version
+        shell: bash
+        run: |
+          VERSION="${{ needs.validate-tag.outputs.version }}"
+          cd app/desktop
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+            pkg.version = '${VERSION}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          echo "✅ Desktop app version set to ${VERSION}"
+
+      - name: Package Electron app
+        run: pnpm --filter @srp-cfg/desktop package
+
       - name: Build MSI
         run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
 
-      - name: Rename MSI with version
+      - name: Prepare release artifacts
         shell: bash
         run: |
           TAG="${{ github.ref_name }}"
-          mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
-          echo "✅ MSI built: SrP-CFG_Installer_${TAG}.msi"
 
-      - name: Upload MSI artifact
+          # 重命名 MSI
+          mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
+          echo "✅ MSI: SrP-CFG_Installer_${TAG}.msi"
+
+          # 打包便携版 ZIP（Electron Forge 输出目录）
+          cd "app/desktop/out"
+          7z a -tzip "../../SrP-CFG_Portable_${TAG}.zip" "SrP-CFG Installer-win32-x64/" -r
+          cd ../../..
+          echo "✅ Portable: SrP-CFG_Portable_${TAG}.zip"
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: msi-installer
-          path: SrP-CFG_Installer_*.msi
+          name: installers
+          path: |
+            SrP-CFG_Installer_*.msi
+            SrP-CFG_Portable_*.zip
 
   # ============================================
   # 构建和发布
   # ============================================
   build-and-release:
-    needs: [validate-tag, build-msi]
+    needs: [validate-tag, build-app]
     if: needs.validate-tag.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -77,11 +114,6 @@ jobs:
         with:
           fetch-depth: 0  # 获取完整历史，用于生成 changelog
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
       # ============================================
       # 验证配置文件
       # ============================================
@@ -90,7 +122,6 @@ jobs:
           echo "🔍 Validating configuration files..."
           REQUIRED_FILES=(
             ".github/packages.yaml"
-            "wpf/Installer.csproj"
             ".github/release/template.md"
           )
 
@@ -114,12 +145,12 @@ jobs:
           echo "✅ Packages configuration parsed"
 
       # ============================================
-      # 下载 MSI 安装包
+      # 下载构建产物（MSI + 便携版 ZIP）
       # ============================================
-      - name: Download MSI artifact
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: msi-installer
+          name: installers
           path: .
 
       # ============================================
@@ -183,6 +214,7 @@ jobs:
           body: ${{ env.RELEASE_BODY }}
           files: |
             SrP-CFG_Installer_*.msi
+            SrP-CFG_Portable_*.zip
             *.zip
           prerelease: false
           draft: false

@@ -18,34 +18,37 @@ contextBridge.exposeInMainWorld("api", {
   getUploadHistory: () => ipcRenderer.invoke("installer:getUploadHistory"),
 
   // Uploaded entries
-  getUploadedEntries: () =>
-    ipcRenderer.invoke("installer:getUploadedEntries"),
+  getUploadedEntries: () => ipcRenderer.invoke("installer:getUploadedEntries"),
   installFromUpload: (folderName: string, mode: "overlay" | "append") =>
     ipcRenderer.invoke("installer:installFromUpload", folderName, mode),
   deleteUploadEntry: (folderName: string) =>
     ipcRenderer.invoke("installer:deleteUploadEntry", folderName),
-  openUploadsFolder: () =>
-    ipcRenderer.invoke("installer:openUploadsFolder"),
+  openUploadsFolder: () => ipcRenderer.invoke("installer:openUploadsFolder"),
 
-  // Applied Config
-  listStagingFiles: () => ipcRenderer.invoke("installer:listStagingFiles"),
-  openStagingDir: (key: string) =>
-    ipcRenderer.invoke("installer:openStagingDir", key),
+  // Installed data (install.json)
+  getInstalledData: () => ipcRenderer.invoke("installer:getInstalledData"),
+  deleteInstalledItem: (category: string, name: string) =>
+    ipcRenderer.invoke("installer:deleteInstalledItem", category, name),
 
-  // Backup / Restore
-  backupAll: () => ipcRenderer.invoke("installer:backupAll"),
-  getBackupEntries: () => ipcRenderer.invoke("installer:getBackupEntries"),
-  restoreFromSave: (folderName: string) =>
-    ipcRenderer.invoke("installer:restoreFromSave", folderName),
-  deleteBackup: (folderName: string) =>
-    ipcRenderer.invoke("installer:deleteBackup", folderName),
-  openBackupFolder: () => ipcRenderer.invoke("installer:openBackupFolder"),
+  // Conflict recovery (res.json)
+  getResData: () => ipcRenderer.invoke("installer:getResData"),
+  restoreFromRes: (category: string, name: string) =>
+    ipcRenderer.invoke("installer:restoreFromRes", category, name),
+
+  // Backup (save.json)
+  getSaveData: () => ipcRenderer.invoke("installer:getSaveData"),
+  restoreFromSave: () => ipcRenderer.invoke("installer:restoreFromSave"),
+  openSaveFolder: () => ipcRenderer.invoke("installer:openSaveFolder"),
+  openResFolder: () => ipcRenderer.invoke("installer:openResFolder"),
+
+  // Append conflict confirmation
+  confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean) =>
+    ipcRenderer.invoke("installer:confirmAppend", folderName, source, proceed),
 
   // Downloads
   downloadFromUrl: (url: string, fileName: string) =>
     ipcRenderer.invoke("installer:downloadFromUrl", url, fileName),
-  getDownloadEntries: () =>
-    ipcRenderer.invoke("installer:getDownloadEntries"),
+  getDownloadEntries: () => ipcRenderer.invoke("installer:getDownloadEntries"),
   deleteDownload: (folderName: string) =>
     ipcRenderer.invoke("installer:deleteDownload", folderName),
   installFromDownload: (folderName: string, mode: "overlay" | "append") =>
@@ -63,9 +66,7 @@ contextBridge.exposeInMainWorld("api", {
   openExternal: (url: string) =>
     ipcRenderer.invoke("shell:openExternal", url),
 
-  // Utils — extract real file paths from File objects (contextIsolation safe)
-  // NOTE: FileList (DOM collection) becomes a non-iterable Proxy through contextBridge.
-  // The renderer MUST convert FileList to a plain Array before calling this.
+  // Utils
   getFilePaths: (files: File[]): string[] => {
     const paths: string[] = [];
     for (const file of files) {
@@ -73,7 +74,7 @@ contextBridge.exposeInMainWorld("api", {
         const p = webUtils.getPathForFile(file);
         if (p) paths.push(p);
       } catch {
-        // skip files without paths
+        // skip
       }
     }
     return paths;

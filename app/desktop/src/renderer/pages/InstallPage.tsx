@@ -1,12 +1,12 @@
 import { useState, useRef, useCallback } from "react";
-import { Archive, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import SteamStatusBanner from "../components/SteamStatusBanner";
 import DetectionCard from "../components/DetectionCard";
 import UploadZone from "../components/UploadZone";
 import UploadedList from "../components/UploadedList";
 import DownloadsList from "../components/DownloadsList";
 import InstallActions from "../components/InstallActions";
-import type { DetectionResult } from "../types";
+import type { DetectionResult, AppendConflictResult, InstallResult } from "../types";
 
 interface Props {
   detection: DetectionResult | null;
@@ -23,7 +23,6 @@ export default function InstallPage({
 }: Props) {
   const [selectedUpload, setSelectedUpload] = useState<string | null>(null);
   const [selectedDownload, setSelectedDownload] = useState<string | null>(null);
-  const [backing, setBacking] = useState(false);
   const uploadedListRef = useRef<{ reload: () => void } | null>(null);
 
   const handleUploadComplete = useCallback(() => {
@@ -46,18 +45,6 @@ export default function InstallPage({
     setSelectedUpload(null);
     setSelectedDownload(null);
     uploadedListRef.current?.reload();
-  };
-
-  const handleBackup = async () => {
-    if (backing) return;
-    setBacking(true);
-    try {
-      await window.api.backupAll();
-      uploadedListRef.current?.reload();
-      setSelectedUpload(null);
-    } finally {
-      setBacking(false);
-    }
   };
 
   const hasSource = selectedUpload !== null || selectedDownload !== null;
@@ -87,24 +74,9 @@ export default function InstallPage({
 
       {/* Uploaded Config Files */}
       <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-display text-sm font-semibold text-text-secondary">
-            已上传配置文件
-          </h2>
-          <button
-            onClick={handleBackup}
-            disabled={backing}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-text-muted hover:text-accent hover:bg-accent-bg disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border-none"
-            title="将所有上传记录转移到备份目录"
-          >
-            {backing ? (
-              <Loader2 size={13} className="animate-spin" />
-            ) : (
-              <Archive size={13} />
-            )}
-            全部备份
-          </button>
-        </div>
+        <h2 className="font-display text-sm font-semibold text-text-secondary">
+          已上传配置文件
+        </h2>
         <UploadedList
           ref={uploadedListRef}
           selectedFolder={selectedUpload}

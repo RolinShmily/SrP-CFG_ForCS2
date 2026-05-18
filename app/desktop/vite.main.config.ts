@@ -5,9 +5,6 @@ export default defineConfig({
     rollupOptions: {
       external: [
         "electron",
-        "archiver",
-        "extract-zip",
-        "winreg",
         "path",
         "fs",
         "os",

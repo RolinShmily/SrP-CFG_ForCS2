@@ -1,28 +1,17 @@
-# Build results
-bin/
-obj/
-
-Installer/Installer.exe
-Installer/Installer.pdb
 CLAUDE.md
 .claude
 .spec-workflow/
 
-# Setup build output
-Setup/bin/
-Setup/obj/
-Setup/*.wixpdb
-
 # Node
 node_modules/
-dist/
-.vite/
-.webpack/
-.astro/
-
-# Legacy (removed)
-site/
-wpf/
+app/website/dist/
+app/desktop/out/
+app/desktop/.vite/
+app/website/.astro/
 
 # Temp files
 tmp/
+
+msi/obj/
+msi/bin/
+

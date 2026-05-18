@@ -3,7 +3,7 @@ import {
   Rocket,
   Upload,
   Layers,
-  Link2,
+  Copy,
   AlertTriangle,
 } from "lucide-react";
 
@@ -34,9 +34,9 @@ const steps = [
   },
   {
     num: "05",
-    title: "自动链接",
-    desc: "程序自动创建符号链接，配置文件即刻生效",
-    icon: Link2,
+    title: "自动部署",
+    desc: "程序自动复制配置文件到 CS2 游戏目录，即刻生效",
+    icon: Copy,
   },
 ];
 
@@ -69,11 +69,11 @@ export default function QuickStartPage() {
           注意事项
         </h2>
         <ul className="space-y-2 text-sm text-text-secondary font-light">
-          <li>配置文件通过符号链接部署到 CS2 游戏目录，修改暂存区文件会直接影响游戏</li>
+          <li>配置文件会被直接复制到 CS2 游戏目录，暂存区保留副本以供后续管理</li>
           <li>覆盖安装会清空暂存区所有内容，追加安装则保留已有文件并合并新文件</li>
           <li>安装前可随时备份当前配置，在「备份与恢复」页面管理备份记录</li>
           <li>文件类型筛选仅支持 .cfg 和 .txt 文件，其他格式将被自动过滤</li>
-          <li>创建文件符号链接需要管理员权限或启用 Windows 开发者模式</li>
+          <li>安装时若游戏目录存在冲突文件，原文件会被移至「冲突恢复」区域</li>
         </ul>
       </div>
     </div>

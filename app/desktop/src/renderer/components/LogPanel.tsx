@@ -8,7 +8,6 @@ const CATEGORY_COLORS: Record<LogCategory, string> = {
   "file-ops": "text-blue",
   install: "text-green",
   backup: "text-purple",
-  symlink: "text-cyan",
 };
 
 const CATEGORY_LABELS: Record<LogCategory, string> = {
@@ -17,7 +16,6 @@ const CATEGORY_LABELS: Record<LogCategory, string> = {
   "file-ops": "文件",
   install: "安装",
   backup: "备份",
-  symlink: "链接",
 };
 
 const LEVEL_STYLES: Record<LogLevel, string> = {

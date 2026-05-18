@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/D:\GitHub\SrP-CFG_ForCS2\app\website\src\assets\favicon.ico" alt="图标">
+<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/app/website/public/favicon.ico" alt="图标">
 
 [![stars](https://img.shields.io/github/stars/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=green)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
 [![fork](https://img.shields.io/github/forks/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=critical)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
@@ -12,7 +12,7 @@
 
 </div>
 
-## 简介
+## 📖 简介
 
 > 所有的 CFG 在运行后都会在控制台输出导航信息，请注意查看。
 
@@ -34,33 +34,30 @@
 
 你会需要的链接：
 
-- [项目说明书](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-1.html) 
-- [下载地址](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html) 
+- [项目文档](https://cfg.srprolin.top/docs) 
+- [下载地址](https://cfg.srprolin.top/download) 
 - [关于CFG你要了解的二三事](https://blog.srprolin.top/posts/srp-cfg/) 
 
-## Installer 安装器
+## 🛠 Installer 安装器
 
-![SrP-Installer]()
+在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目官网](https://cfg.srprolin.top/)中均可下载 MSI 安装包或便携版 ZIP，安装/解压后即可使用。
 
-在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目下载地址](https://doc.srprolin.top/SrP-CFG_CS2/srpcfg-2.html)中均发布了便携版，无须任何依赖，一键启用。
-
-Electron 桌面应用，基于 React + TypeScript，运行后直接拖入下载好的 `zip` 包或 `CFG`/`TXT` 文件即可安装本预设。
+Electron 桌面应用，基于 React + TypeScript + Tailwind CSS，运行后直接拖入下载好的 `zip` 包或 `CFG`/`TXT` 文件即可安装本预设。
 
 ### ✏️ 功能说明 (Features)
-- 自动检测 Steam 路径、游戏全局 CFG 路径和地图指南路径（支持一键刷新）
+- 自动检测 Steam 路径、CS2 游戏目录和用户配置路径（支持一键刷新）
 - 自动检测 Steam 用户并支持手动选择
-- 自动备份全局 CFG 文件夹为 `cfg_backup.zip`
-- 自动备份用户视频预设文件为 `user_cfg_backup.zip`
-- 自动备份地图指南文件为 `annotations_backup.zip`
-- 独立备份功能：不安装、仅备份当前配置
-- 一键恢复：从备份 ZIP 还原配置到游戏目录
-- 支持安装全局 CFG 文件（可单独选择）
-- 支持安装用户视频预设文件（仅识别 `cs2_video.txt`，可单独选择）
-- 支持安装地图指南预设文件（复制 annotations 子目录到 `csgo/annotations/local/`，可单独选择）
-- 目标目录不存在时自动创建（需游戏至少运行过一次）
-- 拖入 `zip`、`cfg` 单文件或文件夹自动检测并安装
+- 两种安装模式：覆盖安装（清空重装）和追加安装（合并保留）
+- 覆盖安装时自动检测冲突文件，冲突项移至恢复区并记录到 `res.json`
+- 第二次覆盖安装时自动备份当前恢复区到 `save/`，支持一键恢复
+- 追加安装时检测同名冲突（超过 3 个自动拒绝，1–3 个弹窗确认）
+- 安装状态通过 `install.json` 追踪，支持逐项快速删除
+- 支持拖入 `zip` 包、`cfg`/`txt` 单文件或文件夹自动识别并安装
+- 内置预设包快捷下载（最多保存 5 个下载记录）
+- 上传文件最多保存 5 条记录，支持手动管理
 - 实时日志输出，清晰的安装进度反馈
-- 内置预设包快捷下载（无需手动访问网页）
+- 直接复制配置文件到游戏目录，无需提权或管理员权限
+- 自动检查版本更新（GitHub Releases）
 
 ## 🌳项目结构
 
@@ -110,13 +107,13 @@ SrP-CFG_ForCS2/
 
 **用户运行：**
 
-Release 发布包为便携版，无需安装任何运行库，直接运行即可。
+Release 提供 MSI 安装包和便携版 ZIP，下载后直接使用。配置文件直接复制到游戏目录，无需提权。
 
 **开发者环境：**
 
 - [Node.js](https://nodejs.org/) 22+
 - [pnpm](https://pnpm.io/) 10+
-- (可选) [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) — 仅构建 MSI 时需要
+- [WiX Toolset v6](https://wixtoolset.org/) — 构建 MSI 安装包
 
 ### 💻 开发
 
@@ -125,28 +122,28 @@ Release 发布包为便携版，无需安装任何运行库，直接运行即可
 pnpm install
 
 # 启动官网开发服务器
-cd app/website && pnpm dev
+pnpm dev:web
 
 # 启动桌面应用
-cd app/desktop && pnpm start
+pnpm dev:desktop
 ```
 
 ### 🚀 构建（Build）
 
 ```bash
 # 构建官网
-cd app/website && pnpm build
+pnpm build:web
 
-# 打包桌面应用
-cd app/desktop && pnpm package
+# 打包桌面应用（Electron Forge）
+pnpm package:desktop
 
-# 构建 MSI 安装包（需要 .NET 8 SDK + WiX Toolset v6）
-dotnet build msi -c Release
+# 构建 MSI 安装包（自动先打包桌面应用）
+pnpm build:msi
 ```
 
-### 📀 MSI 安装包
+### 📀 安装方式
 
-基于 [WiX Toolset v6](https://wixtoolset.org/) 构建 MSI 安装包，通过 Windows 原生安装机制提升系统信任度。
+**MSI 安装包** — 基于 [WiX Toolset v6](https://wixtoolset.org/)，通过 Windows 原生安装机制提升系统信任度。
 
 输出：`msi/bin/Release/SrP-CFG_Installer_Setup.msi`
 
@@ -155,6 +152,8 @@ dotnet build msi -c Release
 - 安装到 `Program Files`，创建开始菜单和桌面快捷方式
 - 支持"程序与功能"卸载
 
-## 仓库活动
+**便携版** — `pnpm package:desktop` 打包输出的目录即为便携版，将整个目录压缩为 ZIP 即可分发。解压即用，不写注册表、不注册服务，适合 U 盘携带或多实例隔离场景。
+
+## 🏠 仓库活动
 
 ![仓库活动](https://repobeats.axiom.co/api/embed/55700fe0f86a32b2418b023fa87c8ec214153ef0.svg "Repobeats analytics image")

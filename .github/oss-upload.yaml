@@ -38,11 +38,15 @@ upload_files:
   # ============================================
   # 安装器
   # ============================================
-  - display_name: "安装器"
+  - display_name: "MSI安装包"
     source_pattern: "SrP-CFG_Installer_*.msi"
     target_name: "SrP-CFG_Installer.msi"
     enabled: true
 
+  - display_name: "Portable便携包"
+    source_pattern: "SrP-CFG_Portable_*.zip"
+    target_name: "SrP-CFG_Portable.zip"
+    enabled: true
 
 # ============================================
 # 全局配置

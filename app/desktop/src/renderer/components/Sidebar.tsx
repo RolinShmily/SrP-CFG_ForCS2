@@ -78,7 +78,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
       {/* Logo — slightly larger */}
       <div className="p-5 mb-2 flex items-center justify-center">
         <img
-          src="/favicon.ico"
+          src="./favicon.ico"
           alt="SrP-CFG"
           className="w-11 h-11 rounded-[10px] object-contain"
         />

@@ -1,18 +1,22 @@
 <Project Sdk="WixToolset.Sdk/6.0.2">
-  <Import Project="..\wpf\Directory.Build.props" />
   <PropertyGroup>
     <OutputName>SrP-CFG_Installer_Setup</OutputName>
     <Cultures>zh-CN</Cultures>
     <InstallerPlatform>x64</InstallerPlatform>
     <ProductCode Condition="'$(ProductCode)' == ''">$([System.Guid]::NewGuid().ToString("B").ToUpperInvariant())</ProductCode>
-    <DefineConstants>Version=$(Version);ProductCode=$(ProductCode)</DefineConstants>
+    <DefineConstants>Version=$(Version);ProductCode=$(ProductCode);ElectronAppDir=$(MSBuildProjectDirectory)\..\app\desktop\out\SrP-CFG Installer-win32-x64</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\wpf\Installer.csproj"
-                      ReferenceOutputAssembly="false"
-                      Publish="true" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
   </ItemGroup>
+
+  <!-- Generate ElectronAppFiles.wxs from Electron app output -->
+  <Target Name="HarvestElectronApp" BeforeTargets="Compile">
+    <Exec Command="node &quot;$(MSBuildProjectDirectory)\harvest.js&quot; &quot;$(MSBuildProjectDirectory)\..\app\desktop\out\SrP-CFG Installer-win32-x64&quot; &quot;$(MSBuildProjectDirectory)\ElectronAppFiles.wxs&quot;"
+          ConsoleToMSBuild="true" />
+    <ItemGroup>
+      <Compile Include="$(MSBuildProjectDirectory)\ElectronAppFiles.wxs" />
+    </ItemGroup>
+  </Target>
 </Project>

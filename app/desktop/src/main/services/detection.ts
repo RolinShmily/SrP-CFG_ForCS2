@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import Winreg = require("winreg");
+import Winreg from "winreg";
 import type {
   DetectionResult,
   SteamUser,

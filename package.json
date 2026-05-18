@@ -7,7 +7,9 @@
     "build:web": "pnpm --filter @srp-cfg/website build",
     "preview:web": "pnpm --filter @srp-cfg/website preview",
     "dev:desktop": "pnpm --filter @srp-cfg/desktop start",
-    "build:desktop": "pnpm --filter @srp-cfg/desktop make"
+    "build:desktop": "pnpm --filter @srp-cfg/desktop make",
+    "package:desktop": "pnpm --filter @srp-cfg/desktop package",
+    "build:msi": "pnpm package:desktop && node -e \"const v=require('./app/desktop/package.json').version;require('child_process').execSync('dotnet build msi/Setup.wixproj -c Release -p:Version='+v,{stdio:'inherit'})\""
   },
   "pnpm": {
     "onlyBuiltDependencies": [

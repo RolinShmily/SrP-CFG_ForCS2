@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+          <Component Id="cmp_1" Bitness="always64" Guid="*">
+            <File Id="fil_2" Source="$(var.ElectronAppDir)\chrome_100_percent.pak" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_3" Bitness="always64" Guid="*">
+            <File Id="fil_4" Source="$(var.ElectronAppDir)\chrome_200_percent.pak" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_5" Bitness="always64" Guid="*">
+            <File Id="fil_6" Source="$(var.ElectronAppDir)\d3dcompiler_47.dll" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_7" Bitness="always64" Guid="*">
+            <File Id="fil_8" Source="$(var.ElectronAppDir)\ffmpeg.dll" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_9" Bitness="always64" Guid="*">
+            <File Id="fil_10" Source="$(var.ElectronAppDir)\icudtl.dat" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_11" Bitness="always64" Guid="*">
+            <File Id="fil_12" Source="$(var.ElectronAppDir)\libEGL.dll" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_13" Bitness="always64" Guid="*">
+            <File Id="fil_14" Source="$(var.ElectronAppDir)\libGLESv2.dll" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_15" Bitness="always64" Guid="*">
+            <File Id="fil_16" Source="$(var.ElectronAppDir)\LICENSE" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_17" Bitness="always64" Guid="*">
+            <File Id="fil_18" Source="$(var.ElectronAppDir)\LICENSES.chromium.html" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_19" Bitness="always64" Guid="*">
+            <File Id="fil_20" Source="$(var.ElectronAppDir)\resources.pak" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_21" Bitness="always64" Guid="*">
+            <File Id="fil_22" Source="$(var.ElectronAppDir)\snapshot_blob.bin" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_23" Bitness="always64" Guid="*">
+            <File Id="fil_24" Source="$(var.ElectronAppDir)\SrP-CFG Installer.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_25" Bitness="always64" Guid="*">
+            <File Id="fil_26" Source="$(var.ElectronAppDir)\v8_context_snapshot.bin" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_27" Bitness="always64" Guid="*">
+            <File Id="fil_28" Source="$(var.ElectronAppDir)\version" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_29" Bitness="always64" Guid="*">
+            <File Id="fil_30" Source="$(var.ElectronAppDir)\vk_swiftshader.dll" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_31" Bitness="always64" Guid="*">
+            <File Id="fil_32" Source="$(var.ElectronAppDir)\vk_swiftshader_icd.json" KeyPath="yes" />
+          </Component>
+          <Component Id="cmp_33" Bitness="always64" Guid="*">
+            <File Id="fil_34" Source="$(var.ElectronAppDir)\vulkan-1.dll" KeyPath="yes" />
+          </Component>
+          <Directory Id="dir_35" Name="locales">
+            <Component Id="cmp_37" Bitness="always64" Guid="*">
+              <File Id="fil_38" Source="$(var.ElectronAppDir)\locales\af.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_39" Bitness="always64" Guid="*">
+              <File Id="fil_40" Source="$(var.ElectronAppDir)\locales\am.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_41" Bitness="always64" Guid="*">
+              <File Id="fil_42" Source="$(var.ElectronAppDir)\locales\ar.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_43" Bitness="always64" Guid="*">
+              <File Id="fil_44" Source="$(var.ElectronAppDir)\locales\bg.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_45" Bitness="always64" Guid="*">
+              <File Id="fil_46" Source="$(var.ElectronAppDir)\locales\bn.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_47" Bitness="always64" Guid="*">
+              <File Id="fil_48" Source="$(var.ElectronAppDir)\locales\ca.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_49" Bitness="always64" Guid="*">
+              <File Id="fil_50" Source="$(var.ElectronAppDir)\locales\cs.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_51" Bitness="always64" Guid="*">
+              <File Id="fil_52" Source="$(var.ElectronAppDir)\locales\da.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_53" Bitness="always64" Guid="*">
+              <File Id="fil_54" Source="$(var.ElectronAppDir)\locales\de.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_55" Bitness="always64" Guid="*">
+              <File Id="fil_56" Source="$(var.ElectronAppDir)\locales\el.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_57" Bitness="always64" Guid="*">
+              <File Id="fil_58" Source="$(var.ElectronAppDir)\locales\en-GB.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_59" Bitness="always64" Guid="*">
+              <File Id="fil_60" Source="$(var.ElectronAppDir)\locales\en-US.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_61" Bitness="always64" Guid="*">
+              <File Id="fil_62" Source="$(var.ElectronAppDir)\locales\es-419.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_63" Bitness="always64" Guid="*">
+              <File Id="fil_64" Source="$(var.ElectronAppDir)\locales\es.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_65" Bitness="always64" Guid="*">
+              <File Id="fil_66" Source="$(var.ElectronAppDir)\locales\et.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_67" Bitness="always64" Guid="*">
+              <File Id="fil_68" Source="$(var.ElectronAppDir)\locales\fa.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_69" Bitness="always64" Guid="*">
+              <File Id="fil_70" Source="$(var.ElectronAppDir)\locales\fi.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_71" Bitness="always64" Guid="*">
+              <File Id="fil_72" Source="$(var.ElectronAppDir)\locales\fil.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_73" Bitness="always64" Guid="*">
+              <File Id="fil_74" Source="$(var.ElectronAppDir)\locales\fr.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_75" Bitness="always64" Guid="*">
+              <File Id="fil_76" Source="$(var.ElectronAppDir)\locales\gu.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_77" Bitness="always64" Guid="*">
+              <File Id="fil_78" Source="$(var.ElectronAppDir)\locales\he.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_79" Bitness="always64" Guid="*">
+              <File Id="fil_80" Source="$(var.ElectronAppDir)\locales\hi.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_81" Bitness="always64" Guid="*">
+              <File Id="fil_82" Source="$(var.ElectronAppDir)\locales\hr.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_83" Bitness="always64" Guid="*">
+              <File Id="fil_84" Source="$(var.ElectronAppDir)\locales\hu.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_85" Bitness="always64" Guid="*">
+              <File Id="fil_86" Source="$(var.ElectronAppDir)\locales\id.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_87" Bitness="always64" Guid="*">
+              <File Id="fil_88" Source="$(var.ElectronAppDir)\locales\it.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_89" Bitness="always64" Guid="*">
+              <File Id="fil_90" Source="$(var.ElectronAppDir)\locales\ja.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_91" Bitness="always64" Guid="*">
+              <File Id="fil_92" Source="$(var.ElectronAppDir)\locales\kn.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_93" Bitness="always64" Guid="*">
+              <File Id="fil_94" Source="$(var.ElectronAppDir)\locales\ko.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_95" Bitness="always64" Guid="*">
+              <File Id="fil_96" Source="$(var.ElectronAppDir)\locales\lt.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_97" Bitness="always64" Guid="*">
+              <File Id="fil_98" Source="$(var.ElectronAppDir)\locales\lv.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_99" Bitness="always64" Guid="*">
+              <File Id="fil_100" Source="$(var.ElectronAppDir)\locales\ml.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_101" Bitness="always64" Guid="*">
+              <File Id="fil_102" Source="$(var.ElectronAppDir)\locales\mr.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_103" Bitness="always64" Guid="*">
+              <File Id="fil_104" Source="$(var.ElectronAppDir)\locales\ms.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_105" Bitness="always64" Guid="*">
+              <File Id="fil_106" Source="$(var.ElectronAppDir)\locales\nb.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_107" Bitness="always64" Guid="*">
+              <File Id="fil_108" Source="$(var.ElectronAppDir)\locales\nl.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_109" Bitness="always64" Guid="*">
+              <File Id="fil_110" Source="$(var.ElectronAppDir)\locales\pl.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_111" Bitness="always64" Guid="*">
+              <File Id="fil_112" Source="$(var.ElectronAppDir)\locales\pt-BR.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_113" Bitness="always64" Guid="*">
+              <File Id="fil_114" Source="$(var.ElectronAppDir)\locales\pt-PT.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_115" Bitness="always64" Guid="*">
+              <File Id="fil_116" Source="$(var.ElectronAppDir)\locales\ro.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_117" Bitness="always64" Guid="*">
+              <File Id="fil_118" Source="$(var.ElectronAppDir)\locales\ru.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_119" Bitness="always64" Guid="*">
+              <File Id="fil_120" Source="$(var.ElectronAppDir)\locales\sk.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_121" Bitness="always64" Guid="*">
+              <File Id="fil_122" Source="$(var.ElectronAppDir)\locales\sl.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_123" Bitness="always64" Guid="*">
+              <File Id="fil_124" Source="$(var.ElectronAppDir)\locales\sr.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_125" Bitness="always64" Guid="*">
+              <File Id="fil_126" Source="$(var.ElectronAppDir)\locales\sv.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_127" Bitness="always64" Guid="*">
+              <File Id="fil_128" Source="$(var.ElectronAppDir)\locales\sw.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_129" Bitness="always64" Guid="*">
+              <File Id="fil_130" Source="$(var.ElectronAppDir)\locales\ta.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_131" Bitness="always64" Guid="*">
+              <File Id="fil_132" Source="$(var.ElectronAppDir)\locales\te.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_133" Bitness="always64" Guid="*">
+              <File Id="fil_134" Source="$(var.ElectronAppDir)\locales\th.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_135" Bitness="always64" Guid="*">
+              <File Id="fil_136" Source="$(var.ElectronAppDir)\locales\tr.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_137" Bitness="always64" Guid="*">
+              <File Id="fil_138" Source="$(var.ElectronAppDir)\locales\uk.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_139" Bitness="always64" Guid="*">
+              <File Id="fil_140" Source="$(var.ElectronAppDir)\locales\ur.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_141" Bitness="always64" Guid="*">
+              <File Id="fil_142" Source="$(var.ElectronAppDir)\locales\vi.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_143" Bitness="always64" Guid="*">
+              <File Id="fil_144" Source="$(var.ElectronAppDir)\locales\zh-CN.pak" KeyPath="yes" />
+            </Component>
+            <Component Id="cmp_145" Bitness="always64" Guid="*">
+              <File Id="fil_146" Source="$(var.ElectronAppDir)\locales\zh-TW.pak" KeyPath="yes" />
+            </Component>
+          </Directory>
+          <Directory Id="dir_36" Name="resources">
+            <Directory Id="dir_147" Name="app">
+              <Component Id="cmp_148" Bitness="always64" Guid="*">
+                <File Id="fil_149" Source="$(var.ElectronAppDir)\resources\app\package.json" KeyPath="yes" />
+              </Component>
+              <Directory Id="dir_150" Name=".vite">
+                <Directory Id="dir_151" Name="build">
+                  <Component Id="cmp_153" Bitness="always64" Guid="*">
+                    <File Id="fil_154" Source="$(var.ElectronAppDir)\resources\app\.vite\build\main.js" KeyPath="yes" />
+                  </Component>
+                  <Component Id="cmp_155" Bitness="always64" Guid="*">
+                    <File Id="fil_156" Source="$(var.ElectronAppDir)\resources\app\.vite\build\preload.js" KeyPath="yes" />
+                  </Component>
+                </Directory>
+                <Directory Id="dir_152" Name="renderer">
+                  <Directory Id="dir_157" Name="main_window">
+                    <Component Id="cmp_158" Bitness="always64" Guid="*">
+                      <File Id="fil_159" Source="$(var.ElectronAppDir)\resources\app\.vite\renderer\main_window\avatar.jpg" KeyPath="yes" />
+                    </Component>
+                    <Component Id="cmp_160" Bitness="always64" Guid="*">
+                      <File Id="fil_161" Source="$(var.ElectronAppDir)\resources\app\.vite\renderer\main_window\favicon.ico" KeyPath="yes" />
+                    </Component>
+                    <Component Id="cmp_162" Bitness="always64" Guid="*">
+                      <File Id="fil_163" Source="$(var.ElectronAppDir)\resources\app\.vite\renderer\main_window\index.html" KeyPath="yes" />
+                    </Component>
+                    <Directory Id="dir_164" Name="assets">
+                      <Component Id="cmp_165" Bitness="always64" Guid="*">
+                        <File Id="fil_166" Source="$(var.ElectronAppDir)\resources\app\.vite\renderer\main_window\assets\index-B5zaN0OA.css" KeyPath="yes" />
+                      </Component>
+                      <Component Id="cmp_167" Bitness="always64" Guid="*">
+                        <File Id="fil_168" Source="$(var.ElectronAppDir)\resources\app\.vite\renderer\main_window\assets\index-BaOtjPoj.js" KeyPath="yes" />
+                      </Component>
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="ElectronAppFiles">
+      <ComponentRef Id="cmp_1" />
+      <ComponentRef Id="cmp_3" />
+      <ComponentRef Id="cmp_5" />
+      <ComponentRef Id="cmp_7" />
+      <ComponentRef Id="cmp_9" />
+      <ComponentRef Id="cmp_11" />
+      <ComponentRef Id="cmp_13" />
+      <ComponentRef Id="cmp_15" />
+      <ComponentRef Id="cmp_17" />
+      <ComponentRef Id="cmp_19" />
+      <ComponentRef Id="cmp_21" />
+      <ComponentRef Id="cmp_23" />
+      <ComponentRef Id="cmp_25" />
+      <ComponentRef Id="cmp_27" />
+      <ComponentRef Id="cmp_29" />
+      <ComponentRef Id="cmp_31" />
+      <ComponentRef Id="cmp_33" />
+      <ComponentRef Id="cmp_37" />
+      <ComponentRef Id="cmp_39" />
+      <ComponentRef Id="cmp_41" />
+      <ComponentRef Id="cmp_43" />
+      <ComponentRef Id="cmp_45" />
+      <ComponentRef Id="cmp_47" />
+      <ComponentRef Id="cmp_49" />
+      <ComponentRef Id="cmp_51" />
+      <ComponentRef Id="cmp_53" />
+      <ComponentRef Id="cmp_55" />
+      <ComponentRef Id="cmp_57" />
+      <ComponentRef Id="cmp_59" />
+      <ComponentRef Id="cmp_61" />
+      <ComponentRef Id="cmp_63" />
+      <ComponentRef Id="cmp_65" />
+      <ComponentRef Id="cmp_67" />
+      <ComponentRef Id="cmp_69" />
+      <ComponentRef Id="cmp_71" />
+      <ComponentRef Id="cmp_73" />
+      <ComponentRef Id="cmp_75" />
+      <ComponentRef Id="cmp_77" />
+      <ComponentRef Id="cmp_79" />
+      <ComponentRef Id="cmp_81" />
+      <ComponentRef Id="cmp_83" />
+      <ComponentRef Id="cmp_85" />
+      <ComponentRef Id="cmp_87" />
+      <ComponentRef Id="cmp_89" />
+      <ComponentRef Id="cmp_91" />
+      <ComponentRef Id="cmp_93" />
+      <ComponentRef Id="cmp_95" />
+      <ComponentRef Id="cmp_97" />
+      <ComponentRef Id="cmp_99" />
+      <ComponentRef Id="cmp_101" />
+      <ComponentRef Id="cmp_103" />
+      <ComponentRef Id="cmp_105" />
+      <ComponentRef Id="cmp_107" />
+      <ComponentRef Id="cmp_109" />
+      <ComponentRef Id="cmp_111" />
+      <ComponentRef Id="cmp_113" />
+      <ComponentRef Id="cmp_115" />
+      <ComponentRef Id="cmp_117" />
+      <ComponentRef Id="cmp_119" />
+      <ComponentRef Id="cmp_121" />
+      <ComponentRef Id="cmp_123" />
+      <ComponentRef Id="cmp_125" />
+      <ComponentRef Id="cmp_127" />
+      <ComponentRef Id="cmp_129" />
+      <ComponentRef Id="cmp_131" />
+      <ComponentRef Id="cmp_133" />
+      <ComponentRef Id="cmp_135" />
+      <ComponentRef Id="cmp_137" />
+      <ComponentRef Id="cmp_139" />
+      <ComponentRef Id="cmp_141" />
+      <ComponentRef Id="cmp_143" />
+      <ComponentRef Id="cmp_145" />
+      <ComponentRef Id="cmp_148" />
+      <ComponentRef Id="cmp_153" />
+      <ComponentRef Id="cmp_155" />
+      <ComponentRef Id="cmp_158" />
+      <ComponentRef Id="cmp_160" />
+      <ComponentRef Id="cmp_162" />
+      <ComponentRef Id="cmp_165" />
+      <ComponentRef Id="cmp_167" />
+    </ComponentGroup>
+  </Fragment>
+</Wix>

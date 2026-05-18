@@ -5,7 +5,6 @@ import extractZip from "extract-zip";
 import type {
   UploadEntry,
   UploadFileInfo,
-  BackupEntry,
   DownloadEntry,
   InstallMode,
   LogEntry,
@@ -26,12 +25,14 @@ const DIRS = {
   cfg: "cfg",
   annotations: "annotations",
   video: "video",
-  tmp: "tmp",
-  saves: "saves",
-  downloads: "downloads",
+  upload: "upload",
+  download: "download",
+  save: "save",
+  res: "res",
 } as const;
 
-const MAX_UPLOADS = 100;
+const MAX_UPLOADS = 5;
+const MAX_DOWNLOADS = 5;
 const ALLOWED_EXTENSIONS = new Set([".cfg", ".txt"]);
 
 export type LogFn = (entry: Omit<LogEntry, "timestamp">) => void;
@@ -42,16 +43,20 @@ export function getStagingPath(dir: keyof typeof DIRS): string {
   return path.join(getBase(), DIRS[dir]);
 }
 
-export function getSavesPath(): string {
-  return path.join(getBase(), DIRS.saves);
+export function getUploadPath(): string {
+  return path.join(getBase(), DIRS.upload);
 }
 
-export function getDownloadsPath(): string {
-  return path.join(getBase(), DIRS.downloads);
+export function getDownloadPath(): string {
+  return path.join(getBase(), DIRS.download);
 }
 
-export function getTmpPath(): string {
-  return path.join(getBase(), DIRS.tmp);
+export function getSavePath(): string {
+  return path.join(getBase(), DIRS.save);
+}
+
+export function getResPath(): string {
+  return path.join(getBase(), DIRS.res);
 }
 
 // ── Initialization ───────────────────────────────────────────
@@ -61,41 +66,11 @@ export function initializeStagingArea(log: LogFn): void {
     fs.mkdirSync(path.join(getBase(), dir), { recursive: true });
   }
 
-  // Clear tmp on startup
-  const tmpDir = path.join(getBase(), DIRS.tmp);
-  clearDirectory(tmpDir);
   log({
     category: "file-ops",
     level: "info",
-    message: "临时目录已清空",
+    message: "目录结构已初始化",
   });
-}
-
-// ── Staging File Listing ──────────────────────────────────────
-
-export interface StagingSection {
-  key: string;
-  label: string;
-  path: string;
-  files: string[];
-}
-
-export function listStagingFiles(): StagingSection[] {
-  const sections: StagingSection[] = [
-    { key: "cfg", label: "CFG 配置", path: getStagingPath("cfg"), files: [] },
-    { key: "annotations", label: "地图指南", path: getStagingPath("annotations"), files: [] },
-    { key: "video", label: "视频预设", path: getStagingPath("video"), files: [] },
-  ];
-
-  for (const section of sections) {
-    if (fs.existsSync(section.path)) {
-      section.files = walkSync(section.path).map((f) =>
-        path.relative(section.path, f).replace(/\\/g, "/"),
-      );
-    }
-  }
-
-  return sections;
 }
 
 // ── Helpers ──────────────────────────────────────────────────
@@ -108,32 +83,6 @@ function clearDirectory(dir: string): void {
   }
 }
 
-function copyDirContents(src: string, dst: string): void {
-  fs.mkdirSync(dst, { recursive: true });
-  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    const srcPath = path.join(src, entry.name);
-    const dstPath = path.join(dst, entry.name);
-    if (entry.isDirectory()) {
-      copyDirContents(srcPath, dstPath);
-    } else {
-      fs.copyFileSync(srcPath, dstPath);
-    }
-  }
-}
-
-function countFilesRecursive(dir: string): number {
-  if (!fs.existsSync(dir)) return 0;
-  let count = 0;
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.isDirectory()) {
-      count += countFilesRecursive(path.join(dir, entry.name));
-    } else {
-      count++;
-    }
-  }
-  return count;
-}
-
 function walkSync(dir: string): string[] {
   const results: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -144,14 +93,13 @@ function walkSync(dir: string): string[] {
   return results;
 }
 
-function generateTimestampFolderName(scanDir?: string): string {
+function generateTimestampFolderName(scanDir: string): string {
   const now = new Date();
   const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   let maxSeq = 0;
-  const dir = scanDir ?? getTmpPath();
-  if (fs.existsSync(dir)) {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+  if (fs.existsSync(scanDir)) {
+    for (const entry of fs.readdirSync(scanDir, { withFileTypes: true })) {
       if (entry.isDirectory() && entry.name.startsWith(date)) {
         const seq = parseInt(entry.name.slice(date.length + 1), 10);
         if (!isNaN(seq) && seq > maxSeq) maxSeq = seq;
@@ -175,13 +123,26 @@ function getFileInfo(filePath: string, baseDir: string): UploadFileInfo {
   return { name, relativePath: rel, type, size: stat.size };
 }
 
-function countUploads(): number {
-  const tmpDir = getTmpPath();
-  if (!fs.existsSync(tmpDir)) return 0;
+function countTimestampedFolders(dir: string): number {
+  if (!fs.existsSync(dir)) return 0;
   return fs
-    .readdirSync(tmpDir, { withFileTypes: true })
+    .readdirSync(dir, { withFileTypes: true })
     .filter((d) => d.isDirectory() && /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d.name))
     .length;
+}
+
+function enforceLimit(dir: string, max: number): void {
+  if (!fs.existsSync(dir)) return;
+  const folders = fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d.name))
+    .map((d) => d.name)
+    .sort();
+
+  while (folders.length >= max) {
+    const oldest = folders.shift()!;
+    fs.rmSync(path.join(dir, oldest), { recursive: true, force: true });
+  }
 }
 
 // ── Upload ───────────────────────────────────────────────────
@@ -190,16 +151,9 @@ export async function uploadFiles(
   filePaths: string[],
   log: LogFn,
 ): Promise<UploadEntry | null> {
-  if (countUploads() >= MAX_UPLOADS) {
-    log({
-      category: "file-ops",
-      level: "error",
-      message: `上传次数已达上限（${MAX_UPLOADS}次），请先安装或清理`,
-    });
-    return null;
-  }
+  const uploadDir = getUploadPath();
 
-  // ── ZIP-only upload: store as-is (download-like logic) ──────
+  // ZIP-only upload
   const allZip =
     filePaths.length > 0 &&
     filePaths.every((fp) => {
@@ -214,21 +168,14 @@ export async function uploadFiles(
     let firstEntry: UploadEntry | null = null;
 
     for (const zipPath of filePaths) {
-      if (countUploads() >= MAX_UPLOADS) {
-        log({
-          category: "file-ops",
-          level: "warning",
-          message: `已达到上传上限，跳过剩余文件`,
-        });
-        break;
-      }
+      enforceLimit(uploadDir, MAX_UPLOADS);
 
-      const folderName = generateTimestampFolderName();
-      const uploadDir = path.join(getTmpPath(), folderName);
-      fs.mkdirSync(uploadDir, { recursive: true });
+      const folderName = generateTimestampFolderName(uploadDir);
+      const dest = path.join(uploadDir, folderName);
+      fs.mkdirSync(dest, { recursive: true });
 
       const fileName = path.basename(zipPath);
-      fs.copyFileSync(zipPath, path.join(uploadDir, fileName));
+      fs.copyFileSync(zipPath, path.join(dest, fileName));
 
       const stat = fs.statSync(zipPath);
       log({
@@ -243,9 +190,7 @@ export async function uploadFiles(
           folderName,
           timestamp: Date.now(),
           fileCount: 1,
-          files: [
-            { name: fileName, relativePath: fileName, type: "txt", size: stat.size },
-          ],
+          files: [{ name: fileName, relativePath: fileName, type: "txt", size: stat.size }],
         };
       }
     }
@@ -253,21 +198,19 @@ export async function uploadFiles(
     return firstEntry;
   }
 
-  // ── Non-ZIP / mixed upload: extract ZIPs and process ───────
-  const folderName = generateTimestampFolderName();
-  const uploadDir = path.join(getTmpPath(), folderName);
-  fs.mkdirSync(uploadDir, { recursive: true });
+  // Non-ZIP / mixed upload
+  enforceLimit(uploadDir, MAX_UPLOADS);
+
+  const folderName = generateTimestampFolderName(uploadDir);
+  const uploadSubDir = path.join(uploadDir, folderName);
+  fs.mkdirSync(uploadSubDir, { recursive: true });
 
   let allFiles: string[] = [];
   const unsupportedSkipped: string[] = [];
 
   for (const filePath of filePaths) {
     if (!fs.existsSync(filePath)) {
-      log({
-        category: "file-ops",
-        level: "warning",
-        message: `文件不存在：${filePath}`,
-      });
+      log({ category: "file-ops", level: "warning", message: `文件不存在：${filePath}` });
       continue;
     }
 
@@ -276,26 +219,20 @@ export async function uploadFiles(
     if (stat.isDirectory()) {
       for (const f of walkSync(filePath)) {
         const ext = path.extname(f).toLowerCase();
-        if (ALLOWED_EXTENSIONS.has(ext)) {
-          allFiles.push(f);
-        } else {
-          unsupportedSkipped.push(path.basename(f));
-        }
+        if (ALLOWED_EXTENSIONS.has(ext)) allFiles.push(f);
+        else unsupportedSkipped.push(path.basename(f));
       }
     } else {
       const ext = path.extname(filePath).toLowerCase();
       if (ext === ".zip") {
-        const tempExtractDir = path.join(uploadDir, `_extract_${Date.now()}`);
+        const tempExtractDir = path.join(uploadSubDir, `_extract_${Date.now()}`);
         fs.mkdirSync(tempExtractDir, { recursive: true });
         try {
           await extractZip(filePath, { dir: tempExtractDir });
           for (const f of walkSync(tempExtractDir)) {
             const fExt = path.extname(f).toLowerCase();
-            if (ALLOWED_EXTENSIONS.has(fExt)) {
-              allFiles.push(f);
-            } else {
-              unsupportedSkipped.push(path.basename(f));
-            }
+            if (ALLOWED_EXTENSIONS.has(fExt)) allFiles.push(f);
+            else unsupportedSkipped.push(path.basename(f));
           }
         } finally {
           fs.rmSync(tempExtractDir, { recursive: true, force: true });
@@ -313,27 +250,21 @@ export async function uploadFiles(
       category: "file-ops",
       level: "warning",
       message: `已过滤 ${unsupportedSkipped.length} 个不支持的文件`,
-      detail: unsupportedSkipped.slice(0, 10).join(", ") +
-        (unsupportedSkipped.length > 10 ? "..." : ""),
+      detail: unsupportedSkipped.slice(0, 10).join(", ") + (unsupportedSkipped.length > 10 ? "..." : ""),
     });
   }
 
   if (allFiles.length === 0) {
-    fs.rmSync(uploadDir, { recursive: true, force: true });
-    log({
-      category: "file-ops",
-      level: "error",
-      message: "未找到任何 .cfg 或 .txt 文件",
-    });
+    fs.rmSync(uploadSubDir, { recursive: true, force: true });
+    log({ category: "file-ops", level: "error", message: "未找到任何 .cfg 或 .txt 文件" });
     return null;
   }
 
   for (const src of allFiles) {
     let relPath: string;
-
     const basename = path.basename(src);
-    if (src.includes(uploadDir)) {
-      relPath = path.relative(uploadDir, src);
+    if (src.includes(uploadSubDir)) {
+      relPath = path.relative(uploadSubDir, src);
     } else {
       const dir = path.dirname(src);
       const parentName = path.basename(dir);
@@ -344,13 +275,13 @@ export async function uploadFiles(
       }
     }
 
-    const dst = path.join(uploadDir, relPath);
+    const dst = path.join(uploadSubDir, relPath);
     fs.mkdirSync(path.dirname(dst), { recursive: true });
     fs.copyFileSync(src, dst);
   }
 
-  const finalFiles = walkSync(uploadDir);
-  const files = finalFiles.map((f) => getFileInfo(f, uploadDir));
+  const finalFiles = walkSync(uploadSubDir);
+  const files = finalFiles.map((f) => getFileInfo(f, uploadSubDir));
 
   log({
     category: "file-ops",
@@ -364,63 +295,28 @@ export async function uploadFiles(
 
 // ── Upload History ───────────────────────────────────────────
 
-export function getLatestUpload(): UploadEntry | null {
-  const tmpDir = getTmpPath();
-  if (!fs.existsSync(tmpDir)) return null;
-
-  const folders = fs
-    .readdirSync(tmpDir, { withFileTypes: true })
-    .filter(
-      (d) =>
-        d.isDirectory() && /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d.name),
-    )
-    .map((d) => d.name)
-    .sort()
-    .reverse();
-
-  if (folders.length === 0) return null;
-
-  const folderName = folders[0];
-  const dir = path.join(tmpDir, folderName);
-  const files = walkSync(dir).map((f) => getFileInfo(f, dir));
-
-  return { folderName, timestamp: Date.now(), fileCount: files.length, files };
-}
-
 export function getUploadHistory(): UploadEntry[] {
-  const tmpDir = getTmpPath();
-  if (!fs.existsSync(tmpDir)) return [];
+  const uploadDir = getUploadPath();
+  if (!fs.existsSync(uploadDir)) return [];
 
   return fs
-    .readdirSync(tmpDir, { withFileTypes: true })
-    .filter(
-      (d) =>
-        d.isDirectory() && /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d.name),
-    )
+    .readdirSync(uploadDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d.name))
     .map((d) => {
-      const dir = path.join(tmpDir, d.name);
+      const dir = path.join(uploadDir, d.name);
       const files = walkSync(dir).map((f) => getFileInfo(f, dir));
-      return {
-        folderName: d.name,
-        timestamp: Date.now(),
-        fileCount: files.length,
-        files,
-      };
+      return { folderName: d.name, timestamp: Date.now(), fileCount: files.length, files };
     })
     .sort((a, b) => b.folderName.localeCompare(a.folderName));
 }
 
 // ── Staging Operations ───────────────────────────────────────
 
-function classifyFile(
-  relativePath: string,
-): "cfg" | "annotations" | "video" | "unsupported" {
+function classifyFile(relativePath: string): "cfg" | "annotations" | "video" | "unsupported" {
   const lower = relativePath.toLowerCase();
-
   if (lower.includes("annotations")) return "annotations";
   if (lower.endsWith(".cfg")) return "cfg";
   if (path.basename(lower) === "cs2_video.txt") return "video";
-
   return "unsupported";
 }
 
@@ -469,7 +365,6 @@ export function processUploadToStaging(
           break;
         }
         case "annotations": {
-          // Preserve sub-path after "annotations/"
           const annIdx = rel.toLowerCase().indexOf("annotations");
           const subPath = rel.slice(annIdx + "annotations".length).replace(/^[/\\]+/, "");
           const dst = path.join(annotationsDir, subPath || path.basename(rel));
@@ -488,240 +383,64 @@ export function processUploadToStaging(
           unsupportedCount++;
       }
     } catch (e: any) {
-      log({
-        category: "file-ops",
-        level: "error",
-        message: `文件复制失败：${rel}`,
-        detail: e.message,
-      });
+      log({ category: "file-ops", level: "error", message: `文件复制失败：${rel}`, detail: e.message });
     }
   }
 
-  if (cfgCount > 0) {
-    log({ category: "install", level: "success", message: `CFG 文件：${cfgCount} 个` });
-  }
-  if (annotationsCount > 0) {
-    log({
-      category: "install",
-      level: "success",
-      message: `地图指南文件：${annotationsCount} 个`,
-    });
-  }
-  if (videoCount > 0) {
-    log({ category: "install", level: "success", message: `视频预设文件：${videoCount} 个` });
-  }
-  if (unsupportedCount > 0) {
-    log({
-      category: "file-ops",
-      level: "warning",
-      message: `跳过 ${unsupportedCount} 个不支持的文件`,
-    });
-  }
+  if (cfgCount > 0) log({ category: "install", level: "success", message: `CFG 文件：${cfgCount} 个` });
+  if (annotationsCount > 0) log({ category: "install", level: "success", message: `地图指南文件：${annotationsCount} 个` });
+  if (videoCount > 0) log({ category: "install", level: "success", message: `视频预设文件：${videoCount} 个` });
+  if (unsupportedCount > 0) log({ category: "file-ops", level: "warning", message: `跳过 ${unsupportedCount} 个不支持的文件` });
 
   return { cfgCount, annotationsCount, videoCount };
 }
 
-// ── Backup / Restore ─────────────────────────────────────────
+// ── Install From Upload ──────────────────────────────────────
 
-function resolveSaveName(savesDir: string, baseName: string): string {
-  let name = baseName;
-  let i = 1;
-  while (fs.existsSync(path.join(savesDir, name))) {
-    name = `${baseName}-${i}`;
-    i++;
-  }
-  return name;
-}
-
-export function moveToSaves(folderName: string, log: LogFn): void {
-  const srcDir = path.join(getTmpPath(), folderName);
-  if (!fs.existsSync(srcDir)) return;
-
-  const savesDir = getSavesPath();
-  fs.mkdirSync(savesDir, { recursive: true });
-
-  const saveName = resolveSaveName(savesDir, folderName);
-  fs.renameSync(srcDir, path.join(savesDir, saveName));
-
-  log({
-    category: "backup",
-    level: "info",
-    message: `已备份：${folderName}`,
-  });
-}
-
-export function backupAllUploads(log: LogFn): number {
-  const tmpDir = getTmpPath();
-  const savesDir = getSavesPath();
-  if (!fs.existsSync(tmpDir)) return 0;
-
-  fs.mkdirSync(savesDir, { recursive: true });
-
-  const folders = fs
-    .readdirSync(tmpDir, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d.name))
-    .map((d) => d.name)
-    .sort();
-
-  if (folders.length === 0) {
-    log({
-      category: "backup",
-      level: "warning",
-      message: "没有可备份的上传记录",
-    });
-    return 0;
-  }
-
-  let count = 0;
-  for (const folderName of folders) {
-    const saveName = resolveSaveName(savesDir, folderName);
-    fs.renameSync(
-      path.join(tmpDir, folderName),
-      path.join(savesDir, saveName),
-    );
-    count++;
-  }
-
-  log({
-    category: "backup",
-    level: "success",
-    message: `已备份 ${count} 项上传记录`,
-  });
-
-  return count;
-}
-
-export function deleteBackup(folderName: string, log: LogFn): void {
-  const dir = path.join(getSavesPath(), folderName);
-  if (fs.existsSync(dir)) {
-    fs.rmSync(dir, { recursive: true, force: true });
-    log({
-      category: "backup",
-      level: "info",
-      message: `已删除备份：${folderName}`,
-    });
-  }
-}
-
-export function getBackupEntries(log: LogFn): BackupEntry[] {
-  const savesDir = getSavesPath();
-  if (!fs.existsSync(savesDir)) return [];
-
-  const entries: BackupEntry[] = [];
-
-  for (const entry of fs.readdirSync(savesDir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const dir = path.join(savesDir, entry.name);
-    const fileCount = countFilesRecursive(dir);
-    entries.push({
-      folderName: entry.name,
-      timestamp: fs.statSync(dir).mtimeMs,
-      fileCount,
-    });
-  }
-
-  return entries.sort((a, b) => {
-    if (a.folderName === "latest") return -1;
-    if (b.folderName === "latest") return 1;
-    return b.folderName.localeCompare(a.folderName);
-  });
-}
-
-export function restoreFromSaves(
+export async function installFromUpload(
   folderName: string,
+  mode: InstallMode,
   log: LogFn,
-): boolean {
-  const srcDir = path.join(getSavesPath(), folderName);
-  if (!fs.existsSync(srcDir)) {
-    log({
-      category: "backup",
-      level: "error",
-      message: `备份不存在：${folderName}`,
-    });
-    return false;
+): Promise<{ cfgCount: number; annotationsCount: number; videoCount: number } | null> {
+  const dir = path.join(getUploadPath(), folderName);
+  if (!fs.existsSync(dir)) {
+    log({ category: "install", level: "error", message: `上传记录不存在：${folderName}` });
+    return null;
   }
 
-  log({
-    category: "backup",
-    level: "progress",
-    message: `正在恢复备份：${folderName}`,
-  });
+  const zipFiles = fs.readdirSync(dir).filter((f) => f.endsWith(".zip"));
 
-  // Copy save contents back to staging dirs (flat restore)
-  const cfgDir = getStagingPath("cfg");
-  const annotationsDir = getStagingPath("annotations");
-  const videoDir = getStagingPath("video");
-
-  clearStagingDirs();
-
-  const allFiles = walkSync(srcDir);
-  let restored = 0;
-
-  for (const file of allFiles) {
-    const rel = path.relative(srcDir, file);
-    const category = classifyFile(rel);
-
+  if (zipFiles.length > 0) {
+    const zipPath = path.join(dir, zipFiles[0]);
+    const tempExtractDir = path.join(dir, `_extract_${Date.now()}`);
     try {
-      switch (category) {
-        case "cfg": {
-          const dst = path.join(cfgDir, rel);
-          fs.mkdirSync(path.dirname(dst), { recursive: true });
-          fs.copyFileSync(file, dst);
-          restored++;
-          break;
-        }
-        case "annotations": {
-          const annIdx = rel.toLowerCase().indexOf("annotations");
-          const subPath = rel.slice(annIdx + "annotations".length).replace(/^[/\\]+/, "");
-          const dst = path.join(annotationsDir, subPath || path.basename(rel));
-          fs.mkdirSync(path.dirname(dst), { recursive: true });
-          fs.copyFileSync(file, dst);
-          restored++;
-          break;
-        }
-        case "video": {
-          const dst = path.join(videoDir, "cs2_video.txt");
-          fs.copyFileSync(file, dst);
-          restored++;
-          break;
-        }
-      }
-    } catch {
-      // Skip files that fail to copy
+      log({ category: "install", level: "progress", message: `解压上传包：${zipFiles[0]}` });
+      await extractZip(zipPath, { dir: tempExtractDir });
+      return processUploadToStaging(tempExtractDir, mode, log);
+    } catch (e: any) {
+      log({ category: "install", level: "error", message: `解压失败：${e.message}` });
+      return null;
+    } finally {
+      fs.rmSync(tempExtractDir, { recursive: true, force: true });
     }
   }
 
-  log({
-    category: "backup",
-    level: "success",
-    message: `恢复完成，共 ${restored} 个文件`,
-  });
-
-  return true;
+  return processUploadToStaging(dir, mode, log);
 }
 
-// ── Uploaded Entries ─────────────────────────────────────────
+// ── Upload CRUD ──────────────────────────────────────────────
 
-export interface UploadedEntry {
-  folderName: string;
-  displayName: string;
-  timestamp: number;
-  size: number;
-  fileCount: number;
-  isZip: boolean;
-}
+export function getUploadedEntries(): { folderName: string; displayName: string; timestamp: number; size: number; fileCount: number; isZip: boolean }[] {
+  const uploadDir = getUploadPath();
+  if (!fs.existsSync(uploadDir)) return [];
 
-export function getUploadedEntries(): UploadedEntry[] {
-  const tmpDir = getTmpPath();
-  if (!fs.existsSync(tmpDir)) return [];
+  const entries: { folderName: string; displayName: string; timestamp: number; size: number; fileCount: number; isZip: boolean }[] = [];
 
-  const entries: UploadedEntry[] = [];
-
-  for (const entry of fs.readdirSync(tmpDir, { withFileTypes: true })) {
+  for (const entry of fs.readdirSync(uploadDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     if (!/^\d{4}-\d{2}-\d{2}-\d{4}$/.test(entry.name)) continue;
 
-    const dir = path.join(tmpDir, entry.name);
+    const dir = path.join(uploadDir, entry.name);
     const allFiles = walkSync(dir);
     const zipFiles = allFiles.filter((f) => f.endsWith(".zip"));
 
@@ -759,60 +478,11 @@ export function getUploadedEntries(): UploadedEntry[] {
   return entries.sort((a, b) => b.folderName.localeCompare(a.folderName));
 }
 
-export async function installFromUpload(
-  folderName: string,
-  mode: InstallMode,
-  log: LogFn,
-): Promise<{ cfgCount: number; annotationsCount: number; videoCount: number } | null> {
-  const dir = path.join(getTmpPath(), folderName);
-  if (!fs.existsSync(dir)) {
-    log({
-      category: "install",
-      level: "error",
-      message: `上传记录不存在：${folderName}`,
-    });
-    return null;
-  }
-
-  const zipFiles = fs.readdirSync(dir).filter((f) => f.endsWith(".zip"));
-
-  if (zipFiles.length > 0) {
-    const zipPath = path.join(dir, zipFiles[0]);
-    const tempExtractDir = path.join(dir, `_extract_${Date.now()}`);
-
-    try {
-      log({
-        category: "install",
-        level: "progress",
-        message: `解压上传包：${zipFiles[0]}`,
-      });
-
-      await extractZip(zipPath, { dir: tempExtractDir });
-      return processUploadToStaging(tempExtractDir, mode, log);
-    } catch (e: any) {
-      log({
-        category: "install",
-        level: "error",
-        message: `解压失败：${e.message}`,
-      });
-      return null;
-    } finally {
-      fs.rmSync(tempExtractDir, { recursive: true, force: true });
-    }
-  }
-
-  return processUploadToStaging(dir, mode, log);
-}
-
 export function deleteUploadEntry(folderName: string, log: LogFn): void {
-  const dir = path.join(getTmpPath(), folderName);
+  const dir = path.join(getUploadPath(), folderName);
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true, force: true });
-    log({
-      category: "file-ops",
-      level: "info",
-      message: `已删除上传：${folderName}`,
-    });
+    log({ category: "file-ops", level: "info", message: `已删除上传：${folderName}` });
   }
 }
 
@@ -826,25 +496,22 @@ export async function downloadFromUrl(
   fileName: string,
   log: LogFn,
 ): Promise<DownloadEntry | null> {
-  const dlBase = getDownloadsPath();
+  const dlBase = getDownloadPath();
+  enforceLimit(dlBase, MAX_DOWNLOADS);
+
   const folderName = generateTimestampFolderName(dlBase);
   const dlDir = path.join(dlBase, folderName);
   fs.mkdirSync(dlDir, { recursive: true });
 
   const filePath = path.join(dlDir, fileName);
 
-  log({
-    category: "file-ops",
-    level: "progress",
-    message: `正在下载：${fileName}`,
-  });
+  log({ category: "file-ops", level: "progress", message: `正在下载：${fileName}` });
 
   try {
     await new Promise<void>((resolve, reject) => {
       const mod = url.startsWith("https") ? https : http;
       const req = mod.get(url, { headers: { "User-Agent": "SrP-CFG-Installer", "Referer": "cfg.srprolin.top" } }, (res) => {
         if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          // Follow redirect
           const redirectMod = res.headers.location.startsWith("https") ? https : http;
           redirectMod.get(res.headers.location, (redirectRes) => {
             if (redirectRes.statusCode !== 200) {
@@ -887,20 +554,14 @@ export async function downloadFromUrl(
 
     return { folderName, fileName, timestamp: Date.now(), size: stat.size };
   } catch (e: any) {
-    // Clean up on failure
     fs.rmSync(dlDir, { recursive: true, force: true });
-    log({
-      category: "file-ops",
-      level: "error",
-      message: `下载失败：${fileName}`,
-      detail: e.message,
-    });
+    log({ category: "file-ops", level: "error", message: `下载失败：${fileName}`, detail: e.message });
     return null;
   }
 }
 
 export function getDownloadEntries(): DownloadEntry[] {
-  const dlDir = getDownloadsPath();
+  const dlDir = getDownloadPath();
   if (!fs.existsSync(dlDir)) return [];
 
   const entries: DownloadEntry[] = [];
@@ -915,26 +576,17 @@ export function getDownloadEntries(): DownloadEntry[] {
     const filePath = path.join(dir, fileName);
     const stat = fs.statSync(filePath);
 
-    entries.push({
-      folderName: entry.name,
-      fileName,
-      timestamp: stat.mtimeMs,
-      size: stat.size,
-    });
+    entries.push({ folderName: entry.name, fileName, timestamp: stat.mtimeMs, size: stat.size });
   }
 
   return entries.sort((a, b) => b.folderName.localeCompare(a.folderName));
 }
 
 export function deleteDownload(folderName: string, log: LogFn): void {
-  const dir = path.join(getDownloadsPath(), folderName);
+  const dir = path.join(getDownloadPath(), folderName);
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true, force: true });
-    log({
-      category: "file-ops",
-      level: "info",
-      message: `已删除下载：${folderName}`,
-    });
+    log({ category: "file-ops", level: "info", message: `已删除下载：${folderName}` });
   }
 }
 
@@ -943,24 +595,16 @@ export async function installFromDownload(
   mode: InstallMode,
   log: LogFn,
 ): Promise<{ cfgCount: number; annotationsCount: number; videoCount: number } | null> {
-  const dlDir = getDownloadsPath();
+  const dlDir = getDownloadPath();
   const dir = path.join(dlDir, folderName);
   if (!fs.existsSync(dir)) {
-    log({
-      category: "install",
-      level: "error",
-      message: `下载记录不存在：${folderName}`,
-    });
+    log({ category: "install", level: "error", message: `下载记录不存在：${folderName}` });
     return null;
   }
 
   const zipFiles = fs.readdirSync(dir).filter((f) => f.endsWith(".zip"));
   if (zipFiles.length === 0) {
-    log({
-      category: "install",
-      level: "error",
-      message: `未找到 ZIP 文件：${folderName}`,
-    });
+    log({ category: "install", level: "error", message: `未找到 ZIP 文件：${folderName}` });
     return null;
   }
 
@@ -968,20 +612,11 @@ export async function installFromDownload(
   const tempExtractDir = path.join(dir, `_extract_${Date.now()}`);
 
   try {
-    log({
-      category: "install",
-      level: "progress",
-      message: `解压预设包：${zipFiles[0]}`,
-    });
-
+    log({ category: "install", level: "progress", message: `解压预设包：${zipFiles[0]}` });
     await extractZip(zipPath, { dir: tempExtractDir });
     return processUploadToStaging(tempExtractDir, mode, log);
   } catch (e: any) {
-    log({
-      category: "install",
-      level: "error",
-      message: `解压失败：${e.message}`,
-    });
+    log({ category: "install", level: "error", message: `解压失败：${e.message}` });
     return null;
   } finally {
     fs.rmSync(tempExtractDir, { recursive: true, force: true });

@@ -56,7 +56,7 @@ export default function AboutPage() {
       {/* Header with logo */}
       <div className="flex flex-col items-center text-center mb-2">
         <img
-          src="/favicon.ico"
+          src="./favicon.ico"
           alt="SrP-CFG"
           className="w-20 h-20 rounded-2xl border border-border shadow-[0_0_30px_rgba(232,121,12,0.12)] mb-4"
         />
@@ -164,7 +164,7 @@ export default function AboutPage() {
                   className="flex items-center gap-3 p-3 bg-bg-raised border border-border rounded-[var(--radius-sm)]"
                 >
                   <img
-                    src="/avatar.jpg"
+                    src="./avatar.jpg"
                     alt={c.name}
                     className="w-10 h-10 rounded-full border border-accent/10 object-cover"
                   />
