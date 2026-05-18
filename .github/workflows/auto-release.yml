@@ -82,28 +82,34 @@ jobs:
       - name: Build MSI
         run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
 
-      - name: Prepare release artifacts
+      - name: Rename MSI
         shell: bash
         run: |
           TAG="${{ github.ref_name }}"
-
-          # 重命名 MSI
           mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
           echo "✅ MSI: SrP-CFG_Installer_${TAG}.msi"
+          ls -lh "SrP-CFG_Installer_${TAG}.msi"
 
-          # 打包便携版 ZIP（Electron Forge 输出目录）
-          cd "app/desktop/out"
-          7z a -tzip "../../SrP-CFG_Portable_${TAG}.zip" "SrP-CFG Installer-win32-x64/" -r
-          cd ../../..
-          echo "✅ Portable: SrP-CFG_Portable_${TAG}.zip"
-
-      - name: Upload build artifacts
+      - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: installers
-          path: |
-            SrP-CFG_Installer_*.msi
-            SrP-CFG_Portable_*.zip
+          name: msi-installer
+          path: SrP-CFG_Installer_*.msi
+
+      - name: Create portable ZIP
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          PORTABLE_NAME="SrP-CFG_Portable_${TAG}.zip"
+          7z a -tzip "$PORTABLE_NAME" "app/desktop/out/SrP-CFG Installer-win32-x64/" -r
+          echo "✅ Portable: $PORTABLE_NAME"
+          ls -lh "$PORTABLE_NAME"
+
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portable-zip
+          path: SrP-CFG_Portable_*.zip
 
   # ============================================
   # 构建和发布
@@ -153,11 +159,23 @@ jobs:
       # ============================================
       # 下载构建产物（MSI + 便携版 ZIP）
       # ============================================
-      - name: Download build artifacts
+      - name: Download MSI artifact
         uses: actions/download-artifact@v4
         with:
-          name: installers
+          name: msi-installer
           path: .
+
+      - name: Download portable artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: portable-zip
+          path: .
+
+      - name: Verify build artifacts
+        run: |
+          echo "=== Build artifacts ==="
+          ls -lh SrP-CFG_Installer_*.msi SrP-CFG_Portable_*.zip 2>&1
+          echo "======================"
 
       # ============================================
       # 生成 Release Notes（必须在打包之前生成，以便打包进zip）
