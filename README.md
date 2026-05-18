@@ -154,6 +154,27 @@ pnpm build:msi
 
 **便携版** — `pnpm package:desktop` 打包输出的目录即为便携版，将整个目录压缩为 ZIP（`SrP-CFG_Installer.zip`）即可分发。解压即用，不写注册表、不注册服务，适合 U 盘携带或多实例隔离场景。
 
+### 🌐 官网部署（Cloudflare Workers）
+
+官网部署在 [Cloudflare Workers](https://workers.cloudflare.com/)，push 到 `main` 且 `app/website/` 有变更时通过 GitHub Actions 自动部署。
+
+所需 GitHub Secrets：
+
+| Secret | 说明 |
+|--------|------|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API Token |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare 账户 ID |
+
+手动部署：
+
+```bash
+# 首次使用需登录 Cloudflare
+cd app/website && npx wrangler login
+
+# 构建并部署
+pnpm deploy:web
+```
+
 ## 🏠 仓库活动
 
 ![仓库活动](https://repobeats.axiom.co/api/embed/55700fe0f86a32b2418b023fa87c8ec214153ef0.svg "Repobeats analytics image")

@@ -6,6 +6,7 @@
     "dev:web": "pnpm --filter @srp-cfg/website dev",
     "build:web": "pnpm --filter @srp-cfg/website build",
     "install:web": "pnpm install --filter @srp-cfg/website...",
+    "deploy:web": "pnpm install:web && pnpm --filter @srp-cfg/website run deploy",
     "preview:web": "pnpm --filter @srp-cfg/website preview",
     "dev:desktop": "pnpm --filter @srp-cfg/desktop start",
     "build:desktop": "pnpm --filter @srp-cfg/desktop make",

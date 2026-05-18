@@ -51,6 +51,7 @@
   .terminal-body {
     flex: 1;
     padding: 16px 18px;
+    overflow-x: hidden;
     overflow-y: auto;
     font-family: var(--font-mono);
     font-size: 12px;
@@ -94,30 +95,37 @@
     const container = document.getElementById("terminal-body");
     if (!container) return;
 
-    const ts = (h: number, m: number, s: number) =>
-      `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    const utc8 = offset <= -480;
+    const local = utc8
+      ? new Date(now.getTime() + (offset + 480) * 60000)
+      : now;
+    const ts = (delta: number) => {
+      const d = new Date(local.getTime() + delta * 1000);
+      return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
+    };
 
     const LINES: { ts: string; src: string; srcColor: string; msg: string; msgColor: string }[] = [
-      { ts: ts(14,32,1), src: "INIT", srcColor: "color:var(--color-teal)", msg: "SrP-CFG Installer v0.1.0 启动中...", msgColor: "color:var(--color-text-secondary)" },
-      { ts: ts(14,32,1), src: "INIT", srcColor: "color:var(--color-teal)", msg: "正在加载配置模块...", msgColor: "color:var(--color-text-secondary)" },
-      { ts: ts(14,32,2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "正在检测 Steam 安装路径...", msgColor: "color:var(--color-text-secondary)" },
-      { ts: ts(14,32,2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "注册表 HKCU\\Software\\Valve\\Steam", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(14,32,3), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "Steam 根目录: D:\\Steam", msgColor: "color:var(--color-text)" },
-      { ts: ts(14,32,3), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "解析 libraryfolders.vdf ...", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(14,32,4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "CS2 路径: D:\\Steam\\steamapps\\common\\Counter-Strike Global Offensive", msgColor: "color:var(--color-text)" },
-      { ts: ts(14,32,5), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "全局 CFG: ...\\game\\csgo\\cfg\\", msgColor: "color:var(--color-text)" },
-      { ts: ts(14,32,5), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "用户视频: ...\\userdata\\76561198...\\730\\local\\cfg\\", msgColor: "color:var(--color-text)" },
-      { ts: ts(14,32,6), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "地图指南: ...\\game\\csgo\\annotations\\local\\", msgColor: "color:var(--color-text)" },
-      { ts: ts(14,32,7), src: "OK", srcColor: "color:var(--color-green)", msg: "路径检测完成 — 3 个目标可用", msgColor: "color:var(--color-green)" },
-      { ts: ts(14,32,18), src: "BACKUP", srcColor: "color:var(--color-accent-light)", msg: "正在备份现有配置...", msgColor: "color:var(--color-text-secondary)" },
-      { ts: ts(14,32,19), src: "BACKUP", srcColor: "color:var(--color-accent-light)", msg: "已创建 backup_20260517_143219.zip", msgColor: "color:var(--color-text)" },
-      { ts: ts(14,32,20), src: "OK", srcColor: "color:var(--color-green)", msg: "备份完成", msgColor: "color:var(--color-green)" },
-      { ts: ts(14,32,21), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "正在安装全局 CFG 文件...", msgColor: "color:var(--color-text-secondary)" },
-      { ts: ts(14,32,22), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ autoexec.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(14,32,22), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ crosshair_view.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(14,32,23), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ practice.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(14,32,23), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ custom.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(14,32,24), src: "OK", srcColor: "color:var(--color-green)", msg: "安装完成 — 4 个文件已部署", msgColor: "color:var(--color-green)" },
+      { ts: ts(0), src: "INIT", srcColor: "color:var(--color-teal)", msg: "SrP-CFG Installer v3.0.0 启动中...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(0), src: "INIT", srcColor: "color:var(--color-teal)", msg: "正在加载配置模块...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(1), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "正在检测 Steam 安装路径...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(1), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "注册表 HKCU\\Software\\Valve\\Steam", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "Steam 根目录: D:\\Steam", msgColor: "color:var(--color-text)" },
+      { ts: ts(2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "解析 libraryfolders.vdf ...", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(3), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "CS2 路径: D:\\Steam\\steamapps\\common\\Counter-Strike2", msgColor: "color:var(--color-text)" },
+      { ts: ts(4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "全局 CFG: ...\\game\\csgo\\cfg\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "用户视频: ...\\userdata\\76561198...\\730\\local\\cfg\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(5), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "地图指南: ...\\game\\csgo\\annotations\\local\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(5), src: "OK", srcColor: "color:var(--color-green)", msg: "路径检测完成 — 3 个目标可用", msgColor: "color:var(--color-green)" },
+      { ts: ts(6), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "检测冲突文件...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(7), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "发现 1 个冲突，移至恢复区 (res.json)", msgColor: "color:var(--color-accent-light)" },
+      { ts: ts(8), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "复制配置文件到游戏目录...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(9), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ autoexec.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(9), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ crosshair_view.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(10), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ practice.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(10), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ custom.cfg", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(11), src: "OK", srcColor: "color:var(--color-green)", msg: "安装完成 — 4 个文件已部署，状态已记录 (install.json)", msgColor: "color:var(--color-green)" },
     ];
 
     let typingTimer: number | null = null;

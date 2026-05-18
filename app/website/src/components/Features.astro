@@ -3,14 +3,14 @@ import SectionHeader from "./SectionHeader.astro";
 import { Search, Users, Archive, Upload, LayoutGrid, Terminal, RefreshCcw, Shield } from "lucide-astro";
 
 const features = [
-  { icon: Search, title: "路径自动检测", desc: "自动扫描注册表与 Steam 库文件，精准定位游戏全局 CFG 路径和地图指南路径" },
+  { icon: Search, title: "路径自动检测", desc: "自动扫描注册表与 Steam 库文件，精准定位游戏全局 CFG、用户视频和地图指南路径" },
   { icon: Users, title: "用户自动识别", desc: "自动枚举 Steam 用户列表并识别当前登录用户，多账号环境支持手动切换" },
-  { icon: Archive, title: "智能备份", desc: "安装前自动将全局 CFG、用户视频预设、地图指南分别打包为独立 ZIP 备份" },
+  { icon: Archive, title: "冲突智能处理", desc: "覆盖安装自动检测冲突文件，移至恢复区并记录到 res.json，支持逐项恢复" },
   { icon: Upload, title: "拖拽安装", desc: "将 ZIP 配置包、CFG 单文件或整个文件夹直接拖入窗口，自动识别类型并完成安装" },
-  { icon: LayoutGrid, title: "多安装目标", desc: "全局 CFG、用户视频设置、地图指南三个独立目标，通过复选框自由组合安装范围" },
+  { icon: LayoutGrid, title: "双安装模式", desc: "覆盖安装（清空重装）与追加安装（合并保留），冲突超 3 个自动拒绝，1–3 个弹窗确认" },
   { icon: Terminal, title: "实时日志", desc: "颜色编码的实时日志输出，安装进度清晰可辨：绿色成功、橙色警告、默认信息" },
   { icon: RefreshCcw, title: "自动更新", desc: "启动时后台检查 GitHub Releases 新版本，有更新自动提醒，支持忽略当前版本" },
-  { icon: Shield, title: "零依赖运行", desc: "自包含单文件发布，无需安装 .NET 运行时或任何其他依赖，下载即可直接运行" },
+  { icon: Shield, title: "CI 自动化构建", desc: "所有安装包均由 GitHub Actions 自动化流水线构建发布，无手动干预，安全可靠" },
 ];
 ---
 

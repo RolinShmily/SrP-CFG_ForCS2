@@ -1,0 +1,7 @@
+{
+  "name": "srp-cfg",
+  "assets": {
+    "directory": "./dist"
+  },
+  "compatibility_date": "2025-01-01"
+}
