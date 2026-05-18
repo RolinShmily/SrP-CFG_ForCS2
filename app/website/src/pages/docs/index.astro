@@ -1,4 +1,24 @@
 ---
-// Redirect /docs → /docs/srpcfg-1
-return Astro.redirect("/docs/srpcfg-1");
+import DocLayout from "../../layouts/DocLayout.astro";
+import { getCollection, render } from "astro:content";
+
+const docs = await getCollection("docs");
+const sorted = docs.sort((a, b) => a.id.localeCompare(b.id));
+const doc = docs.find((d) => d.id === "srpcfg-1")!;
+const { Content, headings } = await render(doc);
 ---
+
+<DocLayout
+  title={`${doc.data.title} — SrP-CFG 文档`}
+  description={`SrP-CFG 文档：${doc.data.title}`}
+  docs={sorted}
+  currentSlug={doc.id}
+  headings={headings}
+>
+  <header class="mb-10">
+    <h1>{doc.data.title}</h1>
+    <div class="w-16 h-0.5 bg-accent rounded-full"></div>
+  </header>
+
+  <Content />
+</DocLayout>

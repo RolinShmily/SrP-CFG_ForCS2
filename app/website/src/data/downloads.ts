@@ -12,7 +12,7 @@ export const installers = [
     name: "便携版 (Portable)",
     desc: "解压即用，无需安装，适合 U 盘携带或多实例隔离场景",
     file: "SrP-CFG_Installer.zip",
-    url: `${DRIVE_BASE}/SrP-CFG_Installer.zip`,
+    url: `${DRIVE_BASE}/SrP-CFG_Portable.zip`,
     badge: "Portable",
   },
 ];
