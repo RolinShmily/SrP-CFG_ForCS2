@@ -9,6 +9,9 @@ app/desktop/out/
 app/desktop/.vite/
 app/website/.astro/
 
+app/desktop/src/renderer/.vite/
+app/desktop/src/renderer/dist/
+
 # Temp files
 tmp/
 
