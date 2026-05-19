@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from "react";
-import { ArrowDownToLine, FileText, Play, Clock, Info, RefreshCw, Package, Globe, Layers } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { ArrowDownToLine, FileText, Play, Clock, Info, RefreshCw, Package, Globe, Layers, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import type { Page } from "../App";
 
 const items: { id: Page; label: string; icon: React.ReactNode }[] = [
@@ -24,9 +24,14 @@ interface Props {
 
 export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
+  const [version, setVersion] = useState("");
   const draggingRef = useRef(false);
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
+
+  useEffect(() => {
+    window.api.getVersion().then(setVersion).catch(() => {});
+  }, []);
 
   const collapsed = width <= MIN_WIDTH + 8;
 
@@ -75,12 +80,22 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
       className="flex-shrink-0 bg-bg-card border-r border-border flex flex-col relative"
       style={{ width }}
     >
+      {/* Collapse / Expand toggle */}
+      <button
+        onClick={() => setWidth(collapsed ? DEFAULT_WIDTH : MIN_WIDTH)}
+        title={collapsed ? "展开侧栏" : "收起侧栏"}
+        className={`w-full flex items-center gap-2.5 py-2.5 cursor-pointer bg-transparent border-none text-text-muted hover:text-text hover:bg-bg-hover transition-colors ${collapsed ? "justify-center" : "px-4"}`}
+      >
+        {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+        {!collapsed && <span className="font-display text-xs">收起侧栏</span>}
+      </button>
+
       {/* Logo — slightly larger */}
       <div className="p-5 mb-2 flex items-center justify-center">
         <img
           src="./favicon.ico"
           alt="SrP-CFG"
-          className="w-11 h-11 rounded-[10px] object-contain"
+          className="w-12 h-12 rounded-[10px] object-contain"
         />
       </div>
 
@@ -150,7 +165,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
           <Package size={14} className="text-text-faint shrink-0" />
           {!collapsed && (
             <span className="font-mono text-xs text-text-faint tracking-wider">
-              v3.0.0
+              v{version}
             </span>
           )}
         </div>
