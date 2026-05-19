@@ -174,17 +174,18 @@ function copyStagingToGame(stagingDir: string, gameDir: string): { files: number
   return { files, dirs };
 }
 
-// ── Conflict → res/ ──────────────────────────────────────────
+// ── Move file/dir to a target base under <category>/ ──────────
 
-function moveToRes(
+function moveToTarget(
+  targetBase: string,
   category: CategoryKey,
   gameFilePath: string,
   name: string,
   isDir: boolean,
   log: LogFn,
+  label: string,
 ): void {
-  const resDir = path.join(getBase(), "res");
-  const dst = path.join(resDir, category, name);
+  const dst = path.join(targetBase, category, name);
 
   if (isDir) {
     fs.mkdirSync(dst, { recursive: true });
@@ -199,42 +200,11 @@ function moveToRes(
   log({
     category: "install",
     level: "info",
-    message: `冲突${isDir ? "目录" : "文件"}已转移：${name}`,
+    message: `${label}已转移：${name}`,
     detail: "可在「备份与恢复」中恢复",
   });
 }
 
-function clearRes(): void {
-  const resDir = path.join(getBase(), "res");
-  if (fs.existsSync(resDir)) {
-    fs.rmSync(resDir, { recursive: true, force: true });
-  }
-}
-
-// ── Backup res → save ────────────────────────────────────────
-
-function backupResToSave(log: LogFn): void {
-  const resDir = path.join(getBase(), "res");
-  const saveDir = path.join(getBase(), "save");
-
-  // Clear old save
-  if (fs.existsSync(saveDir)) {
-    fs.rmSync(saveDir, { recursive: true, force: true });
-  }
-
-  // Move res → save
-  if (fs.existsSync(resDir)) {
-    fs.renameSync(resDir, saveDir);
-    log({ category: "backup", level: "info", message: "已将冲突恢复文件备份" });
-  }
-
-  // Copy res.json → save.json
-  const resData = loadResData();
-  writeSave({ save: resData.res });
-
-  // Clear res.json
-  writeRes({ res: emptyInstallState() });
-}
 
 // ── Categories helper ────────────────────────────────────────
 
@@ -270,23 +240,11 @@ export function deployOverlay(
   log({ category: "install", level: "progress", message: "覆盖部署到游戏目录..." });
 
   const installData = loadInstallData();
-  const isFirst = installData.install.cfg.files.length === 0
-    && installData.install.cfg.dirs.length === 0
-    && installData.install.annotations.files.length === 0
-    && installData.install.annotations.dirs.length === 0
-    && installData.install.video.files.length === 0
-    && installData.install.video.dirs.length === 0;
-
-  // If not first install, backup current res → save
-  if (!isFirst) {
-    backupResToSave(log);
-  } else {
-    // Clear any leftover res
-    clearRes();
-    writeRes({ res: emptyInstallState() });
-  }
-
+  const saveData = loadSaveData();
   const resData = loadResData();
+  const saveBase = path.join(getBase(), "save");
+  const resBase = path.join(getBase(), "res");
+
   let totalFiles = 0;
   let totalDirs = 0;
 
@@ -296,46 +254,52 @@ export function deployOverlay(
     const stagingEntries = walkTopLevel(cat.staging);
     fs.mkdirSync(cat.game!, { recursive: true });
 
-    // Process file conflicts
+    const prevFiles = installData.install[cat.key].files;
+    const prevDirs = installData.install[cat.key].dirs;
+    const stagingNames = new Set([...stagingEntries.files, ...stagingEntries.dirs]);
+
+    // 1. Move previously installed files → save/
+    for (const name of prevFiles) {
+      const gamePath = path.join(cat.game!, name);
+      if (!fs.existsSync(gamePath) || stagingNames.has(name)) continue;
+      moveToTarget(saveBase, cat.key, gamePath, name, false, log, "已安装备份");
+      if (!saveData.save[cat.key].files.includes(name)) {
+        saveData.save[cat.key].files.push(name);
+      }
+    }
+    for (const name of prevDirs) {
+      const gamePath = path.join(cat.game!, name);
+      if (!fs.existsSync(gamePath) || stagingNames.has(name)) continue;
+      moveToTarget(saveBase, cat.key, gamePath, name, true, log, "已安装备份");
+      if (!saveData.save[cat.key].dirs.includes(name)) {
+        saveData.save[cat.key].dirs.push(name);
+      }
+    }
+
+    // 2. Move conflicting user files → res/
     for (const name of stagingEntries.files) {
       const gameFile = path.join(cat.game!, name);
       if (!fs.existsSync(gameFile)) continue;
-
-      if (!isFirst && installData.install[cat.key].files.includes(name)) {
-        // Our file from previous install — delete directly
-        fs.unlinkSync(gameFile);
-        log({ category: "install", level: "info", message: `已移除旧版本：${name}` });
-      } else {
-        // User's file — move to res
-        moveToRes(cat.key, gameFile, name, false, log);
-        if (!resData.res[cat.key].files.includes(name)) {
-          resData.res[cat.key].files.push(name);
-        }
+      moveToTarget(resBase, cat.key, gameFile, name, false, log, "冲突文件");
+      if (!resData.res[cat.key].files.includes(name)) {
+        resData.res[cat.key].files.push(name);
       }
     }
-
-    // Process directory conflicts
     for (const name of stagingEntries.dirs) {
       const gameDir = path.join(cat.game!, name);
       if (!fs.existsSync(gameDir)) continue;
-
-      if (!isFirst && installData.install[cat.key].dirs.includes(name)) {
-        fs.rmSync(gameDir, { recursive: true, force: true });
-        log({ category: "install", level: "info", message: `已移除旧版本目录：${name}` });
-      } else {
-        moveToRes(cat.key, gameDir, name, true, log);
-        if (!resData.res[cat.key].dirs.includes(name)) {
-          resData.res[cat.key].dirs.push(name);
-        }
+      moveToTarget(resBase, cat.key, gameDir, name, true, log, "冲突文件");
+      if (!resData.res[cat.key].dirs.includes(name)) {
+        resData.res[cat.key].dirs.push(name);
       }
     }
 
-    // Copy staging → game
+    // 3. Copy staging → game
     const result = copyStagingToGame(cat.staging, cat.game!);
     totalFiles += result.files;
     totalDirs += result.dirs;
 
-    // Update install data
+    // 4. Update install data
     installData.install[cat.key].files = [...stagingEntries.files];
     installData.install[cat.key].dirs = [...stagingEntries.dirs];
 
@@ -346,11 +310,21 @@ export function deployOverlay(
     });
   }
 
-  // Update res paths
-  if (gamePaths.cfgPath) resData.res.cfg.path = gamePaths.cfgPath;
-  if (gamePaths.annotationsPath) resData.res.annotations.path = gamePaths.annotationsPath;
-  if (gamePaths.videoPath) resData.res.video.path = gamePaths.videoPath;
+  // Update paths
+  if (gamePaths.cfgPath) {
+    saveData.save.cfg.path = gamePaths.cfgPath;
+    resData.res.cfg.path = gamePaths.cfgPath;
+  }
+  if (gamePaths.annotationsPath) {
+    saveData.save.annotations.path = gamePaths.annotationsPath;
+    resData.res.annotations.path = gamePaths.annotationsPath;
+  }
+  if (gamePaths.videoPath) {
+    saveData.save.video.path = gamePaths.videoPath;
+    resData.res.video.path = gamePaths.videoPath;
+  }
 
+  writeSave(saveData);
   writeRes(resData);
   writeInstall(installData);
 
@@ -496,7 +470,7 @@ export function deleteInstalledItem(
   return true;
 }
 
-// ── Restore from res ─────────────────────────────────────────
+// ── Restore from res (conflict recovery) ──────────────────────
 
 export function restoreFromRes(
   category: CategoryKey,
@@ -526,7 +500,6 @@ export function restoreFromRes(
   const isDir = fs.statSync(srcPath).isDirectory();
 
   try {
-    // Remove existing at target
     if (fs.existsSync(dstPath)) {
       const stat = fs.lstatSync(dstPath);
       if (stat.isDirectory()) fs.rmSync(dstPath, { recursive: true, force: true });
