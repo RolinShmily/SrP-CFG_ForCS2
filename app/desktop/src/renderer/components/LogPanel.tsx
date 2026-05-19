@@ -65,7 +65,23 @@ export default function LogPanel({ logs, onClear, isOpen, onToggle }: Props) {
         const delta = startXRef.current - ev.clientX;
         const next = startWidthRef.current + delta;
 
+        // Dragging left past threshold → collapse
         if (next < COLLAPSE_THRESHOLD) {
+          draggingRef.current = false;
+          document.body.style.cursor = "";
+          document.body.style.userSelect = "";
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+          onToggle();
+          return;
+        }
+
+        // Dragging right: collapse if main content would overflow
+        const sidebar = document.querySelector("aside");
+        const sidebarW = sidebar?.getBoundingClientRect().width ?? 208;
+        const mainMin = 320;
+        const maxW = window.innerWidth - sidebarW - mainMin;
+        if (next > maxW) {
           draggingRef.current = false;
           document.body.style.cursor = "";
           document.body.style.userSelect = "";
