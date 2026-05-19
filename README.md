@@ -38,6 +38,14 @@
 - [下载地址](https://cfg.srprolin.top/download) 
 - [关于CFG你要了解的二三事](https://blog.srprolin.top/posts/srp-cfg/) 
 
+官网与程序界面展示：
+
+![](app/website/public/image.png)
+
+![](app/desktop/resources/image1.png)
+
+![](app/desktop/resources/image2.png)
+
 ## 🛠 Installer 安装器
 
 在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目官网](https://cfg.srprolin.top/)中均可下载 MSI 安装包或便携版 ZIP，安装/解压后即可使用。
