@@ -15,6 +15,8 @@ interface UpdateCache {
   lastCheckTime?: number;
   dismissedVersion?: string;
   cachedReleases?: GitHubRelease[];
+  /** Full releases from GitHub (all versions), used as fallback for history */
+  cachedAllReleases?: GitHubRelease[];
 }
 
 function getCurrentVersion(): string {
@@ -109,6 +111,17 @@ function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
   );
 }
 
+function mapRelease(r: GitHubReleaseRaw): GitHubRelease {
+  return {
+    tagName: r.tag_name.replace(/^v/, ""),
+    name: r.name || "",
+    body: r.body || "",
+    htmlUrl: r.html_url,
+    publishedAt: r.published_at || "",
+    hasDesktopAssets: hasDesktopAssets(r.assets || []),
+  };
+}
+
 function filterNewer(
   releases: GitHubRelease[],
   currentVersion: string,
@@ -145,7 +158,8 @@ export async function checkForUpdate(
     cache?.lastCheckTime &&
     Date.now() - cache.lastCheckTime < CHECK_INTERVAL
   ) {
-    const newer = filterNewer(cache.cachedReleases || [], current);
+    const allReleases = cache.cachedAllReleases || cache.cachedReleases || [];
+    const newer = filterNewer(allReleases, current);
     if (isDismissed(newer, cache.dismissedVersion)) {
       return buildResult(current, []);
     }
@@ -154,25 +168,16 @@ export async function checkForUpdate(
 
   try {
     const raw = await fetchAllReleases();
-
-    const newer: GitHubRelease[] = raw
-      .filter(
-        (r) => compareVersions(r.tag_name.replace(/^v/, ""), current) > 0,
-      )
-      .map((r) => ({
-        tagName: r.tag_name.replace(/^v/, ""),
-        name: r.name || "",
-        body: r.body || "",
-        htmlUrl: r.html_url,
-        publishedAt: r.published_at || "",
-        hasDesktopAssets: hasDesktopAssets(r.assets || []),
-      }))
+    const allReleases = raw
+      .map(mapRelease)
       .sort((a, b) => compareVersions(b.tagName, a.tagName));
+    const newer = filterNewer(allReleases, current);
 
     saveCache({
       lastCheckTime: Date.now(),
       dismissedVersion: cache?.dismissedVersion,
       cachedReleases: newer,
+      cachedAllReleases: allReleases,
     });
 
     // Auto-check respects dismissal
@@ -183,7 +188,8 @@ export async function checkForUpdate(
     return buildResult(current, newer);
   } catch {
     // Network failure, use cache
-    const newer = filterNewer(cache?.cachedReleases || [], current);
+    const allReleases = cache?.cachedAllReleases || cache?.cachedReleases || [];
+    const newer = filterNewer(allReleases, current);
     if (!force && isDismissed(newer, cache?.dismissedVersion)) {
       return buildResult(current, []);
     }
@@ -194,22 +200,23 @@ export async function checkForUpdate(
 export async function fetchUpdateHistory(): Promise<GitHubRelease[]> {
   try {
     const raw = await fetchAllReleases();
-    return raw
-      .filter((r) => {
-        const tag = r.tag_name.replace(/^v/, "");
-        return compareVersions(tag, "3.0.0") >= 0;
-      })
-      .map((r) => ({
-        tagName: r.tag_name.replace(/^v/, ""),
-        name: r.name || "",
-        body: r.body || "",
-        htmlUrl: r.html_url,
-        publishedAt: r.published_at || "",
-        hasDesktopAssets: hasDesktopAssets(r.assets || []),
-      }))
+    const allReleases = raw
+      .map(mapRelease)
+      .filter((r) => compareVersions(r.tagName, "3.0.0") >= 0)
       .sort((a, b) => compareVersions(b.tagName, a.tagName));
+
+    // Update cache with full releases for fallback
+    const cache = loadCache() || {};
+    cache.cachedAllReleases = allReleases;
+    saveCache(cache);
+
+    return allReleases;
   } catch {
-    return [];
+    // Network failure, use cached full releases
+    const cache = loadCache();
+    return (cache?.cachedAllReleases || [])
+      .filter((r) => compareVersions(r.tagName, "3.0.0") >= 0)
+      .sort((a, b) => compareVersions(b.tagName, a.tagName));
   }
 }
 

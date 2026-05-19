@@ -91,20 +91,36 @@ function ReleaseSection({ release }: { release: GitHubRelease }) {
   );
 }
 
+function compareVersions(a: string, b: string): number {
+  const pa = a.replace(/^v/, "").split(".").map(Number);
+  const pb = b.replace(/^v/, "").split(".").map(Number);
+  for (let i = 0; i < 3; i++) {
+    if ((pa[i] || 0) > (pb[i] || 0)) return 1;
+    if ((pa[i] || 0) < (pb[i] || 0)) return -1;
+  }
+  return 0;
+}
+
 export default function UpdateModal({
   open,
   checking,
   onClose,
 }: Props) {
   const [releases, setReleases] = useState<GitHubRelease[]>([]);
+  const [currentVersion, setCurrentVersion] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     setLoading(true);
-    window.api
-      .getUpdateHistory()
-      .then(setReleases)
+    Promise.all([
+      window.api.getUpdateHistory(),
+      window.api.getVersion(),
+    ])
+      .then(([r, v]) => {
+        setReleases(r);
+        setCurrentVersion(v);
+      })
       .catch(() => setReleases([]))
       .finally(() => setLoading(false));
   }, [open]);
@@ -112,6 +128,7 @@ export default function UpdateModal({
   if (!open) return null;
 
   const isLoading = checking || loading;
+  const hasNewer = releases.some((r) => compareVersions(r.tagName, currentVersion) > 0);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -140,11 +157,19 @@ export default function UpdateModal({
               暂无更新记录
             </div>
           ) : (
-            <div className="space-y-2">
-              {releases.map((release) => (
-                <ReleaseSection key={release.tagName} release={release} />
-              ))}
-            </div>
+            <>
+              {!hasNewer && currentVersion && (
+                <div className="flex items-center justify-center gap-2 py-3 mb-3 bg-green/10 text-green text-sm rounded-[var(--radius)]">
+                  <span className="font-display font-semibold">v{currentVersion}</span>
+                  <span>当前已是最新版本</span>
+                </div>
+              )}
+              <div className="space-y-2">
+                {releases.map((release) => (
+                  <ReleaseSection key={release.tagName} release={release} />
+                ))}
+              </div>
+            </>
           )}
         </div>
 
