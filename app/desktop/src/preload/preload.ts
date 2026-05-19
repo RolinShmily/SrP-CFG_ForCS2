@@ -56,6 +56,9 @@ contextBridge.exposeInMainWorld("api", {
   openDownloadsFolder: () =>
     ipcRenderer.invoke("installer:openDownloadsFolder"),
 
+  // App Info
+  getVersion: () => ipcRenderer.invoke("app:getVersion"),
+
   // Updater
   checkForUpdate: (force?: boolean) =>
     ipcRenderer.invoke("updater:check", force),

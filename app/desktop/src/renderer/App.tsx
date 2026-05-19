@@ -10,7 +10,7 @@ import BackupRestorePage from "./pages/BackupRestorePage";
 import AppliedConfigPage from "./pages/AppliedConfigPage";
 import AboutPage from "./pages/AboutPage";
 import { useLogs } from "./hooks/useLogs";
-import type { DetectionResult, UpdateCheckResult } from "./types";
+import type { DetectionResult } from "./types";
 
 export type Page = "install" | "download" | "quickstart" | "backup" | "applied" | "about";
 
@@ -56,9 +56,7 @@ export default function App() {
     [detection],
   );
 
-  // ── Update check ───────────────────────────────────────────
-  const [updateResult, setUpdateResult] =
-    useState<UpdateCheckResult | null>(null);
+  // ── Update modal ───────────────────────────────────────────
   const [updateChecking, setUpdateChecking] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
@@ -68,7 +66,6 @@ export default function App() {
       .checkForUpdate(false)
       .then((result) => {
         if (result.hasUpdate) {
-          setUpdateResult(result);
           setUpdateModalOpen(true);
         }
       })
@@ -76,32 +73,11 @@ export default function App() {
   }, []);
 
   // Manual check from sidebar
-  const handleCheckUpdate = useCallback(async () => {
+  const handleCheckUpdate = useCallback(() => {
     setUpdateChecking(true);
-    setUpdateResult(null);
     setUpdateModalOpen(true);
-    try {
-      const result = await window.api.checkForUpdate(true);
-      setUpdateResult(result);
-    } catch {
-      setUpdateResult({
-        currentVersion: "unknown",
-        hasUpdate: false,
-        hasDesktopUpdate: false,
-        hasPresetUpdate: false,
-        releases: [],
-      });
-    } finally {
-      setUpdateChecking(false);
-    }
+    setTimeout(() => setUpdateChecking(false), 500);
   }, []);
-
-  const handleCloseUpdateModal = useCallback(() => {
-    setUpdateModalOpen(false);
-    if (updateResult?.hasUpdate && updateResult.releases[0]) {
-      window.api.dismissUpdate(updateResult.releases[0].tagName);
-    }
-  }, [updateResult]);
 
   const pages: Record<Page, React.ReactNode> = {
     quickstart: <QuickStartPage />,
@@ -134,10 +110,9 @@ export default function App() {
       </div>
 
       <UpdateModal
-        result={updateResult}
         open={updateModalOpen}
         checking={updateChecking}
-        onClose={handleCloseUpdateModal}
+        onClose={() => setUpdateModalOpen(false)}
       />
     </div>
   );

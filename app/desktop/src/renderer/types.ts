@@ -181,6 +181,9 @@ export interface ElectronAPI {
   installFromDownload: (folderName: string, mode: InstallMode) => Promise<InstallResult | AppendConflictResult>;
   openDownloadsFolder: () => Promise<void>;
 
+  // App Info
+  getVersion: () => Promise<string>;
+
   // Updater
   checkForUpdate: (force?: boolean) => Promise<UpdateCheckResult>;
   dismissUpdate: (version: string) => Promise<void>;

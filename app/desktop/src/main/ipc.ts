@@ -1,4 +1,4 @@
-import { ipcMain, shell, BrowserWindow } from "electron";
+import { ipcMain, shell, BrowserWindow, app } from "electron";
 import { AppState } from "./state";
 import * as detection from "./services/detection";
 import * as staging from "./services/staging";
@@ -324,6 +324,10 @@ export function registerIpcHandlers() {
   ipcMain.handle("installer:openDownloadsFolder", async () => {
     await shell.openPath(staging.getDownloadPath());
   });
+
+  // ── App Info ────────────────────────────────────────────────
+
+  ipcMain.handle("app:getVersion", () => app.getVersion());
 
   // ── Updater ────────────────────────────────────────────────
 
