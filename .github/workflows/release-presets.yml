@@ -1,4 +1,4 @@
-name: AutoRelease
+name: Release Presets
 
 on:
   push:
@@ -19,7 +19,6 @@ jobs:
         id: validate
         run: |
           TAG="${{ github.ref_name }}"
-          # 移除 v 前缀并验证语义化版本格式
           VERSION="${TAG#v}"
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "is_valid=false" >> $GITHUB_OUTPUT
@@ -31,91 +30,10 @@ jobs:
           echo "✅ Tag validated: $TAG"
 
   # ============================================
-  # 构建桌面应用 + MSI 安装包 + 便携版 ZIP（需要 Windows 环境）
-  # ============================================
-  build-app:
-    needs: validate-tag
-    if: needs.validate-tag.outputs.is_valid == 'true'
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Configure git to use HTTPS
-        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Inject version
-        shell: bash
-        run: |
-          VERSION="${{ needs.validate-tag.outputs.version }}"
-          cd app/desktop
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-            pkg.version = '${VERSION}';
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
-          echo "✅ Desktop app version set to ${VERSION}"
-
-      - name: Package Electron app
-        run: pnpm --filter @srp-cfg/desktop package
-
-      - name: Harvest Electron app files for MSI
-        run: node msi/harvest.js "app/desktop/out/SrP-CFG Installer-win32-x64" msi/ElectronAppFiles.wxs
-
-      - name: Build MSI
-        run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
-
-      - name: Rename MSI
-        shell: bash
-        run: |
-          TAG="${{ github.ref_name }}"
-          mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
-          echo "✅ MSI: SrP-CFG_Installer_${TAG}.msi"
-          ls -lh "SrP-CFG_Installer_${TAG}.msi"
-
-      - name: Upload MSI artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: msi-installer
-          path: SrP-CFG_Installer_*.msi
-
-      - name: Create portable ZIP
-        shell: bash
-        run: |
-          TAG="${{ github.ref_name }}"
-          PORTABLE_NAME="SrP-CFG_Portable_${TAG}.zip"
-          7z a -tzip "$PORTABLE_NAME" "app/desktop/out/SrP-CFG Installer-win32-x64/" -r
-          echo "✅ Portable: $PORTABLE_NAME"
-          ls -lh "$PORTABLE_NAME"
-
-      - name: Upload portable artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: portable-zip
-          path: SrP-CFG_Portable_*.zip
-
-  # ============================================
-  # 构建和发布
+  # 构建和发布预设包
   # ============================================
   build-and-release:
-    needs: [validate-tag, build-app]
+    needs: validate-tag
     if: needs.validate-tag.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -124,7 +42,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整历史，用于生成 changelog
+          fetch-depth: 0
 
       # ============================================
       # 验证配置文件
@@ -157,28 +75,7 @@ jobs:
           echo "✅ Packages configuration parsed"
 
       # ============================================
-      # 下载构建产物（MSI + 便携版 ZIP）
-      # ============================================
-      - name: Download MSI artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: msi-installer
-          path: .
-
-      - name: Download portable artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: portable-zip
-          path: .
-
-      - name: Verify build artifacts
-        run: |
-          echo "=== Build artifacts ==="
-          ls -lh SrP-CFG_Installer_*.msi SrP-CFG_Portable_*.zip 2>&1
-          echo "======================"
-
-      # ============================================
-      # 生成 Release Notes（必须在打包之前生成，以便打包进zip）
+      # 生成 Release Notes
       # ============================================
       - name: Generate Release Notes
         id: release_notes
@@ -189,30 +86,24 @@ jobs:
           REPO_OWNER="${{ github.repository_owner }}"
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
 
-          # 获取上一个标签
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
 
-          # 生成 changelog
           if [ -n "$PREV_TAG" ]; then
-            # 使用 Python 脚本生成格式化的更新日志
             CHANGELOG_CONTENT=$(export PREV_TAG="$PREV_TAG" && export CURRENT_TAG="$CURRENT_TAG" && python3 .github/scripts/generate_changelog.py)
           else
             CHANGELOG_CONTENT="这是项目的首次发布。"
           fi
 
-          # 读取模板并替换变量
           RELEASE_BODY=$(cat .github/release/template.md)
           RELEASE_BODY="${RELEASE_BODY//\{\{VERSION\}\}/$CURRENT_TAG}"
           RELEASE_BODY="${RELEASE_BODY//\{\{CHANGELOG\}\}/$CHANGELOG_CONTENT}"
 
-          # 保存到环境变量
           {
             echo 'RELEASE_BODY<<EOF'
             echo "$RELEASE_BODY"
             echo 'EOF'
           } >> $GITHUB_ENV
 
-          # 保存为版本更新说明.md（供打包使用）
           echo "$RELEASE_BODY" > "版本更新说明.md"
           echo "✅ Release notes generated"
 
@@ -237,8 +128,6 @@ jobs:
           name: SrP-CFG_${{ github.ref_name }}
           body: ${{ env.RELEASE_BODY }}
           files: |
-            SrP-CFG_Installer_*.msi
-            SrP-CFG_Portable_*.zip
             *.zip
           prerelease: false
           draft: false
@@ -254,25 +143,21 @@ jobs:
           OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
           OSS_PREFIX: ${{ secrets.OSS_PREFIX || '' }}
           TAG: ${{ github.ref_name }}
+          OSS_CONFIG: .github/oss-upload-presets.yaml
         run: |
           echo "☁️ Uploading to Aliyun OSS..."
           echo "  📌 Tag: $TAG"
 
-          # 1. 下载并安装 ossutil
           wget https://gosspublic.alicdn.com/ossutil/1.7.18/ossutil64 -q
           chmod +x ossutil64
           sudo mv ossutil64 /usr/local/bin/ossutil
 
-          # 2. 配置 ossutil
           ossutil config -e "$OSS_ENDPOINT" -i "$OSS_ACCESS_KEY_ID" -k "$OSS_ACCESS_KEY_SECRET" -L CH
 
-          # 3. 执行上传
           python3 .github/scripts/upload_oss.py
 
-          # 4. 生成 GitHub Summary
           python3 .github/scripts/oss_summary.py
 
-          # 5. 检查结果
           FAILED=$(python3 -c "import json; print(json.load(open('upload_results.json'))['failed'])")
 
           if [ "$FAILED" -gt 0 ]; then

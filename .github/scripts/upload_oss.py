@@ -15,8 +15,9 @@ import glob
 
 
 def main():
-    # 读取配置
-    with open('.github/oss-upload.yaml', 'r', encoding='utf-8') as f:
+    # 读取配置（支持通过 OSS_CONFIG 环境变量指定配置文件路径）
+    config_path = os.environ.get('OSS_CONFIG', '.github/oss-upload.yaml')
+    with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
     upload_files = config.get('upload_files', [])

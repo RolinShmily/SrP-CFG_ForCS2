@@ -123,6 +123,7 @@ export interface GitHubRelease {
   body: string;
   htmlUrl: string;
   publishedAt: string;
+  hasDesktopAssets: boolean;
 }
 
 export interface UpdateCheckResult {

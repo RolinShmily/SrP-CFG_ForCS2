@@ -1,0 +1,18 @@
+# ============================================
+# SrP-CFG 桌面端产物 OSS 上传配置
+# ============================================
+
+upload_files:
+  - display_name: "MSI安装包"
+    source_pattern: "SrP-CFG_Installer_*.msi"
+    target_name: "SrP-CFG_Installer.msi"
+    enabled: true
+
+  - display_name: "Portable便携包"
+    source_pattern: "SrP-CFG_Portable_*.zip"
+    target_name: "SrP-CFG_Portable.zip"
+    enabled: true
+
+settings:
+  version_pattern: "_[vV][0-9]+\\.[0-9]+\\.[0-9]+(-[a-zA-Z0-9.]+)?"
+  on_error: "stop"

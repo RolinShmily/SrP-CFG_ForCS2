@@ -1,0 +1,222 @@
+name: Release Desktop
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # ============================================
+  # 验证标签格式
+  # ============================================
+  validate-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.validate.outputs.version }}
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+    steps:
+      - name: Validate tag format
+        id: validate
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "::error::Tag format must be v*.*.* (e.g., v1.0.0, v2.1.3-beta)"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "is_valid=true" >> $GITHUB_OUTPUT
+          echo "✅ Tag validated: $TAG"
+
+  # ============================================
+  # 检测 desktop 相关文件是否有变更
+  # ============================================
+  detect-changes:
+    needs: validate-tag
+    if: needs.validate-tag.outputs.is_valid == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      has_desktop_changes: ${{ steps.check.outputs.has_desktop_changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for desktop changes
+        id: check
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "ℹ️  No previous tag found (first release), will build desktop"
+            echo "has_desktop_changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "📌 Comparing $PREV_TAG → ${{ github.ref_name }}"
+          CHANGED=$(git diff --name-only "$PREV_TAG" HEAD)
+
+          if echo "$CHANGED" | grep -qE '^(app/desktop/|msi/)'; then
+            echo "✅ Desktop files changed, will build MSI and portable"
+            echo "has_desktop_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "ℹ️  No desktop changes detected, skipping build"
+            echo "has_desktop_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ============================================
+  # 构建桌面应用 + MSI 安装包 + 便携版 ZIP
+  # ============================================
+  build-app:
+    needs: [validate-tag, detect-changes]
+    if: needs.detect-changes.outputs.has_desktop_changes == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Configure git to use HTTPS
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Inject version
+        shell: bash
+        run: |
+          VERSION="${{ needs.validate-tag.outputs.version }}"
+          cd app/desktop
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+            pkg.version = '${VERSION}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          echo "✅ Desktop app version set to ${VERSION}"
+
+      - name: Package Electron app
+        run: pnpm --filter @srp-cfg/desktop package
+
+      - name: Harvest Electron app files for MSI
+        run: node msi/harvest.js "app/desktop/out/SrP-CFG Installer-win32-x64" msi/ElectronAppFiles.wxs
+
+      - name: Build MSI
+        run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
+
+      - name: Rename MSI
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
+          echo "✅ MSI: SrP-CFG_Installer_${TAG}.msi"
+          ls -lh "SrP-CFG_Installer_${TAG}.msi"
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: msi-installer
+          path: SrP-CFG_Installer_*.msi
+
+      - name: Create portable ZIP
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          PORTABLE_NAME="SrP-CFG_Portable_${TAG}.zip"
+          7z a -tzip "$PORTABLE_NAME" "app/desktop/out/SrP-CFG Installer-win32-x64/" -r
+          echo "✅ Portable: $PORTABLE_NAME"
+          ls -lh "$PORTABLE_NAME"
+
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portable-zip
+          path: SrP-CFG_Portable_*.zip
+
+  # ============================================
+  # 上传桌面端产物到 OSS + GitHub Release
+  # ============================================
+  upload-desktop:
+    needs: [validate-tag, detect-changes, build-app]
+    if: needs.detect-changes.outputs.has_desktop_changes == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download MSI artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: msi-installer
+          path: .
+
+      - name: Download portable artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: portable-zip
+          path: .
+
+      - name: Verify build artifacts
+        run: |
+          echo "=== Build artifacts ==="
+          ls -lh SrP-CFG_Installer_*.msi SrP-CFG_Portable_*.zip 2>&1
+          echo "======================"
+
+      - name: Append to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            SrP-CFG_Installer_*.msi
+            SrP-CFG_Portable_*.zip
+          fail_on_unmatched_files: true
+
+      - name: Upload to Aliyun OSS
+        env:
+          OSS_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          OSS_BUCKET: ${{ secrets.OSS_BUCKET }}
+          OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
+          OSS_PREFIX: ${{ secrets.OSS_PREFIX || '' }}
+          TAG: ${{ github.ref_name }}
+          OSS_CONFIG: .github/oss-upload-desktop.yaml
+        run: |
+          echo "☁️ Uploading desktop artifacts to Aliyun OSS..."
+          echo "  📌 Tag: $TAG"
+
+          wget https://gosspublic.alicdn.com/ossutil/1.7.18/ossutil64 -q
+          chmod +x ossutil64
+          sudo mv ossutil64 /usr/local/bin/ossutil
+
+          ossutil config -e "$OSS_ENDPOINT" -i "$OSS_ACCESS_KEY_ID" -k "$OSS_ACCESS_KEY_SECRET" -L CH
+
+          python3 .github/scripts/upload_oss.py
+
+          python3 .github/scripts/oss_summary.py
+
+          FAILED=$(python3 -c "import json; print(json.load(open('upload_results.json'))['failed'])")
+
+          if [ "$FAILED" -gt 0 ]; then
+            echo ""
+            echo "::error::Some files failed to upload to OSS"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ Desktop artifacts uploaded to OSS successfully"

@@ -57,12 +57,17 @@ function isDismissed(
   return compareVersions(releases[0].tagName, dismissedVersion) <= 0;
 }
 
+interface GitHubAssetRaw {
+  name: string;
+}
+
 interface GitHubReleaseRaw {
   tag_name: string;
   name: string;
   body: string;
   html_url: string;
   published_at: string;
+  assets: GitHubAssetRaw[];
 }
 
 function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
@@ -94,6 +99,14 @@ function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
 
     req.on("error", reject);
   });
+}
+
+function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
+  return assets.some(
+    (a) =>
+      /^SrP-CFG_Installer_.*\.msi$/i.test(a.name) ||
+      /^SrP-CFG_Portable_.*\.zip$/i.test(a.name),
+  );
 }
 
 function filterNewer(
@@ -140,7 +153,9 @@ export async function checkForUpdate(
 
     const newer: GitHubRelease[] = raw
       .filter(
-        (r) => compareVersions(r.tag_name.replace(/^v/, ""), current) > 0,
+        (r) =>
+          compareVersions(r.tag_name.replace(/^v/, ""), current) > 0 &&
+          hasDesktopAssets(r.assets || []),
       )
       .map((r) => ({
         tagName: r.tag_name.replace(/^v/, ""),
@@ -148,6 +163,7 @@ export async function checkForUpdate(
         body: r.body || "",
         htmlUrl: r.html_url,
         publishedAt: r.published_at || "",
+        hasDesktopAssets: true,
       }))
       .sort((a, b) => compareVersions(b.tagName, a.tagName));
 
