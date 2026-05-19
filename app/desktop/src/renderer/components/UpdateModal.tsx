@@ -187,8 +187,11 @@ export default function UpdateModal({
             </button>
             <button
               onClick={() => {
-                const url = releases.find((r) => r.hasDesktopAssets)?.htmlUrl;
-                if (url) window.api.openExternal(url);
+                const url =
+                  releases.find((r) => r.hasDesktopAssets)?.htmlUrl ??
+                  releases[0]?.htmlUrl ??
+                  "https://github.com/RolinShmily/SrP-CFG_ForCS2/releases";
+                window.api.openExternal(url);
               }}
               className="flex items-center gap-1.5 px-4 py-2 text-sm font-display font-medium bg-transparent text-text-secondary border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer"
             >
