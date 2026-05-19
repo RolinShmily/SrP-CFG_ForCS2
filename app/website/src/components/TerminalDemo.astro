@@ -91,7 +91,17 @@
 </style>
 
 <script>
-  (function () {
+  let typingTimer: number | null = null;
+  let doneTimer: number | null = null;
+  let io: IntersectionObserver | null = null;
+
+  function clearTimers() {
+    if (typingTimer !== null) { clearInterval(typingTimer); typingTimer = null; }
+    if (doneTimer !== null) { clearTimeout(doneTimer); doneTimer = null; }
+    if (io !== null) { io.disconnect(); io = null; }
+  }
+
+  function initTerminal() {
     const container = document.getElementById("terminal-body");
     if (!container) return;
 
@@ -128,18 +138,10 @@
       { ts: ts(11), src: "OK", srcColor: "color:var(--color-green)", msg: "安装完成 — 4 个文件已部署，状态已记录 (install.json)", msgColor: "color:var(--color-green)" },
     ];
 
-    let typingTimer: number | null = null;
-    let doneTimer: number | null = null;
-
     function createCursor(): HTMLSpanElement {
       const c = document.createElement("span");
       c.className = "cursor";
       return c;
-    }
-
-    function clearTimers() {
-      if (typingTimer !== null) { clearInterval(typingTimer); typingTimer = null; }
-      if (doneTimer !== null) { clearTimeout(doneTimer); doneTimer = null; }
     }
 
     function typeLine(
@@ -206,15 +208,19 @@
       runSequence(0);
     }
 
-    const observer = new IntersectionObserver(
+    io = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          observer.disconnect();
+          io!.disconnect();
+          io = null;
           start();
         }
       },
       { threshold: 0.3 }
     );
-    observer.observe(container);
-  })();
+    io.observe(container);
+  }
+
+  document.addEventListener("astro:page-load", initTerminal);
+  document.addEventListener("astro:before-swap", clearTimers);
 </script>
