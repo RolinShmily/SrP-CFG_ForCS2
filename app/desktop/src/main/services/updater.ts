@@ -180,7 +180,7 @@ export async function checkForUpdate(
   }
 }
 
-export async function fetchUpdateHistory(): Promise<GitHubRelease[]> {
+export async function fetchUpdateHistory(): Promise<GitHubRelease[] | null> {
   try {
     const raw = await fetchAllReleases();
     const allReleases = raw
@@ -197,9 +197,10 @@ export async function fetchUpdateHistory(): Promise<GitHubRelease[]> {
   } catch {
     // Network failure, use cached full releases
     const cache = loadCache();
-    return (cache?.cachedAllReleases || [])
+    const cached = (cache?.cachedAllReleases || [])
       .filter((r) => compareVersions(r.tagName, "3.0.0") >= 0)
       .sort((a, b) => compareVersions(b.tagName, a.tagName));
+    return cached.length > 0 ? cached : null;
   }
 }
 

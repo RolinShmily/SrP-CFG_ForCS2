@@ -187,7 +187,7 @@ export interface ElectronAPI {
   // Updater
   checkForUpdate: (force?: boolean) => Promise<UpdateCheckResult>;
   dismissUpdate: (version: string) => Promise<void>;
-  getUpdateHistory: () => Promise<GitHubRelease[]>;
+  getUpdateHistory: () => Promise<GitHubRelease[] | null>;
 
   // Shell
   openExternal: (url: string) => Promise<void>;

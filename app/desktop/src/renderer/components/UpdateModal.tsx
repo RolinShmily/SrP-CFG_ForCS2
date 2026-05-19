@@ -109,19 +109,29 @@ export default function UpdateModal({
   const [releases, setReleases] = useState<GitHubRelease[]>([]);
   const [currentVersion, setCurrentVersion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     setLoading(true);
+    setError(false);
     Promise.all([
       window.api.getUpdateHistory(),
       window.api.getVersion(),
     ])
       .then(([r, v]) => {
-        setReleases(r);
+        if (r === null) {
+          setError(true);
+          setReleases([]);
+        } else {
+          setReleases(r);
+        }
         setCurrentVersion(v);
       })
-      .catch(() => setReleases([]))
+      .catch(() => {
+        setError(true);
+        setReleases([]);
+      })
       .finally(() => setLoading(false));
   }, [open]);
 
@@ -151,6 +161,23 @@ export default function UpdateModal({
             <div className="flex items-center justify-center py-12 text-text-muted">
               <Loader2 size={20} className="animate-spin mr-2" />
               <span className="text-sm">正在检查更新...</span>
+            </div>
+          ) : error && releases.length === 0 ? (
+            <div className="text-center py-12 space-y-3">
+              <p className="text-red text-sm">获取更新信息失败，请检查网络连接</p>
+              <button
+                onClick={() => {
+                  setLoading(true);
+                  setError(false);
+                  window.api.getUpdateHistory()
+                    .then((r) => { if (r) setReleases(r); else setError(true); })
+                    .catch(() => setError(true))
+                    .finally(() => setLoading(false));
+                }}
+                className="px-4 py-1.5 text-xs font-display bg-bg-raised border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer text-text-secondary"
+              >
+                重试
+              </button>
             </div>
           ) : releases.length === 0 ? (
             <div className="text-center py-12 text-text-muted text-sm">
