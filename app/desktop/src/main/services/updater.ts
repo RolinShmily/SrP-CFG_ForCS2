@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as https from "https";
-import { app } from "electron";
+import { app, net } from "electron";
 import type { GitHubRelease, UpdateCheckResult } from "../../renderer/types";
 
 const RELEASES_API =
@@ -72,35 +71,19 @@ interface GitHubReleaseRaw {
   assets: GitHubAssetRaw[];
 }
 
-function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
-  return new Promise((resolve, reject) => {
-    const req = https.get(
-      `${RELEASES_API}?per_page=10`,
-      { headers: { "User-Agent": "SrP-CFG-Installer" } },
-      (res) => {
-        if (res.statusCode !== 200) {
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        let data = "";
-        res.on("data", (chunk: string) => (data += chunk));
-        res.on("end", () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (e) {
-            reject(e);
-          }
-        });
-      },
-    );
-
-    req.setTimeout(HTTP_TIMEOUT, () => {
-      req.destroy();
-      reject(new Error("timeout"));
+async function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), HTTP_TIMEOUT);
+  try {
+    const res = await net.fetch(`${RELEASES_API}?per_page=10`, {
+      headers: { "User-Agent": "SrP-CFG-Installer" },
+      signal: controller.signal,
     });
-
-    req.on("error", reject);
-  });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as GitHubReleaseRaw[];
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
