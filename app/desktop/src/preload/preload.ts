@@ -61,6 +61,8 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("updater:check", force),
   dismissUpdate: (version: string) =>
     ipcRenderer.invoke("updater:dismiss", version),
+  getUpdateHistory: () =>
+    ipcRenderer.invoke("updater:history"),
 
   // Shell
   openExternal: (url: string) =>

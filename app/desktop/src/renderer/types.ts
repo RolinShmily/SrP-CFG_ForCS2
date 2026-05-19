@@ -129,6 +129,8 @@ export interface GitHubRelease {
 export interface UpdateCheckResult {
   currentVersion: string;
   hasUpdate: boolean;
+  hasDesktopUpdate: boolean;
+  hasPresetUpdate: boolean;
   releases: GitHubRelease[];
 }
 
@@ -182,6 +184,7 @@ export interface ElectronAPI {
   // Updater
   checkForUpdate: (force?: boolean) => Promise<UpdateCheckResult>;
   dismissUpdate: (version: string) => Promise<void>;
+  getUpdateHistory: () => Promise<GitHubRelease[]>;
 
   // Shell
   openExternal: (url: string) => Promise<void>;

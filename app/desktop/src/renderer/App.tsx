@@ -87,6 +87,8 @@ export default function App() {
       setUpdateResult({
         currentVersion: "unknown",
         hasUpdate: false,
+        hasDesktopUpdate: false,
+        hasPresetUpdate: false,
         releases: [],
       });
     } finally {

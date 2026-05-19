@@ -3,7 +3,11 @@ import { AppState } from "./state";
 import * as detection from "./services/detection";
 import * as staging from "./services/staging";
 import * as installer from "./services/installer";
-import { checkForUpdate, dismissVersion } from "./services/updater";
+import {
+  checkForUpdate,
+  dismissVersion,
+  fetchUpdateHistory,
+} from "./services/updater";
 import type { LogEntry, InstallMode } from "../renderer/types";
 
 const state = new AppState();
@@ -329,5 +333,9 @@ export function registerIpcHandlers() {
 
   ipcMain.handle("updater:dismiss", async (_e, version: string) => {
     dismissVersion(version);
+  });
+
+  ipcMain.handle("updater:history", async () => {
+    return fetchUpdateHistory();
   });
 }

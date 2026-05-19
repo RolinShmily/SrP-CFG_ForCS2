@@ -122,9 +122,13 @@ function buildResult(
   current: string,
   releases: GitHubRelease[],
 ): UpdateCheckResult {
+  const hasDesktopUpdate = releases.some((r) => r.hasDesktopAssets);
+  const hasPresetUpdate = releases.some((r) => !r.hasDesktopAssets);
   return {
     currentVersion: current,
     hasUpdate: releases.length > 0,
+    hasDesktopUpdate,
+    hasPresetUpdate,
     releases,
   };
 }
@@ -153,9 +157,7 @@ export async function checkForUpdate(
 
     const newer: GitHubRelease[] = raw
       .filter(
-        (r) =>
-          compareVersions(r.tag_name.replace(/^v/, ""), current) > 0 &&
-          hasDesktopAssets(r.assets || []),
+        (r) => compareVersions(r.tag_name.replace(/^v/, ""), current) > 0,
       )
       .map((r) => ({
         tagName: r.tag_name.replace(/^v/, ""),
@@ -163,7 +165,7 @@ export async function checkForUpdate(
         body: r.body || "",
         htmlUrl: r.html_url,
         publishedAt: r.published_at || "",
-        hasDesktopAssets: true,
+        hasDesktopAssets: hasDesktopAssets(r.assets || []),
       }))
       .sort((a, b) => compareVersions(b.tagName, a.tagName));
 
@@ -186,6 +188,28 @@ export async function checkForUpdate(
       return buildResult(current, []);
     }
     return buildResult(current, newer);
+  }
+}
+
+export async function fetchUpdateHistory(): Promise<GitHubRelease[]> {
+  try {
+    const raw = await fetchAllReleases();
+    return raw
+      .filter((r) => {
+        const tag = r.tag_name.replace(/^v/, "");
+        return compareVersions(tag, "3.0.0") >= 0;
+      })
+      .map((r) => ({
+        tagName: r.tag_name.replace(/^v/, ""),
+        name: r.name || "",
+        body: r.body || "",
+        htmlUrl: r.html_url,
+        publishedAt: r.published_at || "",
+        hasDesktopAssets: hasDesktopAssets(r.assets || []),
+      }))
+      .sort((a, b) => compareVersions(b.tagName, a.tagName));
+  } catch {
+    return [];
   }
 }
 
