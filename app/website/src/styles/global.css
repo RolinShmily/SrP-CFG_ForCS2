@@ -35,6 +35,8 @@
 /* ── Base ── */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100dvw;
 }
 
 body {
@@ -44,6 +46,7 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  max-width: 100dvw;
 }
 
 /* ── Noise Overlay ── */

@@ -1,0 +1,310 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import startImg from "../assets/start.png";
+import downloadImg from "../assets/download.png";
+import installImg from "../assets/install.png";
+import backupImg from "../assets/backup.png";
+import applyImg from "../assets/apply.png";
+import aboutImg from "../assets/about.png";
+
+const screenshots = [
+  { src: startImg, title: "快速开始", desc: "使用指引助你快速上手，自动检测 Steam 与 CS2 路径" },
+  { src: downloadImg, title: "下载预设", desc: "从 GitHub Releases 获取最新预设配置包" },
+  { src: installImg, title: "安装部署", desc: "一键将配置部署到游戏目录，支持覆盖与追加模式" },
+  { src: backupImg, title: "备份与恢复", desc: "安装前自动备份，随时可恢复原始配置" },
+  { src: applyImg, title: "已应用配置", desc: "查看和管理已安装的配置文件，清晰掌握部署状态" },
+  { src: aboutImg, title: "关于", desc: "版本信息、项目详情与更新检查" },
+];
+---
+
+<section class="py-4 sm:py-5 md:py-6 relative">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,rgba(232,121,12,0.04)0%,transparent70%)] pointer-events-none"></div>
+  <div class="max-w-[1200px] mx-auto px-5 sm:px-7 relative z-1">
+    <div class="mb-2">
+      <SectionHeader label="App Preview" title="界面预览" description="安装器六大功能模块一览，简洁直观的操作体验" />
+    </div>
+
+    <!-- Mobile: card grid -->
+    <div class="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-5">
+      {screenshots.map((item) => (
+        <div class="showcase-mobile-card relative bg-bg-card border border-border rounded-[10px] overflow-hidden transition-all duration-300 hover:border-border-highlight hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+          <div class="relative aspect-[16/10] overflow-hidden bg-bg">
+            <img
+              src={item.src.src}
+              alt={item.title}
+              loading="lazy"
+              class="w-full h-full object-cover object-top"
+            />
+          </div>
+          <div class="p-4">
+            <h3 class="font-display text-base font-semibold mb-1 flex items-center gap-2">
+              <span class="w-[5px] h-[5px] rounded-full bg-accent opacity-70"></span>
+              {item.title}
+            </h3>
+            <p class="text-xs text-text-secondary font-light leading-[1.7]">{item.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Desktop: carousel -->
+    <div class="hidden md:block">
+      <div id="showcase-carousel" class="relative select-none">
+        <!-- Viewport -->
+        <div class="carousel-viewport relative mx-auto" style="height: 560px; max-width: 1100px;">
+          {screenshots.map((item, i) => (
+            <div
+              class="showcase-slide absolute left-1/2 top-1/2 w-[480px] aspect-[16/10] transition-all duration-500 ease-out cursor-pointer"
+              data-slide-index={i}
+              style={i === 0 ? "z-index:20; opacity:1; transform: translate(-50%, -50%) scale(1);" : "z-index:0; opacity:0; transform: translate(-50%, -50%) scale(0.7);"}
+            >
+              <div class="w-full h-full relative rounded-[14px] overflow-hidden border border-border shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+                <div class="showcase-slide-blur absolute inset-0 bg-bg/50 backdrop-blur-[2px] transition-opacity duration-500 z-10 rounded-[14px]"></div>
+                <img
+                  src={item.src.src}
+                  alt={item.title}
+                  loading="lazy"
+                  class="block w-full h-full object-cover object-top"
+                  draggable="false"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Info area -->
+        <div class="mt-2 text-center min-h-[56px]">
+          <h3 id="showcase-title" class="font-display text-xl font-semibold mb-2">{screenshots[0].title}</h3>
+          <p id="showcase-desc" class="text-sm text-text-secondary font-light leading-[1.7]">{screenshots[0].desc}</p>
+        </div>
+
+        <!-- Circular indicators -->
+        <div class="flex items-center justify-center gap-3 mt-2">
+          {screenshots.map((item, i) => {
+            const circ = 2 * Math.PI * 12;
+            return (
+              <button
+                class="showcase-indicator group/ind relative w-7 h-7 flex items-center justify-center"
+                data-indicator-index={i}
+                aria-label={item.title}
+              >
+                <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 28 28">
+                  <circle cx="14" cy="14" r="12" fill="none" stroke="var(--color-border-highlight)" stroke-width="2" />
+                  <circle
+                    class="indicator-ring"
+                    cx="14" cy="14" r="12"
+                    fill="none"
+                    stroke="var(--color-accent)"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-dasharray={circ}
+                    stroke-dashoffset={i === 0 ? 0 : circ}
+                    style="transition: stroke-dashoffset 0.5s ease;"
+                  />
+                </svg>
+                <span class="relative z-1 font-mono text-[10px] font-semibold text-text-faint group-hover/ind:text-text-secondary transition-colors">
+                  {i + 1}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Lightbox overlay -->
+<div
+  id="showcase-lightbox"
+  class="fixed inset-0 z-[9999] flex items-center justify-center bg-bg/90 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"
+>
+  <button
+    id="lightbox-close"
+    class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-bg-card/80 border border-border text-text-secondary hover:text-text hover:border-border-highlight transition-colors cursor-pointer"
+    aria-label="关闭"
+  >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="3" x2="15" y2="15" /><line x1="15" y1="3" x2="3" y2="15" />
+    </svg>
+  </button>
+  <img id="lightbox-img" src="" alt="" class="max-w-[92vw] max-h-[92vh] object-contain rounded-lg shadow-[0_16px_64px_rgba(0,0,0,0.6)] scale-90 transition-transform duration-300" />
+</div>
+
+<script>
+  const CIRC = 2 * Math.PI * 12;
+
+  function initCarousel() {
+    const container = document.getElementById("showcase-carousel");
+    if (!container) return;
+
+    const viewport = container.querySelector<HTMLElement>(".carousel-viewport");
+    const slides = container.querySelectorAll<HTMLElement>(".showcase-slide");
+    const indicators = container.querySelectorAll<HTMLButtonElement>(".showcase-indicator");
+    const titleEl = document.getElementById("showcase-title");
+    const descEl = document.getElementById("showcase-desc");
+
+    if (!viewport || slides.length === 0) return;
+
+    const total = slides.length;
+    const infoData = Array.from(slides).map((s) => {
+      const img = s.querySelector("img")!;
+      return { title: img.alt };
+    });
+
+    // Also grab descs from mobile cards (always in DOM)
+    const mobileCards = document.querySelectorAll(".showcase-mobile-card p");
+    const descs = Array.from(mobileCards).map((p) => p.textContent?.trim() ?? "");
+    infoData.forEach((d, i) => { d.desc = descs[i] ?? ""; });
+
+    let current = 0;
+
+    function layout() {
+      const vw = viewport!.offsetWidth;
+      if (vw === 0) return;
+
+      const centerW = Math.min(vw * 0.52, 620);
+      const sideScale = 0.6;
+      const gap = Math.min(vw * 0.04, 40);
+
+      // Calculate side slide center offset from viewport center
+      // side slide width = centerW * sideScale
+      // distance between centers = (centerW / 2) + gap + (centerW * sideScale / 2)
+      const offsetPx = centerW / 2 + gap + (centerW * sideScale) / 2;
+
+      const hasLeft = current > 0;
+      const hasRight = current < total - 1;
+
+      slides.forEach((slide, i) => {
+        const blur = slide.querySelector(".showcase-slide-blur") as HTMLElement;
+
+        if (i === current) {
+          slide.style.transform = `translate(-50%, -50%) scale(1)`;
+          slide.style.width = centerW + "px";
+          slide.style.zIndex = "20";
+          slide.style.opacity = "1";
+          slide.style.pointerEvents = "auto";
+          slide.style.cursor = "zoom-in";
+          if (blur) blur.style.opacity = "0";
+        } else if (hasLeft && i === current - 1) {
+          slide.style.transform = `translate(calc(-50% - ${offsetPx}px), -50%) scale(${sideScale})`;
+          slide.style.width = centerW + "px";
+          slide.style.zIndex = "10";
+          slide.style.opacity = "1";
+          slide.style.pointerEvents = "auto";
+          if (blur) blur.style.opacity = "0.55";
+        } else if (hasRight && i === current + 1) {
+          slide.style.transform = `translate(calc(-50% + ${offsetPx}px), -50%) scale(${sideScale})`;
+          slide.style.width = centerW + "px";
+          slide.style.zIndex = "10";
+          slide.style.opacity = "1";
+          slide.style.pointerEvents = "auto";
+          if (blur) blur.style.opacity = "0.55";
+        } else {
+          const dir = i > current ? 1 : -1;
+          slide.style.transform = `translate(calc(-50% + ${dir * (offsetPx * 2)}px), -50%) scale(0.5)`;
+          slide.style.width = centerW + "px";
+          slide.style.zIndex = "0";
+          slide.style.opacity = "0";
+          slide.style.pointerEvents = "none";
+          if (blur) blur.style.opacity = "0.55";
+        }
+      });
+
+      if (titleEl && descEl && infoData[current]) {
+        titleEl.textContent = infoData[current].title;
+        descEl.textContent = infoData[current].desc;
+      }
+
+      indicators.forEach((ind, i) => {
+        const ring = ind.querySelector(".indicator-ring") as SVGCircleElement;
+        if (ring) ring.style.strokeDashoffset = i === current ? "0" : String(CIRC);
+      });
+    }
+
+    function goTo(index: number) {
+      if (index < 0 || index >= total) return;
+      current = index;
+      layout();
+    }
+
+    // Lightbox
+    const lightbox = document.getElementById("showcase-lightbox");
+    const lightboxImg = document.getElementById("lightbox-img") as HTMLImageElement;
+    const lightboxClose = document.getElementById("lightbox-close");
+
+    function openLightbox() {
+      if (!lightbox || !lightboxImg) return;
+      const img = slides[current].querySelector("img");
+      if (!img) return;
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.remove("opacity-0", "pointer-events-none");
+      lightboxImg.classList.remove("scale-90");
+      lightboxImg.classList.add("scale-100");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      if (!lightbox || !lightboxImg) return;
+      lightbox.classList.add("opacity-0", "pointer-events-none");
+      lightboxImg.classList.remove("scale-100");
+      lightboxImg.classList.add("scale-90");
+      document.body.style.overflow = "";
+    }
+
+    slides.forEach((slide, i) => {
+      slide.addEventListener("click", () => {
+        if (i === current) {
+          openLightbox();
+        } else {
+          goTo(i);
+        }
+      });
+    });
+    indicators.forEach((ind, i) => {
+      ind.addEventListener("click", () => goTo(i));
+    });
+
+    lightbox?.addEventListener("click", (e) => {
+      if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
+    });
+    lightboxClose?.addEventListener("click", closeLightbox);
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") { closeLightbox(); return; }
+      if (e.key === "ArrowLeft") goTo(current - 1);
+      if (e.key === "ArrowRight") goTo(current + 1);
+    }
+    document.addEventListener("keydown", onKeyDown);
+
+    layout();
+    window.addEventListener("resize", layout);
+
+    // Mobile card clicks → lightbox
+    const mobileCardEls = document.querySelectorAll<HTMLElement>(".showcase-mobile-card");
+    mobileCardEls.forEach((card) => {
+      card.style.cursor = "zoom-in";
+      card.addEventListener("click", () => {
+        if (!lightbox || !lightboxImg) return;
+        const img = card.querySelector("img");
+        if (!img) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.remove("opacity-0", "pointer-events-none");
+        lightboxImg.classList.remove("scale-90");
+        lightboxImg.classList.add("scale-100");
+        document.body.style.overflow = "hidden";
+      });
+    });
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", layout);
+      lightbox?.removeEventListener("click", closeLightbox);
+      lightboxClose?.removeEventListener("click", closeLightbox);
+    };
+  }
+
+  let cleanup: (() => void) | null = null;
+  cleanup = initCarousel();
+  document.addEventListener("astro:page-load", () => { cleanup?.(); cleanup = initCarousel(); });
+</script>

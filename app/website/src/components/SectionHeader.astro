@@ -8,13 +8,13 @@ interface Props {
 const { label, title, description } = Astro.props;
 ---
 
-<header class="text-center mb-[72px]">
-  <span class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.22em] uppercase text-accent mb-4">
+<header class="text-center mb-12 sm:mb-[72px]">
+  <span class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.22em] uppercase text-accent mb-3 sm:mb-4">
     {label}
   </span>
-  <h2 class="font-display text-[40px] font-bold tracking-[0.03em] mb-4">{title}</h2>
+  <h2 class="font-display text-[28px] sm:text-[36px] md:text-[40px] font-bold tracking-[0.03em] mb-3 sm:mb-4">{title}</h2>
   {description && (
-    <p class="text-base text-text-secondary font-light max-w-[540px] mx-auto leading-[1.8]">
+    <p class="text-sm sm:text-base text-text-secondary font-light max-w-[540px] mx-auto leading-[1.8]">
       {description}
     </p>
   )}

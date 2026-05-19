@@ -10,23 +10,23 @@ const steps = [
 ];
 ---
 
-<section class="py-[120px] relative">
+<section class="py-[60px] sm:py-[80px] md:py-[120px] relative">
   <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[radial-gradient(ellipse,rgba(45,212,191,0.05)0%,transparent70%)] pointer-events-none"></div>
-  <div class="max-w-[1200px] mx-auto px-7 relative z-1">
+  <div class="max-w-[1200px] mx-auto px-5 sm:px-7 relative z-1">
     <SectionHeader label="Quick Start" title="四步上手" description="从下载到安装完成，全程不超过一分钟" />
 
-    <div class="flex flex-wrap justify-center gap-6 lg:gap-0">
+    <div class="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-0">
       {steps.map((step, i) => (
         <div class="flex items-start">
-          <div class="text-center flex-1 max-w-[220px] px-4">
-            <div class="w-[72px] h-[72px] mx-auto mb-6 border-2 border-border rounded-[10px] flex items-center justify-center font-display text-[22px] font-bold text-text-faint bg-bg-card transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_24px_rgba(232,121,12,0.25)]">
+          <div class="text-center flex-1 max-w-[200px] sm:max-w-[220px] px-3 sm:px-4">
+            <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] mx-auto mb-4 sm:mb-6 border-2 border-border rounded-[10px] flex items-center justify-center font-display text-lg sm:text-[22px] font-bold text-text-faint bg-bg-card transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_24px_rgba(232,121,12,0.25)]">
               {step.num}
             </div>
-            <h3 class="font-display text-[22px] font-semibold mb-2.5 tracking-[0.02em]">{step.title}</h3>
-            <p class="text-[15px] text-text-secondary font-light leading-[1.7]" set:html={step.desc} />
+            <h3 class="font-display text-lg sm:text-[22px] font-semibold mb-2 sm:mb-2.5 tracking-[0.02em]">{step.title}</h3>
+            <p class="text-sm sm:text-[15px] text-text-secondary font-light leading-[1.7]" set:html={step.desc} />
           </div>
           {i < steps.length - 1 && (
-            <div class="hidden lg:flex items-center justify-center text-text-faint pt-[26px] w-12 flex-shrink-0">
+            <div class="hidden lg:flex items-center justify-center text-text-faint pt-[22px] sm:pt-[26px] w-8 sm:w-12 flex-shrink-0">
               <ChevronRight class="w-8 h-8" />
             </div>
           )}

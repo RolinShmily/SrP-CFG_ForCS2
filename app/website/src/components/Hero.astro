@@ -4,22 +4,22 @@ import TerminalDemo from "./TerminalDemo.astro";
 import { Download, BookOpen } from "lucide-astro";
 ---
 
-<section class="pt-[140px] min-h-screen flex flex-col relative">
-  <div class="max-w-[1200px] mx-auto px-7 relative z-1 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-16 items-center flex-1">
-    <div class="pb-12">
-      <div class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.28em] uppercase text-teal mb-6">
+<section class="pt-[60px] md:pt-[80px] min-h-screen flex flex-col relative">
+  <div class="max-w-[1200px] mx-auto px-5 sm:px-7 relative z-1 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-10 lg:gap-16 items-center flex-1">
+    <div class="pb-6 md:pb-8">
+      <div class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.28em] uppercase text-teal mb-5 sm:mb-6">
         <span class="w-[7px] h-[7px] bg-teal rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.3)]"></span>
         COUNTER-STRIKE 2 TOOL
       </div>
-      <h1 class="font-display text-[64px] lg:text-[72px] font-bold leading-none tracking-[0.02em] mb-6">
+      <h1 class="font-display text-[40px] sm:text-[52px] md:text-[64px] lg:text-[72px] font-bold leading-none tracking-[0.02em] mb-5 sm:mb-6">
         SrP-CFG
         <span class="block text-accent">Installer</span>
       </h1>
-      <p class="text-lg text-text-secondary font-light leading-[1.9] mb-10 max-w-[500px]">
+      <p class="text-base sm:text-lg text-text-secondary font-light leading-[1.8] sm:leading-[1.9] mb-8 sm:mb-10 max-w-[500px]">
         一键部署 CS2 配置预设。自动检测路径、冲突智能处理、拖拽安装——<br>
         将繁琐的手动配置流程简化为一次拖放操作。
       </p>
-      <div class="flex gap-4 flex-wrap">
+      <div class="flex gap-3 sm:gap-4 flex-wrap">
         <ButtonLink href="/download" size="lg">
           <Download class="w-5 h-5" />下载安装器
         </ButtonLink>
@@ -35,21 +35,21 @@ import { Download, BookOpen } from "lucide-astro";
     </div>
   </div>
 
-  <div class="mt-16 py-10 border-t border-b border-border bg-gradient-to-b from-bg-card/60 to-transparent">
-    <div class="max-w-[1200px] mx-auto px-7 flex items-center justify-center gap-12">
+  <div class="mt-10 sm:mt-16 py-6 sm:py-10 border-t border-b border-border bg-gradient-to-b from-bg-card/60 to-transparent">
+    <div class="max-w-[1200px] mx-auto px-5 sm:px-7 flex items-center justify-center gap-6 sm:gap-12">
       <div class="text-center">
-        <span class="block font-display text-4xl font-bold text-accent leading-none mb-1.5">3</span>
-        <span class="text-sm text-text-muted">独立安装目标</span>
+        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">3</span>
+        <span class="text-xs sm:text-sm text-text-muted">独立安装目标</span>
       </div>
-      <div class="w-px h-10 bg-border"></div>
+      <div class="w-px h-8 sm:h-10 bg-border"></div>
       <div class="text-center">
-        <span class="block font-display text-4xl font-bold text-accent leading-none mb-1.5">10+</span>
-        <span class="text-sm text-text-muted">预设配置文件</span>
+        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">10+</span>
+        <span class="text-xs sm:text-sm text-text-muted">预设配置文件</span>
       </div>
-      <div class="w-px h-10 bg-border"></div>
+      <div class="w-px h-8 sm:h-10 bg-border"></div>
       <div class="text-center">
-        <span class="block font-display text-4xl font-bold text-accent leading-none mb-1.5">v3.0.0</span>
-        <span class="text-sm text-text-muted">最新版本</span>
+        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">v3.0.0</span>
+        <span class="text-xs sm:text-sm text-text-muted">最新版本</span>
       </div>
     </div>
   </div>
