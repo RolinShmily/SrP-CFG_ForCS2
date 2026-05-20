@@ -18,7 +18,7 @@ const sorted = docs.sort((a, b) => a.id.localeCompare(b.id));
 
 <DocLayout
   title={`${doc.data.title} — SrP-CFG 文档`}
-  description={`SrP-CFG 文档：${doc.data.title}`}
+  description={doc.data.description ?? `SrP-CFG 文档：${doc.data.title}`}
   docs={sorted}
   currentSlug={doc.id}
   headings={headings}
