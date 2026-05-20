@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import { app } from "electron";
+import { spawn } from "child_process";
+import { app, shell } from "electron";
 import type { LogEntry } from "../../renderer/types";
 
 export type LogFn = (entry: Omit<LogEntry, "timestamp">) => void;
@@ -256,41 +257,38 @@ export function deployOverlay(
 
     const prevFiles = installData.install[cat.key].files;
     const prevDirs = installData.install[cat.key].dirs;
-    const stagingNames = new Set([...stagingEntries.files, ...stagingEntries.dirs]);
 
-    // 1. Move previously installed files → save/
+    // 1. Move all previously installed files → save/
     for (const name of prevFiles) {
       const gamePath = path.join(cat.game!, name);
-      if (!fs.existsSync(gamePath) || stagingNames.has(name)) continue;
+      if (!fs.existsSync(gamePath)) continue;
       moveToTarget(saveBase, cat.key, gamePath, name, false, log, "已安装备份");
-      if (!saveData.save[cat.key].files.includes(name)) {
-        saveData.save[cat.key].files.push(name);
-      }
     }
     for (const name of prevDirs) {
       const gamePath = path.join(cat.game!, name);
-      if (!fs.existsSync(gamePath) || stagingNames.has(name)) continue;
+      if (!fs.existsSync(gamePath)) continue;
       moveToTarget(saveBase, cat.key, gamePath, name, true, log, "已安装备份");
-      if (!saveData.save[cat.key].dirs.includes(name)) {
-        saveData.save[cat.key].dirs.push(name);
-      }
     }
+    saveData.save[cat.key].files = [...prevFiles];
+    saveData.save[cat.key].dirs = [...prevDirs];
 
-    // 2. Move conflicting user files → res/
-    for (const name of stagingEntries.files) {
-      const gameFile = path.join(cat.game!, name);
-      if (!fs.existsSync(gameFile)) continue;
-      moveToTarget(resBase, cat.key, gameFile, name, false, log, "冲突文件");
-      if (!resData.res[cat.key].files.includes(name)) {
-        resData.res[cat.key].files.push(name);
+    // 2. On fresh install (install.json empty), move conflicting user files → res/
+    if (prevFiles.length === 0 && prevDirs.length === 0) {
+      for (const name of stagingEntries.files) {
+        const gameFile = path.join(cat.game!, name);
+        if (!fs.existsSync(gameFile)) continue;
+        moveToTarget(resBase, cat.key, gameFile, name, false, log, "冲突文件");
+        if (!resData.res[cat.key].files.includes(name)) {
+          resData.res[cat.key].files.push(name);
+        }
       }
-    }
-    for (const name of stagingEntries.dirs) {
-      const gameDir = path.join(cat.game!, name);
-      if (!fs.existsSync(gameDir)) continue;
-      moveToTarget(resBase, cat.key, gameDir, name, true, log, "冲突文件");
-      if (!resData.res[cat.key].dirs.includes(name)) {
-        resData.res[cat.key].dirs.push(name);
+      for (const name of stagingEntries.dirs) {
+        const gameDir = path.join(cat.game!, name);
+        if (!fs.existsSync(gameDir)) continue;
+        moveToTarget(resBase, cat.key, gameDir, name, true, log, "冲突文件");
+        if (!resData.res[cat.key].dirs.includes(name)) {
+          resData.res[cat.key].dirs.push(name);
+        }
       }
     }
 
@@ -470,7 +468,7 @@ export function deleteInstalledItem(
   return true;
 }
 
-// ── Restore from res (conflict recovery) ──────────────────────
+// ── Restore from res (recover user's original same-name files) ─
 
 export function restoreFromRes(
   category: CategoryKey,
@@ -597,6 +595,345 @@ export function restoreFromSave(
   writeInstall(installData);
 
   log({ category: "backup", level: "success", message: `备份恢复完成，共 ${restored} 项` });
+  return true;
+}
+
+// ── Delete single res item ────────────────────────────────────
+
+export function deleteResItem(
+  category: CategoryKey,
+  name: string,
+  log: LogFn,
+): boolean {
+  const resData = loadResData();
+  const catData = resData.res[category];
+
+  const isFile = catData.files.includes(name);
+  const isDir = catData.dirs.includes(name);
+
+  if (!isFile && !isDir) {
+    log({ category: "file-ops", level: "error", message: `未找到冲突恢复项：${name}` });
+    return false;
+  }
+
+  removeEntry(path.join(getBase(), "res", category), name, isDir);
+
+  if (isFile) catData.files = catData.files.filter((f) => f !== name);
+  else catData.dirs = catData.dirs.filter((d) => d !== name);
+  writeRes(resData);
+
+  log({ category: "file-ops", level: "success", message: `已删除冲突恢复项：${name}` });
+  return true;
+}
+
+// ── Clear entire res category ─────────────────────────────────
+
+export function clearResCategory(
+  category: CategoryKey,
+  log: LogFn,
+): void {
+  const catDir = path.join(getBase(), "res", category);
+  if (fs.existsSync(catDir)) {
+    fs.rmSync(catDir, { recursive: true, force: true });
+    fs.mkdirSync(catDir, { recursive: true });
+  }
+
+  const resData = loadResData();
+  resData.res[category].files = [];
+  resData.res[category].dirs = [];
+  writeRes(resData);
+
+  log({ category: "file-ops", level: "success", message: `已清除 ${category} 冲突恢复文件` });
+}
+
+// ── Delete single save item ───────────────────────────────────
+
+export function deleteSaveItem(
+  category: CategoryKey,
+  name: string,
+  log: LogFn,
+): boolean {
+  const saveData = loadSaveData();
+  const catData = saveData.save[category];
+
+  const isFile = catData.files.includes(name);
+  const isDir = catData.dirs.includes(name);
+
+  if (!isFile && !isDir) {
+    log({ category: "file-ops", level: "error", message: `未找到配置备份项：${name}` });
+    return false;
+  }
+
+  removeEntry(path.join(getBase(), "save", category), name, isDir);
+
+  if (isFile) catData.files = catData.files.filter((f) => f !== name);
+  else catData.dirs = catData.dirs.filter((d) => d !== name);
+  writeSave(saveData);
+
+  log({ category: "file-ops", level: "success", message: `已删除配置备份项：${name}` });
+  return true;
+}
+
+// ── Clear entire save category ────────────────────────────────
+
+export function clearSaveCategory(
+  category: CategoryKey,
+  log: LogFn,
+): void {
+  const catDir = path.join(getBase(), "save", category);
+  if (fs.existsSync(catDir)) {
+    fs.rmSync(catDir, { recursive: true, force: true });
+    fs.mkdirSync(catDir, { recursive: true });
+  }
+
+  const saveData = loadSaveData();
+  saveData.save[category].files = [];
+  saveData.save[category].dirs = [];
+  writeSave(saveData);
+
+  log({ category: "file-ops", level: "success", message: `已清除 ${category} 配置备份` });
+}
+
+// ── Restore entire save category ─────────────────────────────
+
+export function restoreSaveCategory(
+  category: CategoryKey,
+  gamePaths: GamePaths,
+  log: LogFn,
+): number {
+  const saveData = loadSaveData();
+  const catData = saveData.save[category];
+
+  if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
+
+  let gameDir: string | null = null;
+  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  else if (category === "annotations") gameDir = gamePaths.annotationsPath;
+  else if (category === "video") gameDir = gamePaths.videoPath;
+
+  if (!gameDir) {
+    log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
+    return 0;
+  }
+
+  const saveDir = path.join(getBase(), "save", category);
+  let restored = 0;
+
+  for (const name of [...catData.dirs, ...catData.files]) {
+    const src = path.join(saveDir, name);
+    if (!fs.existsSync(src)) continue;
+    const dst = path.join(gameDir, name);
+    try {
+      const isDir = fs.statSync(src).isDirectory();
+      if (isDir) copyDirRecursive(src, dst);
+      else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
+      restored++;
+    } catch { /* skip */ }
+  }
+
+  // Update install.json
+  const installData = loadInstallData();
+  installData.install[category].files = [...catData.files];
+  installData.install[category].dirs = [...catData.dirs];
+  writeInstall(installData);
+
+  // Clear save
+  fs.rmSync(saveDir, { recursive: true, force: true });
+  fs.mkdirSync(saveDir, { recursive: true });
+  saveData.save[category].files = [];
+  saveData.save[category].dirs = [];
+  writeSave(saveData);
+
+  log({ category: "backup", level: "success", message: `已恢复 ${category} 配置备份，共 ${restored} 项` });
+  return restored;
+}
+
+// ── Restore single save item ─────────────────────────────────
+
+export function restoreSaveItem(
+  category: CategoryKey,
+  name: string,
+  gamePaths: GamePaths,
+  log: LogFn,
+): boolean {
+  const saveData = loadSaveData();
+  const catData = saveData.save[category];
+  const isFile = catData.files.includes(name);
+  const isDir = catData.dirs.includes(name);
+
+  if (!isFile && !isDir) {
+    log({ category: "file-ops", level: "error", message: `未找到配置备份项：${name}` });
+    return false;
+  }
+
+  let gameDir: string | null = null;
+  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  else if (category === "annotations") gameDir = gamePaths.annotationsPath;
+  else if (category === "video") gameDir = gamePaths.videoPath;
+
+  if (!gameDir) {
+    log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
+    return false;
+  }
+
+  const src = path.join(getBase(), "save", category, name);
+  if (!fs.existsSync(src)) {
+    log({ category: "file-ops", level: "error", message: `恢复源不存在：${name}` });
+    return false;
+  }
+
+  const dst = path.join(gameDir, name);
+  try {
+    if (fs.existsSync(dst)) {
+      if (fs.statSync(dst).isDirectory()) fs.rmSync(dst, { recursive: true, force: true });
+      else fs.unlinkSync(dst);
+    }
+    if (isDir) copyDirRecursive(src, dst);
+    else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
+    fs.rmSync(src, { recursive: true, force: true });
+  } catch (e: any) {
+    log({ category: "file-ops", level: "error", message: `恢复失败：${name}`, detail: e.message });
+    return false;
+  }
+
+  if (isFile) catData.files = catData.files.filter((f) => f !== name);
+  else catData.dirs = catData.dirs.filter((d) => d !== name);
+  writeSave(saveData);
+
+  const installData = loadInstallData();
+  if (isFile && !installData.install[category].files.includes(name)) installData.install[category].files.push(name);
+  if (isDir && !installData.install[category].dirs.includes(name)) installData.install[category].dirs.push(name);
+  writeInstall(installData);
+
+  log({ category: "file-ops", level: "success", message: `已恢复配置备份项：${name}` });
+  return true;
+}
+
+// ── Restore entire res category ──────────────────────────────
+
+export function restoreResCategory(
+  category: CategoryKey,
+  gamePaths: GamePaths,
+  log: LogFn,
+): number {
+  const resData = loadResData();
+  const catData = resData.res[category];
+
+  if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
+
+  let gameDir: string | null = null;
+  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  else if (category === "annotations") gameDir = gamePaths.annotationsPath;
+  else if (category === "video") gameDir = gamePaths.videoPath;
+
+  if (!gameDir) {
+    log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
+    return 0;
+  }
+
+  const resDir = path.join(getBase(), "res", category);
+  let restored = 0;
+
+  for (const name of [...catData.dirs, ...catData.files]) {
+    const src = path.join(resDir, name);
+    if (!fs.existsSync(src)) continue;
+    const dst = path.join(gameDir, name);
+    try {
+      if (fs.existsSync(dst)) {
+        if (fs.statSync(dst).isDirectory()) fs.rmSync(dst, { recursive: true, force: true });
+        else fs.unlinkSync(dst);
+      }
+      const isDir = fs.statSync(src).isDirectory();
+      if (isDir) copyDirRecursive(src, dst);
+      else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
+      restored++;
+    } catch { /* skip */ }
+  }
+
+  // Clear res
+  fs.rmSync(resDir, { recursive: true, force: true });
+  fs.mkdirSync(resDir, { recursive: true });
+  resData.res[category].files = [];
+  resData.res[category].dirs = [];
+  writeRes(resData);
+
+  log({ category: "file-ops", level: "success", message: `已恢复 ${category} 冲突文件，共 ${restored} 项` });
+  return restored;
+}
+
+// ── Uninstall installed category ─────────────────────────────
+
+export function clearInstallCategory(
+  category: CategoryKey,
+  gamePaths: GamePaths,
+  log: LogFn,
+): number {
+  const installData = loadInstallData();
+  const catData = installData.install[category];
+
+  if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
+
+  let gameDir: string | null = null;
+  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  else if (category === "annotations") gameDir = gamePaths.annotationsPath;
+  else if (category === "video") gameDir = gamePaths.videoPath;
+
+  if (!gameDir) {
+    log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法卸载：${category}` });
+    return 0;
+  }
+
+  let removed = 0;
+  for (const name of [...catData.files, ...catData.dirs]) {
+    const isDir = catData.dirs.includes(name);
+    removeEntry(gameDir, name, isDir);
+    removed++;
+  }
+
+  catData.files = [];
+  catData.dirs = [];
+  writeInstall(installData);
+
+  log({ category: "file-ops", level: "success", message: `已卸载 ${category} 配置，共 ${removed} 项` });
+  return removed;
+}
+
+// ── Open item (file in notepad / dir in explorer) ────────────
+
+export function openItem(
+  storage: "install" | "save" | "res",
+  category: CategoryKey,
+  name: string,
+  gamePaths: GamePaths,
+  log: LogFn,
+): boolean {
+  let filePath: string;
+
+  if (storage === "install") {
+    let gameDir: string | null = null;
+    if (category === "cfg") gameDir = gamePaths.cfgPath;
+    else if (category === "annotations") gameDir = gamePaths.annotationsPath;
+    else if (category === "video") gameDir = gamePaths.videoPath;
+    if (!gameDir) {
+      log({ category: "file-ops", level: "error", message: `未检测到游戏目录` });
+      return false;
+    }
+    filePath = path.join(gameDir, name);
+  } else {
+    filePath = path.join(getBase(), storage, category, name);
+  }
+
+  if (!fs.existsSync(filePath)) {
+    log({ category: "file-ops", level: "error", message: `文件不存在：${name}` });
+    return false;
+  }
+
+  const isDir = fs.statSync(filePath).isDirectory();
+  if (isDir) {
+    shell.openPath(filePath);
+  } else {
+    spawn("notepad.exe", [filePath], { detached: true, stdio: "ignore" }).unref();
+  }
   return true;
 }
 

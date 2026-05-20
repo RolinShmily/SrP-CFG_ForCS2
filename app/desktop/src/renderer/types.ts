@@ -160,14 +160,25 @@ export interface ElectronAPI {
   // Applied Config (install.json)
   getInstalledData: () => Promise<InstalledData>;
   deleteInstalledItem: (category: string, name: string) => Promise<boolean>;
+  clearInstallCategory: (category: string) => Promise<number>;
+
+  // Open item (file in notepad / dir in explorer)
+  openItem: (storage: "install" | "save" | "res", category: string, name: string) => Promise<boolean>;
 
   // Conflict Recovery (res.json)
   getResData: () => Promise<ResData>;
   restoreFromRes: (category: string, name: string) => Promise<boolean>;
+  deleteResItem: (category: string, name: string) => Promise<boolean>;
+  clearResCategory: (category: string) => Promise<void>;
+  restoreResCategory: (category: string) => Promise<number>;
 
   // Backup (save.json)
   getSaveData: () => Promise<SaveData>;
   restoreFromSave: () => Promise<boolean>;
+  deleteSaveItem: (category: string, name: string) => Promise<boolean>;
+  clearSaveCategory: (category: string) => Promise<void>;
+  restoreSaveCategory: (category: string) => Promise<number>;
+  restoreSaveItem: (category: string, name: string) => Promise<boolean>;
   openSaveFolder: () => Promise<void>;
   openResFolder: () => Promise<void>;
 

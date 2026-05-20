@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { FolderOpen, FileText, Map, Monitor, Loader2, ChevronDown, Trash2 } from "lucide-react";
+import { FolderOpen, FileText, Map, Monitor, Loader2, ChevronDown, Trash2, PackageX, ExternalLink } from "lucide-react";
 import type { InstalledData, CategoryData } from "../types";
 
 const sectionIcons: Record<string, React.ReactNode> = {
@@ -14,11 +14,42 @@ const sectionLabels: Record<string, string> = {
   video: "视频预设",
 };
 
+function SmallBtn({
+  busyKey,
+  currentBusy,
+  onClick,
+  color,
+  icon,
+  label,
+}: {
+  busyKey: string;
+  currentBusy: string | null;
+  onClick: (e: React.MouseEvent) => void;
+  color: "accent" | "red";
+  icon: React.ReactNode;
+  label: string;
+}) {
+  const colorMap = {
+    accent: "text-accent hover:bg-accent/10 border-accent/20",
+    red: "text-red-400 hover:bg-red-500/10 border-red-400/20",
+  };
+  return (
+    <button
+      onClick={onClick}
+      disabled={currentBusy !== null}
+      className={`flex items-center gap-1 px-2 py-1 text-[10px] bg-bg-card disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer border ${colorMap[color]}`}
+    >
+      {currentBusy === busyKey ? <Loader2 size={10} className="animate-spin" /> : icon}
+      {label}
+    </button>
+  );
+}
+
 export default function AppliedConfigPage() {
   const [data, setData] = useState<InstalledData | null>(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [deleting, setDeleting] = useState<string | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -37,20 +68,15 @@ export default function AppliedConfigPage() {
   const toggle = (key: string) =>
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const handleDelete = async (category: string, name: string) => {
-    const key = `${category}/${name}`;
-    if (deleting) return;
-    setDeleting(key);
+  const runAction = async (key: string, action: () => Promise<any>) => {
+    if (busy) return;
+    setBusy(key);
     try {
-      await window.api.deleteInstalledItem(category, name);
+      await action();
       await loadData();
     } finally {
-      setDeleting(null);
+      setBusy(null);
     }
-  };
-
-  const handleOpenFolder = async (path: string) => {
-    await window.api.openExternal(path);
   };
 
   if (loading) {
@@ -116,7 +142,7 @@ export default function AppliedConfigPage() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleOpenFolder(cat.data.path);
+                      window.api.openExternal(cat.data.path);
                     }}
                     className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-text-muted hover:text-accent hover:bg-accent-bg rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-border"
                   >
@@ -124,6 +150,21 @@ export default function AppliedConfigPage() {
                     打开目标目录
                   </button>
                 )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    runAction(`uninstall:${cat.key}`, () => window.api.clearInstallCategory(cat.key));
+                  }}
+                  disabled={busy !== null}
+                  className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-red-400 hover:bg-red-500/10 disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-red-400/20"
+                >
+                  {busy === `uninstall:${cat.key}` ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <PackageX size={13} />
+                  )}
+                  卸载配置
+                </button>
                 <ChevronDown
                   size={16}
                   className={`text-text-faint transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
@@ -135,60 +176,52 @@ export default function AppliedConfigPage() {
             {isOpen && (
               <div className="px-4 pb-4 pt-0 space-y-1">
                 {/* Dirs */}
-                {cat.data.dirs.map((name) => {
-                  const delKey = `${cat.key}/${name}`;
-                  return (
-                    <div
-                      key={name}
-                      className="flex items-center justify-between gap-2 px-3 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs font-mono text-text"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <FolderOpen size={12} className="text-text-faint shrink-0" />
-                        <span className="truncate">{name}/</span>
-                      </div>
-                      <button
-                        onClick={() => handleDelete(cat.key, name)}
-                        disabled={deleting !== null}
-                        title="删除"
-                        className="p-1.5 text-text-faint hover:text-red disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer bg-transparent border-none shrink-0"
+                {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
+                  ({ name, isDir }) => {
+                    const itemKey = `${cat.key}/${name}`;
+                    return (
+                      <div
+                        key={name}
+                        className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs"
                       >
-                        {deleting === delKey ? (
-                          <Loader2 size={12} className="animate-spin" />
-                        ) : (
-                          <Trash2 size={12} />
-                        )}
-                      </button>
-                    </div>
-                  );
-                })}
-
-                {/* Files */}
-                {cat.data.files.map((name) => {
-                  const delKey = `${cat.key}/${name}`;
-                  return (
-                    <div
-                      key={name}
-                      className="flex items-center justify-between gap-2 px-3 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs font-mono text-text"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <FileText size={12} className="text-text-faint shrink-0" />
-                        <span className="truncate">{name}</span>
+                        <div className="flex items-center gap-2 min-w-0">
+                          {isDir ? (
+                            <FolderOpen size={12} className="text-text-faint shrink-0" />
+                          ) : (
+                            <FileText size={12} className="text-text-faint shrink-0" />
+                          )}
+                          <span className="truncate font-mono text-text">
+                            {name}{isDir ? "/" : ""}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <SmallBtn
+                            busyKey={`delete:${itemKey}`}
+                            currentBusy={busy}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              runAction(`delete:${itemKey}`, () => window.api.deleteInstalledItem(cat.key, name));
+                            }}
+                            color="red"
+                            icon={<Trash2 size={10} />}
+                            label="删除"
+                          />
+                          <SmallBtn
+                            busyKey={`open:${itemKey}`}
+                            currentBusy={busy}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              runAction(`open:${itemKey}`, () => window.api.openItem("install", cat.key, name));
+                            }}
+                            color="accent"
+                            icon={<ExternalLink size={10} />}
+                            label="打开"
+                          />
+                        </div>
                       </div>
-                      <button
-                        onClick={() => handleDelete(cat.key, name)}
-                        disabled={deleting !== null}
-                        title="删除"
-                        className="p-1.5 text-text-faint hover:text-red disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer bg-transparent border-none shrink-0"
-                      >
-                        {deleting === delKey ? (
-                          <Loader2 size={12} className="animate-spin" />
-                        ) : (
-                          <Trash2 size={12} />
-                        )}
-                      </button>
-                    </div>
-                  );
-                })}
+                    );
+                  },
+                )}
 
                 {/* Target path */}
                 {cat.data.path && (

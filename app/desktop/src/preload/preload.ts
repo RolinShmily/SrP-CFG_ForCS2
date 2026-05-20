@@ -29,15 +29,35 @@ contextBridge.exposeInMainWorld("api", {
   getInstalledData: () => ipcRenderer.invoke("installer:getInstalledData"),
   deleteInstalledItem: (category: string, name: string) =>
     ipcRenderer.invoke("installer:deleteInstalledItem", category, name),
+  clearInstallCategory: (category: string) =>
+    ipcRenderer.invoke("installer:clearInstallCategory", category),
+
+  // Open item
+  openItem: (storage: "install" | "save" | "res", category: string, name: string) =>
+    ipcRenderer.invoke("installer:openItem", storage, category, name),
 
   // Conflict recovery (res.json)
   getResData: () => ipcRenderer.invoke("installer:getResData"),
   restoreFromRes: (category: string, name: string) =>
     ipcRenderer.invoke("installer:restoreFromRes", category, name),
+  deleteResItem: (category: string, name: string) =>
+    ipcRenderer.invoke("installer:deleteResItem", category, name),
+  clearResCategory: (category: string) =>
+    ipcRenderer.invoke("installer:clearResCategory", category),
+  restoreResCategory: (category: string) =>
+    ipcRenderer.invoke("installer:restoreResCategory", category),
 
   // Backup (save.json)
   getSaveData: () => ipcRenderer.invoke("installer:getSaveData"),
   restoreFromSave: () => ipcRenderer.invoke("installer:restoreFromSave"),
+  deleteSaveItem: (category: string, name: string) =>
+    ipcRenderer.invoke("installer:deleteSaveItem", category, name),
+  clearSaveCategory: (category: string) =>
+    ipcRenderer.invoke("installer:clearSaveCategory", category),
+  restoreSaveCategory: (category: string) =>
+    ipcRenderer.invoke("installer:restoreSaveCategory", category),
+  restoreSaveItem: (category: string, name: string) =>
+    ipcRenderer.invoke("installer:restoreSaveItem", category, name),
   openSaveFolder: () => ipcRenderer.invoke("installer:openSaveFolder"),
   openResFolder: () => ipcRenderer.invoke("installer:openResFolder"),
 

@@ -1,5 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
-import { FolderOpen, FileText, Map, Monitor, Loader2, ChevronDown, RotateCcw, AlertTriangle, Save } from "lucide-react";
+import {
+  FolderOpen,
+  FileText,
+  Map,
+  Monitor,
+  Loader2,
+  ChevronDown,
+  RotateCcw,
+  AlertTriangle,
+  Save,
+  Trash2,
+  ExternalLink,
+} from "lucide-react";
 import type { ResData, SaveData, CategoryData } from "../types";
 
 const sectionIcons: Record<string, React.ReactNode> = {
@@ -19,8 +31,7 @@ export default function BackupRestorePage() {
   const [saveData, setSaveData] = useState<SaveData | null>(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [restoring, setRestoring] = useState<string | null>(null);
-  const [restoringSave, setRestoringSave] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -43,28 +54,23 @@ export default function BackupRestorePage() {
   const toggle = (key: string) =>
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const handleRestoreRes = async (category: string, name: string) => {
-    const key = `${category}/${name}`;
-    if (restoring) return;
-    setRestoring(key);
+  // ── Generic action wrapper ────────────────────────────────────
+  const runAction = async (key: string, action: () => Promise<any>) => {
+    if (busy) return;
+    setBusy(key);
     try {
-      await window.api.restoreFromRes(category, name);
+      await action();
       await loadData();
     } finally {
-      setRestoring(null);
+      setBusy(null);
     }
   };
 
-  const handleRestoreSave = async () => {
-    if (restoringSave) return;
-    setRestoringSave(true);
-    try {
-      await window.api.restoreFromSave();
-      await loadData();
-    } finally {
-      setRestoringSave(false);
-    }
-  };
+  // ── Helpers ──────────────────────────────────────────────────
+  type CatEntry = { key: "cfg" | "annotations" | "video"; data: CategoryData };
+  const toCategories = (data: ResData | SaveData): CatEntry[] =>
+    (["cfg", "annotations", "video"] as const).map((k) => ({ key: k, data: data[k] }));
+  const hasItems = (c: CatEntry) => c.data.files.length > 0 || c.data.dirs.length > 0;
 
   if (loading) {
     return (
@@ -78,195 +84,228 @@ export default function BackupRestorePage() {
     );
   }
 
-  // Check if res has any entries
-  const resCategories: { key: keyof ResData; data: CategoryData }[] = resData
-    ? [
-        { key: "cfg", data: resData.cfg },
-        { key: "annotations", data: resData.annotations },
-        { key: "video", data: resData.video },
-      ]
-    : [];
-  const hasResEntries = resCategories.some(
-    (c) => c.data.files.length > 0 || c.data.dirs.length > 0,
-  );
+  // ── Category header with buttons ─────────────────────────────
+  function CategoryHeader({
+    prefix,
+    catKey,
+    totalItems,
+    accentLabel,
+    buttons,
+  }: {
+    prefix: string;
+    catKey: string;
+    totalItems: number;
+    accentLabel?: string;
+    buttons: React.ReactNode;
+  }) {
+    const isOpen = expanded[`${prefix}-${catKey}`] ?? false;
+    return (
+      <div
+        onClick={() => toggle(`${prefix}-${catKey}`)}
+        className="flex items-center justify-between px-3 py-2 cursor-pointer select-none"
+      >
+        <div className="flex items-center gap-2">
+          {sectionIcons[catKey]}
+          <span className="text-xs font-semibold text-text-secondary">
+            {sectionLabels[catKey]}
+          </span>
+          <span className={`text-[10px] ${accentLabel ? "text-accent/70" : "text-text-faint"}`}>
+            {totalItems} {accentLabel ?? "项"}
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {buttons}
+          <ChevronDown
+            size={14}
+            className={`text-text-faint transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
+        </div>
+      </div>
+    );
+  }
 
-  // Check if save has any entries
-  const saveCategories: { key: keyof SaveData; data: CategoryData }[] = saveData
-    ? [
-        { key: "cfg", data: saveData.cfg },
-        { key: "annotations", data: saveData.annotations },
-        { key: "video", data: saveData.video },
-      ]
-    : [];
-  const hasSaveEntries = saveCategories.some(
-    (c) => c.data.files.length > 0 || c.data.dirs.length > 0,
-  );
+  // ── Action buttons ───────────────────────────────────────────
+  function SmallBtn({
+    busyKey,
+    currentBusy,
+    onClick,
+    color,
+    icon,
+    label,
+  }: {
+    busyKey: string;
+    currentBusy: string | null;
+    onClick: (e: React.MouseEvent) => void;
+    color: "accent" | "red" | "green";
+    icon: React.ReactNode;
+    label: string;
+  }) {
+    const colorMap = {
+      accent: "text-accent hover:bg-accent/10 border-accent/20",
+      red: "text-red-400 hover:bg-red-500/10 border-red-400/20",
+      green: "text-green hover:bg-green/10 border-green/20",
+    };
+    return (
+      <button
+        onClick={onClick}
+        disabled={currentBusy !== null}
+        className={`flex items-center gap-1 px-2 py-1 text-[10px] bg-bg-card disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer border ${colorMap[color]}`}
+      >
+        {currentBusy === busyKey ? <Loader2 size={10} className="animate-spin" /> : icon}
+        {label}
+      </button>
+    );
+  }
+
+  // ── Render a single item row ─────────────────────────────────
+  function ItemRow({
+    name,
+    isDir,
+    buttons,
+  }: {
+    name: string;
+    isDir: boolean;
+    buttons: React.ReactNode;
+  }) {
+    return (
+      <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs">
+        <div className="flex items-center gap-2 min-w-0">
+          {isDir ? (
+            <FolderOpen size={12} className="text-text-faint shrink-0" />
+          ) : (
+            <FileText size={12} className="text-text-faint shrink-0" />
+          )}
+          <span className="truncate font-mono text-text">
+            {name}{isDir ? "/" : ""}
+          </span>
+        </div>
+        <div className="flex items-center gap-1 shrink-0">{buttons}</div>
+      </div>
+    );
+  }
+
+  const resCats = resData ? toCategories(resData) : [];
+  const saveCats = saveData ? toCategories(saveData) : [];
+
+  const hasResEntries = resCats.some(hasItems);
+  const hasSaveEntries = saveCats.some(hasItems);
 
   return (
     <div className="space-y-5">
       <h1 className="font-display text-2xl font-bold">备份与恢复</h1>
 
-      {/* ── Conflict Recovery (res.json) ───────────────────── */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <AlertTriangle size={16} className="text-accent" />
-          <h2 className="font-display text-sm font-semibold text-text-secondary">
-            冲突恢复
-          </h2>
-          <span className="text-xs text-text-faint">安装时被替换的原文件</span>
-        </div>
-
-        {!hasResEntries ? (
-          <p className="text-xs text-text-faint py-3 text-center">暂无冲突恢复文件</p>
-        ) : (
-          resCategories.map((cat) => {
-            if (cat.data.files.length === 0 && cat.data.dirs.length === 0) return null;
-            const isOpen = expanded[cat.key] ?? false;
-            const totalItems = cat.data.files.length + cat.data.dirs.length;
-
-            return (
-              <div
-                key={cat.key}
-                className="border border-border rounded-[var(--radius-sm)]"
-              >
-                <div
-                  onClick={() => toggle(cat.key)}
-                  className="flex items-center justify-between px-3 py-2 cursor-pointer select-none"
-                >
-                  <div className="flex items-center gap-2">
-                    {sectionIcons[cat.key]}
-                    <span className="text-xs font-semibold text-text-secondary">
-                      {sectionLabels[cat.key]}
-                    </span>
-                    <span className="text-[10px] text-accent/70">
-                      {totalItems} 个冲突文件
-                    </span>
-                  </div>
-                  <ChevronDown
-                    size={14}
-                    className={`text-text-faint transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                  />
-                </div>
-
-                {isOpen && (
-                  <div className="px-3 pb-3 space-y-1">
-                    {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
-                      ({ name, isDir }) => {
-                        const restoreKey = `${cat.key}/${name}`;
-                        return (
-                          <div
-                            key={name}
-                            className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs"
-                          >
-                            <div className="flex items-center gap-2 min-w-0">
-                              {isDir ? (
-                                <FolderOpen size={12} className="text-text-faint shrink-0" />
-                              ) : (
-                                <FileText size={12} className="text-text-faint shrink-0" />
-                              )}
-                              <span className="truncate font-mono text-text">
-                                {name}{isDir ? "/" : ""}
-                              </span>
-                            </div>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleRestoreRes(cat.key, name);
-                              }}
-                              disabled={restoring !== null}
-                              className="flex items-center gap-1 px-2 py-1 text-[10px] bg-bg-card hover:bg-accent/10 disabled:opacity-40 disabled:cursor-not-allowed text-accent rounded-[var(--radius-sm)] transition-colors cursor-pointer border border-accent/20 shrink-0"
-                            >
-                              {restoring === restoreKey ? (
-                                <Loader2 size={10} className="animate-spin" />
-                              ) : (
-                                <RotateCcw size={10} />
-                              )}
-                              恢复
-                            </button>
-                          </div>
-                        );
-                      },
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* ── Config Backup (save.json) ─────────────────────── */}
+      {/* ── 配置备份 (save.json) ─────────────────────────────── */}
       <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Save size={16} className="text-green" />
-            <h2 className="font-display text-sm font-semibold text-text-secondary">
-              配置备份
-            </h2>
+            <h2 className="font-display text-sm font-semibold text-text-secondary">配置备份</h2>
             <span className="text-xs text-text-faint">覆盖安装前自动备份的文件</span>
           </div>
           {hasSaveEntries && (
-            <button
-              onClick={handleRestoreSave}
-              disabled={restoringSave}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-bg-raised hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed text-text-secondary rounded-[var(--radius-sm)] transition-colors cursor-pointer border border-border"
-            >
-              {restoringSave ? (
-                <Loader2 size={12} className="animate-spin" />
-              ) : (
-                <RotateCcw size={12} />
-              )}
-              全部恢复
-            </button>
+            <SmallBtn
+              busyKey="save:restoreAll"
+              currentBusy={busy}
+              onClick={(e) => {
+                e.stopPropagation();
+                runAction("save:restoreAll", () => window.api.restoreFromSave());
+              }}
+              color="green"
+              icon={<RotateCcw size={12} />}
+              label="全部恢复"
+            />
           )}
         </div>
 
         {!hasSaveEntries ? (
           <p className="text-xs text-text-faint py-3 text-center">暂无配置备份</p>
         ) : (
-          saveCategories.map((cat) => {
-            if (cat.data.files.length === 0 && cat.data.dirs.length === 0) return null;
+          saveCats.filter(hasItems).map((cat) => {
+            const totalItems = cat.data.files.length + cat.data.dirs.length;
             const isOpen = expanded[`save-${cat.key}`] ?? false;
-
             return (
-              <div
-                key={`save-${cat.key}`}
-                className="border border-border rounded-[var(--radius-sm)]"
-              >
-                <div
-                  onClick={() => toggle(`save-${cat.key}`)}
-                  className="flex items-center justify-between px-3 py-2 cursor-pointer select-none"
-                >
-                  <div className="flex items-center gap-2">
-                    {sectionIcons[cat.key]}
-                    <span className="text-xs font-semibold text-text-secondary">
-                      {sectionLabels[cat.key]}
-                    </span>
-                    <span className="text-[10px] text-text-faint">
-                      {cat.data.files.length + cat.data.dirs.length} 项
-                    </span>
-                  </div>
-                  <ChevronDown
-                    size={14}
-                    className={`text-text-faint transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                  />
-                </div>
-
+              <div key={`save-${cat.key}`} className="border border-border rounded-[var(--radius-sm)]">
+                <CategoryHeader
+                  prefix="save"
+                  catKey={cat.key}
+                  totalItems={totalItems}
+                  buttons={
+                    <>
+                      <SmallBtn
+                        busyKey={`save:restore:${cat.key}`}
+                        currentBusy={busy}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          runAction(`save:restore:${cat.key}`, () => window.api.restoreSaveCategory(cat.key));
+                        }}
+                        color="green"
+                        icon={<RotateCcw size={10} />}
+                        label="恢复"
+                      />
+                      <SmallBtn
+                        busyKey={`save:clear:${cat.key}`}
+                        currentBusy={busy}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          runAction(`save:clear:${cat.key}`, () => window.api.clearSaveCategory(cat.key));
+                        }}
+                        color="red"
+                        icon={<Trash2 size={10} />}
+                        label="删除"
+                      />
+                    </>
+                  }
+                />
                 {isOpen && (
                   <div className="px-3 pb-3 space-y-1">
-                    {[...cat.data.dirs, ...cat.data.files].map((name) => (
-                      <div
-                        key={name}
-                        className="flex items-center gap-2 px-2.5 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs font-mono text-text"
-                      >
-                        <FileText size={12} className="text-text-faint shrink-0" />
-                        <span className="truncate">{name}</span>
-                      </div>
-                    ))}
+                    {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
+                      ({ name, isDir }) => (
+                        <ItemRow
+                          key={name}
+                          name={name}
+                          isDir={isDir}
+                          buttons={
+                            <>
+                              <SmallBtn
+                                busyKey={`save:item:restore:${cat.key}/${name}`}
+                                currentBusy={busy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAction(`save:item:restore:${cat.key}/${name}`, () => window.api.restoreSaveItem(cat.key, name));
+                                }}
+                                color="green"
+                                icon={<RotateCcw size={10} />}
+                                label="恢复"
+                              />
+                              <SmallBtn
+                                busyKey={`save:item:delete:${cat.key}/${name}`}
+                                currentBusy={busy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAction(`save:item:delete:${cat.key}/${name}`, () => window.api.deleteSaveItem(cat.key, name));
+                                }}
+                                color="red"
+                                icon={<Trash2 size={10} />}
+                                label="删除"
+                              />
+                              <SmallBtn
+                                busyKey={`save:item:open:${cat.key}/${name}`}
+                                currentBusy={busy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAction(`save:item:open:${cat.key}/${name}`, () => window.api.openItem("save", cat.key, name));
+                                }}
+                                color="accent"
+                                icon={<ExternalLink size={10} />}
+                                label="打开"
+                              />
+                            </>
+                          }
+                        />
+                      ),
+                    )}
                     {cat.data.path && (
-                      <p className="text-[10px] text-text-faint font-mono break-all pt-1">
-                        {cat.data.path}
-                      </p>
+                      <p className="text-[10px] text-text-faint font-mono break-all pt-1">{cat.data.path}</p>
                     )}
                   </div>
                 )}
@@ -276,14 +315,114 @@ export default function BackupRestorePage() {
         )}
       </div>
 
-      {/* ── Open folders ──────────────────────────────── */}
+      {/* ── 冲突恢复 (res.json) ──────────────────────────────── */}
       <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <h2 className="font-display text-sm font-semibold text-text-secondary">
-          文件位置浏览
-        </h2>
-        <p className="text-sm text-text-muted">
-          打开备份或恢复文件所在目录，查看和管理文件。
-        </p>
+        <div className="flex items-center gap-2">
+          <AlertTriangle size={16} className="text-accent" />
+          <h2 className="font-display text-sm font-semibold text-text-secondary">冲突恢复</h2>
+          <span className="text-xs text-text-faint">用户原有重名文件</span>
+        </div>
+
+        {!hasResEntries ? (
+          <p className="text-xs text-text-faint py-3 text-center">暂无冲突恢复文件</p>
+        ) : (
+          resCats.filter(hasItems).map((cat) => {
+            const totalItems = cat.data.files.length + cat.data.dirs.length;
+            const isOpen = expanded[`res-${cat.key}`] ?? false;
+            return (
+              <div key={`res-${cat.key}`} className="border border-border rounded-[var(--radius-sm)]">
+                <CategoryHeader
+                  prefix="res"
+                  catKey={cat.key}
+                  totalItems={totalItems}
+                  accentLabel="个冲突文件"
+                  buttons={
+                    <>
+                      <SmallBtn
+                        busyKey={`res:restore:${cat.key}`}
+                        currentBusy={busy}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          runAction(`res:restore:${cat.key}`, () => window.api.restoreResCategory(cat.key));
+                        }}
+                        color="green"
+                        icon={<RotateCcw size={10} />}
+                        label="恢复"
+                      />
+                      <SmallBtn
+                        busyKey={`res:clear:${cat.key}`}
+                        currentBusy={busy}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          runAction(`res:clear:${cat.key}`, () => window.api.clearResCategory(cat.key));
+                        }}
+                        color="red"
+                        icon={<Trash2 size={10} />}
+                        label="删除"
+                      />
+                    </>
+                  }
+                />
+                {isOpen && (
+                  <div className="px-3 pb-3 space-y-1">
+                    {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
+                      ({ name, isDir }) => (
+                        <ItemRow
+                          key={name}
+                          name={name}
+                          isDir={isDir}
+                          buttons={
+                            <>
+                              <SmallBtn
+                                busyKey={`res:item:restore:${cat.key}/${name}`}
+                                currentBusy={busy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAction(`res:item:restore:${cat.key}/${name}`, () => window.api.restoreFromRes(cat.key, name));
+                                }}
+                                color="green"
+                                icon={<RotateCcw size={10} />}
+                                label="恢复"
+                              />
+                              <SmallBtn
+                                busyKey={`res:item:delete:${cat.key}/${name}`}
+                                currentBusy={busy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAction(`res:item:delete:${cat.key}/${name}`, () => window.api.deleteResItem(cat.key, name));
+                                }}
+                                color="red"
+                                icon={<Trash2 size={10} />}
+                                label="删除"
+                              />
+                              <SmallBtn
+                                busyKey={`res:item:open:${cat.key}/${name}`}
+                                currentBusy={busy}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAction(`res:item:open:${cat.key}/${name}`, () => window.api.openItem("res", cat.key, name));
+                                }}
+                                color="accent"
+                                icon={<ExternalLink size={10} />}
+                                label="打开"
+                              />
+                            </>
+                          }
+                        />
+                      ),
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* ── Open folders ──────────────────────────────────────── */}
+      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
+        <h2 className="font-display text-sm font-semibold text-text-secondary">文件位置浏览</h2>
+        <p className="text-sm text-text-muted">打开备份或恢复文件所在目录，查看和管理文件。</p>
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.api.openSaveFolder()}

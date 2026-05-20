@@ -213,6 +213,14 @@ export function registerIpcHandlers() {
     );
   });
 
+  ipcMain.handle("installer:clearInstallCategory", async (_e, category: string) => {
+    return installer.clearInstallCategory(
+      category as installer.CategoryKey,
+      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      sendLog,
+    );
+  });
+
   // ── Conflict Recovery (res.json) ───────────────────────────
 
   ipcMain.handle("installer:getResData", async () => {
@@ -223,6 +231,22 @@ export function registerIpcHandlers() {
     return installer.restoreFromRes(
       category as installer.CategoryKey,
       name,
+      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      sendLog,
+    );
+  });
+
+  ipcMain.handle("installer:deleteResItem", async (_e, category: string, name: string) => {
+    return installer.deleteResItem(category as installer.CategoryKey, name, sendLog);
+  });
+
+  ipcMain.handle("installer:clearResCategory", async (_e, category: string) => {
+    return installer.clearResCategory(category as installer.CategoryKey, sendLog);
+  });
+
+  ipcMain.handle("installer:restoreResCategory", async (_e, category: string) => {
+    return installer.restoreResCategory(
+      category as installer.CategoryKey,
       { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
       sendLog,
     );
@@ -241,12 +265,47 @@ export function registerIpcHandlers() {
     );
   });
 
+  ipcMain.handle("installer:deleteSaveItem", async (_e, category: string, name: string) => {
+    return installer.deleteSaveItem(category as installer.CategoryKey, name, sendLog);
+  });
+
+  ipcMain.handle("installer:clearSaveCategory", async (_e, category: string) => {
+    return installer.clearSaveCategory(category as installer.CategoryKey, sendLog);
+  });
+
+  ipcMain.handle("installer:restoreSaveCategory", async (_e, category: string) => {
+    return installer.restoreSaveCategory(
+      category as installer.CategoryKey,
+      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      sendLog,
+    );
+  });
+
+  ipcMain.handle("installer:restoreSaveItem", async (_e, category: string, name: string) => {
+    return installer.restoreSaveItem(
+      category as installer.CategoryKey,
+      name,
+      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      sendLog,
+    );
+  });
+
   ipcMain.handle("installer:openSaveFolder", async () => {
     await shell.openPath(staging.getSavePath());
   });
 
   ipcMain.handle("installer:openResFolder", async () => {
     await shell.openPath(staging.getResPath());
+  });
+
+  ipcMain.handle("installer:openItem", async (_e, storage: "install" | "save" | "res", category: string, name: string) => {
+    return installer.openItem(
+      storage,
+      category as installer.CategoryKey,
+      name,
+      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      sendLog,
+    );
   });
 
   // ── Downloads ──────────────────────────────────────────────
