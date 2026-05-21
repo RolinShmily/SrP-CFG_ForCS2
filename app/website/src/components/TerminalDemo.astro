@@ -1,6 +1,7 @@
 ---
+import { LATEST_VERSION } from "../data/version";
 ---
-<div class="terminal-window">
+<div class="terminal-window" data-version={LATEST_VERSION}>
   <div class="terminal-bar">
     <span class="terminal-dot terminal-dot--red"></span>
     <span class="terminal-dot terminal-dot--yellow"></span>
@@ -104,6 +105,7 @@
   function initTerminal() {
     const container = document.getElementById("terminal-body");
     if (!container) return;
+    const version = container.closest(".terminal-window")?.getAttribute("data-version") ?? "0.0.0";
 
     const now = new Date();
     const offset = now.getTimezoneOffset();
@@ -117,7 +119,7 @@
     };
 
     const LINES: { ts: string; src: string; srcColor: string; msg: string; msgColor: string }[] = [
-      { ts: ts(0), src: "INIT", srcColor: "color:var(--color-teal)", msg: "SrP-CFG Installer v3.0.0 启动中...", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(0), src: "INIT", srcColor: "color:var(--color-teal)", msg: `SrP-CFG Installer v${version} 启动中...`, msgColor: "color:var(--color-text-secondary)" },
       { ts: ts(0), src: "INIT", srcColor: "color:var(--color-teal)", msg: "正在加载配置模块...", msgColor: "color:var(--color-text-secondary)" },
       { ts: ts(1), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "正在检测 Steam 安装路径...", msgColor: "color:var(--color-text-secondary)" },
       { ts: ts(1), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "注册表 HKCU\\Software\\Valve\\Steam", msgColor: "color:var(--color-text-muted)" },
@@ -221,6 +223,5 @@
     io.observe(container);
   }
 
-  document.addEventListener("astro:page-load", initTerminal);
-  document.addEventListener("astro:before-swap", clearTimers);
+  initTerminal();
 </script>

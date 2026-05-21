@@ -78,6 +78,8 @@ body {
   border-radius: 50%;
   filter: blur(100px);
   background: radial-gradient(circle, rgba(232, 121, 12, 0.12) 0%, transparent 70%);
+  animation: orb-drift-1 18s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .ambient-orbs::after {
@@ -90,4 +92,20 @@ body {
   border-radius: 50%;
   filter: blur(100px);
   background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
+  animation: orb-drift-2 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes orb-drift-1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(-60px, 40px) scale(1.05); }
+  66%  { transform: translate(30px, -50px) scale(0.95); }
+  100% { transform: translate(-40px, 20px) scale(1.02); }
+}
+
+@keyframes orb-drift-2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(50px, -30px) scale(1.08); }
+  66%  { transform: translate(-40px, 60px) scale(0.93); }
+  100% { transform: translate(30px, -40px) scale(1.05); }
 }

@@ -194,6 +194,7 @@ export interface ElectronAPI {
 
   // App Info
   getVersion: () => Promise<string>;
+  getLatestVersion: () => Promise<string>;
 
   // Updater
   checkForUpdate: (force?: boolean) => Promise<UpdateCheckResult>;

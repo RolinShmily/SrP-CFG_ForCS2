@@ -187,8 +187,6 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
 
       <!-- Center — Doc Content -->
       <article
-        transition:name="doc-main"
-        transition:animate="fade"
         class="flex-1 min-w-0 px-4 sm:px-6 md:px-8 lg:px-12 pb-16 prose-doc"
       >
         <slot />
@@ -410,8 +408,8 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
     targets.forEach((el) => observer.observe(el));
   }
 
-  // Re-run when Astro View Transitions swaps content
-  document.addEventListener("astro:page-load", () => {
+  // Initialize TOC scroll-spy
+  (() => {
     const links = document.querySelectorAll("[data-toc-link]");
     if (links.length > 0) {
       const t = new Map<string, HTMLElement>();
@@ -439,7 +437,7 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
       );
       t.forEach((el) => obs.observe(el));
     }
-  });
+  })();
 
   // Mobile doc nav panels
   let mobileDocCleanup: (() => void) | null = null;
@@ -509,5 +507,4 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
   }
 
   initMobileDocNav();
-  document.addEventListener("astro:page-load", initMobileDocNav);
 </script>

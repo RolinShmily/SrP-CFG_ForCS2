@@ -7,6 +7,7 @@ import {
   checkForUpdate,
   dismissVersion,
   fetchUpdateHistory,
+  getLatestVersion,
 } from "./services/updater";
 import type { LogEntry, InstallMode } from "../renderer/types";
 
@@ -387,6 +388,8 @@ export function registerIpcHandlers() {
   // ── App Info ────────────────────────────────────────────────
 
   ipcMain.handle("app:getVersion", () => app.getVersion());
+
+  ipcMain.handle("app:getLatestVersion", () => getLatestVersion());
 
   // ── Updater ────────────────────────────────────────────────
 

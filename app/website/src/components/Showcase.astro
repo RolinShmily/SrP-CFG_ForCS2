@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import SectionHeader from "./SectionHeader.astro";
 import startImg from "../assets/start.png";
 import downloadImg from "../assets/download.png";
@@ -27,13 +28,14 @@ const screenshots = [
     <!-- Mobile: card grid -->
     <div class="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-5">
       {screenshots.map((item) => (
-        <div class="showcase-mobile-card relative bg-bg-card border border-border rounded-[10px] overflow-hidden transition-all duration-300 hover:border-border-highlight hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+        <div class="showcase-mobile-card relative bg-bg-card border border-border rounded-[10px] overflow-hidden transition-all duration-300 hover:border-border-highlight hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)]" data-fullsrc={item.src.src}>
           <div class="relative aspect-[16/10] overflow-hidden bg-bg">
-            <img
-              src={item.src.src}
+            <Image
+              src={item.src}
               alt={item.title}
               loading="lazy"
-              class="w-full h-full object-cover object-top"
+              width={800}
+              class="showcase-img opacity-0 transition-opacity duration-300 w-full h-full object-cover object-top"
             />
           </div>
           <div class="p-4">
@@ -56,15 +58,17 @@ const screenshots = [
             <div
               class="showcase-slide absolute left-1/2 top-1/2 w-[480px] aspect-[16/10] transition-all duration-500 ease-out cursor-pointer"
               data-slide-index={i}
+              data-fullsrc={item.src.src}
               style={i === 0 ? "z-index:20; opacity:1; transform: translate(-50%, -50%) scale(1);" : "z-index:0; opacity:0; transform: translate(-50%, -50%) scale(0.7);"}
             >
               <div class="w-full h-full relative rounded-[14px] overflow-hidden border border-border shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
                 <div class="showcase-slide-blur absolute inset-0 bg-bg/50 backdrop-blur-[2px] transition-opacity duration-500 z-10 rounded-[14px]"></div>
-                <img
-                  src={item.src.src}
+                <Image
+                  src={item.src}
                   alt={item.title}
                   loading="lazy"
-                  class="block w-full h-full object-cover object-top"
+                  width={800}
+                  class="showcase-img opacity-0 transition-opacity duration-300 block w-full h-full object-cover object-top"
                   draggable="false"
                 />
               </div>
@@ -131,6 +135,18 @@ const screenshots = [
 
 <script>
   const CIRC = 2 * Math.PI * 12;
+
+  function revealImages() {
+    document.querySelectorAll<HTMLImageElement>(".showcase-img").forEach((img) => {
+      if (img.complete) {
+        img.classList.replace("opacity-0", "opacity-100");
+      } else {
+        img.addEventListener("load", () => {
+          img.classList.replace("opacity-0", "opacity-100");
+        }, { once: true });
+      }
+    });
+  }
 
   function initCarousel() {
     const container = document.getElementById("showcase-carousel");
@@ -235,7 +251,7 @@ const screenshots = [
       if (!lightbox || !lightboxImg) return;
       const img = slides[current].querySelector("img");
       if (!img) return;
-      lightboxImg.src = img.src;
+      lightboxImg.src = slides[current].getAttribute("data-fullsrc") || img.src;
       lightboxImg.alt = img.alt;
       lightbox.classList.remove("opacity-0", "pointer-events-none");
       lightboxImg.classList.remove("scale-90");
@@ -287,7 +303,7 @@ const screenshots = [
         if (!lightbox || !lightboxImg) return;
         const img = card.querySelector("img");
         if (!img) return;
-        lightboxImg.src = img.src;
+        lightboxImg.src = card.getAttribute("data-fullsrc") || img.src;
         lightboxImg.alt = img.alt;
         lightbox.classList.remove("opacity-0", "pointer-events-none");
         lightboxImg.classList.remove("scale-90");
@@ -304,7 +320,6 @@ const screenshots = [
     };
   }
 
-  let cleanup: (() => void) | null = null;
-  cleanup = initCarousel();
-  document.addEventListener("astro:page-load", () => { cleanup?.(); cleanup = initCarousel(); });
+  initCarousel();
+  revealImages();
 </script>

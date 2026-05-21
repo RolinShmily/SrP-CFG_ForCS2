@@ -12,7 +12,7 @@ const navIcons: Record<string, typeof Home> = {
 };
 ---
 
-<nav transition:name="nav" transition:animate="none" class="fixed top-0 left-0 right-0 z-200 bg-bg/82 backdrop-blur-xl border-b border-border max-w-[100dvw]">
+<nav class="fixed top-0 left-0 right-0 z-200 bg-bg/82 backdrop-blur-xl border-b border-border max-w-[100dvw]">
   <div class="max-w-[1200px] mx-auto px-5 sm:px-7 flex items-center justify-between h-16 w-full">
     <a href="/" class="flex items-center gap-2.5 no-underline">
       <img src="/favicon.ico" alt="SrP-CFG" class="w-7 h-7" />
@@ -146,5 +146,4 @@ const navIcons: Record<string, typeof Home> = {
   }
 
   initMobileMenu();
-  document.addEventListener("astro:page-load", initMobileMenu);
 </script>

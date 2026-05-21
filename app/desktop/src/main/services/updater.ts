@@ -209,3 +209,23 @@ export function dismissVersion(version: string): void {
   cache.dismissedVersion = version;
   saveCache(cache);
 }
+
+export async function getLatestVersion(): Promise<string> {
+  const cache = loadCache();
+  if (
+    cache?.lastCheckTime &&
+    Date.now() - cache.lastCheckTime < CHECK_INTERVAL &&
+    cache.cachedAllReleases?.length
+  ) {
+    return cache.cachedAllReleases[0].tagName;
+  }
+
+  try {
+    const raw = await fetchAllReleases();
+    if (raw.length === 0) return getCurrentVersion();
+    const latest = mapRelease(raw[0]);
+    return latest.tagName;
+  } catch {
+    return cache?.cachedAllReleases?.[0]?.tagName ?? getCurrentVersion();
+  }
+}

@@ -25,12 +25,14 @@ interface Props {
 export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [version, setVersion] = useState("");
+  const [latestVersion, setLatestVersion] = useState("");
   const draggingRef = useRef(false);
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
 
   useEffect(() => {
     window.api.getVersion().then(setVersion).catch(() => {});
+    window.api.getLatestVersion().then(setLatestVersion).catch(() => {});
   }, []);
 
   const collapsed = width <= MIN_WIDTH + 8;
@@ -166,6 +168,9 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
           {!collapsed && (
             <span className="font-mono text-xs text-text-faint tracking-wider">
               v{version}
+              {latestVersion && latestVersion !== version && (
+                <span className="text-accent ml-1">(最新 v{latestVersion})</span>
+              )}
             </span>
           )}
         </div>

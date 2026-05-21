@@ -2,6 +2,7 @@
 import ButtonLink from "./ButtonLink.astro";
 import TerminalDemo from "./TerminalDemo.astro";
 import { Download, BookOpen } from "lucide-astro";
+import { LATEST_VERSION } from "../data/version";
 ---
 
 <section class="pt-[60px] md:pt-[80px] min-h-screen flex flex-col relative">
@@ -48,7 +49,7 @@ import { Download, BookOpen } from "lucide-astro";
       </div>
       <div class="w-px h-8 sm:h-10 bg-border"></div>
       <div class="text-center">
-        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">v3.0.0</span>
+        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">v{LATEST_VERSION}</span>
         <span class="text-xs sm:text-sm text-text-muted">最新版本</span>
       </div>
     </div>

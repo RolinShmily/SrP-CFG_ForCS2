@@ -78,6 +78,7 @@ contextBridge.exposeInMainWorld("api", {
 
   // App Info
   getVersion: () => ipcRenderer.invoke("app:getVersion"),
+  getLatestVersion: () => ipcRenderer.invoke("app:getLatestVersion"),
 
   // Updater
   checkForUpdate: (force?: boolean) =>

@@ -108,6 +108,7 @@ export default function UpdateModal({
 }: Props) {
   const [releases, setReleases] = useState<GitHubRelease[]>([]);
   const [currentVersion, setCurrentVersion] = useState("");
+  const [latestVersion, setLatestVersion] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -118,8 +119,9 @@ export default function UpdateModal({
     Promise.all([
       window.api.getUpdateHistory(),
       window.api.getVersion(),
+      window.api.getLatestVersion(),
     ])
-      .then(([r, v]) => {
+      .then(([r, v, lv]) => {
         if (r === null) {
           setError(true);
           setReleases([]);
@@ -127,6 +129,7 @@ export default function UpdateModal({
           setReleases(r);
         }
         setCurrentVersion(v);
+        setLatestVersion(lv);
       })
       .catch(() => {
         setError(true);
@@ -189,6 +192,13 @@ export default function UpdateModal({
                 <div className="flex items-center justify-center gap-2 py-3 mb-3 bg-green/10 text-green text-sm rounded-[var(--radius)]">
                   <span className="font-display font-semibold">v{currentVersion}</span>
                   <span>当前已是最新版本</span>
+                </div>
+              )}
+              {hasNewer && currentVersion && latestVersion && (
+                <div className="flex items-center justify-center gap-3 py-2.5 mb-3 text-xs text-text-muted bg-bg-raised rounded-[var(--radius)]">
+                  <span>当前 <span className="font-mono text-text-secondary">v{currentVersion}</span></span>
+                  <span className="text-border">|</span>
+                  <span>最新 <span className="font-mono text-accent">v{latestVersion}</span></span>
                 </div>
               )}
               <div className="space-y-2">
