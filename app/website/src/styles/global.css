@@ -35,7 +35,7 @@
 /* ── Base ── */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100dvw;
 }
 
@@ -45,7 +45,7 @@ body {
   color: var(--color-text);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100dvw;
 }
 
