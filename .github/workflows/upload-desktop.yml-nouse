@@ -25,9 +25,20 @@ jobs:
         run: |
           TAG="${{ inputs.tag || github.event.workflow_run.head_branch }}"
           echo "📦 Downloading release assets for $TAG..."
-          gh release download "$TAG" --pattern "SrP-CFG_Installer_*.msi" --pattern "SrP-CFG_Portable_*.zip" --dir .
+          PATTERNS=$(python3 -c "
+          import yaml
+          with open('.github/upload-desktop.yaml') as f:
+              cfg = yaml.safe_load(f)
+          for item in cfg['upload_files']:
+              if item.get('enabled', True):
+                  print(item['source_pattern'])
+          ")
+          while IFS= read -r pattern; do
+            echo "  Downloading: $pattern"
+            gh release download "$TAG" --pattern "$pattern" --dir .
+          done <<< "$PATTERNS"
           echo "✅ Downloaded:"
-          ls -lh SrP-CFG_Installer_*.msi SrP-CFG_Portable_*.zip
+          ls -lh
 
       - name: Strip version from filenames
         run: |

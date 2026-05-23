@@ -7,6 +7,10 @@ on:
         description: 'Release tag (e.g., v1.0.0)'
         required: true
         type: string
+  workflow_run:
+    workflows: ["Release Presets"]
+    types: [completed]
+
 
 jobs:
   upload:
@@ -21,7 +25,17 @@ jobs:
         run: |
           TAG="${{ inputs.tag }}"
           echo "📦 Downloading release assets for $TAG..."
-          gh release download "$TAG" --pattern "*.zip" --dir .
+          PATTERNS=$(python3 -c "
+          import yaml
+          with open('.github/packages.yaml') as f:
+              cfg = yaml.safe_load(f)
+          for pkg in cfg['packages'].values():
+              print(pkg['zip_name'] + '*.zip')
+          ")
+          while IFS= read -r pattern; do
+            echo "  Downloading: $pattern"
+            gh release download "$TAG" --pattern "$pattern" --dir .
+          done <<< "$PATTERNS"
           echo "✅ Downloaded:"
           ls -lh *.zip
 
