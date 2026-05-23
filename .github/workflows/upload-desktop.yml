@@ -50,6 +50,19 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS || 'optional' }}
 
+      - name: Debug SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+        run: |
+          echo "=== ~/.ssh/ contents ==="
+          ls -la ~/.ssh/
+          echo "=== SSH key fingerprint ==="
+          ssh-keygen -l -f ~/.ssh/deploy_key || ssh-keygen -l -f ~/.ssh/id_rsa || echo "No key found"
+          echo "=== Testing SSH connection ==="
+          ssh -vvv -o StrictHostKeyChecking=no -p "$VPS_PORT" "${VPS_USER}@${VPS_HOST}" "echo OK" || true
+
       - name: Sync to VPS
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
