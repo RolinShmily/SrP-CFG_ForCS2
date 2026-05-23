@@ -104,7 +104,8 @@ SrP-CFG_ForCS2/
 │   ├── workflows/            # GitHub Actions 工作流
 │   ├── scripts/              # 构建/发布辅助脚本
 │   ├── packages.yaml         # 打包配置
-│   ├── oss-upload.yaml       # OSS 上传配置
+│   ├── upload-presets.yaml    # 预设包 OSS 上传配置
+│   ├── upload-desktop.yaml    # 桌面端 OSS 上传配置
 │   └── release/template.md   # Release Notes 模板
 └── README.md
 ```

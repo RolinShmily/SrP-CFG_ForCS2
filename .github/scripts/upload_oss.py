@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-上传文件到阿里云 OSS：根据 oss-upload.yaml 配置匹配文件并上传。
-由 CI 的 "Upload to Aliyun OSS" 步骤调用。
+上传文件到阿里云 OSS：根据 upload-*.yaml 配置匹配文件并上传。
+由 upload-presets.yml / upload-desktop.yml 工作流调用。
 
 用法: python3 .github/scripts/upload_oss.py
 """
@@ -16,7 +16,7 @@ import glob
 
 def main():
     # 读取配置（支持通过 OSS_CONFIG 环境变量指定配置文件路径）
-    config_path = os.environ.get('OSS_CONFIG', '.github/oss-upload.yaml')
+    config_path = os.environ.get('OSS_CONFIG', '.github/upload-presets.yaml')
     with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 

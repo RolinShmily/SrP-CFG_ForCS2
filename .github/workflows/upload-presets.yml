@@ -1,0 +1,66 @@
+name: Upload Presets
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ inputs.tag }}"
+          echo "📦 Downloading release assets for $TAG..."
+          gh release download "$TAG" --pattern "*.zip" --dir .
+          echo "✅ Downloaded:"
+          ls -lh *.zip
+
+      - name: Strip version from filenames
+        run: |
+          python3 -c "
+          import os, re
+          ver = re.compile(r'_[vV][0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?')
+          for f in os.listdir('.'):
+              if not f.endswith('.zip'):
+                  continue
+              name, ext = os.path.splitext(f)
+              clean = ver.sub('', name) + ext
+              if clean != f:
+                  os.rename(f, clean)
+                  print(f'  {f} → {clean}')
+          "
+
+      - name: Sync to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_DIR: ${{ secrets.VPS_DOWNLOAD_DIR }}
+        run: |
+          echo "Syncing preset packages to VPS..."
+
+          mkdir -p ~/.ssh
+          echo "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p "$VPS_PORT" "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p '$VPS_DIR'"
+
+          rsync -avz --progress \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p $VPS_PORT" \
+            *.zip "${VPS_USER}@${VPS_HOST}:${VPS_DIR}/"
+
+          echo ""
+          echo "All preset packages synced to VPS"
+          echo "  Path: ${VPS_DIR}/"

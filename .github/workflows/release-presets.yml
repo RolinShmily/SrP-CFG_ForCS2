@@ -132,39 +132,3 @@ jobs:
           prerelease: false
           draft: false
 
-      # ============================================
-      # 上传到阿里云 OSS
-      # ============================================
-      - name: Upload to Aliyun OSS
-        env:
-          OSS_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
-          OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
-          OSS_BUCKET: ${{ secrets.OSS_BUCKET }}
-          OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
-          OSS_PREFIX: ${{ secrets.OSS_PREFIX || '' }}
-          TAG: ${{ github.ref_name }}
-          OSS_CONFIG: .github/oss-upload-presets.yaml
-        run: |
-          echo "☁️ Uploading to Aliyun OSS..."
-          echo "  📌 Tag: $TAG"
-
-          wget https://gosspublic.alicdn.com/ossutil/1.7.18/ossutil64 -q
-          chmod +x ossutil64
-          sudo mv ossutil64 /usr/local/bin/ossutil
-
-          ossutil config -e "$OSS_ENDPOINT" -i "$OSS_ACCESS_KEY_ID" -k "$OSS_ACCESS_KEY_SECRET" -L CH
-
-          python3 .github/scripts/upload_oss.py
-
-          python3 .github/scripts/oss_summary.py
-
-          FAILED=$(python3 -c "import json; print(json.load(open('upload_results.json'))['failed'])")
-
-          if [ "$FAILED" -gt 0 ]; then
-            echo ""
-            echo "::error::Some files failed to upload to OSS"
-            exit 1
-          fi
-
-          echo ""
-          echo "✅ All files uploaded to OSS successfully"
