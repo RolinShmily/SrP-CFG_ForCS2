@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { app } from "electron";
+import { app, net } from "electron";
 import extractZip from "extract-zip";
 import type {
   UploadEntry,
@@ -488,8 +488,6 @@ export function deleteUploadEntry(folderName: string, log: LogFn): void {
 
 // ── Downloads ────────────────────────────────────────────────
 
-import * as https from "https";
-import * as http from "http";
 
 export async function downloadFromUrl(
   url: string,
@@ -508,40 +506,36 @@ export async function downloadFromUrl(
   log({ category: "file-ops", level: "progress", message: `正在下载：${fileName}` });
 
   try {
-    await new Promise<void>((resolve, reject) => {
-      const mod = url.startsWith("https") ? https : http;
-      const req = mod.get(url, { headers: { "User-Agent": "SrP-CFG-Installer", "Referer": "cfg.srprolin.top" } }, (res) => {
-        if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          const redirectMod = res.headers.location.startsWith("https") ? https : http;
-          redirectMod.get(res.headers.location, (redirectRes) => {
-            if (redirectRes.statusCode !== 200) {
-              reject(new Error(`HTTP ${redirectRes.statusCode}`));
-              return;
-            }
-            const stream = fs.createWriteStream(filePath);
-            redirectRes.pipe(stream);
-            stream.on("finish", () => { stream.close(); resolve(); });
-            stream.on("error", reject);
-          }).on("error", reject);
-          return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 60000);
+
+    const res = await net.fetch(url, {
+      headers: { "User-Agent": "SrP-CFG-Installer" },
+      signal: controller.signal,
+      redirect: "follow",
+    });
+    clearTimeout(timer);
+
+    if (!res.ok || !res.body) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    // 流式写入文件（支持大文件）
+    await new Promise<void>(async (resolve, reject) => {
+      const stream = fs.createWriteStream(filePath);
+      stream.on("error", reject);
+      const reader = res.body!.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          stream.write(Buffer.from(value));
         }
-
-        if (res.statusCode !== 200) {
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-
-        const stream = fs.createWriteStream(filePath);
-        res.pipe(stream);
-        stream.on("finish", () => { stream.close(); resolve(); });
-        stream.on("error", reject);
-      });
-
-      req.on("error", reject);
-      req.setTimeout(30000, () => {
-        req.destroy();
-        reject(new Error("timeout"));
-      });
+        stream.end(() => { stream.close(); resolve(); });
+      } catch (err) {
+        stream.destroy();
+        reject(err);
+      }
     });
 
     const stat = fs.statSync(filePath);
