@@ -10,7 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import type { GitHubRelease } from "../types";
-import { REPO_URL, dl, INSTALLER_MSI } from "../lib/downloads";
+import { REPO_URL } from "../lib/downloads";
 
 interface Props {
   open: boolean;
@@ -214,25 +214,17 @@ export default function UpdateModal({
         {/* Footer */}
         {!isLoading && (
           <div className="flex items-center gap-3 px-5 py-4 border-t border-border shrink-0">
-            {hasNewer && (
-              <button
-                onClick={() =>
-                  window.api.openExternal(dl(INSTALLER_MSI))
-                }
-                className="flex items-center gap-1.5 px-4 py-2 text-sm font-display font-medium bg-accent text-bg hover:bg-accent/90 rounded-[var(--radius)] transition-colors cursor-pointer border-none"
-              >
-                <Globe size={14} />
-                下载更新
-              </button>
-            )}
             <button
-              onClick={() => {
-                const url =
-                  releases.find((r) => r.hasDesktopAssets)?.htmlUrl ??
-                  releases[0]?.htmlUrl ??
-                  `${REPO_URL}/releases`;
-                window.api.openExternal(url);
-              }}
+              onClick={() =>
+                window.api.openExternal("https://cfg.srprolin.top")
+              }
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-display font-medium bg-accent text-bg hover:bg-accent/90 rounded-[var(--radius)] transition-colors cursor-pointer border-none"
+            >
+              <Globe size={14} />
+              官网下载
+            </button>
+            <button
+              onClick={() => window.api.openExternal(`${REPO_URL}/releases/latest`)}
               className="flex items-center gap-1.5 px-4 py-2 text-sm font-display font-medium bg-transparent text-text-secondary border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer"
             >
               <ExternalLink size={14} />
