@@ -118,25 +118,23 @@ jobs:
       - name: Build MSI
         run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
 
-      - name: Rename MSI
+      - name: Stage MSI
         shell: bash
         run: |
-          TAG="${{ github.ref_name }}"
-          mv msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer_${TAG}.msi"
-          echo "✅ MSI: SrP-CFG_Installer_${TAG}.msi"
-          ls -lh "SrP-CFG_Installer_${TAG}.msi"
+          cp msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer.msi"
+          echo "✅ MSI: SrP-CFG_Installer.msi"
+          ls -lh "SrP-CFG_Installer.msi"
 
       - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
         with:
           name: msi-installer
-          path: SrP-CFG_Installer_*.msi
+          path: SrP-CFG_Installer.msi
 
       - name: Create portable ZIP
         shell: bash
         run: |
-          TAG="${{ github.ref_name }}"
-          PORTABLE_NAME="SrP-CFG_Portable_${TAG}.zip"
+          PORTABLE_NAME="SrP-CFG_Portable.zip"
           7z a -tzip "$PORTABLE_NAME" "app/desktop/out/SrP-CFG Installer-win32-x64/" -r
           echo "✅ Portable: $PORTABLE_NAME"
           ls -lh "$PORTABLE_NAME"
@@ -145,8 +143,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: portable-zip
-          path: SrP-CFG_Portable_*.zip
-
+          path: SrP-CFG_Portable.zip
   # ============================================
   # 上传桌面端产物到 GitHub Release
   # ============================================
@@ -175,7 +172,7 @@ jobs:
       - name: Verify build artifacts
         run: |
           echo "=== Build artifacts ==="
-          ls -lh SrP-CFG_Installer_*.msi SrP-CFG_Portable_*.zip 2>&1
+          ls -lh SrP-CFG_Installer.msi SrP-CFG_Portable.zip 2>&1
           echo "======================"
 
       - name: Append to GitHub Release
@@ -183,6 +180,6 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: |
-            SrP-CFG_Installer_*.msi
-            SrP-CFG_Portable_*.zip
+            SrP-CFG_Installer.msi
+            SrP-CFG_Portable.zip
           fail_on_unmatched_files: true

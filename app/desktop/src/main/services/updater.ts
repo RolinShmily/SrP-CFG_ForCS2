@@ -89,8 +89,8 @@ async function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
 function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
   return assets.some(
     (a) =>
-      /^SrP-CFG_Installer_.*\.msi$/i.test(a.name) ||
-      /^SrP-CFG_Portable_.*\.zip$/i.test(a.name),
+      /^SrP-CFG_Installer\.msi$/i.test(a.name) ||
+      /^SrP-CFG_Portable\.zip$/i.test(a.name),
   );
 }
 

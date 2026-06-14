@@ -7,34 +7,35 @@ import {
   Star,
   Loader2,
 } from "lucide-react";
+import { REPO_URL, dl } from "../lib/downloads";
 
 const packages = [
   {
     name: "Default 默认版",
     desc: "完整的默认配置包，包含准星视角、跑图练习、demo 录制等全部功能",
     file: "Allcfgs.zip",
-    url: "https://download.srprolin.top/SrP-CFG/Allcfgs.zip",
+    url: dl("Allcfgs.zip"),
     featured: true,
   },
   {
     name: "Echo 定制版",
     desc: "基于默认配置的 Echo 个人定制版本",
     file: "Allcfgs_echo.zip",
-    url: "https://download.srprolin.top/SrP-CFG/Allcfgs_echo.zip",
+    url: dl("Allcfgs_echo.zip"),
     featured: false,
   },
   {
     name: "YSZH 定制版",
     desc: "基于默认配置的 YSZH 个人定制版本",
     file: "Allcfgs_yszh.zip",
-    url: "https://download.srprolin.top/SrP-CFG/Allcfgs_yszh.zip",
+    url: dl("Allcfgs_yszh.zip"),
     featured: false,
   },
   {
     name: "VisionL 定制版",
     desc: "基于默认配置的 VisionL 个人定制版本",
     file: "Allcfgs_visionl.zip",
-    url: "https://download.srprolin.top/SrP-CFG/Allcfgs_visionl.zip",
+    url: dl("Allcfgs_visionl.zip"),
     featured: false,
   },
 ];
@@ -143,7 +144,7 @@ export default function DownloadPage() {
             <button
               onClick={() =>
                 window.api.openExternal(
-                  "https://github.com/RolinShmily/SrP-CFG_ForCS2/releases",
+                  `${REPO_URL}/releases`,
                 )
               }
               className="text-accent hover:underline cursor-pointer bg-transparent border-none font-body text-sm p-0"

@@ -15,7 +15,7 @@ def main():
     with open('packages.json', 'r', encoding='utf-8') as f:
         packages = json.load(f)
 
-    tag = os.environ.get('GITHUB_REF_NAME', '')
+
     zip_files = []
 
     for pkg in packages:
@@ -25,7 +25,7 @@ def main():
         overrides = pkg['overrides']
 
         # 构建输出文件名
-        output_zip = f"{zip_name}_{tag}.zip"
+        output_zip = f"{zip_name}.zip"
         zip_files.append(output_zip)
 
         print(f"  📦 Building {pkg_name} -> {output_zip}")
