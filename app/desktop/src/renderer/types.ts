@@ -86,19 +86,20 @@ export interface CategoryData {
 }
 
 export interface InstalledData {
-  cfg: CategoryData;
+  gameCfg: CategoryData;
+  userCfg: CategoryData;
   annotations: CategoryData;
   video: CategoryData;
 }
-
 export interface ResData {
-  cfg: CategoryData;
+  gameCfg: CategoryData;
+  userCfg: CategoryData;
   annotations: CategoryData;
   video: CategoryData;
 }
-
 export interface SaveData {
-  cfg: CategoryData;
+  gameCfg: CategoryData;
+  userCfg: CategoryData;
   annotations: CategoryData;
   video: CategoryData;
 }
@@ -124,6 +125,7 @@ export interface GitHubRelease {
   htmlUrl: string;
   publishedAt: string;
   hasDesktopAssets: boolean;
+  hasPresetAssets: boolean;
 }
 
 export interface UpdateCheckResult {
@@ -153,7 +155,7 @@ export interface ElectronAPI {
 
   // Uploaded entries (ZIP and non-ZIP)
   getUploadedEntries: () => Promise<UploadedEntry[]>;
-  installFromUpload: (folderName: string, mode: InstallMode) => Promise<InstallResult | AppendConflictResult>;
+  installFromUpload: (folderName: string, mode: InstallMode, usePersonalCfg?: boolean) => Promise<InstallResult | AppendConflictResult>;
   deleteUploadEntry: (folderName: string) => Promise<void>;
   openUploadsFolder: () => Promise<void>;
 
@@ -183,13 +185,13 @@ export interface ElectronAPI {
   openResFolder: () => Promise<void>;
 
   // Append conflict confirmation
-  confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean) => Promise<InstallResult | null>;
+  confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean, usePersonalCfg?: boolean) => Promise<InstallResult | null>;
 
   // Downloads
   downloadFromUrl: (url: string, fileName: string) => Promise<DownloadEntry | null>;
   getDownloadEntries: () => Promise<DownloadEntry[]>;
   deleteDownload: (folderName: string) => Promise<void>;
-  installFromDownload: (folderName: string, mode: InstallMode) => Promise<InstallResult | AppendConflictResult>;
+  installFromDownload: (folderName: string, mode: InstallMode, usePersonalCfg?: boolean) => Promise<InstallResult | AppendConflictResult>;
   openDownloadsFolder: () => Promise<void>;
 
   // App Info

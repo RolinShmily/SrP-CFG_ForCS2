@@ -12,6 +12,9 @@ import {
   Server,
   Code,
 } from "lucide-react";
+import blogSvg from "../assets/svg/blog-solid-full.svg?raw";
+import bilibiliSvg from "../assets/svg/bilibili.svg?raw";
+import githubSvg from "../assets/svg/github-brands-solid-full.svg?raw";
 
 const techStack = [
   { name: "Electron", desc: "桌面应用框架", icon: Monitor },
@@ -91,6 +94,31 @@ export default function AboutPage() {
             </div>
           </div>
 
+          {/* Tech stack — with restored original sizing (p-3, text-sm, Icon size=14) */}
+          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
+            <h2 className="font-display text-lg font-semibold flex items-center gap-2">
+              <Boxes size={18} className="text-teal" />
+              技术栈
+            </h2>
+            <div className="grid grid-cols-2 gap-2.5">
+              {techStack.map((tech) => {
+                const Icon = tech.icon;
+                return (
+                  <div key={tech.name} className="p-3 bg-bg-raised border border-border rounded-[var(--radius-sm)]">
+                    <div className="flex items-center gap-1.5">
+                      <Icon size={14} className="text-text-muted" />
+                      <span className="font-display text-sm font-semibold">{tech.name}</span>
+                    </div>
+                    <span className="text-xs text-text-muted font-light">{tech.desc}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="space-y-5">
           {/* Quick links */}
           <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
             <h2 className="font-display text-lg font-semibold">快速链接</h2>
@@ -114,38 +142,6 @@ export default function AboutPage() {
                       className="ml-auto text-text-faint group-hover:text-text-muted"
                     />
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Right column */}
-        <div className="space-y-5">
-          {/* Tech stack */}
-          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
-            <h2 className="font-display text-lg font-semibold flex items-center gap-2">
-              <Boxes size={18} className="text-teal" />
-              技术栈
-            </h2>
-            <div className="grid grid-cols-2 gap-2.5">
-              {techStack.map((tech) => {
-                const Icon = tech.icon;
-                return (
-                  <div
-                    key={tech.name}
-                    className="p-3 bg-bg-raised border border-border rounded-[var(--radius-sm)]"
-                  >
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <Icon size={14} className="text-text-muted" />
-                      <span className="font-display text-sm font-semibold">
-                        {tech.name}
-                      </span>
-                    </div>
-                    <span className="text-xs text-text-muted font-light">
-                      {tech.desc}
-                    </span>
-                  </div>
                 );
               })}
             </div>
@@ -174,35 +170,27 @@ export default function AboutPage() {
                     </div>
                     <div className="text-xs text-text-muted">{c.role}</div>
                   </div>
-                  <div className="ml-auto flex items-center gap-1.5">
+                  <div className="ml-auto flex items-center gap-2">
                     <button
-                      onClick={() =>
-                        window.api.openExternal(c.blog)
-                      }
-                      className="p-1.5 text-text-faint hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
-                      title="Blog"
+                      onClick={() => window.api.openExternal(c.blog)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card border border-border rounded-full text-text-faint hover:text-accent hover:border-accent/30 hover:bg-accent-bg transition-colors cursor-pointer text-sm"
                     >
-                      <PenLine size={16} />
+                      <span className="w-5 h-5 flex items-center justify-center text-text-faint" dangerouslySetInnerHTML={{ __html: blogSvg }} />
+                      <span>博客</span>
                     </button>
                     <button
-                      onClick={() =>
-                        window.api.openExternal(c.bilibili)
-                      }
-                      className="p-1.5 text-text-faint hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
-                      title="Bilibili"
+                      onClick={() => window.api.openExternal(c.bilibili)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card border border-border rounded-full text-text-faint hover:text-accent hover:border-accent/30 hover:bg-accent-bg transition-colors cursor-pointer text-sm"
                     >
-                      <ExternalLink size={16} />
+                      <span className="w-5 h-5 flex items-center justify-center text-text-faint" dangerouslySetInnerHTML={{ __html: bilibiliSvg }} />
+                      <span>B站</span>
                     </button>
                     <button
-                      onClick={() =>
-                        window.api.openExternal(
-                          `https://github.com/${c.github}`,
-                        )
-                      }
-                      className="p-1.5 text-text-faint hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
-                      title="GitHub"
+                      onClick={() => window.api.openExternal(`https://github.com/${c.github}`)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card border border-border rounded-full text-text-faint hover:text-accent hover:border-accent/30 hover:bg-accent-bg transition-colors cursor-pointer text-sm"
                     >
-                      <Github size={16} />
+                      <span className="w-5 h-5 flex items-center justify-center text-text-faint" dangerouslySetInnerHTML={{ __html: githubSvg }} />
+                      <span>GitHub</span>
                     </button>
                   </div>
                 </div>

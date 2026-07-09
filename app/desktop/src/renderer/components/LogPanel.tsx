@@ -188,16 +188,16 @@ function LogRow({ entry }: { entry: LogEntry }) {
   const categoryLabel = CATEGORY_LABELS[entry.category];
 
   return (
-    <div className="font-mono text-[11px] leading-relaxed px-1 py-0.5 rounded hover:bg-bg-hover/50 select-text">
-      <div className="flex items-start gap-1.5">
-        <span className="text-text-faint shrink-0">{timeStr}</span>
-        <span className={`${categoryColor} shrink-0 font-semibold`}>
+    <div className="text-xs leading-snug px-2 py-1 rounded hover:bg-bg-hover/50 select-text">
+      <div className="flex items-start gap-2">
+        <span className="text-text-faint shrink-0 font-mono text-xs">{timeStr}</span>
+        <span className={`${categoryColor} shrink-0 font-semibold text-xs`}>
           [{categoryLabel}]
         </span>
-        <span className={levelStyle}>{entry.message}</span>
+        <span className={`${levelStyle} text-xs`}>{entry.message}</span>
       </div>
       {entry.detail && (
-        <div className="ml-[7.5rem] text-text-faint text-[10px] select-text">
+        <div className="ml-[5.5rem] text-text-faint text-xs mt-0.5 select-text leading-snug">
           {entry.detail}
         </div>
       )}

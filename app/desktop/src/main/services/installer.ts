@@ -16,6 +16,8 @@ interface CategoryData {
 
 interface InstallState {
   cfg: CategoryData;
+  gameCfg: CategoryData;
+  userCfg: CategoryData;
   annotations: CategoryData;
   video: CategoryData;
 }
@@ -32,7 +34,7 @@ interface SaveFile {
   save: InstallState;
 }
 
-export type CategoryKey = "cfg" | "annotations" | "video";
+export type CategoryKey = "cfg" | "gameCfg" | "userCfg" | "annotations" | "video";
 
 export interface GamePaths {
   cfgPath: string | null;
@@ -83,25 +85,50 @@ function writeJson(filePath: string, data: unknown): void {
 function emptyCategory(): CategoryData {
   return { files: [], dirs: [], path: "" };
 }
-
 function emptyInstallState(): InstallState {
   return {
     cfg: emptyCategory(),
+    gameCfg: emptyCategory(),
+    userCfg: emptyCategory(),
     annotations: emptyCategory(),
     video: emptyCategory(),
   };
 }
 
+function migrateState(state: unknown): void {
+  if (!state || typeof state !== "object") return;
+  const rec = state as Record<string, unknown>;
+  if (!("cfg" in rec) || "gameCfg" in rec) return;
+  const cfg = rec.cfg;
+  if (!cfg || typeof cfg !== "object") return;
+  const cfgObj = cfg as Record<string, unknown>;
+  const cfgPath = typeof cfgObj.path === "string" ? cfgObj.path : "";
+  if (cfgPath.includes("userdata")) {
+    rec.userCfg = cfg;
+    rec.gameCfg = { files: [], dirs: [], path: "" };
+  } else {
+    rec.gameCfg = cfg;
+    rec.userCfg = { files: [], dirs: [], path: "" };
+  }
+  delete rec.cfg;
+}
+
 export function loadInstallData(): InstallFile {
-  return readJson<InstallFile>(jsonPath("install.json")) ?? { install: emptyInstallState() };
+  const data = readJson<InstallFile>(jsonPath("install.json"));
+  if (data) migrateState(data.install);
+  return data ?? { install: emptyInstallState() };
 }
 
 function loadResData(): ResFile {
-  return readJson<ResFile>(jsonPath("res.json")) ?? { res: emptyInstallState() };
+  const data = readJson<ResFile>(jsonPath("res.json"));
+  if (data) migrateState(data.res);
+  return data ?? { res: emptyInstallState() };
 }
 
 function loadSaveData(): SaveFile {
-  return readJson<SaveFile>(jsonPath("save.json")) ?? { save: emptyInstallState() };
+  const data = readJson<SaveFile>(jsonPath("save.json"));
+  if (data) migrateState(data.save);
+  return data ?? { save: emptyInstallState() };
 }
 
 function writeInstall(data: InstallFile): void {
@@ -120,7 +147,8 @@ function writeSave(data: SaveFile): void {
 
 export function updateInstallPaths(gamePaths: GamePaths): void {
   const data = loadInstallData();
-  if (gamePaths.cfgPath) data.install.cfg.path = gamePaths.cfgPath;
+  if (gamePaths.cfgPath) data.install.gameCfg.path = gamePaths.cfgPath;
+  if (gamePaths.cfgPath) data.install.userCfg.path = gamePaths.cfgPath;
   if (gamePaths.annotationsPath) data.install.annotations.path = gamePaths.annotationsPath;
   if (gamePaths.videoPath) data.install.video.path = gamePaths.videoPath;
   writeInstall(data);
@@ -218,7 +246,8 @@ type CatEntry = {
 
 function getCategories(stagingPaths: { cfg: string; annotations: string; video: string }, gamePaths: GamePaths): CatEntry[] {
   return [
-    { key: "cfg", staging: stagingPaths.cfg, game: gamePaths.cfgPath, label: "CFG" },
+    { key: "gameCfg", staging: stagingPaths.cfg, game: gamePaths.cfgPath, label: "游戏 CFG" },
+    { key: "userCfg", staging: stagingPaths.cfg, game: gamePaths.videoPath, label: "用户 CFG" },
     { key: "annotations", staging: stagingPaths.annotations, game: gamePaths.annotationsPath, label: "地图指南" },
     { key: "video", staging: stagingPaths.video, game: gamePaths.videoPath, label: "视频预设" },
   ];
@@ -236,6 +265,7 @@ function hasEntries(cat: CatEntry): boolean {
 export function deployOverlay(
   stagingPaths: { cfg: string; annotations: string; video: string },
   gamePaths: GamePaths,
+  usePersonalCfg: boolean,
   log: LogFn,
 ): DeployResult {
   log({ category: "install", level: "progress", message: "覆盖部署到游戏目录..." });
@@ -250,6 +280,9 @@ export function deployOverlay(
   let totalDirs = 0;
 
   for (const cat of getCategories(stagingPaths, gamePaths)) {
+    if (cat.key === "gameCfg" && usePersonalCfg) continue;
+    if (cat.key === "userCfg" && !usePersonalCfg) continue;
+
     if (!hasEntries(cat)) continue;
 
     const stagingEntries = walkTopLevel(cat.staging);
@@ -310,8 +343,13 @@ export function deployOverlay(
 
   // Update paths
   if (gamePaths.cfgPath) {
-    saveData.save.cfg.path = gamePaths.cfgPath;
-    resData.res.cfg.path = gamePaths.cfgPath;
+    saveData.save.gameCfg.path = gamePaths.cfgPath;
+    resData.res.gameCfg.path = gamePaths.cfgPath;
+  }
+
+  if (gamePaths.cfgPath) {
+    saveData.save.userCfg.path = gamePaths.cfgPath;
+    resData.res.userCfg.path = gamePaths.cfgPath;
   }
   if (gamePaths.annotationsPath) {
     saveData.save.annotations.path = gamePaths.annotationsPath;
@@ -336,10 +374,14 @@ export function deployOverlay(
 export function checkAppendConflicts(
   stagingPaths: { cfg: string; annotations: string; video: string },
   gamePaths: GamePaths,
+  usePersonalCfg?: boolean,
 ): AppendConflictResult {
   const conflicts: { category: CategoryKey; names: string[] }[] = [];
 
   for (const cat of getCategories(stagingPaths, gamePaths)) {
+    if (cat.key === "gameCfg" && usePersonalCfg) continue;
+    if (cat.key === "userCfg" && !usePersonalCfg) continue;
+
     if (!hasEntries(cat)) continue;
 
     const stagingEntries = walkTopLevel(cat.staging);
@@ -376,6 +418,7 @@ export function deployAppend(
   stagingPaths: { cfg: string; annotations: string; video: string },
   gamePaths: GamePaths,
   overwriteConflicts: boolean,
+  usePersonalCfg: boolean,
   log: LogFn,
 ): DeployResult {
   log({ category: "install", level: "progress", message: "追加部署到游戏目录..." });
@@ -385,6 +428,9 @@ export function deployAppend(
   let totalDirs = 0;
 
   for (const cat of getCategories(stagingPaths, gamePaths)) {
+    if (cat.key === "gameCfg" && usePersonalCfg) continue;
+    if (cat.key === "userCfg" && !usePersonalCfg) continue;
+
     if (!hasEntries(cat)) continue;
 
     const stagingEntries = walkTopLevel(cat.staging);
@@ -448,7 +494,8 @@ export function deleteInstalledItem(
 
   // Delete from game dir
   let gameDir: string | null = null;
-  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.videoPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
   else if (category === "video") gameDir = gamePaths.videoPath;
 
@@ -485,7 +532,8 @@ export function restoreFromRes(
   }
 
   let gameDir: string | null = null;
-  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.videoPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
   else if (category === "video") gameDir = gamePaths.videoPath;
 
@@ -532,8 +580,8 @@ export function restoreFromRes(
 
     log({ category: "file-ops", level: "success", message: `已恢复冲突项：${name}`, detail: dstPath });
     return true;
-  } catch (e: any) {
-    log({ category: "file-ops", level: "error", message: `恢复失败：${name}`, detail: e.message });
+  } catch (e: unknown) {
+    log({ category: "file-ops", level: "error", message: `恢复失败：${name}`, detail: e instanceof Error ? e.message : String(e) });
     return false;
   }
 }
@@ -555,7 +603,8 @@ export function restoreFromSave(
   log({ category: "backup", level: "progress", message: "正在从备份恢复..." });
 
   const categories: { key: CategoryKey; game: string | null }[] = [
-    { key: "cfg", game: gamePaths.cfgPath },
+    { key: "gameCfg", game: gamePaths.cfgPath },
+    { key: "userCfg", game: gamePaths.videoPath },
     { key: "annotations", game: gamePaths.annotationsPath },
     { key: "video", game: gamePaths.videoPath },
   ];
@@ -707,7 +756,8 @@ export function restoreSaveCategory(
   if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
 
   let gameDir: string | null = null;
-  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.videoPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
   else if (category === "video") gameDir = gamePaths.videoPath;
 
@@ -767,7 +817,8 @@ export function restoreSaveItem(
   }
 
   let gameDir: string | null = null;
-  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.videoPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
   else if (category === "video") gameDir = gamePaths.videoPath;
 
@@ -791,8 +842,8 @@ export function restoreSaveItem(
     if (isDir) copyDirRecursive(src, dst);
     else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
     fs.rmSync(src, { recursive: true, force: true });
-  } catch (e: any) {
-    log({ category: "file-ops", level: "error", message: `恢复失败：${name}`, detail: e.message });
+  } catch (e: unknown) {
+    log({ category: "file-ops", level: "error", message: `恢复失败：${name}`, detail: e instanceof Error ? e.message : String(e) });
     return false;
   }
 
@@ -822,7 +873,8 @@ export function restoreResCategory(
   if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
 
   let gameDir: string | null = null;
-  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.videoPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
   else if (category === "video") gameDir = gamePaths.videoPath;
 
@@ -874,7 +926,8 @@ export function clearInstallCategory(
   if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
 
   let gameDir: string | null = null;
-  if (category === "cfg") gameDir = gamePaths.cfgPath;
+  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.videoPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
   else if (category === "video") gameDir = gamePaths.videoPath;
 
@@ -911,7 +964,8 @@ export function openItem(
 
   if (storage === "install") {
     let gameDir: string | null = null;
-    if (category === "cfg") gameDir = gamePaths.cfgPath;
+    if (category === "gameCfg") gameDir = gamePaths.cfgPath;
+    else if (category === "userCfg") gameDir = gamePaths.videoPath;
     else if (category === "annotations") gameDir = gamePaths.annotationsPath;
     else if (category === "video") gameDir = gamePaths.videoPath;
     if (!gameDir) {

@@ -94,6 +94,11 @@ function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
   );
 }
 
+function hasPresetAssets(assets: GitHubAssetRaw[]): boolean {
+  return assets.some((a) => /^Allcfgs.*\.zip$/i.test(a.name));
+}
+
+
 function mapRelease(r: GitHubReleaseRaw): GitHubRelease {
   return {
     tagName: r.tag_name.replace(/^v/, ""),
@@ -102,6 +107,7 @@ function mapRelease(r: GitHubReleaseRaw): GitHubRelease {
     htmlUrl: r.html_url,
     publishedAt: r.published_at || "",
     hasDesktopAssets: hasDesktopAssets(r.assets || []),
+    hasPresetAssets: hasPresetAssets(r.assets || []),
   };
 }
 
@@ -119,7 +125,7 @@ function buildResult(
   releases: GitHubRelease[],
 ): UpdateCheckResult {
   const hasDesktopUpdate = releases.some((r) => r.hasDesktopAssets);
-  const hasPresetUpdate = releases.some((r) => !r.hasDesktopAssets);
+  const hasPresetUpdate = releases.some((r) => r.hasPresetAssets);
   return {
     currentVersion: current,
     hasUpdate: releases.length > 0,

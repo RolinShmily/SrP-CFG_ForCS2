@@ -174,7 +174,7 @@ export function detectCs2CfgPath(
       log({
         category: "path-detection",
         level: "success",
-        message: `全局CFG 路径：${cfg}`,
+        message: `游戏CFG 路径：${cfg}`,
       });
       return cfg;
     }
@@ -183,7 +183,7 @@ export function detectCs2CfgPath(
   log({
     category: "path-detection",
     level: "error",
-    message: "未找到 全局CFG 路径",
+    message: "未找到 游戏CFG 路径",
   });
   return null;
 }

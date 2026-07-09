@@ -86,7 +86,7 @@ export default function DownloadPage() {
                     />
                   </div>
                   {pkg.featured && (
-                    <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-accent text-bg flex items-center gap-1">
+                    <span className="text-[11px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-accent text-bg flex items-center gap-1">
                       <Star size={10} />
                       DEFAULT
                     </span>
@@ -100,7 +100,7 @@ export default function DownloadPage() {
                 {pkg.desc}
               </p>
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[11px] text-text-faint">
+                <span className="font-mono text-xs text-text-faint">
                   {pkg.file}
                 </span>
                 <div className="flex items-center gap-2">

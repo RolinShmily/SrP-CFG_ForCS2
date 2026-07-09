@@ -42,19 +42,20 @@ function ReleaseSection({ release }: { release: GitHubRelease }) {
           <span className="font-display text-sm font-semibold text-accent">
             v{release.tagName}
           </span>
-          {release.hasDesktopAssets ? (
-            <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-green/10 text-green">
-              <Monitor size={10} />
+          {release.hasDesktopAssets && (
+            <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded bg-green/10 text-green">
+              <Monitor size={14} />
               软件
             </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-accent-bg text-accent-light">
-              <Package size={10} />
+          )}
+          {release.hasPresetAssets && (
+            <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded bg-accent-bg text-accent-light">
+              <Package size={14} />
               预设包
             </span>
           )}
           {date && (
-            <span className="text-xs text-text-faint">{date}</span>
+            <span className="text-sm text-text-faint">{date}</span>
           )}
         </div>
         <div className="flex items-center gap-1.5">
@@ -66,11 +67,10 @@ function ReleaseSection({ release }: { release: GitHubRelease }) {
             className="p-1 text-text-faint hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
             title="GitHub Release"
           >
-            <ExternalLink size={13} />
+            <ExternalLink size={16} />
           </button>
           <ChevronDown
-            size={16}
-            className={`text-text-faint transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+            size={20}
           />
         </div>
       </div>
@@ -78,11 +78,11 @@ function ReleaseSection({ release }: { release: GitHubRelease }) {
         <div className="px-4 pb-4 pt-0">
           {release.body ? (
             <div
-              className="release-notes bg-bg-raised rounded-[var(--radius-sm)] p-3 max-h-60 overflow-y-auto"
+              className="release-notes bg-bg-raised rounded-[var(--radius-sm)] p-4 max-h-72 overflow-y-auto"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           ) : (
-            <div className="text-xs text-text-muted bg-bg-raised rounded-[var(--radius-sm)] p-3">
+            <div className="text-sm text-text-muted bg-bg-raised rounded-[var(--radius-sm)] p-3">
               暂无更新日志
             </div>
           )}
@@ -178,7 +178,7 @@ export default function UpdateModal({
                     .catch(() => setError(true))
                     .finally(() => setLoading(false));
                 }}
-                className="px-4 py-1.5 text-xs font-display bg-bg-raised border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer text-text-secondary"
+                className="px-4 py-1.5 text-sm font-display bg-bg-raised border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer text-text-secondary"
               >
                 重试
               </button>
@@ -196,7 +196,7 @@ export default function UpdateModal({
                 </div>
               )}
               {hasNewer && currentVersion && latestVersion && (
-                <div className="flex items-center justify-center gap-3 py-2.5 mb-3 text-xs text-text-muted bg-bg-raised rounded-[var(--radius)]">
+                <div className="flex items-center justify-center gap-3 py-2.5 mb-3 text-sm text-text-muted bg-bg-raised rounded-[var(--radius)]">
                   <span>当前 <span className="font-mono text-text-secondary">v{currentVersion}</span></span>
                   <span className="text-border">|</span>
                   <span>最新 <span className="font-mono text-accent">v{latestVersion}</span></span>

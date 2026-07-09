@@ -97,7 +97,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
         <img
           src="./favicon.ico"
           alt="SrP-CFG"
-          className="w-12 h-12 rounded-[10px] object-contain"
+          className="w-16 h-16 rounded-[10px] object-contain"
         />
       </div>
 

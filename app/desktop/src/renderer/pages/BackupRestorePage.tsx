@@ -15,13 +15,14 @@ import {
 import type { ResData, SaveData, CategoryData } from "../types";
 
 const sectionIcons: Record<string, React.ReactNode> = {
-  cfg: <FileText size={16} className="text-accent" />,
+  gameCfg: <FileText size={16} className="text-teal" />,
+  userCfg: <FileText size={16} className="text-accent-light" />,
   annotations: <Map size={16} className="text-accent" />,
   video: <Monitor size={16} className="text-accent" />,
 };
-
 const sectionLabels: Record<string, string> = {
-  cfg: "CFG 配置",
+  gameCfg: "游戏 CFG",
+  userCfg: "用户 CFG",
   annotations: "地图指南",
   video: "视频预设",
 };
@@ -67,9 +68,9 @@ export default function BackupRestorePage() {
   };
 
   // ── Helpers ──────────────────────────────────────────────────
-  type CatEntry = { key: "cfg" | "annotations" | "video"; data: CategoryData };
+  type CatEntry = { key: "gameCfg" | "userCfg" | "annotations" | "video"; data: CategoryData };
   const toCategories = (data: ResData | SaveData): CatEntry[] =>
-    (["cfg", "annotations", "video"] as const).map((k) => ({ key: k, data: data[k] }));
+    (["gameCfg", "userCfg", "annotations", "video"] as const).map((k) => ({ key: k, data: data[k] }));
   const hasItems = (c: CatEntry) => c.data.files.length > 0 || c.data.dirs.length > 0;
 
   if (loading) {
@@ -109,7 +110,7 @@ export default function BackupRestorePage() {
           <span className="text-xs font-semibold text-text-secondary">
             {sectionLabels[catKey]}
           </span>
-          <span className={`text-[10px] ${accentLabel ? "text-accent/70" : "text-text-faint"}`}>
+          <span className={`text-[11px] ${accentLabel ? "text-accent/70" : "text-text-faint"}`}>
             {totalItems} {accentLabel ?? "项"}
           </span>
         </div>
@@ -149,7 +150,7 @@ export default function BackupRestorePage() {
       <button
         onClick={onClick}
         disabled={currentBusy !== null}
-        className={`flex items-center gap-1 px-2 py-1 text-[10px] bg-bg-card disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer border ${colorMap[color]}`}
+        className={`flex items-center gap-1 px-2 py-1 text-[11px] bg-bg-card disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer border ${colorMap[color]}`}
       >
         {currentBusy === busyKey ? <Loader2 size={10} className="animate-spin" /> : icon}
         {label}
@@ -194,250 +195,248 @@ export default function BackupRestorePage() {
     <div className="space-y-5">
       <h1 className="font-display text-2xl font-bold">备份与恢复</h1>
 
-      {/* ── 配置备份 (save.json) ─────────────────────────────── */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Save size={16} className="text-green" />
-            <h2 className="font-display text-sm font-semibold text-text-secondary">配置备份</h2>
-            <span className="text-xs text-text-faint">覆盖安装前自动备份的文件</span>
+      <div className="grid grid-cols-2 gap-5">
+        {/* ── 配置备份 (save.json) ─────────────────────────────── */}
+        <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Save size={16} className="text-green" />
+              <h2 className="font-display text-sm font-semibold text-text-secondary">配置备份</h2>
+              <span className="text-xs text-text-faint">覆盖安装前自动备份的文件</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {hasSaveEntries && (
+                <SmallBtn
+                  busyKey="save:restoreAll"
+                  currentBusy={busy}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    runAction("save:restoreAll", () => window.api.restoreFromSave());
+                  }}
+                  color="green"
+                  icon={<RotateCcw size={12} />}
+                  label="全部恢复"
+                />
+              )}
+              <button
+                onClick={() => window.api.openSaveFolder()}
+                className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-text-muted hover:text-accent hover:bg-accent-bg rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-border"
+              >
+                <FolderOpen size={13} />
+                打开目录
+              </button>
+            </div>
           </div>
-          {hasSaveEntries && (
-            <SmallBtn
-              busyKey="save:restoreAll"
-              currentBusy={busy}
-              onClick={(e) => {
-                e.stopPropagation();
-                runAction("save:restoreAll", () => window.api.restoreFromSave());
-              }}
-              color="green"
-              icon={<RotateCcw size={12} />}
-              label="全部恢复"
-            />
+
+          {!hasSaveEntries ? (
+            <p className="text-xs text-text-faint py-3 text-center">暂无配置备份</p>
+          ) : (
+            saveCats.filter(hasItems).map((cat) => {
+              const totalItems = cat.data.files.length + cat.data.dirs.length;
+              const isOpen = expanded[`save-${cat.key}`] ?? false;
+              return (
+                <div key={`save-${cat.key}`} className="border border-border rounded-[var(--radius-sm)]">
+                  <CategoryHeader
+                    prefix="save"
+                    catKey={cat.key}
+                    totalItems={totalItems}
+                    buttons={
+                      <>
+                        <SmallBtn
+                          busyKey={`save:restore:${cat.key}`}
+                          currentBusy={busy}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            runAction(`save:restore:${cat.key}`, () => window.api.restoreSaveCategory(cat.key));
+                          }}
+                          color="green"
+                          icon={<RotateCcw size={10} />}
+                          label="恢复"
+                        />
+                        <SmallBtn
+                          busyKey={`save:clear:${cat.key}`}
+                          currentBusy={busy}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            runAction(`save:clear:${cat.key}`, () => window.api.clearSaveCategory(cat.key));
+                          }}
+                          color="red"
+                          icon={<Trash2 size={10} />}
+                          label="删除"
+                        />
+                      </>
+                    }
+                  />
+                  {isOpen && (
+                    <div className="px-3 pb-3 space-y-1">
+                      {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
+                        ({ name, isDir }) => (
+                          <ItemRow
+                            key={name}
+                            name={name}
+                            isDir={isDir}
+                            buttons={
+                              <>
+                                <SmallBtn
+                                  busyKey={`save:item:restore:${cat.key}/${name}`}
+                                  currentBusy={busy}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    runAction(`save:item:restore:${cat.key}/${name}`, () => window.api.restoreSaveItem(cat.key, name));
+                                  }}
+                                  color="green"
+                                  icon={<RotateCcw size={10} />}
+                                  label="恢复"
+                                />
+                                <SmallBtn
+                                  busyKey={`save:item:delete:${cat.key}/${name}`}
+                                  currentBusy={busy}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    runAction(`save:item:delete:${cat.key}/${name}`, () => window.api.deleteSaveItem(cat.key, name));
+                                  }}
+                                  color="red"
+                                  icon={<Trash2 size={10} />}
+                                  label="删除"
+                                />
+                                <SmallBtn
+                                  busyKey={`save:item:open:${cat.key}/${name}`}
+                                  currentBusy={busy}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    runAction(`save:item:open:${cat.key}/${name}`, () => window.api.openItem("save", cat.key, name));
+                                  }}
+                                  color="accent"
+                                  icon={<ExternalLink size={10} />}
+                                  label="打开"
+                                />
+                              </>
+                            }
+                          />
+                        ),
+                      )}
+                      {cat.data.path && (
+                        <p className="text-xs text-text-faint font-mono break-all pt-1">{cat.data.path}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })
           )}
         </div>
 
-        {!hasSaveEntries ? (
-          <p className="text-xs text-text-faint py-3 text-center">暂无配置备份</p>
-        ) : (
-          saveCats.filter(hasItems).map((cat) => {
-            const totalItems = cat.data.files.length + cat.data.dirs.length;
-            const isOpen = expanded[`save-${cat.key}`] ?? false;
-            return (
-              <div key={`save-${cat.key}`} className="border border-border rounded-[var(--radius-sm)]">
-                <CategoryHeader
-                  prefix="save"
-                  catKey={cat.key}
-                  totalItems={totalItems}
-                  buttons={
-                    <>
-                      <SmallBtn
-                        busyKey={`save:restore:${cat.key}`}
-                        currentBusy={busy}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          runAction(`save:restore:${cat.key}`, () => window.api.restoreSaveCategory(cat.key));
-                        }}
-                        color="green"
-                        icon={<RotateCcw size={10} />}
-                        label="恢复"
-                      />
-                      <SmallBtn
-                        busyKey={`save:clear:${cat.key}`}
-                        currentBusy={busy}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          runAction(`save:clear:${cat.key}`, () => window.api.clearSaveCategory(cat.key));
-                        }}
-                        color="red"
-                        icon={<Trash2 size={10} />}
-                        label="删除"
-                      />
-                    </>
-                  }
-                />
-                {isOpen && (
-                  <div className="px-3 pb-3 space-y-1">
-                    {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
-                      ({ name, isDir }) => (
-                        <ItemRow
-                          key={name}
-                          name={name}
-                          isDir={isDir}
-                          buttons={
-                            <>
-                              <SmallBtn
-                                busyKey={`save:item:restore:${cat.key}/${name}`}
-                                currentBusy={busy}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  runAction(`save:item:restore:${cat.key}/${name}`, () => window.api.restoreSaveItem(cat.key, name));
-                                }}
-                                color="green"
-                                icon={<RotateCcw size={10} />}
-                                label="恢复"
-                              />
-                              <SmallBtn
-                                busyKey={`save:item:delete:${cat.key}/${name}`}
-                                currentBusy={busy}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  runAction(`save:item:delete:${cat.key}/${name}`, () => window.api.deleteSaveItem(cat.key, name));
-                                }}
-                                color="red"
-                                icon={<Trash2 size={10} />}
-                                label="删除"
-                              />
-                              <SmallBtn
-                                busyKey={`save:item:open:${cat.key}/${name}`}
-                                currentBusy={busy}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  runAction(`save:item:open:${cat.key}/${name}`, () => window.api.openItem("save", cat.key, name));
-                                }}
-                                color="accent"
-                                icon={<ExternalLink size={10} />}
-                                label="打开"
-                              />
-                            </>
-                          }
+        {/* ── 冲突恢复 (res.json) ──────────────────────────────── */}
+        <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle size={16} className="text-accent" />
+              <h2 className="font-display text-sm font-semibold text-text-secondary">冲突恢复</h2>
+              <span className="text-xs text-text-faint">用户原有重名文件</span>
+            </div>
+            <button
+              onClick={() => window.api.openResFolder()}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-text-muted hover:text-accent hover:bg-accent-bg rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-border"
+            >
+              <FolderOpen size={13} />
+              打开目录
+            </button>
+          </div>
+
+          {!hasResEntries ? (
+            <p className="text-xs text-text-faint py-3 text-center">暂无冲突恢复文件</p>
+          ) : (
+            resCats.filter(hasItems).map((cat) => {
+              const totalItems = cat.data.files.length + cat.data.dirs.length;
+              const isOpen = expanded[`res-${cat.key}`] ?? false;
+              return (
+                <div key={`res-${cat.key}`} className="border border-border rounded-[var(--radius-sm)]">
+                  <CategoryHeader
+                    prefix="res"
+                    catKey={cat.key}
+                    totalItems={totalItems}
+                    accentLabel="个冲突文件"
+                    buttons={
+                      <>
+                        <SmallBtn
+                          busyKey={`res:restore:${cat.key}`}
+                          currentBusy={busy}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            runAction(`res:restore:${cat.key}`, () => window.api.restoreResCategory(cat.key));
+                          }}
+                          color="green"
+                          icon={<RotateCcw size={10} />}
+                          label="恢复"
                         />
-                      ),
-                    )}
-                    {cat.data.path && (
-                      <p className="text-[10px] text-text-faint font-mono break-all pt-1">{cat.data.path}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* ── 冲突恢复 (res.json) ──────────────────────────────── */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <AlertTriangle size={16} className="text-accent" />
-          <h2 className="font-display text-sm font-semibold text-text-secondary">冲突恢复</h2>
-          <span className="text-xs text-text-faint">用户原有重名文件</span>
-        </div>
-
-        {!hasResEntries ? (
-          <p className="text-xs text-text-faint py-3 text-center">暂无冲突恢复文件</p>
-        ) : (
-          resCats.filter(hasItems).map((cat) => {
-            const totalItems = cat.data.files.length + cat.data.dirs.length;
-            const isOpen = expanded[`res-${cat.key}`] ?? false;
-            return (
-              <div key={`res-${cat.key}`} className="border border-border rounded-[var(--radius-sm)]">
-                <CategoryHeader
-                  prefix="res"
-                  catKey={cat.key}
-                  totalItems={totalItems}
-                  accentLabel="个冲突文件"
-                  buttons={
-                    <>
-                      <SmallBtn
-                        busyKey={`res:restore:${cat.key}`}
-                        currentBusy={busy}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          runAction(`res:restore:${cat.key}`, () => window.api.restoreResCategory(cat.key));
-                        }}
-                        color="green"
-                        icon={<RotateCcw size={10} />}
-                        label="恢复"
-                      />
-                      <SmallBtn
-                        busyKey={`res:clear:${cat.key}`}
-                        currentBusy={busy}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          runAction(`res:clear:${cat.key}`, () => window.api.clearResCategory(cat.key));
-                        }}
-                        color="red"
-                        icon={<Trash2 size={10} />}
-                        label="删除"
-                      />
-                    </>
-                  }
-                />
-                {isOpen && (
-                  <div className="px-3 pb-3 space-y-1">
-                    {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
-                      ({ name, isDir }) => (
-                        <ItemRow
-                          key={name}
-                          name={name}
-                          isDir={isDir}
-                          buttons={
-                            <>
-                              <SmallBtn
-                                busyKey={`res:item:restore:${cat.key}/${name}`}
-                                currentBusy={busy}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  runAction(`res:item:restore:${cat.key}/${name}`, () => window.api.restoreFromRes(cat.key, name));
-                                }}
-                                color="green"
-                                icon={<RotateCcw size={10} />}
-                                label="恢复"
-                              />
-                              <SmallBtn
-                                busyKey={`res:item:delete:${cat.key}/${name}`}
-                                currentBusy={busy}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  runAction(`res:item:delete:${cat.key}/${name}`, () => window.api.deleteResItem(cat.key, name));
-                                }}
-                                color="red"
-                                icon={<Trash2 size={10} />}
-                                label="删除"
-                              />
-                              <SmallBtn
-                                busyKey={`res:item:open:${cat.key}/${name}`}
-                                currentBusy={busy}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  runAction(`res:item:open:${cat.key}/${name}`, () => window.api.openItem("res", cat.key, name));
-                                }}
-                                color="accent"
-                                icon={<ExternalLink size={10} />}
-                                label="打开"
-                              />
-                            </>
-                          }
+                        <SmallBtn
+                          busyKey={`res:clear:${cat.key}`}
+                          currentBusy={busy}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            runAction(`res:clear:${cat.key}`, () => window.api.clearResCategory(cat.key));
+                          }}
+                          color="red"
+                          icon={<Trash2 size={10} />}
+                          label="删除"
                         />
-                      ),
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* ── Open folders ──────────────────────────────────────── */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <h2 className="font-display text-sm font-semibold text-text-secondary">文件位置浏览</h2>
-        <p className="text-sm text-text-muted">打开备份或恢复文件所在目录，查看和管理文件。</p>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => window.api.openSaveFolder()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-[var(--radius-sm)] font-display font-semibold text-sm transition-all cursor-pointer border border-border bg-transparent text-text-secondary hover:border-border-highlight hover:text-text"
-          >
-            <Save size={16} />
-            打开备份文件夹
-          </button>
-          <button
-            onClick={() => window.api.openResFolder()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-[var(--radius-sm)] font-display font-semibold text-sm transition-all cursor-pointer border border-border bg-transparent text-text-secondary hover:border-border-highlight hover:text-text"
-          >
-            <AlertTriangle size={16} />
-            打开恢复文件夹
-          </button>
+                      </>
+                    }
+                  />
+                  {isOpen && (
+                    <div className="px-3 pb-3 space-y-1">
+                      {[...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
+                        ({ name, isDir }) => (
+                          <ItemRow
+                            key={name}
+                            name={name}
+                            isDir={isDir}
+                            buttons={
+                              <>
+                                <SmallBtn
+                                  busyKey={`res:item:restore:${cat.key}/${name}`}
+                                  currentBusy={busy}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    runAction(`res:item:restore:${cat.key}/${name}`, () => window.api.restoreFromRes(cat.key, name));
+                                  }}
+                                  color="green"
+                                  icon={<RotateCcw size={10} />}
+                                  label="恢复"
+                                />
+                                <SmallBtn
+                                  busyKey={`res:item:delete:${cat.key}/${name}`}
+                                  currentBusy={busy}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    runAction(`res:item:delete:${cat.key}/${name}`, () => window.api.deleteResItem(cat.key, name));
+                                  }}
+                                  color="red"
+                                  icon={<Trash2 size={10} />}
+                                  label="删除"
+                                />
+                                <SmallBtn
+                                  busyKey={`res:item:open:${cat.key}/${name}`}
+                                  currentBusy={busy}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    runAction(`res:item:open:${cat.key}/${name}`, () => window.api.openItem("res", cat.key, name));
+                                  }}
+                                  color="accent"
+                                  icon={<ExternalLink size={10} />}
+                                  label="打开"
+                                />
+                              </>
+                            }
+                          />
+                        ),
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

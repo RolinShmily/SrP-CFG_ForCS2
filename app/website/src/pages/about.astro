@@ -1,10 +1,11 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import SectionHeader from "../components/SectionHeader.astro";
-import { Github, ExternalLink, Boxes, Shield, User, PenLine, Zap, Monitor, Atom, Paintbrush, Server, Code } from "lucide-astro";
+import { Github, ExternalLink, Boxes, Shield, User, Zap, Monitor, Atom, Paintbrush, Server, Code } from "lucide-astro";
 import { REPO_URL, RELEASES_URL } from "../data/navigation";
-import BilibiliIcon from "../components/icons/BilibiliIcon.astro";
-
+import blogSvg from "../assets/svg/blog-solid-full.svg?raw";
+import bilibiliSvg from "../assets/svg/bilibili.svg?raw";
+import githubSvg from "../assets/svg/github-brands-solid-full.svg?raw";
 const techStack = [
   { name: "Astro", desc: "静态站点生成框架", icon: Zap },
   { name: "Electron", desc: "桌面应用框架", icon: Monitor },
@@ -17,7 +18,7 @@ const techStack = [
 const links = [
   { label: "GitHub 仓库", url: REPO_URL, icon: Github },
   { label: "GitHub Release", url: RELEASES_URL, icon: Github },
-  { label: "SrP-CFG 视频系列", url: "https://space.bilibili.com/422744280/lists/6770542", icon: BilibiliIcon },
+  { label: "SrP-CFG 视频系列", url: "https://space.bilibili.com/422744280/lists/6770542", icon: ExternalLink },
   { label: "关于 CFG 你要了解的二三事", url: "https://blog.srprolin.top/posts/srp-cfg/", icon: ExternalLink },
 ];
 
@@ -43,6 +44,7 @@ const contributors = [
       <SectionHeader label="About" title="关于 SrP-CFG" description="适用于 CS2（Counter-Strike 2）各场景的 CFG 预设文件，由 RoL1n 开发维护" />
 
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 max-w-[1000px] mx-auto">
+        <!-- Left column: 项目简介 + 快速链接 -->
         <div>
           <h2 class="font-display text-2xl font-semibold mb-6">项目简介</h2>
           <div class="space-y-4 text-text-secondary font-light leading-[1.8] mb-10">
@@ -78,6 +80,7 @@ const contributors = [
           </div>
         </div>
 
+        <!-- Right column: 技术栈 + 贡献者 + 开源许可 -->
         <div>
           <h2 class="font-display text-2xl font-semibold mb-6 flex items-center gap-3">
             <Boxes class="w-6 h-6 text-teal" />
@@ -114,15 +117,33 @@ const contributors = [
                   <div class="font-display text-base font-semibold">{c.name}</div>
                   <div class="text-xs text-text-muted">{c.role}</div>
                 </div>
-                <div class="ml-auto flex items-center gap-2">
-                  <a href={c.blog} target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors" title="Blog">
-                    <PenLine class="w-[18px] h-[18px]" />
+                <div class="ml-auto flex items-center gap-1.5">
+                  <a
+                    href={c.blog}
+                    target="_blank"
+                    rel="noopener"
+                    class="flex items-center gap-1 px-2.5 py-1.5 bg-bg-raised border border-border rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors no-underline text-xs"
+                  >
+                    <span class="w-3.5 h-3.5 text-text-muted" set:html={blogSvg} />
+                    <span>博客</span>
                   </a>
-                  <a href={c.bilibili} target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors" title="Bilibili">
-                    <BilibiliIcon class="w-[18px] h-[18px]" />
+                  <a
+                    href={c.bilibili}
+                    target="_blank"
+                    rel="noopener"
+                    class="flex items-center gap-1 px-2.5 py-1.5 bg-bg-raised border border-border rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors no-underline text-xs"
+                  >
+                    <span class="w-3.5 h-3.5 text-text-muted" set:html={bilibiliSvg} />
+                    <span>B站</span>
                   </a>
-                  <a href={`https://github.com/${c.github}`} target="_blank" rel="noopener" class="text-text-muted hover:text-accent transition-colors" title="GitHub">
-                    <Github class="w-[18px] h-[18px]" />
+                  <a
+                    href={`https://github.com/${c.github}`}
+                    target="_blank"
+                    rel="noopener"
+                    class="flex items-center gap-1 px-2.5 py-1.5 bg-bg-raised border border-border rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors no-underline text-xs"
+                  >
+                    <span class="w-3.5 h-3.5 text-text-muted" set:html={githubSvg} />
+                    <span>GitHub</span>
                   </a>
                 </div>
               </div>

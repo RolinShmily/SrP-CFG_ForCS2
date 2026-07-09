@@ -19,8 +19,8 @@ contextBridge.exposeInMainWorld("api", {
 
   // Uploaded entries
   getUploadedEntries: () => ipcRenderer.invoke("installer:getUploadedEntries"),
-  installFromUpload: (folderName: string, mode: "overlay" | "append") =>
-    ipcRenderer.invoke("installer:installFromUpload", folderName, mode),
+  installFromUpload: (folderName: string, mode: "overlay" | "append", usePersonalCfg?: boolean) =>
+    ipcRenderer.invoke("installer:installFromUpload", folderName, mode, usePersonalCfg),
   deleteUploadEntry: (folderName: string) =>
     ipcRenderer.invoke("installer:deleteUploadEntry", folderName),
   openUploadsFolder: () => ipcRenderer.invoke("installer:openUploadsFolder"),
@@ -61,21 +61,17 @@ contextBridge.exposeInMainWorld("api", {
   openSaveFolder: () => ipcRenderer.invoke("installer:openSaveFolder"),
   openResFolder: () => ipcRenderer.invoke("installer:openResFolder"),
 
-  // Append conflict confirmation
-  confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean) =>
-    ipcRenderer.invoke("installer:confirmAppend", folderName, source, proceed),
-
+  confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean, usePersonalCfg?: boolean) =>
+    ipcRenderer.invoke("installer:confirmAppend", folderName, source, proceed, usePersonalCfg),
   // Downloads
   downloadFromUrl: (url: string, fileName: string) =>
     ipcRenderer.invoke("installer:downloadFromUrl", url, fileName),
   getDownloadEntries: () => ipcRenderer.invoke("installer:getDownloadEntries"),
   deleteDownload: (folderName: string) =>
     ipcRenderer.invoke("installer:deleteDownload", folderName),
-  installFromDownload: (folderName: string, mode: "overlay" | "append") =>
-    ipcRenderer.invoke("installer:installFromDownload", folderName, mode),
-  openDownloadsFolder: () =>
-    ipcRenderer.invoke("installer:openDownloadsFolder"),
-
+  installFromDownload: (folderName: string, mode: "overlay" | "append", usePersonalCfg?: boolean) =>
+    ipcRenderer.invoke("installer:installFromDownload", folderName, mode, usePersonalCfg),
+  openDownloadsFolder: () => ipcRenderer.invoke("installer:openDownloadsFolder"),
   // App Info
   getVersion: () => ipcRenderer.invoke("app:getVersion"),
   getLatestVersion: () => ipcRenderer.invoke("app:getLatestVersion"),

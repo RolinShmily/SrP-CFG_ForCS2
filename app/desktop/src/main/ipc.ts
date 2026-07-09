@@ -90,7 +90,7 @@ export function registerIpcHandlers() {
     return staging.getUploadedEntries();
   });
 
-  ipcMain.handle("installer:installFromUpload", async (_e, folderName: string, mode: InstallMode) => {
+  ipcMain.handle("installer:installFromUpload", async (_e, folderName: string, mode: InstallMode, usePersonalCfg?: boolean) => {
     try {
       const result = await staging.installFromUpload(folderName, mode, sendLog);
       if (!result) {
@@ -103,8 +103,9 @@ export function registerIpcHandlers() {
         return { filesInstalled: 0, dirsInstalled: 0 };
       }
 
+      const cfgPath = usePersonalCfg ? state.videoCfgPath : state.cs2CfgPath;
       const gamePaths = {
-        cfgPath: state.cs2CfgPath,
+        cfgPath,
         annotationsPath: state.annotationsPath,
         videoPath: state.videoCfgPath,
       };
@@ -113,20 +114,21 @@ export function registerIpcHandlers() {
         const summary = installer.deployOverlay(
           { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
           gamePaths,
+          usePersonalCfg ?? false,
           sendLog,
         );
         sendLog({ category: "install", level: "success", message: "上传包安装完成！" });
         return summary;
       } else {
-        // Append — check conflicts first
         const conflictResult = installer.checkAppendConflicts(
           { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
           gamePaths,
+          usePersonalCfg ?? false,
         );
 
         if (conflictResult.conflicts.length > 3) {
           sendLog({ category: "install", level: "error", message: `冲突文件过多（${conflictResult.conflicts.length} 个），追加安装已拒绝` });
-          return { needsConfirm: false, conflicts: conflictResult.conflicts } as any;
+          return { needsConfirm: false, conflicts: conflictResult.conflicts } as unknown as installer.AppendConflictResult;
         }
 
         if (conflictResult.needsConfirm) {
@@ -135,18 +137,18 @@ export function registerIpcHandlers() {
           return { needsConfirm: true, conflicts: conflictResult.conflicts };
         }
 
-        // No conflicts — proceed
         const summary = installer.deployAppend(
           { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
           gamePaths,
           false,
+          usePersonalCfg ?? false,
           sendLog,
         );
         sendLog({ category: "install", level: "success", message: "上传包追加安装完成！" });
         return summary;
       }
-    } catch (e: any) {
-      sendLog({ category: "install", level: "error", message: `安装异常：${e.message}` });
+    } catch (e: unknown) {
+      sendLog({ category: "install", level: "error", message: `安装异常：${e instanceof Error ? e.message : String(e)}` });
       return { filesInstalled: 0, dirsInstalled: 0 };
     }
   });
@@ -161,7 +163,7 @@ export function registerIpcHandlers() {
 
   // ── Append Conflict Confirmation ───────────────────────────
 
-  ipcMain.handle("installer:confirmAppend", async (_e, folderName: string, source: "upload" | "download", proceed: boolean) => {
+  ipcMain.handle("installer:confirmAppend", async (_e, folderName: string, source: "upload" | "download", proceed: boolean, usePersonalCfg?: boolean) => {
     if (!proceed || !pendingAppend) {
       pendingAppend = null;
       sendLog({ category: "install", level: "info", message: "追加安装已取消" });
@@ -169,8 +171,9 @@ export function registerIpcHandlers() {
     }
 
     try {
+      const cfgPath = usePersonalCfg ? state.videoCfgPath : state.cs2CfgPath;
       const gamePaths = {
-        cfgPath: state.cs2CfgPath,
+        cfgPath,
         annotationsPath: state.annotationsPath,
         videoPath: state.videoCfgPath,
       };
@@ -186,14 +189,15 @@ export function registerIpcHandlers() {
         { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
         gamePaths,
         true,
+        usePersonalCfg ?? false,
         sendLog,
       );
 
       sendLog({ category: "install", level: "success", message: "追加安装完成！" });
       pendingAppend = null;
       return summary;
-    } catch (e: any) {
-      sendLog({ category: "install", level: "error", message: `追加安装异常：${e.message}` });
+    } catch (e: unknown) {
+      sendLog({ category: "install", level: "error", message: `追加安装异常：${e instanceof Error ? e.message : String(e)}` });
       pendingAppend = null;
       return null;
     }
@@ -322,8 +326,7 @@ export function registerIpcHandlers() {
   ipcMain.handle("installer:deleteDownload", async (_e, folderName: string) => {
     staging.deleteDownload(folderName, sendLog);
   });
-
-  ipcMain.handle("installer:installFromDownload", async (_e, folderName: string, mode: InstallMode) => {
+  ipcMain.handle("installer:installFromDownload", async (_e, folderName: string, mode: InstallMode, usePersonalCfg?: boolean) => {
     try {
       const result = await staging.installFromDownload(folderName, mode, sendLog);
       if (!result) {
@@ -335,9 +338,9 @@ export function registerIpcHandlers() {
         sendLog({ category: "install", level: "warning", message: "预设包中未找到可安装的配置文件" });
         return { filesInstalled: 0, dirsInstalled: 0 };
       }
-
+      const cfgPath = usePersonalCfg ? state.videoCfgPath : state.cs2CfgPath;
       const gamePaths = {
-        cfgPath: state.cs2CfgPath,
+        cfgPath,
         annotationsPath: state.annotationsPath,
         videoPath: state.videoCfgPath,
       };
@@ -346,6 +349,7 @@ export function registerIpcHandlers() {
         const summary = installer.deployOverlay(
           { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
           gamePaths,
+          usePersonalCfg ?? false,
           sendLog,
         );
         sendLog({ category: "install", level: "success", message: "预设包安装完成！" });
@@ -354,11 +358,12 @@ export function registerIpcHandlers() {
         const conflictResult = installer.checkAppendConflicts(
           { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
           gamePaths,
+          usePersonalCfg ?? false,
         );
 
         if (conflictResult.conflicts.length > 3) {
           sendLog({ category: "install", level: "error", message: `冲突文件过多（${conflictResult.conflicts.length} 个），追加安装已拒绝` });
-          return { needsConfirm: false, conflicts: conflictResult.conflicts } as any;
+          return { needsConfirm: false, conflicts: conflictResult.conflicts } as unknown as installer.AppendConflictResult;
         }
 
         if (conflictResult.needsConfirm) {
@@ -370,19 +375,23 @@ export function registerIpcHandlers() {
           { cfg: staging.getStagingPath("cfg"), annotations: staging.getStagingPath("annotations"), video: staging.getStagingPath("video") },
           gamePaths,
           false,
+          usePersonalCfg ?? false,
           sendLog,
         );
         sendLog({ category: "install", level: "success", message: "预设包追加安装完成！" });
         return summary;
       }
-    } catch (e: any) {
-      sendLog({ category: "install", level: "error", message: `安装异常：${e.message}` });
+    } catch (e: unknown) {
+      sendLog({ category: "install", level: "error", message: `安装异常：${e instanceof Error ? e.message : String(e)}` });
       return { filesInstalled: 0, dirsInstalled: 0 };
     }
   });
 
   ipcMain.handle("installer:openDownloadsFolder", async () => {
-    await shell.openPath(staging.getDownloadPath());
+    const result = await shell.openPath(staging.getDownloadPath());
+    if (result) {
+      sendLog({ category: "file-ops", level: "error", message: `无法打开下载目录：${result}` });
+    }
   });
 
   // ── App Info ────────────────────────────────────────────────

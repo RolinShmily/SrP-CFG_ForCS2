@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Layers, Plus, Loader2 } from "lucide-react";
+import { Layers, Plus, Loader2, Folder } from "lucide-react";
 import type { InstallMode, InstallResult, AppendConflictResult } from "../types";
 import ConfirmAppendModal from "./ConfirmAppendModal";
 
@@ -10,18 +10,14 @@ interface Props {
   onInstallComplete?: () => void;
 }
 
-function isConflictResult(r: any): r is AppendConflictResult {
-  return r && typeof r.needsConfirm === "boolean";
+function isConflictResult(r: InstallResult | AppendConflictResult): r is AppendConflictResult {
+  return typeof r === "object" && r !== null && "needsConfirm" in r;
 }
 
-export default function InstallActions({
-  hasSource,
-  selectedDownload,
-  selectedUpload,
-  onInstallComplete,
-}: Props) {
+export default function InstallActions({ hasSource, selectedDownload, selectedUpload, onInstallComplete }: Props) {
   const [installing, setInstalling] = useState(false);
   const [conflictData, setConflictData] = useState<AppendConflictResult | null>(null);
+  const [usePersonalCfg, setUsePersonalCfg] = useState(true);
 
   const handleInstall = async (mode: InstallMode) => {
     if (installing || !hasSource) return;
@@ -29,9 +25,9 @@ export default function InstallActions({
     try {
       let result: InstallResult | AppendConflictResult;
       if (selectedDownload) {
-        result = await window.api.installFromDownload(selectedDownload, mode);
+        result = await window.api.installFromDownload(selectedDownload, mode, usePersonalCfg);
       } else {
-        result = await window.api.installFromUpload(selectedUpload!, mode);
+        result = await window.api.installFromUpload(selectedUpload!, mode, usePersonalCfg);
       }
 
       if (isConflictResult(result) && result.needsConfirm) {
@@ -51,7 +47,7 @@ export default function InstallActions({
     setConflictData(null);
     setInstalling(true);
     try {
-      await window.api.confirmAppend(folderName!, source, proceed);
+      await window.api.confirmAppend(folderName!, source, proceed, usePersonalCfg);
       onInstallComplete?.();
     } finally {
       setInstalling(false);
@@ -61,6 +57,43 @@ export default function InstallActions({
   return (
     <>
       <div className="space-y-3">
+        {/* CFG Install Target Toggle */}
+        <div className="flex items-center gap-3 pb-3 border-b border-border">
+          <span className="flex items-center gap-1.5 text-xs text-text-muted shrink-0">
+            <Folder size={14} />
+            CFG 安装目标
+          </span>
+          <div className="flex rounded-[var(--radius-sm)] overflow-hidden border border-border">
+            <button
+              onClick={() => setUsePersonalCfg(false)}
+              disabled={installing}
+              className={`px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer border-none ${
+                !usePersonalCfg
+                  ? "bg-accent text-white"
+                  : "bg-bg-raised text-text-muted hover:text-text"
+              }`}
+            >
+              游戏 CFG
+            </button>
+            <button
+              onClick={() => setUsePersonalCfg(true)}
+              disabled={installing}
+              className={`px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer border-none ${
+                usePersonalCfg
+                  ? "bg-accent text-white"
+                  : "bg-bg-raised text-text-muted hover:text-text"
+              }`}
+            >
+              用户 CFG
+            </button>
+          </div>
+          <span className="text-xs text-text-faint">
+            {usePersonalCfg
+              ? "配置安装到 userdata 用户 CFG 文件夹，局内修改不会被覆盖"
+              : "配置安装到 csgo 游戏 CFG 文件夹，局内修改会随游戏重置而丢失"}
+          </span>
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => handleInstall("overlay")}
@@ -90,12 +123,12 @@ export default function InstallActions({
         </div>
 
         {/* Mode descriptions */}
-        <div className="grid grid-cols-2 gap-3 text-[11px] text-text-faint">
+        <div className="grid grid-cols-2 gap-3 text-xs text-text-faint">
           <div className="px-2 py-1.5 bg-bg-card rounded-[var(--radius-sm)]">
-            清空暂存区，替换为选中的文件，部署到游戏目录
+            清空暂存区，替换为选中的文件，部署到{usePersonalCfg ? "用户" : "游戏"}目录
           </div>
           <div className="px-2 py-1.5 bg-bg-card rounded-[var(--radius-sm)]">
-            保留已有文件，合并选中的文件，部署到游戏目录
+            保留已有文件，合并选中的文件，部署到{usePersonalCfg ? "用户" : "游戏"}目录
           </div>
         </div>
       </div>

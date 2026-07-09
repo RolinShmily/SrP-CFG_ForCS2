@@ -5,7 +5,10 @@ import {
   Layers,
   Copy,
   AlertTriangle,
+  BookOpen,
+  ExternalLink,
 } from "lucide-react";
+import { WEBSITE_URL, REPO_URL } from "../lib/downloads";
 
 const steps = [
   {
@@ -61,6 +64,34 @@ export default function QuickStartPage() {
             </div>
           </div>
         ))}
+      {/* Website & Docs */}
+      <div className="mt-6 p-5 bg-bg-card border border-border rounded-[var(--radius)]">
+        <h2 className="font-display text-base font-semibold mb-3 flex items-center gap-2">
+          <BookOpen size={16} className="text-accent" />
+          项目官网与文档
+        </h2>
+        <p className="text-sm text-text-secondary font-light mb-3">
+          每个 CFG 文件的详细说明、参数释义和使用教程请查阅官网文档。
+        </p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => window.api.openExternal(WEBSITE_URL)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-display font-medium bg-accent text-bg hover:bg-accent-light rounded-[var(--radius-sm)] transition-colors cursor-pointer border-none"
+          >
+            <BookOpen size={14} />
+            官网文档
+            <ExternalLink size={12} />
+          </button>
+          <button
+            onClick={() => window.api.openExternal(REPO_URL)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-display font-medium bg-bg-raised border border-border hover:bg-bg-hover text-text-secondary rounded-[var(--radius-sm)] transition-colors cursor-pointer"
+          >
+            GitHub 仓库
+            <ExternalLink size={12} />
+          </button>
+        </div>
+      </div>
+
       </div>
 
       <div className="mt-6 p-5 bg-bg-card border border-border rounded-[var(--radius)]">
@@ -69,8 +100,15 @@ export default function QuickStartPage() {
           注意事项
         </h2>
         <ul className="space-y-2 text-sm text-text-secondary font-light">
-          <li>配置文件会被直接复制到 CS2 游戏目录，暂存区保留副本以供后续管理</li>
+          <li>配置文件会被直接复制到 CS2 目录，暂存区保留副本以供后续管理</li>
           <li>覆盖安装会清空暂存区所有内容，追加安装则保留已有文件并合并新文件</li>
+          <li>
+            安装时可选<strong className="text-text font-semibold">游戏 CFG</strong>（
+            <code className="font-mono text-xs bg-bg-raised px-1 py-0.5 rounded">csgo/cfg/</code>）或
+            <strong className="text-text font-semibold">用户 CFG</strong>（
+            <code className="font-mono text-xs bg-bg-raised px-1 py-0.5 rounded">userdata/*/730/local/cfg/</code>）目录：
+            前者局内修改会被游戏重置覆盖，后者可持久保留用户调整
+          </li>
           <li>安装前可随时备份当前配置，在「备份与恢复」页面管理备份记录</li>
           <li>文件类型筛选仅支持 .cfg 和 .txt 文件，其他格式将被自动过滤</li>
           <li>安装时若游戏目录存在冲突文件，原文件会被移至「冲突恢复」区域</li>

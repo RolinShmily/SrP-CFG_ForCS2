@@ -80,7 +80,7 @@ const UploadedList = forwardRef<UploadedListHandle, Props>(function UploadedList
       <div className="flex flex-col items-center justify-center py-6 text-text-faint">
         <Package size={28} className="mb-2" />
         <p className="text-xs">暂无已上传的配置文件</p>
-        <p className="text-[11px] mt-0.5">上传 .zip / .cfg / .txt 文件即可在此管理</p>
+        <p className="text-xs mt-0.5">上传 .zip / .cfg / .txt 文件即可在此管理</p>
       </div>
     );
   }
@@ -124,7 +124,7 @@ const UploadedList = forwardRef<UploadedListHandle, Props>(function UploadedList
                 <div className="text-sm font-mono text-text truncate">
                   {entry.displayName}
                 </div>
-                <div className="text-[11px] text-text-faint">
+                <div className="text-xs text-text-faint">
                   {formatSize(entry.size)} · {formatDate(entry.timestamp)}
                 </div>
               </div>

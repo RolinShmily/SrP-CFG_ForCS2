@@ -34,8 +34,8 @@
 
 /* ── Base ── */
 html {
+  font-size: 17px;
   scroll-behavior: smooth;
-  overflow-x: clip;
   max-width: 100dvw;
 }
 
@@ -47,6 +47,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
   max-width: 100dvw;
+  line-height: 1.8;
 }
 
 /* ── Noise Overlay ── */

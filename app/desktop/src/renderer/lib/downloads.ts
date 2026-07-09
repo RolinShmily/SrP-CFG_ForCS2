@@ -1,6 +1,7 @@
 // 仓库与下载链接配置（与 website 保持一致）
 
 export const REPO_URL = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
+export const WEBSITE_URL = "https://srprolin.top";
 
 // 下载镜像前缀：纯字符串拼接到 GitHub Release 链接最前面。
 // - 留空字符串 ""        → 直连 GitHub

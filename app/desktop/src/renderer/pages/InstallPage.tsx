@@ -64,26 +64,27 @@ export default function InstallPage({
         onUserChange={onUserChange}
       />
 
-      {/* Upload Zone */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <h2 className="font-display text-sm font-semibold text-text-secondary">
-          上传配置文件
-        </h2>
-        <UploadZone onUploadComplete={handleUploadComplete} disabled={refreshing} />
+      {/* Upload Config Files — zone + list side by side */}
+      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4">
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <h2 className="font-display text-sm font-semibold text-text-secondary">
+              上传配置文件
+            </h2>
+            <UploadZone onUploadComplete={handleUploadComplete} disabled={refreshing} />
+          </div>
+          <div className="space-y-3 min-w-0">
+            <h2 className="font-display text-sm font-semibold text-text-secondary">
+              已上传配置文件
+            </h2>
+            <UploadedList
+              ref={uploadedListRef}
+              selectedFolder={selectedUpload}
+              onSelect={handleSelectUpload}
+            />
+          </div>
+        </div>
       </div>
-
-      {/* Uploaded Config Files */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <h2 className="font-display text-sm font-semibold text-text-secondary">
-          已上传配置文件
-        </h2>
-        <UploadedList
-          ref={uploadedListRef}
-          selectedFolder={selectedUpload}
-          onSelect={handleSelectUpload}
-        />
-      </div>
-
       {/* Downloaded Presets */}
       <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
         <h2 className="font-display text-sm font-semibold text-text-secondary">

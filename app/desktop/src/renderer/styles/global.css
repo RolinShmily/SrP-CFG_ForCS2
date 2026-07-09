@@ -22,8 +22,8 @@
 
   --color-text: #eae8e4;
   --color-text-secondary: #9ca3b8;
-  --color-text-muted: #5e657e;
-  --color-text-faint: #343a52;
+  --color-text-muted: #7a84a0;
+  --color-text-faint: #54607c;
 
   --font-display: "Chakra Petch", sans-serif;
   --font-body: "Noto Sans SC", sans-serif;
@@ -33,6 +33,9 @@
   --radius-sm: 6px;
 }
 
+html {
+  font-size: 20px;
+}
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -54,10 +57,9 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-faint); }
 
 .drag-region { -webkit-app-region: drag; }
-.no-drag { -webkit-app-region: no-drag; }
 
 /* Release notes markdown rendering */
-.release-notes { font-size: 12px; line-height: 1.7; color: var(--color-text-secondary); }
+.release-notes { font-size: 13px; line-height: 1.7; color: var(--color-text-secondary); }
 .release-notes h1, .release-notes h2, .release-notes h3 { color: var(--color-text); font-weight: 600; margin: 0.6em 0 0.3em; }
 .release-notes h1 { font-size: 1.1em; }
 .release-notes h2 { font-size: 1em; }

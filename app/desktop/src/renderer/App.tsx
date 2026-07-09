@@ -16,7 +16,7 @@ export type Page = "install" | "download" | "quickstart" | "backup" | "applied" 
 
 export default function App() {
   const [page, setPage] = useState<Page>("quickstart");
-  const [logPanelOpen, setLogPanelOpen] = useState(true);
+  const [logPanelOpen, setLogPanelOpen] = useState(false);
   const { logs, clearLogs } = useLogs();
 
   // Detection runs once on startup, shared across pages

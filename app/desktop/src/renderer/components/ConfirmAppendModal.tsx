@@ -12,7 +12,8 @@ interface Props {
 }
 
 const categoryLabels: Record<string, string> = {
-  cfg: "CFG 配置",
+  gameCfg: "游戏 CFG",
+  userCfg: "用户 CFG",
   annotations: "地图指南",
   video: "视频预设",
 };

@@ -37,9 +37,9 @@ export default function DetectionCard({
       {detection ? (
         <>
           <PathRow label="Steam 根目录" value={detection.steamPath} />
-          <PathRow label="全局 CFG 路径" value={detection.cs2CfgPath} />
+          <PathRow label="游戏 CFG 路径" value={detection.cs2CfgPath} />
           <PathRow label="地图指南路径" value={detection.annotationsPath} />
-          <PathRow label="用户视频配置" value={detection.videoCfgPath} />
+          <PathRow label="用户 CFG 路径" value={detection.videoCfgPath} />
 
           {/* Steam User Selection — same row */}
           {detection.steamUsers.length > 0 && (

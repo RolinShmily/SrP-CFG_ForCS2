@@ -71,7 +71,7 @@ export default function DownloadsList({ selectedFolder, onSelect }: Props) {
       <div className="flex flex-col items-center justify-center py-6 text-text-faint">
         <Package size={28} className="mb-2" />
         <p className="text-xs">暂无已下载的预设包</p>
-        <p className="text-[11px] mt-0.5">在下载页面获取预设包</p>
+        <p className="text-xs mt-0.5">在下载页面获取预设包</p>
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default function DownloadsList({ selectedFolder, onSelect }: Props) {
                 <div className="text-sm font-mono text-text truncate">
                   {entry.fileName}
                 </div>
-                <div className="text-[11px] text-text-faint">
+                <div className="text-xs text-text-faint">
                   {formatSize(entry.size)} · {formatDate(entry.timestamp)}
                 </div>
               </div>
