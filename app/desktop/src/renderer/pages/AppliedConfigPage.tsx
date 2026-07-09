@@ -67,7 +67,13 @@ export default function AppliedConfigPage() {
   }, [loadData]);
 
   const toggle = (key: string) =>
-    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+    setExpanded((prev) => {
+      const next = !prev[key];
+      // Sync paired categories within same grid row:
+      // userCfg ↔ gameCfg, annotations ↔ video
+      const pairMap: Record<string, string> = { userCfg: "gameCfg", gameCfg: "userCfg", annotations: "video", video: "annotations" };
+      return { ...prev, [key]: next, [pairMap[key]]: next };
+    });
 
   const runAction = async (key: string, action: () => Promise<any>) => {
     if (busy) return;
@@ -148,7 +154,7 @@ export default function AppliedConfigPage() {
                   )}
                   {totalItems > 0 && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); runAction(`uninstall:${cat.key}`, () => window.api.clearInstallCategory("cfg")); }}
+                      onClick={(e) => { e.stopPropagation(); runAction(`uninstall:${cat.key}`, () => window.api.clearInstallCategory(cat.key)); }}
                       disabled={busy !== null}
                       className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-red-400 hover:bg-red-500/10 disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-red-400/20"
                     >
@@ -176,10 +182,10 @@ export default function AppliedConfigPage() {
                             </div>
                             <div className="flex items-center gap-1 shrink-0">
                               <SmallBtn busyKey={`delete:${itemKey}`} currentBusy={busy}
-                                onClick={(e) => { e.stopPropagation(); runAction(`delete:${itemKey}`, () => window.api.deleteInstalledItem("cfg", name)); }}
+                                onClick={(e) => { e.stopPropagation(); runAction(`delete:${itemKey}`, () => window.api.deleteInstalledItem(cat.key, name)); }}
                                 color="red" icon={<Trash2 size={10} />} label="删除" />
                               <SmallBtn busyKey={`open:${itemKey}`} currentBusy={busy}
-                                onClick={(e) => { e.stopPropagation(); runAction(`open:${itemKey}`, () => window.api.openItem("install", "cfg", name)); }}
+                                onClick={(e) => { e.stopPropagation(); runAction(`open:${itemKey}`, () => window.api.openItem("install", cat.key, name)); }}
                                 color="accent" icon={<ExternalLink size={10} />} label="打开" />
                             </div>
                           </div>
