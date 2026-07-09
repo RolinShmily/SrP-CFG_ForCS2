@@ -8,32 +8,30 @@ export default function TitleBar() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between h-9 bg-bg-card border-b border-border px-3 drag-region">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center justify-between h-10 bg-bg-card border-b border-border px-3">
+      <div className="flex items-center gap-2 flex-1 h-full drag-region">
         <span className="font-display text-sm font-bold text-accent tracking-wider">
           SrP-CFG
         </span>
         <span className="text-xs text-text-faint">Installer</span>
       </div>
-      <div className="flex no-drag">
+      <div className="flex h-full">
         <button
           onClick={() => window.api.minimize()}
-          className="w-10 h-8 flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
+          className="w-10 h-full flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
         >
           <svg width="12" height="1" viewBox="0 0 12 1"><rect width="12" height="1" fill="currentColor" /></svg>
         </button>
         <button
           onClick={() => { window.api.maximize(); setMaximized(!maximized); }}
-          className="w-10 h-8 flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
+          className="w-10 h-full flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
         >
           {maximized ? (
-            // Restore down: two overlapping rectangles
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <rect x="2" y="0" width="8" height="8" rx="1" />
               <rect x="0" y="2" width="8" height="8" rx="1" />
             </svg>
           ) : (
-            // Maximize: single rectangle
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <rect x="0.5" y="0.5" width="9" height="9" rx="1" />
             </svg>
@@ -41,7 +39,7 @@ export default function TitleBar() {
         </button>
         <button
           onClick={() => window.api.close()}
-          className="w-10 h-8 flex items-center justify-center text-text-muted hover:text-red hover:bg-red/10 transition-colors"
+          className="w-10 h-full flex items-center justify-center text-text-muted hover:text-red hover:bg-red/10 transition-colors"
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <line x1="0" y1="0" x2="10" y2="10" /><line x1="10" y1="0" x2="0" y2="10" />
