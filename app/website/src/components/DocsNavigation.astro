@@ -1,0 +1,60 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface NavGroup {
+  label: string;
+  docs: CollectionEntry<"docs">[];
+}
+
+interface Props {
+  groups: NavGroup[];
+  currentSlug: string;
+}
+
+const { groups, currentSlug } = Astro.props;
+const hrefFor = (id: string) => (id === "srpcfg-1" ? "/docs" : `/docs/${id}`);
+---
+
+<nav aria-label="文档导航">
+  <a
+    href="/docs"
+    data-astro-prefetch="hover"
+    class="mb-5 flex min-h-11 items-center justify-between rounded-[var(--radius-sm)] border border-border bg-bg-card px-3.5 font-display text-sm font-bold text-text no-underline transition-colors hover:border-border-highlight hover:text-accent"
+  >
+    <span>文档中心</span>
+    <span class="font-mono text-[10px] text-text-faint">INDEX</span>
+  </a>
+
+  <div class="space-y-5">
+    {groups.map((group) => (
+      <section aria-label={group.label}>
+        <div class="mb-1.5 flex items-center justify-between px-3">
+          <span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-faint">{group.label}</span>
+          <span class="font-mono text-[10px] text-text-faint">{String(group.docs.length).padStart(2, "0")}</span>
+        </div>
+        <ul class="space-y-0.5">
+          {group.docs.map((doc) => {
+            const active = doc.id === currentSlug;
+            return (
+              <li>
+                <a
+                  href={hrefFor(doc.id)}
+                  data-astro-prefetch="hover"
+                  aria-current={active ? "page" : undefined}
+                  class:list={[
+                    "flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200",
+                    active
+                      ? "border-accent bg-accent-bg text-accent"
+                      : "border-transparent text-text-muted hover:bg-bg-hover hover:text-text",
+                  ]}
+                >
+                  {doc.data.title}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+  </div>
+</nav>

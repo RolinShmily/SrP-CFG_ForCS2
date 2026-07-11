@@ -8,9 +8,9 @@ import { RELEASES_URL } from "../data/navigation";
 ---
 
 <MainLayout title="下载 — SrP-CFG" description="下载 SrP-CFG 安装器和 v3 配置包">
-  <section class="pt-[80px] sm:pt-[100px] md:pt-[120px] pb-10 sm:pb-12 md:pb-16">
-    <div class="max-w-[1200px] mx-auto px-5 sm:px-7">
-      <SectionHeader label="Download" title="下载中心" description="获取安装器或直接下载 v3 配置包，所有文件均可通过拖拽安装" />
+  <section class="pb-16 pt-28 sm:pb-20 sm:pt-32">
+    <div class="mx-auto max-w-[1200px] px-5 sm:px-7">
+      <SectionHeader level="h1" label="Download" title="下载中心" description="获取 Desktop 安装器与唯一 Runtime Core。所有 v3 功能、Preset 案例和用户入口都在同一个配置包中。" />
 
       <div class="mb-20">
         <h2 class="font-display text-2xl font-semibold mb-8 flex items-center gap-3">
@@ -29,7 +29,7 @@ import { RELEASES_URL } from "../data/navigation";
                   {item.badge}
                 </span>
               </div>
-              <p class="text-sm text-text-secondary font-light leading-[1.75] mb-6">{item.desc}</p>
+              <p class="mb-6 text-sm leading-7 text-text-secondary">{item.desc}</p>
               <div class="flex items-center gap-2 text-accent font-display text-sm font-semibold">
                 <Download class="w-4 h-4" />点击下载
               </div>
@@ -58,12 +58,12 @@ import { RELEASES_URL } from "../data/navigation";
                   <Download class:list={["w-[18px] h-[18px]", pkg.featured ? "text-accent" : "text-text-muted"]} stroke-width="1.8" />
                 </div>
                 <span class:list={[
-                  "text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded",
+                  "rounded px-2 py-1 font-mono text-xs font-bold tracking-wide",
                   pkg.featured ? "bg-accent text-bg" : "bg-bg-raised text-text-faint border border-border",
                 ]}>{pkg.badge}</span>
               </div>
               <h3 class="font-display text-lg font-semibold mb-1.5 group-hover:text-accent transition-colors">{pkg.name}</h3>
-              <p class="text-xs text-text-secondary font-light leading-[1.75] mb-4">{pkg.desc}</p>
+              <p class="mb-4 text-sm leading-7 text-text-secondary">{pkg.desc}</p>
               <span class="font-mono text-xs text-text-faint">{pkg.file}</span>
             </Card>
           ))}
@@ -75,8 +75,8 @@ import { RELEASES_URL } from "../data/navigation";
           <Info class="w-[18px] h-[18px] text-accent" stroke-width="1.8" />
         </div>
         <div>
-          <h4 class="font-display text-base font-semibold mb-1">使用说明</h4>
-          <p class="text-sm text-text-secondary font-light leading-[1.75]">
+          <h2 class="font-display text-base font-semibold mb-1">使用说明</h2>
+          <p class="text-sm leading-7 text-text-secondary">
             下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。所有文件也可在
             <a href={RELEASES_URL} target="_blank" rel="noopener" class="text-accent hover:underline">GitHub Releases</a>
             找到。

@@ -34,20 +34,20 @@ const contributors = [
 ---
 
 <MainLayout title="关于 — SrP-CFG" description="SrP-CFG 项目介绍与开源信息">
-  <section class="pt-[80px] sm:pt-[100px] md:pt-[120px] pb-12 sm:pb-16 md:pb-20">
+  <section class="pb-16 pt-28 sm:pb-20 sm:pt-32">
     <div class="max-w-[1200px] mx-auto px-5 sm:px-7">
 
       <div class="flex justify-center mb-10">
-        <img src="/favicon.ico" alt="SrP-CFG Logo" class="w-28 h-28 rounded-2xl border border-border shadow-[0_0_40px_rgba(232,121,12,0.15)]" />
+        <img src="/favicon.ico" alt="SrP-CFG Logo" width="112" height="112" class="h-28 w-28 rounded-2xl border border-border shadow-[0_0_40px_rgba(242,138,26,0.14)]" />
       </div>
 
-      <SectionHeader label="About" title="关于 SrP-CFG" description="适用于 CS2（Counter-Strike 2）各场景的 CFG 预设文件，由 RoL1n 开发维护" />
+      <SectionHeader level="h1" label="About" title="关于 SrP-CFG" description="面向 CS2 的模块化 CFG Runtime、Preset 案例与用户配置系统，由 RoL1n 开发维护" />
 
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 max-w-[1000px] mx-auto">
         <!-- Left column: 项目简介 + 快速链接 -->
         <div>
           <h2 class="font-display text-2xl font-semibold mb-6">项目简介</h2>
-          <div class="space-y-4 text-text-secondary font-light leading-[1.8] mb-10">
+          <div class="mb-10 space-y-4 leading-8 text-text-secondary">
             <p>
               SrP-CFG v3 是一套把功能模板、Preset 案例和用户配置分离的 CS2 CFG 系统。Runtime 提供准星视角、跑图练习、Demo 录制等能力，内置案例提供可选推荐值，用户层保存个人差异。
             </p>
@@ -67,7 +67,7 @@ const contributors = [
                   href={link.url}
                   target="_blank"
                   rel="noopener"
-                  class="group flex items-center gap-3 p-4 bg-bg-card border border-border rounded-[10px] no-underline transition-all duration-300 hover:border-border-highlight hover:bg-bg-hover"
+                  class="group flex min-h-14 items-center gap-3 rounded-[var(--radius)] border border-border bg-bg-card p-4 no-underline transition-colors duration-200 hover:border-border-highlight hover:bg-bg-hover"
                 >
                   <div class="w-8 h-8 rounded-[6px] bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center flex-shrink-0 text-accent">
                     <Icon class="w-4 h-4" />
@@ -96,7 +96,7 @@ const contributors = [
                     <Icon class="w-4 h-4 text-text-muted" />
                     <div class="font-display text-base font-semibold text-text">{tech.name}</div>
                   </div>
-                  <div class="text-xs text-text-muted font-light">{tech.desc}</div>
+                  <div class="text-xs text-text-muted">{tech.desc}</div>
                 </div>
               );
             })}
@@ -108,22 +108,25 @@ const contributors = [
           </h2>
           <div class="space-y-3">
             {contributors.map((c) => (
-              <div class="flex items-center gap-4 p-4 bg-bg-card border border-border rounded-[10px]">
-                <img
-                  src="/avatar.jpg"
-                  alt={c.name}
-                  class="w-12 h-12 rounded-full border border-[rgba(232,121,12,0.12)] object-cover"
+              <div class="flex flex-wrap items-center gap-4 rounded-[var(--radius)] border border-border bg-bg-card p-4">
+                  <img
+                    src="/avatar.jpg"
+                    alt={c.name}
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                    class="w-12 h-12 rounded-full border border-[rgba(232,121,12,0.12)] object-cover"
                 />
                 <div>
                   <div class="font-display text-base font-semibold">{c.name}</div>
                   <div class="text-xs text-text-muted">{c.role}</div>
                 </div>
-                <div class="ml-auto flex items-center gap-1.5">
+                <div class="ml-auto flex flex-wrap items-center justify-end gap-2">
                   <a
                     href={c.blog}
                     target="_blank"
                     rel="noopener"
-                    class="flex items-center gap-1 px-2.5 py-1.5 bg-bg-raised border border-border rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors no-underline text-xs"
+                    class="flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-bg-raised px-3 text-xs text-text-muted no-underline transition-colors hover:border-accent/30 hover:text-accent"
                   >
                     <span class="w-3.5 h-3.5 text-text-muted" set:html={blogSvg} />
                     <span>博客</span>
@@ -132,7 +135,7 @@ const contributors = [
                     href={c.bilibili}
                     target="_blank"
                     rel="noopener"
-                    class="flex items-center gap-1 px-2.5 py-1.5 bg-bg-raised border border-border rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors no-underline text-xs"
+                    class="flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-bg-raised px-3 text-xs text-text-muted no-underline transition-colors hover:border-accent/30 hover:text-accent"
                   >
                     <span class="w-3.5 h-3.5 text-text-muted" set:html={bilibiliSvg} />
                     <span>B站</span>
@@ -141,7 +144,7 @@ const contributors = [
                     href={`https://github.com/${c.github}`}
                     target="_blank"
                     rel="noopener"
-                    class="flex items-center gap-1 px-2.5 py-1.5 bg-bg-raised border border-border rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors no-underline text-xs"
+                    class="flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-bg-raised px-3 text-xs text-text-muted no-underline transition-colors hover:border-accent/30 hover:text-accent"
                   >
                     <span class="w-3.5 h-3.5 text-text-muted" set:html={githubSvg} />
                     <span>GitHub</span>

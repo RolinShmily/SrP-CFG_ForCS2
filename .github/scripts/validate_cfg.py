@@ -265,15 +265,10 @@ def validate_preset_layout(names: dict[str, Path]) -> None:
             if required not in names:
                 raise ValidationError(f"Preset {preset} is missing {required}")
 
-        if preset in {"default", "valve"}:
-            expected_execs = [settings_name, keymap_name]
-        else:
-            expected_execs = [
-                "srp-cfg/presets/default/settings.cfg",
-                "srp-cfg/presets/default/keymap.cfg",
-                settings_name,
-                keymap_name,
-            ]
+        # Every built-in preset is a complete, peer-level example. A personal
+        # preset must never inherit Default implicitly because that would hide
+        # part of its effective settings and keymap from review.
+        expected_execs = [settings_name, keymap_name]
         actual_execs = direct_exec_targets(read_cfg(names[apply_name]))
         if actual_execs != expected_execs:
             raise ValidationError(

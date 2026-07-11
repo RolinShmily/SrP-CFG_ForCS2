@@ -9,21 +9,22 @@ const { href, variant = "accent", size = "md" } = Astro.props;
 
 const variants = {
   accent:
-    "bg-accent text-bg hover:bg-accent-light hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(232,121,12,0.25)]",
+    "border border-accent bg-accent text-bg hover:border-accent-light hover:bg-accent-light hover:shadow-[0_10px_32px_rgba(242,138,26,0.2)]",
   ghost:
-    "bg-transparent text-text-secondary border border-border-highlight hover:border-text-muted hover:text-text",
+    "border border-border-highlight bg-bg-card/70 text-text-secondary hover:border-text-muted hover:bg-bg-hover hover:text-text",
 };
 
 const sizes = {
-  md: "text-base px-8 py-3.5",
-  lg: "text-lg px-11 py-4",
+  md: "min-h-11 px-6 py-2.5 text-sm",
+  lg: "min-h-12 px-7 py-3 text-base sm:px-8",
 };
 ---
 
 <a
   href={href}
+  data-astro-prefetch="hover"
   class:list={[
-    "inline-flex items-center gap-2.5 font-display font-semibold tracking-wide rounded-[6px] transition-all duration-250 no-underline",
+    "inline-flex items-center justify-center gap-2.5 rounded-[var(--radius-sm)] font-display font-semibold no-underline transition-[background-color,border-color,color,box-shadow] duration-200",
     variants[variant],
     sizes[size],
   ]}

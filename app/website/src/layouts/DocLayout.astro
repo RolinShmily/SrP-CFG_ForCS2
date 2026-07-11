@@ -1,9 +1,11 @@
 ---
+import type { CollectionEntry } from "astro:content";
+import { ChevronLeft, ChevronRight, Menu, TableOfContents, X } from "lucide-astro";
 import BaseLayout from "./BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import { Menu, TableOfContents } from "lucide-astro";
-import type { CollectionEntry } from "astro:content";
+import DocsNavigation from "../components/DocsNavigation.astro";
+import DocsToc from "../components/DocsToc.astro";
 
 interface Props {
   title: string;
@@ -14,497 +16,452 @@ interface Props {
 }
 
 const { title, description, docs, currentSlug, headings } = Astro.props;
-const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
 
 const guideOrder = ["srpcfg-1", "srpcfg-3", "architecture", "autoexec", "vcfg"];
-const guideDocs = guideOrder
-  .map((id) => docs.find((d) => d.id === id))
-  .filter(Boolean) as CollectionEntry<"docs">[];
-const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcfg-2");
+const featureOrder = ["crosshair_view", "autoview", "knife", "zeus"];
+const modeOrder = ["practice", "previewmode", "guidemake", "demo_hlae"];
+const referenceOrder = ["helps", "cs2_video"];
+
+const take = (ids: string[]) =>
+  ids.map((id) => docs.find((doc) => doc.id === id)).filter(Boolean) as CollectionEntry<"docs">[];
+
+const known = new Set([...guideOrder, ...featureOrder, ...modeOrder, ...referenceOrder]);
+const remaining = docs.filter((doc) => !known.has(doc.id) && doc.id !== "srpcfg-2");
+const navGroups = [
+  { label: "开始与原理", docs: take(guideOrder) },
+  { label: "功能", docs: take(featureOrder) },
+  { label: "模式", docs: take(modeOrder) },
+  { label: "参考", docs: [...take(referenceOrder), ...remaining] },
+].filter((group) => group.docs.length > 0);
+
+const orderedDocs = navGroups.flatMap((group) => group.docs);
+const currentIndex = orderedDocs.findIndex((doc) => doc.id === currentSlug);
+const previousDoc = currentIndex > 0 ? orderedDocs[currentIndex - 1] : null;
+const nextDoc = currentIndex >= 0 && currentIndex < orderedDocs.length - 1 ? orderedDocs[currentIndex + 1] : null;
+const currentDoc = docs.find((doc) => doc.id === currentSlug);
+const hrefFor = (id: string) => (id === "srpcfg-1" ? "/docs" : `/docs/${id}`);
 ---
 
 <BaseLayout title={title} description={description}>
   <Nav />
 
-  <!-- Mobile doc nav bar (visible below lg) -->
-  <div class="lg:hidden sticky top-16 z-190 border-b border-border bg-bg-card/90 backdrop-blur-xl">
-    <div class="flex">
-      <button id="mobile-doc-menu-btn" class="flex-1 flex items-center justify-center gap-2 py-3 font-display text-sm text-text-muted hover:text-text transition-colors" aria-label="文档菜单">
-        <Menu class="w-4 h-4" />
-        菜单
-      </button>
-      <div class="w-px bg-border"></div>
-      <button id="mobile-toc-btn" class="flex-1 flex items-center justify-center gap-2 py-3 font-display text-sm text-text-muted hover:text-text transition-colors" aria-label="本页目录">
-        <TableOfContents class="w-4 h-4" />
-        本页目录
-      </button>
+  <div data-doc-layout>
+    <div class="sticky top-16 z-[70] mt-16 border-b border-border bg-bg-card lg:hidden">
+      <div class="grid grid-cols-2">
+        <button
+          id="mobile-doc-menu-btn"
+          type="button"
+          class="flex min-h-12 items-center justify-center gap-2 border-r border-border text-sm font-semibold text-text-muted transition-colors hover:bg-bg-hover hover:text-text"
+          aria-label="打开文档菜单"
+          aria-controls="mobile-doc-menu"
+          aria-expanded="false"
+        >
+          <Menu class="h-4 w-4" />
+          文档菜单
+        </button>
+        <button
+          id="mobile-toc-btn"
+          type="button"
+          disabled={toc.length === 0}
+          class="flex min-h-12 items-center justify-center gap-2 text-sm font-semibold text-text-muted transition-colors hover:bg-bg-hover hover:text-text disabled:cursor-not-allowed disabled:opacity-40"
+          aria-label="打开本页目录"
+          aria-controls="mobile-toc-panel"
+          aria-expanded="false"
+        >
+          <TableOfContents class="h-4 w-4" />
+          本页目录
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Mobile doc menu panel -->
-  <div id="mobile-doc-menu" class="hidden lg:hidden fixed inset-0 top-[calc(4rem+2.75rem)] z-180 bg-bg/95 backdrop-blur-xl overflow-y-auto">
-    <div class="p-6">
-      <a href="/docs/srpcfg-1" class="block font-display text-sm font-semibold text-text-muted hover:text-text transition-colors no-underline mb-3 tracking-wider">
-        文档中心
-      </a>
-      <ul class="flex flex-col gap-0.5 mb-4">
-        {guideDocs.map((doc) => {
-          const isActive = doc.id === currentSlug;
-          return (
-            <li>
-              <a
-                href={`/docs/${doc.id}`}
-                class:list={[
-                  "block py-2.5 px-4 rounded-[6px] text-sm transition-colors no-underline font-display",
-                  isActive
-                    ? "bg-accent-bg text-accent font-medium"
-                    : "text-text-muted hover:text-text hover:bg-bg-hover",
-                ]}
-              >
-                {doc.data.title}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-      <div class="h-px bg-border my-3"></div>
-      <span class="block font-display text-[11px] font-semibold text-text-faint tracking-widest mb-2 px-4">功能与模式</span>
-      <ul class="flex flex-col gap-0.5">
-        {cfgDocs.map((doc) => {
-          const isActive = doc.id === currentSlug;
-          return (
-            <li>
-              <a
-                href={`/docs/${doc.id}`}
-                class:list={[
-                  "block py-2.5 px-4 rounded-[6px] text-sm transition-colors no-underline font-display",
-                  isActive
-                    ? "bg-accent-bg text-accent font-medium"
-                    : "text-text-muted hover:text-text hover:bg-bg-hover",
-                ]}
-              >
-                {doc.data.title}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+    <div
+      id="mobile-doc-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobile-doc-menu-title"
+      aria-hidden="true"
+      tabindex="-1"
+      class="fixed inset-x-0 bottom-0 top-28 z-[60] hidden overflow-y-auto bg-bg px-5 py-5 lg:hidden"
+    >
+      <div class="mx-auto max-w-[720px]">
+        <div class="mb-4 flex items-center justify-between border-b border-border pb-3">
+          <p id="mobile-doc-menu-title" class="font-display text-lg font-bold">浏览文档</p>
+          <button type="button" data-doc-panel-close class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] border border-border text-text-muted" aria-label="关闭文档菜单">
+            <X class="h-5 w-5" />
+          </button>
+        </div>
+        <DocsNavigation groups={navGroups} currentSlug={currentSlug} />
+      </div>
     </div>
-  </div>
 
-  <!-- Mobile TOC panel -->
-  <div id="mobile-toc-panel" class="hidden lg:hidden fixed inset-0 top-[calc(4rem+2.75rem)] z-180 bg-bg/95 backdrop-blur-xl overflow-y-auto">
-    <div class="p-6">
-      {toc.length > 0 && (
-        <nav>
-          <span class="block font-display text-xs font-semibold text-text-faint tracking-widest mb-3 px-4">本页目录</span>
-          <ul class="flex flex-col gap-0">
-            {toc.map((item) => (
-              <li>
-                <a
-                  href={`#${item.slug}`}
-                  data-toc-link
-                  data-toc-target={item.slug}
-                  class:list={[
-                    "block py-2 px-4 text-sm transition-colors no-underline rounded-[6px]",
-                    item.depth === 3 && "pl-8",
-                    "text-text-muted hover:text-text hover:bg-bg-hover",
-                  ]}
-                >
-                  {item.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
+    <div
+      id="mobile-toc-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobile-toc-title"
+      aria-hidden="true"
+      tabindex="-1"
+      class="fixed inset-x-0 bottom-0 top-28 z-[60] hidden overflow-y-auto bg-bg px-5 py-5 lg:hidden"
+    >
+      <div class="mx-auto max-w-[720px]">
+        <div class="mb-4 flex items-center justify-between border-b border-border pb-3">
+          <p id="mobile-toc-title" class="font-display text-lg font-bold">本页目录</p>
+          <button type="button" data-doc-panel-close class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] border border-border text-text-muted" aria-label="关闭本页目录">
+            <X class="h-5 w-5" />
+          </button>
+        </div>
+        <DocsToc headings={toc} roomy />
+      </div>
     </div>
-  </div>
 
-  <div class="max-w-[1440px] mx-auto pt-20">
-    <div class="flex">
-      <!-- Left Sidebar — Doc Navigation -->
-      <aside class="w-56 shrink-0 hidden lg:block">
-        <nav class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-4 pb-8" id="doc-sidebar">
-          <a
-            href="/docs/srpcfg-1"
-            class="block font-display text-sm font-semibold text-text-muted hover:text-text transition-colors no-underline mb-3 tracking-wider"
-          >
-            文档中心
-          </a>
-
-          <!-- Guide section -->
-          <ul class="flex flex-col gap-0.5 mb-4">
-            {guideDocs.map((doc) => {
-              const isActive = doc.id === currentSlug;
-              return (
-                <li>
-                  <a
-                    href={`/docs/${doc.id}`}
-                    class:list={[
-                      "block py-1.5 px-3 rounded-[6px] text-sm transition-colors no-underline font-display",
-                      isActive
-                        ? "bg-accent-bg text-accent font-medium"
-                        : "text-text-muted hover:text-text hover:bg-bg-hover",
-                    ]}
-                  >
-                    {doc.data.title}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-
-          <!-- Separator -->
-          <div class="h-px bg-border my-3"></div>
-
-          <!-- CFG files section -->
-          <span class="block font-display text-[11px] font-semibold text-text-faint tracking-widest mb-2 px-3">
-            功能与模式
-          </span>
-          <ul class="flex flex-col gap-0.5">
-            {cfgDocs.map((doc) => {
-              const isActive = doc.id === currentSlug;
-              return (
-                <li>
-                  <a
-                    href={`/docs/${doc.id}`}
-                    class:list={[
-                      "block py-1.5 px-3 rounded-[6px] text-sm transition-colors no-underline font-display",
-                      isActive
-                        ? "bg-accent-bg text-accent font-medium"
-                        : "text-text-muted hover:text-text hover:bg-bg-hover",
-                    ]}
-                  >
-                    {doc.data.title}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-5 py-10 sm:px-7 lg:grid-cols-[220px_minmax(0,760px)] lg:justify-center lg:gap-10 lg:pb-20 lg:pt-28 xl:grid-cols-[220px_minmax(0,760px)_220px] xl:gap-12">
+      <aside class="hidden lg:block">
+        <div class="sticky top-24">
+          <DocsNavigation groups={navGroups} currentSlug={currentSlug} />
+        </div>
       </aside>
 
-      <!-- Center — Doc Content -->
-      <article
-        class="flex-1 min-w-0 px-4 sm:px-6 md:px-8 lg:px-12 pb-16 prose-doc"
-      >
-        <slot />
+      <article id="main-content" tabindex="-1" class="min-w-0 pb-8">
+        <nav aria-label="面包屑" class="mb-7 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-text-faint">
+          <a href="/docs" data-astro-prefetch="hover" class="text-text-muted no-underline hover:text-accent">Docs</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{currentDoc?.data.title}</span>
+        </nav>
+
+        <header class="mb-10 border-b border-border pb-8">
+          <p class="font-mono text-xs uppercase tracking-[0.16em] text-accent">SrP-CFG Documentation</p>
+          <h1 class="mt-3 font-display text-[clamp(2.25rem,6vw,4rem)] font-bold leading-[1.04] tracking-[-0.025em] text-text">
+            {currentDoc?.data.title}
+          </h1>
+          {currentDoc?.data.description && (
+            <p class="mt-4 max-w-[680px] text-base leading-7 text-text-secondary sm:text-lg sm:leading-8">
+              {currentDoc.data.description}
+            </p>
+          )}
+        </header>
+
+        <div class="prose-doc">
+          <slot />
+        </div>
+
+        <nav aria-label="前后篇文档" class="mt-14 grid grid-cols-1 gap-3 border-t border-border pt-6 sm:grid-cols-2">
+          {previousDoc ? (
+            <a href={hrefFor(previousDoc.id)} data-astro-prefetch="hover" class="group rounded-[var(--radius)] border border-border bg-bg-card p-4 no-underline transition-colors hover:border-border-highlight hover:bg-bg-hover">
+              <span class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint"><ChevronLeft class="h-3.5 w-3.5" />上一篇</span>
+              <strong class="mt-2 block font-display text-sm text-text-secondary group-hover:text-accent">{previousDoc.data.title}</strong>
+            </a>
+          ) : <span />}
+          {nextDoc && (
+            <a href={hrefFor(nextDoc.id)} data-astro-prefetch="hover" class="group rounded-[var(--radius)] border border-border bg-bg-card p-4 text-right no-underline transition-colors hover:border-border-highlight hover:bg-bg-hover">
+              <span class="flex items-center justify-end gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint">下一篇<ChevronRight class="h-3.5 w-3.5" /></span>
+              <strong class="mt-2 block font-display text-sm text-text-secondary group-hover:text-accent">{nextDoc.data.title}</strong>
+            </a>
+          )}
+        </nav>
       </article>
 
-      <!-- Right Sidebar — Table of Contents -->
-      <aside class="w-48 shrink-0 hidden xl:block">
-        {
-          toc.length > 0 && (
-            <nav class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pb-8" id="toc-nav">
-              <span class="block font-display text-xs font-semibold text-text-faint tracking-widest mb-3">
-                本页目录
-              </span>
-              <ul class="flex flex-col gap-0">
-                {toc.map((item) => (
-                  <li>
-                    <a
-                      href={`#${item.slug}`}
-                      data-toc-link
-                      data-toc-target={item.slug}
-                      class:list={[
-                        "block py-1 text-[13px] leading-snug transition-colors no-underline",
-                        item.depth === 3 && "pl-3",
-                        "text-text-muted hover:text-text",
-                      ]}
-                    >
-                      {item.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )
-        }
+      <aside class="hidden xl:block">
+        {toc.length > 0 && (
+          <div class="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto pb-8 pr-1">
+            <DocsToc headings={toc} />
+          </div>
+        )}
       </aside>
     </div>
   </div>
+
   <Footer />
 </BaseLayout>
 
 <style>
+  :global(body.doc-panel-open) { overflow: hidden; }
+
   .prose-doc {
     color: var(--color-text-secondary);
+    font-size: 1rem;
+    font-weight: 400;
     line-height: 1.8;
-    font-weight: 300;
   }
 
-  .prose-doc :global(h1) {
-    font-family: var(--font-display);
-    font-size: 2.25rem;
-    font-weight: 700;
+  .prose-doc :global(h2),
+  .prose-doc :global(h3) {
+    scroll-margin-top: 7rem;
     color: var(--color-text);
-    margin-bottom: 0.75rem;
-    letter-spacing: 0.02em;
+    font-family: var(--font-display);
   }
 
   .prose-doc :global(h2) {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    letter-spacing: 0.02em;
-    padding-bottom: 0.5rem;
+    margin: 3.25rem 0 1.1rem;
     border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.7rem;
+    font-size: clamp(1.55rem, 4vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
   }
 
   .prose-doc :global(h3) {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
+    margin: 2.25rem 0 0.8rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.35;
   }
 
-  .prose-doc :global(p) {
-    margin-bottom: 1.25rem;
-  }
+  .prose-doc :global(p) { margin: 0 0 1.25rem; }
 
   .prose-doc :global(a) {
-    color: var(--color-accent);
-    text-decoration: none;
-    transition: opacity 0.2s;
+    color: var(--color-accent-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 179, 79, 0.35);
+    text-underline-offset: 0.2em;
+    transition: color 160ms ease, text-decoration-color 160ms ease;
   }
 
   .prose-doc :global(a:hover) {
-    opacity: 0.8;
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
   }
 
   .prose-doc :global(strong) {
     color: var(--color-text);
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .prose-doc :global(blockquote) {
-    border-left: 3px solid var(--color-accent);
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    color: var(--color-text-muted);
-    font-style: italic;
+    margin: 1.75rem 0;
+    border: 1px solid rgba(242, 138, 26, 0.22);
+    border-left: 4px solid var(--color-accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--color-accent-bg);
+    padding: 1rem 1.1rem;
+    color: var(--color-text-secondary);
   }
 
+  .prose-doc :global(blockquote p:last-child) { margin-bottom: 0; }
+
   .prose-doc :global(table) {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    margin: 1.75rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     border-collapse: collapse;
-    margin: 1.5rem 0;
+    background: var(--color-bg-card);
     font-size: 0.875rem;
+    white-space: nowrap;
   }
 
   .prose-doc :global(thead th) {
-    font-family: var(--font-display);
-    font-weight: 600;
-    text-align: left;
-    padding: 0.75rem 1rem;
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border-highlight);
+    background: var(--color-bg-raised);
+    padding: 0.8rem 1rem;
     color: var(--color-text);
+    font-family: var(--font-display);
     font-size: 0.8rem;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    text-align: left;
   }
 
   .prose-doc :global(tbody td) {
-    padding: 0.625rem 1rem;
     border-bottom: 1px solid var(--color-border);
+    padding: 0.72rem 1rem;
   }
 
-  .prose-doc :global(tbody tr:hover) {
-    background: var(--color-bg-hover);
-  }
+  .prose-doc :global(tbody tr:last-child td) { border-bottom: 0; }
+  .prose-doc :global(tbody tr:hover) { background: var(--color-bg-hover); }
 
   .prose-doc :global(code) {
-    font-family: var(--font-mono);
-    font-size: 0.85em;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
     background: var(--color-bg-raised);
-    padding: 0.15em 0.4em;
-    border-radius: 4px;
+    padding: 0.12em 0.38em;
     color: var(--color-accent-light);
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    overflow-wrap: anywhere;
   }
 
   .prose-doc :global(pre) {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: 1.25rem;
+    max-width: 100%;
+    margin: 1.6rem 0;
     overflow-x: auto;
-    margin: 1.5rem 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: #0a0d13;
+    padding: 1.1rem 1.2rem;
+    line-height: 1.7;
   }
 
   .prose-doc :global(pre code) {
+    border: 0;
     background: none;
     padding: 0;
     color: var(--color-text-secondary);
+    font-size: 0.84rem;
+    overflow-wrap: normal;
   }
 
   .prose-doc :global(ul),
   .prose-doc :global(ol) {
-    padding-left: 1.5rem;
-    margin-bottom: 1.25rem;
+    margin: 0 0 1.4rem;
+    padding-left: 1.45rem;
   }
 
-  .prose-doc :global(li) {
-    margin-bottom: 0.375rem;
-  }
+  .prose-doc :global(li) { margin-bottom: 0.45rem; }
+  .prose-doc :global(li::marker) { color: var(--color-accent); }
 
   .prose-doc :global(hr) {
-    border: none;
+    margin: 2.5rem 0;
+    border: 0;
     border-top: 1px solid var(--color-border);
-    margin: 2rem 0;
-  }
-
-  .prose-doc :global(img) {
-    border-radius: var(--radius);
-    border: 1px solid var(--color-border);
-    max-width: 100%;
-  }
-
-  .prose-doc :global(blockquote p:last-child) {
-    margin-bottom: 0;
   }
 
   [data-toc-link].toc-active {
-    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+    color: var(--color-accent-light);
+  }
+
+  @media (max-width: 640px) {
+    .prose-doc { font-size: 0.975rem; }
+    .prose-doc :global(table) { font-size: 0.82rem; }
+  }
+
+  @media print {
+    :global(nav),
+    :global(aside),
+    :global(footer),
+    [aria-label="前后篇文档"] { display: none !important; }
+
+    .prose-doc,
+    .prose-doc :global(h2),
+    .prose-doc :global(h3) { color: #111827; }
   }
 </style>
 
 <script>
-  // Scroll-spy for TOC
-  const tocLinks = document.querySelectorAll("[data-toc-link]");
-  if (tocLinks.length > 0) {
-    const targets = new Map<string, HTMLElement>();
-    tocLinks.forEach((link) => {
-      const slug = link.getAttribute("data-toc-target");
-      if (slug) {
-        const el = document.getElementById(slug);
-        if (el) targets.set(slug, el);
-      }
-    });
+  const layout = document.querySelector<HTMLElement>("[data-doc-layout]");
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let activeSlug = "";
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            activeSlug = entry.target.id;
-            break;
-          }
-        }
-        if (activeSlug) {
-          tocLinks.forEach((link) => {
-            const slug = link.getAttribute("data-toc-target");
-            link.classList.toggle("toc-active", slug === activeSlug);
-          });
-        }
-      },
-      { rootMargin: "-80px 0px -70% 0px" },
-    );
+  if (layout && layout.dataset.ready !== "true") {
+    layout.dataset.ready = "true";
 
-    targets.forEach((el) => observer.observe(el));
-  }
+    const controls = {
+      menu: document.getElementById("mobile-doc-menu-btn") as HTMLButtonElement | null,
+      toc: document.getElementById("mobile-toc-btn") as HTMLButtonElement | null,
+    };
+    const panels = {
+      menu: document.getElementById("mobile-doc-menu"),
+      toc: document.getElementById("mobile-toc-panel"),
+    };
+    let activePanel: "menu" | "toc" | null = null;
+    let returnFocus: HTMLButtonElement | null = null;
 
-  // Initialize TOC scroll-spy
-  (() => {
-    const links = document.querySelectorAll("[data-toc-link]");
-    if (links.length > 0) {
-      const t = new Map<string, HTMLElement>();
-      links.forEach((link) => {
-        const slug = link.getAttribute("data-toc-target");
-        if (slug) {
-          const el = document.getElementById(slug);
-          if (el) t.set(slug, el);
-        }
+    const closePanels = (restoreFocus = true) => {
+      Object.values(panels).forEach((panel) => {
+        panel?.classList.add("hidden");
+        panel?.setAttribute("aria-hidden", "true");
       });
-      const obs = new IntersectionObserver(
-        (entries) => {
-          let s = "";
-          for (const e of entries) {
-            if (e.isIntersecting) { s = e.target.id; break; }
-          }
-          if (s) {
-            links.forEach((l) => {
-              const slug = l.getAttribute("data-toc-target");
-              l.classList.toggle("toc-active", slug === s);
-            });
-          }
-        },
-        { rootMargin: "-80px 0px -70% 0px" },
-      );
-      t.forEach((el) => obs.observe(el));
-    }
-  })();
+      Object.values(controls).forEach((control) => {
+        control?.setAttribute("aria-expanded", "false");
+        control?.classList.remove("bg-accent-bg", "text-accent");
+      });
+      document.body.classList.remove("doc-panel-open");
+      activePanel = null;
+      if (restoreFocus) returnFocus?.focus();
+      returnFocus = null;
+    };
 
-  // Mobile doc nav panels
-  let mobileDocCleanup: (() => void) | null = null;
-
-  function initMobileDocNav() {
-    mobileDocCleanup?.();
-
-    const menuBtn = document.getElementById("mobile-doc-menu-btn");
-    const tocBtn = document.getElementById("mobile-toc-btn");
-    const menuPanel = document.getElementById("mobile-doc-menu");
-    const tocPanel = document.getElementById("mobile-toc-panel");
-    if (!menuBtn || !tocBtn || !menuPanel || !tocPanel) return;
-
-    let activePanel: "none" | "menu" | "toc" = "none";
-
-    function closeAll() {
-      activePanel = "none";
-      menuPanel!.classList.add("hidden");
-      tocPanel!.classList.add("hidden");
-      menuBtn!.classList.remove("text-accent", "bg-accent-bg");
-      tocBtn!.classList.remove("text-accent", "bg-accent-bg");
-      document.body.style.overflow = "";
-    }
-
-    function openPanel(which: "menu" | "toc") {
-      if (activePanel === which) {
-        closeAll();
+    const togglePanel = (name: "menu" | "toc") => {
+      if (activePanel === name) {
+        closePanels();
         return;
       }
-      menuPanel!.classList.toggle("hidden", which !== "menu");
-      tocPanel!.classList.toggle("hidden", which !== "toc");
-      menuBtn!.classList.toggle("text-accent", which === "menu");
-      menuBtn!.classList.toggle("bg-accent-bg", which === "menu");
-      tocBtn!.classList.toggle("text-accent", which === "toc");
-      tocBtn!.classList.toggle("bg-accent-bg", which === "toc");
-      activePanel = which;
-      document.body.style.overflow = "hidden";
-    }
+      closePanels(false);
+      const panel = panels[name];
+      const control = controls[name];
+      if (!panel || !control) return;
+      activePanel = name;
+      returnFocus = control;
+      panel.classList.remove("hidden");
+      panel.setAttribute("aria-hidden", "false");
+      control.setAttribute("aria-expanded", "true");
+      control.classList.add("bg-accent-bg", "text-accent");
+      document.body.classList.add("doc-panel-open");
+      requestAnimationFrame(() => panel.focus());
+    };
 
-    const onMenuBtn = () => openPanel("menu");
-    const onTocBtn = () => openPanel("toc");
-
-    const onDocClick = (e: MouseEvent) => {
-      if (activePanel === "none") return;
-      const t = e.target as Node;
-      if (!menuPanel!.contains(t) && !tocPanel!.contains(t) && !menuBtn!.contains(t) && !tocBtn!.contains(t)) {
-        closeAll();
+    controls.menu?.addEventListener("click", () => togglePanel("menu"));
+    controls.toc?.addEventListener("click", () => togglePanel("toc"));
+    layout.querySelectorAll("[data-doc-panel-close]").forEach((button) =>
+      button.addEventListener("click", () => closePanels()),
+    );
+    panels.menu?.querySelectorAll("a").forEach((link) =>
+      link.addEventListener("click", () => closePanels(false)),
+    );
+    panels.toc?.querySelectorAll("a").forEach((link) =>
+      link.addEventListener("click", () => closePanels(false)),
+    );
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && activePanel) {
+        closePanels();
+        return;
       }
+      if (event.key !== "Tab" || !activePanel) return;
+      const panel = panels[activePanel];
+      if (!panel) return;
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    window.matchMedia("(min-width: 1024px)").addEventListener("change", (event) => {
+      if (event.matches && activePanel) closePanels(false);
+    });
+
+    const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"));
+    const headingIds = [...new Set(tocLinks.map((link) => link.dataset.tocTarget).filter(Boolean))] as string[];
+    const headingElements = headingIds
+      .map((id) => document.getElementById(id))
+      .filter((heading): heading is HTMLElement => Boolean(heading));
+
+    const setActiveHeading = (id: string) => {
+      tocLinks.forEach((link) => {
+        const active = link.dataset.tocTarget === id;
+        link.classList.toggle("toc-active", active);
+        if (active) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
     };
 
-    const onPanelLink = () => closeAll();
-
-    menuBtn.addEventListener("click", onMenuBtn);
-    tocBtn.addEventListener("click", onTocBtn);
-    document.addEventListener("click", onDocClick);
-    menuPanel.querySelectorAll("a").forEach((a) => a.addEventListener("click", onPanelLink));
-    tocPanel.querySelectorAll("a").forEach((a) => a.addEventListener("click", onPanelLink));
-
-    mobileDocCleanup = () => {
-      menuBtn.removeEventListener("click", onMenuBtn);
-      tocBtn.removeEventListener("click", onTocBtn);
-      document.removeEventListener("click", onDocClick);
-      menuPanel.querySelectorAll("a").forEach((a) => a.removeEventListener("click", onPanelLink));
-      tocPanel.querySelectorAll("a").forEach((a) => a.removeEventListener("click", onPanelLink));
-      closeAll();
+    const updateActiveHeading = () => {
+      if (headingElements.length === 0) return;
+      let active = headingElements[0];
+      for (const heading of headingElements) {
+        if (heading.getBoundingClientRect().top <= 150) active = heading;
+        else break;
+      }
+      setActiveHeading(active.id);
     };
+
+    if (headingElements.length > 0) {
+      const observer = new IntersectionObserver(updateActiveHeading, {
+        rootMargin: "-112px 0px -68% 0px",
+        threshold: [0, 1],
+      });
+      headingElements.forEach((heading) => observer.observe(heading));
+      requestAnimationFrame(updateActiveHeading);
+    }
   }
-
-  initMobileDocNav();
 </script>

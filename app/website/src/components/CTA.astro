@@ -1,21 +1,34 @@
 ---
+import { BookOpen, Download } from "lucide-astro";
 import ButtonLink from "./ButtonLink.astro";
-import { Download } from "lucide-astro";
 ---
 
-<section class="py-[60px] sm:py-[80px] md:py-[120px] text-center">
-  <div class="max-w-[1200px] mx-auto px-5 sm:px-7">
-    <div class="py-12 sm:py-16 md:py-20 px-6 sm:px-10 md:px-12 bg-bg-card border border-border rounded-2xl relative overflow-hidden">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[360px] h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent"></div>
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[360px] h-0.5 bg-gradient-to-r from-transparent via-teal/30 to-transparent"></div>
-      <span class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.22em] uppercase text-accent mb-3 sm:mb-4">Get Started</span>
-      <h2 class="font-display text-[28px] sm:text-[36px] md:text-[40px] font-bold tracking-[0.03em] mt-3 sm:mt-4 mb-3 sm:mb-4">立即开始使用</h2>
-      <p class="text-base sm:text-lg text-text-secondary font-light max-w-[500px] mx-auto leading-[1.8] mb-8 sm:mb-11">
-        下载便携版安装器，拖入配置包，即刻体验预设配置带来的竞技优势
-      </p>
-      <ButtonLink href="/download" size="lg">
-        <Download class="w-5 h-5" />前往下载
-      </ButtonLink>
+<section class="home-section py-20 sm:py-28 lg:py-32">
+  <div class="mx-auto max-w-[1280px] px-5 sm:px-7">
+    <div class="relative overflow-hidden rounded-[18px] border border-accent/25 bg-bg-card px-6 py-12 sm:px-10 sm:py-16 lg:px-16 lg:py-20">
+      <div class="tech-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"></div>
+      <div class="absolute inset-y-0 right-0 w-1 bg-accent" aria-hidden="true"></div>
+      <div class="relative grid grid-cols-1 gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-[0.16em] text-accent">Ready when you are</p>
+          <h2 class="mt-4 max-w-[780px] font-display text-[clamp(2.2rem,5vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.025em]">
+            先拥有能力，<br />再决定偏好。
+          </h2>
+          <p class="mt-5 max-w-[650px] text-base leading-8 text-text-secondary">
+            下载一个 Runtime Core。只使用功能，或在同一个 custom.cfg 中建立属于你的确定性配置。
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3 lg:max-w-[220px] lg:flex-col">
+          <ButtonLink href="/download" size="lg">
+            <Download class="h-5 w-5" />
+            前往下载
+          </ButtonLink>
+          <ButtonLink href="/docs/srpcfg-3" variant="ghost" size="lg">
+            <BookOpen class="h-5 w-5" />
+            使用指南
+          </ButtonLink>
+        </div>
+      </div>
     </div>
   </div>
 </section>

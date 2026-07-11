@@ -15,10 +15,5 @@ const { Content, headings } = await render(doc);
   currentSlug={doc.id}
   headings={headings}
 >
-  <header class="mb-10">
-    <h1>{doc.data.title}</h1>
-    <div class="w-16 h-0.5 bg-accent rounded-full"></div>
-  </header>
-
   <Content />
 </DocLayout>

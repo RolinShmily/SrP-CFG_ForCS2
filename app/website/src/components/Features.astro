@@ -1,34 +1,93 @@
 ---
+import { Blocks, CloudCog, SlidersHorizontal, UserRoundCog } from "lucide-astro";
 import SectionHeader from "./SectionHeader.astro";
-import { Search, Users, Archive, Upload, LayoutGrid, Terminal, RefreshCcw, Shield } from "lucide-astro";
 
-const features = [
-  { icon: Search, title: "路径自动检测", desc: "自动扫描注册表与 Steam 库文件，精准定位游戏全局 CFG、用户视频和地图指南路径" },
-  { icon: Users, title: "用户自动识别", desc: "自动枚举 Steam 用户列表并识别当前登录用户，多账号环境支持手动切换" },
-  { icon: Archive, title: "冲突智能处理", desc: "覆盖安装自动检测冲突文件，移至恢复区并记录到 res.json，支持逐项恢复" },
-  { icon: Upload, title: "拖拽安装", desc: "将 ZIP 配置包、CFG 单文件或整个文件夹直接拖入窗口，自动识别类型并完成安装" },
-  { icon: LayoutGrid, title: "双安装模式", desc: "覆盖安装（清空重装）与追加安装（合并保留），冲突超 3 个自动拒绝，1–3 个弹窗确认" },
-  { icon: Terminal, title: "实时日志", desc: "颜色编码的实时日志输出，安装进度清晰可辨：绿色成功、橙色警告、默认信息" },
-  { icon: RefreshCcw, title: "自动更新", desc: "启动时后台检查 GitHub Releases 新版本，有更新自动提醒，支持忽略当前版本" },
-  { icon: Shield, title: "CI 自动化构建", desc: "所有安装包均由 GitHub Actions 自动化流水线构建发布，无手动干预，安全可靠" },
+const layers = [
+  {
+    index: "A",
+    icon: Blocks,
+    title: "Runtime Core",
+    owner: "项目维护",
+    desc: "永久注册 alias、Feature、Mode 与帮助入口，不在启动时偷改你的普通偏好。",
+  },
+  {
+    index: "B",
+    icon: SlidersHorizontal,
+    title: "Preset 案例",
+    owner: "按需调用",
+    desc: "Default、Echo、YSZH、VisionL 是可审查的起点，不是四套独立发行包。",
+  },
+  {
+    index: "C",
+    icon: UserRoundCog,
+    title: "User",
+    owner: "当前用户",
+    desc: "custom.cfg 是唯一个人窗口；Preset 之后的命令拥有最终覆盖权，并在更新时受保护。",
+  },
+  {
+    index: "D",
+    icon: CloudCog,
+    title: "VCFG / Cloud",
+    owner: "CS2 管理",
+    desc: "游戏继续序列化最终绑定与 ConVar；安装器只读解析，不在背后覆盖 Valve 文件。",
+  },
 ];
+
+const features = ["crosshair-view", "autoview", "knife", "zeus"];
+const modes = ["practice", "preview", "guidemake", "demo-hlae"];
 ---
 
-<section class="pt-[80px] sm:pt-[100px] md:pt-[140px] pb-[60px] sm:pb-[80px] md:pb-[120px]">
-  <div class="max-w-[1200px] mx-auto px-5 sm:px-7">
-    <SectionHeader label="Core Features" title="核心功能" description="覆盖从路径检测到备份恢复的完整安装链路，每一步都自动化处理" />
+<section id="architecture" class="home-section scroll-mt-24 border-b border-border py-20 sm:py-28 lg:py-32">
+  <div class="mx-auto max-w-[1280px] px-5 sm:px-7">
+    <SectionHeader
+      index="01"
+      label="Architecture"
+      title="不是一包偏好，而是一套边界明确的运行时"
+      description="v3 把“功能实现”“可选案例”“个人差异”和“游戏持久状态”拆开。每一层只有一个主人，也只有一种职责。"
+      align="left"
+    />
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {features.map((f) => (
-        <article class="group bg-bg-card border border-border rounded-[10px] p-6 sm:p-8 pb-5 sm:pb-6 transition-all duration-300 relative overflow-hidden hover:border-border-highlight hover:bg-bg-hover hover:-translate-y-[3px] hover:shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
-          <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent to-accent-light scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-350"></div>
-          <div class="w-[46px] h-[46px] rounded-[6px] bg-accent-bg border border-[rgba(232,121,12,0.12)] flex items-center justify-center mb-5 transition-all duration-300 group-hover:bg-[rgba(232,121,12,0.14)] group-hover:border-[rgba(232,121,12,0.25)]">
-            <f.icon class="w-5 h-5 text-accent" stroke-width="1.8" />
+    <div class="grid grid-cols-1 border-l border-t border-border sm:grid-cols-2 xl:grid-cols-4">
+      {layers.map((layer) => (
+        <article class="group relative min-h-[270px] border-b border-r border-border bg-bg-card/55 p-6 transition-colors duration-200 hover:bg-bg-hover sm:p-7">
+          <div class="flex items-start justify-between gap-4">
+            <span class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] border border-accent/20 bg-accent-bg text-accent">
+              <layer.icon class="h-5 w-5" stroke-width="1.8" />
+            </span>
+            <span class="font-mono text-xs text-text-faint">{layer.index}</span>
           </div>
-          <h3 class="font-display text-xl font-semibold mb-2.5 tracking-[0.02em]">{f.title}</h3>
-          <p class="text-sm text-text-secondary leading-[1.75] font-light">{f.desc}</p>
+          <h3 class="mt-8 font-display text-xl font-bold text-text">{layer.title}</h3>
+          <p class="mt-1 font-mono text-[11px] uppercase tracking-[0.13em] text-accent">{layer.owner}</p>
+          <p class="mt-4 text-sm leading-7 text-text-secondary">{layer.desc}</p>
         </article>
       ))}
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div class="rounded-[var(--radius)] border border-border bg-bg-card p-6 sm:p-7">
+        <div class="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">Always available</p>
+            <h3 class="mt-1 font-display text-xl font-bold">Features</h3>
+          </div>
+          <span class="font-mono text-xs text-teal">04 MODULES</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {features.map((feature) => <code class="rounded-md border border-border bg-bg-raised px-3 py-2 font-mono text-xs text-text-secondary">{feature}</code>)}
+        </div>
+      </div>
+      <div class="rounded-[var(--radius)] border border-border bg-bg-card p-6 sm:p-7">
+        <div class="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">Explicit workspace</p>
+            <h3 class="mt-1 font-display text-xl font-bold">Modes</h3>
+          </div>
+          <span class="font-mono text-xs text-accent">04 MODULES</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {modes.map((mode) => <code class="rounded-md border border-border bg-bg-raised px-3 py-2 font-mono text-xs text-text-secondary">{mode}</code>)}
+        </div>
+      </div>
     </div>
   </div>
 </section>

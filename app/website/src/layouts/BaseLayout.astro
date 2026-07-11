@@ -16,26 +16,30 @@ const { title, description = "一键部署 CS2 配置预设 — SrP-CFG Installe
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="referrer" content="origin" />
+    <meta name="theme-color" content="#090b10" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Serif+SC:wght@400&family=JetBrains+Mono:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap"
       rel="stylesheet"
       media="print"
       onload="this.setAttribute('media', 'all')"
     />
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Serif+SC:wght@400&family=JetBrains+Mono:wght@400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap"
         rel="stylesheet"
       />
     </noscript>
     <title>{title}</title>
   </head>
   <body>
-    <div class="noise-overlay" aria-hidden="true"></div>
-    <div class="ambient-orbs" aria-hidden="true"></div>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
     <slot />
   </body>
 </html>

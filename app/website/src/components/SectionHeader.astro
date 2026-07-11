@@ -3,18 +3,25 @@ interface Props {
   label: string;
   title: string;
   description?: string;
+  align?: "left" | "center";
+  index?: string;
+  level?: "h1" | "h2";
 }
 
-const { label, title, description } = Astro.props;
+const { label, title, description, align = "center", index, level = "h2" } = Astro.props;
+const Heading = level;
 ---
 
-<header class="text-center mb-12 sm:mb-[72px]">
-  <span class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.22em] uppercase text-accent mb-3 sm:mb-4">
-    {label}
-  </span>
-  <h2 class="font-display text-[28px] sm:text-[36px] md:text-[40px] font-bold tracking-[0.03em] mb-3 sm:mb-4">{title}</h2>
+<header class:list={["mb-10 sm:mb-14", align === "center" ? "text-center" : "text-left"]}>
+  <div class:list={["mb-3 flex items-center gap-3", align === "center" && "justify-center"]}>
+    {index && <span class="font-mono text-xs text-text-faint">{index}</span>}
+    <span class="font-mono text-xs font-medium uppercase tracking-[0.18em] text-accent">
+      {label}
+    </span>
+  </div>
+  <Heading class:list={["max-w-[780px] font-display text-[clamp(1.9rem,4.5vw,3.25rem)] font-bold leading-[1.08] text-text", align === "center" && "mx-auto"]}>{title}</Heading>
   {description && (
-    <p class="text-sm sm:text-base text-text-secondary font-light max-w-[540px] mx-auto leading-[1.8]">
+    <p class:list={["mt-4 max-w-[680px] text-base leading-7 text-text-secondary", align === "center" && "mx-auto"]}>
       {description}
     </p>
   )}

@@ -1,37 +1,63 @@
 ---
+import { Download, Gamepad2, PackageCheck, UserRoundCog } from "lucide-astro";
 import SectionHeader from "./SectionHeader.astro";
-import { ChevronRight } from "lucide-astro";
 
 const steps = [
-  { num: "01", title: "下载", desc: "从 GitHub Releases<br>获取便携版安装器" },
-  { num: "02", title: "启动", desc: "双击运行，自动检测<br>Steam 和 CS2 路径" },
-  { num: "03", title: "拖入", desc: "拖入 ZIP 配置包<br>自动备份并安装" },
-  { num: "04", title: "完成", desc: "启动游戏即刻生效<br>所有配置已就位" },
+  {
+    num: "01",
+    icon: Download,
+    title: "获取",
+    command: "SrP-CFG_Runtime_Core.zip",
+    desc: "下载唯一 Runtime Core，或通过 Desktop 在应用内获取。没有用户专属发行包需要选择。",
+  },
+  {
+    num: "02",
+    icon: PackageCheck,
+    title: "部署",
+    command: "game/csgo/cfg/",
+    desc: "确认 Steam 账号和路径，默认把 Runtime 部署到游戏 CFG 目录；冲突原文件进入恢复中心。",
+  },
+  {
+    num: "03",
+    icon: UserRoundCog,
+    title: "选择",
+    command: "user/custom.cfg",
+    desc: "保持 VCFG 托管，或选择一个 srp_apply_* 起点，再把自己的灵敏度、按键与偏好写在下面。",
+  },
+  {
+    num: "04",
+    icon: Gamepad2,
+    title: "迭代",
+    command: "srp_reload",
+    desc: "游戏内继续调试；需要确定性持久化的差异写回 custom.cfg，需要纯基线时执行 srp_reset_valve。",
+  },
 ];
 ---
 
-<section class="py-[60px] sm:py-[80px] md:py-[120px] relative">
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[radial-gradient(ellipse,rgba(45,212,191,0.05)0%,transparent70%)] pointer-events-none"></div>
-  <div class="max-w-[1200px] mx-auto px-5 sm:px-7 relative z-1">
-    <SectionHeader label="Quick Start" title="四步上手" description="从下载到安装完成，全程不超过一分钟" />
+<section class="home-section border-b border-border py-20 sm:py-28 lg:py-32">
+  <div class="mx-auto max-w-[1280px] px-5 sm:px-7">
+    <SectionHeader
+      index="03"
+      label="Workflow"
+      title="四步开始，每一步都能解释"
+      description="自动化不等于隐藏行为。v3 让安装、选择、覆盖和重置都有可检查的文件与命令。"
+      align="left"
+    />
 
-    <div class="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-0">
-      {steps.map((step, i) => (
-        <div class="flex items-start">
-          <div class="text-center flex-1 max-w-[200px] sm:max-w-[220px] px-3 sm:px-4">
-            <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] mx-auto mb-4 sm:mb-6 border-2 border-border rounded-[10px] flex items-center justify-center font-display text-lg sm:text-[22px] font-bold text-text-faint bg-bg-card transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_24px_rgba(232,121,12,0.25)]">
-              {step.num}
-            </div>
-            <h3 class="font-display text-lg sm:text-[22px] font-semibold mb-2 sm:mb-2.5 tracking-[0.02em]">{step.title}</h3>
-            <p class="text-sm sm:text-[15px] text-text-secondary font-light leading-[1.7]" set:html={step.desc} />
+    <ol class="grid grid-cols-1 border-l border-t border-border md:grid-cols-2 xl:grid-cols-4">
+      {steps.map((step) => (
+        <li class="relative border-b border-r border-border bg-bg-card/45 p-6 sm:p-7">
+          <div class="flex items-center justify-between">
+            <span class="flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-bg-raised text-text-muted">
+              <step.icon class="h-5 w-5" stroke-width="1.8" />
+            </span>
+            <span class="font-mono text-xs text-text-faint">{step.num} / 04</span>
           </div>
-          {i < steps.length - 1 && (
-            <div class="hidden lg:flex items-center justify-center text-text-faint pt-[22px] sm:pt-[26px] w-8 sm:w-12 flex-shrink-0">
-              <ChevronRight class="w-8 h-8" />
-            </div>
-          )}
-        </div>
+          <h3 class="mt-8 font-display text-2xl font-bold text-text">{step.title}</h3>
+          <code class="mt-3 block break-all font-mono text-xs text-accent-light">{step.command}</code>
+          <p class="mt-4 text-sm leading-7 text-text-secondary">{step.desc}</p>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </section>

@@ -1,56 +1,72 @@
 ---
+import { ArrowDownRight, BookOpen, Download } from "lucide-astro";
 import ButtonLink from "./ButtonLink.astro";
 import TerminalDemo from "./TerminalDemo.astro";
-import { Download, BookOpen } from "lucide-astro";
 import { LATEST_VERSION } from "../data/version";
 ---
-<section class="pt-[60px] md:pt-[80px] min-h-screen flex flex-col relative">
-  <div class="max-w-[1200px] mx-auto px-5 sm:px-7 relative z-1 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-10 lg:gap-16 items-center flex-1">
-    <div class="pb-6 md:pb-8">
-      <div class="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.28em] uppercase text-teal mb-5 sm:mb-6">
-        <span class="w-[7px] h-[7px] bg-teal rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.3)]"></span>
-        COUNTER-STRIKE 2 TOOL
+
+<section class="relative overflow-hidden border-b border-border pt-16">
+  <div class="tech-grid pointer-events-none absolute inset-0 opacity-70" aria-hidden="true"></div>
+  <div class="relative mx-auto grid min-h-[calc(100svh-4rem)] max-w-[1280px] grid-cols-1 items-center gap-12 px-5 py-20 sm:px-7 sm:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-20">
+    <div class="hero-reveal max-w-[760px]">
+      <div class="mb-6 flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-[0.16em] text-text-muted">
+        <span class="inline-flex items-center gap-2 rounded-full border border-teal/25 bg-teal/5 px-3 py-1.5 text-teal">
+          <span class="h-1.5 w-1.5 rounded-full bg-teal" aria-hidden="true"></span>
+          VCFG AWARE
+        </span>
+        <span>SrP-CFG v{LATEST_VERSION}</span>
       </div>
-      <h1 class="font-display text-[40px] sm:text-[52px] md:text-[64px] lg:text-[72px] font-bold leading-none tracking-[0.02em] mb-5 sm:mb-6">
-        SrP-CFG
-        <span class="block text-accent">Installer</span>
+
+      <h1 class="font-display text-[clamp(3rem,7vw,6.5rem)] font-bold leading-[0.94] tracking-[-0.035em] text-text">
+        功能留给<br />Runtime，
+        <span class="text-accent">偏好留给你。</span>
       </h1>
-      <p class="text-base sm:text-lg text-text-secondary font-light leading-[1.8] sm:leading-[1.9] mb-8 sm:mb-10 max-w-[500px]">
-        一键部署 CS2 配置预设。自动检测路径、冲突智能处理、拖拽安装——<br>
-        将繁琐的手动配置流程简化为一次拖放操作。
+
+      <p class="mt-7 max-w-[650px] text-base leading-8 text-text-secondary sm:text-lg">
+        SrP-CFG v3 是一套面向 CS2 的模块化配置运行时。一个 Runtime Core 注册 alias、Feature 与 Mode；
+        一个 <code class="font-mono text-[0.9em] text-accent-light">user/custom.cfg</code> 决定 Preset 起点和你的最终覆盖。
       </p>
-      <div class="flex gap-3 sm:gap-4 flex-wrap">
+
+      <div class="mt-9 flex flex-wrap gap-3">
         <ButtonLink href="/download" size="lg">
-          <Download class="w-5 h-5" />下载安装器
+          <Download class="h-5 w-5" />
+          获取 v3
         </ButtonLink>
-        <ButtonLink href="/docs" variant="ghost" size="lg">
-          <BookOpen class="w-5 h-5" />查看文档
+        <ButtonLink href="/docs/srpcfg-1" variant="ghost" size="lg">
+          <BookOpen class="h-5 w-5" />
+          先理解架构
         </ButtonLink>
       </div>
+
+      <a href="#architecture" class="mt-10 inline-flex min-h-11 items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-text-faint no-underline transition-colors hover:text-accent">
+        查看执行边界
+        <ArrowDownRight class="h-4 w-4" />
+      </a>
     </div>
-    <div class="order-[-1] lg:order-none max-w-[580px] mx-auto lg:max-w-none w-full">
-      <div class="bg-bg-card border border-border rounded-[10px] overflow-hidden aspect-video relative shadow-[0_0_60px_rgba(232,121,12,0.06)]">
-        <TerminalDemo />
-      </div>
+
+    <div class="hero-reveal hero-reveal-delayed w-full min-w-0">
+      <TerminalDemo />
     </div>
   </div>
 
-  <div class="mt-10 sm:mt-16 py-6 sm:py-10 border-t border-b border-border bg-gradient-to-b from-bg-card/60 to-transparent">
-    <div class="max-w-[1200px] mx-auto px-5 sm:px-7 flex items-center justify-center gap-6 sm:gap-12">
-      <div class="text-center">
-        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">4</span>
-        <span class="text-xs sm:text-sm text-text-muted">独立安装目标</span>
+  <div class="relative border-t border-border bg-bg-card/55">
+    <dl class="mx-auto grid max-w-[1280px] grid-cols-2 gap-px bg-border sm:grid-cols-4">
+      <div class="bg-bg-card/90 px-5 py-5 sm:px-6 sm:py-6">
+        <dt class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">Release model</dt>
+        <dd class="mt-1 font-display text-xl font-bold text-text">1 Runtime Core</dd>
       </div>
-      <div class="w-px h-8 sm:h-10 bg-border"></div>
-      <div class="text-center">
-        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">10+</span>
-        <span class="text-xs sm:text-sm text-text-muted">预设配置文件</span>
+      <div class="bg-bg-card/90 px-5 py-5 sm:px-6 sm:py-6">
+        <dt class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">Source tree</dt>
+        <dd class="mt-1 font-display text-xl font-bold text-text">84 CFG</dd>
       </div>
-      <div class="w-px h-8 sm:h-10 bg-border"></div>
-      <div class="text-center">
-        <span class="block font-display text-2xl sm:text-4xl font-bold text-accent leading-none mb-1 sm:mb-1.5">v{LATEST_VERSION}</span>
-        <span class="text-xs sm:text-sm text-text-muted">最新版本</span>
+      <div class="bg-bg-card/90 px-5 py-5 sm:px-6 sm:py-6">
+        <dt class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">Preset cases</dt>
+        <dd class="mt-1 font-display text-xl font-bold text-text">4 + Valve</dd>
       </div>
-    </div>
+      <div class="bg-bg-card/90 px-5 py-5 sm:px-6 sm:py-6">
+        <dt class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">User surface</dt>
+        <dd class="mt-1 font-display text-xl font-bold text-text">1 custom.cfg</dd>
+      </div>
+    </dl>
   </div>
 </section>

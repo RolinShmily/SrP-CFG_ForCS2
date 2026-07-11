@@ -8,8 +8,8 @@ export default defineConfig({
   site: "https://srprolin.top",
   integrations: [mdx(), sitemap()],
   prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "viewport",
+    prefetchAll: false,
+    defaultStrategy: "hover",
   },
   markdown: {
     rehypePlugins: [rehypeSlug],

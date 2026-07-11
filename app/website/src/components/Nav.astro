@@ -1,149 +1,131 @@
 ---
 import { navLinks, REPO_URL } from "../data/navigation";
-import { Home, Download, BookOpen, Info, Github, Menu, X } from "lucide-astro";
+import { Github, Menu, X } from "lucide-astro";
 
 const currentPath = Astro.url.pathname;
-
-const navIcons: Record<string, typeof Home> = {
-  "/": Home,
-  "/download": Download,
-  "/docs": BookOpen,
-  "/about": Info,
-};
+const isActive = (href: string) =>
+  href === "/" ? currentPath === "/" : currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-200 bg-bg/82 backdrop-blur-xl border-b border-border max-w-[100dvw]">
-  <div class="max-w-[1200px] mx-auto px-5 sm:px-7 flex items-center justify-between h-16 w-full">
-    <a href="/" class="flex items-center gap-2.5 no-underline">
-      <img src="/favicon.ico" alt="SrP-CFG" class="w-7 h-7" />
-      <span class="font-display text-xl font-bold text-accent tracking-widest">SrP-CFG</span>
+<nav class="fixed inset-x-0 top-0 z-[100] border-b border-border bg-bg/95" aria-label="主导航">
+  <div class="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between px-5 sm:px-7">
+    <a href="/" data-astro-prefetch="hover" class="group flex min-h-11 items-center gap-3 no-underline" aria-label="SrP-CFG 首页">
+      <img src="/favicon.ico" alt="" width="32" height="32" class="h-8 w-8 rounded-[7px]" />
+      <span class="leading-none">
+        <span class="block font-display text-lg font-bold tracking-[0.08em] text-text group-hover:text-accent">SrP-CFG</span>
+        <span class="mt-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-text-faint">v3 Runtime</span>
+      </span>
     </a>
 
-    <div class="hidden md:flex gap-2 items-center">
-      {navLinks.map((link) => {
-        const Icon = navIcons[link.href];
-        return (
-          <a
-            href={link.href}
-            class:list={[
-              "inline-flex items-center gap-1.5 font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] transition-all duration-200 no-underline",
-              currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
-                ? "text-accent bg-accent-bg"
-                : "text-text-muted hover:text-text",
-            ]}
-          >
-            {Icon && <Icon class="w-4 h-4" />}
-            {link.label}
-          </a>
-        );
-      })}
+    <div class="hidden items-center gap-1 md:flex">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          data-astro-prefetch="hover"
+          aria-current={isActive(link.href) ? "page" : undefined}
+          class:list={[
+            "inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 font-display text-sm font-semibold no-underline transition-colors duration-200",
+            isActive(link.href)
+              ? "bg-accent-bg text-accent"
+              : "text-text-muted hover:bg-bg-hover hover:text-text",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <span class="mx-2 h-5 w-px bg-border" aria-hidden="true"></span>
       <a
         href={REPO_URL}
         target="_blank"
         rel="noopener"
-        class="inline-flex items-center gap-1.5 font-display text-[15px] font-medium px-4 py-1.5 rounded-[6px] text-text-muted hover:text-text transition-all duration-200 no-underline"
+        class="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 font-display text-sm font-semibold text-text-muted no-underline transition-colors duration-200 hover:bg-bg-hover hover:text-text"
       >
-        <Github class="w-4 h-4" />
+        <Github class="h-4 w-4" />
         GitHub
       </a>
     </div>
 
     <button
       id="mobile-menu-btn"
-      class="md:hidden flex items-center justify-center bg-transparent border-none cursor-pointer p-1.5 text-text-secondary"
-      aria-label="打开菜单"
+      type="button"
+      class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-bg-card text-text-secondary transition-colors hover:border-border-highlight hover:text-text md:hidden"
+      aria-label="打开主导航"
       aria-expanded="false"
       aria-controls="mobile-menu"
     >
-      <Menu data-icon-menu class="w-6 h-6" />
-      <X data-icon-close class="w-6 h-6 hidden" />
+      <Menu data-icon-menu class="h-5 w-5" />
+      <X data-icon-close class="hidden h-5 w-5" />
     </button>
   </div>
 </nav>
 
-<!-- Mobile menu dropdown — outside nav to escape backdrop-blur containing block -->
-<div id="mobile-menu" class="hidden md:hidden fixed left-0 right-0 top-16 z-199 bg-bg-card/95 backdrop-blur-xl border-b border-border max-h-[calc(100vh-4rem)] overflow-y-auto max-w-[100dvw]" aria-hidden="true">
-  <div class="px-5 sm:px-7 py-4 flex flex-col gap-1">
-    {navLinks.map((link) => {
-      const Icon = navIcons[link.href];
-      return (
-        <a
-          href={link.href}
-          class:list={[
-            "flex items-center gap-3 py-3 px-4 rounded-[6px] font-display text-[15px] font-medium transition-all duration-200 no-underline",
-            currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
-              ? "text-accent bg-accent-bg"
-              : "text-text-muted hover:text-text hover:bg-bg-hover",
-          ]}
-        >
-          {Icon && <Icon class="w-[18px] h-[18px]" />}
-          {link.label}
-        </a>
-      );
-    })}
+<div
+  id="mobile-menu"
+  class="fixed inset-x-0 top-16 z-[90] hidden border-b border-border bg-bg-card px-5 py-4 shadow-2xl md:hidden"
+  aria-hidden="true"
+>
+  <div class="mx-auto flex max-w-[720px] flex-col gap-1">
+    {navLinks.map((link) => (
+      <a
+        href={link.href}
+        data-astro-prefetch="hover"
+        aria-current={isActive(link.href) ? "page" : undefined}
+        class:list={[
+          "flex min-h-12 items-center rounded-[var(--radius-sm)] px-4 font-display text-base font-semibold no-underline transition-colors duration-200",
+          isActive(link.href)
+            ? "bg-accent-bg text-accent"
+            : "text-text-muted hover:bg-bg-hover hover:text-text",
+        ]}
+      >
+        {link.label}
+      </a>
+    ))}
     <a
       href={REPO_URL}
       target="_blank"
       rel="noopener"
-      class="flex items-center gap-3 py-3 px-4 rounded-[6px] font-display text-[15px] font-medium text-text-muted hover:text-text hover:bg-bg-hover transition-all duration-200 no-underline"
+      class="mt-1 flex min-h-12 items-center gap-2 rounded-[var(--radius-sm)] border-t border-border px-4 pt-3 font-display text-base font-semibold text-text-muted no-underline hover:text-text"
     >
-      <Github class="w-[18px] h-[18px]" />
+      <Github class="h-5 w-5" />
       GitHub
     </a>
   </div>
 </div>
 
 <style>
-  #mobile-menu-btn.menu-open [data-icon-menu] {
-    display: none;
-  }
-  #mobile-menu-btn.menu-open [data-icon-close] {
-    display: block;
-  }
+  #mobile-menu-btn.menu-open [data-icon-menu] { display: none; }
+  #mobile-menu-btn.menu-open [data-icon-close] { display: block; }
+  :global(body.mobile-menu-open) { overflow: hidden; }
 </style>
 
 <script>
-  let cleanupFn: (() => void) | null = null;
+  const button = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
 
-  function initMobileMenu() {
-    cleanupFn?.();
-
-    const btn = document.getElementById("mobile-menu-btn");
-    const menu = document.getElementById("mobile-menu");
-    if (!btn || !menu) return;
-
+  if (button && menu && button.dataset.ready !== "true") {
+    button.dataset.ready = "true";
     let open = false;
 
-    function setOpen(value: boolean) {
-      open = value;
-      menu!.classList.toggle("hidden", !open);
-      btn!.classList.toggle("menu-open", open);
-      btn!.setAttribute("aria-expanded", String(open));
-      menu!.setAttribute("aria-hidden", String(!open));
-      document.body.style.overflow = open ? "hidden" : "";
-    }
+    const setOpen = (next: boolean) => {
+      open = next;
+      menu.classList.toggle("hidden", !next);
+      button.classList.toggle("menu-open", next);
+      button.setAttribute("aria-expanded", String(next));
+      button.setAttribute("aria-label", next ? "关闭主导航" : "打开主导航");
+      menu.setAttribute("aria-hidden", String(!next));
+      document.body.classList.toggle("mobile-menu-open", next);
+    };
 
-    const onBtnClick = () => setOpen(!open);
-
-    const onDocClick = (e: MouseEvent) => {
-      if (open && !menu!.contains(e.target as Node) && !btn!.contains(e.target as Node)) {
+    button.addEventListener("click", () => setOpen(!open));
+    menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && open) {
         setOpen(false);
+        button.focus();
       }
-    };
-
-    const onLinkClick = () => setOpen(false);
-
-    btn.addEventListener("click", onBtnClick);
-    document.addEventListener("click", onDocClick);
-    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", onLinkClick));
-
-    cleanupFn = () => {
-      btn.removeEventListener("click", onBtnClick);
-      document.removeEventListener("click", onDocClick);
-      menu.querySelectorAll("a").forEach((a) => a.removeEventListener("click", onLinkClick));
-      setOpen(false);
-    };
+    });
+    window.matchMedia("(min-width: 768px)").addEventListener("change", (event) => {
+      if (event.matches) setOpen(false);
+    });
   }
-
-  initMobileMenu();
 </script>
