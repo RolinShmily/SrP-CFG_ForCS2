@@ -87,11 +87,8 @@ async function fetchAllReleases(): Promise<GitHubReleaseRaw[]> {
 }
 
 function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
-  return assets.some(
-    (a) =>
-      /^SrP-CFG_Installer\.msi$/i.test(a.name) ||
-      /^SrP-CFG_Portable\.zip$/i.test(a.name),
-  );
+  // DESKTOP_UPDATE_MARKER 仅当 desktop 源码真实变更时才会随 workflow 上传
+  return assets.some((a) => a.name === "DESKTOP_UPDATE_MARKER");
 }
 
 function hasConfigAssets(assets: GitHubAssetRaw[]): boolean {

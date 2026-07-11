@@ -71,7 +71,6 @@ jobs:
   # ============================================
   build-app:
     needs: [validate-tag, detect-changes]
-    if: needs.detect-changes.outputs.has_desktop_changes == 'true'
     runs-on: windows-latest
     steps:
       - name: Checkout code
@@ -149,7 +148,6 @@ jobs:
   # ============================================
   release-desktop:
     needs: [validate-tag, detect-changes, build-app]
-    if: needs.detect-changes.outputs.has_desktop_changes == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -175,11 +173,23 @@ jobs:
           ls -lh SrP-CFG_Installer.msi SrP-CFG_Portable.zip 2>&1
           echo "======================"
 
-      - name: Append to GitHub Release
+      - name: Create desktop update marker (if desktop code changed)
+        if: needs.detect-changes.outputs.has_desktop_changes == 'true'
+        run: echo "1" > DESKTOP_UPDATE_MARKER
+
+      - name: Upload MSI and Portable to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: |
             SrP-CFG_Installer.msi
             SrP-CFG_Portable.zip
+          fail_on_unmatched_files: true
+
+      - name: Upload desktop update marker to Release
+        if: needs.detect-changes.outputs.has_desktop_changes == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: DESKTOP_UPDATE_MARKER
           fail_on_unmatched_files: true
