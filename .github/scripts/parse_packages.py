@@ -1,44 +1,51 @@
 #!/usr/bin/env python3
-"""
-解析 packages.yaml：展开继承关系，输出扁平的 packages.json 供打包脚本使用。
-由 CI 的 "Parse packages configuration" 步骤调用。
+"""Parse the single v3 Runtime Core package into packages.json for CI."""
 
-用法: python3 .github/scripts/parse_packages.py
-"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
 
 import yaml
-import json
 
 
-def main():
-    with open('.github/packages.yaml', 'r', encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-
-    packages = config.get('packages', {})
-
-    package_list = []
-    for pkg_name, pkg_config in packages.items():
-        # 获取文件列表（处理 base 继承）
-        if 'base' in pkg_config:
-            base_config = packages.get(pkg_config['base'], {})
-            files = base_config.get('files', [])
-        else:
-            files = pkg_config.get('files', [])
-
-        package_list.append({
-            'name': pkg_name,
-            'zip_name': pkg_config.get('zip_name', pkg_name),
-            'display_name': pkg_config.get('display_name', pkg_name),
-            'description': pkg_config.get('description', ''),
-            'files': files,
-            'overrides': pkg_config.get('overrides', [])
-        })
-
-    with open('packages.json', 'w', encoding='utf-8') as f:
-        json.dump(package_list, f, ensure_ascii=False, indent=2)
-
-    print(f"✅ Parsed {len(package_list)} packages")
+CONFIG_PATH = Path(".github/packages.yaml")
+OUTPUT_PATH = Path("packages.json")
+EXPECTED_PACKAGES = {"runtime_core"}
+EXPECTED_ZIP_NAME = "SrP-CFG_Runtime_Core"
 
 
-if __name__ == '__main__':
+def main() -> None:
+    config = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8")) or {}
+    packages = config.get("packages")
+    if not isinstance(packages, dict) or set(packages) != EXPECTED_PACKAGES:
+        found = sorted(packages) if isinstance(packages, dict) else packages
+        raise ValueError(
+            f"v3 must define only runtime_core; found {found!r}"
+        )
+
+    package = packages["runtime_core"]
+    if package.get("zip_name") != EXPECTED_ZIP_NAME:
+        raise ValueError(
+            f"runtime_core.zip_name must be {EXPECTED_ZIP_NAME!r}"
+        )
+    files = package.get("files")
+    if not isinstance(files, list) or not files or not all(isinstance(item, str) for item in files):
+        raise ValueError("runtime_core.files must be a non-empty string list")
+
+    output = [{
+        "name": "runtime_core",
+        "zip_name": EXPECTED_ZIP_NAME,
+        "display_name": package.get("display_name", "Runtime Core"),
+        "description": package.get("description", ""),
+        "files": list(dict.fromkeys(files)),
+    }]
+    OUTPUT_PATH.write_text(
+        json.dumps(output, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print("Parsed the runtime_core package")
+
+
+if __name__ == "__main__":
     main()

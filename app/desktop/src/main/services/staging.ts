@@ -312,8 +312,9 @@ export function getUploadHistory(): UploadEntry[] {
 
 // ── Staging Operations ───────────────────────────────────────
 
-function classifyFile(relativePath: string): "cfg" | "annotations" | "video" | "unsupported" {
+function classifyFile(relativePath: string): "cfg" | "annotations" | "video" | "vcfg" | "unsupported" {
   const lower = relativePath.toLowerCase();
+  if (lower.endsWith(".vcfg") || lower.endsWith(".vcfg_lastclouded")) return "vcfg";
   if (lower.includes("annotations")) return "annotations";
   if (lower.endsWith(".cfg")) return "cfg";
   if (path.basename(lower) === "cs2_video.txt") return "video";
@@ -350,6 +351,7 @@ export function processUploadToStaging(
   let annotationsCount = 0;
   let videoCount = 0;
   let unsupportedCount = 0;
+  let blockedVcfgCount = 0;
 
   for (const file of allFiles) {
     const rel = path.relative(uploadFolder, file);
@@ -379,6 +381,9 @@ export function processUploadToStaging(
           videoCount++;
           break;
         }
+        case "vcfg":
+          blockedVcfgCount++;
+          break;
         default:
           unsupportedCount++;
       }
@@ -391,8 +396,89 @@ export function processUploadToStaging(
   if (annotationsCount > 0) log({ category: "install", level: "success", message: `地图指南文件：${annotationsCount} 个` });
   if (videoCount > 0) log({ category: "install", level: "success", message: `视频预设文件：${videoCount} 个` });
   if (unsupportedCount > 0) log({ category: "file-ops", level: "warning", message: `跳过 ${unsupportedCount} 个不支持的文件` });
+  if (blockedVcfgCount > 0) {
+    log({
+      category: "file-ops",
+      level: "warning",
+      message: `已阻止 ${blockedVcfgCount} 个 VCFG 文件`,
+      detail: "VCFG 由 CS2 与 Steam Cloud 管理，不能作为普通预设覆盖安装。",
+    });
+  }
 
   return { cfgCount, annotationsCount, videoCount };
+}
+
+export type StagedConfigKind = "empty" | "runtime-core" | "custom";
+
+export interface StagedConfigImpact {
+  kind: StagedConfigKind;
+  cfgCount: number;
+}
+
+function executableLine(line: string): string {
+  return line.split("//", 1)[0].trim();
+}
+
+function execTarget(line: string): string | null {
+  const match = executableLine(line).match(
+    /^exec(?:ifexists)?\s+["']?([a-z0-9_./\\-]+)["']?\s*$/i,
+  );
+  if (!match) return null;
+  const target = match[1].replace(/\\/g, "/");
+  return target.toLowerCase().endsWith(".cfg") ? target : `${target}.cfg`;
+}
+
+function isRuntimeRegistrationOnly(cfgDir: string): boolean {
+  const pending = ["autoexec.cfg"];
+  const visited = new Set<string>();
+
+  while (pending.length > 0) {
+    const relative = pending.pop()!;
+    if (visited.has(relative)) continue;
+    visited.add(relative);
+
+    const file = path.resolve(cfgDir, relative);
+    const root = path.resolve(cfgDir) + path.sep;
+    if (!file.startsWith(root) || !fs.existsSync(file)) continue;
+
+    const content = fs.readFileSync(file, "utf-8");
+    for (const rawLine of content.split(/\r?\n/)) {
+      const line = executableLine(rawLine);
+      if (!line) continue;
+
+      const target = execTarget(rawLine);
+      if (target) {
+        pending.push(target);
+        continue;
+      }
+
+      if (/^(?:alias|echo|echoln)\b/i.test(line)) continue;
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function inspectConfigDirectory(cfgDir: string): StagedConfigImpact {
+  const cfgFiles = fs.existsSync(cfgDir)
+    ? walkSync(cfgDir).filter((file) => path.extname(file).toLowerCase() === ".cfg")
+    : [];
+  const autoexec = path.join(cfgDir, "autoexec.cfg");
+  let kind: StagedConfigKind = cfgFiles.length > 0 ? "custom" : "empty";
+
+  if (fs.existsSync(autoexec) && isRuntimeRegistrationOnly(cfgDir)) {
+    kind = "runtime-core";
+  }
+
+  return {
+    kind,
+    cfgCount: cfgFiles.length,
+  };
+}
+
+export function inspectStagedConfig(): StagedConfigImpact {
+  return inspectConfigDirectory(getStagingPath("cfg"));
 }
 
 // ── Install From Upload ──────────────────────────────────────
@@ -606,7 +692,7 @@ export async function installFromDownload(
   const tempExtractDir = path.join(dir, `_extract_${Date.now()}`);
 
   try {
-    log({ category: "install", level: "progress", message: `解压预设包：${zipFiles[0]}` });
+    log({ category: "install", level: "progress", message: `解压配置包：${zipFiles[0]}` });
     await extractZip(zipPath, { dir: tempExtractDir });
     return processUploadToStaging(tempExtractDir, mode, log);
   } catch (e: any) {

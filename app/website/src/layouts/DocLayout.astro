@@ -16,7 +16,7 @@ interface Props {
 const { title, description, docs, currentSlug, headings } = Astro.props;
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
-const guideOrder = ["srpcfg-1", "srpcfg-3"];
+const guideOrder = ["srpcfg-1", "srpcfg-3", "architecture", "autoexec", "vcfg"];
 const guideDocs = guideOrder
   .map((id) => docs.find((d) => d.id === id))
   .filter(Boolean) as CollectionEntry<"docs">[];
@@ -68,7 +68,7 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
         })}
       </ul>
       <div class="h-px bg-border my-3"></div>
-      <span class="block font-display text-[11px] font-semibold text-text-faint tracking-widest mb-2 px-4">CFG 文件</span>
+      <span class="block font-display text-[11px] font-semibold text-text-faint tracking-widest mb-2 px-4">功能与模式</span>
       <ul class="flex flex-col gap-0.5">
         {cfgDocs.map((doc) => {
           const isActive = doc.id === currentSlug;
@@ -160,7 +160,7 @@ const cfgDocs = docs.filter((d) => !guideOrder.includes(d.id) && d.id !== "srpcf
 
           <!-- CFG files section -->
           <span class="block font-display text-[11px] font-semibold text-text-faint tracking-widest mb-2 px-3">
-            CFG 文件
+            功能与模式
           </span>
           <ul class="flex flex-col gap-0.5">
             {cfgDocs.map((doc) => {

@@ -1,8 +1,12 @@
 import { ipcMain, shell, BrowserWindow, app } from "electron";
+import * as fs from "fs";
+import * as path from "path";
 import { AppState } from "./state";
 import * as detection from "./services/detection";
 import * as staging from "./services/staging";
 import * as installer from "./services/installer";
+import * as userConfig from "./services/user-config";
+import { inspectVcfgState, saveVcfgBaseline } from "./services/vcfg";
 import {
   checkForUpdate,
   dismissVersion,
@@ -19,6 +23,75 @@ function sendLog(entry: Omit<LogEntry, "timestamp">): void {
   if (win && !win.isDestroyed()) {
     win.webContents.send("log:new", full);
   }
+}
+
+function currentGamePaths(): installer.GamePaths {
+  return {
+    gameCfgPath: state.cs2CfgPath,
+    userCfgPath: state.userCfgPath,
+    annotationsPath: state.annotationsPath,
+  };
+}
+
+function getVcfgSnapshotRoot(): string {
+  return path.join(app.getPath("appData"), "srp-cfg", "vcfg");
+}
+
+function capturePersistenceBaseline(): void {
+  state.vcfgState = inspectVcfgState(state.userCfgPath);
+
+  if (!state.userCfgPath || !state.currentUser || !state.vcfgState.available) {
+    sendLog({
+      category: "backup",
+      level: "warning",
+      message: "未创建 VCFG 状态快照",
+      detail: "当前账号尚未生成可读取的 VCFG；安装器不会创建或覆盖游戏管理的 VCFG 文件。",
+    });
+    return;
+  }
+
+  const baseline = saveVcfgBaseline(
+    state.userCfgPath,
+    getVcfgSnapshotRoot(),
+    state.currentUser.accountId,
+  );
+  sendLog({
+    category: "backup",
+    level: baseline.created ? "success" : "info",
+    message: baseline.created ? "已保存 VCFG 原始状态快照" : "VCFG 原始状态快照已存在",
+    detail: `${baseline.path}（仅用于审计与比较，不会自动回写 VCFG）`,
+  });
+}
+
+function logPersistenceImpact(): void {
+  const impact = staging.inspectStagedConfig();
+  switch (impact.kind) {
+    case "runtime-core":
+      sendLog({
+        category: "install",
+        level: "info",
+        message: "检测到 Runtime Core",
+        detail: "启动时注册完整功能与 alias，再执行用户 custom.cfg；Runtime 本身不自动应用偏好。",
+      });
+      break;
+    case "custom":
+      capturePersistenceBaseline();
+      sendLog({
+        category: "install",
+        level: "warning",
+        message: "检测到无法识别的自定义 CFG",
+        detail: `共 ${impact.cfgCount} 个 CFG；安装器无法证明其启动路径不会修改并持久化绑定或 ConVar。`,
+      });
+      break;
+    case "empty":
+      sendLog({
+        category: "install",
+        level: "info",
+        message: "本次安装不包含 CFG 脚本",
+      });
+      break;
+  }
+
 }
 
 // Pending append install (waiting for user confirmation)
@@ -39,17 +112,14 @@ export function registerIpcHandlers() {
     state.cs2InstallDir = result.cs2InstallDir;
     state.cs2CfgPath = result.cs2CfgPath;
     state.annotationsPath = result.annotationsPath;
-    state.videoCfgPath = result.videoCfgPath;
+    state.userCfgPath = result.userCfgPath;
+    state.vcfgState = result.vcfgState;
     state.steamUsers = result.steamUsers;
     state.currentUser = result.currentUser;
     state.hasAutoLoginUser = result.hasAutoLoginUser;
 
     // Update install.json paths
-    installer.updateInstallPaths({
-      cfgPath: state.cs2CfgPath,
-      annotationsPath: state.annotationsPath,
-      videoPath: state.videoCfgPath,
-    });
+    installer.updateInstallPaths(currentGamePaths());
 
     sendLog({ category: "path-detection", level: "success", message: "环境检测完成" });
 
@@ -61,19 +131,40 @@ export function registerIpcHandlers() {
     state.currentUser = user ?? null;
 
     if (state.steamPath) {
-      state.videoCfgPath = detection.detectVideoCfgPath(state.steamPath, accountId, sendLog);
+      state.userCfgPath = detection.detectUserCfgPath(state.steamPath, accountId, sendLog);
     } else {
-      state.videoCfgPath = null;
+      state.userCfgPath = null;
     }
+    state.vcfgState = inspectVcfgState(state.userCfgPath);
 
     // Update install.json paths
-    installer.updateInstallPaths({
-      cfgPath: state.cs2CfgPath,
-      annotationsPath: state.annotationsPath,
-      videoPath: state.videoCfgPath,
-    });
+    installer.updateInstallPaths(currentGamePaths());
 
-    return state.videoCfgPath;
+    return { userCfgPath: state.userCfgPath, vcfgState: state.vcfgState };
+  });
+
+  // ── User-owned final override layer ─────────────────────────
+
+  ipcMain.handle("userConfig:get", async () => {
+    return userConfig.readUserConfig(currentGamePaths());
+  });
+
+  ipcMain.handle("userConfig:save", async (_e, content: string) => {
+    const document = userConfig.saveUserConfig(currentGamePaths(), content);
+    sendLog({
+      category: "file-ops",
+      level: "success",
+      message: "个人配置已保存",
+      detail: document.path ?? undefined,
+    });
+    return document;
+  });
+
+  ipcMain.handle("userConfig:openFolder", async () => {
+    const folder = userConfig.getUserConfigFolder(currentGamePaths());
+    if (!folder) throw new Error("尚未检测到可用的 CS2 CFG 目录");
+    const result = await shell.openPath(folder);
+    if (result) throw new Error(result);
   });
 
   // ── Upload / Staging ───────────────────────────────────────
@@ -103,12 +194,9 @@ export function registerIpcHandlers() {
         return { filesInstalled: 0, dirsInstalled: 0 };
       }
 
-      const cfgPath = usePersonalCfg ? state.videoCfgPath : state.cs2CfgPath;
-      const gamePaths = {
-        cfgPath,
-        annotationsPath: state.annotationsPath,
-        videoPath: state.videoCfgPath,
-      };
+      logPersistenceImpact();
+
+      const gamePaths = currentGamePaths();
 
       if (mode === "overlay") {
         const summary = installer.deployOverlay(
@@ -126,8 +214,9 @@ export function registerIpcHandlers() {
           usePersonalCfg ?? false,
         );
 
-        if (conflictResult.conflicts.length > 3) {
-          sendLog({ category: "install", level: "error", message: `冲突文件过多（${conflictResult.conflicts.length} 个），追加安装已拒绝` });
+        const conflictCount = conflictResult.conflicts.reduce((sum, item) => sum + item.names.length, 0);
+        if (conflictCount > 3) {
+          sendLog({ category: "install", level: "error", message: `冲突文件过多（${conflictCount} 个），追加安装已拒绝` });
           return { needsConfirm: false, conflicts: conflictResult.conflicts } as unknown as installer.AppendConflictResult;
         }
 
@@ -171,12 +260,7 @@ export function registerIpcHandlers() {
     }
 
     try {
-      const cfgPath = usePersonalCfg ? state.videoCfgPath : state.cs2CfgPath;
-      const gamePaths = {
-        cfgPath,
-        annotationsPath: state.annotationsPath,
-        videoPath: state.videoCfgPath,
-      };
+      const gamePaths = currentGamePaths();
 
       // Ensure staging is populated
       if (source === "upload") {
@@ -213,7 +297,7 @@ export function registerIpcHandlers() {
     return installer.deleteInstalledItem(
       category as installer.CategoryKey,
       name,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -221,7 +305,7 @@ export function registerIpcHandlers() {
   ipcMain.handle("installer:clearInstallCategory", async (_e, category: string) => {
     return installer.clearInstallCategory(
       category as installer.CategoryKey,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -236,7 +320,7 @@ export function registerIpcHandlers() {
     return installer.restoreFromRes(
       category as installer.CategoryKey,
       name,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -252,7 +336,7 @@ export function registerIpcHandlers() {
   ipcMain.handle("installer:restoreResCategory", async (_e, category: string) => {
     return installer.restoreResCategory(
       category as installer.CategoryKey,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -265,7 +349,7 @@ export function registerIpcHandlers() {
 
   ipcMain.handle("installer:restoreFromSave", async () => {
     return installer.restoreFromSave(
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -281,7 +365,7 @@ export function registerIpcHandlers() {
   ipcMain.handle("installer:restoreSaveCategory", async (_e, category: string) => {
     return installer.restoreSaveCategory(
       category as installer.CategoryKey,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -290,7 +374,7 @@ export function registerIpcHandlers() {
     return installer.restoreSaveItem(
       category as installer.CategoryKey,
       name,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -303,12 +387,18 @@ export function registerIpcHandlers() {
     await shell.openPath(staging.getResPath());
   });
 
+  ipcMain.handle("installer:openVcfgSnapshotsFolder", async () => {
+    const snapshotRoot = getVcfgSnapshotRoot();
+    fs.mkdirSync(snapshotRoot, { recursive: true });
+    await shell.openPath(snapshotRoot);
+  });
+
   ipcMain.handle("installer:openItem", async (_e, storage: "install" | "save" | "res", category: string, name: string) => {
     return installer.openItem(
       storage,
       category as installer.CategoryKey,
       name,
-      { cfgPath: state.cs2CfgPath, annotationsPath: state.annotationsPath, videoPath: state.videoCfgPath },
+      currentGamePaths(),
       sendLog,
     );
   });
@@ -330,20 +420,16 @@ export function registerIpcHandlers() {
     try {
       const result = await staging.installFromDownload(folderName, mode, sendLog);
       if (!result) {
-        sendLog({ category: "install", level: "error", message: "预设包解压或暂存处理失败" });
+        sendLog({ category: "install", level: "error", message: "配置包解压或暂存处理失败" });
         return { filesInstalled: 0, dirsInstalled: 0 };
       }
 
       if (result.cfgCount === 0 && result.annotationsCount === 0 && result.videoCount === 0) {
-        sendLog({ category: "install", level: "warning", message: "预设包中未找到可安装的配置文件" });
+        sendLog({ category: "install", level: "warning", message: "配置包中未找到可安装的配置文件" });
         return { filesInstalled: 0, dirsInstalled: 0 };
       }
-      const cfgPath = usePersonalCfg ? state.videoCfgPath : state.cs2CfgPath;
-      const gamePaths = {
-        cfgPath,
-        annotationsPath: state.annotationsPath,
-        videoPath: state.videoCfgPath,
-      };
+      logPersistenceImpact();
+      const gamePaths = currentGamePaths();
 
       if (mode === "overlay") {
         const summary = installer.deployOverlay(
@@ -352,7 +438,7 @@ export function registerIpcHandlers() {
           usePersonalCfg ?? false,
           sendLog,
         );
-        sendLog({ category: "install", level: "success", message: "预设包安装完成！" });
+        sendLog({ category: "install", level: "success", message: "配置包安装完成！" });
         return summary;
       } else {
         const conflictResult = installer.checkAppendConflicts(
@@ -361,8 +447,9 @@ export function registerIpcHandlers() {
           usePersonalCfg ?? false,
         );
 
-        if (conflictResult.conflicts.length > 3) {
-          sendLog({ category: "install", level: "error", message: `冲突文件过多（${conflictResult.conflicts.length} 个），追加安装已拒绝` });
+        const conflictCount = conflictResult.conflicts.reduce((sum, item) => sum + item.names.length, 0);
+        if (conflictCount > 3) {
+          sendLog({ category: "install", level: "error", message: `冲突文件过多（${conflictCount} 个），追加安装已拒绝` });
           return { needsConfirm: false, conflicts: conflictResult.conflicts } as unknown as installer.AppendConflictResult;
         }
 
@@ -378,7 +465,7 @@ export function registerIpcHandlers() {
           usePersonalCfg ?? false,
           sendLog,
         );
-        sendLog({ category: "install", level: "success", message: "预设包追加安装完成！" });
+        sendLog({ category: "install", level: "success", message: "配置包追加安装完成！" });
         return summary;
       }
     } catch (e: unknown) {

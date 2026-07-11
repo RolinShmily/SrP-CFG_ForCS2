@@ -1,4 +1,5 @@
 import type { Cs2InstallState, SteamUser } from "../renderer/types";
+import type { VcfgStateSummary } from "../renderer/types";
 
 export class AppState {
   steamPath: string | null = null;
@@ -6,7 +7,16 @@ export class AppState {
   cs2InstallDir: string | null = null;
   cs2CfgPath: string | null = null;
   annotationsPath: string | null = null;
-  videoCfgPath: string | null = null;
+  userCfgPath: string | null = null;
+  vcfgState: VcfgStateSummary = {
+    available: false,
+    bindings: 0,
+    analogBindings: 0,
+    cloudConvars: 0,
+    machineConvars: 0,
+    hasCloudMirror: false,
+    hasVideoConfig: false,
+  };
   steamUsers: SteamUser[] = [];
   currentUser: SteamUser | null = null;
   hasAutoLoginUser = false;
@@ -17,7 +27,16 @@ export class AppState {
     this.cs2InstallDir = null;
     this.cs2CfgPath = null;
     this.annotationsPath = null;
-    this.videoCfgPath = null;
+    this.userCfgPath = null;
+    this.vcfgState = {
+      available: false,
+      bindings: 0,
+      analogBindings: 0,
+      cloudConvars: 0,
+      machineConvars: 0,
+      hasCloudMirror: false,
+      hasVideoConfig: false,
+    };
     this.steamUsers = [];
     this.currentUser = null;
     this.hasAutoLoginUser = false;

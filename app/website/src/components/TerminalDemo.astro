@@ -105,7 +105,8 @@ import { LATEST_VERSION } from "../data/version";
   function initTerminal() {
     const container = document.getElementById("terminal-body");
     if (!container) return;
-    const version = container.closest(".terminal-window")?.getAttribute("data-version") ?? "0.0.0";
+    const terminal = container;
+    const version = terminal.closest(".terminal-window")?.getAttribute("data-version") ?? "0.0.0";
 
     const now = new Date();
     const offset = now.getTimezoneOffset();
@@ -127,17 +128,17 @@ import { LATEST_VERSION } from "../data/version";
       { ts: ts(2), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "解析 libraryfolders.vdf ...", msgColor: "color:var(--color-text-muted)" },
       { ts: ts(3), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "CS2 路径: D:\\Steam\\steamapps\\common\\Counter-Strike2", msgColor: "color:var(--color-text)" },
       { ts: ts(4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "全局 CFG: ...\\game\\csgo\\cfg\\", msgColor: "color:var(--color-text)" },
-      { ts: ts(4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "用户视频: ...\\userdata\\76561198...\\730\\local\\cfg\\", msgColor: "color:var(--color-text)" },
+      { ts: ts(4), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "账号状态: ...\\userdata\\1556563205\\730\\local\\cfg\\", msgColor: "color:var(--color-text)" },
       { ts: ts(5), src: "DETECT", srcColor: "color:var(--color-accent)", msg: "地图指南: ...\\game\\csgo\\annotations\\local\\", msgColor: "color:var(--color-text)" },
-      { ts: ts(5), src: "OK", srcColor: "color:var(--color-green)", msg: "路径检测完成 — 3 个目标可用", msgColor: "color:var(--color-green)" },
+      { ts: ts(5), src: "VCFG", srcColor: "color:var(--color-teal)", msg: "检测到 88 个绑定 / 92 个云端 ConVar", msgColor: "color:var(--color-text-secondary)" },
       { ts: ts(6), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "检测冲突文件...", msgColor: "color:var(--color-text-secondary)" },
       { ts: ts(7), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "发现 1 个冲突，移至恢复区 (res.json)", msgColor: "color:var(--color-accent-light)" },
       { ts: ts(8), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "复制配置文件到游戏目录...", msgColor: "color:var(--color-text-secondary)" },
       { ts: ts(9), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ autoexec.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(9), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ crosshair_view.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(10), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ practice.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(10), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ custom.cfg", msgColor: "color:var(--color-text-muted)" },
-      { ts: ts(11), src: "OK", srcColor: "color:var(--color-green)", msg: "安装完成 — 4 个文件已部署，状态已记录 (install.json)", msgColor: "color:var(--color-green)" },
+      { ts: ts(9), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ srp-cfg/runtime/", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(10), src: "INSTALL", srcColor: "color:var(--color-accent)", msg: "→ srp-cfg/features/ + modes/", msgColor: "color:var(--color-text-muted)" },
+      { ts: ts(10), src: "USER", srcColor: "color:var(--color-teal)", msg: "已保留 srp-cfg/user/custom.cfg", msgColor: "color:var(--color-text-secondary)" },
+      { ts: ts(11), src: "OK", srcColor: "color:var(--color-green)", msg: "安装完成 — Runtime / User 两层已部署", msgColor: "color:var(--color-green)" },
     ];
 
     function createCursor(): HTMLSpanElement {
@@ -156,7 +157,7 @@ import { LATEST_VERSION } from "../data/version";
       el.className = "terminal-line";
 
       const tsSpan = document.createElement("span");
-      tsSpan.style.cssText = line.tsColor;
+      tsSpan.style.cssText = "color:var(--color-text-faint)";
       tsSpan.textContent = `[${line.ts}] `;
 
       const srcSpan = document.createElement("span");
@@ -171,7 +172,7 @@ import { LATEST_VERSION } from "../data/version";
       el.appendChild(msgSpan);
       parent.appendChild(el);
       el.appendChild(cursor);
-      container!.scrollTop = container!.scrollHeight;
+      terminal.scrollTop = terminal.scrollHeight;
 
       const fullText = line.msg;
       let i = 0;
@@ -180,7 +181,7 @@ import { LATEST_VERSION } from "../data/version";
         if (i < fullText.length) {
           msgSpan.textContent += fullText[i];
           i++;
-          container!.scrollTop = container!.scrollHeight;
+          terminal.scrollTop = terminal.scrollHeight;
         } else {
           clearTimers();
           cb();
@@ -195,9 +196,9 @@ import { LATEST_VERSION } from "../data/version";
       }
 
       const line = LINES[index];
-      const cursor = (container.querySelector(".cursor") as HTMLSpanElement | null) || createCursor();
+      const cursor = (terminal.querySelector(".cursor") as HTMLSpanElement | null) || createCursor();
 
-      typeLine(line, container, cursor, () => {
+      typeLine(line, terminal, cursor, () => {
         const isLast = index === LINES.length - 1;
         const pause = isLast ? 2200 : (line.msg.length < 10 ? 100 : 200);
         doneTimer = window.setTimeout(() => runSequence(index + 1), pause);
@@ -206,7 +207,7 @@ import { LATEST_VERSION } from "../data/version";
 
     function start() {
       clearTimers();
-      container.innerHTML = "";
+      terminal.innerHTML = "";
       runSequence(0);
     }
 
@@ -220,7 +221,7 @@ import { LATEST_VERSION } from "../data/version";
       },
       { threshold: 0.3 }
     );
-    io.observe(container);
+    io.observe(terminal);
   }
 
   initTerminal();

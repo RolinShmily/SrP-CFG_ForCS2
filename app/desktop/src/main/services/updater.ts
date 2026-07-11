@@ -94,8 +94,8 @@ function hasDesktopAssets(assets: GitHubAssetRaw[]): boolean {
   );
 }
 
-function hasPresetAssets(assets: GitHubAssetRaw[]): boolean {
-  return assets.some((a) => /^Allcfgs.*\.zip$/i.test(a.name));
+function hasConfigAssets(assets: GitHubAssetRaw[]): boolean {
+  return assets.some((a) => /^SrP-CFG_Runtime_Core\.zip$/i.test(a.name));
 }
 
 
@@ -107,7 +107,7 @@ function mapRelease(r: GitHubReleaseRaw): GitHubRelease {
     htmlUrl: r.html_url,
     publishedAt: r.published_at || "",
     hasDesktopAssets: hasDesktopAssets(r.assets || []),
-    hasPresetAssets: hasPresetAssets(r.assets || []),
+    hasConfigAssets: hasConfigAssets(r.assets || []),
   };
 }
 
@@ -125,12 +125,12 @@ function buildResult(
   releases: GitHubRelease[],
 ): UpdateCheckResult {
   const hasDesktopUpdate = releases.some((r) => r.hasDesktopAssets);
-  const hasPresetUpdate = releases.some((r) => r.hasPresetAssets);
+  const hasConfigUpdate = releases.some((r) => r.hasConfigAssets);
   return {
     currentVersion: current,
     hasUpdate: releases.length > 0,
     hasDesktopUpdate,
-    hasPresetUpdate,
+    hasConfigUpdate,
     releases,
   };
 }

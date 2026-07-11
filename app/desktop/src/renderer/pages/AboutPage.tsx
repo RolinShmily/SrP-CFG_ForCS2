@@ -4,7 +4,6 @@ import {
   Boxes,
   Shield,
   User,
-  PenLine,
   Zap,
   Monitor,
   Atom,
@@ -63,40 +62,40 @@ export default function AboutPage() {
           alt="SrP-CFG"
           className="w-20 h-20 rounded-2xl border border-border shadow-[0_0_30px_rgba(232,121,12,0.12)] mb-4"
         />
-        <h1 className="font-display text-2xl font-bold">关于 SrP-CFG</h1>
-        <p className="text-sm text-text-secondary mt-1">
+        <h1 className="ui-page-title">关于 SrP-CFG</h1>
+        <p className="ui-page-description mt-1">
           适用于 CS2 各场景的 CFG 预设文件，由 RoL1n 开发维护
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
         {/* Left column */}
         <div className="space-y-5">
           {/* Project intro */}
           <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-4">
-            <h2 className="font-display text-lg font-semibold">项目简介</h2>
-            <div className="space-y-3 text-sm text-text-secondary font-light leading-[1.8]">
+            <h2 className="ui-section-title">项目简介</h2>
+            <div className="ui-body space-y-3">
               <p>
-                SrP-CFG 是一套为 CS2 玩家打造的全套预设 CFG 配置文件。提供准星视角、跑图练习、demo
-                录制、饰品预览等功能，旨在提升游戏体验。
+                SrP-CFG v3 是面向 CS2 的模块化 CFG Runtime、Preset 案例与用户层，提供准星视角、
+                跑图练习、Demo 录制和饰品预览等功能，同时把功能实现与个人设置彻底分开。
               </p>
               <p>
-                所有 CFG 通过{" "}
+                启动时由{" "}
                 <code className="font-mono text-xs bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">
                   autoexec.cfg
                 </code>{" "}
-                自启动加载，通过{" "}
+                先注册 Runtime，再执行用户 custom.cfg。用户可以在 custom.cfg 顶部通过{" "}
                 <code className="font-mono text-xs bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">
-                  exec custom
+                  srp_apply_*
                 </code>{" "}
-                链式加载用户定制配置。
+                选择内置 Preset 起点，并在后续行继续覆盖；该文件由安装器在更新、恢复和卸载 Runtime 时保护。
               </p>
             </div>
           </div>
 
           {/* Tech stack — with restored original sizing (p-3, text-sm, Icon size=14) */}
           <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
-            <h2 className="font-display text-lg font-semibold flex items-center gap-2">
+            <h2 className="ui-section-title flex items-center gap-2">
               <Boxes size={18} className="text-teal" />
               技术栈
             </h2>
@@ -107,9 +106,9 @@ export default function AboutPage() {
                   <div key={tech.name} className="p-3 bg-bg-raised border border-border rounded-[var(--radius-sm)]">
                     <div className="flex items-center gap-1.5">
                       <Icon size={14} className="text-text-muted" />
-                      <span className="font-display text-sm font-semibold">{tech.name}</span>
+                      <span className="ui-panel-title">{tech.name}</span>
                     </div>
-                    <span className="text-xs text-text-muted font-light">{tech.desc}</span>
+                    <span className="ui-caption">{tech.desc}</span>
                   </div>
                 );
               })}
@@ -121,12 +120,13 @@ export default function AboutPage() {
         <div className="space-y-5">
           {/* Quick links */}
           <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
-            <h2 className="font-display text-lg font-semibold">快速链接</h2>
+            <h2 className="ui-section-title">快速链接</h2>
             <div className="space-y-2">
               {links.map((link) => {
                 const Icon = link.icon;
                 return (
                   <button
+                    type="button"
                     key={link.label}
                     onClick={() => window.api.openExternal(link.url)}
                     className="group w-full flex items-center gap-3 p-3 bg-bg-raised border border-border rounded-[var(--radius-sm)] transition-all cursor-pointer hover:border-border-highlight hover:bg-bg-hover"
@@ -149,7 +149,7 @@ export default function AboutPage() {
 
           {/* Contributors */}
           <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
-            <h2 className="font-display text-lg font-semibold flex items-center gap-2">
+            <h2 className="ui-section-title flex items-center gap-2">
               <User size={18} className="text-accent" />
               贡献者
             </h2>
@@ -157,7 +157,7 @@ export default function AboutPage() {
               {contributors.map((c) => (
                 <div
                   key={c.name}
-                  className="flex items-center gap-3 p-3 bg-bg-raised border border-border rounded-[var(--radius-sm)]"
+                  className="flex flex-wrap items-center gap-3 rounded-[var(--radius-sm)] border border-border bg-bg-raised p-3"
                 >
                   <img
                     src="./avatar.jpg"
@@ -165,13 +165,14 @@ export default function AboutPage() {
                     className="w-10 h-10 rounded-full border border-accent/10 object-cover"
                   />
                   <div>
-                    <div className="font-display text-sm font-semibold">
+                    <div className="ui-panel-title text-text">
                       {c.name}
                     </div>
                     <div className="text-xs text-text-muted">{c.role}</div>
                   </div>
-                  <div className="ml-auto flex items-center gap-2">
+                  <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
                     <button
+                      type="button"
                       onClick={() => window.api.openExternal(c.blog)}
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card border border-border rounded-full text-text-faint hover:text-accent hover:border-accent/30 hover:bg-accent-bg transition-colors cursor-pointer text-sm"
                     >
@@ -179,6 +180,7 @@ export default function AboutPage() {
                       <span>博客</span>
                     </button>
                     <button
+                      type="button"
                       onClick={() => window.api.openExternal(c.bilibili)}
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card border border-border rounded-full text-text-faint hover:text-accent hover:border-accent/30 hover:bg-accent-bg transition-colors cursor-pointer text-sm"
                     >
@@ -186,6 +188,7 @@ export default function AboutPage() {
                       <span>B站</span>
                     </button>
                     <button
+                      type="button"
                       onClick={() => window.api.openExternal(`https://github.com/${c.github}`)}
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card border border-border rounded-full text-text-faint hover:text-accent hover:border-accent/30 hover:bg-accent-bg transition-colors cursor-pointer text-sm"
                     >
@@ -202,8 +205,8 @@ export default function AboutPage() {
           <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 flex items-center gap-3">
             <Shield size={18} className="text-text-muted flex-shrink-0" />
             <div>
-              <div className="font-display text-sm font-semibold">开源许可</div>
-              <div className="text-xs text-text-muted">
+              <div className="ui-panel-title text-text">开源许可</div>
+              <div className="ui-caption">
                 自定义许可证，详见仓库根目录 LICENSE 文件
               </div>
             </div>

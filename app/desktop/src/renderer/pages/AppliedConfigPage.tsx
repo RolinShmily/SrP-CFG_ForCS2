@@ -1,81 +1,119 @@
-import { useState, useEffect, useCallback } from "react";
-import { FolderOpen, FileText, Map, Monitor, Loader2, ChevronDown, Trash2, PackageX, ExternalLink } from "lucide-react";
-import type { InstalledData, CategoryData } from "../types";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Boxes,
+  ChevronDown,
+  Database,
+  ExternalLink,
+  FileText,
+  FolderOpen,
+  Loader2,
+  Map,
+  Monitor,
+  PackageX,
+  ShieldCheck,
+  Trash2,
+  UserRoundCog,
+} from "lucide-react";
+import type { CategoryData, InstalledData, UserConfigDocument } from "../types";
+import PageHeader from "../components/PageHeader";
 
-const sectionIcons: Record<string, React.ReactNode> = {
-  userCfg: <FileText size={18} className="text-accent-light" />,
-  gameCfg: <FileText size={18} className="text-teal" />,
-  annotations: <Map size={18} className="text-accent" />,
-  video: <Monitor size={18} className="text-accent" />,
-};
-const sectionLabels: Record<string, string> = {
-  userCfg: "用户 CFG",
-  gameCfg: "游戏 CFG",
-  annotations: "地图指南",
-  video: "视频预设",
+type CategoryKey = "gameCfg" | "userCfg" | "annotations" | "video";
+
+const categoryMeta: Record<CategoryKey, { label: string; description: string; icon: React.ReactNode }> = {
+  gameCfg: {
+    label: "游戏目录 Runtime",
+    description: "game/csgo/cfg 中由安装器追踪的 CFG 文件",
+    icon: <FileText size={18} className="text-teal" />,
+  },
+  userCfg: {
+    label: "账号目录 Runtime（实验性）",
+    description: "userdata 账号 CFG 目录中的受管文件",
+    icon: <FileText size={18} className="text-accent-light" />,
+  },
+  annotations: {
+    label: "地图指南",
+    description: "annotations/local 中由安装器部署的内容",
+    icon: <Map size={18} className="text-accent" />,
+  },
+  video: {
+    label: "视频配置",
+    description: "账号目录中的 cs2_video.txt",
+    icon: <Monitor size={18} className="text-accent" />,
+  },
 };
 
-function SmallBtn({
+function itemCount(category: CategoryData): number {
+  return category.files.length + category.dirs.length;
+}
+
+function SmallButton({
+  busy,
   busyKey,
-  currentBusy,
-  onClick,
-  color,
-  icon,
   label,
+  icon,
+  tone,
+  onClick,
 }: {
+  busy: string | null;
   busyKey: string;
-  currentBusy: string | null;
-  onClick: (e: React.MouseEvent) => void;
-  color: "accent" | "red";
-  icon: React.ReactNode;
   label: string;
+  icon: React.ReactNode;
+  tone: "accent" | "red";
+  onClick: (event: React.MouseEvent) => void;
 }) {
-  const colorMap = {
-    accent: "text-accent hover:bg-accent/10 border-accent/20",
-    red: "text-red-400 hover:bg-red-500/10 border-red-400/20",
-  };
+  const colors = tone === "red"
+    ? "border-red-400/20 text-red-400 hover:bg-red-500/10"
+    : "border-accent/20 text-accent hover:bg-accent/10";
   return (
     <button
+      type="button"
       onClick={onClick}
-      disabled={currentBusy !== null}
-      className={`flex items-center gap-1 px-2 py-1 text-[11px] bg-bg-card disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer border ${colorMap[color]}`}
+      disabled={busy !== null}
+      className={`flex min-h-7 items-center gap-1 rounded-[var(--radius-sm)] border bg-bg-card px-2 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${colors}`}
     >
-      {currentBusy === busyKey ? <Loader2 size={10} className="animate-spin" /> : icon}
+      {busy === busyKey ? <Loader2 size={12} className="animate-spin" /> : icon}
       {label}
     </button>
   );
 }
 
 export default function AppliedConfigPage() {
-  const [data, setData] = useState<InstalledData | null>(null);
+  const [installed, setInstalled] = useState<InstalledData | null>(null);
+  const [userConfig, setUserConfig] = useState<UserConfigDocument | null>(null);
   const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const installed = await window.api.getInstalledData();
-      setData(installed);
+      const [nextInstalled, nextUser] = await Promise.all([
+        window.api.getInstalledData(),
+        window.api.getUserConfig(),
+      ]);
+      setInstalled(nextInstalled);
+      setUserConfig(nextUser);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadData();
+    void loadData();
   }, [loadData]);
 
-  const toggle = (key: string) =>
-    setExpanded((prev) => {
-      const next = !prev[key];
-      // Sync paired categories within same grid row:
-      // userCfg ↔ gameCfg, annotations ↔ video
-      const pairMap: Record<string, string> = { userCfg: "gameCfg", gameCfg: "userCfg", annotations: "video", video: "annotations" };
-      return { ...prev, [key]: next, [pairMap[key]]: next };
-    });
+  const categories = useMemo(() => {
+    if (!installed) return [];
+    return (Object.keys(categoryMeta) as CategoryKey[])
+      .map((key) => ({ key, data: installed[key] }))
+      .filter(({ data }) => itemCount(data) > 0);
+  }, [installed]);
 
-  const runAction = async (key: string, action: () => Promise<any>) => {
+  const totalManaged = categories.reduce((sum, category) => sum + itemCount(category.data), 0);
+  const runtimeCategory = categories.find(({ key }) => key === "gameCfg" || key === "userCfg");
+  const runtimeTarget = runtimeCategory?.key === "userCfg" ? "账号 CFG（实验性）" : "游戏 CFG";
+
+  const runAction = async (key: string, action: () => Promise<unknown>) => {
     if (busy) return;
     setBusy(key);
     try {
@@ -89,121 +127,158 @@ export default function AppliedConfigPage() {
   if (loading) {
     return (
       <div className="space-y-5">
-        <h1 className="font-display text-2xl font-bold">已应用配置</h1>
+        <PageHeader title="当前安装" description="核对 Runtime、用户配置和安装器受管清单。" />
         <div className="flex items-center justify-center py-12 text-text-muted">
-          <Loader2 size={20} className="animate-spin mr-2" />
-          <span className="text-sm">加载中...</span>
+          <Loader2 size={20} className="mr-2 animate-spin" />
+          <span className="text-sm">正在核对 Runtime 与用户文件…</span>
         </div>
       </div>
     );
   }
 
-  type CatEntry = { key: string; data: CategoryData };
-  const hasGameCfg = (data?.gameCfg.files.length ?? 0) > 0;
-  const hasUserCfg = (data?.userCfg.files.length ?? 0) > 0;
-  const categories: CatEntry[] = data ? [
-    { key: "userCfg", data: hasUserCfg ? data.userCfg : { files: [], dirs: [], path: data.userCfg.path || data.gameCfg.path?.replace(/csgo.*$/, "userdata/…/730/local/cfg/") || "" } },
-    { key: "gameCfg", data: hasGameCfg ? data.gameCfg : { files: [], dirs: [], path: data.gameCfg.path || data.userCfg.path?.replace(/userdata.*$/, "csgo/cfg/") || "" } },
-    { key: "annotations", data: data.annotations },
-    { key: "video", data: data.video },
-  ] : [];
-
-  const hasAnyEntries = categories.some(
-    (c) => c.data.files.length > 0 || c.data.dirs.length > 0,
-  );
-
   return (
-    <div className="space-y-5">
-      <h1 className="font-display text-2xl font-bold">已应用配置</h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="当前安装"
+        description="查看安装器负责的 Runtime 文件；VCFG 与用户 custom.cfg 不会混入受管清单。"
+      />
 
-      {!hasAnyEntries && (
-        <div className="bg-bg-card border border-border rounded-[var(--radius)] p-6 text-center text-text-faint text-sm">
-          暂无已安装的配置文件
+      <section className="grid grid-cols-1 gap-3 2xl:grid-cols-3">
+        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-4">
+          <div className="flex items-center gap-2 text-teal">
+            <Boxes size={17} />
+            <span className="font-display text-sm font-semibold">Runtime</span>
+          </div>
+          <p className="mt-2 text-sm font-semibold text-text">{userConfig?.runtimeInstalled ? "已检测到" : "未检测到"}</p>
+          <p className="mt-1 text-xs text-text-muted">{runtimeCategory ? `安装目标：${runtimeTarget}` : "没有安装器追踪的 CFG 目录"}</p>
         </div>
-      )}
 
-      <div className="grid grid-cols-2 gap-4">
-        {categories.map((cat) => {
-          const isOpen = expanded[cat.key] ?? false;
-          const totalItems = cat.data.files.length + cat.data.dirs.length;
+        <div className="rounded-[var(--radius)] border border-accent/30 bg-accent-bg p-4">
+          <div className="flex items-center gap-2 text-accent">
+            <UserRoundCog size={17} />
+            <span className="font-display text-sm font-semibold">用户配置</span>
+          </div>
+          <p className="mt-2 text-sm font-semibold text-text">{userConfig?.exists ? "已保存并受保护" : "尚未写入"}</p>
+          <p className="ui-micro mt-1 truncate font-mono" title={userConfig?.path ?? undefined}>{userConfig?.path ?? "未检测到路径"}</p>
+        </div>
 
-          return (
-            <div
-              key={cat.key}
-              className="bg-bg-card border border-border rounded-[var(--radius)]"
-            >
-              <div
-                onClick={() => toggle(cat.key)}
-                className="flex items-center justify-between px-4 py-3 cursor-pointer select-none"
-              >
-                <div className="flex items-center gap-2.5">
-                  {sectionIcons[cat.key]}
-                  <h2 className="font-display text-sm font-semibold text-text-secondary">
-                    {sectionLabels[cat.key]}
-                  </h2>
-                  <span className="text-xs text-text-faint">{totalItems} 项</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {cat.data.path && totalItems > 0 && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); window.api.openExternal(cat.data.path); }}
-                      className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-text-muted hover:text-accent hover:bg-accent-bg rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-border"
-                    >
-                      <FolderOpen size={13} /> 打开目标目录
-                    </button>
-                  )}
-                  {totalItems > 0 && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); runAction(`uninstall:${cat.key}`, () => window.api.clearInstallCategory(cat.key)); }}
-                      disabled={busy !== null}
-                      className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-red-400 hover:bg-red-500/10 disabled:opacity-40 disabled:cursor-not-allowed rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-red-400/20"
-                    >
-                      {busy === `uninstall:${cat.key}` ? <Loader2 size={13} className="animate-spin" /> : <PackageX size={13} />}
-                      卸载配置
-                    </button>
-                  )}
-                  <ChevronDown size={16} className={`text-text-faint transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
-                </div>
-              </div>
+        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-4">
+          <div className="flex items-center gap-2 text-blue">
+            <Database size={17} />
+            <span className="font-display text-sm font-semibold">安装器清单</span>
+          </div>
+          <p className="mt-2 text-sm font-semibold text-text">{totalManaged} 个顶层受管项</p>
+          <p className="mt-1 text-xs text-text-muted">只记录安装器部署的 CFG、指南与视频文件</p>
+        </div>
+      </section>
 
-              {isOpen && (
-                <div className="px-4 pb-4 pt-0 space-y-1">
-                  {totalItems === 0 ? (
-                    <p className="text-xs text-text-faint py-3 text-center">暂无配置</p>
-                  ) : (
-                    [...cat.data.dirs.map((n) => ({ name: n, isDir: true })), ...cat.data.files.map((n) => ({ name: n, isDir: false }))].map(
-                      ({ name, isDir }) => {
-                        const itemKey = `${cat.key}/${name}`;
-                        return (
-                          <div key={name} className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-bg-raised border border-border rounded-[var(--radius-sm)] text-xs">
-                            <div className="flex items-center gap-2 min-w-0">
-                              {isDir ? <FolderOpen size={12} className="text-text-faint shrink-0" /> : <FileText size={12} className="text-text-faint shrink-0" />}
-                              <span className="truncate font-mono text-text">{name}{isDir ? "/" : ""}</span>
-                            </div>
-                            <div className="flex items-center gap-1 shrink-0">
-                              <SmallBtn busyKey={`delete:${itemKey}`} currentBusy={busy}
-                                onClick={(e) => { e.stopPropagation(); runAction(`delete:${itemKey}`, () => window.api.deleteInstalledItem(cat.key, name)); }}
-                                color="red" icon={<Trash2 size={10} />} label="删除" />
-                              <SmallBtn busyKey={`open:${itemKey}`} currentBusy={busy}
-                                onClick={(e) => { e.stopPropagation(); runAction(`open:${itemKey}`, () => window.api.openItem("install", cat.key, name)); }}
-                                color="accent" icon={<ExternalLink size={10} />} label="打开" />
-                            </div>
-                          </div>
-                        );
-                      },
-                    )
-                  )}
-                  {cat.data.path && (
-                    <div className="mt-2 pt-2 border-t border-border">
-                      <p className="text-xs text-text-faint font-mono break-all">{cat.data.path}</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+      <div className="ui-body flex gap-3 rounded-[var(--radius)] border border-teal/25 bg-teal/5 px-4 py-3">
+        <ShieldCheck size={18} className="mt-0.5 shrink-0 text-teal" />
+        <p>
+          删除单项或整个类别只处理安装器清单中的 Runtime 资产；
+          <code className="mx-1 font-mono text-xs text-text">srp-cfg/user/custom.cfg</code>
+          会被先保存再原样放回。游戏管理的 VCFG 也不会被删除。
+        </p>
       </div>
+
+      {categories.length === 0 ? (
+        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-8 text-center">
+          <PackageX size={28} className="mx-auto mb-2 text-text-faint" />
+          <p className="text-sm text-text-muted">安装器当前没有追踪到已部署配置</p>
+          {userConfig?.runtimeInstalled && (
+            <p className="mt-1 text-xs text-text-faint">检测到 Runtime 文件，但它可能是手动安装或来自旧清单。</p>
+          )}
+        </div>
+      ) : (
+        <section className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
+          {categories.map(({ key, data }) => {
+            const meta = categoryMeta[key];
+            const isOpen = expanded[key] ?? false;
+            const items = [
+              ...data.dirs.map((name) => ({ name, isDir: true })),
+              ...data.files.map((name) => ({ name, isDir: false })),
+            ];
+            return (
+              <div key={key} className="rounded-[var(--radius)] border border-border bg-bg-card">
+                <div className="flex flex-wrap items-stretch justify-between gap-y-2 border-b border-transparent">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setExpanded((current) => ({ ...current, [key]: !isOpen }))}
+                    className="flex min-w-0 basis-72 flex-1 items-center justify-between px-4 py-3 text-left"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2.5">
+                        {meta.icon}
+                        <h2 className="ui-panel-title">{meta.label}</h2>
+                        <span className="text-xs text-text-faint">{items.length} 项</span>
+                      </div>
+                      <p className="mt-1 truncate text-xs text-text-faint">{meta.description}</p>
+                    </div>
+                    <ChevronDown size={16} className={`ml-3 shrink-0 text-text-faint transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  <div className="ml-auto flex shrink-0 items-center px-4">
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        if (!window.confirm(`移除 ${meta.label} 中的全部受管项？用户 custom.cfg 会被保留。`)) return;
+                        void runAction(`uninstall:${key}`, () => window.api.clearInstallCategory(key));
+                      }}
+                      disabled={busy !== null}
+                      className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-red-400/20 px-2.5 text-xs text-red-400 transition-colors hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {busy === `uninstall:${key}` ? <Loader2 size={13} className="animate-spin" /> : <PackageX size={13} />}
+                      移除本类
+                    </button>
+                  </div>
+                </div>
+
+                {isOpen && (
+                  <div className="space-y-1 px-4 pb-4">
+                    {items.map(({ name, isDir }) => {
+                      const itemKey = `${key}/${name}`;
+                      return (
+                        <div key={name} className="flex flex-wrap items-center justify-between gap-2 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-2.5 py-1.5 text-xs">
+                          <div className="flex min-w-0 items-center gap-2">
+                            {isDir ? <FolderOpen size={12} className="shrink-0 text-text-faint" /> : <FileText size={12} className="shrink-0 text-text-faint" />}
+                            <span className="truncate font-mono text-text">{name}{isDir ? "/" : ""}</span>
+                          </div>
+                          <div className="ml-auto flex shrink-0 items-center gap-1">
+                            <SmallButton
+                              busy={busy}
+                              busyKey={`delete:${itemKey}`}
+                              label="删除"
+                              icon={<Trash2 size={12} />}
+                              tone="red"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                if (!window.confirm(`删除受管项 ${name}${isDir ? "/" : ""}？`)) return;
+                                void runAction(`delete:${itemKey}`, () => window.api.deleteInstalledItem(key, name));
+                              }}
+                            />
+                            <SmallButton
+                              busy={busy}
+                              busyKey={`open:${itemKey}`}
+                              label="打开"
+                              icon={<ExternalLink size={12} />}
+                              tone="accent"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                void runAction(`open:${itemKey}`, () => window.api.openItem("install", key, name));
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {data.path && <p className="ui-micro border-t border-border pt-2 font-mono break-all">{data.path}</p>}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </section>
+      )}
     </div>
   );
 }

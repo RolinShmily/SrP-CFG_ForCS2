@@ -21,20 +21,21 @@
   --color-cyan: #22d3ee;
 
   --color-text: #eae8e4;
-  --color-text-secondary: #9ca3b8;
-  --color-text-muted: #7a84a0;
-  --color-text-faint: #54607c;
+  --color-text-secondary: #b8becb;
+  --color-text-muted: #949db4;
+  --color-text-faint: #828ca6;
 
-  --font-display: "Chakra Petch", sans-serif;
-  --font-body: "Noto Sans SC", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Chakra Petch", "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
+  --font-body: "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
 
-  --radius: 10px;
-  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-sm: 5px;
 }
 
 html {
-  font-size: 20px;
+  /* Tailwind's type and spacing scales assume a 16px rem baseline. */
+  font-size: 16px;
 }
 html, body, #root {
   height: 100%;
@@ -46,9 +47,90 @@ body {
   font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   user-select: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+.font-display,
+.font-body,
+.font-mono {
+  letter-spacing: 0;
+}
+
+/* Desktop typography roles: 24 / 16 / 14 / 12 / 11. */
+.ui-page-title {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 2rem;
+}
+
+.ui-page-description {
+  max-width: 72ch;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+}
+
+.ui-section-title {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.ui-panel-title {
+  color: var(--color-text-secondary);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+}
+
+.ui-body {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+}
+
+.ui-caption {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+}
+
+.ui-micro {
+  color: var(--color-text-faint);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+}
+
+:where(button, input, select, textarea, [role="button"], a):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+:where(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+}
+
+::selection {
+  background: rgba(232, 121, 12, 0.3);
+  color: var(--color-text);
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -83,3 +165,23 @@ body {
   to { transform: rotate(360deg); }
 }
 .animate-spin { animation: spin 1s linear infinite; }
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: page-enter 160ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

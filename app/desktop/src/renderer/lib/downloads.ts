@@ -11,13 +11,8 @@ export const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
 // GitHub Release 稳定下载基底（始终指向 latest，要求 asset 文件名固定无版本号）
 export const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;
 
-// 预设包文件名（与 CI 产物名一致）
-export const PRESET_FILES = {
-  default: "Allcfgs.zip",
-  echo: "Allcfgs_echo.zip",
-  yszh: "Allcfgs_yszh.zip",
-  visionl: "Allcfgs_visionl.zip",
-} as const;
+// v3 唯一配置包文件名（与 CI 产物名一致）
+export const CONFIG_PACKAGE_FILE = "SrP-CFG_Runtime_Core.zip";
 
 // MSI 安装包文件名
 export const INSTALLER_MSI = "SrP-CFG_Installer.msi";

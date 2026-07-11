@@ -22,7 +22,7 @@ const screenshots = [
   <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,rgba(232,121,12,0.04)0%,transparent70%)] pointer-events-none"></div>
   <div class="max-w-[1200px] mx-auto px-5 sm:px-7 relative z-1">
     <div class="mb-2">
-      <SectionHeader label="App Preview" title="界面预览" description="安装器六大功能模块一览，简洁直观的操作体验" />
+      <SectionHeader label="App Preview" title="界面预览" description="安装器主要功能一览；v3 另提供专用的「我的配置」编辑工作台" />
     </div>
 
     <!-- Mobile: card grid -->
@@ -161,9 +161,9 @@ const screenshots = [
     if (!viewport || slides.length === 0) return;
 
     const total = slides.length;
-    const infoData = Array.from(slides).map((s) => {
+    const infoData: { title: string; desc: string }[] = Array.from(slides).map((s) => {
       const img = s.querySelector("img")!;
-      return { title: img.alt };
+      return { title: img.alt, desc: "" };
     });
 
     // Also grab descs from mobile cards (always in DOM)

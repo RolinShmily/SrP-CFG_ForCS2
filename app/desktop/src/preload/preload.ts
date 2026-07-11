@@ -12,6 +12,11 @@ contextBridge.exposeInMainWorld("api", {
   setCurrentUser: (accountId: string) =>
     ipcRenderer.invoke("installer:setCurrentUser", accountId),
 
+  // User-owned final override layer
+  getUserConfig: () => ipcRenderer.invoke("userConfig:get"),
+  saveUserConfig: (content: string) => ipcRenderer.invoke("userConfig:save", content),
+  openUserConfigFolder: () => ipcRenderer.invoke("userConfig:openFolder"),
+
   // Upload / Staging
   uploadFiles: (filePaths: string[]) =>
     ipcRenderer.invoke("installer:uploadFiles", filePaths),
@@ -60,6 +65,7 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("installer:restoreSaveItem", category, name),
   openSaveFolder: () => ipcRenderer.invoke("installer:openSaveFolder"),
   openResFolder: () => ipcRenderer.invoke("installer:openResFolder"),
+  openVcfgSnapshotsFolder: () => ipcRenderer.invoke("installer:openVcfgSnapshotsFolder"),
 
   confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean, usePersonalCfg?: boolean) =>
     ipcRenderer.invoke("installer:confirmAppend", folderName, source, proceed, usePersonalCfg),

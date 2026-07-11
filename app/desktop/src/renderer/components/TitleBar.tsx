@@ -10,19 +10,25 @@ export default function TitleBar() {
   return (
     <div className="flex items-center justify-between h-10 bg-bg-card border-b border-border px-3">
       <div className="flex items-center gap-2 flex-1 h-full drag-region">
-        <span className="font-display text-sm font-bold text-accent tracking-wider">
+        <span className="font-display text-sm font-bold text-accent">
           SrP-CFG
         </span>
         <span className="text-xs text-text-faint">Installer</span>
       </div>
       <div className="flex h-full">
         <button
+          type="button"
+          aria-label="最小化窗口"
+          title="最小化"
           onClick={() => window.api.minimize()}
           className="w-10 h-full flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
         >
           <svg width="12" height="1" viewBox="0 0 12 1"><rect width="12" height="1" fill="currentColor" /></svg>
         </button>
         <button
+          type="button"
+          aria-label={maximized ? "还原窗口" : "最大化窗口"}
+          title={maximized ? "还原" : "最大化"}
           onClick={() => { window.api.maximize(); setMaximized(!maximized); }}
           className="w-10 h-full flex items-center justify-center text-text-muted hover:text-text hover:bg-bg-hover transition-colors"
         >
@@ -38,6 +44,9 @@ export default function TitleBar() {
           )}
         </button>
         <button
+          type="button"
+          aria-label="关闭窗口"
+          title="关闭"
           onClick={() => window.api.close()}
           className="w-10 h-full flex items-center justify-center text-text-muted hover:text-red hover:bg-red/10 transition-colors"
         >

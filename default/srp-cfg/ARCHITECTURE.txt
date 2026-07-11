@@ -1,0 +1,36 @@
+SrP-CFG v3 ownership model
+
+autoexec.cfg
+  -> runtime/init.cfg
+     -> public commands plus every module runtime.cfg
+  -> user/custom.cfg
+     -> optional srp_apply_* starting point
+     -> user-owned overrides below it
+
+Runtime
+  Stable feature implementation. Each feature/mode keeps persistent alias definitions
+  in its own runtime.cfg so VCFG-synced bindings remain executable on another machine.
+  Runtime files never apply personal preferences or physical keymaps.
+
+Module
+  Every feature and mode uses the same local structure:
+    runtime.cfg       persistent aliases only
+    settings.cfg      feature/mode state without physical bindings
+    keymap.cfg        physical bindings only
+    with-keymap.cfg   settings followed by keymap
+    help.cfg          console vocabulary and usage help
+
+Preset
+  Built-in Default, Echo, YSZH and VisionL configurations are examples, not separate
+  user editions or release packages. Runtime exposes them through safe srp_apply_* aliases;
+  users may place one alias near the top of custom.cfg and continue editing below it.
+  Valve is a special auditable baseline using current engine defaults and binddefaults.
+
+User
+  srp-cfg/user/custom.cfg is the only file ordinary users are expected to edit. It runs
+  after Runtime and is preserved by install, update, restore and uninstall operations.
+
+VCFG
+  Game-owned persistence for current bindings and archived ConVars. SrP-CFG reads it
+  for status/snapshots but never writes it directly. If custom.cfg enables no srp_apply_*,
+  ordinary game-menu values can remain under game control.

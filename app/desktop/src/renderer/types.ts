@@ -33,10 +33,35 @@ export interface DetectionResult {
   cs2InstallDir: string | null;
   cs2CfgPath: string | null;
   annotationsPath: string | null;
-  videoCfgPath: string | null;
+  userCfgPath: string | null;
+  vcfgState: VcfgStateSummary;
   steamUsers: SteamUser[];
   currentUser: SteamUser | null;
   hasAutoLoginUser: boolean;
+}
+
+export interface VcfgStateSummary {
+  available: boolean;
+  bindings: number;
+  analogBindings: number;
+  cloudConvars: number;
+  machineConvars: number;
+  hasCloudMirror: boolean;
+  hasVideoConfig: boolean;
+}
+
+export interface UserConfigSelection {
+  userCfgPath: string | null;
+  vcfgState: VcfgStateSummary;
+}
+
+export interface UserConfigDocument {
+  path: string | null;
+  target: "game" | "account" | null;
+  exists: boolean;
+  runtimeInstalled: boolean;
+  content: string;
+  modifiedAt: number | null;
 }
 
 // ── Upload / Staging ─────────────────────────────────────────
@@ -125,14 +150,14 @@ export interface GitHubRelease {
   htmlUrl: string;
   publishedAt: string;
   hasDesktopAssets: boolean;
-  hasPresetAssets: boolean;
+  hasConfigAssets: boolean;
 }
 
 export interface UpdateCheckResult {
   currentVersion: string;
   hasUpdate: boolean;
   hasDesktopUpdate: boolean;
-  hasPresetUpdate: boolean;
+  hasConfigUpdate: boolean;
   releases: GitHubRelease[];
 }
 
@@ -147,7 +172,12 @@ export interface ElectronAPI {
 
   // Detection
   detectAll: () => Promise<DetectionResult>;
-  setCurrentUser: (accountId: string) => Promise<string | null>;
+  setCurrentUser: (accountId: string) => Promise<UserConfigSelection>;
+
+  // User-owned final override layer
+  getUserConfig: () => Promise<UserConfigDocument>;
+  saveUserConfig: (content: string) => Promise<UserConfigDocument>;
+  openUserConfigFolder: () => Promise<void>;
 
   // Upload / Staging
   uploadFiles: (filePaths: string[]) => Promise<UploadEntry>;
@@ -183,6 +213,7 @@ export interface ElectronAPI {
   restoreSaveItem: (category: string, name: string) => Promise<boolean>;
   openSaveFolder: () => Promise<void>;
   openResFolder: () => Promise<void>;
+  openVcfgSnapshotsFolder: () => Promise<void>;
 
   // Append conflict confirmation
   confirmAppend: (folderName: string, source: "upload" | "download", proceed: boolean, usePersonalCfg?: boolean) => Promise<InstallResult | null>;

@@ -76,10 +76,20 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
   return (
     <div className="space-y-3">
       <div
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-disabled={disabled}
+        aria-busy={uploading}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onClick={handleClick}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleClick();
+          }
+        }}
         className={`
           relative flex flex-col items-center justify-center gap-3 p-8
           border-2 border-dashed rounded-[var(--radius)] transition-all duration-200 cursor-pointer
@@ -96,6 +106,7 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
           type="file"
           multiple
           accept=".zip,.cfg,.txt"
+          aria-label="选择要上传的配置文件"
           className="hidden"
           onChange={handleInputChange}
         />
@@ -107,17 +118,17 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
         )}
 
         <div className="text-center">
-          <p className="text-sm text-text-secondary">
+          <p className="ui-body">
             {uploading ? "正在处理..." : "拖拽文件到此处或点击选择"}
           </p>
-          <p className="text-xs text-text-faint mt-1">
+          <p className="ui-caption mt-1 text-text-faint">
             支持 .zip、.cfg、.txt 文件及文件夹
           </p>
         </div>
       </div>
 
       {uploadSuccess && (
-        <div className="flex items-center gap-2 px-3 py-2 bg-green/5 border border-green/20 rounded-[var(--radius-sm)]">
+        <div role="status" className="flex items-center gap-2 px-3 py-2 bg-green/5 border border-green/20 rounded-[var(--radius-sm)]">
           <CheckCircle size={14} className="text-green shrink-0" />
           <span className="text-xs text-green font-medium">上传成功</span>
         </div>

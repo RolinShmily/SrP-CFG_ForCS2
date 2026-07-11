@@ -35,44 +35,46 @@ function ReleaseSection({ release }: { release: GitHubRelease }) {
   return (
     <div className="border border-border rounded-[var(--radius)]">
       <div
-        onClick={() => setExpanded(!expanded)}
-        className="flex items-center justify-between px-4 py-3 cursor-pointer select-none"
+        className="flex items-stretch justify-between select-none"
       >
-        <div className="flex items-center gap-2.5">
-          <span className="font-display text-sm font-semibold text-accent">
-            v{release.tagName}
-          </span>
-          {release.hasDesktopAssets && (
-            <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded bg-green/10 text-green">
-              <Monitor size={14} />
-              软件
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={() => setExpanded(!expanded)}
+          className="flex min-w-0 flex-1 items-center justify-between px-4 py-3 text-left"
+        >
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="font-display text-sm font-semibold text-accent">
+              v{release.tagName}
             </span>
-          )}
-          {release.hasPresetAssets && (
-            <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded bg-accent-bg text-accent-light">
-              <Package size={14} />
-              预设包
-            </span>
-          )}
-          {date && (
-            <span className="text-sm text-text-faint">{date}</span>
-          )}
-        </div>
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              window.api.openExternal(release.htmlUrl);
-            }}
-            className="p-1 text-text-faint hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
-            title="GitHub Release"
-          >
-            <ExternalLink size={16} />
-          </button>
+            {release.hasDesktopAssets && (
+              <span className="inline-flex items-center gap-1.5 rounded bg-green/10 px-2 py-0.5 text-xs text-green">
+                <Monitor size={14} />
+                软件
+              </span>
+            )}
+            {release.hasConfigAssets && (
+              <span className="inline-flex items-center gap-1.5 rounded bg-accent-bg px-2 py-0.5 text-xs text-accent-light">
+                <Package size={14} />
+                配置包
+              </span>
+            )}
+            {date && <span className="text-xs text-text-faint">{date}</span>}
+          </div>
           <ChevronDown
-            size={20}
+            size={18}
+            className={`ml-3 shrink-0 text-text-faint transition-transform ${expanded ? "rotate-180" : ""}`}
           />
-        </div>
+        </button>
+        <button
+          type="button"
+          aria-label={`在 GitHub 打开 v${release.tagName}`}
+          onClick={() => window.api.openExternal(release.htmlUrl)}
+          className="m-2 flex h-8 w-8 shrink-0 items-center justify-center border-none bg-transparent text-text-faint transition-colors hover:bg-accent-bg hover:text-accent"
+          title="GitHub Release"
+        >
+          <ExternalLink size={15} />
+        </button>
       </div>
       {expanded && (
         <div className="px-4 pb-4 pt-0">
@@ -139,6 +141,15 @@ export default function UpdateModal({
       .finally(() => setLoading(false));
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   const isLoading = checking || loading;
@@ -146,14 +157,17 @@ export default function UpdateModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-bg-card border border-border rounded-[var(--radius)] w-full max-w-lg max-h-[80vh] flex flex-col shadow-xl mx-4">
+      <div aria-hidden="true" className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div role="dialog" aria-modal="true" aria-labelledby="update-modal-title" className="relative mx-4 flex max-h-[80vh] w-full max-w-lg flex-col rounded-[var(--radius)] border border-border bg-bg-card shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
-          <h2 className="font-display text-lg font-bold">检查更新</h2>
+          <h2 id="update-modal-title" className="ui-section-title">检查更新</h2>
           <button
+            type="button"
+            autoFocus
+            aria-label="关闭更新窗口"
             onClick={onClose}
-            className="text-text-muted hover:text-text transition-colors cursor-pointer bg-transparent border-none p-1"
+            className="flex h-8 w-8 items-center justify-center border-none bg-transparent text-text-muted transition-colors hover:bg-bg-hover hover:text-text"
           >
             <X size={18} />
           </button>
@@ -170,6 +184,7 @@ export default function UpdateModal({
             <div className="text-center py-12 space-y-3">
               <p className="text-red text-sm">获取更新信息失败，请检查网络连接</p>
               <button
+                type="button"
                 onClick={() => {
                   setLoading(true);
                   setError(false);
@@ -178,7 +193,7 @@ export default function UpdateModal({
                     .catch(() => setError(true))
                     .finally(() => setLoading(false));
                 }}
-                className="px-4 py-1.5 text-sm font-display bg-bg-raised border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer text-text-secondary"
+                className="min-h-9 rounded-[var(--radius)] border border-border bg-bg-raised px-4 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
               >
                 重试
               </button>
@@ -213,19 +228,21 @@ export default function UpdateModal({
 
         {/* Footer */}
         {!isLoading && (
-          <div className="flex items-center gap-3 px-5 py-4 border-t border-border shrink-0">
+          <div className="flex flex-wrap items-center gap-3 border-t border-border px-5 py-4 shrink-0">
             <button
+              type="button"
               onClick={() =>
                 window.api.openExternal("https://cfg.srprolin.top")
               }
-              className="flex items-center gap-1.5 px-4 py-2 text-sm font-display font-medium bg-accent text-bg hover:bg-accent/90 rounded-[var(--radius)] transition-colors cursor-pointer border-none"
+              className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border-none bg-accent px-4 text-sm font-medium text-bg transition-colors hover:bg-accent/90"
             >
               <Globe size={14} />
               官网下载
             </button>
             <button
+              type="button"
               onClick={() => window.api.openExternal(`${REPO_URL}/releases/latest`)}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm font-display font-medium bg-transparent text-text-secondary border border-border hover:bg-bg-hover rounded-[var(--radius)] transition-colors cursor-pointer"
+              className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border border-border bg-transparent px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover"
             >
               <ExternalLink size={14} />
               GitHub Release

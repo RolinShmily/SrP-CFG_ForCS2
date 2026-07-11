@@ -1,13 +1,13 @@
 ---
-title: demo_hlae.cfg
+title: demo-hlae 模式
 description: HLAE Demo 观看预设，含镜头运镜、动态模糊录制、速度控制
 ---
 
-> 使用 HLAE 观看 demo 的配置文件
+> 模块目录：`srp-cfg/modes/demo-hlae/`
 
 ## 简介
 
-demo_hlae.cfg 为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的按键预设和录制工具。参考自 [Purp1e](https://github.com/Purple-CSGO/CSGO-Config-Presets)，整合了动态模糊录制功能。
+demo-hlae 模式为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的按键预设和录制工具。参考自 [Purp1e](https://github.com/Purple-CSGO/CSGO-Config-Presets)，整合了动态模糊录制功能。
 
 ## 前置条件
 
@@ -16,7 +16,9 @@ demo_hlae.cfg 为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的
 
 ## 激活方式
 
-在 autoexec.cfg 中按 `]` 键启用。需要先在 demo 播放界面中加载。
+输入 `srp_demo` 只应用 HLAE/录制设置。输入 `srp_demo_keys` 才会先执行 Valve `binddefaults`，再安装完整创作键表；Default 案例中的 `]` 键调用带按键入口。
+
+HLAE 模式会重绑大量普通键、鼠标键和小键盘键，属于明确的侵入式会话模式。
 
 ## 功能表
 
@@ -62,13 +64,12 @@ demo_hlae.cfg 为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的
 | 静音 | `M` | - |
 | 开关 CSGO 语音 | `K` | - |
 | 开关 CS2 语音 | `'` | - |
-| 查看玩家信息和语音屏蔽 | `L` | - |
 | 队友头顶标识 | `ralt` | - |
 | 广角 POV | `=` | - |
 | 显示对局头像 | - | `avatars` |
 | 显示对局人数 | - | `numbers` |
-| 显示 demo 下方小字 | - | `show` |
-| 屏蔽 demo 下方小字 | - | `noshow` |
+| 显示 demo 下方小字 | - | `demoshow` |
+| 屏蔽 demo 下方小字 | - | `demonoshow` |
 
 ### 录制功能
 
@@ -87,7 +88,8 @@ demo_hlae.cfg 为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的
 
 | 功能 | 快捷键 | 控制台别名 |
 | :--- | :--- | :--- |
-| 切换击杀信息显示 | `\` | `ass` |
+| 屏蔽/恢复击杀信息 | `\` | `block` |
+| 切换助攻显示 | - | `ass` |
 | 关闭 BGM、MVP、无线电 | - | `mute` |
 | 回合开始无灰色 | - | `post` |
 | 开启投掷物落点预测 | - | `grenadeon` |
@@ -96,21 +98,21 @@ demo_hlae.cfg 为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的
 ## 使用流程
 
 1. 启动 CS2，播放 demo
-2. 按 `]` 键加载 demo_hlae.cfg
+2. 输入 `srp_demo_keys`；只想应用录制设置时使用 `srp_demo`
 3. 使用快捷键控制回放、运镜和录制
 
 ## 动态模糊录制
 
-使用 `bluron` 和 `blurroff` 控制动态模糊录制模式：
+使用 `bluron` 和 `bluroff` 控制动态模糊录制模式：
 
 - **bluron**：开启动态模糊，使用矩形方法，强度 1，曝光 0.7，输出 60fps
 - **bluroff**：关闭动态模糊，恢复正常录制
 
-录制使用 FFmpeg 以 1080fps 采样，配合 HLAE 的 `mirv_streams record` 功能。
+当前案例使用 FFmpeg 以 600fps 源采样，配合 HLAE 的 `mirv_streams record` 功能。
 
 ## 相关文件
 
-- [autoexec.cfg](/docs/autoexec) — 主配置，按 `]` 键加载本文件
+- [autoexec.cfg](/docs/autoexec) — v3 Runtime、内置 Preset 与用户层入口
 
 ## 注意事项
 
@@ -118,3 +120,5 @@ demo_hlae.cfg 为 HLAE（Half-Life Advanced Effects）demo 回放提供完整的
 - 动态模糊录制需要 FFmpeg 配置正确
 - 镜头摆放模式需按 ESC 退出
 - 播放速度循环：0.1x → 0.2x → 0.25x → 1x → 4x → 8x
+- 这些实体绑定会进入 user keys VCFG；录制结束后应显式恢复正常对局键位
+- v3 已修正旧文件中“先绑定部分 HLAE 键、随后 binddefaults 将其清除”的顺序问题

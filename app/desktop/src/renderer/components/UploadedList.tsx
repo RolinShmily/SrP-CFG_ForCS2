@@ -92,8 +92,9 @@ const UploadedList = forwardRef<UploadedListHandle, Props>(function UploadedList
           共 {entries.length} 项
         </span>
         <button
+          type="button"
           onClick={() => window.api.openUploadsFolder()}
-          className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-text-muted hover:text-accent hover:bg-accent-bg rounded-[var(--radius-sm)] transition-colors cursor-pointer bg-transparent border border-border"
+          className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-transparent px-2.5 text-xs text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
         >
           <FolderOpen size={13} />
           打开目录
@@ -105,41 +106,47 @@ const UploadedList = forwardRef<UploadedListHandle, Props>(function UploadedList
         return (
           <div
             key={entry.folderName}
-            onClick={() => onSelect(isSelected ? null : entry.folderName)}
-            className={`flex items-center justify-between px-3 py-2.5 rounded-[var(--radius-sm)] transition-colors cursor-pointer ${
+            className={`flex items-stretch rounded-[var(--radius-sm)] border transition-colors ${
               isSelected
-                ? "bg-accent-bg border border-accent/30"
-                : "bg-bg-raised border border-border hover:border-border-highlight"
+                ? "border-accent/30 bg-accent-bg"
+                : "border-border bg-bg-raised hover:border-border-highlight"
             }`}
           >
-            <div className="flex items-center gap-3 min-w-0">
-              {isSelected ? (
-                <Check size={16} className="text-accent shrink-0" />
-              ) : entry.isZip ? (
-                <Package size={16} className="text-text-muted shrink-0" />
-              ) : (
-                <FileText size={16} className="text-text-muted shrink-0" />
-              )}
-              <div className="min-w-0">
-                <div className="text-sm font-mono text-text truncate">
-                  {entry.displayName}
+            <button
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => onSelect(isSelected ? null : entry.folderName)}
+              className="flex min-w-0 flex-1 items-center gap-3 px-3 py-2.5 text-left"
+            >
+                {isSelected ? (
+                  <Check size={16} className="text-accent shrink-0" />
+                ) : entry.isZip ? (
+                  <Package size={16} className="text-text-muted shrink-0" />
+                ) : (
+                  <FileText size={16} className="text-text-muted shrink-0" />
+                )}
+                <div className="min-w-0">
+                  <div className="truncate font-mono text-sm text-text">
+                    {entry.displayName}
+                  </div>
+                  <div className="text-xs text-text-faint">
+                    {formatSize(entry.size)} · {formatDate(entry.timestamp)}
+                  </div>
                 </div>
-                <div className="text-xs text-text-faint">
-                  {formatSize(entry.size)} · {formatDate(entry.timestamp)}
-                </div>
-              </div>
-            </div>
+            </button>
 
             <button
+              type="button"
+              aria-label={`删除 ${entry.displayName}`}
               onClick={(e) => handleDelete(entry.folderName, e)}
               disabled={deleting !== null}
               title="删除"
-              className="p-1.5 text-text-faint hover:text-red disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer bg-transparent border-none"
+              className="m-1.5 flex h-8 w-8 shrink-0 items-center justify-center border-none bg-transparent text-text-faint transition-colors hover:bg-red/10 hover:text-red disabled:cursor-not-allowed disabled:opacity-40"
             >
               {deleting === entry.folderName ? (
-                <Loader2 size={12} className="animate-spin" />
+                <Loader2 size={14} className="animate-spin" />
               ) : (
-                <Trash2 size={12} />
+                <Trash2 size={14} />
               )}
             </button>
           </div>

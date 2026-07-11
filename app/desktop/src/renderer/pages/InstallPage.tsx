@@ -1,11 +1,11 @@
 import { useState, useRef, useCallback } from "react";
-import { Loader2 } from "lucide-react";
 import SteamStatusBanner from "../components/SteamStatusBanner";
 import DetectionCard from "../components/DetectionCard";
 import UploadZone from "../components/UploadZone";
 import UploadedList from "../components/UploadedList";
 import DownloadsList from "../components/DownloadsList";
 import InstallActions from "../components/InstallActions";
+import PageHeader from "../components/PageHeader";
 import type { DetectionResult, AppendConflictResult, InstallResult } from "../types";
 
 interface Props {
@@ -50,8 +50,11 @@ export default function InstallPage({
   const hasSource = selectedUpload !== null || selectedDownload !== null;
 
   return (
-    <div className="space-y-5">
-      <h1 className="font-display text-2xl font-bold">安装配置</h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="安装配置"
+        description="确认环境与账号，选择一个配置来源，再决定目标目录和部署方式。"
+      />
 
       {/* Steam/CS2 Status Banners */}
       {detection && <SteamStatusBanner detection={detection} />}
@@ -65,18 +68,14 @@ export default function InstallPage({
       />
 
       {/* Upload Config Files — zone + list side by side */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4">
-        <div className="grid grid-cols-2 gap-6">
+      <section className="bg-bg-card border border-border rounded-[var(--radius)] p-5">
+        <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
           <div className="space-y-3">
-            <h2 className="font-display text-sm font-semibold text-text-secondary">
-              上传配置文件
-            </h2>
+            <h2 className="ui-section-title">上传配置文件</h2>
             <UploadZone onUploadComplete={handleUploadComplete} disabled={refreshing} />
           </div>
           <div className="space-y-3 min-w-0">
-            <h2 className="font-display text-sm font-semibold text-text-secondary">
-              已上传配置文件
-            </h2>
+            <h2 className="ui-section-title">已上传配置文件</h2>
             <UploadedList
               ref={uploadedListRef}
               selectedFolder={selectedUpload}
@@ -84,30 +83,26 @@ export default function InstallPage({
             />
           </div>
         </div>
-      </div>
-      {/* Downloaded Presets */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <h2 className="font-display text-sm font-semibold text-text-secondary">
-          已下载预设包
-        </h2>
+      </section>
+      {/* Downloaded configuration package */}
+      <section className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
+        <h2 className="ui-section-title">已下载配置包</h2>
         <DownloadsList
           selectedFolder={selectedDownload}
           onSelect={handleSelectDownload}
         />
-      </div>
+      </section>
 
       {/* Install Actions */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
-        <h2 className="font-display text-sm font-semibold text-text-secondary">
-          执行安装
-        </h2>
+      <section className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
+        <h2 className="ui-section-title">执行安装</h2>
         <InstallActions
           hasSource={hasSource}
           selectedDownload={selectedDownload}
           selectedUpload={selectedUpload}
           onInstallComplete={handleInstallComplete}
         />
-      </div>
+      </section>
     </div>
   );
 }

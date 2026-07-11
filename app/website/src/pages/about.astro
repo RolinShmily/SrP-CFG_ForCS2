@@ -49,11 +49,12 @@ const contributors = [
           <h2 class="font-display text-2xl font-semibold mb-6">项目简介</h2>
           <div class="space-y-4 text-text-secondary font-light leading-[1.8] mb-10">
             <p>
-              SrP-CFG 是一套为 CS2 玩家打造的全套预设 CFG 配置文件。项目提供多种实用功能，包括准星视角设置、跑图练习、demo 录制、饰品预览等，旨在提升游戏体验。
+              SrP-CFG v3 是一套把功能模板、Preset 案例和用户配置分离的 CS2 CFG 系统。Runtime 提供准星视角、跑图练习、Demo 录制等能力，内置案例提供可选推荐值，用户层保存个人差异。
             </p>
             <p>
-              所有的 CFG 在运行后都会在控制台输出导航信息，通过 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">autoexec.cfg</code> 自启动加载，
-              并通过 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">exec custom</code> 链式加载用户定制配置。
+              根目录只保留 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">autoexec.cfg</code> 启动引导，
+              所有 Runtime、Preset、Feature 与 Mode 统一位于 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">srp-cfg/</code>；
+              用户只需要编辑最后加载的 <code class="font-mono text-sm bg-bg-raised px-1.5 py-0.5 rounded text-accent-light">srp-cfg/user/custom.cfg</code>。
             </p>
           </div>
 

@@ -1,96 +1,81 @@
 ---
-title: 项目说明
-description: SrP-CFG For CS2 -- 适用于 CS2 各场景的 CFG 预设文件
+title: SrP-CFG v3
+description: 功能 Runtime、内置 Preset、用户配置和 VCFG 概览
 ---
 
-# SrP-CFG For CS2
+## v3 解决什么问题
 
-> 适用于 CS2 各场景的 CFG 预设文件，由 RoL1n 开发维护
+CS2 的 VCFG 可以保存当前键位与可归档 ConVar，却不能保存 alias 实现、多文件模块、注释和项目结构。SrP-CFG 因此把职责分成：
 
-## 简介
-
-SrP-CFG 是一套为 CS2（Counter-Strike 2）玩家打造的全套预设 CFG 配置文件。本项目提供多种实用功能，包括准星视角预设、跑图练习、Demo 录制回放、匕首切换、饰品截图等，旨在覆盖 CS2 的各类使用场景。
-
-## 快速开始
-
-1. [下载](/download) 最新版本的安装包或 ZIP 预设包
-2. 使用 [SrP-CFG Installer](/docs/srpcfg-3) 安装，或手动将文件复制到 CS2 cfg 目录
-3. 启动 CS2，按 `~` 打开控制台，确认 `autoexec Enabled!` 字样
-
-详细安装步骤请参阅 [使用指南](/docs/srpcfg-3)。
-
-## 包含文件
-
-| 功能 | 文件 | 文档 |
-| :--- | :--- | :--- |
-| 自启动基础设置 | `autoexec.cfg` | [查看](/docs/autoexec) |
-| 准星与持枪视角 | `crosshair_view.cfg` | [查看](/docs/crosshair_view) |
-| 个人自建房跑图 | `practice.cfg` | [查看](/docs/practice) |
-| HLAE Demo 观看 | `demo_hlae.cfg` | [查看](/docs/demo_hlae) |
-| 匕首模型切换 | `knife.cfg` | [查看](/docs/knife) |
-| 电击枪快速切换 | `zeus.cfg` | [查看](/docs/zeus) |
-| 武器自适应视角 | `autoview.cfg` | [查看](/docs/autoview) |
-| 饰品预览检视 | `previewmode.cfg` | [查看](/docs/previewmode) |
-| 地图指南制作 | `guidemake.cfg` | [查看](/docs/guidemake) |
-| 视频设置 | `cs2_video.txt` | [查看](/docs/cs2_video) |
-
-## 文件加载关系
-
-```
-autoexec.cfg （CS2 启动时自动加载）
-├── exec crosshair_view  （准星与视角预设）
-│   └── crosshair_library/*.cfg  （准星代码库）
-├── exec custom  （用户定制化配置）
-│
-├── [P 键] exec practice  （跑图练习）
-│   └── spawn/*.cfg  （出生点预设）
-├── [J 键] exec knife  （匕首模型）
-├── [] 键] exec demo_hlae  （HLAE Demo）
-├── [[ 键] exec autoview  （自适应视角）
-├── [9 键] exec previewmode  （饰品预览）
-├── [zeus] exec zeus  （电击枪切换）
-└── [gm] exec guidemake  （地图指南）
+```text
+Runtime 注册功能
+→ User 可选 Preset 起点
+→ User 个人覆盖
+→ CS2 自己管理最终 VCFG 状态
 ```
 
-## 功能速览
+## 只有一个配置包
 
-- **准星系统**：8 组准星预设 + 8 组视角预设，一键轮换，12 色切换
-- **跑图练习**：出生点传送（11 张地图）、Bot 控制、道具轨迹预测、竞技模拟
-- **Demo 录制**：HLAE 镜头运镜、动态模糊录制、速度控制
-- **快捷购买**：F3~F11 一键购买常用装备
-- **聊天轮盘**：3 页 24 个战术语音快捷指令
-
-## 开源信息
-
-- **仓库地址**: [RolinShmily/SrP-CFG_ForCS2](https://github.com/RolinShmily/SrP-CFG_ForCS2)
-- **许可证**: [GPL-3.0](https://github.com/RolinShmily/SrP-CFG_ForCS2/blob/main/LICENSE)
-- **版本发布**: [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-
-## 贡献与定制
-
-### 加入我们
-
-该项目保持长期更新维护，如果您有特色功能想贡献至此项目，欢迎提交 PR 或联系作者。
-
-### 用户定制
-
-如果你想使用专属定制版本（带有你的名字），可以在仓库中提交 Issue，联系作者获取定制化配置。
-
-### 投递须知
-
-请先查看 [使用指南](/docs/srpcfg-3) 了解默认键位和指令功能。我们默认您只需要 `autoexec.cfg` 中的个性化配置。
-
-**请按以下模板提交需求：**
-
-```
-用户名：（建议英文）
-功能说明：（例如：将烟雾弹单独绑定为C键）
-键位绑定：（例如：C、左Alt）
-控制台指令：（例如：pd）
+```text
+SrP-CFG_Runtime_Core.zip
 ```
 
-## 联系方式
+它包含全部 Runtime、Default / Echo / YSZH / VisionL、Valve 基线、`user/custom.cfg`、Feature、Mode 和帮助文件。Preset 是包内可调用的配置案例，不是另一套发行流程。
 
-- 个人博客: [blog.srprolin.top](https://blog.srprolin.top/about/)
-- B站主页: [RoL1n_SrP](https://space.bilibili.com/422744280)
-- GitHub: [RolinShmily](https://github.com/RolinShmily)
+## 双功能使用模式
+
+### 模板模式
+
+`custom.cfg` 不启用任何 `srp_apply_*`。Runtime 只提供跑图、准星查看、预览、Demo/HLAE 等功能与 alias；普通设置由游戏菜单和 VCFG 管理。
+
+### Preset + 用户模式
+
+在 `custom.cfg` 顶部选择一个起点，再在下面写个人差异：
+
+```text
+srp_apply_default
+
+sensitivity 0.95
+bind "mouse5" "+voicerecord"
+```
+
+每次启动都会按相同顺序应用，个人设置最终覆盖 Preset。Echo、YSZH、VisionL 只是继承 Default 后写入各自差异的案例，和任何仓库外用户处于同一级。
+
+## User 层
+
+`srp-cfg/user/custom.cfg` 是当前用户唯一需要维护的文件。桌面安装器的“我的配置”页面可以直接编辑它，并在安装、更新、回滚和卸载 Runtime 时保护内容。
+
+保存后执行 `srp_reload`，会重新注册 Runtime，并按 `custom.cfg` 的实际顺序重放 Preset 起点与个人覆盖。
+
+## Valve 测试基线
+
+执行 `srp_reset_valve` 可以：
+
+- 调用当前 CS2 自带的 `binddefaults`；
+- 恢复所有当前被 SrP-CFG 修改的可归档偏好字段；
+- 恢复少量预览 / Demo 模式改变的会话画面字段；
+- 保持 VCFG、Steam Cloud 元数据和 `cs2_video.txt` 不被第三方直接写入。
+
+它故意不执行 User，适合排查问题究竟来自 Valve 默认、某个 Preset、个人覆盖还是 VCFG 当前状态。测试结束后执行 `srp_reload` 即可返回正常配置。
+
+## 模块命令
+
+模块的普通入口只应用设置，带 `_keys` 的入口才应用工作区按键。例如：
+
+```text
+srp_practice
+srp_practice_keys
+```
+
+这样用户可以取用跑图、预览、指南或 HLAE 功能，而不必无条件让模块接管键盘。
+
+## 帮助系统
+
+每个模块都有 `help.cfg`。输入 `srp_help` 查看索引，再使用 `srp_help_practice`、`srp_help_demo`、`srp_help_reset` 等命令查看控制台术语。
+
+## 继续阅读
+
+- [使用指南](/docs/srpcfg-3)
+- [v3 分层架构](/docs/architecture)
+- [autoexec.cfg](/docs/autoexec)
+- [VCFG 与 Steam Cloud](/docs/vcfg)

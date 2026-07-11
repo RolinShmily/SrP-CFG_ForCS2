@@ -8,16 +8,19 @@ import DownloadPage from "./pages/DownloadPage";
 import QuickStartPage from "./pages/QuickStartPage";
 import BackupRestorePage from "./pages/BackupRestorePage";
 import AppliedConfigPage from "./pages/AppliedConfigPage";
+import PersonalizePage from "./pages/PersonalizePage";
 import AboutPage from "./pages/AboutPage";
 import { useLogs } from "./hooks/useLogs";
 import type { DetectionResult } from "./types";
 
-export type Page = "install" | "download" | "quickstart" | "backup" | "applied" | "about";
+export type Page = "install" | "download" | "quickstart" | "personalize" | "backup" | "applied" | "about";
 
 export default function App() {
   const [page, setPage] = useState<Page>("quickstart");
+  const [personalizeDirty, setPersonalizeDirty] = useState(false);
   const [logPanelOpen, setLogPanelOpen] = useState(false);
   const { logs, clearLogs } = useLogs();
+  const mainRef = useRef<HTMLElement>(null);
 
   // Detection runs once on startup, shared across pages
   const [detection, setDetection] = useState<DetectionResult | null>(null);
@@ -40,17 +43,22 @@ export default function App() {
     detect();
   }, [detect]);
 
+  useEffect(() => {
+    mainRef.current?.focus({ preventScroll: true });
+  }, [page]);
+
   const handleUserChange = useCallback(
     async (accountId: string) => {
       if (!detection) return;
-      const videoPath = await window.api.setCurrentUser(accountId);
+      const userConfig = await window.api.setCurrentUser(accountId);
       const user = detection.steamUsers.find(
         (u) => u.accountId === accountId,
       );
       setDetection({
         ...detection,
         currentUser: user ?? null,
-        videoCfgPath: videoPath,
+        userCfgPath: userConfig.userCfgPath,
+        vcfgState: userConfig.vcfgState,
       });
     },
     [detection],
@@ -90,6 +98,7 @@ export default function App() {
         onUserChange={handleUserChange}
       />
     ),
+    personalize: <PersonalizePage detection={detection} onDirtyChange={setPersonalizeDirty} />,
     backup: <BackupRestorePage />,
     applied: <AppliedConfigPage />,
     about: <AboutPage />,
@@ -99,8 +108,29 @@ export default function App() {
     <div className="flex flex-col h-screen bg-bg text-text overflow-hidden">
       <TitleBar />
       <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar current={page} onNavigate={setPage} onCheckUpdate={handleCheckUpdate} />
-        <main className="flex-1 overflow-y-auto p-6">{pages[page]}</main>
+        <Sidebar
+          current={page}
+          onNavigate={(nextPage) => {
+            if (
+              page === "personalize" &&
+              nextPage !== "personalize" &&
+              personalizeDirty &&
+              !window.confirm("个人配置尚未保存，离开此页面会丢失修改。继续吗？")
+            ) {
+              return;
+            }
+            setPage(nextPage);
+          }}
+          onCheckUpdate={handleCheckUpdate}
+        />
+        <main
+          id="main-content"
+          ref={mainRef}
+          tabIndex={-1}
+          className="flex-1 overflow-y-auto p-6 outline-none"
+        >
+          <div key={page} className="page-enter min-h-full">{pages[page]}</div>
+        </main>
         <LogPanel
           logs={logs}
           onClear={clearLogs}

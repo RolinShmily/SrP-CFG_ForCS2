@@ -1,62 +1,15 @@
 # ============================================
-# SrP-CFG 包配置
+# SrP-CFG 发布包配置
 # ============================================
 
 packages:
-  # ============================================
-  # 官方完整版
-  # ============================================
-  default:
-    display_name: "官方完整版"
-    zip_name: "Allcfgs"
-    description: "包含官方配置的完整版本，包含官方 autoexec.cfg"
-    # 根目录文件（相对路径）
+  # 唯一发行包：Runtime、用户窗口、内置 Preset 与重置基线。
+  runtime_core:
+    display_name: "Runtime Core"
+    zip_name: "SrP-CFG_Runtime_Core"
+    description: "完整功能 Runtime、用户 custom.cfg、内置 Preset 案例与 Valve 重置基线"
     files:
       - "default/autoexec.cfg"
-      - "default/custom.cfg"
-      - "default/autoview.cfg"
-      - "default/crosshair_view.cfg"
-      - "default/demo_hlae.cfg"
-      - "default/knife.cfg"
-      - "default/practice.cfg"
-      - "default/previewmode.cfg"
-      - "default/guidemake.cfg"
-      - "default/zeus.cfg"
       - "default/video/"
-      - "default/crosshair_library/"
-      - "default/spawn/"
       - "default/annotations/"
-    overrides: []  # 无替换文件
-
-  # ============================================
-  # 用户定制版
-  # ============================================
-  # 说明：
-  # - base: 继承指定包的 files 配置
-  # - overrides: 用户目录下的文件，会提取到 zip 根目录并替换同名文件
-  # ============================================
-
-  custom_echo:
-    display_name: "Echo 定制版"
-    zip_name: "Allcfgs_echo"
-    description: "使用 echo 的自定义 custom.cfg，其他配置与官方版相同"
-    base: "default"  # 继承 allcfgs 的所有文件
-    overrides:
-      - "custom/echo/custom.cfg"
-
-  custom_yszh:
-    display_name: "yszh 定制版"
-    zip_name: "Allcfgs_yszh"
-    description: "使用 yszh 的自定义 custom.cfg，其他配置与官方版相同"
-    base: "default"
-    overrides:
-      - "custom/yszh/custom.cfg"
-
-  custom_visionl:
-    display_name: "visionl 定制版"
-    zip_name: "Allcfgs_visionl"
-    description: "使用 visionl 的自定义 custom.cfg，其他配置与官方版相同"
-    base: "default"
-    overrides:
-      - "custom/visionl/custom.cfg"
-
+      - "default/srp-cfg/"

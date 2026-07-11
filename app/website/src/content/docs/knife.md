@@ -1,22 +1,22 @@
 ---
-title: knife.cfg
+title: knife 功能
 description: 匕首模型切换，支持 21 种刀具模型预览
 ---
 
-> 匕首模型切换配置文件
+> 模块目录：`srp-cfg/features/knife/`
 
 ## 简介
 
-knife.cfg 允许在练习模式下通过控制台切换 21 种匕首模型，用于预览不同刀具的外观和检视动画。使用 `subclass_create` 命令在准星位置生成对应模型。
+knife 模块允许在练习模式下通过控制台切换 21 种匕首模型，用于预览不同刀具的外观和检视动画。它使用 `subclass_create` 命令在准星位置生成对应模型。
 
 ## 激活方式
 
-在 autoexec.cfg 中按 `J` 键加载。加载后在控制台输入对应编号（500-526）切换刀具模型。
+推荐输入 `srp_knife`。Default 案例中可按 `J` 键加载。加载后在控制台输入对应编号（500-526）切换刀具模型。
 
 ## 使用方法
 
 1. 进入自建房或开启作弊的服务器
-2. 按 `J` 键加载 knife.cfg
+2. 输入 `srp_knife`（应用 Default 案例时也可按 `J`）
 3. 在控制台输入刀具编号（如 `507` 切换为爪子刀）
 4. 按 `F` 检视刀具外观
 
@@ -48,7 +48,7 @@ knife.cfg 允许在练习模式下通过控制台切换 21 种匕首模型，用
 
 ## 相关文件
 
-- [autoexec.cfg](/docs/autoexec) — 主配置，按 `J` 键加载本文件
+- [autoexec.cfg](/docs/autoexec) — v3 Runtime、内置 Preset 与用户层入口
 
 ## 注意事项
 

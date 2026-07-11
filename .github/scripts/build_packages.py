@@ -1,70 +1,83 @@
 #!/usr/bin/env python3
-"""
-构建发布包：根据 packages.json 将配置文件打包为 zip。
-由 CI 的 "Build packages" 步骤调用。
+"""Build SrP-CFG release ZIPs from packages.json without shell-dependent commands."""
 
-用法: python3 .github/scripts/build_packages.py
-"""
+from __future__ import annotations
 
 import json
-import subprocess
 import os
+from pathlib import Path, PurePosixPath
+from zipfile import ZIP_DEFLATED, ZipFile
+
+
+ROOT = Path.cwd()
+
+
+def iter_files(source: Path):
+    if source.is_file():
+        yield source
+        return
+    if source.is_dir():
+        yield from sorted(path for path in source.rglob("*") if path.is_file())
+        return
+    raise FileNotFoundError(source)
+
+
+def common_base(paths: list[Path]) -> Path:
+    existing = [path for path in paths if path.exists()]
+    if not existing:
+        return ROOT
+
+    candidates = [path if path.is_dir() else path.parent for path in existing]
+    return Path(os.path.commonpath([str(path) for path in candidates]))
+
+
+def normalise_archive_name(raw: str) -> str:
+    value = raw.replace("\\", "/").lstrip("/")
+    target = PurePosixPath(value)
+    if not value or any(part in {"", ".", ".."} for part in target.parts):
+        raise ValueError(f"Unsafe archive target: {raw!r}")
+    return target.as_posix()
+
+
+def build_package(package: dict) -> str:
+    package_name = package["name"]
+    output_name = f"{package['zip_name']}.zip"
+    output_path = ROOT / output_name
+    sources = [Path(item) for item in package.get("files", [])]
+    base = common_base(sources)
+
+    print(f"  Building {package_name} -> {output_name}")
+
+    entries: dict[str, Path] = {}
+    for source in sources:
+        for file_path in iter_files(source):
+            archive_name = normalise_archive_name(file_path.relative_to(base).as_posix())
+            previous = entries.get(archive_name)
+            if previous is not None and previous != file_path:
+                raise ValueError(
+                    f"Package {package_name} maps multiple files to {archive_name}: "
+                    f"{previous} and {file_path}"
+                )
+            entries[archive_name] = file_path
+
+    with ZipFile(output_path, "w", compression=ZIP_DEFLATED) as archive:
+        for archive_name, file_path in sorted(entries.items()):
+            archive.write(file_path, archive_name)
+
+    print(f"  Created {output_name} ({len(entries)} files)")
+    return output_name
 
 
 def main():
-    with open('packages.json', 'r', encoding='utf-8') as f:
-        packages = json.load(f)
+    with open("packages.json", "r", encoding="utf-8") as file:
+        packages = json.load(file)
+
+    if len(packages) != 1 or packages[0].get("name") != "runtime_core":
+        raise ValueError("v3 build input must contain only runtime_core")
+
+    build_package(packages[0])
+    print("\nBuilt the Runtime Core package")
 
 
-    zip_files = []
-
-    for pkg in packages:
-        pkg_name = pkg['name']
-        zip_name = pkg['zip_name']
-        files = pkg['files']
-        overrides = pkg['overrides']
-
-        # 构建输出文件名
-        output_zip = f"{zip_name}.zip"
-        zip_files.append(output_zip)
-
-        print(f"  📦 Building {pkg_name} -> {output_zip}")
-
-        # 打包基础文件（保留目录结构）
-        # 检测公共基础目录（如 "default"），cd 进去后再 zip，
-        # 确保 zip 内部结构与源码目录结构解耦
-        base_dir = ''
-        if files:
-            base_dir = os.path.commonpath(files)
-            if os.path.isfile(base_dir):
-                base_dir = os.path.dirname(base_dir)
-            rel_files = [os.path.relpath(f, base_dir) for f in files]
-            file_list = ' '.join(rel_files)
-            output_zip_abs = os.path.abspath(output_zip)
-            subprocess.run(f'zip -r {output_zip_abs} {file_list}', shell=True, check=False, cwd=base_dir)
-
-        # 添加覆盖文件（直接替换 zip 中的同名文件）
-        if overrides:
-            for override_file in overrides:
-                if os.path.exists(override_file):
-                    subprocess.run(f'zip -j {output_zip} {override_file}', shell=True, check=False)
-                    print(f"    ✓ Added override: {override_file}")
-                else:
-                    print(f"    ⚠ Override file not found: {override_file}")
-
-        # 添加版本更新说明
-        if os.path.exists('版本更新说明.md'):
-            subprocess.run(f'zip -j {output_zip} 版本更新说明.md', shell=True, check=False)
-            print(f"    ✓ Added: 版本更新说明.md")
-
-        print(f"  ✅ Created {output_zip}")
-
-    # 保存 zip 文件列表
-    with open('zip_files.txt', 'w') as f:
-        f.write(' '.join(zip_files))
-
-    print(f"\n✅ Built {len(zip_files)} packages")
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

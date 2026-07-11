@@ -15,7 +15,6 @@ interface CategoryData {
 }
 
 interface InstallState {
-  cfg: CategoryData;
   gameCfg: CategoryData;
   userCfg: CategoryData;
   annotations: CategoryData;
@@ -23,23 +22,26 @@ interface InstallState {
 }
 
 interface InstallFile {
+  schemaVersion: 3;
   install: InstallState;
 }
 
 interface ResFile {
+  schemaVersion: 3;
   res: InstallState;
 }
 
 interface SaveFile {
+  schemaVersion: 3;
   save: InstallState;
 }
 
-export type CategoryKey = "cfg" | "gameCfg" | "userCfg" | "annotations" | "video";
+export type CategoryKey = "gameCfg" | "userCfg" | "annotations" | "video";
 
 export interface GamePaths {
-  cfgPath: string | null;
+  gameCfgPath: string | null;
+  userCfgPath: string | null;
   annotationsPath: string | null;
-  videoPath: string | null;
 }
 
 export interface DeployResult {
@@ -87,7 +89,6 @@ function emptyCategory(): CategoryData {
 }
 function emptyInstallState(): InstallState {
   return {
-    cfg: emptyCategory(),
     gameCfg: emptyCategory(),
     userCfg: emptyCategory(),
     annotations: emptyCategory(),
@@ -95,40 +96,43 @@ function emptyInstallState(): InstallState {
   };
 }
 
-function migrateState(state: unknown): void {
-  if (!state || typeof state !== "object") return;
-  const rec = state as Record<string, unknown>;
-  if (!("cfg" in rec) || "gameCfg" in rec) return;
-  const cfg = rec.cfg;
-  if (!cfg || typeof cfg !== "object") return;
-  const cfgObj = cfg as Record<string, unknown>;
-  const cfgPath = typeof cfgObj.path === "string" ? cfgObj.path : "";
-  if (cfgPath.includes("userdata")) {
-    rec.userCfg = cfg;
-    rec.gameCfg = { files: [], dirs: [], path: "" };
-  } else {
-    rec.gameCfg = cfg;
-    rec.userCfg = { files: [], dirs: [], path: "" };
-  }
-  delete rec.cfg;
+const CATEGORY_KEYS: CategoryKey[] = ["gameCfg", "userCfg", "annotations", "video"];
+
+function normalizeCategory(value: unknown): CategoryData {
+  if (!value || typeof value !== "object") return emptyCategory();
+  const record = value as Record<string, unknown>;
+  return {
+    files: Array.isArray(record.files)
+      ? record.files.filter((item): item is string => typeof item === "string")
+      : [],
+    dirs: Array.isArray(record.dirs)
+      ? record.dirs.filter((item): item is string => typeof item === "string")
+      : [],
+    path: typeof record.path === "string" ? record.path : "",
+  };
+}
+
+function normalizeState(value: unknown): InstallState {
+  const result = emptyInstallState();
+  if (!value || typeof value !== "object") return result;
+  const record = value as Record<string, unknown>;
+  for (const key of CATEGORY_KEYS) result[key] = normalizeCategory(record[key]);
+  return result;
 }
 
 export function loadInstallData(): InstallFile {
-  const data = readJson<InstallFile>(jsonPath("install.json"));
-  if (data) migrateState(data.install);
-  return data ?? { install: emptyInstallState() };
+  const data = readJson<{ install?: unknown }>(jsonPath("install.json"));
+  return { schemaVersion: 3, install: normalizeState(data?.install) };
 }
 
 function loadResData(): ResFile {
-  const data = readJson<ResFile>(jsonPath("res.json"));
-  if (data) migrateState(data.res);
-  return data ?? { res: emptyInstallState() };
+  const data = readJson<{ res?: unknown }>(jsonPath("res.json"));
+  return { schemaVersion: 3, res: normalizeState(data?.res) };
 }
 
 function loadSaveData(): SaveFile {
-  const data = readJson<SaveFile>(jsonPath("save.json"));
-  if (data) migrateState(data.save);
-  return data ?? { save: emptyInstallState() };
+  const data = readJson<{ save?: unknown }>(jsonPath("save.json"));
+  return { schemaVersion: 3, save: normalizeState(data?.save) };
 }
 
 function writeInstall(data: InstallFile): void {
@@ -147,10 +151,10 @@ function writeSave(data: SaveFile): void {
 
 export function updateInstallPaths(gamePaths: GamePaths): void {
   const data = loadInstallData();
-  if (gamePaths.cfgPath) data.install.gameCfg.path = gamePaths.cfgPath;
-  if (gamePaths.cfgPath) data.install.userCfg.path = gamePaths.cfgPath;
+  if (gamePaths.gameCfgPath) data.install.gameCfg.path = gamePaths.gameCfgPath;
+  if (gamePaths.userCfgPath) data.install.userCfg.path = gamePaths.userCfgPath;
   if (gamePaths.annotationsPath) data.install.annotations.path = gamePaths.annotationsPath;
-  if (gamePaths.videoPath) data.install.video.path = gamePaths.videoPath;
+  if (gamePaths.userCfgPath) data.install.video.path = gamePaths.userCfgPath;
   writeInstall(data);
 }
 
@@ -203,6 +207,52 @@ function copyStagingToGame(stagingDir: string, gameDir: string): { files: number
   return { files, dirs };
 }
 
+const USER_CUSTOM_RELATIVE = path.join("srp-cfg", "user", "custom.cfg");
+
+function isCfgCategory(category: CategoryKey): boolean {
+  return category === "gameCfg" || category === "userCfg";
+}
+
+function captureUserCustom(gameDir: string, category: CategoryKey): Buffer | null {
+  if (!isCfgCategory(category)) return null;
+  const customPath = path.join(gameDir, USER_CUSTOM_RELATIVE);
+  return fs.existsSync(customPath) && fs.statSync(customPath).isFile()
+    ? fs.readFileSync(customPath)
+    : null;
+}
+
+function restoreUserCustom(
+  gameDir: string,
+  category: CategoryKey,
+  content: Buffer | null,
+  log: LogFn,
+): void {
+  if (!content || !isCfgCategory(category)) return;
+  const customPath = path.join(gameDir, USER_CUSTOM_RELATIVE);
+  fs.mkdirSync(path.dirname(customPath), { recursive: true });
+  fs.writeFileSync(customPath, content);
+  log({
+    category: "file-ops",
+    level: "success",
+    message: "已保留用户偏好文件",
+    detail: customPath,
+  });
+}
+
+function withUserCustomPreserved<T>(
+  gameDir: string,
+  category: CategoryKey,
+  log: LogFn,
+  action: () => T,
+): T {
+  const content = captureUserCustom(gameDir, category);
+  try {
+    return action();
+  } finally {
+    restoreUserCustom(gameDir, category, content, log);
+  }
+}
+
 // ── Move file/dir to a target base under <category>/ ──────────
 
 function moveToTarget(
@@ -230,7 +280,7 @@ function moveToTarget(
     category: "install",
     level: "info",
     message: `${label}已转移：${name}`,
-    detail: "可在「备份与恢复」中恢复",
+    detail: "可在「恢复中心」中恢复",
   });
 }
 
@@ -246,10 +296,10 @@ type CatEntry = {
 
 function getCategories(stagingPaths: { cfg: string; annotations: string; video: string }, gamePaths: GamePaths): CatEntry[] {
   return [
-    { key: "gameCfg", staging: stagingPaths.cfg, game: gamePaths.cfgPath, label: "游戏 CFG" },
-    { key: "userCfg", staging: stagingPaths.cfg, game: gamePaths.videoPath, label: "用户 CFG" },
+    { key: "gameCfg", staging: stagingPaths.cfg, game: gamePaths.gameCfgPath, label: "游戏 CFG" },
+    { key: "userCfg", staging: stagingPaths.cfg, game: gamePaths.userCfgPath, label: "账号 CFG（实验性）" },
     { key: "annotations", staging: stagingPaths.annotations, game: gamePaths.annotationsPath, label: "地图指南" },
-    { key: "video", staging: stagingPaths.video, game: gamePaths.videoPath, label: "视频预设" },
+    { key: "video", staging: stagingPaths.video, game: gamePaths.userCfgPath, label: "视频预设" },
   ];
 }
 
@@ -288,45 +338,47 @@ export function deployOverlay(
     const stagingEntries = walkTopLevel(cat.staging);
     fs.mkdirSync(cat.game!, { recursive: true });
 
-    const prevFiles = installData.install[cat.key].files;
-    const prevDirs = installData.install[cat.key].dirs;
+    const result = withUserCustomPreserved(cat.game!, cat.key, log, () => {
+      const prevFiles = installData.install[cat.key].files;
+      const prevDirs = installData.install[cat.key].dirs;
 
-    // 1. Move all previously installed files → save/
-    for (const name of prevFiles) {
-      const gamePath = path.join(cat.game!, name);
-      if (!fs.existsSync(gamePath)) continue;
-      moveToTarget(saveBase, cat.key, gamePath, name, false, log, "已安装备份");
-    }
-    for (const name of prevDirs) {
-      const gamePath = path.join(cat.game!, name);
-      if (!fs.existsSync(gamePath)) continue;
-      moveToTarget(saveBase, cat.key, gamePath, name, true, log, "已安装备份");
-    }
-    saveData.save[cat.key].files = [...prevFiles];
-    saveData.save[cat.key].dirs = [...prevDirs];
+      // 1. Move all previously installed files → save/
+      for (const name of prevFiles) {
+        const gamePath = path.join(cat.game!, name);
+        if (!fs.existsSync(gamePath)) continue;
+        moveToTarget(saveBase, cat.key, gamePath, name, false, log, "已安装备份");
+      }
+      for (const name of prevDirs) {
+        const gamePath = path.join(cat.game!, name);
+        if (!fs.existsSync(gamePath)) continue;
+        moveToTarget(saveBase, cat.key, gamePath, name, true, log, "已安装备份");
+      }
+      saveData.save[cat.key].files = [...prevFiles];
+      saveData.save[cat.key].dirs = [...prevDirs];
 
-    // 2. On fresh install (install.json empty), move conflicting user files → res/
-    if (prevFiles.length === 0 && prevDirs.length === 0) {
-      for (const name of stagingEntries.files) {
-        const gameFile = path.join(cat.game!, name);
-        if (!fs.existsSync(gameFile)) continue;
-        moveToTarget(resBase, cat.key, gameFile, name, false, log, "冲突文件");
-        if (!resData.res[cat.key].files.includes(name)) {
-          resData.res[cat.key].files.push(name);
+      // 2. On fresh install (install.json empty), move conflicting user files → res/
+      if (prevFiles.length === 0 && prevDirs.length === 0) {
+        for (const name of stagingEntries.files) {
+          const gameFile = path.join(cat.game!, name);
+          if (!fs.existsSync(gameFile)) continue;
+          moveToTarget(resBase, cat.key, gameFile, name, false, log, "冲突文件");
+          if (!resData.res[cat.key].files.includes(name)) {
+            resData.res[cat.key].files.push(name);
+          }
+        }
+        for (const name of stagingEntries.dirs) {
+          const gameDir = path.join(cat.game!, name);
+          if (!fs.existsSync(gameDir)) continue;
+          moveToTarget(resBase, cat.key, gameDir, name, true, log, "冲突文件");
+          if (!resData.res[cat.key].dirs.includes(name)) {
+            resData.res[cat.key].dirs.push(name);
+          }
         }
       }
-      for (const name of stagingEntries.dirs) {
-        const gameDir = path.join(cat.game!, name);
-        if (!fs.existsSync(gameDir)) continue;
-        moveToTarget(resBase, cat.key, gameDir, name, true, log, "冲突文件");
-        if (!resData.res[cat.key].dirs.includes(name)) {
-          resData.res[cat.key].dirs.push(name);
-        }
-      }
-    }
 
-    // 3. Copy staging → game
-    const result = copyStagingToGame(cat.staging, cat.game!);
+      // 3. Copy staging → game
+      return copyStagingToGame(cat.staging, cat.game!);
+    });
     totalFiles += result.files;
     totalDirs += result.dirs;
 
@@ -342,22 +394,22 @@ export function deployOverlay(
   }
 
   // Update paths
-  if (gamePaths.cfgPath) {
-    saveData.save.gameCfg.path = gamePaths.cfgPath;
-    resData.res.gameCfg.path = gamePaths.cfgPath;
+  if (gamePaths.gameCfgPath) {
+    saveData.save.gameCfg.path = gamePaths.gameCfgPath;
+    resData.res.gameCfg.path = gamePaths.gameCfgPath;
   }
 
-  if (gamePaths.cfgPath) {
-    saveData.save.userCfg.path = gamePaths.cfgPath;
-    resData.res.userCfg.path = gamePaths.cfgPath;
+  if (gamePaths.userCfgPath) {
+    saveData.save.userCfg.path = gamePaths.userCfgPath;
+    resData.res.userCfg.path = gamePaths.userCfgPath;
   }
   if (gamePaths.annotationsPath) {
     saveData.save.annotations.path = gamePaths.annotationsPath;
     resData.res.annotations.path = gamePaths.annotationsPath;
   }
-  if (gamePaths.videoPath) {
-    saveData.save.video.path = gamePaths.videoPath;
-    resData.res.video.path = gamePaths.videoPath;
+  if (gamePaths.userCfgPath) {
+    saveData.save.video.path = gamePaths.userCfgPath;
+    resData.res.video.path = gamePaths.userCfgPath;
   }
 
   writeSave(saveData);
@@ -436,19 +488,21 @@ export function deployAppend(
     const stagingEntries = walkTopLevel(cat.staging);
     fs.mkdirSync(cat.game!, { recursive: true });
 
-    // Handle conflicts for append
-    if (overwriteConflicts) {
-      for (const name of [...stagingEntries.files, ...stagingEntries.dirs]) {
-        const gamePath = path.join(cat.game!, name);
-        if (!fs.existsSync(gamePath)) continue;
-        const isDir = fs.statSync(gamePath).isDirectory();
-        removeEntry(cat.game!, name, isDir);
-        log({ category: "install", level: "info", message: `已覆盖：${name}` });
+    const result = withUserCustomPreserved(cat.game!, cat.key, log, () => {
+      // Handle conflicts for append
+      if (overwriteConflicts) {
+        for (const name of [...stagingEntries.files, ...stagingEntries.dirs]) {
+          const gamePath = path.join(cat.game!, name);
+          if (!fs.existsSync(gamePath)) continue;
+          const isDir = fs.statSync(gamePath).isDirectory();
+          removeEntry(cat.game!, name, isDir);
+          log({ category: "install", level: "info", message: `已覆盖：${name}` });
+        }
       }
-    }
 
-    // Copy staging → game
-    const result = copyStagingToGame(cat.staging, cat.game!);
+      // Copy staging → game
+      return copyStagingToGame(cat.staging, cat.game!);
+    });
     totalFiles += result.files;
     totalDirs += result.dirs;
 
@@ -494,13 +548,15 @@ export function deleteInstalledItem(
 
   // Delete from game dir
   let gameDir: string | null = null;
-  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-  else if (category === "userCfg") gameDir = gamePaths.videoPath;
+  if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-  else if (category === "video") gameDir = gamePaths.videoPath;
+  else if (category === "video") gameDir = gamePaths.userCfgPath;
 
   if (gameDir) {
-    removeEntry(gameDir, name, isDir);
+    withUserCustomPreserved(gameDir, category, log, () => {
+      removeEntry(gameDir!, name, isDir);
+    });
   }
 
   // Update install.json
@@ -532,10 +588,10 @@ export function restoreFromRes(
   }
 
   let gameDir: string | null = null;
-  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-  else if (category === "userCfg") gameDir = gamePaths.videoPath;
+  if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-  else if (category === "video") gameDir = gamePaths.videoPath;
+  else if (category === "video") gameDir = gamePaths.userCfgPath;
 
   if (!gameDir) {
     log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
@@ -546,19 +602,21 @@ export function restoreFromRes(
   const isDir = fs.statSync(srcPath).isDirectory();
 
   try {
-    if (fs.existsSync(dstPath)) {
-      const stat = fs.lstatSync(dstPath);
-      if (stat.isDirectory()) fs.rmSync(dstPath, { recursive: true, force: true });
-      else fs.unlinkSync(dstPath);
-    }
+    withUserCustomPreserved(gameDir, category, log, () => {
+      if (fs.existsSync(dstPath)) {
+        const stat = fs.lstatSync(dstPath);
+        if (stat.isDirectory()) fs.rmSync(dstPath, { recursive: true, force: true });
+        else fs.unlinkSync(dstPath);
+      }
 
-    if (isDir) {
-      copyDirRecursive(srcPath, dstPath);
-      fs.rmSync(srcPath, { recursive: true, force: true });
-    } else {
-      fs.copyFileSync(srcPath, dstPath);
-      fs.unlinkSync(srcPath);
-    }
+      if (isDir) {
+        copyDirRecursive(srcPath, dstPath);
+        fs.rmSync(srcPath, { recursive: true, force: true });
+      } else {
+        fs.copyFileSync(srcPath, dstPath);
+        fs.unlinkSync(srcPath);
+      }
+    });
 
     // Update res.json
     const resData = loadResData();
@@ -603,10 +661,10 @@ export function restoreFromSave(
   log({ category: "backup", level: "progress", message: "正在从备份恢复..." });
 
   const categories: { key: CategoryKey; game: string | null }[] = [
-    { key: "gameCfg", game: gamePaths.cfgPath },
-    { key: "userCfg", game: gamePaths.videoPath },
+    { key: "gameCfg", game: gamePaths.gameCfgPath },
+    { key: "userCfg", game: gamePaths.userCfgPath },
     { key: "annotations", game: gamePaths.annotationsPath },
-    { key: "video", game: gamePaths.videoPath },
+    { key: "video", game: gamePaths.userCfgPath },
   ];
 
   let restored = 0;
@@ -617,22 +675,24 @@ export function restoreFromSave(
     const catSaveDir = path.join(saveDir, cat.key);
     if (!fs.existsSync(catSaveDir)) continue;
 
-    for (const entry of fs.readdirSync(catSaveDir, { withFileTypes: true })) {
-      const src = path.join(catSaveDir, entry.name);
-      const dst = path.join(cat.game, entry.name);
+    withUserCustomPreserved(cat.game, cat.key, log, () => {
+      for (const entry of fs.readdirSync(catSaveDir, { withFileTypes: true })) {
+        const src = path.join(catSaveDir, entry.name);
+        const dst = path.join(cat.game!, entry.name);
 
-      try {
-        if (entry.isDirectory()) {
-          copyDirRecursive(src, dst);
-        } else {
-          fs.mkdirSync(path.dirname(dst), { recursive: true });
-          fs.copyFileSync(src, dst);
+        try {
+          if (entry.isDirectory()) {
+            copyDirRecursive(src, dst);
+          } else {
+            fs.mkdirSync(path.dirname(dst), { recursive: true });
+            fs.copyFileSync(src, dst);
+          }
+          restored++;
+        } catch {
+          // Skip failed files
         }
-        restored++;
-      } catch {
-        // Skip failed files
       }
-    }
+    });
   }
 
   // Overwrite install.json with save's entries + current paths
@@ -756,10 +816,10 @@ export function restoreSaveCategory(
   if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
 
   let gameDir: string | null = null;
-  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-  else if (category === "userCfg") gameDir = gamePaths.videoPath;
+  if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-  else if (category === "video") gameDir = gamePaths.videoPath;
+  else if (category === "video") gameDir = gamePaths.userCfgPath;
 
   if (!gameDir) {
     log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
@@ -769,17 +829,19 @@ export function restoreSaveCategory(
   const saveDir = path.join(getBase(), "save", category);
   let restored = 0;
 
-  for (const name of [...catData.dirs, ...catData.files]) {
-    const src = path.join(saveDir, name);
-    if (!fs.existsSync(src)) continue;
-    const dst = path.join(gameDir, name);
-    try {
-      const isDir = fs.statSync(src).isDirectory();
-      if (isDir) copyDirRecursive(src, dst);
-      else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
-      restored++;
-    } catch { /* skip */ }
-  }
+  withUserCustomPreserved(gameDir, category, log, () => {
+    for (const name of [...catData.dirs, ...catData.files]) {
+      const src = path.join(saveDir, name);
+      if (!fs.existsSync(src)) continue;
+      const dst = path.join(gameDir, name);
+      try {
+        const isDir = fs.statSync(src).isDirectory();
+        if (isDir) copyDirRecursive(src, dst);
+        else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
+        restored++;
+      } catch { /* skip */ }
+    }
+  });
 
   // Update install.json
   const installData = loadInstallData();
@@ -817,10 +879,10 @@ export function restoreSaveItem(
   }
 
   let gameDir: string | null = null;
-  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-  else if (category === "userCfg") gameDir = gamePaths.videoPath;
+  if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-  else if (category === "video") gameDir = gamePaths.videoPath;
+  else if (category === "video") gameDir = gamePaths.userCfgPath;
 
   if (!gameDir) {
     log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
@@ -835,13 +897,15 @@ export function restoreSaveItem(
 
   const dst = path.join(gameDir, name);
   try {
-    if (fs.existsSync(dst)) {
-      if (fs.statSync(dst).isDirectory()) fs.rmSync(dst, { recursive: true, force: true });
-      else fs.unlinkSync(dst);
-    }
-    if (isDir) copyDirRecursive(src, dst);
-    else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
-    fs.rmSync(src, { recursive: true, force: true });
+    withUserCustomPreserved(gameDir, category, log, () => {
+      if (fs.existsSync(dst)) {
+        if (fs.statSync(dst).isDirectory()) fs.rmSync(dst, { recursive: true, force: true });
+        else fs.unlinkSync(dst);
+      }
+      if (isDir) copyDirRecursive(src, dst);
+      else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
+      fs.rmSync(src, { recursive: true, force: true });
+    });
   } catch (e: unknown) {
     log({ category: "file-ops", level: "error", message: `恢复失败：${name}`, detail: e instanceof Error ? e.message : String(e) });
     return false;
@@ -873,10 +937,10 @@ export function restoreResCategory(
   if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
 
   let gameDir: string | null = null;
-  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-  else if (category === "userCfg") gameDir = gamePaths.videoPath;
+  if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-  else if (category === "video") gameDir = gamePaths.videoPath;
+  else if (category === "video") gameDir = gamePaths.userCfgPath;
 
   if (!gameDir) {
     log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法恢复：${category}` });
@@ -886,21 +950,23 @@ export function restoreResCategory(
   const resDir = path.join(getBase(), "res", category);
   let restored = 0;
 
-  for (const name of [...catData.dirs, ...catData.files]) {
-    const src = path.join(resDir, name);
-    if (!fs.existsSync(src)) continue;
-    const dst = path.join(gameDir, name);
-    try {
-      if (fs.existsSync(dst)) {
-        if (fs.statSync(dst).isDirectory()) fs.rmSync(dst, { recursive: true, force: true });
-        else fs.unlinkSync(dst);
-      }
-      const isDir = fs.statSync(src).isDirectory();
-      if (isDir) copyDirRecursive(src, dst);
-      else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
-      restored++;
-    } catch { /* skip */ }
-  }
+  withUserCustomPreserved(gameDir, category, log, () => {
+    for (const name of [...catData.dirs, ...catData.files]) {
+      const src = path.join(resDir, name);
+      if (!fs.existsSync(src)) continue;
+      const dst = path.join(gameDir, name);
+      try {
+        if (fs.existsSync(dst)) {
+          if (fs.statSync(dst).isDirectory()) fs.rmSync(dst, { recursive: true, force: true });
+          else fs.unlinkSync(dst);
+        }
+        const isDir = fs.statSync(src).isDirectory();
+        if (isDir) copyDirRecursive(src, dst);
+        else { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); }
+        restored++;
+      } catch { /* skip */ }
+    }
+  });
 
   // Clear res
   fs.rmSync(resDir, { recursive: true, force: true });
@@ -926,10 +992,10 @@ export function clearInstallCategory(
   if (catData.files.length === 0 && catData.dirs.length === 0) return 0;
 
   let gameDir: string | null = null;
-  if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-  else if (category === "userCfg") gameDir = gamePaths.videoPath;
+  if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+  else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
   else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-  else if (category === "video") gameDir = gamePaths.videoPath;
+  else if (category === "video") gameDir = gamePaths.userCfgPath;
 
   if (!gameDir) {
     log({ category: "file-ops", level: "error", message: `未检测到游戏目录，无法卸载：${category}` });
@@ -937,11 +1003,13 @@ export function clearInstallCategory(
   }
 
   let removed = 0;
-  for (const name of [...catData.files, ...catData.dirs]) {
-    const isDir = catData.dirs.includes(name);
-    removeEntry(gameDir, name, isDir);
-    removed++;
-  }
+  withUserCustomPreserved(gameDir, category, log, () => {
+    for (const name of [...catData.files, ...catData.dirs]) {
+      const isDir = catData.dirs.includes(name);
+      removeEntry(gameDir, name, isDir);
+      removed++;
+    }
+  });
 
   catData.files = [];
   catData.dirs = [];
@@ -964,10 +1032,10 @@ export function openItem(
 
   if (storage === "install") {
     let gameDir: string | null = null;
-    if (category === "gameCfg") gameDir = gamePaths.cfgPath;
-    else if (category === "userCfg") gameDir = gamePaths.videoPath;
+    if (category === "gameCfg") gameDir = gamePaths.gameCfgPath;
+    else if (category === "userCfg") gameDir = gamePaths.userCfgPath;
     else if (category === "annotations") gameDir = gamePaths.annotationsPath;
-    else if (category === "video") gameDir = gamePaths.videoPath;
+    else if (category === "video") gameDir = gamePaths.userCfgPath;
     if (!gameDir) {
       log({ category: "file-ops", level: "error", message: `未检测到游戏目录` });
       return false;

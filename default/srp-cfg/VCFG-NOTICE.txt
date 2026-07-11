@@ -1,0 +1,21 @@
+CS2 owns VCFG persistence.
+
+- VCFG records current bindings and archived ConVars; it does not contain alias
+  implementations or SrP-CFG module files.
+- A binding such as "p -> srp_practice_keys" can sync to another machine only as a
+  command string. Runtime must register that alias there for the key to work.
+- Runtime Core does not reassert personal values, so game-menu changes can remain
+  under VCFG / Steam Cloud control.
+- user/custom.cfg may begin with one srp_apply_* command. That command establishes a
+  deterministic Preset starting point; later lines in the same file are user overrides.
+- If no srp_apply_* is enabled, Runtime registers features without reasserting a Preset.
+
+- Default, Echo, YSZH and VisionL are built-in examples in the single Runtime package.
+  They are selected with srp_apply_* rather than separate release archives.
+
+- srp_reset_valve uses CS2's binddefaults plus explicit Valve defaults for every
+  archived ConVar currently touched by SrP-CFG. It does not delete unknown VCFG state
+  or replace hardware-specific cs2_video.txt.
+
+SrP-CFG never distributes or writes VCFG, _lastclouded or remotecache.vdf files.
+The installer only reads their current shape and may save external JSON snapshots.

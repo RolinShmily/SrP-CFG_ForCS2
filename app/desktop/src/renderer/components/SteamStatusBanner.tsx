@@ -51,6 +51,7 @@ export default function SteamStatusBanner({ detection }: Props) {
       {issues.map((issue, i) => (
         <div
           key={i}
+          role="alert"
           className={`flex items-center justify-between px-4 py-3 rounded-[var(--radius)] border ${
             issue.type === "error"
               ? "bg-red/5 border-red/20 text-red"
@@ -67,8 +68,9 @@ export default function SteamStatusBanner({ detection }: Props) {
           </div>
           {issue.action && (
             <button
+              type="button"
               onClick={() => window.api.openExternal(issue.action!.url)}
-              className="flex items-center gap-1.5 px-3 py-1 text-xs rounded-[var(--radius-sm)] bg-transparent border border-current/30 hover:bg-current/10 transition-colors cursor-pointer"
+              className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-current/30 bg-transparent px-3 text-xs transition-colors hover:bg-current/10"
             >
               {issue.action.label}
               <ExternalLink size={12} />

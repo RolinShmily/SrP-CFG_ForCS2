@@ -1,19 +1,19 @@
 ---
-title: previewmode.cfg
+title: preview 模式
 description: 饰品截图模式，含景深、FOV 调节、摄像机锁定
 ---
 
-> 饰品预览检视工具配置文件
+> 设置文件：`srp-cfg/modes/preview/settings.cfg`
 
 ## 简介
 
-previewmode.cfg 提供饰品截图专用的预设环境。加载后自动关闭 HUD、开启景深效果、拉长 FOV、固定摄像机视角，方便拍摄饰品检视截图。
+preview 模式提供饰品截图专用的预设环境。加载后自动关闭 HUD、开启景深效果、拉长 FOV、固定摄像机视角，方便拍摄饰品检视截图。
 
 需要在自建房或作弊服务器中使用（需要 sv_cheats 权限）。
 
 ## 激活方式
 
-在 autoexec.cfg 中按 `9` 键加载。
+推荐输入 `srp_preview`，只应用预览模式设置。需要快捷键表时输入 `srp_preview_keys`，它会额外重绑方向键、`-`、`=`、`Z/X/C/V`；Default 案例中的 `9` 键调用该命令。
 
 ## 首次加载预设
 
@@ -26,7 +26,9 @@ previewmode.cfg 提供饰品截图专用的预设环境。加载后自动关闭 
 | FOV | 110 | 拉长视角，显示更多画面 |
 | 摄像机 | 固定 | 视角不会随鼠标移动，便于构图 |
 
-## 功能表
+## 可选按键表
+
+下表快捷键仅在执行 `srp_preview_keys` 后生效。使用 `srp_preview` 时，可通过 settings 文件定义的 alias 或控制台命令操作，不会自动占用这些实体键。
 
 | 功能 | 快捷键 | 控制台别名 |
 | :--- | :--- | :--- |
@@ -57,9 +59,10 @@ previewmode.cfg 提供饰品截图专用的预设环境。加载后自动关闭 
 
 ## 相关文件
 
-- [autoexec.cfg](/docs/autoexec) — 主配置，按 `9` 键加载本文件
+- [autoexec.cfg](/docs/autoexec) — v3 Runtime、内置 Preset 与用户层入口
 
 ## 注意事项
 
 - 仅在自建房/作弊服务器中有效（需要 sv_cheats 1）
 - 恢复默认请使用 `depre` 命令，而非手动逐项调整
+- `_keys` 入口产生的实体绑定会进入 user keys VCFG；`depre` 恢复画面设置，不负责恢复全部按键

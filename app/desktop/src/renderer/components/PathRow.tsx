@@ -7,9 +7,9 @@ interface Props {
 
 export default function PathRow({ label, value }: Props) {
   return (
-    <div className="flex items-center gap-3 text-sm">
+    <div className="flex items-start gap-3">
       <Folder size={14} className="text-text-faint flex-shrink-0" />
-      <span className="text-text-muted w-28 flex-shrink-0">{label}</span>
+      <span className="ui-caption w-32 flex-shrink-0">{label}</span>
       <span className={`font-mono text-xs break-all ${value ? "text-text-secondary" : "text-text-faint"}`}>
         {value ?? "未检测到"}
       </span>

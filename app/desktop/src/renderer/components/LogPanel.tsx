@@ -111,6 +111,8 @@ export default function LogPanel({ logs, onClear, isOpen, onToggle }: Props) {
   if (!isOpen) {
     return (
       <button
+        type="button"
+        aria-label="展开日志面板"
         onClick={onToggle}
         className="absolute top-2 right-2 z-10 p-2 bg-bg-card border border-border rounded-[var(--radius-sm)] text-text-muted hover:text-text hover:bg-bg-hover transition-colors cursor-pointer"
         title="展开日志面板"
@@ -144,6 +146,8 @@ export default function LogPanel({ logs, onClear, isOpen, onToggle }: Props) {
         </div>
         <div className="flex items-center gap-1">
           <button
+            type="button"
+            aria-label="清空日志"
             onClick={onClear}
             className="p-2 text-text-faint hover:text-text-muted transition-colors cursor-pointer bg-transparent border-none"
             title="清空日志"
@@ -151,6 +155,8 @@ export default function LogPanel({ logs, onClear, isOpen, onToggle }: Props) {
             <Trash2 size={14} />
           </button>
           <button
+            type="button"
+            aria-label="收起日志面板"
             onClick={onToggle}
             className="p-2 text-text-faint hover:text-text-muted transition-colors cursor-pointer bg-transparent border-none"
             title="收起日志面板"
@@ -188,19 +194,19 @@ function LogRow({ entry }: { entry: LogEntry }) {
   const categoryLabel = CATEGORY_LABELS[entry.category];
 
   return (
-    <div className="text-xs leading-snug px-2 py-1 rounded hover:bg-bg-hover/50 select-text">
-      <div className="flex items-start gap-2">
-        <span className="text-text-faint shrink-0 font-mono text-xs">{timeStr}</span>
-        <span className={`${categoryColor} shrink-0 font-semibold text-xs`}>
+    <div className="rounded px-2 py-1 text-xs leading-snug hover:bg-bg-hover/50 select-text">
+      <div className="grid grid-cols-[4rem_3.25rem_minmax(0,1fr)] items-start gap-x-2">
+        <span className="font-mono text-xs text-text-faint">{timeStr}</span>
+        <span className={`${categoryColor} font-semibold text-xs`}>
           [{categoryLabel}]
         </span>
-        <span className={`${levelStyle} text-xs`}>{entry.message}</span>
+        <span className={`${levelStyle} min-w-0 break-words text-xs`}>{entry.message}</span>
+        {entry.detail && (
+          <div className="col-start-3 mt-0.5 break-words text-xs leading-snug text-text-faint select-text">
+            {entry.detail}
+          </div>
+        )}
       </div>
-      {entry.detail && (
-        <div className="ml-[5.5rem] text-text-faint text-xs mt-0.5 select-text leading-snug">
-          {entry.detail}
-        </div>
-      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import type {
   Cs2InstallState,
   LogEntry,
 } from "../../renderer/types";
+import { inspectVcfgState } from "./vcfg";
 
 // ── Log helper type ──────────────────────────────────────────
 
@@ -237,12 +238,12 @@ export function detectAnnotationsPath(
   return null;
 }
 
-export function detectVideoCfgPath(
+export function detectUserCfgPath(
   steamRoot: string,
   userId: string,
   log: LogFn,
 ): string | null {
-  const videoCfgDir = path.join(
+  const userCfgDir = path.join(
     steamRoot,
     "userdata",
     userId,
@@ -251,33 +252,33 @@ export function detectVideoCfgPath(
     "cfg",
   );
 
-  if (fs.existsSync(videoCfgDir)) {
+  if (fs.existsSync(userCfgDir)) {
     log({
       category: "path-detection",
       level: "success",
-      message: `用户CFG(视频预设)路径：${videoCfgDir}`,
+      message: `账号本地状态目录：${userCfgDir}`,
     });
-    return videoCfgDir;
+    return userCfgDir;
   }
 
   try {
-    fs.mkdirSync(videoCfgDir, { recursive: true });
+    fs.mkdirSync(userCfgDir, { recursive: true });
     log({
       category: "path-detection",
       level: "success",
-      message: `用户CFG(视频预设)路径（已自动创建）：${videoCfgDir}`,
+      message: `账号本地状态目录（已自动创建）：${userCfgDir}`,
     });
     log({
       category: "path-detection",
       level: "warning",
       message: "首次创建可能需要启动一次游戏",
     });
-    return videoCfgDir;
+    return userCfgDir;
   } catch (e: any) {
     log({
       category: "path-detection",
       level: "error",
-      message: `无法创建用户CFG目录：${e.message}`,
+      message: `无法创建账号本地状态目录：${e.message}`,
     });
     return null;
   }
@@ -369,7 +370,8 @@ export async function detectAll(log: LogFn): Promise<DetectionResult> {
       cs2InstallDir: null,
       cs2CfgPath: null,
       annotationsPath: null,
-      videoCfgPath: null,
+      userCfgPath: null,
+      vcfgState: inspectVcfgState(null),
       steamUsers: [],
       currentUser: null,
       hasAutoLoginUser: false,
@@ -394,9 +396,9 @@ export async function detectAll(log: LogFn): Promise<DetectionResult> {
     log,
   );
 
-  let videoCfgPath: string | null = null;
+  let userCfgPath: string | null = null;
   if (currentUser) {
-    videoCfgPath = detectVideoCfgPath(steamPath, currentUser.accountId, log);
+    userCfgPath = detectUserCfgPath(steamPath, currentUser.accountId, log);
   }
 
   return {
@@ -405,7 +407,8 @@ export async function detectAll(log: LogFn): Promise<DetectionResult> {
     cs2InstallDir,
     cs2CfgPath,
     annotationsPath,
-    videoCfgPath,
+    userCfgPath,
+    vcfgState: inspectVcfgState(userCfgPath),
     steamUsers: users,
     currentUser,
     hasAutoLoginUser,

@@ -8,35 +8,16 @@ import {
   Loader2,
 } from "lucide-react";
 import { REPO_URL, dl } from "../lib/downloads";
+import PageHeader from "../components/PageHeader";
 
 const packages = [
   {
-    name: "Default 默认版",
-    desc: "完整的默认配置包，包含准星视角、跑图练习、demo 录制等全部功能",
-    file: "Allcfgs.zip",
-    url: dl("Allcfgs.zip"),
+    name: "Runtime Core",
+    desc: "唯一配置包：功能 Runtime、用户 custom.cfg、Default/Echo/YSZH/VisionL 案例与 Valve 重置基线",
+    file: "SrP-CFG_Runtime_Core.zip",
+    url: dl("SrP-CFG_Runtime_Core.zip"),
+    badge: "RUNTIME + USER",
     featured: true,
-  },
-  {
-    name: "Echo 定制版",
-    desc: "基于默认配置的 Echo 个人定制版本",
-    file: "Allcfgs_echo.zip",
-    url: dl("Allcfgs_echo.zip"),
-    featured: false,
-  },
-  {
-    name: "YSZH 定制版",
-    desc: "基于默认配置的 YSZH 个人定制版本",
-    file: "Allcfgs_yszh.zip",
-    url: dl("Allcfgs_yszh.zip"),
-    featured: false,
-  },
-  {
-    name: "VisionL 定制版",
-    desc: "基于默认配置的 VisionL 个人定制版本",
-    file: "Allcfgs_visionl.zip",
-    url: dl("Allcfgs_visionl.zip"),
-    featured: false,
   },
 ];
 
@@ -55,15 +36,23 @@ export default function DownloadPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-2xl font-bold">预设包下载</h1>
+      <PageHeader
+        title="配置包下载"
+        description="获取 v3 唯一 Runtime Core；内置 Preset 与用户入口已经包含在同一个包中。"
+      />
 
-      {/* Preset packages grid */}
-      <div>
-        <h2 className="font-display text-lg font-semibold mb-4 flex items-center gap-2">
+      <div className="ui-body bg-accent-bg border border-accent/20 rounded-[var(--radius)] px-4 py-3">
+        现在只发行 Runtime Core。安装后到「我的配置」选择 Default、Echo、YSZH 或 VisionL 作为 custom.cfg 起点，
+        再把个人差异写在下面；也可以不选择 Preset，继续让 VCFG 管理普通游戏设置。
+      </div>
+
+      {/* Runtime package */}
+      <section>
+        <h2 className="ui-section-title mb-4 flex items-center gap-2">
           <Package size={18} className="text-teal" />
-          配置预设包
+          v3 配置包
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {packages.map((pkg) => (
             <div
               key={pkg.file}
@@ -85,30 +74,31 @@ export default function DownloadPage() {
                       className={pkg.featured ? "text-accent" : "text-text-muted"}
                     />
                   </div>
-                  {pkg.featured && (
-                    <span className="text-[11px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-accent text-bg flex items-center gap-1">
-                      <Star size={10} />
-                      DEFAULT
-                    </span>
-                  )}
+                  <span className={`flex items-center gap-1 rounded px-2 py-1 font-mono text-xs font-semibold ${
+                    pkg.featured ? "bg-accent text-bg" : "bg-bg-raised text-text-faint border border-border"
+                  }`}>
+                    {pkg.featured && <Star size={12} />}
+                    {pkg.badge}
+                  </span>
                 </div>
               </div>
-              <h3 className="font-display text-base font-semibold mb-1 group-hover:text-accent transition-colors">
+              <h3 className="ui-section-title mb-1 transition-colors group-hover:text-accent">
                 {pkg.name}
               </h3>
-              <p className="text-xs text-text-secondary font-light leading-[1.7] mb-3">
+              <p className="ui-body mb-3">
                 {pkg.desc}
               </p>
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-text-faint">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="break-all font-mono text-xs text-text-faint">
                   {pkg.file}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={() => handleDownloadInApp(pkg.url, pkg.file)}
                     disabled={downloading !== null}
                     title="下载到应用内，可在安装页直接使用"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-sm)] font-display text-xs font-medium bg-accent text-bg hover:bg-accent-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer border-none"
+                    className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border-none bg-accent px-3 text-xs font-medium text-bg transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {downloading === pkg.file ? (
                       <Loader2 size={12} className="animate-spin" />
@@ -118,9 +108,11 @@ export default function DownloadPage() {
                     下载到应用
                   </button>
                   <button
+                    type="button"
+                    aria-label="在浏览器中下载 Runtime Core"
                     onClick={() => window.api.openExternal("https://cfg.srprolin.top/download/")}
                     title="在浏览器中下载"
-                    className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-sm)] bg-transparent border border-border cursor-pointer text-text-muted hover:text-accent hover:bg-accent-bg transition-colors"
+                    className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-transparent text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
                   >
                     <ExternalLink size={14} />
                   </button>
@@ -129,7 +121,7 @@ export default function DownloadPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Info box */}
       <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 flex gap-4">
@@ -137,11 +129,12 @@ export default function DownloadPage() {
           <Info size={18} className="text-accent" />
         </div>
         <div>
-          <h4 className="font-display text-sm font-semibold mb-1">使用说明</h4>
-          <p className="text-sm text-text-secondary font-light leading-[1.7]">
-            「下载到应用」会将预设包保存到应用管理目录，在安装页面的「已下载预设包」中可直接选择安装。
+          <h2 className="ui-panel-title mb-1">使用说明</h2>
+          <p className="ui-body">
+            「下载到应用」会将配置包保存到应用管理目录，在安装页面的「已下载配置包」中可直接选择安装。
             所有文件也可在{" "}
             <button
+              type="button"
               onClick={() =>
                 window.api.openExternal(
                   `${REPO_URL}/releases`,

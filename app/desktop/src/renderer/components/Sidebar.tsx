@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { ArrowDownToLine, FileText, Play, Clock, Info, RefreshCw, Package, Globe, Layers, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { ArrowDownToLine, FileText, Play, Clock, Info, RefreshCw, Package, Globe, Layers, PanelLeftClose, PanelLeftOpen, UserRoundCog } from "lucide-react";
 import type { Page } from "../App";
 
 const items: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: "quickstart", label: "快速开始", icon: <Play size={20} /> },
   { id: "download", label: "下载", icon: <ArrowDownToLine size={20} /> },
   { id: "install", label: "安装", icon: <FileText size={20} /> },
-  { id: "backup", label: "备份与恢复", icon: <Clock size={20} /> },
-  { id: "applied", label: "已应用配置", icon: <Layers size={20} /> },
+  { id: "personalize", label: "我的配置", icon: <UserRoundCog size={20} /> },
+  { id: "backup", label: "恢复中心", icon: <Clock size={20} /> },
+  { id: "applied", label: "当前安装", icon: <Layers size={20} /> },
   { id: "about", label: "关于", icon: <Info size={20} /> },
 ];
 
@@ -84,6 +85,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
     >
       {/* Collapse / Expand toggle */}
       <button
+        type="button"
         onClick={() => setWidth(collapsed ? DEFAULT_WIDTH : MIN_WIDTH)}
         title={collapsed ? "展开侧栏" : "收起侧栏"}
         className={`w-full flex items-center gap-2.5 py-2.5 cursor-pointer bg-transparent border-none text-text-muted hover:text-text hover:bg-bg-hover transition-colors ${collapsed ? "justify-center" : "px-4"}`}
@@ -97,22 +99,25 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
         <img
           src="./favicon.ico"
           alt="SrP-CFG"
-          className="w-16 h-16 rounded-[10px] object-contain"
+          className="h-16 w-16 rounded-[var(--radius)] object-contain"
         />
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 space-y-1">
+      <nav className="flex-1 min-h-0 overflow-y-auto px-3 space-y-1">
         {items.map((item) => (
           <button
+            type="button"
             key={item.id}
             onClick={() => onNavigate(item.id)}
+            aria-current={current === item.id ? "page" : undefined}
+            aria-label={collapsed ? item.label : undefined}
             title={collapsed ? item.label : undefined}
             className={`w-full flex items-center gap-3 rounded-[6px] font-display text-sm font-medium transition-all duration-200 cursor-pointer border-none ${
               collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5"
             } ${
               current === item.id
-                ? "bg-accent-bg text-accent"
+                ? "bg-accent-bg text-accent shadow-[inset_2px_0_0_var(--color-accent)]"
                 : "bg-transparent text-text-muted hover:text-text hover:bg-bg-hover"
             }`}
           >
@@ -127,6 +132,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
         {/* Project website */}
         {!collapsed ? (
           <button
+            type="button"
             onClick={handleOpenWebsite}
             className="w-full flex items-center gap-2.5 px-4 py-2 text-text-muted hover:text-accent hover:bg-bg-hover transition-colors cursor-pointer bg-transparent border-none"
           >
@@ -135,6 +141,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
           </button>
         ) : (
           <button
+            type="button"
             onClick={handleOpenWebsite}
             title="项目官网"
             className="w-full flex items-center justify-center py-2.5 text-text-muted hover:text-accent hover:bg-bg-hover transition-colors cursor-pointer bg-transparent border-none"
@@ -146,6 +153,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
         {/* Check for updates */}
         {!collapsed ? (
           <button
+            type="button"
             onClick={onCheckUpdate}
             className="w-full flex items-center gap-2.5 px-4 py-2 text-text-muted hover:text-accent hover:bg-bg-hover transition-colors cursor-pointer bg-transparent border-none"
           >
@@ -154,6 +162,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
           </button>
         ) : (
           <button
+            type="button"
             onClick={onCheckUpdate}
             title="检查更新"
             className="w-full flex items-center justify-center py-2.5 text-text-muted hover:text-accent hover:bg-bg-hover transition-colors cursor-pointer bg-transparent border-none"
@@ -166,7 +175,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
         <div className={`flex items-center gap-2 px-4 py-2.5 ${collapsed ? "justify-center" : ""}`}>
           <Package size={14} className="text-text-faint shrink-0" />
           {!collapsed && (
-            <span className="font-mono text-xs text-text-faint tracking-wider">
+            <span className="font-mono text-xs text-text-faint">
               v{version}
               {latestVersion && latestVersion !== version && (
                 <span className="text-accent ml-1">(最新 v{latestVersion})</span>

@@ -23,28 +23,11 @@ export const installers = [
 
 export const packages = [
   {
-    name: "Default 默认版",
-    file: "Allcfgs.zip",
-    url: dl("Allcfgs.zip"),
-    desc: "官方完整版预设，包含全部 CFG 和地图指南",
+    name: "Runtime Core",
+    file: "SrP-CFG_Runtime_Core.zip",
+    url: dl("SrP-CFG_Runtime_Core.zip"),
+    desc: "唯一配置包：Runtime + User + 内置 Preset 案例；在 custom.cfg 中选择起点并写入个人差异",
+    badge: "推荐",
     featured: true,
-  },
-  {
-    name: "Echo 定制版",
-    file: "Allcfgs_echo.zip",
-    url: dl("Allcfgs_echo.zip"),
-    desc: "Echo 用户定制版，覆盖 custom.cfg",
-  },
-  {
-    name: "YSZH 定制版",
-    file: "Allcfgs_yszh.zip",
-    url: dl("Allcfgs_yszh.zip"),
-    desc: "YSZH 用户定制版，覆盖 custom.cfg",
-  },
-  {
-    name: "VisionL 定制版",
-    file: "Allcfgs_visionl.zip",
-    url: dl("Allcfgs_visionl.zip"),
-    desc: "VisionL 用户定制版，覆盖 custom.cfg",
   },
 ];

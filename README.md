@@ -1,189 +1,194 @@
-<h1 align="center">SrP-CFG</h1>
-<h4 align="center">适用于CS2各场景的CFG预设文件</h4>
+# SrP-CFG for CS2
 
-<div align="center">
+SrP-CFG v3 是一套面向 Counter-Strike 2 的“功能 Runtime + 内置 Preset + 用户配置”系统。VCFG 继续由 CS2 / Steam Cloud 管理；SrP-CFG 负责 VCFG 无法保存的 alias、模块、注释和可审查的配置起点。
 
-<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/app/website/public/favicon.ico" alt="图标">
-
-[![stars](https://img.shields.io/github/stars/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=green)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
-[![fork](https://img.shields.io/github/forks/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=critical)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
-![license](https://img.shields.io/github/license/RolinShmily/SrP-CFG_ForCS2)
-[![release](https://img.shields.io/github/release/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=blue)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-
-</div>
-
-## 📖 简介
-
-> 所有的 CFG 在运行后都会在控制台输出导航信息，请注意查看。
-
-文件功能表：
-
-|                             功能                              |         文件         |
-| :-----------------------------------------------------------: | :------------------: |
-|                        自启动基础设置                         |    `autoexec.cfg`    |
-|                        准星与持枪视角                         | `crosshair_view.cfg` |
-|                        个人自建房跑图                         |    `practice.cfg`    |
-| 使用[HLAE](https://github.com/advancedfx/advancedfx)观看 demo |   `demo_hlae.cfg`    |
-|                         匕首模型切换                          |     `knife.cfg`      |
-|                        电击枪快速切换                         |      `zeus.cfg`      |
-|                       武器自适应视角切换                       |    `autoview.cfg`    |
-|                       饰品预览检视工具模式                    |    `previewmode.cfg`    |
-|                       地图指南制作模式                        |    `guidemake.cfg`    |
-|                       各大地图指南预设                        | `annotations/dust2`等  |
-|                           视频设置                            |   `cs2_video.txt`    |
-
-你会需要的链接：
-
-- [项目文档](https://cfg.srprolin.top/docs) 
-- [下载地址](https://cfg.srprolin.top/download) 
-- [关于CFG你要了解的二三事](https://blog.srprolin.top/posts/srp-cfg/) 
-
-官网与程序界面展示：
-
-![](app/website/public/image.png)
-
-![](app/desktop/resources/image1.png)
-
-![](app/desktop/resources/image2.png)
-
-## 🛠 Installer 安装器
-
-在[Release](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)和[项目官网](https://cfg.srprolin.top/)中均可下载 MSI 安装包或便携版 ZIP，安装/解压后即可使用。
-
-Electron 桌面应用，基于 React + TypeScript + Tailwind CSS，运行后直接拖入下载好的 `zip` 包或 `CFG`/`TXT` 文件即可安装本预设。
-
-### ✏️ 功能说明 (Features)
-- 自动检测 Steam 路径、CS2 游戏目录和用户配置路径（支持一键刷新）
-- 自动检测 Steam 用户并支持手动选择
-- 两种安装模式：覆盖安装（清空重装）和追加安装（合并保留）
-- 覆盖安装时自动检测冲突文件，冲突项移至恢复区并记录到 `res.json`
-- 第二次覆盖安装时自动备份当前恢复区到 `save/`，支持一键恢复
-- 追加安装时检测同名冲突（超过 3 个自动拒绝，1–3 个弹窗确认）
-- 安装状态通过 `install.json` 追踪，支持逐项快速删除
-- 支持拖入 `zip` 包、`cfg`/`txt` 单文件或文件夹自动识别并安装
-- 内置预设包快捷下载（最多保存 5 个下载记录）
-- 上传文件最多保存 5 条记录，支持手动管理
-- 实时日志输出，清晰的安装进度反馈
-- 直接复制配置文件到游戏目录，无需提权或管理员权限
-- 自动检查版本更新（GitHub Releases）
-
-## 🌳项目结构
-
-```
-SrP-CFG_ForCS2/
-├── default/                  # 默认配置（官方完整版）
-│   ├── autoexec.cfg          # 自启动基础设置
-│   ├── custom.cfg            # 用户定制化覆盖占位（默认为空）
-│   ├── crosshair_view.cfg    # 准星与持枪视角
-│   ├── practice.cfg          # 个人自建房跑图
-│   ├── demo_hlae.cfg         # HLAE 观看 demo
-│   ├── knife.cfg             # 匕首模型切换
-│   ├── zeus.cfg              # 电击枪快速切换
-│   ├── autoview.cfg          # 武器自适应视角切换
-│   ├── previewmode.cfg       # 饰品预览检视工具模式
-│   ├── guidemake.cfg         # 地图指南制作模式
-│   ├── cs2_video.txt         # 视频设置
-│   ├── annotations/          # 各大地图指南预设
-│   ├── crosshair_library/    # 准星库
-│   └── spawn/                # 出生点配置
-├── custom/                   # 定制版覆盖配置（替换 default/custom.cfg）
-│   ├── echo/custom.cfg       # Echo 定制版覆盖
-│   ├── yszh/custom.cfg       # yszh 定制版覆盖
-│   └── visionl/custom.cfg    # VisionL 定制版覆盖
-├── app/                      # Monorepo 应用层（pnpm workspaces）
-│   ├── website/              # Astro 静态站点（官网，VitePress 风格文档）
-│   ├── desktop/              # Electron 桌面安装器（Vite + React + TS）
-│   └── shared/               # 共享代码
-│       ├── content/          # MDX 文档内容
-│       ├── types/            # 共享类型定义
-│       └── ui/               # React UI 组件库
-├── msi/                      # WiX v6 MSI 安装包项目
-│   ├── Package.wxs           # MSI 包定义
-│   └── Setup.wixproj         # WiX 项目文件
-├── .github/                  # CI/CD 与发布配置
-│   ├── workflows/            # GitHub Actions 工作流
-│   ├── scripts/              # 构建/发布辅助脚本
-│   ├── packages.yaml         # 打包配置
-│   ├── upload-presets.yaml    # 预设包 OSS 上传配置
-│   ├── upload-desktop.yaml    # 桌面端 OSS 上传配置
-│   └── release/template.md   # Release Notes 模板
-└── README.md
+```text
+CS2 载入 VCFG 当前状态
+        ↓
+Runtime 注册功能与 alias
+        ↓
+user/custom.cfg
+  ├─ 可选：srp_apply_default / echo / yszh / visionl
+  └─ 用户自己的最终覆盖
+        ↓
+CS2 之后可能把最终绑定与可归档 ConVar 写回 VCFG
 ```
 
-### 📦 运行环境（Runtime Requirements）
+## 唯一配置包
 
-本项目为 pnpm monorepo，包含 Astro 官网和 Electron 桌面应用。
+v3 只发行：
 
-**用户运行：**
+```text
+SrP-CFG_Runtime_Core.zip
+```
 
-Release 提供 MSI 安装包和便携版 ZIP，下载后直接使用。配置文件直接复制到游戏目录，无需提权。
+它已经包含完整 Runtime、`user/custom.cfg`、Default / Echo / YSZH / VisionL 内置 Preset、Valve 重置基线、全部 Feature / Mode 与帮助文件。Preset 是 Runtime 内的可调用配置起点，不再是独立下载包，也没有 `startup.cfg` 自动选择层。
 
-**开发者环境：**
+## 用户的两种使用方式
 
-- [Node.js](https://nodejs.org/) 22+
-- [pnpm](https://pnpm.io/) 10+
-- [WiX Toolset v6](https://wixtoolset.org/) — 构建 MSI 安装包
+普通用户只需要维护：
 
-### 💻 开发
+```text
+srp-cfg/user/custom.cfg
+```
+
+### 只使用功能模板
+
+不启用任何 `srp_apply_*`：
+
+```cfg
+// srp_apply_default
+// srp_apply_echo
+// srp_apply_yszh
+// srp_apply_visionl
+```
+
+Runtime 每次启动只注册功能和 alias，不主动覆盖普通偏好与实体键位。灵敏度、准星、HUD 和按键可以继续在游戏里修改并由 VCFG / Steam Cloud 保存。
+
+### 使用 Preset 起点并叠加个人差异
+
+在 `custom.cfg` 顶部启用一个命令，再把自己的设置写在下面：
+
+```cfg
+srp_apply_yszh
+
+// 我的最终覆盖
+sensitivity 0.95
+c06
+cyan
+bind "mouse5" "+voicerecord"
+```
+
+每次启动的实际顺序是“YSZH 起点 → 个人覆盖”。Default、Echo、YSZH、VisionL 与仓库外用户处于同一层级：它们只是可以复用、查看和修改的案例。
+
+选择 Preset 后，它涉及的字段会在每次启动或 `srp_reload` 时重新应用。在游戏菜单里对这些字段做的修改若要长期保留，应同步写到 `custom.cfg` 的 Preset 命令之后；若希望完全由游戏保存，则注释掉 `srp_apply_*`。
+
+## YSZH 用户流程
+
+1. 下载并安装 `SrP-CFG_Runtime_Core.zip`。
+2. 在桌面端打开“我的配置”。
+3. 选择 `srp_apply_yszh`，或直接把它写在 `custom.cfg` 顶部。
+4. 在下面写入自己的灵敏度、准星、画面偏好和按键差异。
+5. 保存后启动 CS2；若游戏已运行，在控制台执行 `srp_reload`。
+6. 后续改动继续写在这一个文件中，安装器更新、回滚和卸载 Runtime 都会保护它。
+
+四个内置入口是：
+
+```text
+srp_apply_default
+srp_apply_echo
+srp_apply_yszh
+srp_apply_visionl
+```
+
+这些命令只加载对应 Preset，不会自己再次执行 `custom.cfg`。因此它们可安全地写进 `custom.cfg`；若在控制台单独运行，则只会立即应用 Preset，运行 `srp_reload` 才会重放完整的“Runtime → custom.cfg”链。
+
+## Valve 基线重置
+
+```text
+srp_reset_valve
+srp_reset_valve_settings
+srp_reset_valve_keys
+srp_reset_valve_user
+```
+
+- `srp_reset_valve_keys` 调用当前 CS2 自带的 `binddefaults`。
+- `srp_reset_valve_settings` 恢复 SrP-CFG 实际涉及的 Valve 默认偏好与少量会话画面状态。
+- `srp_reset_valve` 同时执行二者，但故意不重放 `custom.cfg`，便于在 Valve 基线上测试。
+- `srp_reset_valve_user` 会在重置后立即执行 `custom.cfg`。
+
+重置不会删除或直接覆盖 `.vcfg`、`_lastclouded`、`remotecache.vdf`，也不会修改硬件相关的 `cs2_video.txt`。完成纯基线测试后，执行 `srp_reload` 即可返回自己的正常配置链。
+
+## 启动入口
+
+`default/autoexec.cfg` 只有两步：
+
+```cfg
+exec srp-cfg/runtime/init.cfg
+execifexists srp-cfg/user/custom.cfg
+```
+
+`runtime/init.cfg` 先注册命令、alias 与模块实现，随后 `custom.cfg` 决定是否调用内置 Preset，并执行个人覆盖。v2 的 `profiles/`、`selectors/`、`generated/` 与 v3 早期方案中的 `startup.cfg` 都已删除：现在不再由打包流程替用户选择配置。
+
+## 统一模块结构
+
+每个 Feature 和 Mode 都采用相同结构：
+
+```text
+<module>/
+├── runtime.cfg       # 持久 alias；Runtime 每次启动注册
+├── settings.cfg      # 功能或模式状态，不修改物理按键
+├── keymap.cfg        # 只包含实体键位操作
+├── with-keymap.cfg   # 先 settings，再 keymap
+└── help.cfg          # 控制台黑话、命令与使用说明
+```
+
+普通入口只应用设置，带 `_keys` 的入口才修改实体键位，例如：
+
+```text
+srp_practice       / srp_practice_keys
+srp_preview        / srp_preview_keys
+srp_guidemake      / srp_guidemake_keys
+srp_demo           / srp_demo_keys
+srp_crosshair_view / srp_crosshair_view_keys
+```
+
+输入 `srp_help` 可查看全部帮助主题。
+
+## 目录结构
+
+```text
+default/
+├── autoexec.cfg
+├── annotations/
+├── video/
+└── srp-cfg/
+    ├── runtime/
+    ├── helps/
+    ├── features/
+    ├── modes/
+    ├── presets/
+    │   ├── valve/
+    │   ├── default/
+    │   ├── echo/
+    │   ├── yszh/
+    │   └── visionl/
+    └── user/
+```
+
+`default/` 根目录不再保留 v2 的散装功能 CFG。`annotations/` 和 `video/` 是特殊安装类别，其余配置统一位于 `srp-cfg/`。
+
+## VCFG 边界
+
+- VCFG 保存当前绑定和可归档 ConVar，不保存 alias 实现、模块依赖、注释或项目版本结构。
+- CFG 执行后的绑定与可归档值仍可能被 CS2 保存到 VCFG；把 CFG 放入游戏目录并不会隔离 Steam Cloud。
+- 安装器只读解析 VCFG 并保存外部 JSON 基线，不直接写回游戏管理文件。
+- `cs2_video.txt` 是独立视频资产，不属于 VCFG，也不适合作为跨硬件通用基线。
+
+## 本地开发
+
+环境要求：Node.js 22+、pnpm 10+；构建 MSI 还需要 .NET 8 SDK 与 WiX Toolset v6。
 
 ```bash
-# 安装依赖
 pnpm install
-
-# 启动官网开发服务器
 pnpm dev:web
-
-# 启动桌面应用
 pnpm dev:desktop
-```
-
-### 🚀 构建（Build）
-
-```bash
-# 构建官网
 pnpm build:web
-
-# 打包桌面应用（Electron Forge）
-pnpm package:desktop
-
-# 构建 MSI 安装包（自动先打包桌面应用）
-pnpm build:msi
+pnpm build:desktop
+dotnet build msi -c Release
 ```
 
-### 📀 安装方式
-
-**MSI 安装包** — 基于 [WiX Toolset v6](https://wixtoolset.org/)，通过 Windows 原生安装机制提升系统信任度。
-
-输出：`msi/bin/Release/SrP-CFG_Installer_Setup.msi`
-
-特性：
-- 标准安装向导（欢迎 → 许可协议 → 安装路径 → 进度 → 完成）
-- 安装到 `Program Files`，创建开始菜单和桌面快捷方式
-- 支持"程序与功能"卸载
-
-**便携版** — `pnpm package:desktop` 打包输出的目录即为便携版，将整个目录压缩为 ZIP（`SrP-CFG_Installer.zip`）即可分发。解压即用，不写注册表、不注册服务，适合 U 盘携带或多实例隔离场景。
-
-### 🌐 官网部署（Cloudflare Workers）
-
-官网部署在 [Cloudflare Workers](https://workers.cloudflare.com/)，push 到 `main` 且 `app/website/` 有变更时通过 GitHub Actions 自动部署。
-
-所需 GitHub Secrets：
-
-| Secret | 说明 |
-|--------|------|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare API Token |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare 账户 ID |
-
-手动部署：
+CFG 与唯一发行包校验：
 
 ```bash
-# 首次使用需登录 Cloudflare
-cd app/website && npx wrangler login
-
-# 构建并部署
-pnpm deploy:web
+python .github/scripts/validate_cfg.py
+python .github/scripts/parse_packages.py
+python .github/scripts/build_packages.py
+python .github/scripts/validate_cfg.py --packages
 ```
 
-## 🏠 仓库活动
+## 链接
 
-![仓库活动](https://repobeats.axiom.co/api/embed/55700fe0f86a32b2418b023fa87c8ec214153ef0.svg "Repobeats analytics image")
+- 官网：<https://srprolin.top>
+- GitHub：<https://github.com/RolinShmily/SrP-CFG_ForCS2>
+- Releases：<https://github.com/RolinShmily/SrP-CFG_ForCS2/releases>

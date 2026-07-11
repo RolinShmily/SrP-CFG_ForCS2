@@ -2,15 +2,15 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import Card from "../components/Card.astro";
-import { Download, FileText, Info, Package } from "lucide-astro";
+import { Download, Info, Package } from "lucide-astro";
 import { installers, packages } from "../data/downloads";
 import { RELEASES_URL } from "../data/navigation";
 ---
 
-<MainLayout title="下载 — SrP-CFG" description="下载 SrP-CFG 安装器和配置预设包">
+<MainLayout title="下载 — SrP-CFG" description="下载 SrP-CFG 安装器和 v3 配置包">
   <section class="pt-[80px] sm:pt-[100px] md:pt-[120px] pb-10 sm:pb-12 md:pb-16">
     <div class="max-w-[1200px] mx-auto px-5 sm:px-7">
-      <SectionHeader label="Download" title="下载中心" description="获取安装器或直接下载配置预设包，所有文件均可通过拖拽安装" />
+      <SectionHeader label="Download" title="下载中心" description="获取安装器或直接下载 v3 配置包，所有文件均可通过拖拽安装" />
 
       <div class="mb-20">
         <h2 class="font-display text-2xl font-semibold mb-8 flex items-center gap-3">
@@ -41,9 +41,13 @@ import { RELEASES_URL } from "../data/navigation";
       <div>
         <h2 class="font-display text-2xl font-semibold mb-8 flex items-center gap-3">
           <Package class="w-6 h-6 text-teal" />
-          配置预设包
+          v3 配置包
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="mb-6 p-4 bg-accent-bg border border-[rgba(232,121,12,0.18)] rounded-[8px] text-sm text-text-secondary leading-[1.75]">
+          现在只发行 Runtime Core。安装后在 <code>user/custom.cfg</code> 中启用一个
+          <code>srp_apply_*</code> 作为起点，再把个人差异写在下面；也可以完全交给 VCFG。
+        </div>
+        <div class="grid grid-cols-1 gap-5">
           {packages.map((pkg) => (
             <Card href={pkg.url} class:list={["p-6", pkg.featured && "border-accent/20"]}>
               <div class="flex items-center gap-3 mb-3">
@@ -53,9 +57,10 @@ import { RELEASES_URL } from "../data/navigation";
                 ]}>
                   <Download class:list={["w-[18px] h-[18px]", pkg.featured ? "text-accent" : "text-text-muted"]} stroke-width="1.8" />
                 </div>
-                {pkg.featured && (
-                  <span class="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-accent text-bg">DEFAULT</span>
-                )}
+                <span class:list={[
+                  "text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded",
+                  pkg.featured ? "bg-accent text-bg" : "bg-bg-raised text-text-faint border border-border",
+                ]}>{pkg.badge}</span>
               </div>
               <h3 class="font-display text-lg font-semibold mb-1.5 group-hover:text-accent transition-colors">{pkg.name}</h3>
               <p class="text-xs text-text-secondary font-light leading-[1.75] mb-4">{pkg.desc}</p>
@@ -72,7 +77,7 @@ import { RELEASES_URL } from "../data/navigation";
         <div>
           <h4 class="font-display text-base font-semibold mb-1">使用说明</h4>
           <p class="text-sm text-text-secondary font-light leading-[1.75]">
-            下载安装器后双击运行，将配置预设包（ZIP）直接拖入窗口即可自动完成安装。所有文件也可在
+            下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。所有文件也可在
             <a href={RELEASES_URL} target="_blank" rel="noopener" class="text-accent hover:underline">GitHub Releases</a>
             找到。
           </p>
