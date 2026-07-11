@@ -125,7 +125,7 @@ alias 需要一个很小的 `runtime.cfg`，因为把它与会立即执行的设
 ## 目录树
 
 ```text
-default/
+config/
 ├── autoexec.cfg
 ├── annotations/
 ├── video/

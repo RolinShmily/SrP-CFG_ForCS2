@@ -12,7 +12,7 @@ import yaml
 
 
 ROOT = Path.cwd()
-DEFAULT_ROOT = ROOT / "default"
+CONFIG_ROOT = ROOT / "config"
 PACKAGES_FILE = ROOT / ".github" / "packages.yaml"
 V3_ROOT_ENTRIES = {"autoexec.cfg", "annotations", "video", "srp-cfg"}
 V3_ROOT_DIRECTORIES = {"annotations", "video", "srp-cfg"}
@@ -138,6 +138,19 @@ def validate_cfg_syntax(name: str, text: str) -> None:
             )
 
 
+def validate_editable_line_comments(name: str, text: str) -> None:
+    """Require a local explanation for every user-editable command line."""
+    for line_number, raw_line in enumerate(text.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("//"):
+            continue
+        if "//" not in raw_line:
+            raise ValidationError(
+                f"Editable CFG command is missing an inline comment: "
+                f"{name}:{line_number}: {stripped}"
+            )
+
+
 def assert_no_cycles(graph: dict[str, list[str]], start: str, label: str) -> None:
     active: list[str] = []
     visited: set[str] = set()
@@ -247,7 +260,7 @@ def validate_valve_reset_coverage(cfg_text: dict[str, str]) -> None:
 
 
 def validate_preset_layout(names: dict[str, Path]) -> None:
-    preset_root = DEFAULT_ROOT / "srp-cfg" / "presets"
+    preset_root = CONFIG_ROOT / "srp-cfg" / "presets"
     actual_presets = {path.name for path in preset_root.iterdir() if path.is_dir()}
     if actual_presets != PRESET_NAMES:
         raise ValidationError(
@@ -321,7 +334,7 @@ def validate_preset_layout(names: dict[str, Path]) -> None:
 
 def validate_module_layout(names: dict[str, Path], cfg_text: dict[str, str]) -> None:
     for family in ("features", "modes"):
-        family_root = DEFAULT_ROOT / "srp-cfg" / family
+        family_root = CONFIG_ROOT / "srp-cfg" / family
         for module_dir in sorted(path for path in family_root.iterdir() if path.is_dir()):
             module = module_dir.name
             prefix = f"srp-cfg/{family}/{module}"
@@ -369,47 +382,47 @@ def validate_module_layout(names: dict[str, Path], cfg_text: dict[str, str]) -> 
 
 
 def validate_source() -> None:
-    root_entries = {entry.name: entry for entry in DEFAULT_ROOT.iterdir()}
+    root_entries = {entry.name: entry for entry in CONFIG_ROOT.iterdir()}
     unexpected_root_entries = sorted(set(root_entries).difference(V3_ROOT_ENTRIES))
     if unexpected_root_entries:
         raise ValidationError(
-            "default/ root contains files outside the v3 layout: "
+            "config/ root contains files outside the v3 layout: "
             + ", ".join(unexpected_root_entries)
         )
 
     missing_root_entries = sorted(V3_ROOT_ENTRIES.difference(root_entries))
     if missing_root_entries:
         raise ValidationError(
-            "default/ root is missing required v3 entries: "
+            "config/ root is missing required v3 entries: "
             + ", ".join(missing_root_entries)
         )
 
     if not root_entries["autoexec.cfg"].is_file():
-        raise ValidationError("default/autoexec.cfg must be a file")
+        raise ValidationError("config/autoexec.cfg must be a file")
     invalid_directories = sorted(
         name for name in V3_ROOT_DIRECTORIES if not root_entries[name].is_dir()
     )
     if invalid_directories:
         raise ValidationError(
-            "default/ v3 directory entries are not directories: "
+            "config/ v3 directory entries are not directories: "
             + ", ".join(invalid_directories)
         )
 
     forbidden_source_files = sorted(
-        path.relative_to(DEFAULT_ROOT).as_posix()
-        for path in DEFAULT_ROOT.rglob("*")
+        path.relative_to(CONFIG_ROOT).as_posix()
+        for path in CONFIG_ROOT.rglob("*")
         if path.is_file() and is_forbidden_persistence_file(path.name)
     )
     if forbidden_source_files:
         raise ValidationError(
-            "default/ contains game-managed persistence files:\n  "
+            "config/ contains game-managed persistence files:\n  "
             + "\n  ".join(forbidden_source_files)
         )
 
     forbidden_paths = sorted(
-        path.relative_to(DEFAULT_ROOT).as_posix()
-        for path in DEFAULT_ROOT.rglob("*")
-        if any(part.lower() in FORBIDDEN_V3_PATH_PARTS for part in path.relative_to(DEFAULT_ROOT).parts)
+        path.relative_to(CONFIG_ROOT).as_posix()
+        for path in CONFIG_ROOT.rglob("*")
+        if any(part.lower() in FORBIDDEN_V3_PATH_PARTS for part in path.relative_to(CONFIG_ROOT).parts)
     )
     if forbidden_paths:
         raise ValidationError(
@@ -417,11 +430,11 @@ def validate_source() -> None:
             + "\n  ".join(forbidden_paths)
         )
 
-    cfg_paths = sorted(DEFAULT_ROOT.rglob("*.cfg"))
+    cfg_paths = sorted(CONFIG_ROOT.rglob("*.cfg"))
     if not cfg_paths:
-        raise ValidationError("No CFG files found under default/")
+        raise ValidationError("No CFG files found under config/")
 
-    names = {path.relative_to(DEFAULT_ROOT).as_posix(): path for path in cfg_paths}
+    names = {path.relative_to(CONFIG_ROOT).as_posix(): path for path in cfg_paths}
     graph: dict[str, list[str]] = {}
     missing: list[str] = []
 
@@ -437,6 +450,14 @@ def validate_source() -> None:
         raise ValidationError("Missing exec targets:\n  " + "\n  ".join(missing))
 
     cfg_text = {name: read_cfg(path) for name, path in names.items()}
+
+    for name, text in cfg_text.items():
+        is_settings_or_keymap = name.endswith(("/settings.cfg", "/keymap.cfg"))
+        is_crosshair_library = name.startswith(
+            "srp-cfg/features/crosshair-view/library/"
+        )
+        if is_settings_or_keymap or is_crosshair_library:
+            validate_editable_line_comments(name, text)
 
     autoexec_chain = direct_exec_targets(cfg_text["autoexec.cfg"])
     if autoexec_chain != EXPECTED_AUTOEXEC_CHAIN:

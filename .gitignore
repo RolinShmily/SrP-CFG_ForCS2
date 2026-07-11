@@ -1,6 +1,7 @@
 CLAUDE.md
 AGENTS.md
 .claude
+.agents/
 .spec-workflow/
 
 # Node
@@ -19,4 +20,3 @@ tmp/
 msi/obj/
 msi/bin/
 msi/ElectronAppFiles.wxs
-

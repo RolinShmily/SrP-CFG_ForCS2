@@ -9,7 +9,7 @@ packages:
     zip_name: "SrP-CFG_Runtime_Core"
     description: "完整功能 Runtime、用户 custom.cfg、内置 Preset 案例与 Valve 重置基线"
     files:
-      - "default/autoexec.cfg"
-      - "default/video/"
-      - "default/annotations/"
-      - "default/srp-cfg/"
+      - "config/autoexec.cfg"
+      - "config/video/"
+      - "config/annotations/"
+      - "config/srp-cfg/"
