@@ -18,7 +18,7 @@ interface Props {
 const { title, description, docs, currentSlug, headings } = Astro.props;
 const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
 
-const guideOrder = ["srpcfg-1", "srpcfg-3", "architecture", "autoexec", "vcfg"];
+const guideOrder = ["srpcfg-1", "srpcfg-3", "autoexec", "vcfg"];
 const featureOrder = ["crosshair_view", "autoview", "knife", "zeus"];
 const modeOrder = ["practice", "previewmode", "guidemake", "demo_hlae"];
 const referenceOrder = ["helps", "cs2_video"];

@@ -140,7 +140,6 @@ srp_help_reset
 
 ## 继续阅读
 
-- [v3 分层架构](/docs/architecture)
 - [autoexec.cfg](/docs/autoexec)
 - [VCFG 与 Steam Cloud](/docs/vcfg)
 - [practice 模式](/docs/practice)
