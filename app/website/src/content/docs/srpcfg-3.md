@@ -38,8 +38,11 @@ SrP-CFG_Runtime_Core.zip
 只启用一个起点，并把所有个人差异写在它下面：
 
 ```text
+// ─── SrP-CFG Preset Layer ───
 srp_apply_yszh
+// ─── Preset Layer End ───
 
+// ─── SrP-CFG User Layer ───
 // 我的最终语音键
 unbind "v"
 bind "mouse5" "+voicerecord"
@@ -48,9 +51,11 @@ bind "mouse5" "+voicerecord"
 sensitivity 0.95
 c06
 cyan
+// ─── User Layer End ───
 ```
 
-每次启动都会依次执行“Runtime → YSZH → 个人差异”。后面的同名命令会覆盖 Preset，所以不需要复制或修改仓库内的 YSZH 文件。
+每次启动都会依次执行"Runtime → YSZH → 个人差异"。后面的同名命令会覆盖 Preset，所以不需要复制或修改仓库内的 YSZH 文件。
+
 
 ## 以 YSZH 用户为例
 
@@ -82,6 +87,35 @@ srp_apply_visionl
 ```text
 srp_reload
 ```
+
+## 从 VCFG 写入当前配置
+
+桌面安装器的"我的配置"页面支持"写入 VCFG 当前配置"功能：
+
+1. 点击"读取 VCFG"，安装器只读解析当前账号的三个 VCFG 文件。
+2. 勾选要写入的类别（按键绑定、模拟轴绑定、个人偏好、机器设置）。
+3. 点击"写入 custom.cfg"，安装器对比 `presets/valve/settings.cfg` 中的 Valve 默认值，只写入你实际改过的 ConVar；按键绑定全量导出。
+4. 生成结果自动插入到 Preset Layer 和 User Layer 之间的独立分区，重复写入会替换上一次的内容。
+5. 可随时点击"撤销 VCFG 写入"一键移除导入块；撤销操作跨会话有效（标记保存在文件中）。
+
+写入后的 `custom.cfg` 布局：
+
+```text
+// ─── SrP-CFG Preset Layer ───
+srp_apply_default
+// ─── Preset Layer End ───
+
+// ─── VCFG Import Layer (2026/07/12 20:30:00) ───
+bind "a" "+moveleft"
+sensitivity 1.5
+// ─── VCFG Import Layer End ───
+
+// ─── SrP-CFG User Layer ───
+// 手动编写的个人差异
+// ─── User Layer End ───
+```
+
+VCFG Import Layer 中的命令位于 Preset 之后、User 之前，因此优先级低于 User Layer 中的同名命令。如果需要覆盖某个导入值，在 User Layer 中写一行新的即可。
 
 ## 回到 Valve 原始测试基线
 
@@ -135,6 +169,7 @@ srp_help_reset
 | 每次启动使用作者推荐值 | `custom.cfg` 顶部写 `srp_apply_default` |
 | 每次启动使用 YSZH 等案例 | `custom.cfg` 顶部写相应 `srp_apply_*` |
 | 在案例之上保留个人差异 | 写在同一 `custom.cfg` 的 Preset 命令之后 |
+| 把当前游戏设置持久化到 `custom.cfg` | 安装器"写入 VCFG 当前配置"，自动对比 Valve 默认值 |
 | 排查问题、回到可审计基线 | `srp_reset_valve` |
 | 分辨率、显卡和设备画质 | 游戏设置或 `cs2_video.txt` |
 

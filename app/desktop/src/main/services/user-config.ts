@@ -6,20 +6,32 @@ const USER_CONFIG_RELATIVE = path.join("srp-cfg", "user", "custom.cfg");
 const RUNTIME_RELATIVE = path.join("srp-cfg", "runtime", "init.cfg");
 const MAX_USER_CONFIG_BYTES = 256 * 1024;
 
-export const DEFAULT_USER_CONFIG = `// SrP-CFG v3 用户层
-// Runtime 注册命令后，每次启动都会执行本文件。
-// 选择一个 Preset 起点（删除行首 //），再把个人差异写在它下面；也可以一个都不选。
+export const DEFAULT_USER_CONFIG = `// ─── SrP-CFG Preset Layer ───
+// 第一步：从下面四个 Preset 起点中选择一个，删除该行开头的 //。
+// 只启用一个；如果完全依赖游戏设置与 VCFG，也可以一个都不启用。
+//
 // srp_apply_default
 // srp_apply_echo
 // srp_apply_yszh
 // srp_apply_visionl
 //
-// 个人差异示例（删除行首 // 后生效）：
+// 想从 Valve 基线重新测试：控制台执行 srp_reset_valve；
+// ─── Preset Layer End ───
+
+// ─── SrP-CFG User Layer ───
+// 第二步：把自己的灵敏度、准星、HUD、声音、按键和 alias 写在所选命令下面。
+// 后面的命令会覆盖 Preset 中的同名设置；不要直接修改 runtime/features/modes/presets。
+// 安装器更新、恢复或卸载 Runtime 时都会保护本文件。
+//
+// 示例（删除行首 // 后生效）：
 // sensitivity 1.00
 // c06
 // cyan
 // bind "mouse4" "+voicerecord"
 // alias "mypractice" "srp_practice_keys"
+//
+// 修改并保存本文件后执行 srp_reload，再应用"Preset 起点 → 个人差异"。
+// ─── User Layer End ───
 `;
 
 export type UserConfigTarget = "game" | "account";

@@ -11,9 +11,11 @@ import {
   RotateCcw,
   Save,
   ShieldCheck,
+  Undo2,
   UserRoundCog,
+  Wand2,
 } from "lucide-react";
-import type { DetectionResult, UserConfigDocument } from "../types";
+import type { DetectionResult, UserConfigDocument, VcfgSnapshot } from "../types";
 import PageHeader from "../components/PageHeader";
 
 interface Props {
@@ -40,6 +42,15 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
+  const [vcfgSnapshot, setVcfgSnapshot] = useState<VcfgSnapshot | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [importCategories, setImportCategories] = useState({
+    bindings: true,
+    analogBindings: false,
+    userConvars: true,
+    machineConvars: false,
+  });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -131,7 +142,113 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
     }).join("\n"));
   }, [content]);
 
+  const captureSnapshot = useCallback(async () => {
+    setImporting(true);
+    setError("");
+    try {
+      const snapshot = await window.api.captureVcfgSnapshot();
+      if (!snapshot) {
+        setError("未检测到用户 CFG 目录，无法读取 VCFG 状态");
+        setVcfgSnapshot(null);
+      } else if (
+        Object.keys(snapshot.bindings).length === 0 &&
+        Object.keys(snapshot.analogBindings).length === 0 &&
+        Object.keys(snapshot.userConvars).length === 0 &&
+        Object.keys(snapshot.machineConvars).length === 0
+      ) {
+        setError("VCFG 文件为空或不存在，请先在游戏中修改设置后重试");
+        setVcfgSnapshot(null);
+      } else {
+        setVcfgSnapshot(snapshot);
+      }
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason));
+      setVcfgSnapshot(null);
+    } finally {
+      setImporting(false);
+    }
+  }, []);
+
+  const insertImportedCfg = useCallback(async () => {
+    if (!vcfgSnapshot) return;
+    setGenerating(true);
+    setError("");
+    try {
+      const generated = await window.api.generateCfgFromSnapshot(importCategories);
+      if (!generated || !generated.trim()) {
+        setError("所选类别中没有可写入的内容");
+        return;
+      }
+      const timestamp = new Date().toLocaleString("zh-CN");
+      const vcfgBlock = [
+        `// ─── VCFG Import Layer (${timestamp}) ───`,
+        generated,
+        `// ─── VCFG Import Layer End ───`,
+      ].join("\n");
+
+      // 1. 移除已有的 VCFG 导入块（"VCFG Import Layer" 到 "VCFG Import Layer End"）
+      const lines = content.split(/\r?\n/);
+      const cleaned: string[] = [];
+      let skipping = false;
+      for (const line of lines) {
+        if (!skipping && line.includes("VCFG Import Layer") && !line.includes("End") && line.trimStart().startsWith("//")) {
+          skipping = true;
+          continue;
+        }
+        if (skipping && line.includes("VCFG Import Layer End")) {
+          skipping = false;
+          continue;
+        }
+        if (skipping) continue;
+        cleaned.push(line);
+      }
+
+      // 2. 在 Preset Layer End 和 User Layer 之间插入
+      const presetEndIdx = cleaned.findIndex((l) => l.includes("Preset Layer End"));
+      const userLayerIdx = cleaned.findIndex((l) => l.includes("SrP-CFG User Layer"));
+      if (presetEndIdx >= 0 && userLayerIdx >= 0 && userLayerIdx > presetEndIdx) {
+        cleaned.splice(userLayerIdx, 0, vcfgBlock, "");
+      } else {
+        // 空文件或无标记：从头部插入
+        cleaned.unshift(vcfgBlock, "");
+      }
+
+      setContent(cleaned.join("\n"));
+      setVcfgSnapshot(null);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason));
+    } finally {
+      setGenerating(false);
+    }
+  }, [content, vcfgSnapshot, importCategories]);
+
+  const undoVcfgImport = useCallback(() => {
+    const lines = content.split(/\r?\n/);
+    const result: string[] = [];
+    let skipping = false;
+    let found = false;
+    for (const line of lines) {
+      if (!skipping && line.includes("VCFG Import Layer") && !line.includes("End") && line.trimStart().startsWith("//")) {
+        skipping = true;
+        found = true;
+        continue;
+      }
+      if (skipping && line.includes("VCFG Import Layer End")) {
+        skipping = false;
+        continue;
+      }
+      if (skipping) continue;
+      result.push(line);
+    }
+    if (!found) {
+      setError("没有找到可撤销的 VCFG 导入块");
+      return;
+    }
+    setContent(result.join("\n"));
+  }, [content]);
+
   const hasActivePreset = /^\s*srp_apply_(?:default|echo|yszh|visionl)\s*$/mi.test(content);
+  const hasVcfgImport = content.includes("VCFG Import Layer") && content.includes("VCFG Import Layer End");
 
   if (!detection || loading) {
     return (
@@ -198,39 +315,108 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
       </div>
 
       <section className="rounded-[var(--radius)] border border-border bg-bg-card px-4 py-3">
-        <div className="flex flex-col gap-3 2xl:flex-row 2xl:items-start 2xl:justify-between">
+        <div className="flex flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
           <div className="min-w-0">
             <h2 className="ui-panel-title">选择 custom.cfg 的 Preset 起点</h2>
             <p className="mt-1 text-xs text-text-muted">
-              点击会更新编辑器草稿中的 srp_apply_* 行，不会立即写盘。只保留一个起点，个人差异写在它后面。
+              选择后更新编辑器草稿中的 srp_apply_* 行，不会立即写盘。只保留一个起点，个人差异写在它后面。
             </p>
           </div>
-          <div className="flex max-w-xl flex-wrap justify-start gap-2 2xl:justify-end">
+          <select
+            value={
+              hasActivePreset
+                ? content.match(/^\s*srp_apply_(\w+)/mi)?.[1] ?? "vcfg"
+                : "vcfg"
+            }
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "vcfg") clearBasePreset();
+              else setBasePreset(value);
+            }}
+            className="min-h-8 shrink-0 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-3 py-1.5 font-mono text-xs text-text transition-colors hover:border-border-highlight focus:border-accent/60 focus:outline-none 2xl:w-auto"
+          >
+            <option value="vcfg">VCFG 托管</option>
+            {["default", "echo", "yszh", "visionl"].map((preset) => (
+              <option key={preset} value={preset}>
+                srp_apply_{preset}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
+
+      <section className="rounded-[var(--radius)] border border-border bg-bg-card px-4 py-3">
+        <div className="flex flex-col gap-3 2xl:flex-row 2xl:items-start 2xl:justify-between">
+          <div className="min-w-0">
+            <h2 className="ui-panel-title">写入 VCFG 当前配置</h2>
+            <p className="mt-1 text-xs text-text-muted">
+              读取当前 VCFG 中的按键绑定与偏好设置，对比 Valve 默认值后只写入你改过的项。写入到 Preset 起点和个人自定义之间的独立分区，可随时撤销。
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 2xl:justify-end">
+            {hasVcfgImport && (
+              <button
+                type="button"
+                onClick={undoVcfgImport}
+                className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-red/40 bg-red/5 px-2.5 font-mono text-xs text-red transition-colors hover:border-red/60 hover:bg-red/10"
+              >
+                <Undo2 size={13} />
+                撤销 VCFG 写入
+              </button>
+            )}
             <button
               type="button"
-              onClick={clearBasePreset}
-              className={`flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border px-2.5 font-mono text-xs transition-colors ${!hasActivePreset ? "border-blue/50 bg-blue/10 text-blue" : "border-border bg-bg-raised text-text-muted hover:border-blue/45 hover:text-blue"}`}
+              onClick={() => void captureSnapshot()}
+              disabled={!detection?.userCfgPath || importing}
+              className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-2.5 font-mono text-xs text-text-secondary transition-colors hover:border-accent/50 hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {!hasActivePreset ? <Check size={13} /> : <Database size={13} />}
-              VCFG 托管
+              {importing ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} />}
+              {vcfgSnapshot ? "重新读取" : "读取 VCFG"}
             </button>
-            {["default", "echo", "yszh", "visionl"].map((preset) => {
-              const command = `srp_apply_${preset}`;
-              const active = new RegExp(`^\\s*${command}\\s*$`, "mi").test(content);
-              return (
-                <button
-                  type="button"
-                  key={preset}
-                  onClick={() => setBasePreset(preset)}
-                  className={`flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border px-2.5 font-mono text-xs transition-colors ${active ? "border-teal/50 bg-teal/10 text-teal" : "border-border bg-bg-raised text-text-muted hover:border-teal/45 hover:text-teal"}`}
-                >
-                  {active ? <Check size={13} /> : <Braces size={13} />}
-                  {command}
-                </button>
-              );
-            })}
           </div>
         </div>
+
+        {vcfgSnapshot && (
+          <div className="mt-3 space-y-3 border-t border-border pt-3">
+            <p className="text-xs text-text-muted">
+              勾选要写入的内容，点击"写入 custom.cfg"将命令插入到 Preset 起点和个人自定义之间的分区。重复写入会替换上一次的内容；可点击"撤销 VCFG 写入"一键移除。
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {([
+                { key: "bindings", label: "按键绑定", count: Object.keys(vcfgSnapshot.bindings).length },
+                { key: "analogBindings", label: "模拟轴绑定", count: Object.keys(vcfgSnapshot.analogBindings).length },
+                { key: "userConvars", label: "个人偏好", count: Object.keys(vcfgSnapshot.userConvars).length },
+                { key: "machineConvars", label: "机器设置", count: Object.keys(vcfgSnapshot.machineConvars).length },
+              ] as const).map(({ key, label, count }) => (
+                <button
+                  type="button"
+                  key={key}
+                  onClick={() => setImportCategories((prev) => ({ ...prev, [key]: !prev[key] }))}
+                  className={`flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border px-2.5 font-mono text-xs transition-colors ${
+                    importCategories[key]
+                      ? "border-accent/50 bg-accent-bg text-accent"
+                      : "border-border bg-bg-raised text-text-muted hover:border-accent/45 hover:text-accent"
+                  }`}
+                >
+                  {importCategories[key] ? <Check size={13} /> : <Braces size={13} />}
+                  {label}
+                  <span className="ml-0.5 opacity-60">({count})</span>
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => void insertImportedCfg()}
+                disabled={generating}
+                className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-accent bg-accent px-3 text-xs font-semibold text-bg transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {generating ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                写入 custom.cfg
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {!document?.runtimeInstalled && (

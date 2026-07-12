@@ -107,7 +107,25 @@ srp_apply_visionl
 
 ## User 层
 
-`srp-cfg/user/custom.cfg` 是当前用户唯一需要维护的文件。桌面安装器的“我的配置”页面可以直接编辑它，并在安装、更新、回滚和卸载 Runtime 时保护其内容。
+`srp-cfg/user/custom.cfg` 是当前用户唯一需要维护的文件。桌面安装器的"我的配置"页面可以直接编辑它，并在安装、更新、回滚和卸载 Runtime 时保护其内容。
+
+文件内部采用三层分区结构：
+
+```text
+// ─── SrP-CFG Preset Layer ───
+// srp_apply_default / echo / yszh / visionl
+// ─── Preset Layer End ───
+
+// ─── VCFG Import Layer (timestamp) ───
+// 从 VCFG 自动写入的按键与偏好（可一键撤销）
+// ─── VCFG Import Layer End ───
+
+// ─── SrP-CFG User Layer ───
+// 用户手动编写的个人差异
+// ─── User Layer End ───
+```
+
+桌面安装器支持"写入 VCFG 当前配置"：读取当前 VCFG 中的按键绑定与偏好设置，对比 `presets/valve/settings.cfg` 中的 Valve 默认值后，只写入用户实际改过的项。导入结果自动插入到 Preset Layer 和 User Layer 之间，重复写入会替换上一次的内容，可随时一键撤销。
 
 保存后在控制台执行 `srp_reload`，会重新注册 Runtime，并按 `custom.cfg` 的实际顺序重放 Preset 起点与个人覆盖。
 

@@ -71,10 +71,10 @@ SrP-CFG v3 将功能 Runtime、内置 Preset 案例、用户偏好与 CS2 的 VC
 ### ✏️ 功能说明
 
 - 自动检测 Steam、CS2、游戏 CFG、Annotations、Video 与账号 CFG 路径
-- 读取当前账号 VCFG / Steam Cloud 概况，但不直接覆盖 Valve 管理文件
+- 只读统计当前账号 VCFG 的按键绑定与偏好设置，可按需生成 CFG 命令写入 `custom.cfg`
 - 下载唯一 Runtime Core，或导入 ZIP、CFG、TXT 与文件夹
 - 支持覆盖与追加安装，并记录安装器负责的受管文件
-- 在“我的配置”中直接维护 `user/custom.cfg` 与 `srp_apply_*` 起点
+- 在"我的配置"中直接维护 `user/custom.cfg` 与 `srp_apply_*` 起点，支持从 VCFG 自动写入当前按键与偏好
 - 更新、回滚和卸载 Runtime 时保护用户配置
 - 分开管理上一个 Runtime、安装前原文件与只读 VCFG 快照
 - 支持检查更新、实时日志与安装结果审计

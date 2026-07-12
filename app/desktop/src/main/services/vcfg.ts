@@ -1,20 +1,11 @@
 import * as fs from "fs";
 import * as path from "path";
-import type { VcfgStateSummary } from "../../renderer/types";
+import type { VcfgStateSummary, VcfgSnapshot } from "../../renderer/types";
 
 interface VdfNode {
   [key: string]: string | VdfNode;
 }
 
-export interface VcfgSnapshot {
-  schemaVersion: 1;
-  capturedAt: number;
-  userCfgPath: string;
-  bindings: Record<string, string>;
-  analogBindings: Record<string, string>;
-  userConvars: Record<string, string>;
-  machineConvars: Record<string, string>;
-}
 
 function tokenize(content: string): string[] {
   const tokens: string[] = [];
@@ -118,6 +109,98 @@ export function captureVcfgSnapshot(userCfgPath: string): VcfgSnapshot {
     userConvars: stringEntries(child(userConvars, "config", "convars")),
     machineConvars: stringEntries(child(machineConvars, "config", "convars")),
   };
+}
+
+export interface SnapshotToCfgOptions {
+  bindings: boolean;
+  analogBindings: boolean;
+  userConvars: boolean;
+  machineConvars: boolean;
+}
+
+/** Parse a .cfg file and extract convar → value pairs, skipping comments/echo/exec/bind. */
+export function parseCfgConvars(filePath: string): Record<string, string> {
+  if (!fs.existsSync(filePath)) return {};
+  try {
+    const lines = fs.readFileSync(filePath, "utf-8").split(/\r?\n/);
+    const result: Record<string, string> = {};
+    for (const raw of lines) {
+      const commentIdx = raw.indexOf("//");
+      const code = (commentIdx >= 0 ? raw.slice(0, commentIdx) : raw).trim();
+      if (!code) continue;
+      if (/^(?:echo|exec|bind|binddefaults|firstperson)\b/i.test(code)) continue;
+      const match = code.match(/^(\S+)\s+(?:"([^"]*)"|(\S+))$/);
+      if (match) result[match[1]] = match[2] ?? match[3];
+    }
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+/** Normalize boolean literals so "true"/"1" and "false"/"0" compare equal. */
+function normalizeCfgValue(v: string): string {
+  if (v === "true" || v === "True") return "1";
+  if (v === "false" || v === "False") return "0";
+  return v;
+}
+
+/** Convert a VcfgSnapshot into CS2 CFG text lines, filtered by category.
+ *  Convars are diffed against the optional Valve baseline; only non-default values are emitted. */
+export function snapshotToCfg(
+  snapshot: VcfgSnapshot,
+  options: SnapshotToCfgOptions,
+  baseline: Record<string, string> = {},
+): string {
+  const sections: string[] = [];
+
+  if (options.bindings) {
+    const entries = Object.entries(snapshot.bindings).sort(([a], [b]) => a.localeCompare(b));
+    if (entries.length) {
+      sections.push("// ── 按键绑定 ──");
+      for (const [key, cmd] of entries) sections.push(`bind "${key}" "${cmd}"`);
+    }
+  }
+
+  if (options.analogBindings) {
+    const entries = Object.entries(snapshot.analogBindings).sort(([a], [b]) => a.localeCompare(b));
+    if (entries.length) {
+      sections.push("// ── 模拟轴绑定 ──");
+      for (const [axis, cmd] of entries) sections.push(`bind "${axis}" "${cmd}"`);
+    }
+  }
+
+  if (options.userConvars) {
+    const entries = Object.entries(snapshot.userConvars)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .filter(([name, value]) => {
+        const def = baseline[name];
+        return def === undefined || normalizeCfgValue(def) !== normalizeCfgValue(value);
+      });
+    if (entries.length) {
+      sections.push("// ── 个人偏好设置（仅与 Valve 默认值不同的项）──");
+      for (const [convar, value] of entries) {
+        sections.push(value.includes(" ") ? `${convar} "${value}"` : `${convar} ${value}`);
+      }
+    }
+  }
+
+  if (options.machineConvars) {
+    const entries = Object.entries(snapshot.machineConvars)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .filter(([name, value]) => {
+        const def = baseline[name];
+        return def === undefined || normalizeCfgValue(def) !== normalizeCfgValue(value);
+      });
+    if (entries.length) {
+      sections.push("// ── 机器设置（仅与 Valve 默认值不同的项）──");
+      for (const [convar, value] of entries) {
+        sections.push(value.includes(" ") ? `${convar} "${value}"` : `${convar} ${value}`);
+      }
+    }
+  }
+
+  return sections.join("\n");
 }
 
 export function saveVcfgBaseline(

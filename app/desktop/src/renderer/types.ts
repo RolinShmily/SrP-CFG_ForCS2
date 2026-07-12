@@ -50,6 +50,17 @@ export interface VcfgStateSummary {
   hasVideoConfig: boolean;
 }
 
+
+export interface VcfgSnapshot {
+  schemaVersion: 1;
+  capturedAt: number;
+  userCfgPath: string;
+  bindings: Record<string, string>;
+  analogBindings: Record<string, string>;
+  userConvars: Record<string, string>;
+  machineConvars: Record<string, string>;
+}
+
 export interface UserConfigSelection {
   userCfgPath: string | null;
   vcfgState: VcfgStateSummary;
@@ -178,6 +189,15 @@ export interface ElectronAPI {
   getUserConfig: () => Promise<UserConfigDocument>;
   saveUserConfig: (content: string) => Promise<UserConfigDocument>;
   openUserConfigFolder: () => Promise<void>;
+
+  // VCFG snapshot (current game state)
+  captureVcfgSnapshot: () => Promise<VcfgSnapshot | null>;
+  generateCfgFromSnapshot: (options: {
+    bindings: boolean;
+    analogBindings: boolean;
+    userConvars: boolean;
+    machineConvars: boolean;
+  }) => Promise<string | null>;
 
   // Upload / Staging
   uploadFiles: (filePaths: string[]) => Promise<UploadEntry>;

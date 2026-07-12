@@ -17,6 +17,11 @@ contextBridge.exposeInMainWorld("api", {
   saveUserConfig: (content: string) => ipcRenderer.invoke("userConfig:save", content),
   openUserConfigFolder: () => ipcRenderer.invoke("userConfig:openFolder"),
 
+  // VCFG snapshot (current game state → CFG)
+  captureVcfgSnapshot: () => ipcRenderer.invoke("vcfg:captureSnapshot"),
+  generateCfgFromSnapshot: (options: { bindings: boolean; analogBindings: boolean; userConvars: boolean; machineConvars: boolean }) =>
+    ipcRenderer.invoke("vcfg:generateCfg", options),
+
   // Upload / Staging
   uploadFiles: (filePaths: string[]) =>
     ipcRenderer.invoke("installer:uploadFiles", filePaths),

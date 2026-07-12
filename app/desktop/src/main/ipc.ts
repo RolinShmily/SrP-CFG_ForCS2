@@ -6,7 +6,8 @@ import * as detection from "./services/detection";
 import * as staging from "./services/staging";
 import * as installer from "./services/installer";
 import * as userConfig from "./services/user-config";
-import { inspectVcfgState, saveVcfgBaseline } from "./services/vcfg";
+import { captureVcfgSnapshot, inspectVcfgState, parseCfgConvars, saveVcfgBaseline, snapshotToCfg } from "./services/vcfg";
+import type { SnapshotToCfgOptions } from "./services/vcfg";
 import {
   checkForUpdate,
   dismissVersion,
@@ -391,6 +392,23 @@ export function registerIpcHandlers() {
     const snapshotRoot = getVcfgSnapshotRoot();
     fs.mkdirSync(snapshotRoot, { recursive: true });
     await shell.openPath(snapshotRoot);
+  });
+
+  // ── VCFG Snapshot (current game state → CFG) ───────────────
+
+  ipcMain.handle("vcfg:captureSnapshot", async () => {
+    if (!state.userCfgPath) return null;
+    return captureVcfgSnapshot(state.userCfgPath);
+  });
+
+  ipcMain.handle("vcfg:generateCfg", async (_e, options: SnapshotToCfgOptions) => {
+    if (!state.userCfgPath) return null;
+    const snapshot = captureVcfgSnapshot(state.userCfgPath);
+    const baselinePath = state.cs2CfgPath
+      ? path.join(state.cs2CfgPath, "srp-cfg", "presets", "valve", "settings.cfg")
+      : null;
+    const baseline = baselinePath ? parseCfgConvars(baselinePath) : {};
+    return snapshotToCfg(snapshot, options, baseline);
   });
 
   ipcMain.handle("installer:openItem", async (_e, storage: "install" | "save" | "res", category: string, name: string) => {
