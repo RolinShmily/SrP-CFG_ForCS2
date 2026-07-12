@@ -235,8 +235,8 @@ def main():
 
     # 4. Handle new commands translations
     if new_commands:
-        cf_token = os.environ.get("CF_API_TOKEN") or os.environ.get("CLOUDFLARE_API_TOKEN")
-        cf_account = os.environ.get("CF_ACCOUNT_ID") or os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+        cf_token = os.environ.get("CLOUDFLARE_AI_TOKEN") or os.environ.get("CF_API_TOKEN") or os.environ.get("CLOUDFLARE_API_TOKEN")
+        cf_account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
         
         translated_new = {}
         if cf_token and cf_account:
