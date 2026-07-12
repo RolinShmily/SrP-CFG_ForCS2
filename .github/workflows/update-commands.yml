@@ -1,0 +1,52 @@
+name: Update CS2 Commands
+
+on:
+  schedule:
+    # 每天凌晨 02:00 (UTC) 自动执行
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # 支持在 GitHub Actions 页面上手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  update-commands:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Test Cloudflare Workers AI availability
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python .github/scripts/test_cf_ai.py
+
+      - name: Run update script
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python .github/scripts/update_commands.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add app/website/public/data/commands.json .github/scripts/last_sha.txt
+          # 检查是否有文件改动，如果有则提交并推送
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(auto): update CS2 console commands database"
+            git push
+          else
+            echo "No changes detected in commands database."
+          fi
