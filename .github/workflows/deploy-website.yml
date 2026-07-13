@@ -34,6 +34,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install:web
 
+      - name: Validate AI protection secrets
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.CLOUDFLARE_TURNSTILE_SECRET || secrets.TURNSTILE_SECRET_KEY || '' }}
+        run: |
+          : "${PUBLIC_TURNSTILE_SITE_KEY:?PUBLIC_TURNSTILE_SITE_KEY is required}"
+          : "${TURNSTILE_SECRET_KEY:?CLOUDFLARE_TURNSTILE_SECRET or TURNSTILE_SECRET_KEY is required}"
+
       - name: Build website
         env:
           PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
@@ -46,14 +54,9 @@ jobs:
         working-directory: app/website
         run: npx wrangler deploy
 
-      - name: Set Turnstile secret (if configured)
+      - name: Set Turnstile secret
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          TURNSTILE_SECRET_KEY: ${{ secrets.CLOUDFLARE_TURNSTILE_SECRET || secrets.TURNSTILE_SECRET_KEY || '' }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.CLOUDFLARE_TURNSTILE_SECRET || secrets.TURNSTILE_SECRET_KEY }}
         working-directory: app/website
-        run: |
-          if [ -n "$TURNSTILE_SECRET_KEY" ]; then
-            echo "$TURNSTILE_SECRET_KEY" | npx wrangler secret put TURNSTILE_SECRET_KEY
-          else
-            echo "TURNSTILE_SECRET_KEY not set. Skipping."
-          fi
+        run: echo "$TURNSTILE_SECRET_KEY" | npx wrangler secret put TURNSTILE_SECRET_KEY

@@ -28,7 +28,7 @@ const quickQuestions = [
 ---
 
 <MainLayout title="指令中心 — SrP-CFG" description="CS2 官方控制台指令与变量中文翻译数据库，支持检索和分类筛选，内置 AI 助理。">
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
   <section class="pb-16 pt-28 sm:pb-20 sm:pt-32">
     <div class="mx-auto max-w-[1500px] px-5 sm:px-7">
       <SectionHeader
@@ -173,6 +173,7 @@ const quickQuestions = [
                 <textarea
                   id="chat-input"
                   rows="1"
+                  maxlength="500"
                   placeholder="用自然语言描述你的需求..."
                   class="w-full resize-none bg-bg border border-border rounded-[10px] pl-3.5 pr-12 py-2.5 text-sm text-text placeholder-text-faint font-body outline-none focus:border-accent transition-colors max-h-24"
                   style="min-height: 42px;"
@@ -502,11 +503,18 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "";
 interface TurnstileApi {
   render(container: string | HTMLElement, options: {
     sitekey: string;
+    action: "chat";
     execution: "execute";
     appearance: "interaction-only";
+    theme: "dark";
+    language: "zh-CN";
+    size: "flexible";
+    responseField: false;
+    retry: "never";
     callback: (token: string) => void;
-    "error-callback": () => void;
+    "error-callback": (errorCode: string) => void;
     "expired-callback": () => void;
+    "timeout-callback": () => void;
   }): string;
   execute(widgetId: string): void;
   reset(widgetId: string): void;
@@ -517,8 +525,35 @@ let pendingTurnstileResolve: ((token: string) => void) | undefined;
 let pendingTurnstileReject: ((error: Error) => void) | undefined;
 let turnstileTimeoutId: number | undefined;
 
+function rejectTurnstile(error: Error): void {
+  if (turnstileTimeoutId !== undefined) window.clearTimeout(turnstileTimeoutId);
+  const reject = pendingTurnstileReject;
+  pendingTurnstileResolve = undefined;
+  pendingTurnstileReject = undefined;
+  turnstileTimeoutId = undefined;
+  reject?.(error);
+}
+
+function describeTurnstileError(errorCode: string): string {
+  if (errorCode === "110200") {
+    return `当前域名 ${window.location.hostname} 未加入 Turnstile 允许列表（错误码 110200）。`;
+  }
+  if (["110100", "110110", "400020", "400070"].includes(errorCode)) {
+    return `Turnstile Site Key 配置无效或已停用（错误码 ${errorCode}）。`;
+  }
+  if (errorCode === "200500") {
+    return "Turnstile 验证组件加载失败，请检查广告拦截器或网络设置（错误码 200500）。";
+  }
+  if (errorCode.startsWith("300") || errorCode.startsWith("600")) {
+    return `Turnstile 未能通过安全检查，请关闭代理后重试（错误码 ${errorCode}）。`;
+  }
+  return `Turnstile 验证失败，请重试（错误码 ${errorCode || "unknown"}）。`;
+}
+
 async function getTurnstileToken(): Promise<string> {
-  if (!TURNSTILE_SITE_KEY) return "";
+  if (!TURNSTILE_SITE_KEY) {
+    throw new Error("Turnstile Site Key 未配置，AI 助手暂时不可用。");
+  }
 
   const container = document.getElementById("turnstile-container");
   if (!container) throw new Error("Turnstile 容器不存在，请刷新页面重试。");
@@ -530,8 +565,14 @@ async function getTurnstileToken(): Promise<string> {
   if (!turnstileWidgetId) {
     turnstileWidgetId = api.render(container, {
       sitekey: TURNSTILE_SITE_KEY,
+      action: "chat",
       execution: "execute",
       appearance: "interaction-only",
+      theme: "dark",
+      language: "zh-CN",
+      size: "flexible",
+      responseField: false,
+      retry: "never",
       callback: (token) => {
         if (turnstileTimeoutId !== undefined) window.clearTimeout(turnstileTimeoutId);
         const resolve = pendingTurnstileResolve;
@@ -540,18 +581,14 @@ async function getTurnstileToken(): Promise<string> {
         turnstileTimeoutId = undefined;
         resolve?.(token);
       },
-      "error-callback": () => {
-        if (turnstileTimeoutId !== undefined) window.clearTimeout(turnstileTimeoutId);
-        const reject = pendingTurnstileReject;
-        pendingTurnstileResolve = undefined;
-        pendingTurnstileReject = undefined;
-        turnstileTimeoutId = undefined;
-        reject?.(new Error("Turnstile 验证失败，请重试。"));
+      "error-callback": (errorCode) => {
+        rejectTurnstile(new Error(describeTurnstileError(errorCode)));
       },
       "expired-callback": () => {
-        pendingTurnstileReject?.(new Error("Turnstile 验证已过期，请重试。"));
-        pendingTurnstileResolve = undefined;
-        pendingTurnstileReject = undefined;
+        rejectTurnstile(new Error("Turnstile 验证已过期，请重试。"));
+      },
+      "timeout-callback": () => {
+        rejectTurnstile(new Error("Turnstile 交互验证超时，请重试。"));
       },
     });
   } else {
@@ -563,11 +600,8 @@ async function getTurnstileToken(): Promise<string> {
     pendingTurnstileResolve = resolve;
     pendingTurnstileReject = reject;
     turnstileTimeoutId = window.setTimeout(() => {
-      pendingTurnstileResolve = undefined;
-      pendingTurnstileReject = undefined;
-      turnstileTimeoutId = undefined;
-      reject(new Error("Turnstile 验证超时，请重试。"));
-    }, 30_000);
+      rejectTurnstile(new Error("Turnstile 验证超时，请刷新页面后重试。"));
+    }, 120_000);
     api.execute(widgetId);
   });
 }
@@ -599,7 +633,14 @@ async function sendMessage() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, history: chatHistory.slice(-6), turnstileToken }),
+        body: JSON.stringify({
+          message,
+          history: chatHistory.slice(-6).map((item) => ({
+            role: item.role,
+            content: item.content.slice(0, 4_000),
+          })),
+          turnstileToken,
+        }),
       });
 
       if (!res.ok) {
@@ -607,10 +648,7 @@ async function sendMessage() {
         try {
           const errJson = await res.json();
           errText += ` - ${errJson.error || JSON.stringify(errJson)}`;
-          if (errJson.details) {
-            console.error("Server Error Details:", errJson.details);
-          }
-        } catch (e) {
+        } catch {
           // ignore parsing error
         }
         throw new Error(errText);
@@ -661,9 +699,10 @@ async function sendMessage() {
       chatHistory.push({ role: "user", content: message });
       chatHistory.push({ role: "assistant", content: fullText });
 
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       if (bubbleContent) {
-        bubbleContent.innerHTML = `<p class="text-red-400 text-sm">⚠️ 请求失败：${err.message}</p><p class="text-text-faint text-xs mt-1">请稍后重试，或直接使用左侧检索功能。</p>`;
+        bubbleContent.innerHTML = `<p class="text-red-400 text-sm">⚠️ 请求失败：${escapeHtml(errorMessage)}</p><p class="text-text-faint text-xs mt-1">请稍后重试，或直接使用左侧检索功能。</p>`;
       }
     } finally {
       isStreaming = false;
@@ -706,8 +745,8 @@ async function sendMessage() {
     let html = escapeHtml(text);
 
     // 反引号 `command_name` → 可点击复制
-    html = html.replace(/`([^`\n]+)`/g, (_, cmd) => {
-      return `<code class="inline-code" onclick="copyCommand(this, '${cmd.replace(/'/g, "\\'")}')" title="点击复制" style="cursor:pointer">${cmd}</code>`;
+    html = html.replace(/`([^`\n]+)`/g, (_, command) => {
+      return `<code class="inline-code" onclick="copyCommand(this, this.textContent || '')" title="点击复制" style="cursor:pointer">${command}</code>`;
     });
 
     // **bold**
