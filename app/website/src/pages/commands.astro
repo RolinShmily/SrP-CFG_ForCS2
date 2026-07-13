@@ -28,6 +28,7 @@ const quickQuestions = [
 ---
 
 <MainLayout title="指令中心 — SrP-CFG" description="CS2 官方控制台指令与变量中文翻译数据库，支持检索和分类筛选，内置 AI 助理。">
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <section class="pb-16 pt-28 sm:pb-20 sm:pt-32">
     <div class="mx-auto max-w-[1500px] px-5 sm:px-7">
       <SectionHeader
@@ -185,6 +186,7 @@ const quickQuestions = [
                   <Send class="w-4 h-4" />
                 </button>
               </div>
+              <div id="turnstile-container" class="mt-2 flex min-h-0 justify-center"></div>
               <p class="text-[10px] text-text-faint mt-1.5 text-center">AI 回复仅供参考，请以游戏内实际效果为准</p>
             </div>
           </div>
@@ -194,9 +196,6 @@ const quickQuestions = [
   </section>
 </MainLayout>
 
-<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<!-- Turnstile invisible widget -->
-<div id="turnstile-container" class="hidden"></div>
 <script>
   // ============ 指令检索逻辑 ============
   let rawCommands = [];
@@ -497,18 +496,79 @@ const quickQuestions = [
     });
   }
 
-// Turnstile site key — 在 GitHub → Settings → Secrets → Actions 设置 PUBLIC_TURNSTILE_SITE_KEY
+// Turnstile Site Key 是公开标识，由构建环境变量注入；Secret Key 仅存在于 Worker。
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "";
 
+interface TurnstileApi {
+  render(container: string | HTMLElement, options: {
+    sitekey: string;
+    execution: "execute";
+    appearance: "interaction-only";
+    callback: (token: string) => void;
+    "error-callback": () => void;
+    "expired-callback": () => void;
+  }): string;
+  execute(widgetId: string): void;
+  reset(widgetId: string): void;
+}
+
+let turnstileWidgetId: string | undefined;
+let pendingTurnstileResolve: ((token: string) => void) | undefined;
+let pendingTurnstileReject: ((error: Error) => void) | undefined;
+let turnstileTimeoutId: number | undefined;
+
 async function getTurnstileToken(): Promise<string> {
-  return new Promise((resolve) => {
-    if (typeof turnstile === "undefined") {
-      resolve(""); // Turnstile not loaded, skip
-      return;
-    }
-    turnstile.execute(TURNSTILE_SITE_KEY, {
-      callback: (token: string) => resolve(token),
+  if (!TURNSTILE_SITE_KEY) return "";
+
+  const container = document.getElementById("turnstile-container");
+  if (!container) throw new Error("Turnstile 容器不存在，请刷新页面重试。");
+
+  // Turnstile is loaded by Cloudflare's external script and is not part of DOM typings.
+  const api = (window as unknown as { turnstile?: TurnstileApi }).turnstile;
+  if (!api) throw new Error("Turnstile 尚未加载完成，请稍后重试。");
+
+  if (!turnstileWidgetId) {
+    turnstileWidgetId = api.render(container, {
+      sitekey: TURNSTILE_SITE_KEY,
+      execution: "execute",
+      appearance: "interaction-only",
+      callback: (token) => {
+        if (turnstileTimeoutId !== undefined) window.clearTimeout(turnstileTimeoutId);
+        const resolve = pendingTurnstileResolve;
+        pendingTurnstileResolve = undefined;
+        pendingTurnstileReject = undefined;
+        turnstileTimeoutId = undefined;
+        resolve?.(token);
+      },
+      "error-callback": () => {
+        if (turnstileTimeoutId !== undefined) window.clearTimeout(turnstileTimeoutId);
+        const reject = pendingTurnstileReject;
+        pendingTurnstileResolve = undefined;
+        pendingTurnstileReject = undefined;
+        turnstileTimeoutId = undefined;
+        reject?.(new Error("Turnstile 验证失败，请重试。"));
+      },
+      "expired-callback": () => {
+        pendingTurnstileReject?.(new Error("Turnstile 验证已过期，请重试。"));
+        pendingTurnstileResolve = undefined;
+        pendingTurnstileReject = undefined;
+      },
     });
+  } else {
+    api.reset(turnstileWidgetId);
+  }
+
+  const widgetId = turnstileWidgetId;
+  return new Promise((resolve, reject) => {
+    pendingTurnstileResolve = resolve;
+    pendingTurnstileReject = reject;
+    turnstileTimeoutId = window.setTimeout(() => {
+      pendingTurnstileResolve = undefined;
+      pendingTurnstileReject = undefined;
+      turnstileTimeoutId = undefined;
+      reject(new Error("Turnstile 验证超时，请重试。"));
+    }, 30_000);
+    api.execute(widgetId);
   });
 }
 
