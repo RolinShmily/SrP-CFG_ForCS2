@@ -144,27 +144,27 @@ const quickQuestions = [
               </button>
             </div>
 
+            <!-- 数据库选择 -->
+            <div class="flex border-b border-border text-xs bg-bg/30 relative z-10 select-none">
+              <button
+                type="button"
+                id="db-srpcfg"
+                class="flex-1 py-2 text-center border-b-2 font-medium transition-colors border-accent text-accent cursor-pointer"
+              >
+                SrP-CFG 预设与功能
+              </button>
+              <button
+                type="button"
+                id="db-commands"
+                class="flex-1 py-2 text-center border-b-2 font-medium transition-colors border-transparent text-text-muted hover:text-text cursor-pointer"
+              >
+                CS2 全量指令 (高阶)
+              </button>
+            </div>
+
             <!-- 消息区域 -->
             <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-4 no-scrollbar">
-              <!-- 欢迎消息 -->
-              <div class="flex gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-accent-bg border border-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Bot class="w-3.5 h-3.5 text-accent" />
-                </div>
-                <div class="flex-1">
-                  <div class="bg-bg-hover rounded-[10px] rounded-tl-[3px] px-3.5 py-2.5 text-sm text-text leading-6">
-                    <p class="mb-2">你好！我是 CS2 指令助理，已学习全部 <span class="text-accent font-semibold">2785</span> 条控制台指令。</p>
-                    <p class="text-text-muted text-xs mb-2">试着用自然语言问我：</p>
-                    <div class="flex flex-col gap-1.5">
-                      {quickQuestions.map((q) => (
-                        <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question={q}>
-                          {q}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <!-- 由 JavaScript 初始化渲染 -->
             </div>
 
             <!-- 输入区 -->
@@ -449,6 +449,76 @@ const quickQuestions = [
   // ============ AI 助理逻辑 ============
   let chatHistory: { role: string; content: string }[] = [];
   let isStreaming = false;
+  let currentDb = "srpcfg";
+
+  function renderWelcomeMessage(dbType: string) {
+    const messagesEl = document.getElementById("chat-messages");
+    if (!messagesEl) return;
+    chatHistory = [];
+    
+    let welcomeHtml = "";
+    if (dbType === "srpcfg") {
+      welcomeHtml = `
+        <div class="flex gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-accent-bg border border-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <div class="flex-1">
+            <div class="bg-bg-hover rounded-[10px] rounded-tl-[3px] px-3.5 py-2.5 text-sm text-text leading-6">
+              <p class="mb-2">你好！我是 <span class="text-accent font-semibold">SrP-CFG 配置包助手</span>。我已深度学习了配置包底层的 CFG 源码、按键绑定（Keybinds）、别名别称（Aliases）及各类预设玩法。</p>
+              <p class="text-text-muted text-xs mb-2">试着用自然语言提问你的按键与功能：</p>
+              <div class="flex flex-col gap-1.5">
+                <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question="J 键在配置包里绑定了什么功能？">
+                  J 键在配置包里绑定了什么功能？
+                </button>
+                <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question="一键练习跑图模式怎么开启？">
+                  一键练习跑图模式怎么开启？
+                </button>
+                <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question="配置包里的刀具模型预览怎么使用？">
+                  配置包里的刀具模型预览怎么使用？
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      welcomeHtml = `
+        <div class="flex gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-accent-bg border border-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <div class="flex-1">
+            <div class="bg-bg-hover rounded-[10px] rounded-tl-[3px] px-3.5 py-2.5 text-sm text-text leading-6">
+              <p class="mb-2">你好！我是 <span class="text-accent font-semibold">CS2 全量官方指令助理</span>，已学习全部 2780+ 条官方控制台指令与变量（Cvar）。</p>
+              <p class="text-text-muted text-xs mb-2">试着用自然语言询问官方控制台指令：</p>
+              <div class="flex flex-col gap-1.5">
+                <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question="如何改准星大小的指令？">
+                  如何改准星大小的指令？
+                </button>
+                <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question="怎么绑定一键大跳？">
+                  怎么绑定一键大跳？
+                </button>
+                <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question="哪些指令在作弊模式下才生效？">
+                  哪些指令在作弊模式下才生效？
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    messagesEl.innerHTML = welcomeHtml;
+    
+    messagesEl.querySelectorAll(".quick-question").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const question = btn.getAttribute("data-question") || "";
+        const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
+        if (input) input.value = question;
+        sendMessage();
+      });
+    });
+  }
 
   function initChat() {
     const fab = document.getElementById("ai-fab");
@@ -457,6 +527,31 @@ const quickQuestions = [
     const overlay = document.getElementById("ai-overlay");
     const sendBtn = document.getElementById("chat-send");
     const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
+    
+    const dbSrp = document.getElementById("db-srpcfg");
+    const dbCmd = document.getElementById("db-commands");
+
+    const selectDb = (dbType: string) => {
+      if (dbType === currentDb) return;
+      currentDb = dbType;
+
+      if (dbType === "srpcfg") {
+        dbSrp?.classList.add("border-accent", "text-accent");
+        dbSrp?.classList.remove("border-transparent", "text-text-muted");
+        dbCmd?.classList.add("border-transparent", "text-text-muted");
+        dbCmd?.classList.remove("border-accent", "text-accent");
+      } else {
+        dbCmd?.classList.add("border-accent", "text-accent");
+        dbCmd?.classList.remove("border-transparent", "text-text-muted");
+        dbSrp?.classList.add("border-transparent", "text-text-muted");
+        dbSrp?.classList.remove("border-accent", "text-accent");
+      }
+
+      renderWelcomeMessage(dbType);
+    };
+
+    dbSrp?.addEventListener("click", () => selectDb("srpcfg"));
+    dbCmd?.addEventListener("click", () => selectDb("commands"));
 
     // 小屏打开面板
     fab?.addEventListener("click", () => {
@@ -469,15 +564,6 @@ const quickQuestions = [
     };
     closeBtn?.addEventListener("click", closePanel);
     overlay?.addEventListener("click", closePanel);
-
-    // 快捷问题按钮
-    document.querySelectorAll(".quick-question").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const question = btn.getAttribute("data-question") || "";
-        if (input) input.value = question;
-        sendMessage();
-      });
-    });
 
     // 发送按钮
     sendBtn?.addEventListener("click", () => sendMessage());
@@ -495,7 +581,11 @@ const quickQuestions = [
       input.style.height = "auto";
       input.style.height = Math.min(input.scrollHeight, 96) + "px";
     });
+
+    // 初始化渲染默认数据库欢迎语
+    renderWelcomeMessage("srpcfg");
   }
+
 
 // Turnstile Site Key 是公开标识，由构建环境变量注入；Secret Key 仅存在于 Worker。
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "";
@@ -635,6 +725,7 @@ async function sendMessage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message,
+          db: currentDb,
           history: chatHistory.slice(-6).map((item) => ({
             role: item.role,
             content: item.content.slice(0, 4_000),

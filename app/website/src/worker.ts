@@ -1,5 +1,6 @@
 export interface Env {
   VECTORIZE_INDEX: VectorizeIndex;
+  CONFIG_INDEX?: VectorizeIndex;
   AI: Ai;
   ASSETS: { fetch: typeof fetch };
   TURNSTILE_SECRET_KEY?: string;
@@ -213,8 +214,11 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     }
     const queryVector = queryEmbedResponse.data[0] as number[];
 
-    // 2. Semantic search in Vectorize
-    const vectorMatches = await env.VECTORIZE_INDEX.query(queryVector, {
+    // 2. Decide which index to query based on payload.db
+    const useSrpDb = payload.db === "srpcfg" || payload.db === undefined; // default to srpcfg
+    const indexToQuery = (useSrpDb && env.CONFIG_INDEX) ? env.CONFIG_INDEX : env.VECTORIZE_INDEX;
+
+    const vectorMatches = await indexToQuery.query(queryVector, {
       topK: TOP_K,
       returnValues: false,
       returnMetadata: "all",
@@ -232,23 +236,40 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     }>;
 
     const contextStr = matchedCommands
-      .map(
-        (command) =>
-          `- \`${command.n}\` (${command.t}): ${command.cn || command.en || "无描述"} | 默认值: ${command.d || "无"}`,
-      )
+      .map((item) => {
+        if (item.t === "doc") {
+          return `- [SrP-CFG 官方文档] 《${item.n}》 (参考链接: /docs/${item.d}): ${item.cn}`;
+        }
+        return `- \`${item.n}\` (${item.t === "convar" ? "变量" : "指令"}): ${item.cn || item.en || "无描述"} | 默认值: ${item.d || "无"}`;
+      })
       .join("\n");
 
-    // 4. Construct the prompt
-    const systemPrompt = `你是一个专业的 CS2 游戏控制台指令助理。请根据下面提供的参考指令字典，解答玩家的提问。
+    // 4. Construct the prompt based on selected database
+    let systemPrompt = "";
+    if (useSrpDb) {
+      systemPrompt = `你是一个专业的 CS2 游戏控制台指令与 SrP-CFG 配置包助手。请根据下面提供的参考字典（包含配置包文件、按键绑定、别名和相关指令说明），解答玩家的提问。
+
+参考字典（按相关度排序）：
+${contextStr}
+
+回答规范：
+1. 只解答 CS2 游戏控制台指令与 SrP-CFG 配置包相关问题，婉拒无关内容。
+2. 涉及指令、绑定按键或别名时，必须用 \`指令/按键/别名\` 格式包裹（例如 \`bind "J" "srp_knife"\`），并清晰说明其作用位置、生效范围和条件。
+3. 详细解释玩家询问的配置预设、快捷键或功能原理（如 knife 刀具模型切换、practice 跑图练习、zeus 快捷电人、autoview 视角切换等）。如果字典里有参考链接，建议引导玩家去文档查看，链接格式为 [页面标题](/docs/路径)。
+4. 如果字典中没有直接匹配的配置内容，请如实告知玩家，不要编造不存在的预设或绑定。
+5. 保持回答简练、专业、有条理。请使用中文回答。`;
+    } else {
+      systemPrompt = `你是一个专业的 CS2 官方控制台指令与变量助手。请根据下面提供的参考指令字典，解答玩家的提问。
 
 参考指令字典（按相关度排序）：
 ${contextStr}
 
 回答规范：
-1. 只解答 CS2 游戏控制台指令相关问题，婉拒无关内容。
-2. 涉及指令时，必须用 \`指令名\` 格式包裹，并说明该指令的作用、默认值及推荐设置。
+1. 只解答 CS2 官方控制台指令与变量（Cvar）相关问题，婉拒无关内容。
+2. 涉及指令或变量时，必须用 \`指令名\` 格式包裹，并说明该指令的作用、默认值及推荐设置（如果适用）。
 3. 如果字典中没有直接匹配的指令，请如实告知玩家，不要编造字典中不存在的指令。
 4. 保持回答简练、专业、有条理。请使用中文回答。`;
+    }
 
     const messages = [
       { role: "system", content: systemPrompt },

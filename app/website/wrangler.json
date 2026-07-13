@@ -13,6 +13,10 @@
 		{
 			"binding": "VECTORIZE_INDEX",
 			"index_name": "cs2-commands-index"
+		},
+		{
+			"binding": "CONFIG_INDEX",
+			"index_name": "srp-config-index"
 		}
 	]
 }
