@@ -64,9 +64,15 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     }
 
     // 1. Embed the user query
-    const queryEmbedResponse = await env.AI.run(EMBEDDING_MODEL, {
-      text: [message],
-    });
+    let queryEmbedResponse;
+    try {
+      queryEmbedResponse = await env.AI.run(EMBEDDING_MODEL, {
+        text: [message],
+      });
+    } catch (e: unknown) {
+      const err = e as Error;
+      throw new Error(`Embedding model (${EMBEDDING_MODEL}) failed: ${err.message}`);
+    }
     const queryVector = queryEmbedResponse.data[0] as number[];
 
     // 2. Semantic search in Vectorize
@@ -116,10 +122,16 @@ ${contextStr}
     ];
 
     // 5. Stream the LLM response
-    const stream = (await env.AI.run(LLM_MODEL, {
-      messages,
-      stream: true,
-    })) as ReadableStream;
+    let stream;
+    try {
+      stream = (await env.AI.run(LLM_MODEL, {
+        messages,
+        stream: true,
+      })) as ReadableStream;
+    } catch (e: unknown) {
+      const err = e as Error;
+      throw new Error(`LLM model (${LLM_MODEL}) failed: ${err.message}`);
+    }
 
     return new Response(stream, {
       headers: {
