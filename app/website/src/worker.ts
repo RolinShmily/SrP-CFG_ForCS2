@@ -288,6 +288,9 @@ ${contextStr}
     const message = error instanceof Error ? error.message : String(error);
     const stack = error instanceof Error ? error.stack : undefined;
     console.error("Chat API error:", message, stack);
+    if (message.includes("2016") || message.includes("2017") || message.includes("security configurations")) {
+      return jsonError("提问或回复包含不当及敏感内容，已被安全策略拦截。", 400);
+    }
     return jsonError("AI 服务暂时不可用，请稍后重试。", 500);
   }
 }
