@@ -9,19 +9,13 @@ BATCH_SIZE = 50  # commands per embedding + upsert cycle
 
 
 def get_credentials():
-    """Return (account, ai_token, vectorize_token) from environment."""
     account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
-    ai_token = (
+    token = (
         os.environ.get("CLOUDFLARE_AI_TOKEN")
         or os.environ.get("CLOUDFLARE_API_TOKEN")
         or os.environ.get("CF_API_TOKEN")
     )
-    # Vectorize token falls back to AI token if not separately configured
-    vectorize_token = (
-        os.environ.get("CLOUDFLARE_VECTORIZE_TOKEN")
-        or ai_token
-    )
-    return account, ai_token, vectorize_token
+    return account, token
 
 
 def cf_request(url, token, payload=None, method="GET", content_type="application/json"):
@@ -94,8 +88,8 @@ def upsert_vectors(account, token, vectors):
 
 
 def main():
-    account, ai_token, vectorize_token = get_credentials()
-    if not account or not ai_token:
+    account, token = get_credentials()
+    if not account or not token:
         print("Missing Cloudflare credentials. Skipping Vectorize sync.")
         return
 
@@ -130,7 +124,7 @@ def main():
 
         try:
             # 1. Generate embeddings
-            embeddings = get_embeddings(account, ai_token, embed_texts)
+            embeddings = get_embeddings(account, token, embed_texts)
 
             # Diagnostic: print embedding info on first batch
             if first_batch:
@@ -165,7 +159,7 @@ def main():
                 print(f"  [DEBUG] NDJSON sample (first 2 lines):\n{sample_ndjson}")
 
             # 3. Upsert into Vectorize
-            upsert_vectors(account, vectorize_token, vectors)
+            upsert_vectors(account, token, vectors)
             success_count += len(batch)
             print(f"  [{i + len(batch)}/{total}] Batch synced ({success_count} total)")
             time.sleep(0.3)
