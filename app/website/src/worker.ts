@@ -118,9 +118,9 @@ ${contextStr}
         ...corsHeaders,
       },
     });
-  } catch (err: any) {
-    const errorMsg = err?.message || String(err);
-    console.error("Chat API error:", errorMsg, err?.stack);
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error("Chat API error:", errorMsg, err instanceof Error ? err.stack : undefined);
     return new Response(
       JSON.stringify({ error: errorMsg || "Internal Server Error" }),
       {
