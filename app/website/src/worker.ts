@@ -126,6 +126,7 @@ ${contextStr}
     try {
       stream = (await env.AI.run(LLM_MODEL, {
         messages,
+        max_tokens: 1024,
         stream: true,
       })) as ReadableStream;
     } catch (e: unknown) {
