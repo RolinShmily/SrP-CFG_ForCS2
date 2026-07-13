@@ -2,6 +2,7 @@ export interface Env {
   VECTORIZE_INDEX: VectorizeIndex;
   AI: Ai;
   ASSETS: { fetch: typeof fetch };
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
@@ -80,9 +81,10 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
   }
 
   try {
-    const { message, history } = (await request.json()) as {
+    const { message, history, turnstileToken } = (await request.json()) as {
       message: string;
       history?: { role: string; content: string }[];
+      turnstileToken?: string;
     };
 
     if (!message) {
@@ -90,6 +92,33 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
         status: 400,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
+    }
+
+    // Turnstile verification (optional — only if SECRET is configured)
+    if (env.TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return new Response(JSON.stringify({ error: "缺少人机验证令牌，请刷新页面后重试。" }), {
+          status: 403,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+      const verifyUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+      const verifyBody = new URLSearchParams({
+        secret: env.TURNSTILE_SECRET_KEY,
+        response: turnstileToken,
+        remoteip: clientIp === "unknown" ? "" : clientIp,
+      });
+      const verifyRes = await fetch(verifyUrl, {
+        method: "POST",
+        body: verifyBody,
+      });
+      const verifyData = (await verifyRes.json()) as { success: boolean; [key: string]: unknown };
+      if (!verifyData.success) {
+        return new Response(JSON.stringify({ error: "人机验证失败，请刷新页面后重试。" }), {
+          status: 403,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
     }
 
     // 1. Embed the user query

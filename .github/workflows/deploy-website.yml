@@ -43,3 +43,15 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         working-directory: app/website
         run: npx wrangler deploy
+
+      - name: Set Turnstile secret (if configured)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.CLOUDFLARE_TURNSTILE_SECRET || secrets.TURNSTILE_SECRET_KEY || '' }}
+        working-directory: app/website
+        run: |
+          if [ -n "$TURNSTILE_SECRET_KEY" ]; then
+            echo "$TURNSTILE_SECRET_KEY" | npx wrangler secret put TURNSTILE_SECRET_KEY
+          else
+            echo "TURNSTILE_SECRET_KEY not set. Skipping."
+          fi

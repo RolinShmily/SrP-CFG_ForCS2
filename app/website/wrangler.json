@@ -6,7 +6,8 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2025-01-01",
 	"ai": {
-		"binding": "AI"
+		"binding": "AI",
+		"gateway_id": "srp-cfg"
 	},
 	"vectorize": [
 		{

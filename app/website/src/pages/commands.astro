@@ -194,6 +194,9 @@ const quickQuestions = [
   </section>
 </MainLayout>
 
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<!-- Turnstile invisible widget -->
+<div id="turnstile-container" class="hidden"></div>
 <script>
   // ============ 指令检索逻辑 ============
   let rawCommands = [];
@@ -494,7 +497,23 @@ const quickQuestions = [
     });
   }
 
-  async function sendMessage() {
+// Turnstile configuration
+// ⚠️ 在 Cloudflare Dashboard → Turnstile → 添加小部件后，将下面的站点密钥替换为你的实际值
+const TURNSTILE_SITE_KEY = "0x4AAAAAAA..."; // <-- 请替换为你的 Turnstile Site Key
+
+async function getTurnstileToken(): Promise<string> {
+  return new Promise((resolve) => {
+    if (typeof turnstile === "undefined") {
+      resolve(""); // Turnstile not loaded, skip
+      return;
+    }
+    turnstile.execute(TURNSTILE_SITE_KEY, {
+      callback: (token: string) => resolve(token),
+    });
+  });
+}
+
+async function sendMessage() {
     const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
     if (!input || isStreaming) return;
 
@@ -517,10 +536,11 @@ const quickQuestions = [
     updateSendButton();
 
     try {
+      const turnstileToken = await getTurnstileToken();
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, history: chatHistory.slice(-6) }),
+        body: JSON.stringify({ message, history: chatHistory.slice(-6), turnstileToken }),
       });
 
       if (!res.ok) {
