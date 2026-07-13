@@ -10,6 +10,9 @@ on:
       - 'app/website/**'
       - 'app/shared/**'
       - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
+    # 支持在 GitHub Actions 页面上手动触发
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

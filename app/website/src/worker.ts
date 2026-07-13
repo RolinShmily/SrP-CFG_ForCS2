@@ -62,7 +62,7 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     const vectorMatches = await env.VECTORIZE_INDEX.query(queryVector, {
       topK: TOP_K,
       returnValues: false,
-      returnMetadata: true,
+      returnMetadata: "all",
     });
 
     // 3. Build context from matched metadata
@@ -119,8 +119,10 @@ ${contextStr}
       },
     });
   } catch (err: any) {
+    const errorMsg = err?.message || String(err);
+    console.error("Chat API error:", errorMsg, err?.stack);
     return new Response(
-      JSON.stringify({ error: err.message || "Internal Server Error" }),
+      JSON.stringify({ error: errorMsg || "Internal Server Error" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
