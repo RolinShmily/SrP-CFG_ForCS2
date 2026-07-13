@@ -35,6 +35,8 @@ jobs:
         run: pnpm install:web
 
       - name: Build website
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
         run: pnpm build:web
 
       - name: Deploy to Cloudflare Workers

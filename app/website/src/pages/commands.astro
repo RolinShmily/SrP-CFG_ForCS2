@@ -126,7 +126,7 @@ const quickQuestions = [
           <div id="ai-overlay" class="absolute inset-0 bg-bg/80 backdrop-blur-sm xl:hidden cursor-pointer"></div>
 
           <!-- 实际面板内容 -->
-          <div class="relative w-full xl:sticky xl:top-24 xl:h-[420px] h-[60vh] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col shadow-2xl" style="resize: vertical; overflow: hidden; min-height: 300px; max-height: calc(100vh - 8rem);">
+          <div class="relative w-full xl:sticky xl:top-24 xl:h-[420px] h-[60vh] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col shadow-2xl" style="resize: both; overflow: hidden; min-width: 300px; max-width: 500px; min-height: 300px; max-height: calc(100vh - 8rem);">
             <!-- 面板顶栏 -->
             <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-hover/50">
               <div class="flex items-center gap-2">
@@ -377,7 +377,7 @@ const quickQuestions = [
               <code class="text-accent font-mono text-base font-bold select-all group-hover:text-accent-light transition-colors break-all cursor-pointer" title="点击复制" onclick="copyCommand(this, '${cmd.n}')">${cmd.n}</code>
               <div class="flex flex-wrap items-center gap-1.5 flex-shrink-0">${valueHtml}</div>
             </div>
-            <p class="text-text font-body text-sm leading-6 mb-1.5">${cmd.cn || '暂无详细中文释义'}</p>
+            <p class="text-text font-body text-sm leading-6 mb-1.5 break-words">${cmd.cn || '暂无详细中文释义'}</p>
             ${cmd.en ? `<p class="text-text-muted font-body text-xs italic break-words leading-5">${cmd.en}</p>` : ''}
           </div>
           <div class="flex items-start justify-between gap-4 mt-4 border-t border-border/40 pt-3">
@@ -387,7 +387,6 @@ const quickQuestions = [
               <span data-copy-text>复制</span>
             </button>
           </div>
-        </div>
       `;
     }).join("");
 
@@ -497,9 +496,8 @@ const quickQuestions = [
     });
   }
 
-// Turnstile configuration
-// ⚠️ 在 Cloudflare Dashboard → Turnstile → 添加小部件后，将下面的站点密钥替换为你的实际值
-const TURNSTILE_SITE_KEY = "0x4AAAAAAA..."; // <-- 请替换为你的 Turnstile Site Key
+// Turnstile site key — 在 GitHub → Settings → Secrets → Actions 设置 PUBLIC_TURNSTILE_SITE_KEY
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "";
 
 async function getTurnstileToken(): Promise<string> {
   return new Promise((resolve) => {
