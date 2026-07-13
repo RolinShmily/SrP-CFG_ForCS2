@@ -43,12 +43,41 @@ export default {
   },
 };
 
+// Simple in-memory rate limiter per edge node
+const rateLimitMap = new Map<string, number[]>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const windowMs = 60 * 1000; // 1 minute window
+  const maxRequests = 10; // Max 10 requests per minute per IP
+
+  let requests = rateLimitMap.get(ip) || [];
+  requests = requests.filter((time) => now - time < windowMs);
+
+  if (requests.length >= maxRequests) {
+    rateLimitMap.set(ip, requests);
+    return false;
+  }
+
+  requests.push(now);
+  rateLimitMap.set(ip, requests);
+  return true;
+}
+
 async function handleChat(request: Request, env: Env): Promise<Response> {
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
+
+  const clientIp = request.headers.get("cf-connecting-ip") || "unknown";
+  if (clientIp !== "unknown" && !checkRateLimit(clientIp)) {
+    return new Response(JSON.stringify({ error: "请求过于频繁，请稍候再试（限制 10次/分钟）。" }), {
+      status: 429,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
 
   try {
     const { message, history } = (await request.json()) as {
@@ -126,7 +155,7 @@ ${contextStr}
     try {
       stream = (await env.AI.run(LLM_MODEL, {
         messages,
-        max_tokens: 1024,
+        max_tokens: 2048,
         stream: true,
       })) as ReadableStream;
     } catch (e: unknown) {
