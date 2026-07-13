@@ -47,7 +47,7 @@ const quickQuestions = [
         <Bot class="w-6 h-6" />
       </button>
 
-      <div class="flex flex-col xl:flex-row gap-6 mt-12 items-stretch">
+      <div class="flex flex-col xl:flex-row gap-6 mt-12 items-start">
         <!-- 左侧：指令检索区 -->
         <div class="flex-1 w-full min-w-0">
           <div class="flex flex-col lg:flex-row gap-8 items-start">
@@ -120,13 +120,13 @@ const quickQuestions = [
         <!-- 右侧：AI 助理面板 -->
         <div
           id="ai-panel"
-          class="fixed inset-0 z-40 xl:z-auto xl:static xl:block flex items-end translate-y-full xl:translate-y-0 opacity-0 xl:opacity-100 pointer-events-none xl:pointer-events-auto transition-all duration-300 w-full xl:w-[360px] flex-shrink-0"
+          class="fixed inset-0 z-40 xl:z-auto xl:sticky xl:top-24 xl:block bg-bg/80 xl:bg-transparent backdrop-blur-sm xl:backdrop-blur-none flex items-end xl:items-start translate-y-full xl:translate-y-0 opacity-0 xl:opacity-100 pointer-events-none xl:pointer-events-auto transition-all duration-300 w-full xl:w-[360px] flex-shrink-0 self-start"
         >
           <!-- 遮罩点击关闭（小屏） -->
           <div id="ai-overlay" class="absolute inset-0 bg-bg/80 backdrop-blur-sm xl:hidden cursor-pointer"></div>
 
-          <!-- 实际面板内容 -->
-          <div class="relative w-full xl:sticky xl:top-24 xl:h-[420px] h-[60vh] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col shadow-2xl" style="resize: both; overflow: hidden; min-width: 300px; max-width: 500px; min-height: 300px; max-height: calc(100vh - 8rem);">
+          <!-- 实际面板内容（无 sticky，由外层控制） -->
+          <div class="relative w-full xl:w-[360px] xl:h-[420px] h-[60vh] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col shadow-2xl" style="resize: both; overflow: hidden; min-width: 300px; max-width: 500px; min-height: 300px; max-height: calc(100vh - 8rem);">
             <!-- 面板顶栏 -->
             <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-hover/50">
               <div class="flex items-center gap-2">
