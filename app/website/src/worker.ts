@@ -196,9 +196,17 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     // 1. Embed the user query
     let queryEmbedResponse;
     try {
-      queryEmbedResponse = await env.AI.run(EMBEDDING_MODEL, {
-        text: [message],
-      });
+      queryEmbedResponse = await env.AI.run(
+        EMBEDDING_MODEL,
+        {
+          text: [message],
+        },
+        {
+          gateway: {
+            id: "srp-cfg",
+          },
+        },
+      );
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(`Embedding model (${EMBEDDING_MODEL}) failed: ${message}`);
@@ -252,11 +260,19 @@ ${contextStr}
     // 5. Stream the LLM response
     let stream;
     try {
-      stream = (await env.AI.run(LLM_MODEL, {
-        messages,
-        max_tokens: 1_024,
-        stream: true,
-      })) as ReadableStream;
+      stream = (await env.AI.run(
+        LLM_MODEL,
+        {
+          messages,
+          max_tokens: 1_024,
+          stream: true,
+        },
+        {
+          gateway: {
+            id: "srp-cfg",
+          },
+        },
+      )) as ReadableStream;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(`LLM model (${LLM_MODEL}) failed: ${message}`);
