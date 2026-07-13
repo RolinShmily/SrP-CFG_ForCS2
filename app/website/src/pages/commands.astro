@@ -47,7 +47,7 @@ const quickQuestions = [
         <Bot class="w-6 h-6" />
       </button>
 
-      <div class="flex gap-6 mt-12 items-start">
+      <div class="flex flex-col xl:flex-row gap-6 mt-12 items-stretch">
         <!-- 左侧：指令检索区 -->
         <div class="flex-1 w-full min-w-0">
           <div class="flex flex-col lg:flex-row gap-8 items-start">
@@ -120,13 +120,13 @@ const quickQuestions = [
         <!-- 右侧：AI 助理面板 -->
         <div
           id="ai-panel"
-          class="fixed inset-0 z-40 xl:z-auto xl:static xl:z-0 bg-bg/80 xl:bg-transparent backdrop-blur-sm xl:backdrop-blur-none flex items-end xl:items-start xl:block translate-y-full xl:translate-y-0 opacity-0 xl:opacity-100 pointer-events-none xl:pointer-events-auto transition-all duration-300 w-full xl:w-[360px] flex-shrink-0"
+          class="fixed inset-0 z-40 xl:z-auto xl:static xl:block flex items-end translate-y-full xl:translate-y-0 opacity-0 xl:opacity-100 pointer-events-none xl:pointer-events-auto transition-all duration-300 w-full xl:w-[360px] flex-shrink-0"
         >
           <!-- 遮罩点击关闭（小屏） -->
-          <div id="ai-overlay" class="absolute inset-0 xl:hidden cursor-pointer"></div>
+          <div id="ai-overlay" class="absolute inset-0 bg-bg/80 backdrop-blur-sm xl:hidden cursor-pointer"></div>
 
           <!-- 实际面板内容 -->
-          <div class="relative xl:sticky xl:top-24 w-full xl:w-[360px] h-[60vh] xl:h-[520px] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col overflow-hidden shadow-2xl">
+          <div class="relative w-full xl:sticky xl:top-24 xl:h-[420px] h-[60vh] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col shadow-2xl" style="resize: vertical; overflow: hidden; min-height: 300px; max-height: calc(100vh - 8rem);">
             <!-- 面板顶栏 -->
             <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-hover/50">
               <div class="flex items-center gap-2">
@@ -377,9 +377,9 @@ const quickQuestions = [
             <p class="text-text font-body text-sm leading-6 mb-1.5">${cmd.cn || '暂无详细中文释义'}</p>
             ${cmd.en ? `<p class="text-text-muted font-body text-xs italic break-words leading-5">${cmd.en}</p>` : ''}
           </div>
-          <div class="flex items-center justify-between mt-4 border-t border-border/40 pt-3">
-            <div class="flex items-center gap-1">${flagsHtml}</div>
-            <button type="button" onclick="copyCommand(this, '${cmd.n}')" class="flex items-center gap-1 text-text-muted hover:text-accent font-display text-xs font-semibold cursor-pointer transition-colors bg-bg border border-border hover:border-accent-bg px-2.5 py-1 rounded-[6px]">
+          <div class="flex items-start justify-between gap-4 mt-4 border-t border-border/40 pt-3">
+            <div class="flex flex-wrap items-center gap-1.5 flex-1">${flagsHtml}</div>
+            <button type="button" onclick="copyCommand(this, '${cmd.n}')" class="flex items-center gap-1 flex-shrink-0 text-text-muted hover:text-accent font-display text-xs font-semibold cursor-pointer transition-colors bg-bg border border-border hover:border-accent-bg px-2.5 py-1 rounded-[6px]">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-copy-icon><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
               <span data-copy-text>复制</span>
             </button>
