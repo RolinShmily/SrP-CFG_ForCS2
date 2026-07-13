@@ -3,8 +3,7 @@ import json
 import urllib.request
 import urllib.error
 import time
-
-EMBEDDING_MODEL = "@cf/baai/bge-large-zh-v1.5"
+EMBEDDING_MODEL = "@cf/baai/bge-m3"
 INDEX_NAME = "cs2-commands-index"
 BATCH_SIZE = 50  # commands per embedding + upsert cycle
 

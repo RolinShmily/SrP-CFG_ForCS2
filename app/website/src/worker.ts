@@ -4,7 +4,7 @@ export interface Env {
   ASSETS: { fetch: typeof fetch };
 }
 
-const EMBEDDING_MODEL = "@cf/baai/bge-large-zh-v1.5";
+const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const LLM_MODEL = "@cf/meta/llama-3.1-8b-instruct";
 const TOP_K = 8;
 
