@@ -1,11 +1,13 @@
 import os
 import json
 import urllib.request
+import urllib.error
 import time
 
 EMBEDDING_MODEL = "@cf/baai/bge-large-zh-v1.5"
 INDEX_NAME = "cs2-commands-index"
 BATCH_SIZE = 50  # commands per embedding + upsert cycle
+
 
 def get_credentials():
     account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
@@ -17,19 +19,32 @@ def get_credentials():
     return account, token
 
 
-def cf_request(url, token, payload=None, method="GET"):
-    data = json.dumps(payload).encode("utf-8") if payload else None
+def cf_request(url, token, payload=None, method="GET", content_type="application/json"):
+    """Generic Cloudflare API request with proper error handling."""
+    if content_type == "application/json":
+        data = json.dumps(payload).encode("utf-8") if payload else None
+    else:
+        data = payload  # raw bytes for multipart
+
     req = urllib.request.Request(
         url,
         data=data,
         headers={
             "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
+            "Content-Type": content_type,
         },
         method=method,
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_body = ""
+        try:
+            error_body = e.read().decode("utf-8")
+        except Exception:
+            pass
+        raise RuntimeError(f"HTTP {e.code} from {url}: {error_body}")
 
 
 def get_embeddings(account, token, texts):
@@ -43,32 +58,31 @@ def get_embeddings(account, token, texts):
 
 def upsert_vectors(account, token, vectors):
     """Upsert a batch of vectors into Cloudflare Vectorize via NDJSON multipart upload."""
-    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/v2/indexes/{INDEX_NAME}/insert"
+    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/v2/indexes/{INDEX_NAME}/upsert"
 
     # Build NDJSON body: one JSON object per line
-    ndjson_lines = "\n".join(json.dumps(v) for v in vectors) + "\n"
+    ndjson_lines = "\n".join(json.dumps(v, ensure_ascii=False) for v in vectors) + "\n"
+    ndjson_bytes = ndjson_lines.encode("utf-8")
 
-    # Construct multipart/form-data manually (no external deps needed)
+    # Construct multipart/form-data manually
     boundary = "----FormBoundary7MA4YWxkTrZu0gW"
-    body = (
-        f"--{boundary}\r\n"
-        f'Content-Disposition: form-data; name="vectors"; filename="vectors.ndjson"\r\n'
-        f"Content-Type: application/octet-stream\r\n\r\n"
-        f"{ndjson_lines}"
-        f"--{boundary}--\r\n"
-    ).encode("utf-8")
-
-    req = urllib.request.Request(
-        url,
-        data=body,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": f"multipart/form-data; boundary={boundary}",
-        },
-        method="POST",
+    body_parts = []
+    body_parts.append(f"--{boundary}\r\n".encode("utf-8"))
+    body_parts.append(
+        f'Content-Disposition: form-data; name="vectors"; filename="vectors.ndjson"\r\n'.encode("utf-8")
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        res = json.loads(resp.read().decode("utf-8"))
+    body_parts.append(b"Content-Type: application/octet-stream\r\n\r\n")
+    body_parts.append(ndjson_bytes)
+    body_parts.append(f"--{boundary}--\r\n".encode("utf-8"))
+    body = b"".join(body_parts)
+
+    res = cf_request(
+        url,
+        token,
+        payload=body,
+        method="POST",
+        content_type=f"multipart/form-data; boundary={boundary}",
+    )
     if not res.get("success"):
         raise RuntimeError(f"Vectorize upsert error: {json.dumps(res)}")
     return res
@@ -92,10 +106,12 @@ def main():
     print(f"Syncing {total} commands to Cloudflare Vectorize index '{INDEX_NAME}'...")
 
     success_count = 0
+    first_batch = True
+
     for i in range(0, total, BATCH_SIZE):
         batch = commands[i : i + BATCH_SIZE]
 
-        # Build composite text for embedding: combine name, type, default, CN, EN
+        # Build composite text for embedding
         embed_texts = []
         for cmd in batch:
             parts = [
@@ -110,6 +126,13 @@ def main():
         try:
             # 1. Generate embeddings
             embeddings = get_embeddings(account, token, embed_texts)
+
+            # Diagnostic: print embedding info on first batch
+            if first_batch:
+                print(f"  [DEBUG] Embedding count: {len(embeddings)}")
+                print(f"  [DEBUG] First embedding dimensions: {len(embeddings[0])}")
+                print(f"  [DEBUG] First embedding sample (first 5 values): {embeddings[0][:5]}")
+                first_batch = False
 
             # 2. Build vector payloads with metadata
             vectors = []
@@ -128,14 +151,28 @@ def main():
                     }
                 )
 
+            # Diagnostic: print first vector structure
+            if i == 0:
+                sample = {"id": vectors[0]["id"], "values_len": len(vectors[0]["values"]), "metadata": vectors[0]["metadata"]}
+                print(f"  [DEBUG] First vector: {json.dumps(sample, ensure_ascii=False)}")
+                # Print raw NDJSON for first 2 vectors
+                sample_ndjson = "\n".join(json.dumps(v, ensure_ascii=False) for v in vectors[:2])
+                print(f"  [DEBUG] NDJSON sample (first 2 lines):\n{sample_ndjson}")
+
             # 3. Upsert into Vectorize
             upsert_vectors(account, token, vectors)
             success_count += len(batch)
             print(f"  [{i + len(batch)}/{total}] Batch synced ({success_count} total)")
-            time.sleep(0.3)  # gentle rate limiting
+            time.sleep(0.3)
         except Exception as e:
             print(f"  [{i}/{total}] ERROR: {e}")
-            # Continue with next batch instead of aborting entirely
+            # On first batch failure, also print the raw NDJSON for debugging
+            if i == 0:
+                try:
+                    sample_ndjson = "\n".join(json.dumps(v, ensure_ascii=False) for v in vectors[:3])
+                    print(f"  [DEBUG] First 3 vectors NDJSON:\n{sample_ndjson}")
+                except Exception:
+                    pass
 
     print(f"Vectorize sync complete. {success_count}/{total} commands indexed.")
 
