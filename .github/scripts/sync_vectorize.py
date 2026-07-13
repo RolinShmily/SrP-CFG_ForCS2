@@ -1,11 +1,14 @@
 import os
 import json
+import hashlib
 import urllib.request
 import urllib.error
 import time
+
 EMBEDDING_MODEL = "@cf/baai/bge-m3"
 INDEX_NAME = "cs2-commands-index"
 BATCH_SIZE = 50  # commands per embedding + upsert cycle
+CACHE_PATH = ".github/scripts/vectorize_sync_cache.json"
 
 
 def get_credentials():
@@ -23,7 +26,7 @@ def cf_request(url, token, payload=None, method="GET", content_type="application
     if content_type == "application/json":
         data = json.dumps(payload).encode("utf-8") if payload else None
     else:
-        data = payload  # raw bytes for multipart
+        data = payload  # raw bytes
 
     req = urllib.request.Request(
         url,
@@ -58,10 +61,7 @@ def get_embeddings(account, token, texts):
 def upsert_vectors(account, token, vectors):
     """Upsert a batch of vectors into Cloudflare Vectorize via raw NDJSON body."""
     url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/v2/indexes/{INDEX_NAME}/upsert"
-
-    # Build NDJSON body: one JSON object per line
     ndjson_lines = "\n".join(json.dumps(v, ensure_ascii=False) for v in vectors) + "\n"
-
     res = cf_request(
         url,
         token,
@@ -72,6 +72,30 @@ def upsert_vectors(account, token, vectors):
     if not res.get("success"):
         raise RuntimeError(f"Vectorize upsert error: {json.dumps(res)}")
     return res
+
+
+def compute_hash(cmd):
+    """Compute a content hash for a command — changes if any embed-relevant field changes."""
+    content = f"{cmd.get('n','')}|{cmd.get('t','')}|{cmd.get('d','')}|{cmd.get('cn','')}|{cmd.get('en','')}"
+    return hashlib.md5(content.encode("utf-8")).hexdigest()
+
+
+def load_cache():
+    """Load the local sync cache: { command_name: content_hash }"""
+    if os.path.exists(CACHE_PATH):
+        try:
+            with open(CACHE_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def save_cache(cache):
+    """Save the sync cache to disk."""
+    os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
+    with open(CACHE_PATH, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
 def main():
@@ -88,16 +112,31 @@ def main():
     with open(commands_path, "r", encoding="utf-8") as f:
         commands = json.load(f)
 
-    total = len(commands)
-    print(f"Syncing {total} commands to Cloudflare Vectorize index '{INDEX_NAME}'...")
+    # 1. Load cache and determine which commands need (re-)embedding
+    cache = load_cache()
+    stale_commands = []
+    for cmd in commands:
+        name = cmd.get("n", "")
+        h = compute_hash(cmd)
+        if cache.get(name) != h:
+            stale_commands.append(cmd)
 
+    total = len(commands)
+    stale_count = len(stale_commands)
+    print(f"Total commands: {total} | Need sync: {stale_count} | Cached: {total - stale_count}")
+
+    if stale_count == 0:
+        print("All vectors are up to date. Nothing to sync.")
+        return
+
+    # 2. Batch-embed and upsert only stale commands
+    print(f"Syncing {stale_count} changed/new commands to Vectorize index '{INDEX_NAME}'...")
     success_count = 0
     first_batch = True
 
-    for i in range(0, total, BATCH_SIZE):
-        batch = commands[i : i + BATCH_SIZE]
+    for i in range(0, stale_count, BATCH_SIZE):
+        batch = stale_commands[i : i + BATCH_SIZE]
 
-        # Build composite text for embedding
         embed_texts = []
         for cmd in batch:
             parts = [
@@ -110,57 +149,42 @@ def main():
             embed_texts.append(" | ".join(parts))
 
         try:
-            # 1. Generate embeddings
             embeddings = get_embeddings(account, token, embed_texts)
 
-            # Diagnostic: print embedding info on first batch
             if first_batch:
-                print(f"  [DEBUG] Embedding count: {len(embeddings)}")
-                print(f"  [DEBUG] First embedding dimensions: {len(embeddings[0])}")
-                print(f"  [DEBUG] First embedding sample (first 5 values): {embeddings[0][:5]}")
+                print(f"  [DEBUG] Embedding count: {len(embeddings)} | dims: {len(embeddings[0])}")
                 first_batch = False
 
-            # 2. Build vector payloads with metadata
             vectors = []
             for idx, cmd in enumerate(batch):
-                vectors.append(
-                    {
-                        "id": cmd["n"],
-                        "values": embeddings[idx],
-                        "metadata": {
-                            "n": cmd.get("n", ""),
-                            "cn": cmd.get("cn", ""),
-                            "en": cmd.get("en", ""),
-                            "d": str(cmd.get("d", "")),
-                            "t": cmd.get("t", ""),
-                        },
-                    }
-                )
+                vectors.append({
+                    "id": cmd["n"],
+                    "values": embeddings[idx],
+                    "metadata": {
+                        "n": cmd.get("n", ""),
+                        "cn": cmd.get("cn", ""),
+                        "en": cmd.get("en", ""),
+                        "d": str(cmd.get("d", "")),
+                        "t": cmd.get("t", ""),
+                    },
+                })
 
-            # Diagnostic: print first vector structure
-            if i == 0:
-                sample = {"id": vectors[0]["id"], "values_len": len(vectors[0]["values"]), "metadata": vectors[0]["metadata"]}
-                print(f"  [DEBUG] First vector: {json.dumps(sample, ensure_ascii=False)}")
-                # Print raw NDJSON for first 2 vectors
-                sample_ndjson = "\n".join(json.dumps(v, ensure_ascii=False) for v in vectors[:2])
-                print(f"  [DEBUG] NDJSON sample (first 2 lines):\n{sample_ndjson}")
-
-            # 3. Upsert into Vectorize
             upsert_vectors(account, token, vectors)
-            success_count += len(batch)
-            print(f"  [{i + len(batch)}/{total}] Batch synced ({success_count} total)")
-            time.sleep(0.3)
-        except Exception as e:
-            print(f"  [{i}/{total}] ERROR: {e}")
-            # On first batch failure, also print the raw NDJSON for debugging
-            if i == 0:
-                try:
-                    sample_ndjson = "\n".join(json.dumps(v, ensure_ascii=False) for v in vectors[:3])
-                    print(f"  [DEBUG] First 3 vectors NDJSON:\n{sample_ndjson}")
-                except Exception:
-                    pass
 
-    print(f"Vectorize sync complete. {success_count}/{total} commands indexed.")
+            # Update cache for successfully synced commands
+            for cmd in batch:
+                cache[cmd["n"]] = compute_hash(cmd)
+
+            success_count += len(batch)
+            print(f"  [{i + len(batch)}/{stale_count}] Batch synced ({success_count} total)")
+            time.sleep(0.3)
+
+        except Exception as e:
+            print(f"  [{i}/{stale_count}] ERROR: {e}")
+
+    # 3. Save updated cache
+    save_cache(cache)
+    print(f"Vectorize sync complete. {success_count}/{stale_count} commands synced. Cache saved to {CACHE_PATH}")
 
 
 if __name__ == "__main__":
