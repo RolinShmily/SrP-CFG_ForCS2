@@ -1,9 +1,10 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import SectionHeader from "../components/SectionHeader.astro";
-import { 
-  Search, Copy, Check, Sliders, Volume2, MousePointer, 
-  Gamepad2, Network, Terminal, ShieldAlert, BookOpen, Layers
+import {
+  Search, Copy, Check, Sliders, Volume2, MousePointer,
+  Gamepad2, Network, Terminal, ShieldAlert, BookOpen, Layers,
+  Send, Bot, X, Sparkles
 } from "lucide-astro";
 
 const categories = [
@@ -17,120 +18,175 @@ const categories = [
   { id: "practice", label: "跑图与练习", icon: BookOpen },
   { id: "system", label: "系统与引擎", icon: Terminal },
 ];
+
+const quickQuestions = [
+  "怎么优化帧率和画面？",
+  "如何调整鼠标灵敏度？",
+  "跑图练习投掷物需要什么指令？",
+  "怎么设置网络插值减少延迟？",
+];
 ---
 
-<MainLayout title="指令中心 — SrP-CFG" description="CS2 官方控制台指令与变量中文翻译数据库，支持检索和分类筛选。">
+<MainLayout title="指令中心 — SrP-CFG" description="CS2 官方控制台指令与变量中文翻译数据库，支持检索和分类筛选，内置 AI 助理。">
   <section class="pb-16 pt-28 sm:pb-20 sm:pt-32">
-    <div class="mx-auto max-w-[1200px] px-5 sm:px-7">
-      <SectionHeader 
-        level="h1" 
-        label="Commands" 
-        title="指令中心" 
-        description="收录 CS2 官方所有的控制台指令与变量，支持中文/英文/拼音多维度检索，自带详细释义、默认值与 Flags 标志。"
+    <div class="mx-auto max-w-[1500px] px-5 sm:px-7">
+      <SectionHeader
+        level="h1"
+        label="Commands"
+        title="指令中心"
+        description="收录 CS2 官方所有的控制台指令与变量，支持中文/英文/拼音多维度检索，自带详细释义、默认值与 Flags 标志。右侧 AI 助理可解答自然语言提问。"
       />
 
-      <div class="flex flex-col lg:flex-row gap-8 mt-12 items-start">
-        <!-- 侧边栏类别选择 - 桌面端固定在左侧，移动端变为横向滚动 -->
-        <aside class="w-full lg:w-64 flex-shrink-0 z-10 lg:sticky lg:top-24">
-          <h2 class="hidden lg:block font-display text-sm font-semibold text-text-muted uppercase tracking-wider mb-4">指令分类</h2>
-          <div class="flex lg:flex-col overflow-x-auto lg:overflow-x-visible pb-3 lg:pb-0 gap-2 border-b lg:border-b-0 border-border lg:max-w-none no-scrollbar">
-            {categories.map((cat) => {
-              const Icon = cat.icon;
-              return (
+      <!-- 移动端/小屏 AI 悬浮按钮 -->
+      <button
+        type="button"
+        id="ai-fab"
+        class="xl:hidden fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-accent text-bg flex items-center justify-center shadow-lg shadow-accent/30 hover:bg-accent-light transition-all active:scale-95"
+        aria-label="打开 AI 助理"
+      >
+        <Bot class="w-6 h-6" />
+      </button>
+
+      <div class="flex gap-6 mt-12 items-start">
+        <!-- 左侧：指令检索区 -->
+        <div class="flex-1 w-full min-w-0">
+          <div class="flex flex-col lg:flex-row gap-8 items-start">
+            <!-- 侧边栏类别选择 -->
+            <aside class="w-full lg:w-56 flex-shrink-0 z-10 lg:sticky lg:top-24">
+              <h2 class="hidden lg:block font-display text-sm font-semibold text-text-muted uppercase tracking-wider mb-4">指令分类</h2>
+              <div class="flex lg:flex-col overflow-x-auto lg:overflow-x-visible pb-3 lg:pb-0 gap-2 border-b lg:border-b-0 border-border lg:max-w-none no-scrollbar">
+                {categories.map((cat) => {
+                  const Icon = cat.icon;
+                  return (
+                    <button
+                      type="button"
+                      data-category={cat.id}
+                      class="flex items-center gap-3 px-4 py-2.5 rounded-[8px] border border-border bg-bg-card font-display text-sm font-medium text-text-secondary whitespace-nowrap cursor-pointer transition-all hover:bg-bg-hover hover:text-text active:scale-98 data-[active=true]:bg-accent-bg data-[active=true]:border-accent/40 data-[active=true]:text-accent"
+                      data-active={cat.id === "all" ? "true" : "false"}
+                    >
+                      <Icon class="w-4 h-4" />
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </aside>
+
+            <!-- 主内容区域：检索器与列表 -->
+            <div class="flex-1 w-full min-w-0">
+              <!-- 顶部搜索工具栏 -->
+              <div class="bg-bg-card border border-border rounded-[12px] p-4 mb-6 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+                <div class="relative flex-1">
+                  <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                  <input
+                    type="text"
+                    id="search-input"
+                    placeholder="搜索指令名称、描述或中文翻译... (支持拼音)"
+                    class="w-full pl-10 pr-4 py-2.5 bg-bg border border-border rounded-[8px] text-text placeholder-text-faint text-sm font-body outline-none focus:border-accent transition-colors"
+                  />
+                </div>
+
+                <div class="flex gap-1 bg-bg border border-border p-1 rounded-[8px] flex-shrink-0">
+                  <button type="button" data-type="all" class="px-3.5 py-1.5 rounded-[6px] font-display text-xs font-semibold cursor-pointer transition-all text-text-muted hover:text-text data-[active=true]:bg-bg-raised data-[active=true]:text-accent" data-active="true">全部</button>
+                  <button type="button" data-type="cmd" class="px-3.5 py-1.5 rounded-[6px] font-display text-xs font-semibold cursor-pointer transition-all text-text-muted hover:text-text data-[active=true]:bg-bg-raised data-[active=true]:text-accent" data-active="false">命令 (Cmd)</button>
+                  <button type="button" data-type="var" class="px-3.5 py-1.5 rounded-[6px] font-display text-xs font-semibold cursor-pointer transition-all text-text-muted hover:text-text data-[active=true]:bg-bg-raised data-[active=true]:text-accent" data-active="false">变量 (Var)</button>
+                </div>
+
+                <label class="flex items-center gap-2 text-sm text-text-secondary cursor-pointer select-none">
+                  <input type="checkbox" id="exclude-cheats-checkbox" class="w-4 h-4 rounded border-border text-accent focus:ring-accent bg-bg" />
+                  <span>排除作弊指令</span>
+                </label>
+              </div>
+
+              <div class="flex justify-between items-center mb-6 text-sm text-text-muted">
+                <span id="results-count">正在加载指令数据库...</span>
+                <span class="text-xs text-text-faint font-mono hidden sm:inline">点击卡片指令名或复制按钮即可一键复制</span>
+              </div>
+
+              <div id="commands-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: 6 }).map(() => (
+                  <div class="bg-zinc-900/40 border border-zinc-800 p-6 rounded-xl animate-pulse h-40"></div>
+                ))}
+              </div>
+
+              <div id="load-more-sentinel" class="h-10 mt-8"></div>
+              <div class="flex justify-center mt-4">
+                <button type="button" id="load-more-btn" class="hidden px-6 py-2.5 rounded-[8px] bg-bg-card border border-border hover:bg-bg-hover hover:border-border-highlight text-text-secondary font-display text-sm font-medium transition-all">加载更多指令</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：AI 助理面板 -->
+        <div
+          id="ai-panel"
+          class="fixed inset-0 z-40 xl:z-auto xl:static xl:z-0 bg-bg/80 xl:bg-transparent backdrop-blur-sm xl:backdrop-blur-none flex items-end xl:items-start xl:block translate-y-full xl:translate-y-0 opacity-0 xl:opacity-100 pointer-events-none xl:pointer-events-auto transition-all duration-300 w-full xl:w-[380px] flex-shrink-0"
+        >
+          <!-- 遮罩点击关闭（小屏） -->
+          <div id="ai-overlay" class="absolute inset-0 xl:hidden cursor-pointer"></div>
+
+          <!-- 实际面板内容 -->
+          <div class="relative xl:sticky xl:top-24 w-full xl:w-[380px] h-[75vh] xl:h-[calc(100vh-7rem)] max-h-[600px] xl:max-h-[calc(100vh-7rem)] bg-bg-card border border-border xl:rounded-[12px] rounded-t-[16px] flex flex-col overflow-hidden shadow-2xl">
+            <!-- 面板顶栏 -->
+            <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-bg-hover/50">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-accent-bg border border-accent/20 flex items-center justify-center">
+                  <Bot class="w-4 h-4 text-accent" />
+                </div>
+                <div>
+                  <h2 class="font-display text-sm font-semibold text-text">AI 指令助理</h2>
+                  <p class="text-[10px] text-text-faint">基于全量指令库 · 语义检索</p>
+                </div>
+              </div>
+              <button type="button" id="ai-close" class="xl:hidden text-text-muted hover:text-text p-1 rounded transition-colors" aria-label="关闭">
+                <X class="w-5 h-5" />
+              </button>
+            </div>
+
+            <!-- 消息区域 -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-4 no-scrollbar">
+              <!-- 欢迎消息 -->
+              <div class="flex gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-accent-bg border border-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Bot class="w-3.5 h-3.5 text-accent" />
+                </div>
+                <div class="flex-1">
+                  <div class="bg-bg-hover rounded-[10px] rounded-tl-[3px] px-3.5 py-2.5 text-sm text-text leading-6">
+                    <p class="mb-2">你好！我是 CS2 指令助理，已学习全部 <span class="text-accent font-semibold">2785</span> 条控制台指令。</p>
+                    <p class="text-text-muted text-xs mb-2">试着用自然语言问我：</p>
+                    <div class="flex flex-col gap-1.5">
+                      {quickQuestions.map((q) => (
+                        <button type="button" class="quick-question text-left text-xs text-accent/90 bg-accent-bg/50 hover:bg-accent-bg border border-accent/15 hover:border-accent/30 rounded-lg px-3 py-2 transition-all cursor-pointer" data-question={q}>
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 输入区 -->
+            <div class="border-t border-border p-3">
+              <div class="relative">
+                <textarea
+                  id="chat-input"
+                  rows="1"
+                  placeholder="用自然语言描述你的需求..."
+                  class="w-full resize-none bg-bg border border-border rounded-[10px] pl-3.5 pr-12 py-2.5 text-sm text-text placeholder-text-faint font-body outline-none focus:border-accent transition-colors max-h-24"
+                  style="min-height: 42px;"
+                ></textarea>
                 <button
                   type="button"
-                  data-category={cat.id}
-                  class="flex items-center gap-3 px-4 py-2.5 rounded-[8px] border border-border bg-bg-card font-display text-sm font-medium text-text-secondary whitespace-nowrap cursor-pointer transition-all hover:bg-bg-hover hover:text-text active:scale-98 data-[active=true]:bg-accent-bg data-[active=true]:border-accent/40 data-[active=true]:text-accent"
-                  data-active={cat.id === "all" ? "true" : "false"}
+                  id="chat-send"
+                  class="absolute right-2 bottom-2 w-8 h-8 rounded-[8px] bg-accent hover:bg-accent-light text-bg flex items-center justify-center transition-all active:scale-90 disabled:opacity-40 disabled:cursor-not-allowed"
+                  aria-label="发送"
                 >
-                  <Icon class="w-4 h-4" />
-                  {cat.label}
+                  <Send class="w-4 h-4" />
                 </button>
-              );
-            })}
-          </div>
-        </aside>
-
-        <!-- 主内容区域：检索器与列表 -->
-        <div class="flex-1 w-full">
-          <!-- 顶部搜索工具栏 -->
-          <div class="bg-bg-card border border-border rounded-[12px] p-4 mb-6 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
-            <!-- 搜索框 -->
-            <div class="relative flex-1">
-              <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input
-                type="text"
-                id="search-input"
-                placeholder="搜索指令名称、描述或中文翻译... (支持拼音)"
-                class="w-full pl-10 pr-4 py-2.5 bg-bg border border-border rounded-[8px] text-text placeholder-text-faint text-sm font-body outline-none focus:border-accent transition-colors"
-              />
+              </div>
+              <p class="text-[10px] text-text-faint mt-1.5 text-center">AI 回复仅供参考，请以游戏内实际效果为准</p>
             </div>
-
-            <!-- 类型筛选 (All, cmd, var) -->
-            <div class="flex gap-1 bg-bg border border-border p-1 rounded-[8px] flex-shrink-0">
-              <button
-                type="button"
-                data-type="all"
-                class="px-3.5 py-1.5 rounded-[6px] font-display text-xs font-semibold cursor-pointer transition-all text-text-muted hover:text-text data-[active=true]:bg-bg-raised data-[active=true]:text-accent"
-                data-active="true"
-              >
-                全部
-              </button>
-              <button
-                type="button"
-                data-type="cmd"
-                class="px-3.5 py-1.5 rounded-[6px] font-display text-xs font-semibold cursor-pointer transition-all text-text-muted hover:text-text data-[active=true]:bg-bg-raised data-[active=true]:text-accent"
-                data-active="false"
-              >
-                命令 (Cmd)
-              </button>
-              <button
-                type="button"
-                data-type="var"
-                class="px-3.5 py-1.5 rounded-[6px] font-display text-xs font-semibold cursor-pointer transition-all text-text-muted hover:text-text data-[active=true]:bg-bg-raised data-[active=true]:text-accent"
-                data-active="false"
-              >
-                变量 (Var)
-              </button>
-            </div>
-
-            <!-- 作弊指令过滤 -->
-            <label class="flex items-center gap-2 text-sm text-text-secondary cursor-pointer select-none">
-              <input 
-                type="checkbox" 
-                id="exclude-cheats-checkbox" 
-                class="w-4 h-4 rounded border-border text-accent focus:ring-accent bg-bg" 
-              />
-              <span>排除作弊指令</span>
-            </label>
-          </div>
-
-          <!-- 检索数量统计 -->
-          <div class="flex justify-between items-center mb-6 text-sm text-text-muted">
-            <span id="results-count">正在加载指令数据库...</span>
-            <span class="text-xs text-text-faint font-mono hidden sm:inline">提示：点击卡片指令名或右下角复制按钮即可一键复制</span>
-          </div>
-
-          <!-- 卡片列表容器 -->
-          <div id="commands-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- 骨架屏 -->
-            {Array.from({ length: 6 }).map(() => (
-              <div class="bg-zinc-900/40 border border-zinc-800 p-6 rounded-xl animate-pulse h-40"></div>
-            ))}
-          </div>
-
-          <!-- 懒加载触发点 -->
-          <div id="load-more-sentinel" class="h-10 mt-8"></div>
-          
-          <!-- 加载更多备用按钮 -->
-          <div class="flex justify-center mt-4">
-            <button
-              type="button"
-              id="load-more-btn"
-              class="hidden px-6 py-2.5 rounded-[8px] bg-bg-card border border-border hover:bg-bg-hover hover:border-border-highlight text-text-secondary font-display text-sm font-medium transition-all"
-            >
-              加载更多指令
-            </button>
           </div>
         </div>
       </div>
@@ -139,18 +195,18 @@ const categories = [
 </MainLayout>
 
 <script>
+  // ============ 指令检索逻辑 ============
   let rawCommands = [];
   let filteredCommands = [];
-  
+
   let currentCategory = "all";
   let currentType = "all";
   let excludeCheats = false;
   let searchQuery = "";
-  
+
   let currentPage = 1;
   const pageSize = 50;
 
-  // 类别对应的汉语简称，用于本地额外关键词索引
   const categoryKeywords = {
     network: ["network", "ping", "delay", "interp", "packet", "rate", "网络", "延迟", "丢包", "插值", "网络设置", "上传", "下载"],
     graphics: ["graphics", "fps", "video", "render", "resolution", "画面", "帧率", "渲染", "显卡", "画质", "分辨率"],
@@ -162,50 +218,33 @@ const categories = [
     system: ["system", "engine", "con_", "exec", "bind", "quit", "系统", "引擎", "绑定", "按键", "控制台", "清除"]
   };
 
-  // 1. 初始化，下载 JSON
-  async function init() {
+  async function initCommands() {
     const container = document.getElementById("commands-container");
     const countEl = document.getElementById("results-count");
-    
+
     try {
       const res = await fetch("/data/commands.json");
       if (!res.ok) throw new Error("Network response was not ok");
       rawCommands = await res.json();
-      
-      // 为每个指令生成简易拼音首字母，提升拼音搜索体验 (常见词汇补充)
+
       enhanceKeywords();
-      
-      // 绑定过滤事件
       bindEvents();
-      
-      // 执行首次过滤并渲染
       applyFilters();
-      
-      // 设置无限滚动
       setupInfiniteScroll();
     } catch (err) {
       console.error(err);
       if (container) {
-        container.innerHTML = `
-          <div class="col-span-full py-16 text-center">
-            <p class="text-red-400 font-medium mb-3">数据加载失败</p>
-            <p class="text-text-muted text-sm">未能成功读取指令数据库，请刷新页面重试。</p>
-          </div>
-        `;
+        container.innerHTML = `<div class="col-span-full py-16 text-center"><p class="text-red-400 font-medium mb-3">数据加载失败</p><p class="text-text-muted text-sm">未能成功读取指令数据库，请刷新页面重试。</p></div>`;
       }
       if (countEl) countEl.textContent = "加载出错";
     }
   }
 
-  // 补充检索关键词
   function enhanceKeywords() {
     rawCommands.forEach(cmd => {
-      // 英文小写
       cmd.n_lower = cmd.n.toLowerCase();
       cmd.cn_lower = (cmd.cn || "").toLowerCase();
       cmd.en_lower = (cmd.en || "").toLowerCase();
-      
-      // 拼音简易映射（为了首字母检索如 zx -> 准星，ls -> 灵敏度，yc -> 延迟）
       cmd.pinyin = [];
       const cn = cmd.cn_lower;
       if (cn.includes("准星")) cmd.pinyin.push("zx", "zhunxing");
@@ -219,9 +258,7 @@ const categories = [
     });
   }
 
-  // 绑定所有的过滤器交互
   function bindEvents() {
-    // 搜索框
     const searchInput = document.getElementById("search-input");
     searchInput?.addEventListener("input", (e) => {
       searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
@@ -229,7 +266,6 @@ const categories = [
       applyFilters();
     });
 
-    // 类别选择
     const catButtons = document.querySelectorAll("button[data-category]");
     catButtons.forEach(btn => {
       btn.addEventListener("click", () => {
@@ -238,13 +274,10 @@ const categories = [
         currentCategory = btn.getAttribute("data-category") || "all";
         currentPage = 1;
         applyFilters();
-        
-        // 移动端横向滚动自动居中选中的按钮
         btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       });
     });
 
-    // 类型选择 (cmd / var)
     const typeButtons = document.querySelectorAll("button[data-type]");
     typeButtons.forEach(btn => {
       btn.addEventListener("click", () => {
@@ -256,7 +289,6 @@ const categories = [
       });
     });
 
-    // 排除作弊指令多选框
     const cheatCheckbox = document.getElementById("exclude-cheats-checkbox");
     cheatCheckbox?.addEventListener("change", (e) => {
       excludeCheats = (e.target as HTMLInputElement).checked;
@@ -264,7 +296,6 @@ const categories = [
       applyFilters();
     });
 
-    // 加载更多备用按钮
     const loadMoreBtn = document.getElementById("load-more-btn");
     loadMoreBtn?.addEventListener("click", () => {
       currentPage++;
@@ -272,37 +303,22 @@ const categories = [
     });
   }
 
-  // 执行过滤
   function applyFilters() {
     filteredCommands = rawCommands.filter(cmd => {
-      // 1. 类别过滤
-      if (currentCategory !== "all") {
-        if (cmd.c !== currentCategory) return false;
-      }
+      if (currentCategory !== "all" && cmd.c !== currentCategory) return false;
+      if (currentType !== "all" && cmd.t !== currentType) return false;
+      if (excludeCheats && cmd.f && cmd.f.includes("cheat")) return false;
 
-      // 2. 类型过滤
-      if (currentType !== "all") {
-        if (cmd.t !== currentType) return false;
-      }
-
-      // 3. 排除作弊
-      if (excludeCheats) {
-        if (cmd.f && cmd.f.includes("cheat")) return false;
-      }
-
-      // 4. 搜索框匹配 (指令名、英文描述、中文描述、拼音首字母、分类关键词)
       if (searchQuery) {
         const nameMatch = cmd.n_lower.includes(searchQuery);
         const cnMatch = cmd.cn_lower.includes(searchQuery);
         const enMatch = cmd.en_lower.includes(searchQuery);
         const pyMatch = cmd.pinyin.some(p => p.includes(searchQuery));
-        
-        // 类别关键词补充匹配（例如搜索“网络”直接命中 network 类的所有指令）
+
         let catKeywordMatch = false;
         if (categoryKeywords[currentCategory]) {
           catKeywordMatch = categoryKeywords[currentCategory].some(k => k.includes(searchQuery));
         } else {
-          // 遍历全局分类关键字
           for (const key in categoryKeywords) {
             if (cmd.c === key && categoryKeywords[key].some(k => k.includes(searchQuery))) {
               catKeywordMatch = true;
@@ -311,40 +327,24 @@ const categories = [
           }
         }
 
-        if (!nameMatch && !cnMatch && !enMatch && !pyMatch && !catKeywordMatch) {
-          return false;
-        }
+        if (!nameMatch && !cnMatch && !enMatch && !pyMatch && !catKeywordMatch) return false;
       }
-
       return true;
     });
 
-    // 更新数量统计
     const countEl = document.getElementById("results-count");
-    if (countEl) {
-      countEl.textContent = `共筛选出 ${filteredCommands.length} 条指令`;
-    }
-
-    // 渲染页面
+    if (countEl) countEl.textContent = `共筛选出 ${filteredCommands.length} 条指令`;
     renderCommands(false);
   }
 
-  // 渲染卡片
   function renderCommands(append = false) {
     const container = document.getElementById("commands-container");
     if (!container) return;
 
-    if (!append) {
-      container.innerHTML = "";
-    }
+    if (!append) container.innerHTML = "";
 
     if (filteredCommands.length === 0) {
-      container.innerHTML = `
-        <div class="col-span-full py-16 text-center text-text-muted">
-          <p class="mb-2">未找到匹配的指令</p>
-          <p class="text-xs text-text-faint">请尝试更换检索关键词或更改筛选类别</p>
-        </div>
-      `;
+      container.innerHTML = `<div class="col-span-full py-16 text-center text-text-muted"><p class="mb-2">未找到匹配的指令</p><p class="text-xs text-text-faint">请尝试更换检索关键词或更改筛选类别</p></div>`;
       document.getElementById("load-more-btn")?.classList.add("hidden");
       return;
     }
@@ -354,9 +354,8 @@ const categories = [
     const pageItems = filteredCommands.slice(startIndex, endIndex);
 
     const cardsHtml = pageItems.map(cmd => {
-      // 组装 Flag 徽章
       const flagsHtml = (cmd.f || [])
-        .filter(flag => !["clientdll", "gamedll", "release"].includes(flag)) // 过滤基础标识以保持洁净
+        .filter(flag => !["clientdll", "gamedll", "release"].includes(flag))
         .map(flag => {
           let colorClass = "bg-bg-raised text-text-faint border-border";
           if (flag === "cheat") colorClass = "bg-red/10 text-red border-red/20";
@@ -364,7 +363,7 @@ const categories = [
           return `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold border ${colorClass}">${flag}</span>`;
         }).join(" ");
 
-      const valueHtml = cmd.t === "var" 
+      const valueHtml = cmd.t === "var"
         ? `<span class="text-xs text-text-muted bg-bg px-2 py-0.5 border border-border rounded font-mono">默认值: <span class="text-accent-light font-bold">${cmd.d !== undefined ? cmd.d : '无'}</span></span>`
         : `<span class="text-[10px] text-text-faint px-1.5 py-0.5 border border-dashed border-border rounded font-mono uppercase">Command</span>`;
 
@@ -373,24 +372,14 @@ const categories = [
           <div>
             <div class="flex items-start justify-between gap-3 mb-2.5">
               <code class="text-accent font-mono text-base font-bold select-all group-hover:text-accent-light transition-colors break-all cursor-pointer" title="点击复制" onclick="copyCommand(this, '${cmd.n}')">${cmd.n}</code>
-              <div class="flex flex-wrap items-center gap-1.5 flex-shrink-0">
-                ${valueHtml}
-              </div>
+              <div class="flex flex-wrap items-center gap-1.5 flex-shrink-0">${valueHtml}</div>
             </div>
             <p class="text-text font-body text-sm leading-6 mb-1.5">${cmd.cn || '暂无详细中文释义'}</p>
             ${cmd.en ? `<p class="text-text-muted font-body text-xs italic break-words leading-5">${cmd.en}</p>` : ''}
           </div>
-          
           <div class="flex items-center justify-between mt-4 border-t border-border/40 pt-3">
-            <div class="flex items-center gap-1">
-              ${flagsHtml}
-            </div>
-            
-            <button
-              type="button"
-              onclick="copyCommand(this, '${cmd.n}')"
-              class="flex items-center gap-1 text-text-muted hover:text-accent font-display text-xs font-semibold cursor-pointer transition-colors bg-bg border border-border hover:border-accent-bg px-2.5 py-1 rounded-[6px]"
-            >
+            <div class="flex items-center gap-1">${flagsHtml}</div>
+            <button type="button" onclick="copyCommand(this, '${cmd.n}')" class="flex items-center gap-1 text-text-muted hover:text-accent font-display text-xs font-semibold cursor-pointer transition-colors bg-bg border border-border hover:border-accent-bg px-2.5 py-1 rounded-[6px]">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-copy-icon><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
               <span data-copy-text>复制</span>
             </button>
@@ -405,7 +394,6 @@ const categories = [
       container.innerHTML = cardsHtml;
     }
 
-    // 控制显示/隐藏“加载更多”备用按钮
     const loadMoreBtn = document.getElementById("load-more-btn");
     if (endIndex < filteredCommands.length) {
       loadMoreBtn?.classList.remove("hidden");
@@ -414,54 +402,36 @@ const categories = [
     }
   }
 
-  // 复制功能逻辑
   window.copyCommand = function(el, text) {
-    // 写入剪贴板
     navigator.clipboard.writeText(text).then(() => {
-      // 查找该卡片内的复制按钮，进行视觉反馈
-      // 如果触发元素本身就是按钮，或者在卡片中查找对应的按钮
       let btn = el;
       if (el.tagName !== "BUTTON") {
         const card = el.closest(".bg-bg-card");
         btn = card?.querySelector("button");
       }
-      
       if (btn) {
         const iconContainer = btn.querySelector("[data-copy-icon]");
         const textContainer = btn.querySelector("[data-copy-text]");
-        
-        if (textContainer) {
-          textContainer.textContent = "已复制";
-          textContainer.classList.add("text-green");
-        }
+        if (textContainer) { textContainer.textContent = "已复制"; textContainer.classList.add("text-green"); }
         btn.classList.add("border-green/30", "bg-green/5");
-        
         if (iconContainer) {
           iconContainer.outerHTML = `<svg class="w-3.5 h-3.5 text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" data-copy-icon><polyline points="20 6 9 17 4 12"/></svg>`;
         }
-
         setTimeout(() => {
           const newIcon = btn.querySelector("[data-copy-icon]");
           if (newIcon) {
             newIcon.outerHTML = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-copy-icon><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
           }
-          if (textContainer) {
-            textContainer.textContent = "复制";
-            textContainer.classList.remove("text-green");
-          }
+          if (textContainer) { textContainer.textContent = "复制"; textContainer.classList.remove("text-green"); }
           btn.classList.remove("border-green/30", "bg-green/5");
         }, 1500);
       }
-    }).catch(err => {
-      console.error("复制失败:", err);
-    });
+    }).catch(err => console.error("复制失败:", err));
   }
 
-  // 3. 无限滚动
   function setupInfiniteScroll() {
     const sentinel = document.getElementById("load-more-sentinel");
     if (!sentinel) return;
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && filteredCommands.length > currentPage * pageSize) {
@@ -469,24 +439,240 @@ const categories = [
           renderCommands(true);
         }
       });
-    }, {
-      rootMargin: "200px" // 提前 200px 触发加载，保证顺畅体验
-    });
-
+    }, { rootMargin: "200px" });
     observer.observe(sentinel);
   }
 
-  // 页面加载触发
-  init();
+  // ============ AI 助理逻辑 ============
+  let chatHistory: { role: string; content: string }[] = [];
+  let isStreaming = false;
+
+  function initChat() {
+    const fab = document.getElementById("ai-fab");
+    const panel = document.getElementById("ai-panel");
+    const closeBtn = document.getElementById("ai-close");
+    const overlay = document.getElementById("ai-overlay");
+    const sendBtn = document.getElementById("chat-send");
+    const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
+
+    // 小屏打开面板
+    fab?.addEventListener("click", () => {
+      panel?.classList.remove("translate-y-full", "opacity-0", "pointer-events-none");
+    });
+
+    // 关闭面板
+    const closePanel = () => {
+      panel?.classList.add("translate-y-full", "opacity-0", "pointer-events-none");
+    };
+    closeBtn?.addEventListener("click", closePanel);
+    overlay?.addEventListener("click", closePanel);
+
+    // 快捷问题按钮
+    document.querySelectorAll(".quick-question").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const question = btn.getAttribute("data-question") || "";
+        if (input) input.value = question;
+        sendMessage();
+      });
+    });
+
+    // 发送按钮
+    sendBtn?.addEventListener("click", () => sendMessage());
+
+    // 回车发送（Shift+Enter 换行）
+    input?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // 自适应输入框高度
+    input?.addEventListener("input", () => {
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 96) + "px";
+    });
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
+    if (!input || isStreaming) return;
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    // 清空输入框
+    input.value = "";
+    input.style.height = "auto";
+
+    // 渲染用户消息
+    appendMessage("user", message);
+
+    // 渲染 AI 消息占位（流式填充）
+    const aiBubble = appendMessage("assistant", "");
+    const bubbleContent = aiBubble.querySelector("[data-bubble-content]") as HTMLElement;
+    if (bubbleContent) bubbleContent.innerHTML = '<span class="inline-flex items-center gap-1 text-text-muted text-xs"><span class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style="animation-delay:0ms"></span><span class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style="animation-delay:150ms"></span><span class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style="animation-delay:300ms"></span></span>';
+
+    isStreaming = true;
+    updateSendButton();
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, history: chatHistory.slice(-6) }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.body) throw new Error("No response body");
+
+      // 清除加载动画
+      if (bubbleContent) bubbleContent.innerHTML = "";
+
+      // 读取 SSE 流
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let fullText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // 解析 SSE data: 行
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith("data:")) continue;
+
+          const jsonStr = trimmed.slice(5).trim();
+          if (jsonStr === "[DONE]") continue;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const chunk = parsed.response || "";
+            fullText += chunk;
+            if (bubbleContent) {
+              bubbleContent.innerHTML = renderMarkdown(fullText);
+              scrollToBottom();
+            }
+          } catch {
+            // 忽略无法解析的行
+          }
+        }
+      }
+
+      // 保存到历史
+      chatHistory.push({ role: "user", content: message });
+      chatHistory.push({ role: "assistant", content: fullText });
+
+    } catch (err: any) {
+      if (bubbleContent) {
+        bubbleContent.innerHTML = `<p class="text-red-400 text-sm">⚠️ 请求失败：${err.message}</p><p class="text-text-faint text-xs mt-1">请稍后重试，或直接使用左侧检索功能。</p>`;
+      }
+    } finally {
+      isStreaming = false;
+      updateSendButton();
+    }
+  }
+
+  function appendMessage(role: "user" | "assistant", content: string) {
+    const messagesEl = document.getElementById("chat-messages");
+    if (!messagesEl) return {} as HTMLElement;
+
+    const isUser = role === "user";
+    const wrapper = document.createElement("div");
+    wrapper.className = `flex gap-2.5 ${isUser ? "flex-row-reverse" : ""}`;
+
+    const avatar = document.createElement("div");
+    avatar.className = `w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isUser ? "bg-bg-raised border border-border" : "bg-accent-bg border border-accent/20"}`;
+    avatar.innerHTML = isUser
+      ? '<svg class="w-3.5 h-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+      : '<svg class="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v4M12 16h.01"/></svg>';
+
+    const bubble = document.createElement("div");
+    bubble.className = `flex-1 max-w-[85%]`;
+    const inner = document.createElement("div");
+    inner.setAttribute("data-bubble-content", "");
+    inner.className = `rounded-[10px] px-3.5 py-2.5 text-sm leading-6 ${isUser ? "bg-accent text-bg rounded-tr-[3px]" : "bg-bg-hover text-text rounded-tl-[3px]"}`;
+    inner.innerHTML = isUser ? escapeHtml(content) : renderMarkdown(content);
+
+    bubble.appendChild(inner);
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(bubble);
+    messagesEl.appendChild(wrapper);
+    scrollToBottom();
+
+    return wrapper;
+  }
+
+  function renderMarkdown(text: string): string {
+    if (!text) return "";
+    let html = escapeHtml(text);
+
+    // 反引号 `command_name` → 可点击复制
+    html = html.replace(/`([^`\n]+)`/g, (_, cmd) => {
+      return `<code class="inline-code" onclick="copyCommand(this, '${cmd.replace(/'/g, "\\'")}')" title="点击复制" style="cursor:pointer">${cmd}</code>`;
+    });
+
+    // **bold**
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+    // 换行
+    html = html.replace(/\n/g, '<br>');
+
+    // 列表项 (行首 - 或 •)
+    html = html.replace(/(?:^|<br>)((?:[-•]\s[^\n<]+(?:<br>|$))+)/g, (_, listBlock) => {
+      const items = listBlock.split(/<br>|$/).filter((s: string) => s.trim()).map((s: string) => {
+        return `<li>${s.replace(/^[-•]\s/, '').trim()}</li>`;
+      }).join("");
+      return `<ul class="list-disc list-inside space-y-0.5 my-1">${items}</ul>`;
+    });
+
+    return html;
+  }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function scrollToBottom() {
+    const messagesEl = document.getElementById("chat-messages");
+    if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function updateSendButton() {
+    const sendBtn = document.getElementById("chat-send") as HTMLButtonElement | null;
+    if (sendBtn) sendBtn.disabled = isStreaming;
+  }
+
+  // ============ 启动 ============
+  initCommands();
+  initChat();
 </script>
 
 <style>
-  /* 隐藏横向滚动条，但保持滚动能力 */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* AI 回复中的内联代码样式 */
+  :global(.inline-code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: rgba(242, 138, 26, 0.12);
+    color: var(--color-accent-light);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    border: 1px solid rgba(242, 138, 26, 0.15);
+    transition: background 0.15s;
   }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  :global(.inline-code:hover) {
+    background: rgba(242, 138, 26, 0.22);
   }
 </style>

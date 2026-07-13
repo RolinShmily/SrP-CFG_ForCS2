@@ -3,5 +3,15 @@
   "assets": {
     "directory": "./dist"
   },
-  "compatibility_date": "2025-01-01"
+  "main": "./src/worker.ts",
+  "compatibility_date": "2025-01-01",
+  "ai": {
+    "binding": "AI"
+  },
+  "vectorize": [
+    {
+      "binding": "VECTORIZE_INDEX",
+      "index_name": "cs2-commands-index"
+    }
+  ]
 }
