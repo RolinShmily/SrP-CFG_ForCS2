@@ -22,9 +22,20 @@ export default {
         },
       });
     }
-
     if (url.pathname === "/api/chat" && request.method === "POST") {
       return handleChat(request, env);
+    }
+    
+    // Diagnostic endpoint
+    if (url.pathname === "/api/health") {
+      return new Response(
+        JSON.stringify({
+          aiBinding: !!env.AI,
+          vectorizeBinding: !!env.VECTORIZE_INDEX,
+          envKeys: Object.keys(env)
+        }),
+        { headers: { "Content-Type": "application/json" } }
+      );
     }
 
     // Fallback to static assets (Astro SSG output)
@@ -120,9 +131,21 @@ ${contextStr}
     });
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
-    console.error("Chat API error:", errorMsg, err instanceof Error ? err.stack : undefined);
+    const stack = err instanceof Error ? err.stack : undefined;
+    
+    // Detect missing bindings
+    const bindingsState = {
+      hasAI: !!env.AI,
+      hasVectorize: !!env.VECTORIZE_INDEX,
+    };
+
+    console.error("Chat API error:", errorMsg, stack);
     return new Response(
-      JSON.stringify({ error: errorMsg || "Internal Server Error" }),
+      JSON.stringify({ 
+        error: errorMsg,
+        details: stack,
+        bindings: bindingsState
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
