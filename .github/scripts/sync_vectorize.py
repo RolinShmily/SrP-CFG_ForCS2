@@ -42,9 +42,33 @@ def get_embeddings(account, token, texts):
 
 
 def upsert_vectors(account, token, vectors):
-    """Upsert a batch of vectors into Cloudflare Vectorize."""
-    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/indexes/{INDEX_NAME}/insert"
-    res = cf_request(url, token, payload={"vectors": vectors}, method="POST")
+    """Upsert a batch of vectors into Cloudflare Vectorize via NDJSON multipart upload."""
+    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/v2/indexes/{INDEX_NAME}/insert"
+
+    # Build NDJSON body: one JSON object per line
+    ndjson_lines = "\n".join(json.dumps(v) for v in vectors) + "\n"
+
+    # Construct multipart/form-data manually (no external deps needed)
+    boundary = "----FormBoundary7MA4YWxkTrZu0gW"
+    body = (
+        f"--{boundary}\r\n"
+        f'Content-Disposition: form-data; name="vectors"; filename="vectors.ndjson"\r\n'
+        f"Content-Type: application/octet-stream\r\n\r\n"
+        f"{ndjson_lines}"
+        f"--{boundary}--\r\n"
+    ).encode("utf-8")
+
+    req = urllib.request.Request(
+        url,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        res = json.loads(resp.read().decode("utf-8"))
     if not res.get("success"):
         raise RuntimeError(f"Vectorize upsert error: {json.dumps(res)}")
     return res
