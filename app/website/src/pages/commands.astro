@@ -523,7 +523,19 @@ const quickQuestions = [
         body: JSON.stringify({ message, history: chatHistory.slice(-6) }),
       });
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        let errText = `HTTP ${res.status}`;
+        try {
+          const errJson = await res.json();
+          errText += ` - ${errJson.error || JSON.stringify(errJson)}`;
+          if (errJson.details) {
+            console.error("Server Error Details:", errJson.details);
+          }
+        } catch (e) {
+          // ignore parsing error
+        }
+        throw new Error(errText);
+      }
       if (!res.body) throw new Error("No response body");
 
       // 清除加载动画
