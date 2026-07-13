@@ -13,12 +13,9 @@ CACHE_PATH = ".github/scripts/vectorize_sync_cache.json"
 
 def get_credentials():
     account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
-    token = (
-        os.environ.get("CLOUDFLARE_AI_TOKEN")
-        or os.environ.get("CLOUDFLARE_API_TOKEN")
-        or os.environ.get("CF_API_TOKEN")
-    )
-    return account, token
+    ai_token = os.environ.get("CLOUDFLARE_AI_TOKEN")
+    api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
+    return account, ai_token, api_token
 
 
 def cf_request(url, token, payload=None, method="GET", content_type="application/json"):
@@ -74,9 +71,38 @@ def upsert_vectors(account, token, vectors):
     return res
 
 
+def format_value_metadata(cmd):
+    value = cmd.get("value") if isinstance(cmd.get("value"), dict) else {}
+    constraint = value.get("constraint") if isinstance(value.get("constraint"), dict) else {}
+    documented = value.get("documented_range") if isinstance(value.get("documented_range"), dict) else {}
+
+    def range_text(label, value_range):
+        minimum = value_range.get("min")
+        maximum = value_range.get("max")
+        if minimum is not None and maximum is not None:
+            return f"{label}: {minimum}–{maximum}"
+        if minimum is not None:
+            return f"{label}: ≥ {minimum}"
+        if maximum is not None:
+            return f"{label}: ≤ {maximum}"
+        return ""
+
+    ranges = "；".join(filter(None, (
+        range_text("引擎约束", constraint),
+        range_text("说明范围", documented),
+    )))
+    options = "；".join(
+        f"{option.get('value', '')}={option.get('label', '')}"
+        for option in value.get("options", [])
+        if isinstance(option, dict)
+    )
+    return str(value.get("description", "")), ranges, options
+
+
 def compute_hash(cmd):
     """Compute a content hash for a command — changes if any embed-relevant field changes."""
-    content = f"{cmd.get('n','')}|{cmd.get('t','')}|{cmd.get('d','')}|{cmd.get('cn','')}|{cmd.get('en','')}"
+    value_json = json.dumps(cmd.get("value", {}), ensure_ascii=False, sort_keys=True)
+    content = f"{cmd.get('n','')}|{cmd.get('t','')}|{cmd.get('d','')}|{cmd.get('cn','')}|{cmd.get('en','')}|{value_json}"
     return hashlib.md5(content.encode("utf-8")).hexdigest()
 
 
@@ -99,9 +125,9 @@ def save_cache(cache):
 
 
 def main():
-    account, token = get_credentials()
-    if not account or not token:
-        print("Missing Cloudflare credentials. Skipping Vectorize sync.")
+    account, ai_token, api_token = get_credentials()
+    if not account or not ai_token or not api_token:
+        print("Missing CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_AI_TOKEN, or CLOUDFLARE_API_TOKEN. Skipping Vectorize sync.")
         return
 
     commands_path = "app/website/public/data/commands.json"
@@ -139,17 +165,21 @@ def main():
 
         embed_texts = []
         for cmd in batch:
+            value_description, value_ranges, value_options = format_value_metadata(cmd)
             parts = [
                 f"指令名: {cmd.get('n', '')}",
                 f"类型: {cmd.get('t', '')}",
                 f"默认值: {cmd.get('d', '')}",
                 f"中文释义: {cmd.get('cn', '')}",
                 f"英文描述: {cmd.get('en', '')}",
+                f"数值说明: {value_description}",
+                f"数值范围: {value_ranges}",
+                f"离散取值: {value_options}",
             ]
             embed_texts.append(" | ".join(parts))
 
         try:
-            embeddings = get_embeddings(account, token, embed_texts)
+            embeddings = get_embeddings(account, ai_token, embed_texts)
 
             if first_batch:
                 print(f"  [DEBUG] Embedding count: {len(embeddings)} | dims: {len(embeddings[0])}")
@@ -157,6 +187,7 @@ def main():
 
             vectors = []
             for idx, cmd in enumerate(batch):
+                value_description, value_ranges, value_options = format_value_metadata(cmd)
                 vectors.append({
                     "id": cmd["n"],
                     "values": embeddings[idx],
@@ -166,10 +197,13 @@ def main():
                         "en": cmd.get("en", ""),
                         "d": str(cmd.get("d", "")),
                         "t": cmd.get("t", ""),
+                        "value_cn": value_description,
+                        "range": value_ranges,
+                        "options": value_options,
                     },
                 })
 
-            upsert_vectors(account, token, vectors)
+            upsert_vectors(account, api_token, vectors)
 
             # Update cache for successfully synced commands
             for cmd in batch:

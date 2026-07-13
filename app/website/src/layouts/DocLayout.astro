@@ -40,7 +40,7 @@ const currentIndex = orderedDocs.findIndex((doc) => doc.id === currentSlug);
 const previousDoc = currentIndex > 0 ? orderedDocs[currentIndex - 1] : null;
 const nextDoc = currentIndex >= 0 && currentIndex < orderedDocs.length - 1 ? orderedDocs[currentIndex + 1] : null;
 const currentDoc = docs.find((doc) => doc.id === currentSlug);
-const hrefFor = (id: string) => (id === "srpcfg-1" ? "/docs" : `/docs/${id}`);
+const hrefFor = (id: string) => `/docs/${id}`;
 ---
 
 <BaseLayout title={title} description={description}>

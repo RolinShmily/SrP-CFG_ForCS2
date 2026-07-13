@@ -12,6 +12,7 @@ import {
   Save,
   ShieldCheck,
   Undo2,
+  SlidersHorizontal,
   UserRoundCog,
   Wand2,
 } from "lucide-react";
@@ -511,6 +512,22 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
           >
             {copiedCommand === "srp_reload" ? <Check size={14} className="text-green" /> : <Copy size={14} />}
             {copiedCommand === "srp_reload" ? "已复制" : "srp_reload"}
+          </button>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+          <div>
+            <p className="font-display text-sm font-semibold">清理 SrP-CFG 管理的 ConVar</p>
+            <p className="mt-0.5 text-xs text-text-muted">
+              复制安全重置命令：只把 SrP-CFG 涉及的偏好恢复到已审计的 Valve 基线。不会直接删除 VCFG、_lastclouded、remotecache.vdf、未知 ConVar 或视频设置。
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void copyCommand("srp_reset_valve_settings")}
+            className="flex min-h-8 shrink-0 items-center gap-2 rounded-[var(--radius-sm)] border border-teal/35 bg-teal/5 px-3 font-mono text-xs text-teal transition-colors hover:border-teal/65 hover:bg-teal/10"
+          >
+            {copiedCommand === "srp_reset_valve_settings" ? <Check size={14} className="text-green" /> : <SlidersHorizontal size={14} />}
+            {copiedCommand === "srp_reset_valve_settings" ? "已复制" : "清理 ConVar"}
           </button>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">

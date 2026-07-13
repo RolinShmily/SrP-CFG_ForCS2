@@ -1,0 +1,54 @@
+name: Sync SrP-CFG Knowledge Index
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'config/**'
+      - '.github/scripts/sync_config_vectorize.mjs'
+      - '.github/scripts/sync_config_vectorize.test.mjs'
+      - '.github/workflows/sync-config-index.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-srp-config-index
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate CFG knowledge model
+        run: |
+          node --test .github/scripts/sync_config_vectorize.test.mjs
+          node .github/scripts/sync_config_vectorize.mjs --dry-run
+
+      - name: Validate Cloudflare credentials
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          : "${CLOUDFLARE_ACCOUNT_ID:?CLOUDFLARE_ACCOUNT_ID is required}"
+          : "${CLOUDFLARE_AI_TOKEN:?CLOUDFLARE_AI_TOKEN is required}"
+          : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
+
+      - name: Sync config source to Vectorize
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          SRP_CONFIG_INDEX_NAME: srp-config-index
+        run: node .github/scripts/sync_config_vectorize.mjs

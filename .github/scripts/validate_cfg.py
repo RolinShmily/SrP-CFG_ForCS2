@@ -58,9 +58,7 @@ RESETTABLE_COMMAND_RE = re.compile(
 )
 RESET_COVERAGE_IGNORE = {"cl_ticktiming"}
 REQUIRED_RUNTIME_ALIASES = {
-    "keyhud", "back", "zeus", "gm", "lefthand", "debounce", "silencer",
-    "avatars", "numbers", "tracer", "ping", "squareon", "squareoff", "round",
-    "sniperon", "sniperoff", "flyn", "flyralt", "ps", "pd", "show", "notshow",
+    "keyhud",
     "srp_apply_default", "srp_apply_echo", "srp_apply_yszh", "srp_apply_visionl",
     "srp_reset_valve", "srp_reset_valve_user", "srp_reset_valve_settings",
     "srp_reset_valve_keys", "srp_crosshair_view", "srp_crosshair_view_keys",
@@ -82,6 +80,17 @@ REQUIRED_RUNTIME_ALIASES = {
     "rec", "rec_end", "campath", "campath_draw", "gear_up", "gear_down",
     "bluron", "bluroff", "demoshow", "demonoshow",
     "att0", "att1", "+firr1", "-firr1", "+firr2", "-firr2",
+    "teamcounter", "teamid", "tick",
+    "dust2", "inferno", "mirage", "ancient", "nuke", "vertigo", "anubis", "office", "italy", "overpass", "train",
+    "CT1", "CT2", "CT3", "CT4", "CT5", "CT6", "CT7", "CT8", "CT9", "CT10", "CT11", "CT12", "CT13", "CT14", "CT15",
+    "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", "T13", "T14", "T15",
+    "pvp-hud-off", "pvp-hud-on", "fire",
+    "500", "503", "505", "506", "507", "508", "509", "512", "514", "515", "516", "517", "518", "519", "520", "521", "522", "523", "524", "525", "526",
+    "srp_crosshair_custom_info", "srp_viewmodel_custom_info",
+    "srp_c00_info", "srp_c01_info", "srp_c02_info", "srp_c03_info", "srp_c04_info", "srp_c05_info", "srp_c06_info", "srp_c07_info",
+    "srp_v00_info", "srp_v01_info", "srp_v02_info", "srp_v03_info", "srp_v04_info", "srp_v05_info", "srp_v06_info", "srp_v07_info",
+    "srp_color_custom_info", "grenadeoff", "grenadeon", "campath_draw_on", "campath_draw_off", "campath_on", "campath_off", "dmsg", "dmsg_on", "dmsg_off", "block", "blockOn", "blockOff", "widefov", "widefovOn", "widefovOff",
+    "gear1", "gear2", "gear3", "gear4", "gear5", "gear6", "gear7", "gear8", "gear9", "gear10", "gear11", "gear12", "gear13", "gear14", "gear15", "gear16", "ass", "mute", "t", "pos", "time", "post", "demoshow", "demonoshow", "f10", "f15", "f20", "f25", "f30", "f35", "f40", "f45", "f50", "f55", "f60", "f65", "f70", "f75", "f80", "f85", "f90", "f95", "f100",
 }
 
 
@@ -138,15 +147,18 @@ def validate_cfg_syntax(name: str, text: str) -> None:
             )
 
 
-def validate_editable_line_comments(name: str, text: str) -> None:
-    """Require a local explanation for every user-editable command line."""
+def validate_command_line_comments(name: str, text: str) -> None:
+    """Require a specific inline explanation for every executable source line."""
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
         stripped = raw_line.strip()
         if not stripped or stripped.startswith("//"):
             continue
-        if "//" not in raw_line:
+        if re.match(r"^(?:echo|echoln)\b", stripped, re.IGNORECASE):
+            continue
+        comment = re.search(r"\s//\s*(\S.*)$", raw_line)
+        if not comment:
             raise ValidationError(
-                f"Editable CFG command is missing an inline comment: "
+                f"CFG command is missing an inline explanation: "
                 f"{name}:{line_number}: {stripped}"
             )
 
@@ -190,7 +202,7 @@ def assert_runtime_registration_only(
             if match:
                 pending.append(cfg_name(match.group(1)))
                 continue
-            if re.match(r"^(?:alias|echo|echoln)\b", line, re.IGNORECASE):
+            if re.match(r"^(?:alias|echo|echoln|exec|execifexists)\b", line, re.IGNORECASE):
                 continue
             raise ValidationError(f"{label} executes non-Runtime command in {name}: {line}")
 
@@ -452,12 +464,9 @@ def validate_source() -> None:
     cfg_text = {name: read_cfg(path) for name, path in names.items()}
 
     for name, text in cfg_text.items():
-        is_settings_or_keymap = name.endswith(("/settings.cfg", "/keymap.cfg"))
-        is_crosshair_library = name.startswith(
-            "srp-cfg/features/crosshair-view/library/"
-        )
-        if is_settings_or_keymap or is_crosshair_library:
-            validate_editable_line_comments(name, text)
+        is_help_output = name.endswith("/help.cfg") or name.startswith("srp-cfg/helps/")
+        if not is_help_output:
+            validate_command_line_comments(name, text)
 
     autoexec_chain = direct_exec_targets(cfg_text["autoexec.cfg"])
     if autoexec_chain != EXPECTED_AUTOEXEC_CHAIN:

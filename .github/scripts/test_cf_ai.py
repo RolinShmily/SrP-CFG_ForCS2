@@ -5,7 +5,7 @@ import urllib.request
 
 def test_cf_ai():
     # 1. Read credentials
-    cf_token = os.environ.get("CLOUDFLARE_AI_TOKEN") or os.environ.get("CLOUDFLARE_API_TOKEN") or os.environ.get("CF_API_TOKEN")
+    cf_token = os.environ.get("CLOUDFLARE_AI_TOKEN")
     cf_account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
     
     if not cf_token or not cf_account:

@@ -30,6 +30,9 @@ jobs:
         run: |
           python .github/scripts/test_cf_ai.py
 
+      - name: Test command value model
+        run: python .github/scripts/test_command_values.py
+
       - name: Run update script
         env:
           CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
@@ -41,6 +44,7 @@ jobs:
       - name: Sync Vectorize index
         env:
           CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           python .github/scripts/sync_vectorize.py
@@ -49,7 +53,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add app/website/public/data/commands.json .github/scripts/last_sha.txt .github/scripts/vectorize_sync_cache.json
+          git add app/website/public/data/commands.json .github/scripts/last_sha.txt .github/scripts/vectorize_sync_cache.json .github/scripts/command_values.py .github/scripts/test_command_values.py
           # 检查是否有文件改动，如果有则提交并推送
           if ! git diff --cached --quiet; then
             git commit -m "chore(auto): update CS2 console commands database"

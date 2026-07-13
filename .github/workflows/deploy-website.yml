@@ -60,9 +60,3 @@ jobs:
           TURNSTILE_SECRET_KEY: ${{ secrets.CLOUDFLARE_TURNSTILE_SECRET || secrets.TURNSTILE_SECRET_KEY }}
         working-directory: app/website
         run: echo "$TURNSTILE_SECRET_KEY" | npx wrangler secret put TURNSTILE_SECRET_KEY
-
-      - name: Sync docs to Vectorize
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: node .github/scripts/sync_docs_vectorize.js

@@ -6,12 +6,11 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2025-01-01",
 	"ai": {
-		"binding": "AI",
-		"gateway_id": "srp-cfg"
+		"binding": "AI"
 	},
 	"vectorize": [
 		{
-			"binding": "VECTORIZE_INDEX",
+			"binding": "COMMANDS_INDEX",
 			"index_name": "cs2-commands-index"
 		},
 		{

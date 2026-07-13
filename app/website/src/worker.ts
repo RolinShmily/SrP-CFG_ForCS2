@@ -1,7 +1,26 @@
+interface VectorizeMatch {
+  metadata?: unknown;
+}
+
+interface VectorizeResult {
+  matches?: VectorizeMatch[];
+}
+
+interface VectorizeBinding {
+  query(
+    vector: number[],
+    options: { topK: number; returnValues: boolean; returnMetadata: "all" },
+  ): Promise<VectorizeResult>;
+}
+
+interface AiBinding {
+  run(model: string, inputs: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
+}
+
 export interface Env {
-  VECTORIZE_INDEX: VectorizeIndex;
-  CONFIG_INDEX?: VectorizeIndex;
-  AI: Ai;
+  COMMANDS_INDEX: VectorizeBinding;
+  CONFIG_INDEX: VectorizeBinding;
+  AI: AiBinding;
   ASSETS: { fetch: typeof fetch };
   TURNSTILE_SECRET_KEY?: string;
 }
@@ -20,6 +39,34 @@ type ChatRole = "user" | "assistant";
 interface ChatHistoryItem {
   role: ChatRole;
   content: string;
+}
+
+type ChatDatabase = "srpcfg" | "commands";
+
+interface KnowledgeMetadata {
+  kind?: string;
+  sourcePath?: string;
+  line?: number;
+  module?: string;
+  family?: string;
+  role?: string;
+  command?: string;
+  symbol?: string;
+  key?: string;
+  source?: string;
+  description?: string;
+  scope?: string;
+  activation?: string;
+  relation?: string;
+  subject?: string;
+  n?: string;
+  cn?: string;
+  en?: string;
+  d?: string;
+  t?: string;
+  value_cn?: string;
+  range?: string;
+  options?: string;
 }
 
 interface TurnstileVerification {
@@ -50,29 +97,6 @@ export default {
   },
 };
 
-// Best-effort per-isolate limiter. Turnstile and AI Gateway remain the durable abuse controls.
-interface RateLimitEntry {
-  count: number;
-  resetAt: number;
-}
-
-const rateLimitMap = new Map<string, RateLimitEntry>();
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const windowMs = 60_000;
-  const maxRequests = 10;
-  const current = rateLimitMap.get(ip);
-
-  if (!current || current.resetAt <= now) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (current.count >= maxRequests) return false;
-
-  current.count += 1;
-  return true;
-}
 
 function jsonError(message: string, status: number, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify({ error: message }), {
@@ -89,6 +113,40 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
+function isKnowledgeMetadata(value: unknown): value is KnowledgeMetadata {
+  return isRecord(value);
+}
+
+function formatConfigContext(item: KnowledgeMetadata): string {
+  const location = item.sourcePath
+    ? `${item.sourcePath}${typeof item.line === "number" ? `:${item.line}` : ""}`
+    : "未知位置";
+  return [
+    `- 类型：${item.kind || "config"}`,
+    `位置：${location}`,
+    item.module ? `模块：${item.family ? `${item.family}/` : ""}${item.module}` : "",
+    item.source ? `源码：\`${item.source}\`` : "",
+    item.description ? `源码说明：${item.description}` : "",
+    item.scope ? `生效范围：${item.scope}` : "",
+    item.activation ? `加载路径：${item.activation}` : "",
+    item.relation ? `关联关系：${item.relation}` : "",
+  ]
+    .filter(Boolean)
+    .join(" | ");
+}
+
+function formatCommandContext(item: KnowledgeMetadata): string {
+  return [
+    `- \`${item.n || "未知指令"}\` (${item.t || "unknown"}): ${item.cn || item.en || "无描述"}`,
+    `默认值: ${item.d ?? "无"}`,
+    item.value_cn ? `数值说明: ${item.value_cn}` : "",
+    item.range ? `范围: ${item.range}` : "",
+    item.options ? `离散取值: ${item.options}` : "",
+  ]
+    .filter(Boolean)
+    .join(" | ");
+}
+
 async function handleChat(request: Request, env: Env): Promise<Response> {
   const requestUrl = new URL(request.url);
   const requestOrigin = request.headers.get("Origin");
@@ -97,9 +155,6 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
   }
 
   const clientIp = request.headers.get("cf-connecting-ip") || "unknown";
-  if (!checkRateLimit(clientIp)) {
-    return jsonError("请求过于频繁，请稍候再试（限制 10 次/分钟）。", 429);
-  }
 
   try {
     const contentType = request.headers.get("Content-Type")?.split(";", 1)[0].trim();
@@ -154,6 +209,14 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
       }
     }
 
+    let database: ChatDatabase = "srpcfg";
+    if (payload.db !== undefined) {
+      if (payload.db !== "srpcfg" && payload.db !== "commands") {
+        return jsonError("未知的知识库。", 400);
+      }
+      database = payload.db;
+    }
+
     if (!env.TURNSTILE_SECRET_KEY) {
       console.error("TURNSTILE_SECRET_KEY is not configured");
       return jsonError("AI 助手安全验证未配置，暂时不可用。", 503);
@@ -195,9 +258,9 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     }
 
     // 1. Embed the user query
-    let queryEmbedResponse;
+    let queryVector: number[];
     try {
-      queryEmbedResponse = await env.AI.run(
+      const queryEmbedResponse = (await env.AI.run(
         EMBEDDING_MODEL,
         {
           text: [message],
@@ -207,16 +270,19 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
             id: "srp-cfg",
           },
         },
-      );
+      )) as { data?: number[][] };
+      queryVector = queryEmbedResponse.data?.[0] ?? [];
+      if (queryVector.length === 0) throw new Error("Embedding response did not contain a vector");
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Embedding model (${EMBEDDING_MODEL}) failed: ${message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`Embedding model (${EMBEDDING_MODEL}) failed: ${errorMessage}`);
     }
-    const queryVector = queryEmbedResponse.data[0] as number[];
 
-    // 2. Decide which index to query based on payload.db
-    const useSrpDb = payload.db === "srpcfg" || payload.db === undefined; // default to srpcfg
-    const indexToQuery = (useSrpDb && env.CONFIG_INDEX) ? env.CONFIG_INDEX : env.VECTORIZE_INDEX;
+    // 2. Query only the explicitly selected physical index.
+    const indexToQuery = database === "srpcfg" ? env.CONFIG_INDEX : env.COMMANDS_INDEX;
+    if (!indexToQuery) {
+      return jsonError("所选知识库暂时不可用。", 503);
+    }
 
     const vectorMatches = await indexToQuery.query(queryVector, {
       topK: TOP_K,
@@ -224,51 +290,41 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
       returnMetadata: "all",
     });
 
-    // 3. Build context from matched metadata
-    const matchedCommands = (vectorMatches.matches ?? [])
-      .map((match: { metadata?: unknown }) => match.metadata)
-      .filter(Boolean) as Array<{
-      n: string;
-      cn: string;
-      en: string;
-      d: string;
-      t: string;
-    }>;
+    // 3. Build context from matched metadata.
+    const matchedKnowledge = (vectorMatches.matches ?? [])
+      .map((match) => match.metadata)
+      .filter(isKnowledgeMetadata);
 
-    const contextStr = matchedCommands
-      .map((item) => {
-        if (item.t === "doc") {
-          return `- [SrP-CFG 官方文档] 《${item.n}》 (参考链接: /docs/${item.d}): ${item.cn}`;
-        }
-        return `- \`${item.n}\` (${item.t === "convar" ? "变量" : "指令"}): ${item.cn || item.en || "无描述"} | 默认值: ${item.d || "无"}`;
-      })
+    const contextStr = matchedKnowledge
+      .map(database === "srpcfg" ? formatConfigContext : formatCommandContext)
       .join("\n");
+    const referenceContext = contextStr || "未检索到匹配记录。";
 
-    // 4. Construct the prompt based on selected database
-    let systemPrompt = "";
-    if (useSrpDb) {
-      systemPrompt = `你是一个专业的 CS2 游戏控制台指令与 SrP-CFG 配置包助手。请根据下面提供的参考字典（包含配置包文件、按键绑定、别名和相关指令说明），解答玩家的提问。
+    // 4. Construct the prompt based on selected database.
+    let systemPrompt: string;
+    if (database === "srpcfg") {
+      systemPrompt = `你是 SrP-CFG 配置包源码助手。下方参考资料来自 config/ 目录的静态解析结果，包含准确文件、行号、源码、加载链和文件职责。
 
-参考字典（按相关度排序）：
-${contextStr}
+参考资料（按相关度排序）：
+${referenceContext}
 
 回答规范：
-1. 只解答 CS2 游戏控制台指令与 SrP-CFG 配置包相关问题，婉拒无关内容。
-2. 涉及指令、绑定按键或别名时，必须用 \`指令/按键/别名\` 格式包裹（例如 \`bind "J" "srp_knife"\`），并清晰说明其作用位置、生效范围和条件。
-3. 详细解释玩家询问的配置预设、快捷键或功能原理（如 knife 刀具模型切换、practice 跑图练习、zeus 快捷电人、autoview 视角切换等）。如果字典里有参考链接，建议引导玩家去文档查看，链接格式为 [页面标题](/docs/路径)。
-4. 如果字典中没有直接匹配的配置内容，请如实告知玩家，不要编造不存在的预设或绑定。
-5. 保持回答简练、专业、有条理。请使用中文回答。`;
+1. 只解答 SrP-CFG 配置包及其使用到的 CS2 指令。说明作用时必须区分“CS2 指令本身的通用含义”和“它在 SrP-CFG 中的具体用途”。
+2. 优先给出配置位置、所属模块、加载入口、生效范围与必要条件；没有证据时明确说“参考资料未能确认”，不得推断作弊条件、默认按键或文档链接。
+3. 涉及源码时用反引号包裹指令、alias 或 bind；引用位置使用 \`config/路径:行号\`。
+4. Runtime 只注册能力；settings 只应用状态；keymap 才修改物理键位；Preset 应用后 user/custom.cfg 仍可覆盖，这是回答范围问题时的核心架构规则。
+5. 保持简练、专业、有条理，使用中文回答。`;
     } else {
-      systemPrompt = `你是一个专业的 CS2 官方控制台指令与变量助手。请根据下面提供的参考指令字典，解答玩家的提问。
+      systemPrompt = `你是 CS2 官方控制台指令与变量助手。下方参考资料来自独立的官方指令向量库。
 
 参考指令字典（按相关度排序）：
-${contextStr}
+${referenceContext}
 
 回答规范：
 1. 只解答 CS2 官方控制台指令与变量（Cvar）相关问题，婉拒无关内容。
-2. 涉及指令或变量时，必须用 \`指令名\` 格式包裹，并说明该指令的作用、默认值及推荐设置（如果适用）。
-3. 如果字典中没有直接匹配的指令，请如实告知玩家，不要编造字典中不存在的指令。
-4. 保持回答简练、专业、有条理。请使用中文回答。`;
+2. 涉及指令或变量时，使用反引号包裹名称，并说明作用、默认值、引擎 Min/Max 约束、描述范围和离散取值（资料提供时）；不得把“说明范围”说成引擎强制限制。
+3. 如果字典中没有直接匹配的指令或未提供具体范围，请如实告知，不要编造不存在的指令、默认值、单位或边界。
+4. 保持简练、专业、有条理，使用中文回答。`;
     }
 
     const messages = [
@@ -290,12 +346,14 @@ ${contextStr}
         {
           gateway: {
             id: "srp-cfg",
+            metadata: { knowledgeBase: database },
           },
         },
       )) as ReadableStream;
+      if (!(stream instanceof ReadableStream)) throw new Error("Model did not return a response stream");
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`LLM model (${LLM_MODEL}) failed: ${message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`LLM model (${LLM_MODEL}) failed: ${errorMessage}`);
     }
 
     return new Response(stream, {

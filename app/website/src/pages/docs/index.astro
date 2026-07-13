@@ -1,19 +1,40 @@
 ---
-import DocLayout from "../../layouts/DocLayout.astro";
-import { getCollection, render } from "astro:content";
+import DocsIndexLayout from "../../layouts/DocsIndexLayout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { BookOpen, Boxes, Crosshair, Terminal } from "lucide-astro";
 
 const docs = await getCollection("docs");
-const sorted = docs.sort((a, b) => a.id.localeCompare(b.id));
-const doc = docs.find((d) => d.id === "srpcfg-1")!;
-const { Content, headings } = await render(doc);
+const take = (ids: string[]) =>
+  ids
+    .map((id) => docs.find((doc) => doc.id === id))
+    .filter((doc): doc is CollectionEntry<"docs"> => Boolean(doc));
+
+const groups = [
+  {
+    label: "开始与原理",
+    description: "安装之前先理解启动顺序、用户层和 CS2 持久状态。",
+    icon: BookOpen,
+    docs: take(["srpcfg-1", "srpcfg-3", "autoexec", "vcfg"]),
+  },
+  {
+    label: "常驻功能",
+    description: "按需启用准星、视角、刀具与 Zeus 能力。",
+    icon: Crosshair,
+    docs: take(["crosshair_view", "autoview", "knife", "zeus"]),
+  },
+  {
+    label: "会话模式",
+    description: "进入跑图、预览、地图指南或 Demo/HLAE 工作区。",
+    icon: Boxes,
+    docs: take(["practice", "previewmode", "guidemake", "demo_hlae"]),
+  },
+  {
+    label: "资源与参考",
+    description: "查询控制台帮助、视频预设和地图 Annotation 资源。",
+    icon: Terminal,
+    docs: take(["helps", "cs2_video", "annotations"]),
+  },
+];
 ---
 
-<DocLayout
-  title={`${doc.data.title} — SrP-CFG 文档`}
-  description={doc.data.description ?? `SrP-CFG 文档：${doc.data.title}`}
-  docs={sorted}
-  currentSlug={doc.id}
-  headings={headings}
->
-  <Content />
-</DocLayout>
+<DocsIndexLayout docs={docs} groups={groups} />

@@ -1,0 +1,147 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { ArrowRight, BookOpen, Boxes, Crosshair, Gauge, Search, Terminal, Wrench } from "lucide-astro";
+import BaseLayout from "./BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface DocsGroup {
+  label: string;
+  description: string;
+  icon: typeof BookOpen;
+  docs: CollectionEntry<"docs">[];
+}
+
+interface Props {
+  docs: CollectionEntry<"docs">[];
+  groups: DocsGroup[];
+}
+
+const { docs, groups } = Astro.props;
+const hrefFor = (id: string) => (id === "srpcfg-1" ? "/docs/srpcfg-1" : `/docs/${id}`);
+const featured = [
+  {
+    href: "/docs/srpcfg-1",
+    eyebrow: "01 / Understand",
+    title: "先理解四层边界",
+    description: "分清 Runtime、Preset、User 与 VCFG，避免把脚本能力、个人覆盖和游戏持久状态混为一谈。",
+    icon: Boxes,
+  },
+  {
+    href: "/docs/srpcfg-3",
+    eyebrow: "02 / Install",
+    title: "安装并选择使用模式",
+    description: "安装唯一 Runtime Core，再决定只使用功能，还是选一个 Preset 起点并继续写个人差异。",
+    icon: Gauge,
+  },
+  {
+    href: "/docs/helps",
+    eyebrow: "03 / Operate",
+    title: "在控制台找到功能",
+    description: "从 srp_help 进入完整帮助树；普通入口只应用设置，带 _keys 的入口才会接管物理按键。",
+    icon: Terminal,
+  },
+];
+---
+
+<BaseLayout title="文档中心 — SrP-CFG" description="SrP-CFG v3 架构、安装、功能、模式、恢复边界与 CS2 VCFG 参考文档。">
+  <Nav />
+  <main id="main-content" tabindex="-1" class="pt-16">
+    <section class="border-b border-border bg-[radial-gradient(circle_at_18%_18%,rgba(242,138,26,0.09),transparent_34%)]">
+      <div class="mx-auto max-w-[1280px] px-5 pb-14 pt-16 sm:px-7 sm:pb-20 sm:pt-24">
+        <div class="grid gap-10 lg:grid-cols-[minmax(0,760px)_300px] lg:items-end lg:gap-16">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-[0.18em] text-accent">Documentation / v3</p>
+            <h1 class="mt-4 max-w-[760px] font-display text-[clamp(2.75rem,8vw,6rem)] font-bold leading-[0.94] tracking-[-0.04em] text-text">
+              从边界出发，<br />再开始配置。
+            </h1>
+            <p class="mt-6 max-w-[700px] text-base leading-8 text-text-secondary sm:text-lg">
+              文档按“架构 → 安装 → 功能 → 模式 → 参考”组织。先确定谁负责保存状态，再选择会覆盖哪些设置与按键的入口。
+            </p>
+          </div>
+
+          <aside class="border-l-2 border-accent pl-5">
+            <p class="font-mono text-[11px] uppercase tracking-[0.14em] text-text-faint">Fast path</p>
+            <p class="mt-2 text-sm leading-6 text-text-secondary">首次使用按前三张卡片阅读；遇到具体 ConVar 数值问题，直接进入指令中心。</p>
+            <a href="/commands" class="mt-4 inline-flex min-h-11 items-center gap-2 font-display text-sm font-bold text-accent no-underline transition-colors hover:text-accent-light">
+              <Search class="h-4 w-4" />检索 CS2 指令与数值<ArrowRight class="h-4 w-4" />
+            </a>
+          </aside>
+        </div>
+
+        <div class="mt-12 grid gap-px overflow-hidden rounded-[var(--radius)] border border-border bg-border md:grid-cols-3">
+          {featured.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a href={item.href} data-astro-prefetch="hover" class="group min-h-[230px] bg-bg-card p-6 no-underline transition-colors hover:bg-bg-hover sm:p-7">
+                <div class="flex items-start justify-between gap-4">
+                  <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint">{item.eyebrow}</span>
+                  <Icon class="h-5 w-5 text-accent" />
+                </div>
+                <h2 class="mt-10 font-display text-xl font-bold leading-tight text-text group-hover:text-accent">{item.title}</h2>
+                <p class="mt-3 text-sm leading-6 text-text-muted">{item.description}</p>
+                <span class="mt-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent">开始阅读<ArrowRight class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-[1280px] px-5 py-14 sm:px-7 sm:py-20">
+      <div class="mb-9 flex flex-col gap-3 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">Browse all</p>
+          <h2 class="mt-2 font-display text-3xl font-bold text-text sm:text-4xl">按任务浏览</h2>
+        </div>
+        <p class="font-mono text-xs text-text-faint">{docs.length} 篇文档 · {groups.length} 个分组</p>
+      </div>
+
+      <div class="space-y-12">
+        {groups.map((group, groupIndex) => {
+          const GroupIcon = group.icon;
+          return (
+            <section aria-labelledby={`docs-group-${groupIndex}`} class="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
+              <header>
+                <div class="flex items-center gap-2 text-accent"><GroupIcon class="h-4 w-4" /><span class="font-mono text-[10px] uppercase tracking-[0.15em]">{String(groupIndex + 1).padStart(2, "0")}</span></div>
+                <h3 id={`docs-group-${groupIndex}`} class="mt-3 font-display text-xl font-bold text-text">{group.label}</h3>
+                <p class="mt-2 text-sm leading-6 text-text-muted">{group.description}</p>
+              </header>
+
+              <div class="grid gap-3 md:grid-cols-2">
+                {group.docs.map((doc) => (
+                  <a href={hrefFor(doc.id)} data-astro-prefetch="hover" class="group flex min-h-[132px] flex-col justify-between rounded-[var(--radius-sm)] border border-border bg-bg-card p-5 no-underline transition-colors hover:border-border-highlight hover:bg-bg-hover">
+                    <div>
+                      <div class="flex items-start justify-between gap-4">
+                        <h4 class="font-display text-base font-bold text-text group-hover:text-accent">{doc.data.title}</h4>
+                        <ArrowRight class="h-4 w-4 shrink-0 text-text-faint transition-transform group-hover:translate-x-1 group-hover:text-accent" />
+                      </div>
+                      <p class="mt-2 text-sm leading-6 text-text-muted">{doc.data.description ?? "查看模块用法、作用边界与相关文件。"}</p>
+                    </div>
+                    <span class="mt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-text-faint">/docs/{doc.id}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="border-y border-border bg-bg-card">
+      <div class="mx-auto grid max-w-[1280px] gap-px bg-border md:grid-cols-2">
+        <a href="/download" class="group bg-bg-card px-5 py-9 no-underline transition-colors hover:bg-bg-hover sm:px-7">
+          <Wrench class="h-5 w-5 text-accent" />
+          <p class="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint">Ready to install</p>
+          <h2 class="mt-2 font-display text-2xl font-bold text-text group-hover:text-accent">获取 Installer 与 Runtime Core</h2>
+        </a>
+        <a href="/commands" class="group bg-bg-card px-5 py-9 no-underline transition-colors hover:bg-bg-hover sm:px-7">
+          <Crosshair class="h-5 w-5 text-accent" />
+          <p class="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint">Need a value</p>
+          <h2 class="mt-2 font-display text-2xl font-bold text-text group-hover:text-accent">查询默认值、约束与离散模式</h2>
+        </a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

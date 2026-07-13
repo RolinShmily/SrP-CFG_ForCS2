@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { groups, currentSlug } = Astro.props;
-const hrefFor = (id: string) => (id === "srpcfg-1" ? "/docs" : `/docs/${id}`);
+const hrefFor = (id: string) => `/docs/${id}`;
 ---
 
 <nav aria-label="文档导航">
@@ -21,7 +21,7 @@ const hrefFor = (id: string) => (id === "srpcfg-1" ? "/docs" : `/docs/${id}`);
     data-astro-prefetch="hover"
     class="mb-5 flex min-h-11 items-center justify-between rounded-[var(--radius-sm)] border border-border bg-bg-card px-3.5 font-display text-sm font-bold text-text no-underline transition-colors hover:border-border-highlight hover:text-accent"
   >
-    <span>文档中心</span>
+    <span>全部文档</span>
     <span class="font-mono text-[10px] text-text-faint">INDEX</span>
   </a>
 

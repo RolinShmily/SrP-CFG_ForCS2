@@ -7,6 +7,7 @@
     "build:web": "pnpm --filter @srp-cfg/website build",
     "install:web": "pnpm install --filter @srp-cfg/website...",
     "deploy:web": "pnpm install:web && pnpm --filter @srp-cfg/website run deploy",
+    "check:config-index": "node --test .github/scripts/sync_config_vectorize.test.mjs && node .github/scripts/sync_config_vectorize.mjs --dry-run",
     "preview:web": "pnpm --filter @srp-cfg/website preview",
     "dev:desktop": "pnpm --filter @srp-cfg/desktop start",
     "build:desktop": "pnpm --filter @srp-cfg/desktop make",

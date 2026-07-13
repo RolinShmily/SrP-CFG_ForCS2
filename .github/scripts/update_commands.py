@@ -4,6 +4,8 @@ import json
 import os
 import sys
 
+from command_values import enrich_dataset, parse_convar_metadata
+
 def fetch_and_parse(url, is_convar):
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     with urllib.request.urlopen(req) as response:
@@ -26,16 +28,17 @@ def fetch_and_parse(url, is_convar):
             
         if match:
             name = match.group(1)
+            value = {}
             if is_convar:
                 val = match.group(2).strip()
                 if val.startswith('"') and val.endswith('"'):
                     val = val[1:-1]
-                flags_str = match.group(3)
+                flags, bounds = parse_convar_metadata(match.group(3))
+                if bounds:
+                    value["constraint"] = bounds
             else:
                 val = ""
-                flags_str = match.group(2)
-                
-            flags = [f.strip() for f in flags_str.split() if f.strip()]
+                flags = [f.strip() for f in match.group(2).split() if f.strip()]
             
             desc = ""
             if i + 1 < total_lines and lines[i+1].startswith('\t'):
@@ -44,13 +47,16 @@ def fetch_and_parse(url, is_convar):
                     desc = ""
                 i += 1
             
-            entries.append({
+            entry = {
                 "n": name,
                 "d": val,
                 "f": flags,
                 "en": desc,
                 "t": "var" if is_convar else "cmd"
-            })
+            }
+            if value:
+                entry["value"] = value
+            entries.append(entry)
         i += 1
     return entries
 
@@ -90,8 +96,24 @@ def translate_new_commands(new_items, cf_token, cf_account):
     
     for i in range(0, len(new_items), batch_size):
         batch = new_items[i:i+batch_size]
-        batch_data = [{"n": item["n"], "en": item["en"]} for item in batch]
-        prompt = f"Translate these CS2 commands/variables and categorize them. If English description is empty, write a brief Chinese description. Return JSON matching this format: {{\"translations\": [{{\"name\": \"cmd_name\", \"desc_cn\": \"中文释义\", \"category\": \"network/graphics/audio/mouse/gameplay/cheats/practice/system\"}}]}}:\n{json.dumps(batch_data)}"
+        batch_data = [
+            {
+                "n": item["n"],
+                "default": item["d"],
+                "en": item["en"],
+                "constraint": item.get("value", {}).get("constraint", {}),
+            }
+            for item in batch
+        ]
+        prompt = (
+            "Translate these CS2 commands/variables and categorize them. Preserve every documented "
+            "number exactly. For numeric variables, explain units, special values, discrete modes, and "
+            "Min/Max constraints when the input provides them; never invent a missing unit or boundary. "
+            "If the English description is empty, write a brief Chinese description. Return JSON matching "
+            "this format: {\"translations\": [{\"name\": \"cmd_name\", \"desc_cn\": \"中文释义\", "
+            "\"category\": \"network/graphics/audio/mouse/gameplay/cheats/practice/system\"}]}:\n"
+            f"{json.dumps(batch_data)}"
+        )
         
         # Simple retry loop
         for attempt in range(3):
@@ -102,7 +124,7 @@ def translate_new_commands(new_items, cf_token, cf_account):
                 }
                 payload = {
                     "messages": [
-                        {"role": "system", "content": "You are a CS2 pro player and config developer. Translate CS2 console commands/variables descriptions to Chinese player terms. Return JSON matching the requested format directly. Do not include markdown code block syntax around the JSON output."},
+                        {"role": "system", "content": "You are a CS2 config reference editor. Translate Source 2 command descriptions into precise Chinese player terminology. Preserve numeric values, comparison signs, units, bitmasks, sentinel values, and enum meanings exactly; distinguish engine Min/Max constraints from prose examples, and state when no unit or bound is provided. Return only JSON in the requested schema, without Markdown fences."},
                         {"role": "user", "content": prompt}
                     ]
                 }
@@ -225,7 +247,8 @@ def main():
                 "en": item["en"],     # Update English description
                 "t": item["t"],       # Update type
                 "cn": cached.get("cn", ""),
-                "c": cached.get("c", "system")
+                "c": cached.get("c", "system"),
+                "value": item.get("value", {}),
             })
         else:
             # New command found!
@@ -235,7 +258,7 @@ def main():
 
     # 4. Handle new commands translations
     if new_commands:
-        cf_token = os.environ.get("CLOUDFLARE_AI_TOKEN") or os.environ.get("CF_API_TOKEN") or os.environ.get("CLOUDFLARE_API_TOKEN")
+        cf_token = os.environ.get("CLOUDFLARE_AI_TOKEN")
         cf_account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
         
         translated_new = {}
@@ -263,8 +286,11 @@ def main():
                 "en": item["en"],
                 "t": item["t"],
                 "cn": desc_cn,
-                "c": category
+                "c": category,
+                "value": item.get("value", {}),
             })
+
+    enrich_dataset(final_dataset)
 
     # Sort alphabetically by name
     final_dataset.sort(key=lambda x: x["n"])
