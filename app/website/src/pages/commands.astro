@@ -236,6 +236,7 @@ const categories = [
 </MainLayout>
 
 <script>
+  import { IncompleteAiStreamError, TruncatedAiResponseError, readAiEventStream } from "../lib/ai-stream";
   interface CommandValueRange {
     min?: string;
     max?: string;
@@ -804,7 +805,47 @@ async function getTurnstileToken(): Promise<string> {
   });
 }
 
-async function sendMessage() {
+  async function requestAiResponse(
+    message: string,
+    requestDb: ChatDatabase,
+    requestHistory: { role: "user" | "assistant"; content: string }[],
+    bubbleContent: HTMLElement | null,
+  ): Promise<string> {
+    const turnstileToken = await getTurnstileToken();
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        db: requestDb,
+        history: requestHistory.slice(-6).map((item) => ({
+          role: item.role,
+          content: item.content.slice(0, 4_000),
+        })),
+        turnstileToken,
+      }),
+    });
+
+    if (!res.ok) {
+      let errorMessage = `HTTP ${res.status}`;
+      try {
+        const errorPayload = await res.json();
+        errorMessage = errorPayload.error || errorMessage;
+      } catch {
+        // Keep the HTTP status fallback.
+      }
+      throw new Error(errorMessage);
+    }
+    if (!res.body) throw new Error("服务未返回响应内容。");
+
+    return readAiEventStream(res.body, (text) => {
+      if (!bubbleContent) return;
+      bubbleContent.innerHTML = renderMarkdown(text);
+      scrollToBottom();
+    });
+  }
+
+  async function sendMessage() {
     const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
     if (!input || isStreaming) return;
 
@@ -818,7 +859,7 @@ async function sendMessage() {
 
     appendMessage("user", message);
     const aiBubble = appendMessage("assistant", "");
-    const bubbleContent = aiBubble.querySelector("[data-bubble-content]") as HTMLElement;
+    const bubbleContent = aiBubble.querySelector("[data-bubble-content]") as HTMLElement | null;
     if (bubbleContent) {
       bubbleContent.innerHTML = '<span class="inline-flex items-center gap-1 text-text-muted text-xs"><span class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style="animation-delay:0ms"></span><span class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style="animation-delay:150ms"></span><span class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style="animation-delay:300ms"></span></span>';
     }
@@ -828,79 +869,30 @@ async function sendMessage() {
     updateSendButton();
 
     try {
-      const turnstileToken = await getTurnstileToken();
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message,
-          db: requestDb,
-          history: requestHistory.slice(-6).map((item) => ({
-            role: item.role,
-            content: item.content.slice(0, 4_000),
-          })),
-          turnstileToken,
-        }),
-      });
-
-      if (!res.ok) {
-        let errorMessage = `HTTP ${res.status}`;
-        try {
-          const errorPayload = await res.json();
-          errorMessage = errorPayload.error || errorMessage;
-        } catch {
-          // Keep the HTTP status fallback.
-        }
-        throw new Error(errorMessage);
-      }
-      if (!res.body) throw new Error("服务未返回响应内容。");
-      if (bubbleContent) bubbleContent.innerHTML = "";
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
       let fullText = "";
-      let completed = false;
-
-      const consumeEvent = (line: string) => {
-        const trimmed = line.trim();
-        if (!trimmed.startsWith("data:")) return;
-        const jsonText = trimmed.slice(5).trim();
-        if (jsonText === "[DONE]") {
-          completed = true;
-          return;
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          if (attempt > 0 && bubbleContent) {
+            bubbleContent.innerHTML = '<p class="text-amber-300 text-xs">连接提前结束，正在自动重试一次…</p>';
+            await new Promise((resolve) => window.setTimeout(resolve, 250));
+          }
+          fullText = await requestAiResponse(message, requestDb, requestHistory, bubbleContent);
+          break;
+        } catch (error: unknown) {
+          if (attempt === 0 && error instanceof IncompleteAiStreamError) continue;
+          throw error;
         }
-        const parsed = JSON.parse(jsonText);
-        if (parsed.error) throw new Error(String(parsed.error));
-        const chunk = typeof parsed.response === "string" ? parsed.response : "";
-        fullText += chunk;
-        if (bubbleContent && fullText) {
-          bubbleContent.innerHTML = renderMarkdown(fullText);
-          scrollToBottom();
-        }
-      };
-
-      while (true) {
-        const { done, value } = await reader.read();
-        buffer += decoder.decode(value, { stream: !done });
-        const lines = buffer.split("\n");
-        if (done) {
-          buffer = "";
-        } else {
-          buffer = lines.pop() || "";
-        }
-        for (const line of lines) consumeEvent(line);
-        if (done) break;
       }
-      if (!fullText.trim()) throw new Error("AI 未生成可显示的回复，请重试。");
-      if (!completed) console.warn("AI stream ended without an explicit [DONE] marker");
 
       requestHistory.push({ role: "user", content: message });
       requestHistory.push({ role: "assistant", content: fullText });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      const guidance = error instanceof TruncatedAiResponseError
+        ? "回答达到长度上限。请缩小问题范围，或要求分批列出字段。"
+        : "请重试，或切换到左侧精确检索。";
       if (bubbleContent) {
-        bubbleContent.innerHTML = `<p class="text-red-400 text-sm">请求失败：${escapeHtml(errorMessage)}</p><p class="text-text-faint text-xs mt-1">请修改问题后重试，或切换到左侧精确检索。</p>`;
+        bubbleContent.innerHTML = `<p class="text-red-400 text-sm">回复未完整生成：${escapeHtml(errorMessage)}</p><p class="text-text-faint text-xs mt-1">${escapeHtml(guidance)}</p>`;
       }
     } finally {
       isStreaming = false;
