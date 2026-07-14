@@ -28,6 +28,7 @@ export interface Env {
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const LLM_MODEL = "@cf/meta/llama-3.2-3b-instruct";
 const TOP_K = 8;
+const MAX_OUTPUT_TOKENS = 2_048;
 const TURNSTILE_ACTION = "chat";
 const MAX_REQUEST_BODY_LENGTH = 32_768;
 const MAX_MESSAGE_LENGTH = 500;
@@ -313,7 +314,8 @@ ${referenceContext}
 2. 优先给出配置位置、所属模块、加载入口、生效范围与必要条件；没有证据时明确说“参考资料未能确认”，不得推断作弊条件、默认按键或文档链接。
 3. 涉及源码时用反引号包裹指令、alias 或 bind；引用位置使用 \`config/路径:行号\`。
 4. Runtime 只注册能力；settings 只应用状态；keymap 才修改物理键位；Preset 应用后 user/custom.cfg 仍可覆盖，这是回答范围问题时的核心架构规则。
-5. 保持简练、专业、有条理，使用中文回答。`;
+5. 回答必须以完整句子结束。资料过多时应压缩每项文字或明确分批回答，不得在文件位置、命令、表格字段或代码中途停止。
+6. 保持简练、专业、有条理，使用中文回答。`;
     } else {
       systemPrompt = `你是 CS2 官方控制台指令与变量助手。下方参考资料来自独立的官方指令向量库。
 
@@ -324,7 +326,8 @@ ${referenceContext}
 1. 只解答 CS2 官方控制台指令与变量（Cvar）相关问题，婉拒无关内容。
 2. 涉及指令或变量时，使用反引号包裹名称，并说明作用、默认值、引擎 Min/Max 约束、描述范围和离散取值（资料提供时）；不得把“说明范围”说成引擎强制限制。
 3. 如果字典中没有直接匹配的指令或未提供具体范围，请如实告知，不要编造不存在的指令、默认值、单位或边界。
-4. 保持简练、专业、有条理，使用中文回答。`;
+4. 回答必须以完整句子结束。资料过多时应压缩每项文字或明确分批回答，不得在默认值、范围、离散取值或命令名称中途停止。
+5. 保持简练、专业、有条理，使用中文回答。`;
     }
 
     const messages = [
@@ -340,7 +343,8 @@ ${referenceContext}
         LLM_MODEL,
         {
           messages,
-          max_tokens: 1_024,
+          max_tokens: MAX_OUTPUT_TOKENS,
+          temperature: 0.2,
           stream: true,
         },
         {
