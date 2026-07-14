@@ -14,6 +14,10 @@ app/website/.astro/
 app/desktop/src/renderer/.vite/
 app/desktop/src/renderer/dist/
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Temp files
 tmp/
 
