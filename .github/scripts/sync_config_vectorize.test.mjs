@@ -114,19 +114,28 @@ test("knowledge records expose exact command context within Vectorize limits", (
   }
 });
 
-test("Vectorize synchronization uses the Workers AI token", async () => {
+test("Vectorize synchronization uses the Workers AI token and batches stale deletions", async () => {
   const previousAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   const previousAiToken = process.env.CLOUDFLARE_AI_TOKEN;
   const previousApiToken = process.env.CLOUDFLARE_API_TOKEN;
   const previousFetch = globalThis.fetch;
+  const staleIds = Array.from({ length: 150 }, (_, index) => `srpcfg:stale-${index}`);
   const requests = [];
 
   process.env.CLOUDFLARE_ACCOUNT_ID = "test-account";
   process.env.CLOUDFLARE_AI_TOKEN = "vectorize-capable-token";
   process.env.CLOUDFLARE_API_TOKEN = "deployment-only-token";
   globalThis.fetch = async (url, options) => {
-    requests.push({ url: String(url), authorization: options?.headers?.Authorization });
-    return new Response(JSON.stringify({ success: true, result: { vectors: [], isTruncated: false } }), {
+    const request = {
+      url: String(url),
+      authorization: options?.headers?.Authorization,
+      body: options?.body,
+    };
+    requests.push(request);
+    const result = request.url.endsWith("/list?count=1000")
+      ? { vectors: staleIds.map((id) => ({ id })), isTruncated: false }
+      : {};
+    return new Response(JSON.stringify({ success: true, result }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -134,10 +143,13 @@ test("Vectorize synchronization uses the Workers AI token", async () => {
 
   try {
     const result = await syncKnowledgeIndex([], { indexName: "test-index" });
-    assert.deepEqual(result, { total: 0, upserted: 0, deleted: 0 });
-    assert.equal(requests.length, 1);
+    assert.deepEqual(result, { total: 0, upserted: 0, deleted: 150 });
+    assert.equal(requests.length, 3);
     assert.match(requests[0].url, /\/vectorize\/v2\/indexes\/test-index\/list/);
-    assert.equal(requests[0].authorization, "Bearer vectorize-capable-token");
+    assert.deepEqual(requests.slice(1).map((request) => JSON.parse(request.body).ids.length), [100, 50]);
+    for (const request of requests) {
+      assert.equal(request.authorization, "Bearer vectorize-capable-token");
+    }
   } finally {
     globalThis.fetch = previousFetch;
     if (previousAccountId === undefined) delete process.env.CLOUDFLARE_ACCOUNT_ID;
