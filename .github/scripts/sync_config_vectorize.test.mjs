@@ -8,6 +8,7 @@ import {
   parseExecutableLine,
   splitActions,
   splitInlineComment,
+  syncKnowledgeIndex,
 } from "./sync_config_vectorize.mjs";
 
 const CONFIG_ROOT = path.resolve("config");
@@ -110,5 +111,40 @@ test("knowledge records expose exact command context within Vectorize limits", (
     assert.ok(Buffer.byteLength(JSON.stringify(record.metadata), "utf8") <= 10 * 1024, record.id);
     assert.ok(record.metadata.sourcePath.startsWith("config/"));
     assert.equal(record.metadata.schema, "srp-config-v1");
+  }
+});
+
+test("Vectorize synchronization uses the Workers AI token", async () => {
+  const previousAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const previousAiToken = process.env.CLOUDFLARE_AI_TOKEN;
+  const previousApiToken = process.env.CLOUDFLARE_API_TOKEN;
+  const previousFetch = globalThis.fetch;
+  const requests = [];
+
+  process.env.CLOUDFLARE_ACCOUNT_ID = "test-account";
+  process.env.CLOUDFLARE_AI_TOKEN = "vectorize-capable-token";
+  process.env.CLOUDFLARE_API_TOKEN = "deployment-only-token";
+  globalThis.fetch = async (url, options) => {
+    requests.push({ url: String(url), authorization: options?.headers?.Authorization });
+    return new Response(JSON.stringify({ success: true, result: { vectors: [], isTruncated: false } }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  };
+
+  try {
+    const result = await syncKnowledgeIndex([], { indexName: "test-index" });
+    assert.deepEqual(result, { total: 0, upserted: 0, deleted: 0 });
+    assert.equal(requests.length, 1);
+    assert.match(requests[0].url, /\/vectorize\/v2\/indexes\/test-index\/list/);
+    assert.equal(requests[0].authorization, "Bearer vectorize-capable-token");
+  } finally {
+    globalThis.fetch = previousFetch;
+    if (previousAccountId === undefined) delete process.env.CLOUDFLARE_ACCOUNT_ID;
+    else process.env.CLOUDFLARE_ACCOUNT_ID = previousAccountId;
+    if (previousAiToken === undefined) delete process.env.CLOUDFLARE_AI_TOKEN;
+    else process.env.CLOUDFLARE_AI_TOKEN = previousAiToken;
+    if (previousApiToken === undefined) delete process.env.CLOUDFLARE_API_TOKEN;
+    else process.env.CLOUDFLARE_API_TOKEN = previousApiToken;
   }
 });

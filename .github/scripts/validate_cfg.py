@@ -89,8 +89,8 @@ REQUIRED_RUNTIME_ALIASES = {
     "srp_crosshair_custom_info", "srp_viewmodel_custom_info",
     "srp_c00_info", "srp_c01_info", "srp_c02_info", "srp_c03_info", "srp_c04_info", "srp_c05_info", "srp_c06_info", "srp_c07_info",
     "srp_v00_info", "srp_v01_info", "srp_v02_info", "srp_v03_info", "srp_v04_info", "srp_v05_info", "srp_v06_info", "srp_v07_info",
-    "srp_color_custom_info", "grenadeoff", "grenadeon", "campath_draw_on", "campath_draw_off", "campath_on", "campath_off", "dmsg", "dmsg_on", "dmsg_off", "block", "blockOn", "blockOff", "widefov", "widefovOn", "widefovOff",
-    "gear1", "gear2", "gear3", "gear4", "gear5", "gear6", "gear7", "gear8", "gear9", "gear10", "gear11", "gear12", "gear13", "gear14", "gear15", "gear16", "ass", "mute", "t", "pos", "time", "post", "demoshow", "demonoshow", "f10", "f15", "f20", "f25", "f30", "f35", "f40", "f45", "f50", "f55", "f60", "f65", "f70", "f75", "f80", "f85", "f90", "f95", "f100",
+    "grenadeoff", "grenadeon", "campath_draw_on", "campath_draw_off", "campath_on", "campath_off", "dmsg", "dmsg_on", "dmsg_off", "block", "blockOn", "blockOff", "widefov", "widefovOn", "widefovOff",
+    "gear110", "gear1", "gear4", "gear8", "gear14", "gear15", "gear16", "ass", "mute", "t", "pos", "time", "post", "demoshow", "demonoshow", "f10", "f15", "f20", "f25", "f30", "f35", "f40", "f45", "f50", "f55", "f60", "f65", "f70", "f75", "f80", "f85", "f90", "f95", "f100",
 }
 
 
@@ -215,23 +215,38 @@ def direct_exec_targets(text: str) -> list[str]:
 
 def runtime_aliases(cfg_text: dict[str, str], files: set[str]) -> set[str]:
     aliases: set[str] = set()
+    startup_files = set(files)
+    pending = list(files)
+    visited: set[str] = set()
     definitions: dict[str, tuple[str, str]] = {}
-    for name in files:
-        for line in executable_text(cfg_text[name]).splitlines():
+
+    while pending:
+        name = pending.pop()
+        if name in visited or name not in cfg_text:
+            continue
+        visited.add(name)
+
+        text = executable_text(cfg_text[name])
+        for target in exec_targets(text):
+            if target in cfg_text and target not in visited:
+                pending.append(target)
+
+        for line in text.splitlines():
             match = ALIAS_LINE_RE.match(line.strip())
             if not match:
                 continue
             alias_name = match.group(1)
             alias_key = alias_name.lower()
             body = match.group(2)
-            previous = definitions.get(alias_key)
-            if previous is not None and previous[0] != body:
-                raise ValidationError(
-                    f"Runtime alias collision for {alias_name}: {previous[1]} and {name}"
-                )
-            definitions[alias_key] = (body, name)
+            if name in startup_files:
+                previous = definitions.get(alias_key)
+                if previous is not None and previous[0] != body:
+                    raise ValidationError(
+                        f"Runtime alias collision for {alias_name}: {previous[1]} and {name}"
+                    )
+                definitions[alias_key] = (body, name)
             aliases.add(alias_name)
-            if '"' in match.group(2):
+            if '"' in body:
                 raise ValidationError(
                     f"Runtime alias contains nested quotes in {name}: {line.strip()}"
                 )

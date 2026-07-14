@@ -601,8 +601,7 @@ export function buildKnowledgeRecords(analysis) {
 function getCredentials() {
   return {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID || process.env.CF_ACCOUNT_ID || "",
-    aiToken: process.env.CLOUDFLARE_AI_TOKEN || "",
-    apiToken: process.env.CLOUDFLARE_API_TOKEN || "",
+    token: process.env.CLOUDFLARE_AI_TOKEN || process.env.CF_API_TOKEN || "",
   };
 }
 
@@ -690,13 +689,13 @@ async function deleteVectors(accountId, apiToken, indexName, ids) {
 }
 
 export async function syncKnowledgeIndex(records, options = {}) {
-  const { accountId, aiToken, apiToken } = getCredentials();
+  const { accountId, token } = getCredentials();
   const indexName = options.indexName || process.env.SRP_CONFIG_INDEX_NAME || DEFAULT_INDEX_NAME;
-  if (!accountId || !aiToken || !apiToken) {
-    throw new Error("CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_AI_TOKEN, and CLOUDFLARE_API_TOKEN are required for synchronization");
+  if (!accountId || !token) {
+    throw new Error("CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN are required for synchronization");
   }
 
-  const existingIds = new Set(await listVectorIds(accountId, apiToken, indexName));
+  const existingIds = new Set(await listVectorIds(accountId, token, indexName));
   const currentIds = new Set(records.map((record) => record.id));
   const missing = records.filter((record) => !existingIds.has(record.id));
   const stale = [...existingIds].filter(
@@ -707,10 +706,10 @@ export async function syncKnowledgeIndex(records, options = {}) {
 
   for (let start = 0; start < missing.length; start += EMBEDDING_BATCH_SIZE) {
     const batch = missing.slice(start, start + EMBEDDING_BATCH_SIZE);
-    const embeddings = await createEmbeddings(accountId, aiToken, batch.map((record) => record.embeddingText));
+    const embeddings = await createEmbeddings(accountId, token, batch.map((record) => record.embeddingText));
     await upsertVectors(
       accountId,
-      apiToken,
+      token,
       indexName,
       batch.map((record, index) => ({ id: record.id, values: embeddings[index], metadata: record.metadata })),
     );
@@ -719,7 +718,7 @@ export async function syncKnowledgeIndex(records, options = {}) {
 
   for (let start = 0; start < stale.length; start += DELETE_BATCH_SIZE) {
     const batch = stale.slice(start, start + DELETE_BATCH_SIZE);
-    await deleteVectors(accountId, apiToken, indexName, batch);
+    await deleteVectors(accountId, token, indexName, batch);
     console.log(`Deleted ${Math.min(start + batch.length, stale.length)}/${stale.length} stale records.`);
   }
 

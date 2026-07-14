@@ -13,9 +13,8 @@ CACHE_PATH = ".github/scripts/vectorize_sync_cache.json"
 
 def get_credentials():
     account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or os.environ.get("CF_ACCOUNT_ID")
-    ai_token = os.environ.get("CLOUDFLARE_AI_TOKEN")
-    api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
-    return account, ai_token, api_token
+    token = os.environ.get("CLOUDFLARE_AI_TOKEN") or os.environ.get("CF_API_TOKEN")
+    return account, token
 
 
 def cf_request(url, token, payload=None, method="GET", content_type="application/json"):
@@ -125,9 +124,9 @@ def save_cache(cache):
 
 
 def main():
-    account, ai_token, api_token = get_credentials()
-    if not account or not ai_token or not api_token:
-        print("Missing CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_AI_TOKEN, or CLOUDFLARE_API_TOKEN. Skipping Vectorize sync.")
+    account, token = get_credentials()
+    if not account or not token:
+        print("Missing CLOUDFLARE_ACCOUNT_ID or CLOUDFLARE_AI_TOKEN. Skipping Vectorize sync.")
         return
 
     commands_path = "app/website/public/data/commands.json"
@@ -179,7 +178,7 @@ def main():
             embed_texts.append(" | ".join(parts))
 
         try:
-            embeddings = get_embeddings(account, ai_token, embed_texts)
+            embeddings = get_embeddings(account, token, embed_texts)
 
             if first_batch:
                 print(f"  [DEBUG] Embedding count: {len(embeddings)} | dims: {len(embeddings[0])}")
@@ -203,7 +202,7 @@ def main():
                     },
                 })
 
-            upsert_vectors(account, api_token, vectors)
+            upsert_vectors(account, token, vectors)
 
             # Update cache for successfully synced commands
             for cmd in batch:
