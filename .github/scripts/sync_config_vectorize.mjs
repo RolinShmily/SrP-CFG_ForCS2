@@ -8,9 +8,9 @@ const DEFAULT_INDEX_NAME = "srp-config-index";
 const CONFIG_ROOT = "config";
 const EMBEDDING_BATCH_SIZE = 50;
 const DELETE_BATCH_SIZE = 100;
-const VECTOR_SCHEMA = "srp-config-v1";
-const CURRENT_ID_PREFIX = "srpcfg:";
-const LEGACY_ID_PREFIX = "cfg:";
+const VECTOR_SCHEMA = "srp-config-v2";
+const CURRENT_ID_PREFIX = "srpcfg:v2:";
+const LEGACY_ID_PREFIXES = ["srpcfg:", "cfg:"];
 const MAX_METADATA_BYTES = 10 * 1024;
 const MAX_VECTOR_ID_BYTES = 64;
 
@@ -454,6 +454,41 @@ function createRecord(fields) {
   return { id, embeddingText: fields.embeddingText, metadata };
 }
 
+function structuredRecord(record) {
+  return {
+    id: record.id,
+    embeddingText: record.embeddingText,
+    metadata: record.metadata,
+  };
+}
+
+export function buildKnowledgeDataset(analysis, records) {
+  const countsByKind = Object.fromEntries(
+    [...new Set(records.map((record) => record.metadata.kind))]
+      .sort()
+      .map((kind) => [kind, records.filter((record) => record.metadata.kind === kind).length]),
+  );
+  const canonicalRecords = records
+    .map(structuredRecord)
+    .sort((left, right) => left.id.localeCompare(right.id));
+  return {
+    schema: VECTOR_SCHEMA,
+    sourceRoot: "config",
+    embeddingModel: EMBEDDING_MODEL,
+    sourceFiles: analysis.files.length,
+    recordCount: canonicalRecords.length,
+    countsByKind,
+    records: canonicalRecords,
+  };
+}
+
+export function writeKnowledgeDataset(outputPath, dataset) {
+  const resolved = path.resolve(outputPath);
+  fs.mkdirSync(path.dirname(resolved), { recursive: true });
+  fs.writeFileSync(resolved, `${JSON.stringify(dataset, null, 2)}\n`, "utf8");
+  return resolved;
+}
+
 export function analyzeConfigDirectory(rootDir = path.resolve(CONFIG_ROOT)) {
   if (!fs.existsSync(rootDir)) throw new Error(`Config directory not found: ${rootDir}`);
   const files = collectCfgFiles(rootDir).map((fullPath) => parseConfigFile(rootDir, fullPath));
@@ -541,6 +576,9 @@ export function buildKnowledgeRecords(analysis) {
           symbol: statement.symbol,
           key: statement.key,
           source: statement.source,
+          body: statement.body,
+          target: statement.target ? normalizeExecTarget(statement.target) : "",
+          arguments: statement.arguments,
           description: statement.description,
           scope: file.scope,
           activation,
@@ -578,6 +616,9 @@ export function buildKnowledgeRecords(analysis) {
             command: action.command,
             symbol: statement.symbol,
             key: statement.key,
+            body: statement.body,
+            arguments: action.arguments,
+            actionIndex,
             source: action.source,
             description: statement.description,
             scope: file.scope,
@@ -699,7 +740,7 @@ export async function syncKnowledgeIndex(records, options = {}) {
   const currentIds = new Set(records.map((record) => record.id));
   const missing = records.filter((record) => !existingIds.has(record.id));
   const stale = [...existingIds].filter(
-    (id) => (id.startsWith(CURRENT_ID_PREFIX) || id.startsWith(LEGACY_ID_PREFIX)) && !currentIds.has(id),
+    (id) => LEGACY_ID_PREFIXES.some((prefix) => id.startsWith(prefix)) && !currentIds.has(id),
   );
 
   console.log(`Index '${indexName}': ${records.length} current, ${missing.length} new/changed, ${stale.length} stale.`);
@@ -727,16 +768,16 @@ export async function syncKnowledgeIndex(records, options = {}) {
 
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
+  const outputIndex = process.argv.indexOf("--output");
+  const outputPath = outputIndex >= 0 ? process.argv[outputIndex + 1] : "";
+  if (outputIndex >= 0 && !outputPath) throw new Error("--output requires a JSON path");
   const analysis = analyzeConfigDirectory(path.resolve(CONFIG_ROOT));
   const records = buildKnowledgeRecords(analysis);
-  const countsByKind = Object.fromEntries(
-    [...new Set(records.map((record) => record.metadata.kind))]
-      .sort()
-      .map((kind) => [kind, records.filter((record) => record.metadata.kind === kind).length]),
-  );
+  const dataset = buildKnowledgeDataset(analysis, records);
 
   console.log(`Analyzed ${analysis.files.length} CFG files and generated ${records.length} knowledge records.`);
-  console.log(JSON.stringify(countsByKind, null, 2));
+  console.log(JSON.stringify(dataset.countsByKind, null, 2));
+  if (outputPath) console.log(`Wrote structured knowledge dataset to ${writeKnowledgeDataset(outputPath, dataset)}`);
   if (dryRun) return;
   await syncKnowledgeIndex(records);
 }

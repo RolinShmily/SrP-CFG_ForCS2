@@ -55,6 +55,10 @@ interface KnowledgeMetadata {
   symbol?: string;
   key?: string;
   source?: string;
+  body?: string;
+  target?: string;
+  arguments?: string;
+  actionIndex?: number;
   description?: string;
   scope?: string;
   activation?: string;
@@ -118,7 +122,7 @@ function isKnowledgeMetadata(value: unknown): value is KnowledgeMetadata {
   return isRecord(value);
 }
 
-function formatConfigContext(item: KnowledgeMetadata): string {
+export function formatConfigContext(item: KnowledgeMetadata): string {
   const location = item.sourcePath
     ? `${item.sourcePath}${typeof item.line === "number" ? `:${item.line}` : ""}`
     : "未知位置";
@@ -127,7 +131,12 @@ function formatConfigContext(item: KnowledgeMetadata): string {
     `位置：${location}`,
     item.module ? `模块：${item.family ? `${item.family}/` : ""}${item.module}` : "",
     item.source ? `源码：\`${item.source}\`` : "",
-    item.description ? `源码说明：${item.description}` : "",
+    item.key ? `按键：${JSON.stringify(item.key)}` : "",
+    item.symbol ? `Alias：${item.symbol}` : "",
+    item.body ? `绑定或定义内容：${JSON.stringify(item.body)}` : "",
+    item.target ? `目标文件：${item.target}` : "",
+    item.arguments ? `参数：${item.arguments}` : "",
+    item.description ? `注释说明：${item.description}` : "",
     item.scope ? `生效范围：${item.scope}` : "",
     item.activation ? `加载路径：${item.activation}` : "",
     item.relation ? `关联关系：${item.relation}` : "",
@@ -304,18 +313,17 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     // 4. Construct the prompt based on selected database.
     let systemPrompt: string;
     if (database === "srpcfg") {
-      systemPrompt = `你是 SrP-CFG 配置包源码助手。下方参考资料来自 config/ 目录的静态解析结果，包含准确文件、行号、源码、加载链和文件职责。
+      systemPrompt = `你是 SrP-CFG 配置包的证据检索助手。下方资料是从 config/ 源码确定性解析出的结构化记录，每条记录都包含可引用的文件、行号和原始源码。
 
-参考资料（按相关度排序）：
+参考资料（按相关度排序；仅这些资料可作为事实依据）：
 ${referenceContext}
 
 回答规范：
-1. 只解答 SrP-CFG 配置包及其使用到的 CS2 指令。说明作用时必须区分“CS2 指令本身的通用含义”和“它在 SrP-CFG 中的具体用途”。
-2. 优先给出配置位置、所属模块、加载入口、生效范围与必要条件；没有证据时明确说“参考资料未能确认”，不得推断作弊条件、默认按键或文档链接。
-3. 涉及源码时用反引号包裹指令、alias 或 bind；引用位置使用 \`config/路径:行号\`。
-4. Runtime 只注册能力；settings 只应用状态；keymap 才修改物理键位；Preset 应用后 user/custom.cfg 仍可覆盖，这是回答范围问题时的核心架构规则。
-5. 回答必须以完整句子结束。资料过多时应压缩每项文字或明确分批回答，不得在文件位置、命令、表格字段或代码中途停止。
-6. 保持简练、专业、有条理，使用中文回答。`;
+1. 先定位与问题完全匹配的结构化字段。按键问题只允许读取“按键”和“绑定或定义内容”；alias 问题只允许读取“Alias”“绑定或定义内容”和“关联关系”；不得根据名称、常见用法或对话中的暗示猜测。
+2. 每个关于按键、命令、默认值、加载文件或作用范围的事实，必须在同一句中引用 \`config/路径:行号\`。没有匹配源码时只回答“当前检索证据不足”，不得补全可能答案。
+3. “源码”字段优先级最高；注释只解释源码，不能覆盖源码。用户指出错误时必须重新核对同一条源码，不能为了迎合而改成另一个无证据答案。
+4. 必须区分 Runtime 注册、settings 状态、keymap 物理键位、with-keymap 组合入口、Preset 应用和 user/custom.cfg 最终覆盖层。
+5. 只解答 SrP-CFG 及其使用到的 CS2 指令。回答简练、使用中文，并以完整句子结束。`;
     } else {
       systemPrompt = `你是 CS2 官方控制台指令与变量助手。下方参考资料来自独立的官方指令向量库。
 

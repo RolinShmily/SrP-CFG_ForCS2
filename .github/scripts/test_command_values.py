@@ -12,7 +12,8 @@ from command_values import (  # noqa: E402
     extract_options,
     parse_convar_metadata,
 )
-from sync_vectorize import format_value_metadata  # noqa: E402
+from update_commands import ALLOWED_CATEGORIES, normalize_category, validate_dataset  # noqa: E402
+from sync_vectorize import DELETE_BATCH_SIZE, format_value_metadata  # noqa: E402
 
 
 class CommandValueMetadataTests(unittest.TestCase):
@@ -139,6 +140,23 @@ class CommandValueMetadataTests(unittest.TestCase):
             self.assertNotIn("max", value)
             option_values = [option["value"] for option in value.get("options", [])]
             self.assertEqual(len(option_values), len(set(option_values)))
+
+    def test_repository_data_obeys_command_contract(self):
+        path = SCRIPT_DIR.parents[1] / "app/website/public/data/commands.json"
+        commands = json.loads(path.read_text(encoding="utf-8"))
+
+        validate_dataset(commands)
+        self.assertEqual(len(commands), len({command["n"] for command in commands}))
+        self.assertTrue(all(command["c"] in ALLOWED_CATEGORIES for command in commands))
+        self.assertTrue(all(command["cn"].strip() for command in commands))
+
+    def test_category_normalization_rejects_model_inventions(self):
+        self.assertEqual(normalize_category("gameplay,", "sample", []), "gameplay")
+        self.assertEqual(normalize_category("graphics_viewmodel", "sample", []), "graphics")
+        self.assertEqual(normalize_category("invented", "snd_sample", []), "audio")
+
+    def test_vectorize_delete_batches_obey_api_limit(self):
+        self.assertEqual(DELETE_BATCH_SIZE, 100)
 
     def test_enrichment_is_idempotent(self):
         command = {

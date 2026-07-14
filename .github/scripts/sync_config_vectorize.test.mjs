@@ -5,6 +5,7 @@ import test from "node:test";
 import {
   analyzeConfigDirectory,
   buildKnowledgeRecords,
+  buildKnowledgeDataset,
   parseExecutableLine,
   splitActions,
   splitInlineComment,
@@ -110,8 +111,33 @@ test("knowledge records expose exact command context within Vectorize limits", (
     assert.ok(Buffer.byteLength(record.id, "utf8") <= 64, record.id);
     assert.ok(Buffer.byteLength(JSON.stringify(record.metadata), "utf8") <= 10 * 1024, record.id);
     assert.ok(record.metadata.sourcePath.startsWith("config/"));
-    assert.equal(record.metadata.schema, "srp-config-v1");
+    assert.equal(record.metadata.schema, "srp-config-v2");
   }
+});
+
+test("structured knowledge dataset preserves exact bind and alias fields", () => {
+  const { analysis, records } = buildFixture();
+  const dataset = buildKnowledgeDataset(analysis, records);
+
+  assert.equal(dataset.schema, "srp-config-v2");
+  assert.equal(dataset.sourceFiles, analysis.files.length);
+  assert.equal(dataset.recordCount, records.length);
+  assert.equal(dataset.records.length, records.length);
+
+  const defaultKnifeBind = dataset.records.find(
+    (record) =>
+      record.metadata.kind === "bind" &&
+      record.metadata.sourcePath === "config/srp-cfg/presets/default/keymap.cfg" &&
+      record.metadata.key === "j",
+  );
+  assert.equal(defaultKnifeBind.metadata.body, "srp_knife");
+  assert.equal(defaultKnifeBind.metadata.source, 'bind "j" "srp_knife"');
+
+  const practiceKeys = dataset.records.find(
+    (record) => record.metadata.kind === "alias" && record.metadata.symbol === "srp_practice_keys",
+  );
+  assert.match(practiceKeys.metadata.body, /with-keymap\.cfg/);
+  assert.match(practiceKeys.metadata.relation, /with-keymap\.cfg/);
 });
 
 test("Vectorize synchronization uses the Workers AI token and batches stale deletions", async () => {

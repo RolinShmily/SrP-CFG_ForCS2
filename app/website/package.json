@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts",
+    "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts src/worker.test.ts",
     "deploy": "astro build && npx wrangler deploy"
   },
   "dependencies": {
