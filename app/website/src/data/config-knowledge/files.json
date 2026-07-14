@@ -119,7 +119,7 @@
       "line": 1,
       "text": "// Persistent autoview command vocabulary.",
       "lineCount": 5,
-      "sha256": "db960ed06fd08ffd671e944e844a743352d6d4045addadd1f3b89d01300f058d",
+      "sha256": "52ad061adde03a1fa28815ee0215901a4236962ac7e827f7e5bf79a5b59e9068",
       "area": "feature",
       "module": "autoview",
       "role": "runtime"
@@ -190,7 +190,7 @@
       "line": 1,
       "text": "exec srp-cfg/features/autoview/settings.cfg // 注册并准备武器自适应视角功能。",
       "lineCount": 4,
-      "sha256": "7e4339b07a5c09534c05906896efddb94f8b8e7ad12c2580551d3a3b6ff6b80b",
+      "sha256": "e591955f5ed26b672e67129fa3d56b51f47af26c63c0e8ea4cb9c771ceda5432",
       "area": "feature",
       "module": "autoview",
       "role": "composition"
@@ -295,7 +295,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 00；修改后可在控制台执行 c00 立即预览。",
       "lineCount": 22,
-      "sha256": "34684dac4096c465c9a8eb15115b2bb4e42678ff42f85fb24b2b56390f95de62",
+      "sha256": "5c01f0dc00434bb146a3bb0fd473bb9259a6ad3f7ce7e3761bb2d7a86359bab0",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -347,7 +347,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 01；修改后可在控制台执行 c01 立即预览。",
       "lineCount": 22,
-      "sha256": "12e218adf17f445c86b15c74cb638e3c594d5049e5816eb0612466186af703bb",
+      "sha256": "c8fb5b2f824d4d79d1646e55f6a6a0d21a9c1ed2f198cd3615ed7788605f65cf",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -399,7 +399,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 02；修改后可在控制台执行 c02 立即预览。",
       "lineCount": 22,
-      "sha256": "50b6b10463d3c287e92525b98e10f8a0d0eb8717d8ffab7a90a8f4a072dfaca4",
+      "sha256": "c204a761135a0409a5bd45445dca059481122d4e7f46b694f37aa7263a84f319",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -451,7 +451,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 03；修改后可在控制台执行 c03 立即预览。",
       "lineCount": 22,
-      "sha256": "37e99f00f06f8dcbb0dda2393b5afb0d131b71f5bdae964810adb1716cf6898c",
+      "sha256": "4642c1763661a85009aafd3e9cc849aa78aa5ba757e1dff5be29324961b136c8",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -503,7 +503,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 04；修改后可在控制台执行 c04 立即预览。",
       "lineCount": 22,
-      "sha256": "658b553c22382a23ab94e210cd537b30bc88110272da38e10cb594825ef9ba32",
+      "sha256": "fee8bdf80def2f735caa8de405ad4d55cf89b92f052c25b4a20eae4a0bd6b602",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -555,7 +555,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 05；修改后可在控制台执行 c05 立即预览。",
       "lineCount": 24,
-      "sha256": "1325303b9d5684e3556ffbbaefeec60923d6f2a427fef9d17b71c7f00f096597",
+      "sha256": "77af3a7e445a1fd7fc598c9eab4ff0af6599a29fc7b08d429a6705547ceb3746",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -609,7 +609,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 06；修改后可在控制台执行 c06 立即预览。",
       "lineCount": 22,
-      "sha256": "555ca08056d1c04ba45aab4117a3b24f7d0ff4d1a10a9ba4d398c319c3272e93",
+      "sha256": "f2a303dbfd94bd112c35c94ea465cf7a2c565e1b99a0508d1901f2345a0f93d7",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -661,7 +661,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 07；修改后可在控制台执行 c07 立即预览。",
       "lineCount": 22,
-      "sha256": "6ee49b9af99b773cdd648d1bc5ff1df704dd0e36d95293649d6178ab4abd33b4",
+      "sha256": "f86b9648084ea78893e94ca2a662336b6aeffb2fa027487f48edba1df82dea33",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -713,7 +713,7 @@
       "line": 1,
       "text": "// Persistent crosshair/viewmodel command vocabulary.",
       "lineCount": 63,
-      "sha256": "467bf9e73cc1278751125750e0b39abda4b22c3d22a472ee4ab79863703d639f",
+      "sha256": "80a3f4a1defe0e382de5358c4f92818ac1d860e2eb1ad285a4fd850b263d41b2",
       "area": "feature",
       "module": "crosshair-view",
       "role": "runtime"
@@ -840,7 +840,7 @@
       "line": 1,
       "text": "// Crosshair/viewmodel settings plus the optional physical keymap.",
       "lineCount": 5,
-      "sha256": "0f4866181e7782e333aed590d32def11086ed6eb9afe16a96616301bc7e0095d",
+      "sha256": "41fbf175363f065c5c3ef06a28eb75c034287fd43a901fe9565be2093b3e4114",
       "area": "feature",
       "module": "crosshair-view",
       "role": "composition"
@@ -938,7 +938,7 @@
       "line": 1,
       "text": "// Knife model command vocabulary. Loaded by Runtime; no preference or key is changed here.",
       "lineCount": 23,
-      "sha256": "a7f78f04399a1d80d6af1e5b6625117c1e95a04114f235d4d98e81e49e0b7237",
+      "sha256": "aaf0ce164eef675a381cf4657b664949674895aaec6342bb157856bbfc39a73e",
       "area": "feature",
       "module": "knife",
       "role": "runtime"
@@ -1135,7 +1135,7 @@
       "line": 1,
       "text": "// Persistent Zeus command vocabulary.",
       "lineCount": 9,
-      "sha256": "d5b730cdb789ab916e70bad78bf7ae1c47f2ebe8350c2979d5c4f72f524dbbba",
+      "sha256": "07b6b64ec3cc7f32b7b796948ab3a7eab990345c41565f74c25256a9af16c8ab",
       "area": "feature",
       "module": "zeus",
       "role": "runtime"
@@ -1215,7 +1215,7 @@
       "line": 1,
       "text": "exec srp-cfg/features/zeus/settings.cfg // 注册电击枪攻击回切命令。",
       "lineCount": 4,
-      "sha256": "bdf1ff2f4391abbcb3651fe7a7762afad8543da5958d54da2b0d29715ef9830a",
+      "sha256": "94f136ce6aa0ed0355d24a037360affd6533bd20d05c23db92a7daff7000ec83",
       "area": "feature",
       "module": "zeus",
       "role": "composition"
@@ -1401,7 +1401,7 @@
       "line": 1,
       "text": "// Persistent Demo/HLAE command vocabulary. No HLAE state or physical key is changed here.",
       "lineCount": 60,
-      "sha256": "2c89240b16f7bb6ec43c7aa95d8572e2b1f7f9e4d6a144769e51c0d12c7ebae1",
+      "sha256": "bcf8144fe714510e368ebfbf917b62d738c1d592396548806604170c201e6647",
       "area": "mode",
       "module": "demo-hlae",
       "role": "runtime"
@@ -1578,7 +1578,7 @@
       "line": 1,
       "text": "exec srp-cfg/modes/demo-hlae/settings.cfg // 应用 Demo/HLAE 录制与画面设置。",
       "lineCount": 4,
-      "sha256": "d1d5fde812c3424287cf06362c2ffe78cfc002f392b019c58558028d9749288e",
+      "sha256": "870554d53c03e3785f5f218ea9d6f981b734726fc77aef4a8201be4f255a985b",
       "area": "mode",
       "module": "demo-hlae",
       "role": "composition"
@@ -1684,7 +1684,7 @@
       "line": 1,
       "text": "// Persistent guide-maker commands. No cheat state or physical key is changed here.",
       "lineCount": 11,
-      "sha256": "c003a3fd0bea3f09e14b364317b399e5afcfe7b6d2edbe57b4122c6f1f4778d1",
+      "sha256": "63a3a17702fed0a5df96c814943eff24f311df907536cd890465952ae9e6a02f",
       "area": "mode",
       "module": "guidemake",
       "role": "runtime"
@@ -1881,7 +1881,7 @@
       "line": 1,
       "text": "// Persistent practice command vocabulary. No server state or physical key is changed here.",
       "lineCount": 15,
-      "sha256": "f3d823f952285019b762c3b07a2a0792ddaece37121fd03284a56f284a5b2cef",
+      "sha256": "df38a9b70b27bc6bd39132885de215fc63d3f66966f5f4924f34ce0207c25cd3",
       "area": "mode",
       "module": "practice",
       "role": "runtime"
@@ -2039,7 +2039,7 @@
       "line": 1,
       "text": "// Ancient出生点配置",
       "lineCount": 19,
-      "sha256": "73fb941bcd94c69a16b546acc8bf22bd6c70f1282e40cea7c1382fea4f7533d6",
+      "sha256": "461bced16a7ff32294046c618e0126100850b77880db5e7aa59cb58d3aef1f75",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2085,7 +2085,7 @@
       "line": 1,
       "text": "// Anubis出生点配置",
       "lineCount": 25,
-      "sha256": "001c01a67b9dfc09dfe819baf82a03f9477622f8eb4ebf6cb1970cec2fc4845c",
+      "sha256": "021c09c1e3b21efca79ec2c00965db2b529d398b3bb34aff3f48aa2c1c3b406a",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2137,7 +2137,7 @@
       "line": 1,
       "text": "// Dust2出生点配置",
       "lineCount": 29,
-      "sha256": "b1ce7a9041f238448b51b0f591d6555e9836d745133e2ac07b0baf8751a3f6ec",
+      "sha256": "c1e028b3843a8d77adb579097b79c851b4db7443453e12a101c103a1869ee93a",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2194,7 +2194,7 @@
       "line": 1,
       "text": "// Inferno出生点配置",
       "lineCount": 20,
-      "sha256": "b87b88de47c7f25595f8e4b83ac74349db7deff55be7e52dbd062593aa916a75",
+      "sha256": "ecd5df15fb8f9cf813242771e10fbde1536f6d439003a352ef79205317800e0a",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2241,7 +2241,7 @@
       "line": 1,
       "text": "// 初始化CT出生点",
       "lineCount": 34,
-      "sha256": "ed308da31cd35b667f79052d6e6202a9016d3638bb7dd2220f764e68d83cd857",
+      "sha256": "88f04c95016f826fa7dff8f09102a4e6dfcc5289b6b07efbb9e98546c1a58642",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2304,7 +2304,7 @@
       "line": 1,
       "text": "// Italy出生点配置",
       "lineCount": 19,
-      "sha256": "875e73437da9a69f9c8d8978ebe584c578d67dec53195a7cba8afeb3fee4747e",
+      "sha256": "2b3332ae5099d250870ec92f061dc984fc6d30bb6005340f11d1fc6d1b042315",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2350,7 +2350,7 @@
       "line": 1,
       "text": "// Mirage出生点配置",
       "lineCount": 24,
-      "sha256": "f133b3f6e970e8feeba2b14c45dc3ef9634ee540f398fd99366db4cdb412ae14",
+      "sha256": "5f04b52ceb78203532d5f52891adc0b3fcae07f3460d077e8f86c53fcb4d1f42",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2401,7 +2401,7 @@
       "line": 1,
       "text": "// Nuke出生点配置",
       "lineCount": 22,
-      "sha256": "05449ef1ab23399613bd974b81f259ac28751187b064373a70a900fdc62711f3",
+      "sha256": "992952bb88de85ec1af3733a00b3fb9d89cf91e7547f9347848db24c2cc016ae",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2450,7 +2450,7 @@
       "line": 1,
       "text": "// Office出生点配置",
       "lineCount": 19,
-      "sha256": "fefd6e0b1db5d1dbe3f09863e52d0db778f242eb9ae9898a377be87887489bf3",
+      "sha256": "d35f7a069c77a9d31315907b7fc78ed87f64dfa60e3d90f75370793749cfbb94",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2496,7 +2496,7 @@
       "line": 1,
       "text": "// Overpass出生点配置",
       "lineCount": 25,
-      "sha256": "60bd167c7f90588fa0bb71c223dc2beb52c0592f65055e4a1dd665c63c206383",
+      "sha256": "3899b40d6f87b126d568cb0e825460c6f13c2bcf05f9ab80b4bd9c1e33903531",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2548,7 +2548,7 @@
       "line": 1,
       "text": "// ══════════════════════════════════════════════════════════════════",
       "lineCount": 49,
-      "sha256": "5d35e6f0ba3ddeeb126c8d1794914c98ba6ad6b8ee87906ccbf60a7fa241bc8d",
+      "sha256": "9a713354f92e4ef026ab11d0373ccb5592a44a03cc0ebb9610348d47586cf6fe",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2593,7 +2593,7 @@
       "line": 1,
       "text": "// Train出生点配置",
       "lineCount": 23,
-      "sha256": "2b00d69afec6d11201077f88f16de7849c09b9f8999a3df75560a88647f5e5ee",
+      "sha256": "535bc7f4ce7c2074f536e5d9b1cf3a85b02227288ecba535ce457aa2b22bb2a0",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2643,7 +2643,7 @@
       "line": 1,
       "text": "// Vertigo出生点配置",
       "lineCount": 19,
-      "sha256": "3feae0e41fbbe6e7b09dfb61f3f3c5b119f54429b0be4ff04cb5b49fff617bb0",
+      "sha256": "9719ea558e5a9e2f74a498a9ae1e376fa5a28542c1112e1f702db4d872891005",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2793,7 +2793,7 @@
       "line": 1,
       "text": "// Persistent preview-mode command vocabulary. No camera state or physical key is changed here.",
       "lineCount": 40,
-      "sha256": "9265669cdd793ac3ac8b6c0de1cd2e0b68b9187fa5480bff1b9661420511915d",
+      "sha256": "adcbde0732fe689c9ac5e6d0330e906d14ed41823c1ce6aeb5fb72531a19763d",
       "area": "mode",
       "module": "preview",
       "role": "runtime"
@@ -2946,7 +2946,7 @@
       "line": 1,
       "text": "// Recommended SrP preset example.",
       "lineCount": 5,
-      "sha256": "e2ea7554135b94389192df72127c6b3bcb6a2fac3c90fdd52bd92e026c802d6b",
+      "sha256": "18a2f36d6826a4e3bda2b2bb52fe2189907cce46b84516a302122a54e5683c35",
       "area": "preset",
       "module": "default",
       "role": "preset_apply"
@@ -3182,7 +3182,7 @@
       "line": 1,
       "text": "// Echo preset example: complete peer-level settings and keymap.",
       "lineCount": 5,
-      "sha256": "406036436b892d61b48dac568ad3d1a3b75f7a6b10781a88956847c52e132881",
+      "sha256": "6261fea2a87bab1ee05cbb2263d8d92e19cf0a224fd386fe52ce01e5cd306ba2",
       "area": "preset",
       "module": "echo",
       "role": "preset_apply"
@@ -3406,7 +3406,7 @@
       "line": 1,
       "text": "// Raw Valve baseline reset. user/custom.cfg is intentionally not re-applied here.",
       "lineCount": 5,
-      "sha256": "1429122ff01cea8f62a8e6f7a18a540b616639c43297a29c997708d7e14e0d40",
+      "sha256": "627dd313c3f57e86b777e964c7a8d58be9307b335ebe6df7b325d7675a53c25e",
       "area": "preset",
       "module": "valve",
       "role": "preset_apply"
@@ -3618,7 +3618,7 @@
       "line": 1,
       "text": "// VisionL preset example: complete peer-level settings and keymap.",
       "lineCount": 5,
-      "sha256": "7502db7ed07e4e7c42e8ec963d53bab520d90a7a448db9fa42688730cf967528",
+      "sha256": "8a9e56f27b75d686dc24bc7f2933136630b3adfc83149e597350c6e3bd40acb0",
       "area": "preset",
       "module": "visionl",
       "role": "preset_apply"
@@ -3841,7 +3841,7 @@
       "line": 1,
       "text": "// YSZH preset example: complete peer-level settings and keymap.",
       "lineCount": 5,
-      "sha256": "0ab849e5eb113626624e2d10a68049e18b9e4e7f12df1870dcd30f153cfa35cf",
+      "sha256": "7166c30c51292d7bc2d0c9895cf6f67fc0df5950f616c23ce3ee819b40562e63",
       "area": "preset",
       "module": "yszh",
       "role": "preset_apply"
@@ -4069,7 +4069,7 @@
       "line": 1,
       "text": "// SrP-CFG reusable aliases.",
       "lineCount": 11,
-      "sha256": "d2aeb024153172d55adb06650fa93aba8eb24d04ec5ac045c4f46966dcbcd771",
+      "sha256": "07d75f846dfc4da5925772ab958e8a2cfbba63095e1b702898b85c7c6515599b",
       "area": "runtime",
       "module": "runtime",
       "role": "runtime"
@@ -4111,7 +4111,7 @@
       "line": 1,
       "text": "// Built-in Preset starting points. These aliases are safe to call from user/custom.cfg.",
       "lineCount": 47,
-      "sha256": "97753c5f4e29d65007de14ca239488f12bf75ef262a8693c715bb06ab2788f01",
+      "sha256": "9d61e530748499376a687270c14f4f64d4266cb39cb49e7b60ada903dc9645ba",
       "area": "runtime",
       "module": "runtime",
       "role": "runtime"
@@ -4178,7 +4178,7 @@
       "line": 1,
       "text": "// ══════════════════════════════════════════════════════════════════",
       "lineCount": 21,
-      "sha256": "e5d64dac9f95b58ce21fbd2e405f83524703735d3259100730a47111514b915e",
+      "sha256": "5b4af6fb1ccc74bc370cef278664ebde0c7639b82b3278e0ff1066761315b0f9",
       "area": "runtime",
       "module": "runtime",
       "role": "bootstrap"
