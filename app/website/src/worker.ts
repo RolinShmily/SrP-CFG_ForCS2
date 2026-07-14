@@ -1,4 +1,8 @@
+import configKnowledgeManifest from "./data/config-knowledge/manifest.json" with { type: "json" };
+
 interface VectorizeMatch {
+  id?: string;
+  score?: number;
   metadata?: unknown;
 }
 
@@ -27,7 +31,9 @@ export interface Env {
 
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const LLM_MODEL = "@cf/meta/llama-3.1-8b-instruct-fp8";
-const TOP_K = 8;
+const COMMAND_TOP_K = 8;
+const CONFIG_TOP_K = 50;
+const CONFIG_CONTEXT_LIMIT = 12;
 const MAX_OUTPUT_TOKENS = 2_048;
 const TURNSTILE_ACTION = "chat";
 const MAX_REQUEST_BODY_LENGTH = 32_768;
@@ -45,25 +51,29 @@ interface ChatHistoryItem {
 type ChatDatabase = "srpcfg" | "commands";
 
 interface KnowledgeMetadata {
-  kind?: string;
+  schema?: string;
+  entityId?: string;
+  entityType?: string;
+  status?: string;
   sourcePath?: string;
-  line?: number;
-  module?: string;
-  family?: string;
-  role?: string;
-  command?: string;
-  symbol?: string;
-  key?: string;
+  sourceLine?: number;
+  sourceRef?: string;
   source?: string;
-  body?: string;
+  title?: string;
+  summary?: string;
+  tags?: string;
+  keywords?: string;
+  name?: string;
+  aliases?: string;
+  key?: string;
+  cvar?: string;
   target?: string;
-  arguments?: string;
-  actionIndex?: number;
-  description?: string;
-  scope?: string;
-  activation?: string;
-  relation?: string;
-  subject?: string;
+  body?: string;
+  area?: string;
+  module?: string;
+  role?: string;
+  entryId?: string;
+  fileId?: string;
   n?: string;
   cn?: string;
   en?: string;
@@ -122,27 +132,187 @@ function isKnowledgeMetadata(value: unknown): value is KnowledgeMetadata {
   return isRecord(value);
 }
 
+const PRODUCTION_CONFIG_STATUSES = new Set(configKnowledgeManifest.productionStatuses);
+const SOURCE_REF_PATTERN = /config\/[A-Za-z0-9_./-]+\.cfg:\d+/g;
+const IDENTIFIER_PATTERN = /[A-Za-z_+][A-Za-z0-9_+.-]*/g;
+const QUERY_STOP_WORDS: Record<string, true> = {
+  a: true,
+  an: true,
+  and: true,
+  cfg: true,
+  config: true,
+  for: true,
+  in: true,
+  key: true,
+  keys: true,
+  of: true,
+  preset: true,
+  the: true,
+  to: true,
+  what: true,
+};
+const PRESET_NAMES: Record<string, true> = { default: true, echo: true, valve: true, visionl: true, yszh: true };
+const CONFIG_TYPE_LIMITS: Record<string, number> = {
+  binding: 4,
+  alias: 4,
+  setting: 3,
+  entry: 3,
+  concept: 2,
+  file: 2,
+};
+
+interface ConfigQuerySignals {
+  identifiers: Set<string>;
+  keys: Set<string>;
+  paths: Set<string>;
+  presets: Set<string>;
+}
+
+interface RankedConfigMatch {
+  item: KnowledgeMetadata;
+  exactScore: number;
+  vectorScore: number;
+}
+
+function normalizeExact(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function identifierTokens(value: string | undefined): Set<string> {
+  return new Set((value?.match(IDENTIFIER_PATTERN) ?? []).map(normalizeExact));
+}
+
+function extractSourceRefs(value: string | undefined): string[] {
+  return [...new Set(value?.match(SOURCE_REF_PATTERN) ?? [])];
+}
+
+function isProductionConfigEvidence(item: KnowledgeMetadata): boolean {
+  if (
+    item.schema !== "srp-config-v3" ||
+    !item.entityId ||
+    !item.entityType ||
+    !item.status ||
+    !PRODUCTION_CONFIG_STATUSES.has(item.status) ||
+    !item.source ||
+    !item.sourcePath ||
+    typeof item.sourceLine !== "number"
+  ) {
+    return false;
+  }
+  return extractSourceRefs(item.sourceRef).includes(`${item.sourcePath}:${item.sourceLine}`);
+}
+
+function buildConfigQuerySignals(message: string): ConfigQuerySignals {
+  const normalizedMessage = normalizeExact(message);
+  const identifiers = identifierTokens(normalizedMessage);
+  for (const stopWord of Object.keys(QUERY_STOP_WORDS)) identifiers.delete(stopWord);
+
+  const paths = new Set<string>();
+  for (const match of normalizedMessage.matchAll(/(?:config\/)?[a-z0-9_./-]+\.cfg/g)) {
+    paths.add(match[0].startsWith("config/") ? match[0] : `config/${match[0]}`);
+  }
+
+  const keys = new Set<string>();
+  const keyPatterns = [
+    /(?:key|按键|键位|绑定)\s*[`"'“”]?([a-z0-9+_.-]+)[`"'“”]?/g,
+    /[`"'“”]?([a-z0-9+_.-]+)[`"'“”]?\s*(?:key|按键|键位)/g,
+  ];
+  for (const pattern of keyPatterns) {
+    for (const match of normalizedMessage.matchAll(pattern)) keys.add(match[1]);
+  }
+
+  const presets = new Set([...identifiers].filter((identifier) => PRESET_NAMES[identifier]));
+  return { identifiers, keys, paths, presets };
+}
+
+function hasToken(value: string | undefined, expected: Set<string>): boolean {
+  if (!value || expected.size === 0) return false;
+  const tokens = identifierTokens(value);
+  return [...expected].some((candidate) => tokens.has(candidate));
+}
+
+function exactScore(item: KnowledgeMetadata, signals: ConfigQuerySignals): number {
+  const exact = (value: string | undefined, candidates: Set<string>) =>
+    Boolean(value && candidates.has(normalizeExact(value)));
+  let score = 0;
+  if (exact(item.key, signals.keys)) score += 1_400;
+  if (exact(item.name, signals.identifiers) || exact(item.cvar, signals.identifiers)) score += 1_300;
+  if (exact(item.sourcePath, signals.paths)) score += 1_200;
+  if (hasToken(item.aliases, signals.identifiers)) score += 1_100;
+  if (exact(item.module, signals.presets)) score += 900;
+  if (hasToken(item.target, signals.identifiers) || hasToken(item.body, signals.identifiers)) score += 700;
+  if (hasToken(item.source, signals.identifiers)) score += 500;
+  if (hasToken(item.title, signals.identifiers)) score += 300;
+  if (hasToken(item.tags, signals.identifiers) || hasToken(item.keywords, signals.identifiers)) score += 150;
+  if (score > 0 && item.status === "reviewed") score += 100;
+  return score;
+}
+
+export function selectConfigKnowledge(
+  message: string,
+  matches: VectorizeMatch[],
+  signals = buildConfigQuerySignals(message),
+): KnowledgeMetadata[] {
+  const ranked: RankedConfigMatch[] = matches
+    .filter((match): match is VectorizeMatch & { metadata: KnowledgeMetadata } => isKnowledgeMetadata(match.metadata))
+    .map((match) => ({
+      item: match.metadata,
+      exactScore: exactScore(match.metadata, signals),
+      vectorScore: typeof match.score === "number" ? match.score : 0,
+    }))
+    .filter(({ item }) => isProductionConfigEvidence(item))
+    .sort((left, right) =>
+      right.exactScore - left.exactScore ||
+      Number(right.item.status === "reviewed") - Number(left.item.status === "reviewed") ||
+      right.vectorScore - left.vectorScore ||
+      left.item.entityId!.localeCompare(right.item.entityId!),
+    );
+
+  const selected: KnowledgeMetadata[] = [];
+  const seenEntityIds = new Set<string>();
+  const typeCounts = new Map<string, number>();
+  for (const { item } of ranked) {
+    const entityId = item.entityId!;
+    const entityType = item.entityType!;
+    if (seenEntityIds.has(entityId)) continue;
+    const typeCount = typeCounts.get(entityType) ?? 0;
+    const typeLimit = CONFIG_TYPE_LIMITS[entityType] ?? 2;
+    if (typeCount >= typeLimit) continue;
+    seenEntityIds.add(entityId);
+    typeCounts.set(entityType, typeCount + 1);
+    selected.push(item);
+    if (selected.length >= CONFIG_CONTEXT_LIMIT) break;
+  }
+  return selected;
+}
+
 export function formatConfigContext(item: KnowledgeMetadata): string {
-  const location = item.sourcePath
-    ? `${item.sourcePath}${typeof item.line === "number" ? `:${item.line}` : ""}`
-    : "未知位置";
+  if (!isProductionConfigEvidence(item)) return "";
+  const sourceRefs = extractSourceRefs(item.sourceRef);
   return [
-    `- 类型：${item.kind || "config"}`,
-    `位置：${location}`,
-    item.module ? `模块：${item.family ? `${item.family}/` : ""}${item.module}` : "",
+    `- 实体：${item.entityId} (${item.entityType}; ${item.status})`,
+    `证据：${sourceRefs.join("、")}`,
+    item.title ? `标题：${item.title}` : "",
+    item.summary ? `摘要：${item.summary}` : "",
     item.source ? `源码：\`${item.source}\`` : "",
+    item.name ? `名称：${item.name}` : "",
     item.key ? `按键：${JSON.stringify(item.key)}` : "",
-    item.symbol ? `Alias：${item.symbol}` : "",
+    item.cvar ? `Cvar：${item.cvar}` : "",
+    item.aliases ? `别名：${item.aliases}` : "",
     item.body ? `绑定或定义内容：${JSON.stringify(item.body)}` : "",
-    item.target ? `目标文件：${item.target}` : "",
-    item.arguments ? `参数：${item.arguments}` : "",
-    item.description ? `注释说明：${item.description}` : "",
-    item.scope ? `生效范围：${item.scope}` : "",
-    item.activation ? `加载路径：${item.activation}` : "",
-    item.relation ? `关联关系：${item.relation}` : "",
+    item.target ? `目标：${item.target}` : "",
+    item.module ? `模块：${item.area ? `${item.area}/` : ""}${item.module}` : "",
+    item.role ? `职责：${item.role}` : "",
+    item.tags ? `标签：${item.tags}` : "",
+    item.keywords ? `关键词：${item.keywords}` : "",
   ]
     .filter(Boolean)
     .join(" | ");
+}
+
+export function buildConfigReferenceContext(items: KnowledgeMetadata[]): string {
+  const context = items.map(formatConfigContext).filter(Boolean).join("\n");
+  return context || "未检索到可引用的生产证据。";
 }
 
 function formatCommandContext(item: KnowledgeMetadata): string {
@@ -267,6 +437,10 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
       return jsonError("人机验证失败，请刷新页面后重试。", 403);
     }
 
+    // Recognize exact identifiers before retrieval; Vectorize has no metadata listing API,
+    // so the broad query is reranked deterministically from returned v3 metadata.
+    const configQuerySignals = buildConfigQuerySignals(message);
+
     // 1. Embed the user query
     let queryVector: number[];
     try {
@@ -295,35 +469,40 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     }
 
     const vectorMatches = await indexToQuery.query(queryVector, {
-      topK: TOP_K,
+      topK: database === "srpcfg" ? CONFIG_TOP_K : COMMAND_TOP_K,
       returnValues: false,
       returnMetadata: "all",
     });
 
-    // 3. Build context from matched metadata.
-    const matchedKnowledge = (vectorMatches.matches ?? [])
-      .map((match) => match.metadata)
-      .filter(isKnowledgeMetadata);
-
-    const contextStr = matchedKnowledge
-      .map(database === "srpcfg" ? formatConfigContext : formatCommandContext)
-      .join("\n");
-    const referenceContext = contextStr || "未检索到匹配记录。";
+    // 3. Keep only source-backed production config entities, rerank exact metadata,
+    // dedupe by stable entity ID, and enforce per-entity-type context limits.
+    let referenceContext: string;
+    if (database === "srpcfg") {
+      const matchedKnowledge = selectConfigKnowledge(message, vectorMatches.matches ?? [], configQuerySignals);
+      referenceContext = buildConfigReferenceContext(matchedKnowledge);
+    } else {
+      referenceContext = (vectorMatches.matches ?? [])
+        .map((match) => match.metadata)
+        .filter(isKnowledgeMetadata)
+        .map(formatCommandContext)
+        .join("\n") || "未检索到匹配记录。";
+    }
 
     // 4. Construct the prompt based on selected database.
     let systemPrompt: string;
     if (database === "srpcfg") {
-      systemPrompt = `你是 SrP-CFG 配置包的证据检索助手。下方资料是从 config/ 源码确定性解析出的结构化记录，每条记录都包含可引用的文件、行号和原始源码。
+      systemPrompt = `你是 SrP-CFG 配置包的证据检索助手。下方资料来自 v3 curated knowledge，每条可用记录都有稳定实体 ID、生产状态和 config/ 源码引用。
 
-参考资料（按相关度排序；仅这些资料可作为事实依据）：
+参考资料（已按精确字段优先、语义相关度其次排序；仅这些资料可作为事实依据）：
 ${referenceContext}
 
 回答规范：
-1. 先定位与问题完全匹配的结构化字段。按键问题只允许读取“按键”和“绑定或定义内容”；alias 问题只允许读取“Alias”“绑定或定义内容”和“关联关系”；不得根据名称、常见用法或对话中的暗示猜测。
-2. 每个关于按键、命令、默认值、加载文件或作用范围的事实，必须在同一句中引用 \`config/路径:行号\`。没有匹配源码时只回答“当前检索证据不足”，不得补全可能答案。
-3. “源码”字段优先级最高；注释只解释源码，不能覆盖源码。用户指出错误时必须重新核对同一条源码，不能为了迎合而改成另一个无证据答案。
-4. 必须区分 Runtime 注册、settings 状态、keymap 物理键位、with-keymap 组合入口、Preset 应用和 user/custom.cfg 最终覆盖层。
-5. 只解答 SrP-CFG 及其使用到的 CS2 指令。回答简练、使用中文，并以完整句子结束。`;
+1. 先核对“实体”“名称”“按键”“Cvar”“别名”“目标”“模块”等精确字段，再读摘要、标签和关键词。完整名称必须完整匹配；例如不得把 srp_practice 与 srp_practice_keys 当作同一实体。
+2. 只使用状态为 generated 或 reviewed 且带“证据”的记录。相同实体 ID 的内容属于同一实体，不得跨实体拼接事实；精确匹配的 reviewed 记录优先。
+3. 每个关于按键、命令、默认值、加载文件或作用范围的事实，必须在同一句中引用资料给出的 \`config/路径.cfg:行号\`。没有可引用证据时只回答“当前检索证据不足”，不得补全可能答案。
+4. “源码”和证据引用优先于 curated 摘要；标题、摘要、标签和关键词只用于定位与解释，不能覆盖源码。用户指出错误时必须重新核对同一实体的证据。
+5. 必须区分 Runtime 注册、settings 状态、keymap 物理键位、with-keymap 组合入口、Preset 应用和 user/custom.cfg 最终覆盖层。
+6. 只解答 SrP-CFG 及其使用到的 CS2 指令。回答简练、使用中文，并以完整句子结束。`;
     } else {
       systemPrompt = `你是 CS2 官方控制台指令与变量助手。下方参考资料来自独立的官方指令向量库。
 

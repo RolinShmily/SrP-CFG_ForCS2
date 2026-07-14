@@ -1,0 +1,4234 @@
+[
+  {
+    "id": "file:config/autoexec.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/autoexec.cfg:1",
+      "path": "config/autoexec.cfg",
+      "line": 1,
+      "text": "// ══════════════════════════════════════════════════════════════════",
+      "lineCount": 10,
+      "sha256": "0731d629f9ea83cec32f609cc1e541567a5bf0e3268dc6e0f25228b5081b5f18",
+      "area": "root",
+      "module": "bootstrap",
+      "role": "bootstrap"
+    },
+    "semantic": {
+      "title": "config/autoexec.cfg",
+      "summary": "启动入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "root",
+        "bootstrap"
+      ],
+      "keywords": [
+        "exec",
+        "execifexists"
+      ],
+      "scope": "启动时执行；负责连接 Runtime 注册层与最后加载的用户覆盖层。",
+      "activation": "别名 srp_reload -> autoexec.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/autoview/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/autoview/help.cfg:1",
+      "path": "config/srp-cfg/features/autoview/help.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ 自动视角帮助 ═════════════════",
+      "lineCount": 12,
+      "sha256": "470eafb317f04717b5e535824a01321514806d685ca5be80c74ebfff690fe36a",
+      "area": "feature",
+      "module": "autoview",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/autoview/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "autoview",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_autoview -> srp-cfg/features/autoview/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/autoview/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/autoview/keymap.cfg:1",
+      "path": "config/srp-cfg/features/autoview/keymap.cfg",
+      "line": 1,
+      "text": "// Autoview physical keymap. These bindings may be persisted by CS2 VCFG.",
+      "lineCount": 22,
+      "sha256": "50e983e31b8f4f145acda79393702916f885ec632a0c45767066b18913e881b3",
+      "area": "feature",
+      "module": "autoview",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/autoview/keymap.cfg",
+      "summary": "物理键位；13 类命令，0 个 alias，10 个 bind。",
+      "tags": [
+        "features",
+        "autoview",
+        "keymap"
+      ],
+      "keywords": [
+        "unbind",
+        "slot1",
+        "view_0",
+        "slot2",
+        "view_1",
+        "slot3",
+        "slot11",
+        "slot5",
+        "slot9",
+        "slot6",
+        "slot7",
+        "slot8",
+        "slot10"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_autoview_keys -> srp-cfg/features/autoview/with-keymap.cfg -> srp-cfg/features/autoview/keymap.cfg；按键入口 [@srp-cfg/presets/default/keymap.cfg:79"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/autoview/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/autoview/runtime.cfg:1",
+      "path": "config/srp-cfg/features/autoview/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent autoview command vocabulary.",
+      "lineCount": 5,
+      "sha256": "db960ed06fd08ffd671e944e844a743352d6d4045addadd1f3b89d01300f058d",
+      "area": "feature",
+      "module": "autoview",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/autoview/runtime.cfg",
+      "summary": "运行时注册；2 类命令，2 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "autoview",
+        "runtime"
+      ],
+      "keywords": [
+        "v06",
+        "v00",
+        "view_0",
+        "view_1"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_autoview -> srp-cfg/features/autoview/settings.cfg -> srp-cfg/features/autoview/runtime.cfg；别名 srp_autoview_keys -> srp-cfg/features/autoview/with-keymap.cfg -> srp-cfg/features/autoview/settings.cfg -> srp-cfg/features/autoview/runtime.cfg；按键入口 [@srp-cfg/presets/default/keymap.cfg:79；别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/autoview/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/autoview/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/autoview/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/autoview/settings.cfg:1",
+      "path": "config/srp-cfg/features/autoview/settings.cfg",
+      "line": 1,
+      "text": "// Reset autoview's internal view mapping without changing physical keys.",
+      "lineCount": 4,
+      "sha256": "849b35668538e6f708654acfc32f216c8c85c1fe149b5c485e8f4bdf4b94b71b",
+      "area": "feature",
+      "module": "autoview",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/autoview/settings.cfg",
+      "summary": "功能设置；3 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "autoview",
+        "settings"
+      ],
+      "keywords": [
+        "exec",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_autoview -> srp-cfg/features/autoview/settings.cfg；别名 srp_autoview_keys -> srp-cfg/features/autoview/with-keymap.cfg -> srp-cfg/features/autoview/settings.cfg；按键入口 [@srp-cfg/presets/default/keymap.cfg:79"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/autoview/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/autoview/with-keymap.cfg:1",
+      "path": "config/srp-cfg/features/autoview/with-keymap.cfg",
+      "line": 1,
+      "text": "exec srp-cfg/features/autoview/settings.cfg // 注册并准备武器自适应视角功能。",
+      "lineCount": 4,
+      "sha256": "7e4339b07a5c09534c05906896efddb94f8b8e7ad12c2580551d3a3b6ff6b80b",
+      "area": "feature",
+      "module": "autoview",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/autoview/with-keymap.cfg",
+      "summary": "设置与键位组合入口；3 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "autoview",
+        "composition"
+      ],
+      "keywords": [
+        "exec",
+        "echo",
+        "weapon"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_autoview_keys -> srp-cfg/features/autoview/with-keymap.cfg；按键入口 [@srp-cfg/presets/default/keymap.cfg:79"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/help.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/help.cfg",
+      "line": 1,
+      "text": "echo ═══════════════ 准星与持枪视角帮助 ═══════════════",
+      "lineCount": 17,
+      "sha256": "f12312cc425f64730b47b14f3a448ed1a9845e6b24805de536383f60d1cea570",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_crosshair -> srp-cfg/features/crosshair-view/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/keymap.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/keymap.cfg",
+      "line": 1,
+      "text": "// Optional physical keys for the crosshair/viewmodel feature.",
+      "lineCount": 6,
+      "sha256": "b8a51be3ed2c56d721af8f86c36a8fa97847d5768361627b7b16645e6e631b40",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/keymap.cfg",
+      "summary": "物理键位；5 类命令，0 个 alias，4 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "keymap"
+      ],
+      "keywords": [
+        "keyc",
+        "keyv",
+        "toggle",
+        "echo",
+        "switchthrow"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_crosshair_view_keys -> srp-cfg/features/crosshair-view/with-keymap.cfg -> srp-cfg/features/crosshair-view/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/00.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/00.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/00.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 00；修改后可在控制台执行 c00 立即预览。",
+      "lineCount": 22,
+      "sha256": "34684dac4096c465c9a8eb15115b2bb4e42678ff42f85fb24b2b56390f95de62",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/00.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c00 -> srp-cfg/features/crosshair-view/library/00.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/01.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/01.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/01.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 01；修改后可在控制台执行 c01 立即预览。",
+      "lineCount": 22,
+      "sha256": "12e218adf17f445c86b15c74cb638e3c594d5049e5816eb0612466186af703bb",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/01.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c01 -> srp-cfg/features/crosshair-view/library/01.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/02.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/02.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/02.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 02；修改后可在控制台执行 c02 立即预览。",
+      "lineCount": 22,
+      "sha256": "50b6b10463d3c287e92525b98e10f8a0d0eb8717d8ffab7a90a8f4a072dfaca4",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/02.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c02 -> srp-cfg/features/crosshair-view/library/02.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/03.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/03.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/03.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 03；修改后可在控制台执行 c03 立即预览。",
+      "lineCount": 22,
+      "sha256": "37e99f00f06f8dcbb0dda2393b5afb0d131b71f5bdae964810adb1716cf6898c",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/03.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c03 -> srp-cfg/features/crosshair-view/library/03.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/04.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/04.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/04.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 04；修改后可在控制台执行 c04 立即预览。",
+      "lineCount": 22,
+      "sha256": "658b553c22382a23ab94e210cd537b30bc88110272da38e10cb594825ef9ba32",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/04.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c04 -> srp-cfg/features/crosshair-view/library/04.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/05.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/05.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/05.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 05；修改后可在控制台执行 c05 立即预览。",
+      "lineCount": 24,
+      "sha256": "1325303b9d5684e3556ffbbaefeec60923d6f2a427fef9d17b71c7f00f096597",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/05.cfg",
+      "summary": "预设库；22 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_friendly_warning",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha",
+        "cl_fixedcrosshairgap",
+        "cl_crosshair_recoil"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c05 -> srp-cfg/features/crosshair-view/library/05.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/06.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/06.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/06.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 06；修改后可在控制台执行 c06 立即预览。",
+      "lineCount": 22,
+      "sha256": "555ca08056d1c04ba45aab4117a3b24f7d0ff4d1a10a9ba4d398c319c3272e93",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/06.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c06 -> srp-cfg/features/crosshair-view/library/06.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
+      "line": 1,
+      "text": "// SrP-CFG 准星预设 07；修改后可在控制台执行 c07 立即预览。",
+      "lineCount": 22,
+      "sha256": "6ee49b9af99b773cdd648d1bc5ff1df704dd0e36d95293649d6178ab4abd33b4",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "library"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/library/07.cfg",
+      "summary": "预设库；20 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "library"
+      ],
+      "keywords": [
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_b",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_r",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha"
+      ],
+      "scope": "由所属功能的 Runtime alias 按需加载的预设库文件。",
+      "activation": "别名 c07 -> srp-cfg/features/crosshair-view/library/07.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/runtime.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent crosshair/viewmodel command vocabulary.",
+      "lineCount": 63,
+      "sha256": "467bf9e73cc1278751125750e0b39abda4b22c3d22a472ee4ab79863703d639f",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "summary": "运行时注册；39 类命令，54 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "runtime"
+      ],
+      "keywords": [
+        "echo",
+        "srp_crosshair_custom_info",
+        "srp_viewmodel_custom_info",
+        "c00",
+        "v00",
+        "exec",
+        "srp_c00_info",
+        "alias",
+        "srp_c01_info",
+        "srp_c02_info",
+        "srp_c03_info",
+        "srp_c04_info",
+        "srp_c05_info",
+        "srp_c06_info",
+        "srp_c07_info",
+        "viewmodel_fov",
+        "viewmodel_offset_x",
+        "viewmodel_offset_y",
+        "viewmodel_offset_z",
+        "viewmodel_presetpos",
+        "srp_v00_info",
+        "srp_v01_info",
+        "srp_v02_info",
+        "srp_v03_info",
+        "srp_v04_info",
+        "srp_v05_info",
+        "srp_v06_info",
+        "srp_v07_info",
+        "nothrow",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_smoke",
+        "cl_grenadecrosshair_keepusercrosshair",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_r",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_b",
+        "whoamic",
+        "whoamiv",
+        "keyc",
+        "keyv",
+        "c01",
+        "c02",
+        "c03",
+        "c04",
+        "c05",
+        "c06",
+        "c07",
+        "v01",
+        "v02",
+        "v03",
+        "v04",
+        "v05",
+        "v06",
+        "v07",
+        "switchthrow",
+        "throw"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/crosshair-view/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/settings.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/settings.cfg",
+      "line": 1,
+      "text": "// Apply the recommended crosshair/viewmodel state without changing physical keys.",
+      "lineCount": 5,
+      "sha256": "de139d68d7aa01f4c446ca2bb4deb341cec5e6a009f283aff88fc9ae5fc19225",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/settings.cfg",
+      "summary": "功能设置；4 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "settings"
+      ],
+      "keywords": [
+        "c00",
+        "v00",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_crosshair_view -> srp-cfg/features/crosshair-view/settings.cfg；别名 srp_crosshair_view_keys -> srp-cfg/features/crosshair-view/with-keymap.cfg -> srp-cfg/features/crosshair-view/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/crosshair-view/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/crosshair-view/with-keymap.cfg:1",
+      "path": "config/srp-cfg/features/crosshair-view/with-keymap.cfg",
+      "line": 1,
+      "text": "// Crosshair/viewmodel settings plus the optional physical keymap.",
+      "lineCount": 5,
+      "sha256": "0f4866181e7782e333aed590d32def11086ed6eb9afe16a96616301bc7e0095d",
+      "area": "feature",
+      "module": "crosshair-view",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/crosshair-view/with-keymap.cfg",
+      "summary": "设置与键位组合入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "crosshair-view",
+        "composition"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_crosshair_view_keys -> srp-cfg/features/crosshair-view/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/knife/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/help.cfg:1",
+      "path": "config/srp-cfg/features/knife/help.cfg",
+      "line": 1,
+      "text": "echo ═══════════════════ 刀具模型帮助 ══════════════════",
+      "lineCount": 15,
+      "sha256": "0dc1d0827eaa0f5b5d17aff22e2fc6794a6ebfb0d5e4fad5c0b9d4abeddca3c1",
+      "area": "feature",
+      "module": "knife",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/knife/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "knife",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_knife -> srp-cfg/features/knife/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/knife/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/keymap.cfg:1",
+      "path": "config/srp-cfg/features/knife/keymap.cfg",
+      "line": 1,
+      "text": "// Knife intentionally has no default physical keymap.",
+      "lineCount": 2,
+      "sha256": "873164125bb58421b05e54f29af4430be5ea92010239d36ee3b09f9c67aae5e4",
+      "area": "feature",
+      "module": "knife",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/knife/keymap.cfg",
+      "summary": "物理键位；0 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "knife",
+        "keymap"
+      ],
+      "keywords": [],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "未发现直接启动或公共 alias 加载路径；请结合调用该文件的模块上下文判断。"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/knife/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:1",
+      "path": "config/srp-cfg/features/knife/runtime.cfg",
+      "line": 1,
+      "text": "// Knife model command vocabulary. Loaded by Runtime; no preference or key is changed here.",
+      "lineCount": 23,
+      "sha256": "a7f78f04399a1d80d6af1e5b6625117c1e95a04114f235d4d98e81e49e0b7237",
+      "area": "feature",
+      "module": "knife",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/knife/runtime.cfg",
+      "summary": "运行时注册；2 类命令，21 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "knife",
+        "runtime"
+      ],
+      "keywords": [
+        "subclass_create",
+        "echo",
+        "500",
+        "503",
+        "505",
+        "506",
+        "507",
+        "508",
+        "509",
+        "512",
+        "514",
+        "515",
+        "516",
+        "517",
+        "518",
+        "519",
+        "520",
+        "521",
+        "522",
+        "523",
+        "524",
+        "525",
+        "526"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg -> srp-cfg/features/knife/runtime.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:77、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62；别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/knife/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/knife/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/knife/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:1",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 1,
+      "text": "// Knife has no physical keymap or persistent preference; this refreshes its command library.",
+      "lineCount": 4,
+      "sha256": "e7b62137b8e083b17a405cca015bbae608de530dd88a81624501977fee68b3af",
+      "area": "feature",
+      "module": "knife",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/knife/settings.cfg",
+      "summary": "功能设置；3 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "exec",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:77、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/knife/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/with-keymap.cfg:1",
+      "path": "config/srp-cfg/features/knife/with-keymap.cfg",
+      "line": 1,
+      "text": "exec srp-cfg/features/knife/settings.cfg // 注册匕首模型命令库。",
+      "lineCount": 3,
+      "sha256": "652bd27a00329ccd610e614641971a0e52f553ab9fc8026e0349100e0d744609",
+      "area": "feature",
+      "module": "knife",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/knife/with-keymap.cfg",
+      "summary": "设置与键位组合入口；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "knife",
+        "composition"
+      ],
+      "keywords": [
+        "exec"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "未发现直接启动或公共 alias 加载路径；请结合调用该文件的模块上下文判断。"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/zeus/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/zeus/help.cfg:1",
+      "path": "config/srp-cfg/features/zeus/help.cfg",
+      "line": 1,
+      "text": "echo ═══════════════════ Zeus 自动回切帮助 ══════════════════",
+      "lineCount": 12,
+      "sha256": "f9c70d33d604227c19ec3038e39c7d065b17b0651a579d90765ed537430e7113",
+      "area": "feature",
+      "module": "zeus",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/zeus/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "zeus",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_zeus -> srp-cfg/features/zeus/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/zeus/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/zeus/keymap.cfg:1",
+      "path": "config/srp-cfg/features/zeus/keymap.cfg",
+      "line": 1,
+      "text": "// Zeus physical keymap. Selecting slot 4 enables the automatic attack wrapper.",
+      "lineCount": 14,
+      "sha256": "9784c64bd464631b3a54f5c8ed9288e0aefec29c5edb046e4f687d7b25ab4445",
+      "area": "feature",
+      "module": "zeus",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/zeus/keymap.cfg",
+      "summary": "物理键位；9 类命令，0 个 alias，6 个 bind。",
+      "tags": [
+        "features",
+        "zeus",
+        "keymap"
+      ],
+      "keywords": [
+        "unbind",
+        "slot1",
+        "att1",
+        "slot2",
+        "slot3",
+        "slot11",
+        "att0",
+        "slot5",
+        "lastinv"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_zeus_keys -> srp-cfg/features/zeus/with-keymap.cfg -> srp-cfg/features/zeus/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/zeus/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/zeus/runtime.cfg:1",
+      "path": "config/srp-cfg/features/zeus/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent Zeus command vocabulary.",
+      "lineCount": 9,
+      "sha256": "d5b730cdb789ab916e70bad78bf7ae1c47f2ebe8350c2979d5c4f72f524dbbba",
+      "area": "feature",
+      "module": "zeus",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/zeus/runtime.cfg",
+      "summary": "运行时注册；8 类命令，6 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "zeus",
+        "runtime"
+      ],
+      "keywords": [
+        "bind",
+        "+attack",
+        "-attack",
+        "slot2",
+        "slot1",
+        "att1",
+        "+attack2",
+        "-attack2",
+        "att0",
+        "+firr1",
+        "-firr1",
+        "+firr2",
+        "-firr2"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/zeus/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；别名 srp_zeus -> srp-cfg/features/zeus/settings.cfg -> srp-cfg/features/zeus/runtime.cfg；别名 srp_zeus_keys -> srp-cfg/features/zeus/with-keymap.cfg -> srp-cfg/features/zeus/settings.cfg -> srp-cfg/features/zeus/runtime.cfg；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/features/zeus/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/zeus/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/zeus/settings.cfg:1",
+      "path": "config/srp-cfg/features/zeus/settings.cfg",
+      "line": 1,
+      "text": "// Reset Zeus aliases without changing physical keys.",
+      "lineCount": 4,
+      "sha256": "7f120801fe662f194083cb861c56c1b7f308469274f905189eab37ecfc6ae12f",
+      "area": "feature",
+      "module": "zeus",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/zeus/settings.cfg",
+      "summary": "功能设置；3 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "zeus",
+        "settings"
+      ],
+      "keywords": [
+        "exec",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_zeus -> srp-cfg/features/zeus/settings.cfg；别名 srp_zeus_keys -> srp-cfg/features/zeus/with-keymap.cfg -> srp-cfg/features/zeus/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/features/zeus/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/features/zeus/with-keymap.cfg:1",
+      "path": "config/srp-cfg/features/zeus/with-keymap.cfg",
+      "line": 1,
+      "text": "exec srp-cfg/features/zeus/settings.cfg // 注册电击枪攻击回切命令。",
+      "lineCount": 4,
+      "sha256": "bdf1ff2f4391abbcb3651fe7a7762afad8543da5958d54da2b0d29715ef9830a",
+      "area": "feature",
+      "module": "zeus",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/features/zeus/with-keymap.cfg",
+      "summary": "设置与键位组合入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "features",
+        "zeus",
+        "composition"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_zeus_keys -> srp-cfg/features/zeus/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/helps/index.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/helps/index.cfg:1",
+      "path": "config/srp-cfg/helps/index.cfg",
+      "line": 1,
+      "text": "echo ═══════════════════════════ SrP-CFG v3 帮助 ═══════════════════════════",
+      "lineCount": 21,
+      "sha256": "f074e0d882ae95a0cb7074405e148bd768955aaebb52d66d5e3f9b2cc96c4705",
+      "area": "help",
+      "module": "help",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/helps/index.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help -> srp-cfg/helps/index.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/helps/presets.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/helps/presets.cfg:1",
+      "path": "config/srp-cfg/helps/presets.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ 内置 Preset 起点 ════════════════",
+      "lineCount": 16,
+      "sha256": "519a7592998e87d638cfc150ca7e9f3151014d79b449429763f26c35a198d8e3",
+      "area": "help",
+      "module": "help",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/helps/presets.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_presets -> srp-cfg/helps/presets.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/demo-hlae/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/demo-hlae/help.cfg:1",
+      "path": "config/srp-cfg/modes/demo-hlae/help.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ Demo / HLAE 帮助 ════════════════",
+      "lineCount": 20,
+      "sha256": "8097e760719fa28e98556262a0ab1ffdce8d6fa0ecebdf4dc46002427a915c1d",
+      "area": "mode",
+      "module": "demo-hlae",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/demo-hlae/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "demo-hlae",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_demo -> srp-cfg/modes/demo-hlae/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:1",
+      "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
+      "line": 1,
+      "text": "// Demo/HLAE physical workspace. binddefaults intentionally runs first.",
+      "lineCount": 48,
+      "sha256": "706f80ba2fce67476eb57e2e7fca32e0c959512eaff559f60530cf2bc35dca47",
+      "area": "mode",
+      "module": "demo-hlae",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
+      "summary": "物理键位；25 类命令，0 个 alias，45 个 bind。",
+      "tags": [
+        "modes",
+        "demo-hlae",
+        "keymap"
+      ],
+      "keywords": [
+        "binddefaults",
+        "rec",
+        "demo_resume",
+        "checkSetting",
+        "rec_end",
+        "demo_pause",
+        "campath",
+        "campath_draw",
+        "dmsg",
+        "block",
+        "widefov",
+        "gear_up",
+        "gear_down",
+        "demoui",
+        "demo_togglepause",
+        "toggle",
+        "incrementvar",
+        "mute",
+        "mirv_input",
+        "echo",
+        "demo_marktick",
+        "demo_gotomark",
+        "demo_goto",
+        "mirv_campath",
+        "mirv_cmd"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_demo_keys -> srp-cfg/modes/demo-hlae/with-keymap.cfg -> srp-cfg/modes/demo-hlae/keymap.cfg；按键入口 ]@srp-cfg/presets/default/keymap.cfg:80"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/demo-hlae/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/demo-hlae/runtime.cfg:1",
+      "path": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent Demo/HLAE command vocabulary. No HLAE state or physical key is changed here.",
+      "lineCount": 60,
+      "sha256": "2c89240b16f7bb6ec43c7aa95d8572e2b1f7f9e4d6a144769e51c0d12c7ebae1",
+      "area": "mode",
+      "module": "demo-hlae",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "summary": "运行时注册；30 类命令，58 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "demo-hlae",
+        "runtime"
+      ],
+      "keywords": [
+        "demo_timescale",
+        "fps_max",
+        "echo",
+        "mirv_streams",
+        "campath_on",
+        "mirv_campath",
+        "alias",
+        "campath_draw_on",
+        "dmsg_on",
+        "mirv_deathmsg",
+        "blockOn",
+        "widefovOn",
+        "mirv_fov",
+        "gear4",
+        "gear14",
+        "toggle",
+        "snd_menumusic_volume",
+        "snd_roundstart_volume",
+        "snd_roundend_volume",
+        "snd_roundaction_volume",
+        "snd_mapobjective_volume",
+        "snd_tensecondwarning_volume",
+        "snd_deathcamera_volume",
+        "snd_mvp_volume",
+        "snd_mute_mvp_music_live_players",
+        "snd_mute_losefocus",
+        "unbind",
+        "mirv_input",
+        "cl_spec_show_bindings",
+        "sv_grenade_trajectory_prac_pipreview",
+        "rec",
+        "rec_end",
+        "checkSetting",
+        "campath",
+        "campath_off",
+        "campath_draw",
+        "campath_draw_off",
+        "dmsg",
+        "dmsg_off",
+        "block",
+        "blockOff",
+        "widefov",
+        "widefovOff",
+        "gear_up",
+        "gear_down",
+        "gear110",
+        "gear15",
+        "gear1",
+        "gear8",
+        "gear16",
+        "ass",
+        "mute",
+        "t",
+        "f100",
+        "f95",
+        "f90",
+        "f85",
+        "f80",
+        "f75",
+        "f70",
+        "f65",
+        "f60",
+        "f55",
+        "f50",
+        "f45",
+        "f40",
+        "f35",
+        "f30",
+        "f25",
+        "f20",
+        "f15",
+        "f10",
+        "pos"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/demo-hlae/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/demo-hlae/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/demo-hlae/settings.cfg:1",
+      "path": "config/srp-cfg/modes/demo-hlae/settings.cfg",
+      "line": 1,
+      "text": "// Demo/HLAE workspace settings. Requires launching CS2 through HLAE with FFmpeg configured.",
+      "lineCount": 52,
+      "sha256": "8620af9216ffff46a338742fffe5d9f52b435e791cbd335092c26c19ec53bfac",
+      "area": "mode",
+      "module": "demo-hlae",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/demo-hlae/settings.cfg",
+      "summary": "功能设置；40 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "demo-hlae",
+        "settings"
+      ],
+      "keywords": [
+        "clear",
+        "sv_cheats",
+        "cl_show_observer_crosshair",
+        "cl_clock_correction",
+        "tv_listen_voice_indices",
+        "tv_listen_voice_indices_h",
+        "mirv_campath",
+        "mirv_input",
+        "mirv_reshade",
+        "mirv_streams",
+        "engine_no_focus_sleep",
+        "campath_on",
+        "campath_draw_on",
+        "r_show_build_info",
+        "r_fullscreen_gamma",
+        "fog_override",
+        "hud_showtargetid",
+        "mp_display_kill_assists",
+        "mirv_cvar_unhide_all",
+        "demo_pause",
+        "cl_showpos",
+        "cl_spec_show_bindings",
+        "cl_hud_telemetry_frametime_show",
+        "cl_hud_telemetry_net_misdelivery_show",
+        "cl_hud_telemetry_ping_show",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_smoke",
+        "cl_teamcounter_playercount_instead_of_avatars",
+        "sv_grenade_trajectory_prac_pipreview",
+        "cl_hud_color",
+        "cl_radar_always_centered",
+        "cl_radar_scale",
+        "cl_hud_radar_scale",
+        "cl_radar_icon_scale_min",
+        "cl_radar_rotate",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_demo -> srp-cfg/modes/demo-hlae/settings.cfg；别名 srp_demo_keys -> srp-cfg/modes/demo-hlae/with-keymap.cfg -> srp-cfg/modes/demo-hlae/settings.cfg；按键入口 ]@srp-cfg/presets/default/keymap.cfg:80"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/demo-hlae/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/demo-hlae/with-keymap.cfg:1",
+      "path": "config/srp-cfg/modes/demo-hlae/with-keymap.cfg",
+      "line": 1,
+      "text": "exec srp-cfg/modes/demo-hlae/settings.cfg // 应用 Demo/HLAE 录制与画面设置。",
+      "lineCount": 4,
+      "sha256": "d1d5fde812c3424287cf06362c2ffe78cfc002f392b019c58558028d9749288e",
+      "area": "mode",
+      "module": "demo-hlae",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/demo-hlae/with-keymap.cfg",
+      "summary": "设置与键位组合入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "demo-hlae",
+        "composition"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_demo_keys -> srp-cfg/modes/demo-hlae/with-keymap.cfg；按键入口 ]@srp-cfg/presets/default/keymap.cfg:80"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/guidemake/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/guidemake/help.cfg:1",
+      "path": "config/srp-cfg/modes/guidemake/help.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ 地图指南制作帮助 ════════════════",
+      "lineCount": 17,
+      "sha256": "57621f5fde05755fccdea8765f93c6931c8fafd56581584d3644875ddc458c02",
+      "area": "mode",
+      "module": "guidemake",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/guidemake/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "guidemake",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_guidemake -> srp-cfg/modes/guidemake/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/guidemake/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/guidemake/keymap.cfg:1",
+      "path": "config/srp-cfg/modes/guidemake/keymap.cfg",
+      "line": 1,
+      "text": "// Optional guide-maker workspace keys. Use srp_guidemake for settings without these bindings.",
+      "lineCount": 9,
+      "sha256": "61142df5a366a7e3238e7885938cf7dca8565b1df140c90a3a73c9973b0d6edc",
+      "area": "mode",
+      "module": "guidemake",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/guidemake/keymap.cfg",
+      "summary": "物理键位；7 类命令，0 个 alias，7 个 bind。",
+      "tags": [
+        "modes",
+        "guidemake",
+        "keymap"
+      ],
+      "keywords": [
+        "srp_guide_he",
+        "srp_guide_flash",
+        "srp_guide_smoke",
+        "srp_guide_fire",
+        "srp_guide_decoy",
+        "srp_guide_delete",
+        "srp_guide_save"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_guidemake_keys -> srp-cfg/modes/guidemake/with-keymap.cfg -> srp-cfg/modes/guidemake/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/guidemake/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/guidemake/runtime.cfg:1",
+      "path": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent guide-maker commands. No cheat state or physical key is changed here.",
+      "lineCount": 11,
+      "sha256": "c003a3fd0bea3f09e14b364317b399e5afcfe7b6d2edbe57b4122c6f1f4778d1",
+      "area": "mode",
+      "module": "guidemake",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "summary": "运行时注册；5 类命令，9 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "guidemake",
+        "runtime"
+      ],
+      "keywords": [
+        "annotation_create",
+        "workshop_annotation_submit",
+        "fire",
+        "annotation_delete_previous_node_set",
+        "annotation_save",
+        "srp_guide_upload",
+        "srp_guide_he",
+        "srp_guide_flash",
+        "srp_guide_smoke",
+        "srp_guide_fire",
+        "srp_guide_decoy",
+        "srp_guide_delete",
+        "srp_guide_save"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/guidemake/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/guidemake/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/guidemake/settings.cfg:1",
+      "path": "config/srp-cfg/modes/guidemake/settings.cfg",
+      "line": 1,
+      "text": "// Guide-maker mode settings. Physical keys are isolated in keymap.cfg.",
+      "lineCount": 6,
+      "sha256": "9559df1123f0c5ac93726e1eeadfe1561954c8e82f52964b0443dc5903a47645",
+      "area": "mode",
+      "module": "guidemake",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/guidemake/settings.cfg",
+      "summary": "功能设置；5 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "guidemake",
+        "settings"
+      ],
+      "keywords": [
+        "sv_cheats",
+        "sv_allow_annotations_access_level",
+        "annotation_auto_load",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_guidemake -> srp-cfg/modes/guidemake/settings.cfg；别名 srp_guidemake_keys -> srp-cfg/modes/guidemake/with-keymap.cfg -> srp-cfg/modes/guidemake/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/guidemake/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/guidemake/with-keymap.cfg:1",
+      "path": "config/srp-cfg/modes/guidemake/with-keymap.cfg",
+      "line": 1,
+      "text": "// Guide-maker mode plus the optional physical-key workspace.",
+      "lineCount": 4,
+      "sha256": "679537fd53d521831252981ed4a8ade0a5795a7aa5b1d0b7cb6dff62b1c0c126",
+      "area": "mode",
+      "module": "guidemake",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/guidemake/with-keymap.cfg",
+      "summary": "设置与键位组合入口；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "guidemake",
+        "composition"
+      ],
+      "keywords": [
+        "exec"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_guidemake_keys -> srp-cfg/modes/guidemake/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/help.cfg:1",
+      "path": "config/srp-cfg/modes/practice/help.cfg",
+      "line": 1,
+      "text": "echo ═══════════════════ 跑图练习帮助 ══════════════════",
+      "lineCount": 18,
+      "sha256": "2d1e6a1a430f9dfd76fc3568b90e31d92583a975a293e74a5db8b02c2ecbd8ce",
+      "area": "mode",
+      "module": "practice",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_practice -> srp-cfg/modes/practice/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/keymap.cfg:1",
+      "path": "config/srp-cfg/modes/practice/keymap.cfg",
+      "line": 1,
+      "text": "// Optional practice workspace keys. Use srp_practice for settings without these bindings.",
+      "lineCount": 24,
+      "sha256": "aede004bc2fabf7b83ea6d2590aa5f491c6d28b9a1cc85f809bd433bd41d3ef4",
+      "area": "mode",
+      "module": "practice",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/keymap.cfg",
+      "summary": "物理键位；17 类命令，0 个 alias，22 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "keymap"
+      ],
+      "keywords": [
+        "give",
+        "echo",
+        "toggle",
+        "switchperson",
+        "bot_add",
+        "mp_death_drop_gun",
+        "bot_kick",
+        "+Pucci",
+        "sv_rethrow_last_grenade",
+        "noclip",
+        "ent_fire",
+        "stopsound",
+        "switch-impactsNpreview",
+        "bot_kill",
+        "mp_restartgame",
+        "bot_stop",
+        "bot_place"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_practice_keys -> srp-cfg/modes/practice/with-keymap.cfg -> srp-cfg/modes/practice/keymap.cfg；按键入口 p@srp-cfg/presets/default/keymap.cfg:78、p@srp-cfg/presets/echo/keymap.cfg:59、p@srp-cfg/presets/visionl/keymap.cfg:58、p@srp-cfg/presets/yszh/keymap.cfg:63"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/runtime.cfg:1",
+      "path": "config/srp-cfg/modes/practice/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent practice command vocabulary. No server state or physical key is changed here.",
+      "lineCount": 15,
+      "sha256": "f3d823f952285019b762c3b07a2a0792ddaece37121fd03284a56f284a5b2cef",
+      "area": "mode",
+      "module": "practice",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/runtime.cfg",
+      "summary": "运行时注册；20 类命令，13 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "runtime"
+      ],
+      "keywords": [
+        "host_timescale",
+        "impactsNpreview-on",
+        "sv_showimpacts",
+        "sv_grenade_trajectory_prac_pipreview",
+        "alias",
+        "echo",
+        "switchperson-third",
+        "thirdperson",
+        "firstperson",
+        "exec",
+        "mp_respawn_on_death_ct",
+        "mp_respawn_on_death_t",
+        "sv_infinite_ammo",
+        "sv_alltalk",
+        "mp_buy_anywhere",
+        "mp_freezetime",
+        "mp_restartgame",
+        "sv_cheats",
+        "mp_plant_c4_anywhere",
+        "toggle",
+        "+Pucci",
+        "-Pucci",
+        "switch-impactsNpreview",
+        "impactsNpreview-off",
+        "switchperson",
+        "switchperson-first",
+        "spawn",
+        "gkd",
+        "gg",
+        "plant",
+        "xray"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/practice/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/practice/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/settings.cfg:1",
+      "path": "config/srp-cfg/modes/practice/settings.cfg",
+      "line": 1,
+      "text": "// Practice server and training settings. Physical keys are isolated in keymap.cfg.",
+      "lineCount": 64,
+      "sha256": "90952451170391334ababd2ee3839819ef049cd1d9b1542ffe14718c3be58120",
+      "area": "mode",
+      "module": "practice",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/settings.cfg",
+      "summary": "功能设置；63 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "settings"
+      ],
+      "keywords": [
+        "sv_cheats",
+        "sv_enablebunnyhopping",
+        "sv_autobunnyhopping",
+        "sv_airaccelerate",
+        "sv_alltalk",
+        "sv_talk_enemy_dead",
+        "sv_talk_enemy_living",
+        "sv_talk_after_dying_time",
+        "sv_infinite_ammo",
+        "sv_showimpacts",
+        "sv_showimpacts_time",
+        "sv_grenade_trajectory_prac_pipreview",
+        "sv_grenade_trajectory_prac_trailtime",
+        "sv_grenade_trajectory_time_spectator",
+        "spec_show_xray",
+        "ammo_grenade_limit_total",
+        "cl_versus_intro",
+        "cl_showpos",
+        "bot_stop",
+        "bot_kick",
+        "bot_join_after_player",
+        "bot_chatter",
+        "mp_maxmoney",
+        "mp_startmoney",
+        "mp_afterroundmoney",
+        "mp_buytime",
+        "mp_warmuptime",
+        "mp_roundtime",
+        "mp_roundtime_defuse",
+        "mp_freezetime",
+        "mp_round_restart_delay",
+        "mp_buy_anywhere",
+        "mp_free_armor",
+        "mp_drop_knife_enable",
+        "mp_drop_grenade_enable",
+        "mp_death_drop_grenade",
+        "mp_death_drop_gun",
+        "mp_death_drop_defuser",
+        "mp_items_prohibited",
+        "mp_solid_teammates",
+        "mp_team_intro_time",
+        "mp_humanteam",
+        "mp_limitteams",
+        "mp_autoteambalance",
+        "mp_autokick",
+        "mp_spectators_max",
+        "mp_forcecamera",
+        "mp_respawn_immunitytime",
+        "mp_respawn_on_death_ct",
+        "mp_respawn_on_death_t",
+        "mp_warmup_end",
+        "mp_friendlyfire",
+        "mp_weapons_allow_typecount",
+        "mp_t_default_primary",
+        "mp_t_default_secondary",
+        "mp_ct_default_primary",
+        "mp_ct_default_secondary",
+        "mp_t_default_grenades",
+        "mp_ct_default_grenades",
+        "sv_annotation_limits_max_rounds_per_half",
+        "sv_allow_annotations_access_level",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_practice -> srp-cfg/modes/practice/settings.cfg；别名 srp_practice_keys -> srp-cfg/modes/practice/with-keymap.cfg -> srp-cfg/modes/practice/settings.cfg；按键入口 p@srp-cfg/presets/default/keymap.cfg:78、p@srp-cfg/presets/echo/keymap.cfg:59、p@srp-cfg/presets/visionl/keymap.cfg:58、p@srp-cfg/presets/yszh/keymap.cfg:63"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/ancient.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/ancient.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "line": 1,
+      "text": "// Ancient出生点配置",
+      "lineCount": 19,
+      "sha256": "73fb941bcd94c69a16b546acc8bf22bd6c70f1282e40cea7c1382fea4f7533d6",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "summary": "模块辅助文件；4 类命令，10 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 ancient -> srp-cfg/modes/practice/spawn/ancient.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/anubis.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/anubis.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "line": 1,
+      "text": "// Anubis出生点配置",
+      "lineCount": 25,
+      "sha256": "001c01a67b9dfc09dfe819baf82a03f9477622f8eb4ebf6cb1970cec2fc4845c",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "summary": "模块辅助文件；4 类命令，16 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 anubis -> srp-cfg/modes/practice/spawn/anubis.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/dust2.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/dust2.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/dust2.cfg",
+      "line": 1,
+      "text": "// Dust2出生点配置",
+      "lineCount": 29,
+      "sha256": "b1ce7a9041f238448b51b0f591d6555e9836d745133e2ac07b0baf8751a3f6ec",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/dust2.cfg",
+      "summary": "模块辅助文件；5 类命令，20 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "setang_exact",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 dust2 -> srp-cfg/modes/practice/spawn/dust2.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/inferno.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/inferno.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/inferno.cfg",
+      "line": 1,
+      "text": "// Inferno出生点配置",
+      "lineCount": 20,
+      "sha256": "b87b88de47c7f25595f8e4b83ac74349db7deff55be7e52dbd062593aa916a75",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/inferno.cfg",
+      "summary": "模块辅助文件；4 类命令，11 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "CT6",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 inferno -> srp-cfg/modes/practice/spawn/inferno.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "line": 1,
+      "text": "// 初始化CT出生点",
+      "lineCount": 34,
+      "sha256": "ed308da31cd35b667f79052d6e6202a9016d3638bb7dd2220f764e68d83cd857",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "summary": "模块辅助文件；1 类命令，30 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "CT6",
+        "CT7",
+        "CT8",
+        "CT9",
+        "CT10",
+        "CT11",
+        "CT12",
+        "CT13",
+        "CT14",
+        "CT15",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 ancient -> srp-cfg/modes/practice/spawn/ancient.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 anubis -> srp-cfg/modes/practice/spawn/anubis.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 dust2 -> srp-cfg/modes/practice/spawn/dust2.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 inferno -> srp-cfg/modes/practice/spawn/inferno.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 italy -> srp-cfg/modes/practice/spawn/italy.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 mirage -> srp-cfg/modes/practice/spawn/mirage.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 nuke -> srp-cfg/modes/practice/spawn/nuke.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg；别名 office -> srp-cfg/modes/practice/spawn/office.cfg -> srp-cfg/modes/practice/spawn/init_spawns.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/italy.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/italy.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/italy.cfg",
+      "line": 1,
+      "text": "// Italy出生点配置",
+      "lineCount": 19,
+      "sha256": "875e73437da9a69f9c8d8978ebe584c578d67dec53195a7cba8afeb3fee4747e",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/italy.cfg",
+      "summary": "模块辅助文件；4 类命令，10 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 italy -> srp-cfg/modes/practice/spawn/italy.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/mirage.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/mirage.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/mirage.cfg",
+      "line": 1,
+      "text": "// Mirage出生点配置",
+      "lineCount": 24,
+      "sha256": "f133b3f6e970e8feeba2b14c45dc3ef9634ee540f398fd99366db4cdb412ae14",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/mirage.cfg",
+      "summary": "模块辅助文件；4 类命令，15 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 mirage -> srp-cfg/modes/practice/spawn/mirage.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/nuke.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/nuke.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/nuke.cfg",
+      "line": 1,
+      "text": "// Nuke出生点配置",
+      "lineCount": 22,
+      "sha256": "05449ef1ab23399613bd974b81f259ac28751187b064373a70a900fdc62711f3",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/nuke.cfg",
+      "summary": "模块辅助文件；4 类命令，13 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 nuke -> srp-cfg/modes/practice/spawn/nuke.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/office.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/office.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/office.cfg",
+      "line": 1,
+      "text": "// Office出生点配置",
+      "lineCount": 19,
+      "sha256": "fefd6e0b1db5d1dbe3f09863e52d0db778f242eb9ae9898a377be87887489bf3",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/office.cfg",
+      "summary": "模块辅助文件；4 类命令，10 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 office -> srp-cfg/modes/practice/spawn/office.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/overpass.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/overpass.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/overpass.cfg",
+      "line": 1,
+      "text": "// Overpass出生点配置",
+      "lineCount": 25,
+      "sha256": "60bd167c7f90588fa0bb71c223dc2beb52c0592f65055e4a1dd665c63c206383",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/overpass.cfg",
+      "summary": "模块辅助文件；4 类命令，16 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang_exact",
+        "echo",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 overpass -> srp-cfg/modes/practice/spawn/overpass.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/spawn.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/spawn.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "line": 1,
+      "text": "// ══════════════════════════════════════════════════════════════════",
+      "lineCount": 49,
+      "sha256": "5d35e6f0ba3ddeeb126c8d1794914c98ba6ad6b8ee87906ccbf60a7fa241bc8d",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "summary": "模块辅助文件；2 类命令，11 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "echo",
+        "dust2",
+        "inferno",
+        "mirage",
+        "ancient",
+        "nuke",
+        "vertigo",
+        "anubis",
+        "office",
+        "italy",
+        "overpass",
+        "train"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 spawn -> srp-cfg/modes/practice/spawn/spawn.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/train.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/train.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/train.cfg",
+      "line": 1,
+      "text": "// Train出生点配置",
+      "lineCount": 23,
+      "sha256": "2b00d69afec6d11201077f88f16de7849c09b9f8999a3df75560a88647f5e5ee",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/train.cfg",
+      "summary": "模块辅助文件；4 类命令，14 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang_exact",
+        "echo",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "CT6",
+        "CT7",
+        "CT8"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 train -> srp-cfg/modes/practice/spawn/train.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/spawn/vertigo.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/spawn/vertigo.cfg:1",
+      "path": "config/srp-cfg/modes/practice/spawn/vertigo.cfg",
+      "line": 1,
+      "text": "// Vertigo出生点配置",
+      "lineCount": 19,
+      "sha256": "3feae0e41fbbe6e7b09dfb61f3f3c5b119f54429b0be4ff04cb5b49fff617bb0",
+      "area": "mode",
+      "module": "practice",
+      "role": "auxiliary"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/spawn/vertigo.cfg",
+      "summary": "模块辅助文件；4 类命令，10 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "auxiliary"
+      ],
+      "keywords": [
+        "exec",
+        "setpos_exact",
+        "setang",
+        "echo",
+        "CT1",
+        "CT2",
+        "CT3",
+        "CT4",
+        "CT5",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "scope": "由所属模块通过 exec 或 alias 按需加载的辅助配置。",
+      "activation": "别名 vertigo -> srp-cfg/modes/practice/spawn/vertigo.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/practice/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/practice/with-keymap.cfg:1",
+      "path": "config/srp-cfg/modes/practice/with-keymap.cfg",
+      "line": 1,
+      "text": "// Practice mode plus the optional physical-key workspace.",
+      "lineCount": 4,
+      "sha256": "5c9017ac0d28acd0954e8a667a41de4a6d78a9fd5e9c5cb6c979e9fd036dbb55",
+      "area": "mode",
+      "module": "practice",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/practice/with-keymap.cfg",
+      "summary": "设置与键位组合入口；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "practice",
+        "composition"
+      ],
+      "keywords": [
+        "exec"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_practice_keys -> srp-cfg/modes/practice/with-keymap.cfg；按键入口 p@srp-cfg/presets/default/keymap.cfg:78、p@srp-cfg/presets/echo/keymap.cfg:59、p@srp-cfg/presets/visionl/keymap.cfg:58、p@srp-cfg/presets/yszh/keymap.cfg:63"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/preview/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/preview/help.cfg:1",
+      "path": "config/srp-cfg/modes/preview/help.cfg",
+      "line": 1,
+      "text": "echo ═══════════════════ 饰品预览帮助 ══════════════════",
+      "lineCount": 13,
+      "sha256": "9fbda0351030fffb560ca7dfd6847483b06b62f183d184056901ca2feff46173",
+      "area": "mode",
+      "module": "preview",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/preview/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "preview",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_preview -> srp-cfg/modes/preview/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/preview/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/preview/keymap.cfg:1",
+      "path": "config/srp-cfg/modes/preview/keymap.cfg",
+      "line": 1,
+      "text": "// Optional preview workspace keys. Use srp_preview for settings without these bindings.",
+      "lineCount": 9,
+      "sha256": "c96782371b1a735d8dce4a9f4f940b6b94ba65136c19fc3b80920189e2c26e08",
+      "area": "mode",
+      "module": "preview",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/preview/keymap.cfg",
+      "summary": "物理键位；6 类命令，0 个 alias，7 个 bind。",
+      "tags": [
+        "modes",
+        "preview",
+        "keymap"
+      ],
+      "keywords": [
+        "toggle",
+        "echo",
+        "changeblur",
+        "changefov",
+        "changeang--",
+        "changeang++"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_preview_keys -> srp-cfg/modes/preview/with-keymap.cfg -> srp-cfg/modes/preview/keymap.cfg；按键入口 9@srp-cfg/presets/default/keymap.cfg:76"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/preview/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/preview/runtime.cfg:1",
+      "path": "config/srp-cfg/modes/preview/runtime.cfg",
+      "line": 1,
+      "text": "// Persistent preview-mode command vocabulary. No camera state or physical key is changed here.",
+      "lineCount": 40,
+      "sha256": "9265669cdd793ac3ac8b6c0de1cd2e0b68b9187fa5480bff1b9661420511915d",
+      "area": "mode",
+      "module": "preview",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/preview/runtime.cfg",
+      "summary": "运行时注册；12 类命令，38 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "preview",
+        "runtime"
+      ],
+      "keywords": [
+        "cl_drawhud",
+        "r_dof_override",
+        "r_dof_override_near_blurry",
+        "fov_cs_debug",
+        "cl_lock_camera",
+        "echo",
+        "blur1",
+        "alias",
+        "ang1",
+        "setang",
+        "ang-1",
+        "fov1",
+        "depre",
+        "changeblur",
+        "blur0",
+        "blur2",
+        "blur3",
+        "blur4",
+        "changeang++",
+        "ang0+",
+        "ang2",
+        "ang3",
+        "ang4",
+        "ang5",
+        "changeang--",
+        "ang0-",
+        "ang-2",
+        "ang-3",
+        "ang-4",
+        "ang-5",
+        "changefov",
+        "fov0",
+        "fov2",
+        "fov3",
+        "fov4",
+        "fov5",
+        "fov6",
+        "fov7",
+        "fov8",
+        "fov9",
+        "fov10",
+        "fov11",
+        "fov12",
+        "fov13",
+        "fov14",
+        "fov15"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/preview/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/preview/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/preview/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/preview/settings.cfg:1",
+      "path": "config/srp-cfg/modes/preview/settings.cfg",
+      "line": 1,
+      "text": "// Preview/camera settings. Physical keys are isolated in keymap.cfg.",
+      "lineCount": 11,
+      "sha256": "a9d2dcdb6b857556948522c2f55e8c2954dcad7785aadb77cc0dbce19596ae07",
+      "area": "mode",
+      "module": "preview",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/preview/settings.cfg",
+      "summary": "功能设置；10 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "preview",
+        "settings"
+      ],
+      "keywords": [
+        "sv_cheats",
+        "cl_draw_only_deathnotices",
+        "cl_drawhud_force_radar",
+        "cl_drawhud",
+        "r_dof_override",
+        "r_dof_override_near_blurry",
+        "fov_cs_debug",
+        "cl_lock_camera",
+        "echo",
+        "use"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_preview -> srp-cfg/modes/preview/settings.cfg；别名 srp_preview_keys -> srp-cfg/modes/preview/with-keymap.cfg -> srp-cfg/modes/preview/settings.cfg；按键入口 9@srp-cfg/presets/default/keymap.cfg:76"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/preview/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/preview/with-keymap.cfg:1",
+      "path": "config/srp-cfg/modes/preview/with-keymap.cfg",
+      "line": 1,
+      "text": "// Preview mode plus the optional physical-key workspace.",
+      "lineCount": 4,
+      "sha256": "329db3b3ad711e81b4f75a498fa0914e55d5debe11daa3149865b50d4c678a46",
+      "area": "mode",
+      "module": "preview",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/preview/with-keymap.cfg",
+      "summary": "设置与键位组合入口；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "modes",
+        "preview",
+        "composition"
+      ],
+      "keywords": [
+        "exec"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_preview_keys -> srp-cfg/modes/preview/with-keymap.cfg；按键入口 9@srp-cfg/presets/default/keymap.cfg:76"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/default/apply.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/default/apply.cfg:1",
+      "path": "config/srp-cfg/presets/default/apply.cfg",
+      "line": 1,
+      "text": "// Recommended SrP preset example.",
+      "lineCount": 5,
+      "sha256": "e2ea7554135b94389192df72127c6b3bcb6a2fac3c90fdd52bd92e026c802d6b",
+      "area": "preset",
+      "module": "default",
+      "role": "preset_apply"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/default/apply.cfg",
+      "summary": "Preset 应用入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "default",
+        "preset_apply"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "仅在选择对应 Preset 起点时执行；之后 user/custom.cfg 仍可覆盖同名设置和键位。",
+      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/default/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:1",
+      "path": "config/srp-cfg/presets/default/keymap.cfg",
+      "line": 1,
+      "text": "// SrP recommended keymap example. Runtime owns every referenced alias.",
+      "lineCount": 81,
+      "sha256": "4659651fd1ec0d544f12bf8584af4cbd9f75e419dac671c0f637dbab1f725abb",
+      "area": "preset",
+      "module": "default",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/default/keymap.cfg",
+      "summary": "物理键位；58 类命令，0 个 alias，67 个 bind。",
+      "tags": [
+        "presets",
+        "default",
+        "keymap"
+      ],
+      "keywords": [
+        "+forward",
+        "+back",
+        "+left",
+        "+right",
+        "+attack",
+        "+attack2",
+        "yaw",
+        "pitch",
+        "+use",
+        "+reload",
+        "+lookatweapon",
+        "+jump",
+        "+duck",
+        "+showscores",
+        "drop",
+        "teammenu",
+        "+sprint",
+        "buymenu",
+        "slot1",
+        "slot2",
+        "slot3",
+        "slot4",
+        "slot5",
+        "slot9",
+        "slot6",
+        "slot7",
+        "slot8",
+        "slot10",
+        "lastinv",
+        "+spray_menu",
+        "messagemode",
+        "messagemode2",
+        "+voicerecord",
+        "player_ping",
+        "+radialradio",
+        "noclip",
+        "toggleconsole",
+        "switchhands",
+        "toggleradarscale",
+        "say_team",
+        "teamid",
+        "radio2",
+        "slot12",
+        "keyhud",
+        "unbind",
+        "buy",
+        "sellbackall",
+        "toggle",
+        "keyc",
+        "keyv",
+        "echo",
+        "switchthrow",
+        "srp_reload",
+        "srp_preview_keys",
+        "srp_knife",
+        "srp_practice_keys",
+        "srp_autoview_keys",
+        "srp_demo_keys"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/default/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/default/settings.cfg:1",
+      "path": "config/srp-cfg/presets/default/settings.cfg",
+      "line": 1,
+      "text": "// SrP recommended preference example.",
+      "lineCount": 119,
+      "sha256": "5d02f6267881c3b68af7882c8494d3d0e2aa2fd3e9450ae22fb72910d68137fc",
+      "area": "preset",
+      "module": "default",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/default/settings.cfg",
+      "summary": "功能设置；102 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "default",
+        "settings"
+      ],
+      "keywords": [
+        "sensitivity",
+        "zoom_sensitivity_ratio",
+        "m_yaw",
+        "crosshair",
+        "cl_crosshair_sniper_width",
+        "cl_sniper_show_inaccuracy",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_keepusercrosshair",
+        "cl_grenadecrosshair_smoke",
+        "cl_grenadecrosshairdelay_decoy",
+        "cl_grenadecrosshairdelay_explosive",
+        "cl_grenadecrosshairdelay_fire",
+        "cl_grenadecrosshairdelay_flash",
+        "cl_grenadecrosshairdelay_smoke",
+        "cl_observed_bot_crosshair",
+        "cl_show_observer_crosshair",
+        "cl_teamid_overhead_fade_near_crosshair",
+        "c00",
+        "v00",
+        "cl_radar_always_centered",
+        "cl_radar_scale",
+        "cl_hud_radar_scale",
+        "cl_teammate_colors_show",
+        "cl_radar_icon_scale_min",
+        "cl_radar_rotate",
+        "cl_radar_square_always",
+        "cl_radar_square_with_scoreboard",
+        "cl_hud_radar_blur_background",
+        "cl_hud_radar_background_alpha",
+        "cl_hud_radar_map_additive",
+        "hud_showtargetid",
+        "hud_scaling",
+        "safezonex",
+        "safezoney",
+        "cl_color",
+        "cl_showloadout",
+        "cl_hud_color",
+        "volume",
+        "snd_headphone_eq",
+        "snd_menumusic_volume",
+        "snd_roundstart_volume",
+        "snd_roundend_volume",
+        "snd_roundaction_volume",
+        "snd_mvp_volume",
+        "snd_mapobjective_volume",
+        "snd_tensecondwarning_volume",
+        "snd_deathcamera_volume",
+        "snd_mute_mvp_music_live_players",
+        "snd_mute_losefocus",
+        "voice_modenable",
+        "cl_hud_telemetry_frametime_show",
+        "cl_hud_telemetry_ping_show",
+        "mm_dedicated_search_maxping",
+        "cl_prefer_lefthanded",
+        "cl_debounce_zoom",
+        "cl_silencer_mode",
+        "cl_use_opens_buy_menu",
+        "cl_dm_buyrandomweapons",
+        "cl_teamcounter_playercount_instead_of_avatars",
+        "r_drawtracers_firstperson",
+        "r_fullscreen_gamma",
+        "cl_teamid_overhead_mode",
+        "cl_teamid_overhead_colors_show",
+        "con_enable",
+        "fps_max",
+        "gameinstructor_enable",
+        "cl_autohelp",
+        "func_break_max_pieces",
+        "r_show_build_info",
+        "spec_replay_autostart",
+        "cl_predict_body_shot_fx",
+        "cl_predict_head_shot_fx",
+        "cl_predict_kill_ragdolls",
+        "cl_radial_radio_tap_to_ping",
+        "cl_radial_radio_tab",
+        "cl_radial_radio_tab_0_text_1",
+        "cl_radial_radio_tab_0_text_2"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/echo/apply.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/echo/apply.cfg:1",
+      "path": "config/srp-cfg/presets/echo/apply.cfg",
+      "line": 1,
+      "text": "// Echo preset example: complete peer-level settings and keymap.",
+      "lineCount": 5,
+      "sha256": "406036436b892d61b48dac568ad3d1a3b75f7a6b10781a88956847c52e132881",
+      "area": "preset",
+      "module": "echo",
+      "role": "preset_apply"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/echo/apply.cfg",
+      "summary": "Preset 应用入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "echo",
+        "preset_apply"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "仅在选择对应 Preset 起点时执行；之后 user/custom.cfg 仍可覆盖同名设置和键位。",
+      "activation": "别名 srp_apply_echo -> srp-cfg/presets/echo/apply.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/echo/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/echo/keymap.cfg:1",
+      "path": "config/srp-cfg/presets/echo/keymap.cfg",
+      "line": 1,
+      "text": "// Echo example: complete personal keymap.",
+      "lineCount": 60,
+      "sha256": "23cad2ae64daf5fd4f9cd048708ba077c7abb19e5bfb4f57f164c29bd8aa5a4f",
+      "area": "preset",
+      "module": "echo",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/echo/keymap.cfg",
+      "summary": "物理键位；46 类命令，0 个 alias，46 个 bind。",
+      "tags": [
+        "presets",
+        "echo",
+        "keymap"
+      ],
+      "keywords": [
+        "+forward",
+        "+back",
+        "+left",
+        "+right",
+        "+attack",
+        "+attack2",
+        "yaw",
+        "pitch",
+        "+use",
+        "+reload",
+        "+lookatweapon",
+        "+jump",
+        "+duck",
+        "+showscores",
+        "drop",
+        "teammenu",
+        "+sprint",
+        "buymenu",
+        "slot1",
+        "slot2",
+        "slot3",
+        "slot4",
+        "slot5",
+        "radio2",
+        "slot12",
+        "lastinv",
+        "+spray_menu",
+        "messagemode2",
+        "messagemode",
+        "invnext",
+        "invprev",
+        "+voicerecord",
+        "player_ping",
+        "+radialradio",
+        "noclip",
+        "toggleconsole",
+        "switchhands",
+        "toggleradarscale",
+        "say_team",
+        "toggle",
+        "unbind",
+        "keyc",
+        "keyv",
+        "srp_reload",
+        "srp_knife",
+        "srp_practice_keys"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_echo -> srp-cfg/presets/echo/apply.cfg -> srp-cfg/presets/echo/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/echo/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/echo/settings.cfg:1",
+      "path": "config/srp-cfg/presets/echo/settings.cfg",
+      "line": 1,
+      "text": "// Echo example: complete personal preference set.",
+      "lineCount": 118,
+      "sha256": "05b53937d6ef2c9f6f7fd4600bb1b92b9e36e18905fc45bc697f22a6df538124",
+      "area": "preset",
+      "module": "echo",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/echo/settings.cfg",
+      "summary": "功能设置；102 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "echo",
+        "settings"
+      ],
+      "keywords": [
+        "sensitivity",
+        "zoom_sensitivity_ratio",
+        "m_yaw",
+        "crosshair",
+        "cl_crosshair_sniper_width",
+        "cl_sniper_show_inaccuracy",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_keepusercrosshair",
+        "cl_grenadecrosshair_smoke",
+        "cl_grenadecrosshairdelay_decoy",
+        "cl_grenadecrosshairdelay_explosive",
+        "cl_grenadecrosshairdelay_fire",
+        "cl_grenadecrosshairdelay_flash",
+        "cl_grenadecrosshairdelay_smoke",
+        "cl_observed_bot_crosshair",
+        "cl_show_observer_crosshair",
+        "cl_teamid_overhead_fade_near_crosshair",
+        "c00",
+        "v00",
+        "cl_radar_always_centered",
+        "cl_radar_scale",
+        "cl_hud_radar_scale",
+        "cl_teammate_colors_show",
+        "cl_radar_icon_scale_min",
+        "cl_radar_rotate",
+        "cl_radar_square_always",
+        "cl_radar_square_with_scoreboard",
+        "cl_hud_radar_blur_background",
+        "cl_hud_radar_background_alpha",
+        "cl_hud_radar_map_additive",
+        "hud_showtargetid",
+        "hud_scaling",
+        "safezonex",
+        "safezoney",
+        "cl_color",
+        "cl_showloadout",
+        "cl_hud_color",
+        "volume",
+        "snd_headphone_eq",
+        "snd_menumusic_volume",
+        "snd_roundstart_volume",
+        "snd_roundend_volume",
+        "snd_roundaction_volume",
+        "snd_mvp_volume",
+        "snd_mapobjective_volume",
+        "snd_tensecondwarning_volume",
+        "snd_deathcamera_volume",
+        "snd_mute_mvp_music_live_players",
+        "snd_mute_losefocus",
+        "voice_modenable",
+        "cl_hud_telemetry_frametime_show",
+        "cl_hud_telemetry_ping_show",
+        "mm_dedicated_search_maxping",
+        "cl_prefer_lefthanded",
+        "cl_debounce_zoom",
+        "cl_silencer_mode",
+        "cl_use_opens_buy_menu",
+        "cl_dm_buyrandomweapons",
+        "cl_teamcounter_playercount_instead_of_avatars",
+        "r_drawtracers_firstperson",
+        "r_fullscreen_gamma",
+        "cl_teamid_overhead_mode",
+        "cl_teamid_overhead_colors_show",
+        "con_enable",
+        "fps_max",
+        "gameinstructor_enable",
+        "cl_autohelp",
+        "func_break_max_pieces",
+        "r_show_build_info",
+        "spec_replay_autostart",
+        "cl_predict_body_shot_fx",
+        "cl_predict_head_shot_fx",
+        "cl_predict_kill_ragdolls",
+        "cl_radial_radio_tap_to_ping",
+        "cl_radial_radio_tab",
+        "cl_radial_radio_tab_0_text_1",
+        "cl_radial_radio_tab_0_text_2"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_apply_echo -> srp-cfg/presets/echo/apply.cfg -> srp-cfg/presets/echo/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/valve/apply.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/valve/apply.cfg:1",
+      "path": "config/srp-cfg/presets/valve/apply.cfg",
+      "line": 1,
+      "text": "// Raw Valve baseline reset. user/custom.cfg is intentionally not re-applied here.",
+      "lineCount": 5,
+      "sha256": "1429122ff01cea8f62a8e6f7a18a540b616639c43297a29c997708d7e14e0d40",
+      "area": "preset",
+      "module": "valve",
+      "role": "preset_apply"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/valve/apply.cfg",
+      "summary": "Preset 应用入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "valve",
+        "preset_apply"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "仅在选择对应 Preset 起点时执行；之后 user/custom.cfg 仍可覆盖同名设置和键位。",
+      "activation": "别名 srp_reset_valve -> srp-cfg/presets/valve/apply.cfg；别名 srp_reset_valve_user -> srp-cfg/presets/valve/apply.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/valve/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/valve/help.cfg:1",
+      "path": "config/srp-cfg/presets/valve/help.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ Valve 基线重置帮助 ════════════════",
+      "lineCount": 14,
+      "sha256": "68c0ac627498cf5fe9007a75086aae7bba50a29f3bb9dd7ab1511f95668cdde9",
+      "area": "preset",
+      "module": "valve",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/valve/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "valve",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_reset -> srp-cfg/presets/valve/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/valve/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/valve/keymap.cfg:1",
+      "path": "config/srp-cfg/presets/valve/keymap.cfg",
+      "line": 1,
+      "text": "// Ask the current CS2 build to reload its own shipped user_keys_default.vcfg.",
+      "lineCount": 4,
+      "sha256": "85d87423ab5a2d7d8c677d9ddfc4fdd78458288911a712e0597a43e88711c37a",
+      "area": "preset",
+      "module": "valve",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/valve/keymap.cfg",
+      "summary": "物理键位；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "valve",
+        "keymap"
+      ],
+      "keywords": [
+        "binddefaults"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_reset_valve -> srp-cfg/presets/valve/apply.cfg -> srp-cfg/presets/valve/keymap.cfg；别名 srp_reset_valve_keys -> srp-cfg/presets/valve/keymap.cfg；别名 srp_reset_valve_user -> srp-cfg/presets/valve/apply.cfg -> srp-cfg/presets/valve/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/valve/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/valve/settings.cfg:1",
+      "path": "config/srp-cfg/presets/valve/settings.cfg",
+      "line": 1,
+      "text": "// Valve baseline for every archived ConVar currently touched by SrP-CFG.",
+      "lineCount": 176,
+      "sha256": "6b687d5c0a3b0a6892f5718328f87a87aca27e4b178da9f52ad7f972bb03ef01",
+      "area": "preset",
+      "module": "valve",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/valve/settings.cfg",
+      "summary": "功能设置；151 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "valve",
+        "settings"
+      ],
+      "keywords": [
+        "sensitivity",
+        "zoom_sensitivity_ratio",
+        "m_yaw",
+        "viewmodel_fov",
+        "viewmodel_offset_x",
+        "viewmodel_offset_y",
+        "viewmodel_offset_z",
+        "viewmodel_presetpos",
+        "crosshair",
+        "cl_crosshair_drawoutline",
+        "cl_crosshair_dynamic_maxdist_splitratio",
+        "cl_crosshair_dynamic_splitalpha_innermod",
+        "cl_crosshair_dynamic_splitalpha_outermod",
+        "cl_crosshair_dynamic_splitdist",
+        "cl_crosshair_friendly_warning",
+        "cl_crosshair_outlinethickness",
+        "cl_crosshair_recoil",
+        "cl_crosshair_sniper_width",
+        "cl_crosshair_t",
+        "cl_crosshairalpha",
+        "cl_crosshaircolor",
+        "cl_crosshaircolor_r",
+        "cl_crosshaircolor_g",
+        "cl_crosshaircolor_b",
+        "cl_crosshairdot",
+        "cl_crosshairgap",
+        "cl_crosshairgap_useweaponvalue",
+        "cl_crosshairsize",
+        "cl_crosshairstyle",
+        "cl_crosshairthickness",
+        "cl_crosshairusealpha",
+        "cl_fixedcrosshairgap",
+        "cl_sniper_show_inaccuracy",
+        "cl_observed_bot_crosshair",
+        "cl_show_observer_crosshair",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_keepusercrosshair",
+        "cl_grenadecrosshair_smoke",
+        "cl_grenadecrosshairdelay_decoy",
+        "cl_grenadecrosshairdelay_explosive",
+        "cl_grenadecrosshairdelay_fire",
+        "cl_grenadecrosshairdelay_flash",
+        "cl_grenadecrosshairdelay_smoke",
+        "cl_radar_always_centered",
+        "cl_radar_icon_scale_min",
+        "cl_radar_rotate",
+        "cl_radar_scale",
+        "cl_radar_square_always",
+        "cl_radar_square_with_scoreboard",
+        "cl_hud_radar_background_alpha",
+        "cl_hud_radar_blur_background",
+        "cl_hud_radar_map_additive",
+        "cl_hud_radar_scale",
+        "cl_hud_color",
+        "hud_scaling",
+        "hud_showtargetid",
+        "safezonex",
+        "safezoney",
+        "cl_showloadout",
+        "cl_teamcounter_playercount_instead_of_avatars",
+        "cl_teamid_overhead_colors_show",
+        "cl_teamid_overhead_fade_near_crosshair",
+        "cl_teamid_overhead_mode",
+        "cl_teammate_colors_show",
+        "cl_color",
+        "cl_hud_telemetry_frametime_show",
+        "cl_hud_telemetry_net_misdelivery_show",
+        "cl_hud_telemetry_ping_show",
+        "cl_predict_body_shot_fx",
+        "cl_predict_head_shot_fx",
+        "cl_predict_kill_ragdolls",
+        "r_drawtracers_firstperson",
+        "r_fullscreen_gamma",
+        "r_show_build_info",
+        "func_break_max_pieces",
+        "spec_replay_autostart",
+        "spec_show_xray"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_reset_valve -> srp-cfg/presets/valve/apply.cfg -> srp-cfg/presets/valve/settings.cfg；别名 srp_reset_valve_settings -> srp-cfg/presets/valve/settings.cfg；别名 srp_reset_valve_user -> srp-cfg/presets/valve/apply.cfg -> srp-cfg/presets/valve/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/visionl/apply.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/visionl/apply.cfg:1",
+      "path": "config/srp-cfg/presets/visionl/apply.cfg",
+      "line": 1,
+      "text": "// VisionL preset example: complete peer-level settings and keymap.",
+      "lineCount": 5,
+      "sha256": "7502db7ed07e4e7c42e8ec963d53bab520d90a7a448db9fa42688730cf967528",
+      "area": "preset",
+      "module": "visionl",
+      "role": "preset_apply"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/visionl/apply.cfg",
+      "summary": "Preset 应用入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "visionl",
+        "preset_apply"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "仅在选择对应 Preset 起点时执行；之后 user/custom.cfg 仍可覆盖同名设置和键位。",
+      "activation": "别名 srp_apply_visionl -> srp-cfg/presets/visionl/apply.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/visionl/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:1",
+      "path": "config/srp-cfg/presets/visionl/keymap.cfg",
+      "line": 1,
+      "text": "// VisionL example: complete personal keymap.",
+      "lineCount": 59,
+      "sha256": "22c1dbabb3f263aa48ee923710870d53d2807c8be2f73d58c4897133530b894e",
+      "area": "preset",
+      "module": "visionl",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/visionl/keymap.cfg",
+      "summary": "物理键位；45 类命令，0 个 alias，45 个 bind。",
+      "tags": [
+        "presets",
+        "visionl",
+        "keymap"
+      ],
+      "keywords": [
+        "+forward",
+        "+back",
+        "+left",
+        "+right",
+        "+attack",
+        "+attack2",
+        "yaw",
+        "pitch",
+        "+use",
+        "+reload",
+        "+lookatweapon",
+        "+jump",
+        "+duck",
+        "+showscores",
+        "drop",
+        "teammenu",
+        "+sprint",
+        "buymenu",
+        "slot1",
+        "slot2",
+        "slot3",
+        "slot4",
+        "slot5",
+        "radio2",
+        "slot12",
+        "lastinv",
+        "+spray_menu",
+        "messagemode",
+        "messagemode2",
+        "toggleradarscale",
+        "invnext",
+        "invprev",
+        "+voicerecord",
+        "player_ping",
+        "+radialradio",
+        "toggleconsole",
+        "switchhands",
+        "say_team",
+        "toggle",
+        "unbind",
+        "keyc",
+        "keyv",
+        "srp_reload",
+        "srp_knife",
+        "srp_practice_keys"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_visionl -> srp-cfg/presets/visionl/apply.cfg -> srp-cfg/presets/visionl/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/visionl/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/visionl/settings.cfg:1",
+      "path": "config/srp-cfg/presets/visionl/settings.cfg",
+      "line": 1,
+      "text": "// VisionL example: complete personal preference set.",
+      "lineCount": 119,
+      "sha256": "bb443329b4bcb6734ecd8c85eb5a47131cc4273ba7c87be4facf4a8535476f03",
+      "area": "preset",
+      "module": "visionl",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/visionl/settings.cfg",
+      "summary": "功能设置；103 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "visionl",
+        "settings"
+      ],
+      "keywords": [
+        "sensitivity",
+        "zoom_sensitivity_ratio",
+        "m_yaw",
+        "crosshair",
+        "cl_crosshair_sniper_width",
+        "cl_sniper_show_inaccuracy",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_keepusercrosshair",
+        "cl_grenadecrosshair_smoke",
+        "cl_grenadecrosshairdelay_decoy",
+        "cl_grenadecrosshairdelay_explosive",
+        "cl_grenadecrosshairdelay_fire",
+        "cl_grenadecrosshairdelay_flash",
+        "cl_grenadecrosshairdelay_smoke",
+        "cl_observed_bot_crosshair",
+        "cl_show_observer_crosshair",
+        "cl_teamid_overhead_fade_near_crosshair",
+        "c06",
+        "cyan",
+        "v06",
+        "cl_radar_always_centered",
+        "cl_radar_scale",
+        "cl_hud_radar_scale",
+        "cl_teammate_colors_show",
+        "cl_radar_icon_scale_min",
+        "cl_radar_rotate",
+        "cl_radar_square_always",
+        "cl_radar_square_with_scoreboard",
+        "cl_hud_radar_blur_background",
+        "cl_hud_radar_background_alpha",
+        "cl_hud_radar_map_additive",
+        "hud_showtargetid",
+        "hud_scaling",
+        "safezonex",
+        "safezoney",
+        "cl_color",
+        "cl_showloadout",
+        "cl_hud_color",
+        "volume",
+        "snd_headphone_eq",
+        "snd_menumusic_volume",
+        "snd_roundstart_volume",
+        "snd_roundend_volume",
+        "snd_roundaction_volume",
+        "snd_mvp_volume",
+        "snd_mapobjective_volume",
+        "snd_tensecondwarning_volume",
+        "snd_deathcamera_volume",
+        "snd_mute_mvp_music_live_players",
+        "snd_mute_losefocus",
+        "voice_modenable",
+        "cl_hud_telemetry_frametime_show",
+        "cl_hud_telemetry_ping_show",
+        "mm_dedicated_search_maxping",
+        "cl_prefer_lefthanded",
+        "cl_debounce_zoom",
+        "cl_silencer_mode",
+        "cl_use_opens_buy_menu",
+        "cl_dm_buyrandomweapons",
+        "cl_teamcounter_playercount_instead_of_avatars",
+        "r_drawtracers_firstperson",
+        "r_fullscreen_gamma",
+        "cl_teamid_overhead_mode",
+        "cl_teamid_overhead_colors_show",
+        "con_enable",
+        "fps_max",
+        "gameinstructor_enable",
+        "cl_autohelp",
+        "func_break_max_pieces",
+        "r_show_build_info",
+        "spec_replay_autostart",
+        "cl_predict_body_shot_fx",
+        "cl_predict_head_shot_fx",
+        "cl_predict_kill_ragdolls",
+        "cl_radial_radio_tap_to_ping",
+        "cl_radial_radio_tab",
+        "cl_radial_radio_tab_0_text_1"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_apply_visionl -> srp-cfg/presets/visionl/apply.cfg -> srp-cfg/presets/visionl/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/yszh/apply.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/yszh/apply.cfg:1",
+      "path": "config/srp-cfg/presets/yszh/apply.cfg",
+      "line": 1,
+      "text": "// YSZH preset example: complete peer-level settings and keymap.",
+      "lineCount": 5,
+      "sha256": "0ab849e5eb113626624e2d10a68049e18b9e4e7f12df1870dcd30f153cfa35cf",
+      "area": "preset",
+      "module": "yszh",
+      "role": "preset_apply"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/yszh/apply.cfg",
+      "summary": "Preset 应用入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "yszh",
+        "preset_apply"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "仅在选择对应 Preset 起点时执行；之后 user/custom.cfg 仍可覆盖同名设置和键位。",
+      "activation": "别名 srp_apply_yszh -> srp-cfg/presets/yszh/apply.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/yszh/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:1",
+      "path": "config/srp-cfg/presets/yszh/keymap.cfg",
+      "line": 1,
+      "text": "// YSZH example: complete personal keymap.",
+      "lineCount": 64,
+      "sha256": "df87f530fb814be1ee28e97f85f8efddd23c7e074f4bf6b71fa4fb8f3d75b380",
+      "area": "preset",
+      "module": "yszh",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/yszh/keymap.cfg",
+      "summary": "物理键位；50 类命令，0 个 alias，50 个 bind。",
+      "tags": [
+        "presets",
+        "yszh",
+        "keymap"
+      ],
+      "keywords": [
+        "+forward",
+        "+back",
+        "+left",
+        "+right",
+        "+attack",
+        "+attack2",
+        "yaw",
+        "pitch",
+        "+use",
+        "+reload",
+        "+lookatweapon",
+        "+jump",
+        "+duck",
+        "+showscores",
+        "drop",
+        "teammenu",
+        "+sprint",
+        "buymenu",
+        "slot1",
+        "slot2",
+        "slot3",
+        "slot4",
+        "slot5",
+        "slot9",
+        "slot6",
+        "slot7",
+        "slot8",
+        "slot10",
+        "radio2",
+        "slot12",
+        "+spray_menu",
+        "messagemode",
+        "messagemode2",
+        "invnext",
+        "invprev",
+        "+voicerecord",
+        "player_ping",
+        "+radialradio",
+        "noclip",
+        "toggleconsole",
+        "switchhands",
+        "toggleradarscale",
+        "say_team",
+        "toggle",
+        "unbind",
+        "keyc",
+        "keyv",
+        "srp_reload",
+        "srp_knife",
+        "srp_practice_keys"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_yszh -> srp-cfg/presets/yszh/apply.cfg -> srp-cfg/presets/yszh/keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/presets/yszh/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/presets/yszh/settings.cfg:1",
+      "path": "config/srp-cfg/presets/yszh/settings.cfg",
+      "line": 1,
+      "text": "// YSZH example: complete personal preference set.",
+      "lineCount": 119,
+      "sha256": "61c39f621f9b043cf07ab354788b1479c48e4595feeb62e3da26b984db16507c",
+      "area": "preset",
+      "module": "yszh",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/presets/yszh/settings.cfg",
+      "summary": "功能设置；103 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "presets",
+        "yszh",
+        "settings"
+      ],
+      "keywords": [
+        "sensitivity",
+        "zoom_sensitivity_ratio",
+        "m_yaw",
+        "crosshair",
+        "cl_crosshair_sniper_width",
+        "cl_sniper_show_inaccuracy",
+        "cl_grenadecrosshair_decoy",
+        "cl_grenadecrosshair_explosive",
+        "cl_grenadecrosshair_fire",
+        "cl_grenadecrosshair_flash",
+        "cl_grenadecrosshair_keepusercrosshair",
+        "cl_grenadecrosshair_smoke",
+        "cl_grenadecrosshairdelay_decoy",
+        "cl_grenadecrosshairdelay_explosive",
+        "cl_grenadecrosshairdelay_fire",
+        "cl_grenadecrosshairdelay_flash",
+        "cl_grenadecrosshairdelay_smoke",
+        "cl_observed_bot_crosshair",
+        "cl_show_observer_crosshair",
+        "cl_teamid_overhead_fade_near_crosshair",
+        "c06",
+        "cyan",
+        "v06",
+        "cl_radar_always_centered",
+        "cl_radar_scale",
+        "cl_hud_radar_scale",
+        "cl_teammate_colors_show",
+        "cl_radar_icon_scale_min",
+        "cl_radar_rotate",
+        "cl_radar_square_always",
+        "cl_radar_square_with_scoreboard",
+        "cl_hud_radar_blur_background",
+        "cl_hud_radar_background_alpha",
+        "cl_hud_radar_map_additive",
+        "hud_showtargetid",
+        "hud_scaling",
+        "safezonex",
+        "safezoney",
+        "cl_color",
+        "cl_showloadout",
+        "cl_hud_color",
+        "volume",
+        "snd_headphone_eq",
+        "snd_menumusic_volume",
+        "snd_roundstart_volume",
+        "snd_roundend_volume",
+        "snd_roundaction_volume",
+        "snd_mvp_volume",
+        "snd_mapobjective_volume",
+        "snd_tensecondwarning_volume",
+        "snd_deathcamera_volume",
+        "snd_mute_mvp_music_live_players",
+        "snd_mute_losefocus",
+        "voice_modenable",
+        "cl_hud_telemetry_frametime_show",
+        "cl_hud_telemetry_ping_show",
+        "mm_dedicated_search_maxping",
+        "cl_prefer_lefthanded",
+        "cl_debounce_zoom",
+        "cl_silencer_mode",
+        "cl_use_opens_buy_menu",
+        "cl_dm_buyrandomweapons",
+        "cl_teamcounter_playercount_instead_of_avatars",
+        "r_drawtracers_firstperson",
+        "r_fullscreen_gamma",
+        "cl_teamid_overhead_mode",
+        "cl_teamid_overhead_colors_show",
+        "con_enable",
+        "fps_max",
+        "gameinstructor_enable",
+        "cl_autohelp",
+        "func_break_max_pieces",
+        "r_show_build_info",
+        "spec_replay_autostart",
+        "cl_predict_body_shot_fx",
+        "cl_predict_head_shot_fx",
+        "cl_predict_kill_ragdolls",
+        "cl_radial_radio_tap_to_ping",
+        "cl_radial_radio_tab",
+        "cl_radial_radio_tab_0_text_1"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_apply_yszh -> srp-cfg/presets/yszh/apply.cfg -> srp-cfg/presets/yszh/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/runtime/aliases.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/runtime/aliases.cfg:1",
+      "path": "config/srp-cfg/runtime/aliases.cfg",
+      "line": 1,
+      "text": "// SrP-CFG reusable aliases.",
+      "lineCount": 11,
+      "sha256": "d2aeb024153172d55adb06650fa93aba8eb24d04ec5ac045c4f46966dcbcd771",
+      "area": "runtime",
+      "module": "runtime",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/runtime/aliases.cfg",
+      "summary": "运行时注册；7 类命令，6 个 alias，0 个 bind。",
+      "tags": [
+        "runtime"
+      ],
+      "keywords": [
+        "pvp-hud-off",
+        "cl_draw_only_deathnotices",
+        "cl_drawhud_force_radar",
+        "alias",
+        "echo",
+        "toggle",
+        "cl_ticktiming",
+        "keyhud",
+        "pvp-hud-on",
+        "teamcounter",
+        "teamid",
+        "tick"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/aliases.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/aliases.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/runtime/commands.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/runtime/commands.cfg:1",
+      "path": "config/srp-cfg/runtime/commands.cfg",
+      "line": 1,
+      "text": "// Built-in Preset starting points. These aliases are safe to call from user/custom.cfg.",
+      "lineCount": 47,
+      "sha256": "97753c5f4e29d65007de14ca239488f12bf75ef262a8693c715bb06ab2788f01",
+      "area": "runtime",
+      "module": "runtime",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/runtime/commands.cfg",
+      "summary": "运行时注册；2 类命令，35 个 alias，0 个 bind。",
+      "tags": [
+        "runtime"
+      ],
+      "keywords": [
+        "exec",
+        "execifexists",
+        "srp_apply_default",
+        "srp_apply_echo",
+        "srp_apply_yszh",
+        "srp_apply_visionl",
+        "srp_reset_valve",
+        "srp_reset_valve_user",
+        "srp_reset_valve_settings",
+        "srp_reset_valve_keys",
+        "srp_crosshair_view",
+        "srp_crosshair_view_keys",
+        "srp_autoview",
+        "srp_autoview_keys",
+        "srp_zeus",
+        "srp_zeus_keys",
+        "srp_knife",
+        "srp_practice",
+        "srp_practice_keys",
+        "srp_preview",
+        "srp_preview_keys",
+        "srp_demo",
+        "srp_demo_keys",
+        "srp_guidemake",
+        "srp_guidemake_keys",
+        "srp_help",
+        "srp_help_presets",
+        "srp_help_reset",
+        "srp_help_crosshair",
+        "srp_help_autoview",
+        "srp_help_knife",
+        "srp_help_zeus",
+        "srp_help_practice",
+        "srp_help_preview",
+        "srp_help_guidemake",
+        "srp_help_demo",
+        "srp_reload"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/runtime/init.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/runtime/init.cfg:1",
+      "path": "config/srp-cfg/runtime/init.cfg",
+      "line": 1,
+      "text": "// ══════════════════════════════════════════════════════════════════",
+      "lineCount": 21,
+      "sha256": "e5d64dac9f95b58ce21fbd2e405f83524703735d3259100730a47111514b915e",
+      "area": "runtime",
+      "module": "runtime",
+      "role": "bootstrap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/runtime/init.cfg",
+      "summary": "启动入口；2 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "runtime",
+        "bootstrap"
+      ],
+      "keywords": [
+        "exec",
+        "echo"
+      ],
+      "scope": "启动时执行；负责连接 Runtime 注册层与最后加载的用户覆盖层。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/user/custom.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/user/custom.cfg:1",
+      "path": "config/srp-cfg/user/custom.cfg",
+      "line": 1,
+      "text": "// ─── SrP-CFG Preset Layer ───",
+      "lineCount": 27,
+      "sha256": "b1115d0c21ab1e78e6905281856ef0bb0b2e9a4c137f69c580bc769922f27c0d",
+      "area": "user",
+      "module": "user",
+      "role": "user"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/user/custom.cfg",
+      "summary": "用户覆盖层；0 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "user"
+      ],
+      "keywords": [],
+      "scope": "用户拥有的最终覆盖层；启动时最后执行，并覆盖此前 Runtime 或 Preset 的同名设置。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/user/custom.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:75、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；别名 srp_reset_valve_user -> srp-cfg/user/custom.cfg；启动链 autoexec.cfg -> srp-cfg/user/custom.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  }
+]

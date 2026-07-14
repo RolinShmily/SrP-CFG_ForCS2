@@ -2,17 +2,27 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const DEFAULT_INDEX_NAME = "srp-config-index";
 const CONFIG_ROOT = "config";
+const KNOWLEDGE_ROOT = "app/website/src/data/config-knowledge";
 const EMBEDDING_BATCH_SIZE = 50;
 const DELETE_BATCH_SIZE = 100;
-const VECTOR_SCHEMA = "srp-config-v2";
-const CURRENT_ID_PREFIX = "srpcfg:v2:";
+const VECTOR_SCHEMA = "srp-config-v3";
+const CURRENT_ID_PREFIX = "srpcfg:v3:";
 const LEGACY_ID_PREFIXES = ["srpcfg:", "cfg:"];
 const MAX_METADATA_BYTES = 10 * 1024;
 const MAX_VECTOR_ID_BYTES = 64;
+const GENERATED_COLLECTIONS = ["files", "entries", "aliases", "bindings", "settings"];
+const COLLECTION_TYPES = {
+  files: "file",
+  entries: "entry",
+  aliases: "alias",
+  bindings: "binding",
+  settings: "setting",
+};
 
 const FILE_ROLE_LABELS = {
   bootstrap: "启动入口",
@@ -20,7 +30,7 @@ const FILE_ROLE_LABELS = {
   settings: "功能设置",
   keymap: "物理键位",
   composition: "设置与键位组合入口",
-  presetApply: "Preset 应用入口",
+  preset_apply: "Preset 应用入口",
   help: "控制台帮助",
   user: "用户覆盖层",
   library: "预设库",
@@ -219,14 +229,14 @@ function classifyFile(relativePath) {
     return { family: "help", module: "help", role: "help" };
   }
 
-  const family = parts[1] ?? "root";
+  const family = { features: "feature", modes: "mode", presets: "preset" }[parts[1]] ?? parts[1] ?? "root";
   const module = parts[2] ?? basename;
   const nested = parts.slice(3, -1);
   if (filename === "runtime.cfg") return { family, module, role: "runtime" };
   if (filename === "settings.cfg") return { family, module, role: "settings" };
   if (filename === "keymap.cfg") return { family, module, role: "keymap" };
   if (filename === "with-keymap.cfg") return { family, module, role: "composition" };
-  if (filename === "apply.cfg") return { family, module, role: "presetApply" };
+  if (filename === "apply.cfg") return { family, module, role: "preset_apply" };
   if (filename === "help.cfg") return { family, module, role: "help" };
   if (nested.includes("library")) return { family, module, role: "library" };
   return { family, module, role: "auxiliary" };
@@ -249,7 +259,7 @@ function scopeForFile(file) {
   if (role === "composition") {
     return "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。";
   }
-  if (role === "presetApply") {
+  if (role === "preset_apply") {
     return "仅在选择对应 Preset 起点时执行；之后 user/custom.cfg 仍可覆盖同名设置和键位。";
   }
   if (role === "user") {
@@ -307,6 +317,9 @@ function parseConfigFile(rootDir, fullPath) {
     relativePath,
     sourcePath: `config/${relativePath}`,
     lineCount: lines.length,
+    contentHash: sha256(rawText),
+    firstLine: lines[0] ?? "",
+    lines,
     ...classification,
     scope: "",
     statements,
@@ -462,22 +475,487 @@ function structuredRecord(record) {
   };
 }
 
-export function buildKnowledgeDataset(analysis, records) {
-  const countsByKind = Object.fromEntries(
-    [...new Set(records.map((record) => record.metadata.kind))]
-      .sort()
-      .map((kind) => [kind, records.filter((record) => record.metadata.kind === kind).length]),
+function generatedCuration() {
+  return { status: "generated", source: "generator" };
+}
+
+function fileEntityId(sourcePath) {
+  return `file:${sourcePath}`;
+}
+
+function statementIdentity(statement) {
+  if (statement.kind === "alias") return statement.symbol;
+  if (statement.kind === "bind" || statement.kind === "unbind") return statement.key;
+  if (statement.kind === "exec") return normalizeExecTarget(statement.target);
+  return statement.command;
+}
+
+function entityLocator(sourcePath, statement, ordinal, includeKind = true) {
+  const kind = includeKind ? `${statement.kind}:` : "";
+  const subject = encodeURIComponent(statementIdentity(statement).toLowerCase() || "entry");
+  const suffix = ordinal > 1 ? `:${ordinal}` : "";
+  return `${sourcePath}#${kind}${subject}${suffix}`;
+}
+
+function entryEntityId(sourcePath, statement, ordinal) {
+  return `entry:${entityLocator(sourcePath, statement, ordinal)}`;
+}
+
+function sourceRef(sourcePath, line) {
+  return `${sourcePath}:${line}`;
+}
+
+function cleanSourceObject(value) {
+  return Object.fromEntries(Object.entries(value).filter(([, field]) => field !== undefined));
+}
+
+function actionsForSource(statement) {
+  return statement.actions.map((action) => ({
+    command: action.command,
+    arguments: action.arguments,
+    source: action.source,
+  }));
+}
+
+function relationForStatement(statement, graph) {
+  const relations = [];
+  if (statement.kind === "exec") {
+    relations.push(`${statement.optional ? "可选" : "直接"}加载 ${normalizeExecTarget(statement.target)}`);
+  }
+  if (statement.kind === "alias" || statement.kind === "bind") {
+    relations.push(...statement.actions.map((action) => resolveActionRelation(action, graph)).filter(Boolean));
+  }
+  return relations.join("；");
+}
+
+function statementSource(file, statement, ordinal) {
+  return cleanSourceObject({
+    ref: sourceRef(file.sourcePath, statement.line),
+    path: file.sourcePath,
+    line: statement.line,
+    text: statement.source,
+    fileId: fileEntityId(file.sourcePath),
+    kind: statement.kind,
+    command: statement.command,
+    symbol: statement.symbol ?? "",
+    key: statement.key ?? "",
+    body: statement.body ?? "",
+    target: statement.target ? normalizeExecTarget(statement.target) : "",
+    arguments: statement.arguments ?? "",
+    optional: statement.optional ?? false,
+    ordinal,
+    description: statement.description ?? "",
+    actions: actionsForSource(statement),
+    area: file.family,
+    module: file.module,
+    role: file.role,
+  });
+}
+
+function semanticForStatement(file, statement, relation) {
+  const subject = statement.symbol || statement.key || statement.command;
+  return {
+    title: `${subject} · ${statement.kind}`,
+    summary: statement.description || `${statement.source}，定义于 ${file.sourcePath}:${statement.line}。`,
+    tags: [...new Set([statement.kind, file.family, file.module, file.role])],
+    keywords: [...new Set([statement.symbol, statement.key, statement.command].filter(Boolean))],
+    scope: file.scope,
+    activation: file.activation,
+    relation,
+  };
+}
+
+export function analyzeConfigDirectory(rootDir = path.resolve(CONFIG_ROOT)) {
+  if (!fs.existsSync(rootDir)) throw new Error(`Config directory not found: ${rootDir}`);
+  const files = collectCfgFiles(rootDir).map((fullPath) => parseConfigFile(rootDir, fullPath));
+  const graph = buildGraph(files);
+  const activationMap = buildActivationMap(files, graph);
+  for (const file of files) {
+    file.scope = scopeForFile(file);
+    file.activation = activationMap.get(file.relativePath) ?? "";
+  }
+  return { rootDir, files, graph, activationMap };
+}
+
+export function generateCuratedCollections(analysis) {
+  const collections = Object.fromEntries(GENERATED_COLLECTIONS.map((name) => [name, []]));
+
+  for (const file of analysis.files) {
+    const aliases = file.statements.filter((statement) => statement.kind === "alias").map((statement) => statement.symbol);
+    const bindings = file.statements.filter((statement) => statement.kind === "bind").map((statement) => `${statement.key} -> ${statement.body}`);
+    const commands = [...new Set(file.statements.flatMap((statement) => statement.actions.map((action) => action.command)).filter(Boolean))];
+    const roleLabel = FILE_ROLE_LABELS[file.role] ?? FILE_ROLE_LABELS.source;
+    const fileId = fileEntityId(file.sourcePath);
+    collections.files.push({
+      id: fileId,
+      type: "file",
+      source: {
+        ref: sourceRef(file.sourcePath, 1),
+        path: file.sourcePath,
+        line: 1,
+        text: file.firstLine,
+        lineCount: file.lineCount,
+        sha256: file.contentHash,
+        area: file.family,
+        module: file.module,
+        role: file.role,
+      },
+      semantic: {
+        title: file.sourcePath,
+        summary: `${roleLabel}；${commands.length} 类命令，${aliases.length} 个 alias，${bindings.length} 个 bind。`,
+        tags: [...new Set([file.family, file.module, file.role])],
+        keywords: [...new Set([...commands, ...aliases].slice(0, 80))],
+        scope: file.scope,
+        activation: file.activation,
+      },
+      curation: generatedCuration(),
+    });
+
+    const statementOrdinals = new Map();
+    for (const statement of file.statements) {
+      const ordinalKey = `${statement.kind}:${statementIdentity(statement).toLowerCase()}`;
+      const ordinal = (statementOrdinals.get(ordinalKey) ?? 0) + 1;
+      statementOrdinals.set(ordinalKey, ordinal);
+      const entryId = entryEntityId(file.sourcePath, statement, ordinal);
+      const relation = relationForStatement(statement, analysis.graph);
+      const source = statementSource(file, statement, ordinal);
+      collections.entries.push({
+        id: entryId,
+        type: "entry",
+        source,
+        semantic: semanticForStatement(file, statement, relation),
+        curation: generatedCuration(),
+      });
+
+      if (statement.kind === "alias") {
+        collections.aliases.push({
+          id: `alias:${entityLocator(file.sourcePath, statement, ordinal, false)}`,
+          type: "alias",
+          source: {
+            ...source,
+            entryId,
+            name: statement.symbol,
+          },
+          semantic: {
+            ...semanticForStatement(file, statement, relation),
+            title: `alias ${statement.symbol}`,
+          },
+          curation: generatedCuration(),
+        });
+      }
+
+      if (statement.kind === "bind") {
+        collections.bindings.push({
+          id: `binding:${entityLocator(file.sourcePath, statement, ordinal, false)}`,
+          type: "binding",
+          source: {
+            ...source,
+            entryId,
+            name: statement.key,
+          },
+          semantic: {
+            ...semanticForStatement(file, statement, relation),
+            title: `${statement.key} -> ${statement.body}`,
+          },
+          curation: generatedCuration(),
+        });
+      }
+
+      if (statement.kind === "command") {
+        collections.settings.push({
+          id: `setting:${entityLocator(file.sourcePath, statement, ordinal, false)}`,
+          type: "setting",
+          source: {
+            ...source,
+            entryId,
+            name: statement.command,
+            value: statement.arguments,
+          },
+          semantic: {
+            ...semanticForStatement(file, statement, relation),
+            title: `${statement.command} ${statement.arguments}`.trim(),
+          },
+          curation: generatedCuration(),
+        });
+      }
+    }
+  }
+
+  for (const name of GENERATED_COLLECTIONS) {
+    collections[name].sort((left, right) => left.id.localeCompare(right.id));
+  }
+  return collections;
+}
+
+function readJson(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (error) {
+    throw new Error(`Unable to read JSON ${filePath}: ${error instanceof Error ? error.message : error}`);
+  }
+}
+
+function writeJson(filePath, value) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+export function loadCuratedKnowledge(knowledgeDir = path.resolve(KNOWLEDGE_ROOT)) {
+  const manifest = readJson(path.join(knowledgeDir, "manifest.json"));
+  const concepts = readJson(path.join(knowledgeDir, "concepts.json"));
+  const collections = Object.fromEntries(
+    GENERATED_COLLECTIONS.map((name) => [name, readJson(path.join(knowledgeDir, `${name}.json`))]),
   );
-  const canonicalRecords = records
-    .map(structuredRecord)
-    .sort((left, right) => left.id.localeCompare(right.id));
+  return {
+    knowledgeDir,
+    manifest,
+    concepts,
+    collections,
+    entities: [...GENERATED_COLLECTIONS.flatMap((name) => collections[name]), ...concepts],
+  };
+}
+
+function mergeGeneratedEntity(generated, existing) {
+  if (!existing) return generated;
+  const preserved = Object.fromEntries(
+    Object.entries(existing).filter(([key]) => !["id", "type", "source"].includes(key)),
+  );
+  return {
+    ...generated,
+    ...preserved,
+    id: generated.id,
+    type: generated.type,
+    source: generated.source,
+  };
+}
+
+export function updateCuratedKnowledge(analysis, knowledgeDir = path.resolve(KNOWLEDGE_ROOT)) {
+  const generated = generateCuratedCollections(analysis);
+  for (const name of GENERATED_COLLECTIONS) {
+    const filePath = path.join(knowledgeDir, `${name}.json`);
+    const existing = fs.existsSync(filePath) ? readJson(filePath) : [];
+    if (!Array.isArray(existing)) throw new Error(`${filePath} must contain a JSON array`);
+    const existingById = new Map(existing.map((entity) => [entity.id, entity]));
+    const merged = generated[name].map((entity) => mergeGeneratedEntity(entity, existingById.get(entity.id)));
+    writeJson(filePath, merged);
+  }
+  return loadCuratedKnowledge(knowledgeDir);
+}
+
+function parseEvidenceRef(ref) {
+  const match = /^(config\/.+\.cfg):(\d+)$/.exec(ref);
+  if (!match) return null;
+  return { path: match[1], line: Number(match[2]) };
+}
+
+function assertArray(value, label) {
+  if (!Array.isArray(value)) throw new Error(`${label} must be a JSON array`);
+}
+
+export function validateCuratedKnowledge(analysis, knowledge = loadCuratedKnowledge()) {
+  const errors = [];
+  const { manifest, collections, concepts } = knowledge;
+  if (manifest.schema !== "srp-config-knowledge-v3") {
+    errors.push(`manifest.schema must be srp-config-knowledge-v3, received ${manifest.schema}`);
+  }
+  const entityTypes = new Set(manifest.entityTypes ?? []);
+  const areas = new Set(manifest.areas ?? []);
+  const fileRoles = new Set(manifest.fileRoles ?? []);
+  const statuses = new Set(manifest.curationStatuses ?? []);
+  const productionStatuses = new Set(manifest.productionStatuses ?? []);
+  if (![...productionStatuses].every((status) => statuses.has(status))) {
+    errors.push("manifest.productionStatuses must be a subset of curationStatuses");
+  }
+
+  const expected = generateCuratedCollections(analysis);
+  const allEntities = [];
+  const ids = new Set();
+  for (const name of GENERATED_COLLECTIONS) {
+    try {
+      assertArray(collections[name], `${name}.json`);
+    } catch (error) {
+      errors.push(error.message);
+      continue;
+    }
+    const expectedById = new Map(expected[name].map((entity) => [entity.id, entity]));
+    const actualById = new Map(collections[name].map((entity) => [entity.id, entity]));
+    for (const id of expectedById.keys()) {
+      if (!actualById.has(id)) errors.push(`${name}.json is missing ${id}`);
+    }
+    for (const id of actualById.keys()) {
+      if (!expectedById.has(id)) errors.push(`${name}.json contains stale entity ${id}`);
+    }
+    for (const entity of collections[name]) {
+      allEntities.push(entity);
+      if (!entity || typeof entity !== "object") {
+        errors.push(`${name}.json contains a non-object entity`);
+        continue;
+      }
+      if (ids.has(entity.id)) errors.push(`Duplicate entity id ${entity.id}`);
+      ids.add(entity.id);
+      if (entity.type !== COLLECTION_TYPES[name]) errors.push(`${entity.id} must have type ${COLLECTION_TYPES[name]}`);
+      if (!entityTypes.has(entity.type)) errors.push(`${entity.id} uses unknown entity type ${entity.type}`);
+      if (!statuses.has(entity.curation?.status)) errors.push(`${entity.id} uses unknown curation status ${entity.curation?.status}`);
+      const expectedEntity = expectedById.get(entity.id);
+      if (expectedEntity && !isDeepStrictEqual(entity.source, expectedEntity.source)) {
+        errors.push(`${entity.id} has source-owned fields that differ from ${entity.source?.ref ?? "config source"}`);
+      }
+    }
+  }
+
+  const filesById = new Map((collections.files ?? []).map((entity) => [entity.id, entity]));
+  const entriesById = new Map((collections.entries ?? []).map((entity) => [entity.id, entity]));
+  for (const file of collections.files ?? []) {
+    if (!areas.has(file.source?.area)) errors.push(`${file.id} uses unknown area ${file.source?.area}`);
+    if (!fileRoles.has(file.source?.role)) errors.push(`${file.id} uses unknown file role ${file.source?.role}`);
+  }
+  for (const entry of collections.entries ?? []) {
+    if (!filesById.has(entry.source?.fileId)) errors.push(`${entry.id} references missing file ${entry.source?.fileId}`);
+  }
+  for (const name of ["aliases", "bindings", "settings"]) {
+    for (const entity of collections[name] ?? []) {
+      if (!filesById.has(entity.source?.fileId)) errors.push(`${entity.id} references missing file ${entity.source?.fileId}`);
+      if (!entriesById.has(entity.source?.entryId)) errors.push(`${entity.id} references missing entry ${entity.source?.entryId}`);
+    }
+  }
+
+  assertArray(concepts, "concepts.json");
+  const sourceFiles = new Map(analysis.files.map((file) => [file.sourcePath, file]));
+  for (const concept of concepts) {
+    allEntities.push(concept);
+    if (ids.has(concept.id)) errors.push(`Duplicate entity id ${concept.id}`);
+    ids.add(concept.id);
+    if (concept.type !== "concept" || !entityTypes.has(concept.type)) errors.push(`${concept.id} must have type concept`);
+    if (!statuses.has(concept.curation?.status)) errors.push(`${concept.id} uses unknown curation status ${concept.curation?.status}`);
+    if (!Array.isArray(concept.claims) || !concept.claims.length) errors.push(`${concept.id} must contain claims`);
+    for (const claim of concept.claims ?? []) {
+      for (const ref of claim.evidence ?? []) {
+        const parsed = parseEvidenceRef(ref);
+        const file = parsed ? sourceFiles.get(parsed.path) : null;
+        if (!parsed || !file || parsed.line < 1 || parsed.line > file.lineCount) {
+          errors.push(`${concept.id} has invalid evidence reference ${ref}`);
+        }
+      }
+    }
+  }
+
+  if (errors.length) {
+    const preview = errors.slice(0, 20).map((error) => `- ${error}`).join("\n");
+    const remainder = errors.length > 20 ? `\n- ...and ${errors.length - 20} more` : "";
+    throw new Error(`Curated knowledge validation failed:\n${preview}${remainder}\nRun: node .github/scripts/sync_config_vectorize.mjs --update`);
+  }
+  return { ...knowledge, entities: allEntities };
+}
+
+function semanticFields(entity) {
+  return entity.semantic ?? entity;
+}
+
+function evidenceForEntity(entity, analysis) {
+  if (entity.type !== "concept") {
+    return {
+      refs: [entity.source.ref],
+      paths: [entity.source.path],
+      lines: [entity.source.line],
+      texts: [entity.source.text],
+    };
+  }
+  const refs = [...new Set(entity.claims.flatMap((claim) => claim.evidence ?? []))];
+  const filesByPath = new Map(analysis.files.map((file) => [file.sourcePath, file]));
+  const resolved = refs.map((ref) => {
+    const parsed = parseEvidenceRef(ref);
+    const file = parsed ? filesByPath.get(parsed.path) : null;
+    return { ref, path: parsed?.path ?? "", line: parsed?.line ?? 0, text: file?.lines[(parsed?.line ?? 1) - 1]?.trim() ?? "" };
+  });
+  return {
+    refs,
+    paths: resolved.map((item) => item.path),
+    lines: resolved.map((item) => item.line),
+    texts: resolved.map((item) => item.text),
+  };
+}
+
+export function buildKnowledgeRecords(knowledge, analysis) {
+  const productionStatuses = new Set(knowledge.manifest.productionStatuses);
+  const records = [];
+  for (const entity of knowledge.entities) {
+    const status = entity.curation.status;
+    if (!productionStatuses.has(status)) continue;
+    const semantic = semanticFields(entity);
+    const evidence = evidenceForEntity(entity, analysis);
+    const source = entity.source ?? {};
+    const title = semantic.title ?? entity.id;
+    const summary = semantic.summary ?? "";
+    const tags = Array.isArray(semantic.tags) ? semantic.tags : [];
+    const keywords = Array.isArray(semantic.keywords) ? semantic.keywords : [];
+    const aliases = Array.isArray(semantic.aliases) ? semantic.aliases : [];
+    const claims = entity.type === "concept" ? entity.claims.map((claim) => claim.text).join("；") : "";
+    const embeddingText = [
+      title,
+      summary,
+      claims,
+      tags.length ? `标签：${tags.join("、")}` : "",
+      keywords.length ? `关键词：${keywords.join("、")}` : "",
+      `实体：${entity.id} (${entity.type})`,
+      `来源：${evidence.refs.join("；")}`,
+      `源码：${evidence.texts.join("；")}`,
+      semantic.scope ? `范围：${semantic.scope}` : "",
+      semantic.activation ? `加载：${semantic.activation}` : "",
+      semantic.relation ? `关联：${semantic.relation}` : "",
+    ].filter(Boolean).join("\n");
+    records.push(createRecord({
+      identity: entity.id,
+      embeddingText,
+      metadata: {
+        entityId: entity.id,
+        entityType: entity.type,
+        status,
+        sourcePath: evidence.paths[0],
+        sourceLine: evidence.lines[0],
+        sourceRef: evidence.refs.join(" | "),
+        source: evidence.texts.join(" | "),
+        title,
+        summary,
+        tags: tags.join(" "),
+        keywords: keywords.join(" "),
+        name: source.name || source.symbol || source.command,
+        aliases: aliases.join(" "),
+        key: source.key,
+        cvar: entity.type === "setting" ? source.name : "",
+        target: source.target,
+        body: source.body || source.value,
+        area: source.area,
+        module: source.module,
+        role: source.role,
+        entryId: source.entryId,
+        fileId: source.fileId,
+      },
+    }));
+  }
+
+  const ids = new Set();
+  for (const record of records) {
+    if (ids.has(record.id)) throw new Error(`Duplicate vector id generated: ${record.id}`);
+    ids.add(record.id);
+  }
+  return records;
+}
+
+export function buildKnowledgeDataset(analysis, records) {
+  const countsByType = Object.fromEntries(
+    [...new Set(records.map((record) => record.metadata.entityType))]
+      .sort()
+      .map((type) => [type, records.filter((record) => record.metadata.entityType === type).length]),
+  );
+  const canonicalRecords = records.map(structuredRecord).sort((left, right) => left.id.localeCompare(right.id));
   return {
     schema: VECTOR_SCHEMA,
+    knowledgeSchema: "srp-config-knowledge-v3",
     sourceRoot: "config",
     embeddingModel: EMBEDDING_MODEL,
     sourceFiles: analysis.files.length,
     recordCount: canonicalRecords.length,
-    countsByKind,
+    countsByType,
     records: canonicalRecords,
   };
 }
@@ -487,156 +965,6 @@ export function writeKnowledgeDataset(outputPath, dataset) {
   fs.mkdirSync(path.dirname(resolved), { recursive: true });
   fs.writeFileSync(resolved, `${JSON.stringify(dataset, null, 2)}\n`, "utf8");
   return resolved;
-}
-
-export function analyzeConfigDirectory(rootDir = path.resolve(CONFIG_ROOT)) {
-  if (!fs.existsSync(rootDir)) throw new Error(`Config directory not found: ${rootDir}`);
-  const files = collectCfgFiles(rootDir).map((fullPath) => parseConfigFile(rootDir, fullPath));
-  const graph = buildGraph(files);
-  const activationMap = buildActivationMap(files, graph);
-  for (const file of files) file.scope = scopeForFile(file);
-  return { rootDir, files, graph, activationMap };
-}
-
-export function buildKnowledgeRecords(analysis) {
-  const records = [];
-  const { files, graph, activationMap } = analysis;
-
-  for (const file of files) {
-    const activation = activationMap.get(file.relativePath) ?? "";
-    const aliases = file.statements.filter((statement) => statement.kind === "alias").map((statement) => statement.symbol);
-    const binds = file.statements.filter((statement) => statement.kind === "bind").map((statement) => `${statement.key} -> ${statement.body}`);
-    const directExecs = file.statements.filter((statement) => statement.kind === "exec").map((statement) => normalizeExecTarget(statement.target));
-    const commands = [...new Set(file.statements.flatMap((statement) => statement.actions.map((action) => action.command)).filter(Boolean))];
-    const roleLabel = FILE_ROLE_LABELS[file.role] ?? FILE_ROLE_LABELS.source;
-    const overview = [
-      `SrP-CFG 文件：${file.sourcePath}`,
-      `所属层级：${file.family}/${file.module}`,
-      `文件职责：${roleLabel}`,
-      `生效范围：${file.scope}`,
-      `加载路径：${activation}`,
-      directExecs.length ? `直接加载：${directExecs.join("、")}` : "",
-      aliases.length ? `定义 alias：${aliases.slice(0, 30).join("、")}` : "",
-      binds.length ? `定义键位：${binds.slice(0, 30).join("、")}` : "",
-      commands.length ? `涉及命令：${commands.slice(0, 60).join("、")}` : "",
-    ].filter(Boolean).join("\n");
-
-    records.push(createRecord({
-      identity: `file:${file.relativePath}`,
-      embeddingText: overview,
-      metadata: {
-        kind: "file",
-        sourcePath: file.sourcePath,
-        line: 1,
-        module: file.module,
-        family: file.family,
-        role: file.role,
-        source: `${file.sourcePath}（${file.lineCount} 行）`,
-        description: `${roleLabel}；${commands.length} 类命令，${aliases.length} 个 alias，${binds.length} 个 bind。`,
-        scope: file.scope,
-        activation,
-      },
-    }));
-
-    for (const statement of file.statements) {
-      const relationParts = [];
-      if (statement.kind === "exec") {
-        relationParts.push(`${statement.optional ? "可选" : "直接"}加载 ${normalizeExecTarget(statement.target)}`);
-      }
-      if (statement.kind === "alias") {
-        relationParts.push(...statement.actions.map((action) => resolveActionRelation(action, graph)).filter(Boolean));
-      }
-      if (statement.kind === "bind") {
-        relationParts.push(...statement.actions.map((action) => resolveActionRelation(action, graph)).filter(Boolean));
-      }
-      const subject = statement.symbol || statement.key || statement.command;
-      const statementText = [
-        `SrP-CFG 源码记录：${statement.kind}`,
-        `位置：${file.sourcePath}:${statement.line}`,
-        `所属层级：${file.family}/${file.module}`,
-        `文件职责：${roleLabel}`,
-        `源码：${statement.source}`,
-        statement.description ? `源码说明：${statement.description}` : "",
-        `生效范围：${file.scope}`,
-        `加载路径：${activation}`,
-        relationParts.length ? `关联关系：${relationParts.join("；")}` : "",
-      ].filter(Boolean).join("\n");
-
-      records.push(createRecord({
-        identity: `statement:${file.relativePath}:${statement.line}:${statement.source}`,
-        embeddingText: statementText,
-        metadata: {
-          kind: statement.kind,
-          sourcePath: file.sourcePath,
-          line: statement.line,
-          module: file.module,
-          family: file.family,
-          role: file.role,
-          command: statement.command,
-          symbol: statement.symbol,
-          key: statement.key,
-          source: statement.source,
-          body: statement.body,
-          target: statement.target ? normalizeExecTarget(statement.target) : "",
-          arguments: statement.arguments,
-          description: statement.description,
-          scope: file.scope,
-          activation,
-          relation: relationParts.join("；"),
-          subject,
-        },
-      }));
-
-      if (statement.kind !== "alias" && statement.kind !== "bind" && statement.actions.length <= 1) continue;
-      for (let actionIndex = 0; actionIndex < statement.actions.length; actionIndex += 1) {
-        const action = statement.actions[actionIndex];
-        const relation = resolveActionRelation(action, graph);
-        const owner = statement.kind === "alias" ? `alias ${statement.symbol}` : statement.kind === "bind" ? `按键 ${statement.key}` : statement.source;
-        const actionText = [
-          `SrP-CFG 内部动作：${action.command}`,
-          `所属定义：${owner}`,
-          `位置：${file.sourcePath}:${statement.line}`,
-          `动作源码：${action.source}`,
-          statement.description ? `源码说明：${statement.description}` : "",
-          `生效范围：${file.scope}`,
-          `加载路径：${activation}`,
-          relation ? `关联关系：${relation}` : "",
-        ].filter(Boolean).join("\n");
-
-        records.push(createRecord({
-          identity: `action:${file.relativePath}:${statement.line}:${actionIndex}:${action.source}`,
-          embeddingText: actionText,
-          metadata: {
-            kind: `${statement.kind}_action`,
-            sourcePath: file.sourcePath,
-            line: statement.line,
-            module: file.module,
-            family: file.family,
-            role: file.role,
-            command: action.command,
-            symbol: statement.symbol,
-            key: statement.key,
-            body: statement.body,
-            arguments: action.arguments,
-            actionIndex,
-            source: action.source,
-            description: statement.description,
-            scope: file.scope,
-            activation,
-            relation,
-            subject: owner,
-          },
-        }));
-      }
-    }
-  }
-
-  const ids = new Set();
-  for (const record of records) {
-    if (ids.has(record.id)) throw new Error(`Duplicate vector id generated: ${record.id}`);
-    ids.add(record.id);
-  }
-  return records;
 }
 
 function getCredentials() {
@@ -767,18 +1095,27 @@ export async function syncKnowledgeIndex(records, options = {}) {
 }
 
 async function main() {
-  const dryRun = process.argv.includes("--dry-run");
+  const update = process.argv.includes("--update");
+  const validateOnly = process.argv.includes("--validate");
+  const buildOnly = process.argv.includes("--build") || process.argv.includes("--dry-run");
   const outputIndex = process.argv.indexOf("--output");
   const outputPath = outputIndex >= 0 ? process.argv[outputIndex + 1] : "";
   if (outputIndex >= 0 && !outputPath) throw new Error("--output requires a JSON path");
   const analysis = analyzeConfigDirectory(path.resolve(CONFIG_ROOT));
-  const records = buildKnowledgeRecords(analysis);
-  const dataset = buildKnowledgeDataset(analysis, records);
+  if (update) {
+    updateCuratedKnowledge(analysis, path.resolve(KNOWLEDGE_ROOT));
+    console.log(`Updated curated source entities from ${analysis.files.length} CFG files.`);
+  }
+  const knowledge = validateCuratedKnowledge(analysis, loadCuratedKnowledge(path.resolve(KNOWLEDGE_ROOT)));
+  console.log(`Validated ${knowledge.entities.length} local knowledge entities.`);
+  if (validateOnly && !buildOnly && !outputPath) return;
 
-  console.log(`Analyzed ${analysis.files.length} CFG files and generated ${records.length} knowledge records.`);
-  console.log(JSON.stringify(dataset.countsByKind, null, 2));
+  const records = buildKnowledgeRecords(knowledge, analysis);
+  const dataset = buildKnowledgeDataset(analysis, records);
+  console.log(`Built ${records.length} production ${VECTOR_SCHEMA} vector records.`);
+  console.log(JSON.stringify(dataset.countsByType, null, 2));
   if (outputPath) console.log(`Wrote structured knowledge dataset to ${writeKnowledgeDataset(outputPath, dataset)}`);
-  if (dryRun) return;
+  if (update || buildOnly) return;
   await syncKnowledgeIndex(records);
 }
 

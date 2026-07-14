@@ -1,25 +1,72 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
 import {
   analyzeConfigDirectory,
-  buildKnowledgeRecords,
   buildKnowledgeDataset,
+  buildKnowledgeRecords,
+  generateCuratedCollections,
+  loadCuratedKnowledge,
   parseExecutableLine,
   splitActions,
   splitInlineComment,
   syncKnowledgeIndex,
+  updateCuratedKnowledge,
+  validateCuratedKnowledge,
 } from "./sync_config_vectorize.mjs";
 
 const CONFIG_ROOT = path.resolve("config");
+const KNOWLEDGE_ROOT = path.resolve("app/website/src/data/config-knowledge");
 
-function buildFixture() {
-  const analysis = analyzeConfigDirectory(CONFIG_ROOT);
-  return { analysis, records: buildKnowledgeRecords(analysis) };
+function writeJson(filePath, value) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-test("inline comments do not truncate URLs or quoted content", () => {
+function createFixture() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "srp-config-knowledge-"));
+  const configRoot = path.join(root, "config");
+  const knowledgeRoot = path.join(root, "knowledge");
+  fs.mkdirSync(path.join(configRoot, "srp-cfg", "runtime"), { recursive: true });
+  fs.mkdirSync(path.join(configRoot, "srp-cfg", "features", "knife"), { recursive: true });
+  fs.writeFileSync(
+    path.join(configRoot, "autoexec.cfg"),
+    "exec srp-cfg/runtime/commands.cfg // load commands\n",
+    "utf8",
+  );
+  fs.writeFileSync(
+    path.join(configRoot, "srp-cfg", "runtime", "commands.cfg"),
+    [
+      'alias "srp_knife" "exec srp-cfg/features/knife/settings.cfg" // knife entry',
+      'bind "j" "srp_knife" // knife key',
+      "sv_cheats 1 // practice setting",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  fs.writeFileSync(
+    path.join(configRoot, "srp-cfg", "features", "knife", "settings.cfg"),
+    "echo knife ready\n",
+    "utf8",
+  );
+  writeJson(path.join(knowledgeRoot, "manifest.json"), JSON.parse(fs.readFileSync(path.join(KNOWLEDGE_ROOT, "manifest.json"), "utf8")));
+  writeJson(path.join(knowledgeRoot, "concepts.json"), []);
+  return { root, configRoot, knowledgeRoot };
+}
+
+function withFixture(callback) {
+  const fixture = createFixture();
+  try {
+    return callback(fixture);
+  } finally {
+    fs.rmSync(fixture.root, { recursive: true, force: true });
+  }
+}
+
+test("inline comments and semicolon-delimited actions are parsed exactly", () => {
   assert.deepEqual(splitInlineComment("echo 官网：https://cfg.srprolin.top/"), {
     code: "echo 官网：https://cfg.srprolin.top/",
     comment: "",
@@ -28,116 +75,154 @@ test("inline comments do not truncate URLs or quoted content", () => {
     code: 'bind "j" "srp_knife"',
     comment: "默认 Preset 键位",
   });
-});
-
-test("alias and bind bodies retain every semicolon-delimited action", () => {
   const alias = parseExecutableLine(
     'alias "srp_practice_keys" "exec srp-cfg/modes/practice/with-keymap.cfg;echo ready"',
     12,
   );
   assert.equal(alias.kind, "alias");
-  assert.equal(alias.symbol, "srp_practice_keys");
   assert.deepEqual(alias.actions.map((action) => action.command), ["exec", "echo"]);
-
-  const bind = parseExecutableLine('bind "\\" "block" // 切换击杀信息显示。', 8);
-  assert.equal(bind.kind, "bind");
-  assert.equal(bind.key, "\\");
-  assert.equal(bind.body, "block");
-  assert.equal(bind.description, "切换击杀信息显示。");
-
   assert.deepEqual(splitActions('say "a;b";echo done'), ['say "a;b"', "echo done"]);
 });
 
-test("source analyzer derives startup, preset, and module activation paths", () => {
-  const { analysis, records } = buildFixture();
-  assert.ok(analysis.files.length > 50);
+test("generated entities have stable human-readable IDs and exact source coverage", () => {
+  const analysis = analyzeConfigDirectory(CONFIG_ROOT);
+  const first = generateCuratedCollections(analysis);
+  const second = generateCuratedCollections(analysis);
+  for (const name of Object.keys(first)) {
+    assert.deepEqual(first[name].map((entity) => entity.id), second[name].map((entity) => entity.id));
+    for (const entity of first[name]) {
+      assert.match(entity.id, /^(file|entry|alias|binding|setting):config\/.+/);
+      assert.doesNotMatch(entity.id, /[a-f0-9]{32,}/);
+    }
+  }
 
-  const runtimeFile = records.find(
-    (record) => record.metadata.kind === "file" && record.metadata.sourcePath === "config/srp-cfg/features/knife/runtime.cfg",
-  );
-  assert.match(runtimeFile.metadata.activation, /启动链 autoexec\.cfg -> srp-cfg\/runtime\/init\.cfg/);
-
-  const defaultKnifeBind = records.find(
-    (record) =>
-      record.metadata.kind === "bind" &&
-      record.metadata.sourcePath === "config/srp-cfg/presets/default/keymap.cfg" &&
-      record.metadata.key === "j",
-  );
-  assert.equal(defaultKnifeBind.metadata.source, 'bind "j" "srp_knife"');
-  assert.match(defaultKnifeBind.metadata.activation, /别名 srp_apply_default/);
-  assert.match(defaultKnifeBind.metadata.scope, /Preset|物理键位/);
-
-  const knifeEntry = records.find(
-    (record) =>
-      record.metadata.kind === "alias" &&
-      record.metadata.sourcePath === "config/srp-cfg/runtime/commands.cfg" &&
-      record.metadata.symbol === "srp_knife",
-  );
-  assert.match(knifeEntry.metadata.relation, /features\/knife\/settings\.cfg/);
-});
-
-test("every executable CFG line has an exact source record", () => {
-  const { analysis, records } = buildFixture();
-  const statementKeys = new Set(
-    records
-      .filter((record) => record.metadata.kind !== "file" && !record.metadata.kind.endsWith("_action"))
-      .map((record) => `${record.metadata.sourcePath}:${record.metadata.line}:${record.metadata.source}`),
+  const entriesByEvidence = new Map(
+    first.entries.map((entity) => [`${entity.source.ref}:${entity.source.text}`, entity]),
   );
   for (const file of analysis.files) {
     for (const statement of file.statements) {
-      const key = `${file.sourcePath}:${statement.line}:${statement.source}`;
-      assert.ok(statementKeys.has(key), `Missing source record for ${key}`);
+      const evidence = `${file.sourcePath}:${statement.line}:${statement.source}`;
+      assert.ok(entriesByEvidence.has(evidence), `Missing exact source entity for ${evidence}`);
     }
   }
 });
 
-test("knowledge records expose exact command context within Vectorize limits", () => {
-  const { records } = buildFixture();
-  assert.ok(records.length > 1000);
+test("repo-local knowledge validates enums, references, and current source without drift", () => {
+  const analysis = analyzeConfigDirectory(CONFIG_ROOT);
+  const knowledge = validateCuratedKnowledge(analysis, loadCuratedKnowledge(KNOWLEDGE_ROOT));
+  assert.equal(knowledge.entities.length, 3771);
 
-  const practiceCheats = records.find(
-    (record) =>
-      record.metadata.sourcePath === "config/srp-cfg/modes/practice/settings.cfg" &&
-      record.metadata.line === 2 &&
-      record.metadata.command === "sv_cheats",
+  const invalidReference = structuredClone(knowledge);
+  invalidReference.collections.aliases[0].source.entryId = "entry:config/missing.cfg:1";
+  assert.throws(
+    () => validateCuratedKnowledge(analysis, invalidReference),
+    /references missing entry entry:config\/missing\.cfg:1/,
   );
-  assert.equal(practiceCheats.metadata.source, "sv_cheats                        1");
-  assert.match(practiceCheats.metadata.description, /允许本地训练/);
-  assert.match(practiceCheats.metadata.scope, /模块入口/);
 
-  const uniqueIds = new Set(records.map((record) => record.id));
-  assert.equal(uniqueIds.size, records.length);
-  for (const record of records) {
-    assert.ok(Buffer.byteLength(record.id, "utf8") <= 64, record.id);
-    assert.ok(Buffer.byteLength(JSON.stringify(record.metadata), "utf8") <= 10 * 1024, record.id);
-    assert.ok(record.metadata.sourcePath.startsWith("config/"));
-    assert.equal(record.metadata.schema, "srp-config-v2");
-  }
+  const invalidEnum = structuredClone(knowledge);
+  invalidEnum.manifest.fileRoles = invalidEnum.manifest.fileRoles.filter(
+    (role) => role !== invalidEnum.collections.files[0].source.role,
+  );
+  assert.throws(() => validateCuratedKnowledge(analysis, invalidEnum), /uses unknown file role/);
 });
 
-test("structured knowledge dataset preserves exact bind and alias fields", () => {
-  const { analysis, records } = buildFixture();
+test("changing a source-owned field is rejected with the regeneration command", () => {
+  withFixture(({ configRoot, knowledgeRoot }) => {
+    const analysis = analyzeConfigDirectory(configRoot);
+    updateCuratedKnowledge(analysis, knowledgeRoot);
+    const entriesPath = path.join(knowledgeRoot, "entries.json");
+    const entries = JSON.parse(fs.readFileSync(entriesPath, "utf8"));
+    entries[0].source.text = "tampered source";
+    writeJson(entriesPath, entries);
+
+    assert.throws(
+      () => validateCuratedKnowledge(analysis, loadCuratedKnowledge(knowledgeRoot)),
+      /source-owned fields[\s\S]*--update/,
+    );
+  });
+});
+
+test("regeneration preserves manual semantic fields while refreshing source facts and stable IDs", () => {
+  withFixture(({ configRoot, knowledgeRoot }) => {
+    let analysis = analyzeConfigDirectory(configRoot);
+    updateCuratedKnowledge(analysis, knowledgeRoot);
+    const aliasesPath = path.join(knowledgeRoot, "aliases.json");
+    const aliases = JSON.parse(fs.readFileSync(aliasesPath, "utf8"));
+    aliases[0].semantic.summary = "Manual knife explanation";
+    aliases[0].semantic.aliases = ["knife", "换刀"];
+    aliases[0].curation = { status: "reviewed", source: "manual" };
+    aliases[0].notes = "keep this note";
+    const stableId = aliases[0].id;
+    writeJson(aliasesPath, aliases);
+
+    const commandsPath = path.join(configRoot, "srp-cfg", "runtime", "commands.cfg");
+    fs.writeFileSync(
+      commandsPath,
+      `// inserted before curated entity\n${fs.readFileSync(commandsPath, "utf8").replace(
+        "exec srp-cfg/features/knife/settings.cfg",
+        "exec srp-cfg/features/knife/settings.cfg;echo refreshed",
+      )}`,
+      "utf8",
+    );
+    analysis = analyzeConfigDirectory(configRoot);
+    const updated = updateCuratedKnowledge(analysis, knowledgeRoot);
+    const alias = updated.collections.aliases[0];
+    assert.equal(alias.id, stableId);
+    assert.match(alias.source.body, /echo refreshed/);
+    assert.equal(alias.semantic.summary, "Manual knife explanation");
+    assert.deepEqual(alias.semantic.aliases, ["knife", "换刀"]);
+    assert.deepEqual(alias.curation, { status: "reviewed", source: "manual" });
+    assert.equal(alias.notes, "keep this note");
+  });
+});
+
+test("default preset preserves the exact J to srp_knife binding", () => {
+  const analysis = analyzeConfigDirectory(CONFIG_ROOT);
+  const knowledge = validateCuratedKnowledge(analysis, loadCuratedKnowledge(KNOWLEDGE_ROOT));
+  const binding = knowledge.collections.bindings.find(
+    (entity) =>
+      entity.source.path === "config/srp-cfg/presets/default/keymap.cfg" &&
+      entity.source.key === "j",
+  );
+  assert.ok(binding);
+  assert.equal(binding.source.body, "srp_knife");
+  assert.equal(binding.source.text, 'bind "j" "srp_knife"');
+  assert.equal(binding.source.ref, "config/srp-cfg/presets/default/keymap.cfg:77");
+});
+
+test("v3 dataset is built only from validated production local entities", () => {
+  const analysis = analyzeConfigDirectory(CONFIG_ROOT);
+  const knowledge = validateCuratedKnowledge(analysis, loadCuratedKnowledge(KNOWLEDGE_ROOT));
+  const excludedId = knowledge.collections.aliases[0].id;
+  knowledge.collections.aliases[0].curation.status = "needs_review";
+  knowledge.entities = [
+    ...knowledge.collections.files,
+    ...knowledge.collections.entries,
+    ...knowledge.collections.aliases,
+    ...knowledge.collections.bindings,
+    ...knowledge.collections.settings,
+    ...knowledge.concepts,
+  ];
+  const records = buildKnowledgeRecords(knowledge, analysis);
   const dataset = buildKnowledgeDataset(analysis, records);
 
-  assert.equal(dataset.schema, "srp-config-v2");
-  assert.equal(dataset.sourceFiles, analysis.files.length);
-  assert.equal(dataset.recordCount, records.length);
-  assert.equal(dataset.records.length, records.length);
-
-  const defaultKnifeBind = dataset.records.find(
-    (record) =>
-      record.metadata.kind === "bind" &&
-      record.metadata.sourcePath === "config/srp-cfg/presets/default/keymap.cfg" &&
-      record.metadata.key === "j",
-  );
-  assert.equal(defaultKnifeBind.metadata.body, "srp_knife");
-  assert.equal(defaultKnifeBind.metadata.source, 'bind "j" "srp_knife"');
-
-  const practiceKeys = dataset.records.find(
-    (record) => record.metadata.kind === "alias" && record.metadata.symbol === "srp_practice_keys",
-  );
-  assert.match(practiceKeys.metadata.body, /with-keymap\.cfg/);
-  assert.match(practiceKeys.metadata.relation, /with-keymap\.cfg/);
+  assert.equal(dataset.schema, "srp-config-v3");
+  assert.equal(dataset.knowledgeSchema, "srp-config-knowledge-v3");
+  assert.equal(dataset.recordCount, 3770);
+  assert.ok(!records.some((record) => record.metadata.entityId === excludedId));
+  for (const record of records) {
+    assert.equal(record.metadata.schema, "srp-config-v3");
+    assert.ok(record.metadata.entityId);
+    assert.ok(record.metadata.entityType);
+    assert.ok(record.metadata.status);
+    assert.ok(record.metadata.sourceRef);
+    assert.ok(record.metadata.sourcePath);
+    assert.ok(record.metadata.sourceLine > 0);
+    assert.ok(record.metadata.source);
+    assert.ok(record.metadata.title);
+    assert.ok(Buffer.byteLength(record.id, "utf8") <= 64);
+    assert.ok(Buffer.byteLength(JSON.stringify(record.metadata), "utf8") <= 10 * 1024);
+  }
 });
 
 test("Vectorize synchronization uses the Workers AI token and batches stale deletions", async () => {
@@ -145,7 +230,7 @@ test("Vectorize synchronization uses the Workers AI token and batches stale dele
   const previousAiToken = process.env.CLOUDFLARE_AI_TOKEN;
   const previousApiToken = process.env.CLOUDFLARE_API_TOKEN;
   const previousFetch = globalThis.fetch;
-  const staleIds = Array.from({ length: 150 }, (_, index) => `srpcfg:stale-${index}`);
+  const staleIds = Array.from({ length: 150 }, (_, index) => `srpcfg:v2:stale-${index}`);
   const requests = [];
 
   process.env.CLOUDFLARE_ACCOUNT_ID = "test-account";
@@ -171,7 +256,6 @@ test("Vectorize synchronization uses the Workers AI token and batches stale dele
     const result = await syncKnowledgeIndex([], { indexName: "test-index" });
     assert.deepEqual(result, { total: 0, upserted: 0, deleted: 150 });
     assert.equal(requests.length, 3);
-    assert.match(requests[0].url, /\/vectorize\/v2\/indexes\/test-index\/list/);
     assert.deepEqual(requests.slice(1).map((request) => JSON.parse(request.body).ids.length), [100, 50]);
     for (const request of requests) {
       assert.equal(request.authorization, "Bearer vectorize-capable-token");

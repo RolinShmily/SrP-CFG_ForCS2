@@ -1,0 +1,56 @@
+[
+  {
+    "id": "concept:runtime-registration-boundary",
+    "type": "concept",
+    "title": "Runtime 只注册能力",
+    "summary": "autoexec 先加载 Runtime 注册层；Runtime 负责注册公共 alias 与模块能力，不主动安装普通物理键位。",
+    "claims": [
+      {
+        "text": "Runtime 初始化发生在用户覆盖层之前。",
+        "evidence": ["config/autoexec.cfg:8", "config/autoexec.cfg:9"]
+      },
+      {
+        "text": "Runtime 注册层不应主动应用个人偏好或普通物理键位。",
+        "evidence": ["config/srp-cfg/runtime/init.cfg:3"]
+      }
+    ],
+    "tags": ["runtime", "启动", "注册", "按键边界"],
+    "curation": { "status": "reviewed", "source": "manual" }
+  },
+  {
+    "id": "concept:settings-vs-keymap",
+    "type": "concept",
+    "title": "settings、keymap 与 with-keymap 的职责边界",
+    "summary": "settings 只应用模块状态，keymap 才修改物理按键，with-keymap 按顺序组合二者。",
+    "claims": [
+      {
+        "text": "with-keymap 先加载 settings，再加载 keymap。",
+        "evidence": ["config/srp-cfg/modes/practice/with-keymap.cfg:2", "config/srp-cfg/modes/practice/with-keymap.cfg:3"]
+      },
+      {
+        "text": "普通模块入口只加载 settings；带 _keys 的入口加载 with-keymap。",
+        "evidence": ["config/srp-cfg/runtime/commands.cfg:24", "config/srp-cfg/runtime/commands.cfg:25"]
+      }
+    ],
+    "tags": ["settings", "keymap", "with-keymap", "_keys", "物理按键"],
+    "curation": { "status": "reviewed", "source": "manual" }
+  },
+  {
+    "id": "concept:preset-user-override-order",
+    "type": "concept",
+    "title": "Preset 起点与 User 最终覆盖",
+    "summary": "user/custom.cfg 在 Runtime 之后执行；用户可先调用一个 Preset 起点，再用后续同名设置和按键覆盖它。",
+    "claims": [
+      {
+        "text": "user/custom.cfg 是启动链最后执行的用户层。",
+        "evidence": ["config/autoexec.cfg:9"]
+      },
+      {
+        "text": "用户写在 Preset 入口之后的同名设置会覆盖 Preset。",
+        "evidence": ["config/srp-cfg/user/custom.cfg:13", "config/srp-cfg/user/custom.cfg:15"]
+      }
+    ],
+    "tags": ["preset", "user", "custom.cfg", "覆盖顺序"],
+    "curation": { "status": "reviewed", "source": "manual" }
+  }
+]

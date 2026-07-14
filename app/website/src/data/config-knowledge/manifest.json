@@ -1,0 +1,9 @@
+{
+  "schema": "srp-config-knowledge-v3",
+  "sourceRoot": "config",
+  "entityTypes": ["file", "entry", "alias", "binding", "setting", "concept"],
+  "areas": ["root", "runtime", "preset", "feature", "mode", "help", "user", "resource"],
+  "fileRoles": ["bootstrap", "runtime", "settings", "keymap", "composition", "preset_apply", "help", "user", "library", "auxiliary", "source"],
+  "curationStatuses": ["generated", "ai_draft", "reviewed", "needs_review", "deprecated"],
+  "productionStatuses": ["generated", "reviewed"]
+}
