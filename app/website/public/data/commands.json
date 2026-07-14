@@ -10481,7 +10481,7 @@
     "en": "",
     "t": "var",
     "cn": "手持武器模型（第一人称手臂/武器）的最大阴影渲染可见距离限制",
-    "c": "graphics_viewmodel",
+    "c": "graphics",
     "value": {
       "description": "默认值为 1000。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
@@ -11668,7 +11668,7 @@
     "en": "Find and list all entities with classnames or targetnames that contain the specified substrings.",
     "t": "cmd",
     "cn": "查找并列出类名或目标名中包含指定子字符串的所有实体。",
-    "c": "cheats_practice"
+    "c": "practice"
   },
   {
     "n": "ent_find_index",
@@ -11680,7 +11680,7 @@
     "en": "Display data for entity matching specified index.",
     "t": "cmd",
     "cn": "显示与指定索引相匹配的实体的数据信息。",
-    "c": "cheats_practice"
+    "c": "practice"
   },
   {
     "n": "ent_fire",
@@ -11754,7 +11754,7 @@
     "en": "Displays the hitboxes for the given entity(ies).",
     "t": "cmd",
     "cn": "显示指定实体的受击判定盒（Hitbox/弹道盒）。",
-    "c": "cheats_practice"
+    "c": "practice"
   },
   {
     "n": "ent_info",
@@ -11900,7 +11900,7 @@
     "en": "Toggles 'picker' mode.  When picker is on, the bounding box, pivot and debugging text is displayed for whatever entity the player is looking at.",
     "t": "cmd",
     "cn": "切换“选择器”模式。开启时，会显示玩家视线所指任意实体的包围盒、轴心和调试文本。",
-    "c": "cheats_practice"
+    "c": "practice"
   },
   {
     "n": "ent_pivot",
@@ -24894,7 +24894,7 @@
     "en": "Possible Values: 'start_at_attachment', 'follow_attachment', 'start_at_origin', 'follow_origin'",
     "t": "var",
     "cn": "粒子测试挂载模式（如：在挂载点开始、跟随挂载点、在原点开始、跟随原点）",
-    "c": "graphics_cn"
+    "c": "graphics"
   },
   {
     "n": "particle_test_create",
@@ -25877,7 +25877,7 @@
     "en": "",
     "t": "var",
     "cn": "在烟雾弹迷雾中时是否开启画面泛光特效（Bloom）",
-    "c": "graphics_bloom_when_smoked"
+    "c": "graphics"
   },
   {
     "n": "r_csgo_enable_glows",
@@ -27827,7 +27827,7 @@
     "en": "",
     "t": "var",
     "cn": "布娃娃系统（尸体）摩擦力缩放比例",
-    "c": "physics",
+    "c": "system",
     "value": {
       "description": "默认值为 0.6。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
@@ -27844,7 +27844,7 @@
     "en": "",
     "t": "var",
     "cn": "布娃娃系统（尸体）重力缩放比例",
-    "c": "physics",
+    "c": "system",
     "value": {
       "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
@@ -27861,7 +27861,7 @@
     "en": "",
     "t": "var",
     "cn": "调试布娃娃系统LRU算法移除逻辑",
-    "c": "physics"
+    "c": "system"
   },
   {
     "n": "ragdoll_lru_min_age",
@@ -27875,7 +27875,7 @@
     "en": "",
     "t": "var",
     "cn": "布娃娃系统LRU算法的最小存留时间",
-    "c": "physics",
+    "c": "system",
     "value": {
       "description": "默认值为 10。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
@@ -27892,7 +27892,7 @@
     "en": "",
     "t": "var",
     "cn": "是否允许移动布娃娃实体",
-    "c": "physics"
+    "c": "system"
   },
   {
     "n": "ragdoll_resolve_initial_conflict",
@@ -27906,7 +27906,7 @@
     "en": "",
     "t": "var",
     "cn": "布娃娃系统初始碰撞冲突解决开关",
-    "c": "physics"
+    "c": "system"
   },
   {
     "n": "ragdoll_resolve_separation",
@@ -27920,7 +27920,7 @@
     "en": "",
     "t": "var",
     "cn": "布娃娃系统重叠分离冲突解决开关",
-    "c": "physics"
+    "c": "system"
   },
   {
     "n": "ragdoll_update_from_weights",
@@ -27934,7 +27934,7 @@
     "en": "",
     "t": "var",
     "cn": "根据骨骼权重更新布娃娃模型姿态",
-    "c": "physics"
+    "c": "system"
   },
   {
     "n": "rangefinder",
@@ -33127,7 +33127,7 @@
     "en": "",
     "t": "var",
     "cn": "打开购买菜单时，是否阻止玩家意外/自动捡起地上的其他武器。",
-    "c": "gameplay,"
+    "c": "gameplay"
   },
   {
     "n": "sv_chat_proximity",
@@ -33555,7 +33555,7 @@
     "en": "Allow jump speed to exceed 1.1x max speed",
     "t": "var",
     "cn": "允许连跳（连跳限速解锁，跳跃速度可超过最大速度的1.1倍）",
-    "c": "movement"
+    "c": "gameplay"
   },
   {
     "n": "sv_ent_showonlyhitbox",

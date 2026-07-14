@@ -6,6 +6,40 @@ import sys
 
 from command_values import enrich_dataset, parse_convar_metadata
 
+ALLOWED_CATEGORIES = {
+    "network", "graphics", "audio", "mouse", "gameplay", "cheats", "practice", "system"
+}
+
+
+def normalize_category(category, name, flags):
+    normalized = str(category or "").strip().rstrip(",").lower()
+    legacy = {
+        "graphics_viewmodel": "graphics",
+        "graphics_cn": "graphics",
+        "graphics_bloom_when_smoked": "graphics",
+        "cheats_practice": "practice",
+        "physics": "system",
+        "movement": "gameplay",
+    }
+    normalized = legacy.get(normalized, normalized)
+    return normalized if normalized in ALLOWED_CATEGORIES else guess_category(name, flags)
+
+
+def validate_dataset(commands):
+    names = set()
+    for command in commands:
+        name = command.get("n", "")
+        if not name or name in names:
+            raise RuntimeError(f"Command dataset contains a missing or duplicate name: {name!r}")
+        names.add(name)
+        if command.get("t") not in {"cmd", "var"}:
+            raise RuntimeError(f"Command {name} has invalid type: {command.get('t')!r}")
+        if command.get("c") not in ALLOWED_CATEGORIES:
+            raise RuntimeError(f"Command {name} has invalid category: {command.get('c')!r}")
+        if not str(command.get("cn", "")).strip():
+            raise RuntimeError(f"Command {name} is missing a Chinese description")
+    return commands
+
 def fetch_and_parse(url, is_convar):
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     with urllib.request.urlopen(req) as response:
@@ -247,7 +281,7 @@ def main():
                 "en": item["en"],     # Update English description
                 "t": item["t"],       # Update type
                 "cn": cached.get("cn", ""),
-                "c": cached.get("c", "system"),
+                "c": normalize_category(cached.get("c"), name, item["f"]),
                 "value": item.get("value", {}),
             })
         else:
@@ -272,12 +306,10 @@ def main():
             name = item["n"]
             t_info = translated_new.get(name, {})
             
-            desc_cn = t_info.get("desc_cn", "")
-            category = t_info.get("category")
-            
-            # Fallbacks if translation failed or key was absent
-            if not category:
-                category = guess_category(name, item["f"])
+            desc_cn = str(t_info.get("desc_cn", "")).strip()
+            if not desc_cn:
+                raise RuntimeError(f"Workers AI did not return a Chinese description for new command {name}")
+            category = normalize_category(t_info.get("category"), name, item["f"])
             
             final_dataset.append({
                 "n": name,
@@ -290,7 +322,7 @@ def main():
                 "value": item.get("value", {}),
             })
 
-    enrich_dataset(final_dataset)
+    validate_dataset(enrich_dataset(final_dataset))
 
     # Sort alphabetically by name
     final_dataset.sort(key=lambda x: x["n"])

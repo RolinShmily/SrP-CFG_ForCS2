@@ -33,7 +33,15 @@ jobs:
       - name: Validate CFG knowledge model
         run: |
           node --test .github/scripts/sync_config_vectorize.test.mjs
-          node .github/scripts/sync_config_vectorize.mjs --dry-run
+          node .github/scripts/sync_config_vectorize.mjs --dry-run --output .artifacts/config-knowledge.json
+
+      - name: Upload structured knowledge dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: srp-config-knowledge
+          path: .artifacts/config-knowledge.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Validate Cloudflare credentials
         env:

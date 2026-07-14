@@ -2,12 +2,14 @@ import os
 import json
 import hashlib
 import urllib.request
+import urllib.parse
 import urllib.error
 import time
 
 EMBEDDING_MODEL = "@cf/baai/bge-m3"
 INDEX_NAME = "cs2-commands-index"
 BATCH_SIZE = 50  # commands per embedding + upsert cycle
+DELETE_BATCH_SIZE = 100
 CACHE_PATH = ".github/scripts/vectorize_sync_cache.json"
 
 
@@ -68,6 +70,30 @@ def upsert_vectors(account, token, vectors):
     if not res.get("success"):
         raise RuntimeError(f"Vectorize upsert error: {json.dumps(res)}")
     return res
+
+def list_vector_ids(account, token):
+    ids = []
+    cursor = ""
+    while True:
+        url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/v2/indexes/{INDEX_NAME}/list?count=1000"
+        if cursor:
+            url += f"&cursor={urllib.parse.quote(cursor)}"
+        result = cf_request(url, token)
+        payload = result.get("result", {})
+        ids.extend(vector.get("id", "") for vector in payload.get("vectors", []) if vector.get("id"))
+        if not payload.get("isTruncated"):
+            return ids
+        cursor = payload.get("nextCursor", "")
+        if not cursor:
+            raise RuntimeError("Vectorize list response was truncated without a cursor")
+
+
+def delete_vectors(account, token, ids):
+    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/vectorize/v2/indexes/{INDEX_NAME}/delete_by_ids"
+    result = cf_request(url, token, payload={"ids": ids}, method="POST")
+    if not result.get("success"):
+        raise RuntimeError(f"Vectorize delete error: {json.dumps(result)}")
+    return result
 
 
 def format_value_metadata(cmd):
@@ -150,7 +176,10 @@ def main():
     stale_count = len(stale_commands)
     print(f"Total commands: {total} | Need sync: {stale_count} | Cached: {total - stale_count}")
 
-    if stale_count == 0:
+    current_ids = {cmd.get("n", "") for cmd in commands}
+    stale_ids = sorted(set(list_vector_ids(account, token)).difference(current_ids))
+
+    if stale_count == 0 and not stale_ids:
         print("All vectors are up to date. Nothing to sync.")
         return
 
@@ -177,44 +206,45 @@ def main():
             ]
             embed_texts.append(" | ".join(parts))
 
-        try:
-            embeddings = get_embeddings(account, token, embed_texts)
+        embeddings = get_embeddings(account, token, embed_texts)
 
-            if first_batch:
-                print(f"  [DEBUG] Embedding count: {len(embeddings)} | dims: {len(embeddings[0])}")
-                first_batch = False
+        if first_batch:
+            print(f"  [DEBUG] Embedding count: {len(embeddings)} | dims: {len(embeddings[0])}")
+            first_batch = False
 
-            vectors = []
-            for idx, cmd in enumerate(batch):
-                value_description, value_ranges, value_options = format_value_metadata(cmd)
-                vectors.append({
-                    "id": cmd["n"],
-                    "values": embeddings[idx],
-                    "metadata": {
-                        "n": cmd.get("n", ""),
-                        "cn": cmd.get("cn", ""),
-                        "en": cmd.get("en", ""),
-                        "d": str(cmd.get("d", "")),
-                        "t": cmd.get("t", ""),
-                        "value_cn": value_description,
-                        "range": value_ranges,
-                        "options": value_options,
-                    },
-                })
+        vectors = []
+        for idx, cmd in enumerate(batch):
+            value_description, value_ranges, value_options = format_value_metadata(cmd)
+            vectors.append({
+                "id": cmd["n"],
+                "values": embeddings[idx],
+                "metadata": {
+                    "n": cmd.get("n", ""),
+                    "cn": cmd.get("cn", ""),
+                    "en": cmd.get("en", ""),
+                    "d": str(cmd.get("d", "")),
+                    "t": cmd.get("t", ""),
+                    "value_cn": value_description,
+                    "range": value_ranges,
+                    "options": value_options,
+                },
+            })
 
-            upsert_vectors(account, token, vectors)
+        upsert_vectors(account, token, vectors)
 
-            # Update cache for successfully synced commands
-            for cmd in batch:
-                cache[cmd["n"]] = compute_hash(cmd)
+        for cmd in batch:
+            cache[cmd["n"]] = compute_hash(cmd)
 
-            success_count += len(batch)
-            print(f"  [{i + len(batch)}/{stale_count}] Batch synced ({success_count} total)")
-            time.sleep(0.3)
+        success_count += len(batch)
+        print(f"  [{i + len(batch)}/{stale_count}] Batch synced ({success_count} total)")
+        time.sleep(0.3)
 
-        except Exception as e:
-            print(f"  [{i}/{stale_count}] ERROR: {e}")
+    for i in range(0, len(stale_ids), DELETE_BATCH_SIZE):
+        batch = stale_ids[i:i + DELETE_BATCH_SIZE]
+        delete_vectors(account, token, batch)
+        print(f"  [{i + len(batch)}/{len(stale_ids)}] Stale vectors deleted")
 
+    cache = {name: value for name, value in cache.items() if name in current_ids}
     # 3. Save updated cache
     save_cache(cache)
     print(f"Vectorize sync complete. {success_count}/{stale_count} commands synced. Cache saved to {CACHE_PATH}")
