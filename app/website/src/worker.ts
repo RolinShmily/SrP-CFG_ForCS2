@@ -26,7 +26,7 @@ export interface Env {
 }
 
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
-const LLM_MODEL = "@cf/meta/llama-3.2-3b-instruct";
+const LLM_MODEL = "@cf/meta/llama-3.1-8b-instruct-fp8";
 const TOP_K = 8;
 const MAX_OUTPUT_TOKENS = 2_048;
 const TURNSTILE_ACTION = "chat";

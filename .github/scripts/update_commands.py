@@ -128,7 +128,7 @@ def translate_new_commands(new_items, cf_token, cf_account):
                         {"role": "user", "content": prompt}
                     ]
                 }
-                model = "@cf/meta/llama-3.1-8b-instruct"
+                model = "@cf/meta/llama-3.1-8b-instruct-fp8"
                 url = f"https://api.cloudflare.com/client/v4/accounts/{cf_account}/ai/run/{model}"
                 req = urllib.request.Request(url, 
                                              data=json.dumps(payload).encode('utf-8'),

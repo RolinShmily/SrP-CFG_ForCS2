@@ -18,7 +18,7 @@ def test_cf_ai():
     print(f"API Token: {cf_token[:6]}...{cf_token[-6:] if len(cf_token) > 12 else ''}")
     
     # 2. Prepare test payload
-    model = "@cf/meta/llama-3.1-8b-instruct"
+    model = "@cf/meta/llama-3.1-8b-instruct-fp8"
     url = f"https://api.cloudflare.com/client/v4/accounts/{cf_account}/ai/run/{model}"
     
     payload = {
