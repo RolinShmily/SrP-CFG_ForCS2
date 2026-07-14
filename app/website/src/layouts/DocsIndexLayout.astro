@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { ArrowRight, BookOpen, Boxes, Crosshair, Gauge, Search, Terminal, Wrench } from "lucide-astro";
+import { ArrowRight, BookOpen, Boxes, Crosshair, Gauge, MessageCircleQuestion, Search, Terminal, Wrench } from "lucide-astro";
 import BaseLayout from "./BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
@@ -126,6 +126,18 @@ const featured = [
           );
         })}
       </div>
+
+      <a
+        href="https://deepwiki.com/RolinShmily/SrP-CFG_ForCS2"
+        target="_blank"
+        rel="noopener"
+        aria-label="前往 DeepWiki 询问 SrP-CFG 项目问题（在新窗口打开）"
+        class="group mt-12 flex min-h-14 items-center justify-center gap-3 rounded-[var(--radius)] border-2 border-accent/70 bg-accent-bg px-5 py-4 text-center font-display text-base font-bold text-accent no-underline shadow-[0_0_0_1px_rgba(242,138,26,0.04),0_14px_40px_rgba(242,138,26,0.08)] transition-[border-color,background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-accent hover:bg-[rgba(242,138,26,0.16)] hover:text-accent-light hover:shadow-[0_16px_46px_rgba(242,138,26,0.14)] sm:text-lg"
+      >
+        <MessageCircleQuestion class="h-5 w-5 shrink-0" aria-hidden="true" />
+        <span>有疑问？询问 DeepWiki！</span>
+        <ArrowRight class="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+      </a>
     </section>
 
     <section class="border-y border-border bg-bg-card">
