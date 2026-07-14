@@ -295,7 +295,7 @@ function collectCfgFiles(rootDir) {
 function parseConfigFile(rootDir, fullPath) {
   const relativePath = toPosix(path.relative(rootDir, fullPath));
   const classification = classifyFile(relativePath);
-  const rawText = fs.readFileSync(fullPath, "utf8").replace(/^\uFEFF/, "");
+  const rawText = fs.readFileSync(fullPath, "utf8").replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
   const lines = rawText.split(/\r?\n/);
   const statements = [];
   let comments = [];
