@@ -57,41 +57,6 @@ RESETTABLE_COMMAND_RE = re.compile(
     re.IGNORECASE,
 )
 RESET_COVERAGE_IGNORE = {"cl_ticktiming"}
-REQUIRED_RUNTIME_ALIASES = {
-    "keyhud",
-    "srp_apply_default", "srp_apply_echo", "srp_apply_yszh", "srp_apply_visionl",
-    "srp_reset_valve", "srp_reset_valve_user", "srp_reset_valve_settings",
-    "srp_reset_valve_keys", "srp_crosshair_view", "srp_crosshair_view_keys",
-    "srp_autoview", "srp_autoview_keys", "srp_zeus", "srp_zeus_keys", "srp_knife",
-    "srp_practice", "srp_practice_keys", "srp_preview", "srp_preview_keys",
-    "srp_demo", "srp_demo_keys", "srp_guidemake", "srp_guidemake_keys",
-    "srp_reload", "srp_help", "srp_help_presets", "srp_help_reset",
-    "srp_help_crosshair", "srp_help_autoview", "srp_help_knife", "srp_help_zeus",
-    "srp_help_practice", "srp_help_preview", "srp_help_guidemake", "srp_help_demo",
-    "c00", "c01", "c02", "c03", "c04", "c05", "c06", "c07",
-    "v00", "v01", "v02", "v03", "v04", "v05", "v06", "v07",
-    "keyc", "keyv", "switchthrow", "view_0", "view_1",
-    "red", "orange", "yellow", "green", "cyan", "blue", "purple", "black",
-    "white", "pink", "brown", "gray", "spawn", "gkd", "gg", "plant", "xray",
-    "+Pucci", "-Pucci", "switchperson", "switch-impactsNpreview",
-    "depre", "changeblur", "changefov", "changeang++", "changeang--",
-    "srp_guide_he", "srp_guide_flash", "srp_guide_smoke", "srp_guide_fire",
-    "srp_guide_decoy", "srp_guide_delete", "srp_guide_save", "srp_guide_upload",
-    "rec", "rec_end", "campath", "campath_draw", "gear_up", "gear_down",
-    "bluron", "bluroff", "demoshow", "demonoshow",
-    "att0", "att1", "+firr1", "-firr1", "+firr2", "-firr2",
-    "tick",
-    "dust2", "inferno", "mirage", "ancient", "nuke", "vertigo", "anubis", "office", "italy", "overpass", "train",
-    "CT1", "CT2", "CT3", "CT4", "CT5", "CT6", "CT7", "CT8", "CT9", "CT10", "CT11", "CT12", "CT13", "CT14", "CT15",
-    "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", "T13", "T14", "T15",
-    "pvp-hud-off", "pvp-hud-on", "fire",
-    "500", "503", "505", "506", "507", "508", "509", "512", "514", "515", "516", "517", "518", "519", "520", "521", "522", "523", "524", "525", "526",
-    "srp_crosshair_custom_info", "srp_viewmodel_custom_info",
-    "srp_c00_info", "srp_c01_info", "srp_c02_info", "srp_c03_info", "srp_c04_info", "srp_c05_info", "srp_c06_info", "srp_c07_info",
-    "srp_v00_info", "srp_v01_info", "srp_v02_info", "srp_v03_info", "srp_v04_info", "srp_v05_info", "srp_v06_info", "srp_v07_info",
-    "grenadeoff", "grenadeon", "campath_draw_on", "campath_draw_off", "campath_on", "campath_off", "dmsg", "dmsg_on", "dmsg_off", "block", "blockOn", "blockOff", "widefov", "widefovOn", "widefovOff",
-    "gear110", "gear1", "gear4", "gear8", "gear14", "gear15", "gear16", "ass", "mute", "t", "pos", "time", "post", "demoshow", "demonoshow", "f10", "f15", "f20", "f25", "f30", "f35", "f40", "f45", "f50", "f55", "f60", "f65", "f70", "f75", "f80", "f85", "f90", "f95", "f100",
-}
 
 
 class ValidationError(RuntimeError):
