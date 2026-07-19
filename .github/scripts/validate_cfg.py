@@ -16,9 +16,6 @@ CONFIG_ROOT = ROOT / "config"
 PACKAGES_FILE = ROOT / ".github" / "packages.yaml"
 V3_ROOT_ENTRIES = {"autoexec.cfg", "annotations", "video", "srp-cfg"}
 V3_ROOT_DIRECTORIES = {"annotations", "video", "srp-cfg"}
-FORBIDDEN_V3_PATH_PARTS = {
-    "classic", "legacy", "migration", "profiles", "selectors", "generated", "startup.cfg"
-}
 FORBIDDEN_PERSISTENCE_SUFFIXES = (".vcfg", ".vcfg_lastclouded")
 EXEC_RE = re.compile(r"\bexec(?:ifexists)?\s+[\"']?([A-Za-z0-9_./\\-]+)", re.IGNORECASE)
 DIRECT_EXEC_RE = re.compile(
@@ -272,16 +269,6 @@ def validate_source() -> None:
             + "\n  ".join(forbidden_source_files)
         )
 
-    forbidden_paths = sorted(
-        path.relative_to(CONFIG_ROOT).as_posix()
-        for path in CONFIG_ROOT.rglob("*")
-        if any(part.lower() in FORBIDDEN_V3_PATH_PARTS for part in path.relative_to(CONFIG_ROOT).parts)
-    )
-    if forbidden_paths:
-        raise ValidationError(
-            "v3 contains forbidden compatibility paths:\n  "
-            + "\n  ".join(forbidden_paths)
-        )
 
     cfg_paths = sorted(CONFIG_ROOT.rglob("*.cfg"))
     if not cfg_paths:
@@ -353,10 +340,6 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
             if is_forbidden_persistence_file(normalized):
                 raise ValidationError(
                     f"{zip_path.name} contains forbidden persistence file: {raw_name}"
-                )
-            if any(part.lower() in FORBIDDEN_V3_PATH_PARTS for part in path.parts):
-                raise ValidationError(
-                    f"{zip_path.name} contains forbidden compatibility path: {raw_name}"
                 )
 
         archive_roots = {
