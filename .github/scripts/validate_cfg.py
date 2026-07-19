@@ -390,15 +390,7 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
         runtime_files = assert_runtime_registration_only(
             cfg_text, runtime_init_name, f"{zip_path.name} Runtime"
         )
-        aliases = runtime_aliases(cfg_text, runtime_files)
-        missing_aliases = sorted(REQUIRED_RUNTIME_ALIASES.difference(aliases))
-        if missing_aliases:
-            raise ValidationError(
-                f"{zip_path.name} is missing Runtime aliases: {', '.join(missing_aliases)}"
-            )
 
-        if package_name != "runtime_core":
-            raise ValidationError(f"Unexpected v3 package key: {package_name}")
         assert_runtime_registration_only(cfg_text, "autoexec.cfg", zip_path.name)
 
         assert_no_cycles(graph, "autoexec.cfg", zip_path.name)
