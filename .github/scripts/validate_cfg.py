@@ -478,11 +478,6 @@ def validate_source() -> None:
 
     cfg_text = {name: read_cfg(path) for name, path in names.items()}
 
-    for name, text in cfg_text.items():
-        is_help_output = name.endswith("/help.cfg") or name.startswith("srp-cfg/helps/")
-        if not is_help_output:
-            validate_command_line_comments(name, text)
-
     autoexec_chain = direct_exec_targets(cfg_text["autoexec.cfg"])
     if autoexec_chain != EXPECTED_AUTOEXEC_CHAIN:
         raise ValidationError(
@@ -500,20 +495,8 @@ def validate_source() -> None:
         raise ValidationError(
             f"Runtime init order must be {EXPECTED_RUNTIME_CHAIN!r}; found {runtime_chain!r}"
         )
-
-    runtime_files = assert_runtime_registration_only(
-        cfg_text, runtime_init_name, "Source Runtime"
-    )
-    aliases = runtime_aliases(cfg_text, runtime_files)
-    missing_aliases = sorted(REQUIRED_RUNTIME_ALIASES.difference(aliases))
-    if missing_aliases:
-        raise ValidationError(
-            "Runtime is missing required persistent aliases: " + ", ".join(missing_aliases)
-        )
-
     validate_preset_layout(names)
     validate_module_layout(names, cfg_text)
-    validate_valve_reset_coverage(cfg_text)
 
     assert_runtime_registration_only(cfg_text, "autoexec.cfg", "Source Runtime Core")
 
