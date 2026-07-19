@@ -8,7 +8,7 @@
       "line": 1,
       "text": "// ══════════════════════════════════════════════════════════════════",
       "lineCount": 10,
-      "sha256": "0731d629f9ea83cec32f609cc1e541567a5bf0e3268dc6e0f25228b5081b5f18",
+      "sha256": "85904a81e890bf4dff45e11e58e8cf69dd5d70f744a4b0baaab09db65f198240",
       "area": "root",
       "module": "bootstrap",
       "role": "bootstrap"
@@ -155,7 +155,7 @@
       "line": 1,
       "text": "// Reset autoview's internal view mapping without changing physical keys.",
       "lineCount": 4,
-      "sha256": "849b35668538e6f708654acfc32f216c8c85c1fe149b5c485e8f4bdf4b94b71b",
+      "sha256": "c4e4280d1ec11265d020ab2143630b94ea87fa405eca70e4ea1dd62c5e4e3d05",
       "area": "feature",
       "module": "autoview",
       "role": "settings"
@@ -190,7 +190,7 @@
       "line": 1,
       "text": "exec srp-cfg/features/autoview/settings.cfg // 注册并准备武器自适应视角功能。",
       "lineCount": 4,
-      "sha256": "e591955f5ed26b672e67129fa3d56b51f47af26c63c0e8ea4cb9c771ceda5432",
+      "sha256": "584602d76b1a5e1f949794a3e735044dd003d9d1626c0ad530ed88a556ec155a",
       "area": "feature",
       "module": "autoview",
       "role": "composition"
@@ -224,8 +224,8 @@
       "path": "config/srp-cfg/features/crosshair-view/help.cfg",
       "line": 1,
       "text": "echo ═══════════════ 准星与持枪视角帮助 ═══════════════",
-      "lineCount": 17,
-      "sha256": "f12312cc425f64730b47b14f3a448ed1a9845e6b24805de536383f60d1cea570",
+      "lineCount": 18,
+      "sha256": "6552ee238e7a4d3d5064119a80b11e1e21de283a1e6b974db828a2774cc2858b",
       "area": "feature",
       "module": "crosshair-view",
       "role": "help"
@@ -258,7 +258,7 @@
       "line": 1,
       "text": "// Optional physical keys for the crosshair/viewmodel feature.",
       "lineCount": 6,
-      "sha256": "b8a51be3ed2c56d721af8f86c36a8fa97847d5768361627b7b16645e6e631b40",
+      "sha256": "caa6cd9ef03f30ae8b9ec0ae017d8b137bd0c5f8f2e02a9754182a19c585faa5",
       "area": "feature",
       "module": "crosshair-view",
       "role": "keymap"
@@ -712,8 +712,8 @@
       "path": "config/srp-cfg/features/crosshair-view/runtime.cfg",
       "line": 1,
       "text": "// Persistent crosshair/viewmodel command vocabulary.",
-      "lineCount": 63,
-      "sha256": "80a3f4a1defe0e382de5358c4f92818ac1d860e2eb1ad285a4fd850b263d41b2",
+      "lineCount": 65,
+      "sha256": "1d5775cc8b7601fe07e27d04f2ab7c515c38bd9ef1dc1ef1ccb6399e31e9fb45",
       "area": "feature",
       "module": "crosshair-view",
       "role": "runtime"
@@ -804,7 +804,7 @@
       "line": 1,
       "text": "// Apply the recommended crosshair/viewmodel state without changing physical keys.",
       "lineCount": 5,
-      "sha256": "de139d68d7aa01f4c446ca2bb4deb341cec5e6a009f283aff88fc9ae5fc19225",
+      "sha256": "c4a00eb1574b38f706cab34e170cabc0c58d0c77ffcb85bffa656323472d1a64",
       "area": "feature",
       "module": "crosshair-view",
       "role": "settings"
@@ -873,8 +873,8 @@
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 1,
       "text": "echo ═══════════════════ 刀具模型帮助 ══════════════════",
-      "lineCount": 15,
-      "sha256": "0dc1d0827eaa0f5b5d17aff22e2fc6794a6ebfb0d5e4fad5c0b9d4abeddca3c1",
+      "lineCount": 17,
+      "sha256": "127306f316dbc6571a4f0ad16ed76d94995a18350c76fabe8f54175e01a95486",
       "area": "feature",
       "module": "knife",
       "role": "help"
@@ -907,7 +907,7 @@
       "line": 1,
       "text": "// Knife intentionally has no default physical keymap.",
       "lineCount": 2,
-      "sha256": "873164125bb58421b05e54f29af4430be5ea92010239d36ee3b09f9c67aae5e4",
+      "sha256": "d6d6b53597a152d9f193f0355ef7df20aa26478dc69266974763e3d547e2b9b4",
       "area": "feature",
       "module": "knife",
       "role": "keymap"
@@ -937,8 +937,8 @@
       "path": "config/srp-cfg/features/knife/runtime.cfg",
       "line": 1,
       "text": "// Knife model command vocabulary. Loaded by Runtime; no preference or key is changed here.",
-      "lineCount": 23,
-      "sha256": "aaf0ce164eef675a381cf4657b664949674895aaec6342bb157856bbfc39a73e",
+      "lineCount": 68,
+      "sha256": "d9a5ca27d351582c256d8510c9eb0a6cad026992b6224a80b7777ff002171494",
       "area": "feature",
       "module": "knife",
       "role": "runtime"
@@ -993,7 +993,7 @@
       "line": 1,
       "text": "// Knife has no physical keymap or persistent preference; this refreshes its command library.",
       "lineCount": 4,
-      "sha256": "e7b62137b8e083b17a405cca015bbae608de530dd88a81624501977fee68b3af",
+      "sha256": "23a0d78c9a08b5cf37d81b2f3402780e85cb2896e4018ec4838e8a2aa5339554",
       "area": "feature",
       "module": "knife",
       "role": "settings"
@@ -1180,7 +1180,7 @@
       "line": 1,
       "text": "// Reset Zeus aliases without changing physical keys.",
       "lineCount": 4,
-      "sha256": "7f120801fe662f194083cb861c56c1b7f308469274f905189eab37ecfc6ae12f",
+      "sha256": "dd2e6f7990a027551985a286d744597dcf14490724a8acd379e909429781f9f0",
       "area": "feature",
       "module": "zeus",
       "role": "settings"
@@ -1248,8 +1248,8 @@
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 1,
       "text": "echo ═══════════════════════════ SrP-CFG v3 帮助 ═══════════════════════════",
-      "lineCount": 21,
-      "sha256": "f074e0d882ae95a0cb7074405e148bd768955aaebb52d66d5e3f9b2cc96c4705",
+      "lineCount": 24,
+      "sha256": "b69405092af578446ae6c32c7115d3e7582123b6d3df02c41f66ab2f1201f381",
       "area": "help",
       "module": "help",
       "role": "help"
@@ -1310,8 +1310,8 @@
       "path": "config/srp-cfg/modes/demo-hlae/help.cfg",
       "line": 1,
       "text": "echo ═════════════════ Demo / HLAE 帮助 ════════════════",
-      "lineCount": 20,
-      "sha256": "8097e760719fa28e98556262a0ab1ffdce8d6fa0ecebdf4dc46002427a915c1d",
+      "lineCount": 21,
+      "sha256": "785e0037c9d0234f126822e23dc43bf9e43437e00aeef45c0a8a472fda0d816f",
       "area": "mode",
       "module": "demo-hlae",
       "role": "help"
@@ -1344,7 +1344,7 @@
       "line": 1,
       "text": "// Demo/HLAE physical workspace. binddefaults intentionally runs first.",
       "lineCount": 48,
-      "sha256": "706f80ba2fce67476eb57e2e7fca32e0c959512eaff559f60530cf2bc35dca47",
+      "sha256": "ac343ea19c8b5a7feb61781489ff8808b9890b1115d4e7f7e513b014847385fa",
       "area": "mode",
       "module": "demo-hlae",
       "role": "keymap"
@@ -1400,8 +1400,8 @@
       "path": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
       "line": 1,
       "text": "// Persistent Demo/HLAE command vocabulary. No HLAE state or physical key is changed here.",
-      "lineCount": 60,
-      "sha256": "bcf8144fe714510e368ebfbf917b62d738c1d592396548806604170c201e6647",
+      "lineCount": 105,
+      "sha256": "8fb079236cbe698f22d8c4fc9d22253cc015e366304f44b2ca24af1834365176",
       "area": "mode",
       "module": "demo-hlae",
       "role": "runtime"
@@ -1506,7 +1506,7 @@
       "line": 1,
       "text": "// Demo/HLAE workspace settings. Requires launching CS2 through HLAE with FFmpeg configured.",
       "lineCount": 52,
-      "sha256": "8620af9216ffff46a338742fffe5d9f52b435e791cbd335092c26c19ec53bfac",
+      "sha256": "97454994b85a073e2cdd1e718c4b27f79f85d648a0cc03e61f33583c7c0df5b1",
       "area": "mode",
       "module": "demo-hlae",
       "role": "settings"
@@ -1729,7 +1729,7 @@
       "line": 1,
       "text": "// Guide-maker mode settings. Physical keys are isolated in keymap.cfg.",
       "lineCount": 6,
-      "sha256": "9559df1123f0c5ac93726e1eeadfe1561954c8e82f52964b0443dc5903a47645",
+      "sha256": "ee799e76118dc177fa6ae20716db732c0d7a6445a0d0a7c185eda8c49ff30d23",
       "area": "mode",
       "module": "guidemake",
       "role": "settings"
@@ -1798,8 +1798,8 @@
       "path": "config/srp-cfg/modes/practice/help.cfg",
       "line": 1,
       "text": "echo ═══════════════════ 跑图练习帮助 ══════════════════",
-      "lineCount": 18,
-      "sha256": "2d1e6a1a430f9dfd76fc3568b90e31d92583a975a293e74a5db8b02c2ecbd8ce",
+      "lineCount": 22,
+      "sha256": "9c9da8e6cce505783eafe3369023f355b571f7f29d8c71f41bc2b2e1b3220aab",
       "area": "mode",
       "module": "practice",
       "role": "help"
@@ -1832,7 +1832,7 @@
       "line": 1,
       "text": "// Optional practice workspace keys. Use srp_practice for settings without these bindings.",
       "lineCount": 24,
-      "sha256": "aede004bc2fabf7b83ea6d2590aa5f491c6d28b9a1cc85f809bd433bd41d3ef4",
+      "sha256": "cb693885a4aabe5b75eee137c5477ac9c1d39fabaa1b72d9f4a5c1b77c4bc4db",
       "area": "mode",
       "module": "practice",
       "role": "keymap"
@@ -1880,8 +1880,8 @@
       "path": "config/srp-cfg/modes/practice/runtime.cfg",
       "line": 1,
       "text": "// Persistent practice command vocabulary. No server state or physical key is changed here.",
-      "lineCount": 15,
-      "sha256": "df38a9b70b27bc6bd39132885de215fc63d3f66966f5f4924f34ce0207c25cd3",
+      "lineCount": 34,
+      "sha256": "99308799329ab419b72bbf4dc322bd909bdb49a2015f68ddc0647a8da9955164",
       "area": "mode",
       "module": "practice",
       "role": "runtime"
@@ -1944,7 +1944,7 @@
       "line": 1,
       "text": "// Practice server and training settings. Physical keys are isolated in keymap.cfg.",
       "lineCount": 64,
-      "sha256": "90952451170391334ababd2ee3839819ef049cd1d9b1542ffe14718c3be58120",
+      "sha256": "d2571cb647afe7b35bb151799d39f3e04919847939985fad89d1c3b2dd0af739",
       "area": "mode",
       "module": "practice",
       "role": "settings"
@@ -2547,8 +2547,8 @@
       "path": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
       "line": 1,
       "text": "// ══════════════════════════════════════════════════════════════════",
-      "lineCount": 49,
-      "sha256": "9a713354f92e4ef026ab11d0373ccb5592a44a03cc0ebb9610348d47586cf6fe",
+      "lineCount": 48,
+      "sha256": "5ad81d217a42619a970dd10b69cf1f4944b34b9fd86e09541c01635632a73d19",
       "area": "mode",
       "module": "practice",
       "role": "auxiliary"
@@ -2722,7 +2722,7 @@
       "line": 1,
       "text": "echo ═══════════════════ 饰品预览帮助 ══════════════════",
       "lineCount": 13,
-      "sha256": "9fbda0351030fffb560ca7dfd6847483b06b62f183d184056901ca2feff46173",
+      "sha256": "19333a003175262d9340bc2a8695d4c6a75c1d6244b8dcc123dd180e1a11e321",
       "area": "mode",
       "module": "preview",
       "role": "help"
@@ -2755,7 +2755,7 @@
       "line": 1,
       "text": "// Optional preview workspace keys. Use srp_preview for settings without these bindings.",
       "lineCount": 9,
-      "sha256": "c96782371b1a735d8dce4a9f4f940b6b94ba65136c19fc3b80920189e2c26e08",
+      "sha256": "c32cdd8572b18a3a941f45bdd481700c410962af85ba49ee4fe4fb60f238ad35",
       "area": "mode",
       "module": "preview",
       "role": "keymap"
@@ -2792,8 +2792,8 @@
       "path": "config/srp-cfg/modes/preview/runtime.cfg",
       "line": 1,
       "text": "// Persistent preview-mode command vocabulary. No camera state or physical key is changed here.",
-      "lineCount": 40,
-      "sha256": "adcbde0732fe689c9ac5e6d0330e906d14ed41823c1ce6aeb5fb72531a19763d",
+      "lineCount": 44,
+      "sha256": "6ceb2afc772349f7c1924f7d4fae0b661977e3501f5d5db96b89e8b34816fc0d",
       "area": "mode",
       "module": "preview",
       "role": "runtime"
@@ -2871,7 +2871,7 @@
       "line": 1,
       "text": "// Preview/camera settings. Physical keys are isolated in keymap.cfg.",
       "lineCount": 11,
-      "sha256": "a9d2dcdb6b857556948522c2f55e8c2954dcad7785aadb77cc0dbce19596ae07",
+      "sha256": "80a41d44abfe52321b134a09466f78dc9f1b22247320b38a65fa20c2da69a3c3",
       "area": "mode",
       "module": "preview",
       "role": "settings"
@@ -2979,8 +2979,8 @@
       "path": "config/srp-cfg/presets/default/keymap.cfg",
       "line": 1,
       "text": "// SrP recommended keymap example. Runtime owns every referenced alias.",
-      "lineCount": 81,
-      "sha256": "4659651fd1ec0d544f12bf8584af4cbd9f75e419dac671c0f637dbab1f725abb",
+      "lineCount": 80,
+      "sha256": "74e2526a5322df15b576f7c3b82cb2e59db0d110e6626675f044f2c77b8b6133",
       "area": "preset",
       "module": "default",
       "role": "keymap"
@@ -3069,8 +3069,8 @@
       "path": "config/srp-cfg/presets/default/settings.cfg",
       "line": 1,
       "text": "// SrP recommended preference example.",
-      "lineCount": 119,
-      "sha256": "5d02f6267881c3b68af7882c8494d3d0e2aa2fd3e9450ae22fb72910d68137fc",
+      "lineCount": 121,
+      "sha256": "4d451f613f3d0fcf23a2c61ba072c41d48b2caf8816f1fe574443394d7c346bf",
       "area": "preset",
       "module": "default",
       "role": "settings"
@@ -3216,7 +3216,7 @@
       "line": 1,
       "text": "// Echo example: complete personal keymap.",
       "lineCount": 60,
-      "sha256": "23cad2ae64daf5fd4f9cd048708ba077c7abb19e5bfb4f57f164c29bd8aa5a4f",
+      "sha256": "e009611737a6981beb4f2d4501113f0d1414c63f28a04b9f8a2adc6401f8078c",
       "area": "preset",
       "module": "echo",
       "role": "keymap"
@@ -3293,8 +3293,8 @@
       "path": "config/srp-cfg/presets/echo/settings.cfg",
       "line": 1,
       "text": "// Echo example: complete personal preference set.",
-      "lineCount": 118,
-      "sha256": "05b53937d6ef2c9f6f7fd4600bb1b92b9e36e18905fc45bc697f22a6df538124",
+      "lineCount": 119,
+      "sha256": "544eaecdfa1627c947303563300f1b401f5e0c79c0c35c9bf160918ac89a2163",
       "area": "preset",
       "module": "echo",
       "role": "settings"
@@ -3506,7 +3506,7 @@
       "line": 1,
       "text": "// Valve baseline for every archived ConVar currently touched by SrP-CFG.",
       "lineCount": 176,
-      "sha256": "6b687d5c0a3b0a6892f5718328f87a87aca27e4b178da9f52ad7f972bb03ef01",
+      "sha256": "4d66174ff78ad156ffb1100e7c5f0c3d9d3e7a6f061e3c845fc500fa7319a0b8",
       "area": "preset",
       "module": "valve",
       "role": "settings"
@@ -3652,7 +3652,7 @@
       "line": 1,
       "text": "// VisionL example: complete personal keymap.",
       "lineCount": 59,
-      "sha256": "22c1dbabb3f263aa48ee923710870d53d2807c8be2f73d58c4897133530b894e",
+      "sha256": "c2618e3a8d8bd0c035151fc08f26ed1ed7e7fb148cf00503f241b712acfdb631",
       "area": "preset",
       "module": "visionl",
       "role": "keymap"
@@ -3728,8 +3728,8 @@
       "path": "config/srp-cfg/presets/visionl/settings.cfg",
       "line": 1,
       "text": "// VisionL example: complete personal preference set.",
-      "lineCount": 119,
-      "sha256": "bb443329b4bcb6734ecd8c85eb5a47131cc4273ba7c87be4facf4a8535476f03",
+      "lineCount": 120,
+      "sha256": "28c05e88fc994469c5320780c2476a231454576f5e6ed048ff1cf6d97f32d10e",
       "area": "preset",
       "module": "visionl",
       "role": "settings"
@@ -3875,7 +3875,7 @@
       "line": 1,
       "text": "// YSZH example: complete personal keymap.",
       "lineCount": 64,
-      "sha256": "df87f530fb814be1ee28e97f85f8efddd23c7e074f4bf6b71fa4fb8f3d75b380",
+      "sha256": "277e3245629a77177e3939fdf56c324b378618a2159c0c455dbd0ed60e3cdba3",
       "area": "preset",
       "module": "yszh",
       "role": "keymap"
@@ -3956,8 +3956,8 @@
       "path": "config/srp-cfg/presets/yszh/settings.cfg",
       "line": 1,
       "text": "// YSZH example: complete personal preference set.",
-      "lineCount": 119,
-      "sha256": "61c39f621f9b043cf07ab354788b1479c48e4595feeb62e3da26b984db16507c",
+      "lineCount": 120,
+      "sha256": "ed844f535d0194c34a21cf484ca0b52b96675c16d8ca7119962f6b6050f8b5a8",
       "area": "preset",
       "module": "yszh",
       "role": "settings"
@@ -4068,8 +4068,8 @@
       "path": "config/srp-cfg/runtime/aliases.cfg",
       "line": 1,
       "text": "// SrP-CFG reusable aliases.",
-      "lineCount": 11,
-      "sha256": "07d75f846dfc4da5925772ab958e8a2cfbba63095e1b702898b85c7c6515599b",
+      "lineCount": 8,
+      "sha256": "2ce77edb2351ed51127cbc8c12c450c93cf6b615309f63e5893ebf8c55f9e746",
       "area": "runtime",
       "module": "runtime",
       "role": "runtime"
@@ -4177,8 +4177,8 @@
       "path": "config/srp-cfg/runtime/init.cfg",
       "line": 1,
       "text": "// ══════════════════════════════════════════════════════════════════",
-      "lineCount": 21,
-      "sha256": "5b4af6fb1ccc74bc370cef278664ebde0c7639b82b3278e0ff1066761315b0f9",
+      "lineCount": 29,
+      "sha256": "e3c29bf78d201e269e376837281a612317807d8b9aaaa972db71d93df3e2f20b",
       "area": "runtime",
       "module": "runtime",
       "role": "bootstrap"

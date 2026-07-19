@@ -758,13 +758,13 @@
       "ref": "config/srp-cfg/features/crosshair-view/keymap.cfg:4",
       "path": "config/srp-cfg/features/crosshair-view/keymap.cfg",
       "line": 4,
-      "text": "bind \"leftarrow\" \"toggle cl_crosshairdot 1 0;echo 准星中心点状态更新!\"",
+      "text": "bind \"leftarrow\" \"srp_crosshair_dot\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "leftarrow",
-      "body": "toggle cl_crosshairdot 1 0;echo 准星中心点状态更新!",
+      "body": "srp_crosshair_dot",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -772,14 +772,9 @@
       "description": "切换准星中心点。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_crosshairdot 1 0",
-          "source": "toggle cl_crosshairdot 1 0"
-        },
-        {
-          "command": "echo",
-          "arguments": "准星中心点状态更新!",
-          "source": "echo 准星中心点状态更新!"
+          "command": "srp_crosshair_dot",
+          "arguments": "",
+          "source": "srp_crosshair_dot"
         }
       ],
       "area": "feature",
@@ -804,6 +799,60 @@
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
       "activation": "别名 srp_crosshair_view_keys -> srp-cfg/features/crosshair-view/with-keymap.cfg -> srp-cfg/features/crosshair-view/keymap.cfg",
       "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/features/knife/keymap.cfg#j",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/keymap.cfg:2",
+      "path": "config/srp-cfg/features/knife/keymap.cfg",
+      "line": 2,
+      "text": "bind \"j\" \"+srp_knife_switch\"",
+      "fileId": "file:config/srp-cfg/features/knife/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "j",
+      "body": "+srp_knife_switch",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "一键循环切换刀具。",
+      "actions": [
+        {
+          "command": "+srp_knife_switch",
+          "arguments": "",
+          "source": "+srp_knife_switch"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/features/knife/keymap.cfg#bind:j",
+      "name": "j"
+    },
+    "semantic": {
+      "title": "j -> +srp_knife_switch",
+      "summary": "一键循环切换刀具。",
+      "tags": [
+        "bind",
+        "feature",
+        "knife",
+        "keymap"
+      ],
+      "keywords": [
+        "j",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "未发现直接启动或公共 alias 加载路径；请结合调用该文件的模块上下文判断。",
+      "relation": "调用 alias +srp_knife_switch，定义于 srp-cfg/features/knife/runtime.cfg:27，内容 +srp_knife_515"
     },
     "curation": {
       "status": "generated",
@@ -1171,13 +1220,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:28",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 28,
-      "text": "bind \".\" \"demo_goto 5s relative\"",
+      "text": "bind \".\" \"srp_demo_seek_forward\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": ".",
-      "body": "demo_goto 5s relative",
+      "body": "srp_demo_seek_forward",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1185,9 +1234,9 @@
       "description": "Demo 快进 5 秒。",
       "actions": [
         {
-          "command": "demo_goto",
-          "arguments": "5s relative",
-          "source": "demo_goto 5s relative"
+          "command": "srp_demo_seek_forward",
+          "arguments": "",
+          "source": "srp_demo_seek_forward"
         }
       ],
       "area": "mode",
@@ -1225,13 +1274,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:17",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 17,
-      "text": "bind \"'\" \"toggle tv_listen_voice_indices -1 0\"",
+      "text": "bind \"'\" \"srp_demo_player_voice\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "'",
-      "body": "toggle tv_listen_voice_indices -1 0",
+      "body": "srp_demo_player_voice",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1239,9 +1288,9 @@
       "description": "切换 Demo 玩家语音。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "tv_listen_voice_indices -1 0",
-          "source": "toggle tv_listen_voice_indices -1 0"
+          "command": "srp_demo_player_voice",
+          "arguments": "",
+          "source": "srp_demo_player_voice"
         }
       ],
       "area": "mode",
@@ -1279,13 +1328,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:27",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 27,
-      "text": "bind \",\" \"demo_goto -5s relative\"",
+      "text": "bind \",\" \"srp_demo_seek_back\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": ",",
-      "body": "demo_goto -5s relative",
+      "body": "srp_demo_seek_back",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1293,9 +1342,9 @@
       "description": "Demo 快退 5 秒。",
       "actions": [
         {
-          "command": "demo_goto",
-          "arguments": "-5s relative",
-          "source": "demo_goto -5s relative"
+          "command": "srp_demo_seek_back",
+          "arguments": "",
+          "source": "srp_demo_seek_back"
         }
       ],
       "area": "mode",
@@ -1333,13 +1382,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:9",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 9,
-      "text": "bind \"=\" \"widefov\"",
+      "text": "bind \"=\" \"srp_demo_widefov\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "=",
-      "body": "widefov",
+      "body": "srp_demo_widefov",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1347,9 +1396,9 @@
       "description": "切换广角 FOV。",
       "actions": [
         {
-          "command": "widefov",
+          "command": "srp_demo_widefov",
           "arguments": "",
-          "source": "widefov"
+          "source": "srp_demo_widefov"
         }
       ],
       "area": "mode",
@@ -1387,13 +1436,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:29",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 29,
-      "text": "bind \"[\" \"mirv_campath edit start delta+0.25\"",
+      "text": "bind \"[\" \"srp_demo_campath_start_forward\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "[",
-      "body": "mirv_campath edit start delta+0.25",
+      "body": "srp_demo_campath_start_forward",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1401,9 +1450,9 @@
       "description": "将镜头路径起始时间后移 0.25 秒。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "edit start delta+0.25",
-          "source": "mirv_campath edit start delta+0.25"
+          "command": "srp_demo_campath_start_forward",
+          "arguments": "",
+          "source": "srp_demo_campath_start_forward"
         }
       ],
       "area": "mode",
@@ -1441,13 +1490,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:8",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 8,
-      "text": "bind \"\\\" \"block\"",
+      "text": "bind \"\\\" \"srp_demo_block\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "\\",
-      "body": "block",
+      "body": "srp_demo_block",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1455,9 +1504,9 @@
       "description": "切换击杀信息显示。",
       "actions": [
         {
-          "command": "block",
+          "command": "srp_demo_block",
           "arguments": "",
-          "source": "block"
+          "source": "srp_demo_block"
         }
       ],
       "area": "mode",
@@ -1495,13 +1544,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:30",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 30,
-      "text": "bind \"]\" \"mirv_campath edit start delta-0.25\"",
+      "text": "bind \"]\" \"srp_demo_campath_start_back\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "]",
-      "body": "mirv_campath edit start delta-0.25",
+      "body": "srp_demo_campath_start_back",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1509,9 +1558,9 @@
       "description": "将镜头路径起始时间前移 0.25 秒。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "edit start delta-0.25",
-          "source": "mirv_campath edit start delta-0.25"
+          "command": "srp_demo_campath_start_back",
+          "arguments": "",
+          "source": "srp_demo_campath_start_back"
         }
       ],
       "area": "mode",
@@ -1549,13 +1598,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:20",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 20,
-      "text": "bind \"b\" \"toggle cl_drawhud\"",
+      "text": "bind \"b\" \"srp_demo_hud_full\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "b",
-      "body": "toggle cl_drawhud",
+      "body": "srp_demo_hud_full",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1563,9 +1612,9 @@
       "description": "切换完整 HUD。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_drawhud",
-          "source": "toggle cl_drawhud"
+          "command": "srp_demo_hud_full",
+          "arguments": "",
+          "source": "srp_demo_hud_full"
         }
       ],
       "area": "mode",
@@ -1603,13 +1652,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:35",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 35,
-      "text": "bind \"capslock\" \"mirv_campath add;echo 已添加机位\"",
+      "text": "bind \"capslock\" \"srp_demo_campath_add\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "capslock",
-      "body": "mirv_campath add;echo 已添加机位",
+      "body": "srp_demo_campath_add",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1617,14 +1666,9 @@
       "description": "添加当前镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "add",
-          "source": "mirv_campath add"
-        },
-        {
-          "command": "echo",
-          "arguments": "已添加机位",
-          "source": "echo 已添加机位"
+          "command": "srp_demo_campath_add",
+          "arguments": "",
+          "source": "srp_demo_campath_add"
         }
       ],
       "area": "mode",
@@ -1662,13 +1706,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:37",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 37,
-      "text": "bind \"del\" \"mirv_campath clear;echo 已清除所有机位\"",
+      "text": "bind \"del\" \"srp_demo_campath_clear\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "del",
-      "body": "mirv_campath clear;echo 已清除所有机位",
+      "body": "srp_demo_campath_clear",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1676,14 +1720,9 @@
       "description": "清空全部镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "clear",
-          "source": "mirv_campath clear"
-        },
-        {
-          "command": "echo",
-          "arguments": "已清除所有机位",
-          "source": "echo 已清除所有机位"
+          "command": "srp_demo_campath_clear",
+          "arguments": "",
+          "source": "srp_demo_campath_clear"
         }
       ],
       "area": "mode",
@@ -1721,13 +1760,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:4",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 4,
-      "text": "bind \"downarrow\" \"rec_end;demo_pause\"",
+      "text": "bind \"downarrow\" \"srp_demo_record_end\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "downarrow",
-      "body": "rec_end;demo_pause",
+      "body": "srp_demo_record_end",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1735,14 +1774,9 @@
       "description": "结束 HLAE 录制并暂停 Demo。",
       "actions": [
         {
-          "command": "rec_end",
+          "command": "srp_demo_record_end",
           "arguments": "",
-          "source": "rec_end"
-        },
-        {
-          "command": "demo_pause",
-          "arguments": "",
-          "source": "demo_pause"
+          "source": "srp_demo_record_end"
         }
       ],
       "area": "mode",
@@ -1780,13 +1814,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:31",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 31,
-      "text": "bind \"f5\" \"mirv_cmd addTick rec\"",
+      "text": "bind \"f5\" \"srp_demo_tick_rec\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f5",
-      "body": "mirv_cmd addTick rec",
+      "body": "srp_demo_tick_rec",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1794,9 +1828,9 @@
       "description": "把当前 Tick 设为录制开始点。",
       "actions": [
         {
-          "command": "mirv_cmd",
-          "arguments": "addTick rec",
-          "source": "mirv_cmd addTick rec"
+          "command": "srp_demo_tick_rec",
+          "arguments": "",
+          "source": "srp_demo_tick_rec"
         }
       ],
       "area": "mode",
@@ -1834,13 +1868,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:32",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 32,
-      "text": "bind \"f6\" \"mirv_cmd addTick rec_end\"",
+      "text": "bind \"f6\" \"srp_demo_tick_rec_end\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f6",
-      "body": "mirv_cmd addTick rec_end",
+      "body": "srp_demo_tick_rec_end",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1848,9 +1882,9 @@
       "description": "把当前 Tick 设为录制结束点。",
       "actions": [
         {
-          "command": "mirv_cmd",
-          "arguments": "addTick rec_end",
-          "source": "mirv_cmd addTick rec_end"
+          "command": "srp_demo_tick_rec_end",
+          "arguments": "",
+          "source": "srp_demo_tick_rec_end"
         }
       ],
       "area": "mode",
@@ -1888,13 +1922,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:33",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 33,
-      "text": "bind \"f7\" \"mirv_cmd print\"",
+      "text": "bind \"f7\" \"srp_demo_cmd_print\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f7",
-      "body": "mirv_cmd print",
+      "body": "srp_demo_cmd_print",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1902,9 +1936,9 @@
       "description": "打印全部 mirv_cmd 指令。",
       "actions": [
         {
-          "command": "mirv_cmd",
-          "arguments": "print",
-          "source": "mirv_cmd print"
+          "command": "srp_demo_cmd_print",
+          "arguments": "",
+          "source": "srp_demo_cmd_print"
         }
       ],
       "area": "mode",
@@ -1942,13 +1976,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:34",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 34,
-      "text": "bind \"f8\" \"mirv_cmd clear;echo >>> Cleared!\"",
+      "text": "bind \"f8\" \"srp_demo_cmd_clear\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f8",
-      "body": "mirv_cmd clear;echo >>> Cleared!",
+      "body": "srp_demo_cmd_clear",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -1956,14 +1990,9 @@
       "description": "清空全部 mirv_cmd 指令。",
       "actions": [
         {
-          "command": "mirv_cmd",
-          "arguments": "clear",
-          "source": "mirv_cmd clear"
-        },
-        {
-          "command": "echo",
-          "arguments": ">>> Cleared!",
-          "source": "echo >>> Cleared!"
+          "command": "srp_demo_cmd_clear",
+          "arguments": "",
+          "source": "srp_demo_cmd_clear"
         }
       ],
       "area": "mode",
@@ -2001,13 +2030,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:15",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 15,
-      "text": "bind \"h\" \"toggle cl_draw_only_deathnotices\"",
+      "text": "bind \"h\" \"srp_demo_hud_deathnotices\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "h",
-      "body": "toggle cl_draw_only_deathnotices",
+      "body": "srp_demo_hud_deathnotices",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2015,9 +2044,9 @@
       "description": "切换精简 HUD。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_draw_only_deathnotices",
-          "source": "toggle cl_draw_only_deathnotices"
+          "command": "srp_demo_hud_deathnotices",
+          "arguments": "",
+          "source": "srp_demo_hud_deathnotices"
         }
       ],
       "area": "mode",
@@ -2055,13 +2084,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:26",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 26,
-      "text": "bind \"i\" \"demo_gotomark\"",
+      "text": "bind \"i\" \"srp_demo_gotomark\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "i",
-      "body": "demo_gotomark",
+      "body": "srp_demo_gotomark",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2069,9 +2098,9 @@
       "description": "跳转到已标记的 Demo Tick。",
       "actions": [
         {
-          "command": "demo_gotomark",
+          "command": "srp_demo_gotomark",
           "arguments": "",
-          "source": "demo_gotomark"
+          "source": "srp_demo_gotomark"
         }
       ],
       "area": "mode",
@@ -2109,13 +2138,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:36",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 36,
-      "text": "bind \"ins\" \"mirv_campath print\"",
+      "text": "bind \"ins\" \"srp_demo_campath_print\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "ins",
-      "body": "mirv_campath print",
+      "body": "srp_demo_campath_print",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2123,9 +2152,9 @@
       "description": "打印全部镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "print",
-          "source": "mirv_campath print"
+          "command": "srp_demo_campath_print",
+          "arguments": "",
+          "source": "srp_demo_campath_print"
         }
       ],
       "area": "mode",
@@ -2163,13 +2192,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:7",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 7,
-      "text": "bind \"j\" \"dmsg\"",
+      "text": "bind \"j\" \"srp_demo_dmsg\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "dmsg",
+      "body": "srp_demo_dmsg",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2177,9 +2206,9 @@
       "description": "切换当前观察玩家的击杀信息。",
       "actions": [
         {
-          "command": "dmsg",
+          "command": "srp_demo_dmsg",
           "arguments": "",
-          "source": "dmsg"
+          "source": "srp_demo_dmsg"
         }
       ],
       "area": "mode",
@@ -2217,13 +2246,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:16",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 16,
-      "text": "bind \"k\" \"toggle voice_enable;toggle voice_caster_enable\"",
+      "text": "bind \"k\" \"srp_demo_voice\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "k",
-      "body": "toggle voice_enable;toggle voice_caster_enable",
+      "body": "srp_demo_voice",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2231,14 +2260,9 @@
       "description": "切换游戏与解说语音。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "voice_enable",
-          "source": "toggle voice_enable"
-        },
-        {
-          "command": "toggle",
-          "arguments": "voice_caster_enable",
-          "source": "toggle voice_caster_enable"
+          "command": "srp_demo_voice",
+          "arguments": "",
+          "source": "srp_demo_voice"
         }
       ],
       "area": "mode",
@@ -2276,13 +2300,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:47",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 47,
-      "text": "bind \"kp_0\" \"mirv_campath remove 0\"",
+      "text": "bind \"kp_0\" \"srp_demo_campath_remove_0\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_0",
-      "body": "mirv_campath remove 0",
+      "body": "srp_demo_campath_remove_0",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2290,9 +2314,9 @@
       "description": "删除编号 0 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 0",
-          "source": "mirv_campath remove 0"
+          "command": "srp_demo_campath_remove_0",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_0"
         }
       ],
       "area": "mode",
@@ -2330,13 +2354,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:38",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 38,
-      "text": "bind \"kp_1\" \"mirv_campath remove 1\"",
+      "text": "bind \"kp_1\" \"srp_demo_campath_remove_1\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_1",
-      "body": "mirv_campath remove 1",
+      "body": "srp_demo_campath_remove_1",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2344,9 +2368,9 @@
       "description": "删除编号 1 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 1",
-          "source": "mirv_campath remove 1"
+          "command": "srp_demo_campath_remove_1",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_1"
         }
       ],
       "area": "mode",
@@ -2384,13 +2408,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:39",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 39,
-      "text": "bind \"kp_2\" \"mirv_campath remove 2\"",
+      "text": "bind \"kp_2\" \"srp_demo_campath_remove_2\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_2",
-      "body": "mirv_campath remove 2",
+      "body": "srp_demo_campath_remove_2",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2398,9 +2422,9 @@
       "description": "删除编号 2 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 2",
-          "source": "mirv_campath remove 2"
+          "command": "srp_demo_campath_remove_2",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_2"
         }
       ],
       "area": "mode",
@@ -2438,13 +2462,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:40",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 40,
-      "text": "bind \"kp_3\" \"mirv_campath remove 3\"",
+      "text": "bind \"kp_3\" \"srp_demo_campath_remove_3\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_3",
-      "body": "mirv_campath remove 3",
+      "body": "srp_demo_campath_remove_3",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2452,9 +2476,9 @@
       "description": "删除编号 3 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 3",
-          "source": "mirv_campath remove 3"
+          "command": "srp_demo_campath_remove_3",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_3"
         }
       ],
       "area": "mode",
@@ -2492,13 +2516,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:41",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 41,
-      "text": "bind \"kp_4\" \"mirv_campath remove 4\"",
+      "text": "bind \"kp_4\" \"srp_demo_campath_remove_4\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_4",
-      "body": "mirv_campath remove 4",
+      "body": "srp_demo_campath_remove_4",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2506,9 +2530,9 @@
       "description": "删除编号 4 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 4",
-          "source": "mirv_campath remove 4"
+          "command": "srp_demo_campath_remove_4",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_4"
         }
       ],
       "area": "mode",
@@ -2546,13 +2570,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:42",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 42,
-      "text": "bind \"kp_5\" \"mirv_campath remove 5\"",
+      "text": "bind \"kp_5\" \"srp_demo_campath_remove_5\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_5",
-      "body": "mirv_campath remove 5",
+      "body": "srp_demo_campath_remove_5",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2560,9 +2584,9 @@
       "description": "删除编号 5 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 5",
-          "source": "mirv_campath remove 5"
+          "command": "srp_demo_campath_remove_5",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_5"
         }
       ],
       "area": "mode",
@@ -2600,13 +2624,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:43",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 43,
-      "text": "bind \"kp_6\" \"mirv_campath remove 6\"",
+      "text": "bind \"kp_6\" \"srp_demo_campath_remove_6\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_6",
-      "body": "mirv_campath remove 6",
+      "body": "srp_demo_campath_remove_6",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2614,9 +2638,9 @@
       "description": "删除编号 6 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 6",
-          "source": "mirv_campath remove 6"
+          "command": "srp_demo_campath_remove_6",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_6"
         }
       ],
       "area": "mode",
@@ -2654,13 +2678,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:44",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 44,
-      "text": "bind \"kp_7\" \"mirv_campath remove 7\"",
+      "text": "bind \"kp_7\" \"srp_demo_campath_remove_7\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_7",
-      "body": "mirv_campath remove 7",
+      "body": "srp_demo_campath_remove_7",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2668,9 +2692,9 @@
       "description": "删除编号 7 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 7",
-          "source": "mirv_campath remove 7"
+          "command": "srp_demo_campath_remove_7",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_7"
         }
       ],
       "area": "mode",
@@ -2708,13 +2732,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:45",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 45,
-      "text": "bind \"kp_8\" \"mirv_campath remove 8\"",
+      "text": "bind \"kp_8\" \"srp_demo_campath_remove_8\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_8",
-      "body": "mirv_campath remove 8",
+      "body": "srp_demo_campath_remove_8",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2722,9 +2746,9 @@
       "description": "删除编号 8 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 8",
-          "source": "mirv_campath remove 8"
+          "command": "srp_demo_campath_remove_8",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_8"
         }
       ],
       "area": "mode",
@@ -2762,13 +2786,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:46",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 46,
-      "text": "bind \"kp_9\" \"mirv_campath remove 9\"",
+      "text": "bind \"kp_9\" \"srp_demo_campath_remove_9\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "kp_9",
-      "body": "mirv_campath remove 9",
+      "body": "srp_demo_campath_remove_9",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2776,9 +2800,9 @@
       "description": "删除编号 9 的镜头机位。",
       "actions": [
         {
-          "command": "mirv_campath",
-          "arguments": "remove 9",
-          "source": "mirv_campath remove 9"
+          "command": "srp_demo_campath_remove_9",
+          "arguments": "",
+          "source": "srp_demo_campath_remove_9"
         }
       ],
       "area": "mode",
@@ -2816,13 +2840,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:23",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 23,
-      "text": "bind \"m\" \"mute\"",
+      "text": "bind \"m\" \"srp_demo_mute\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "m",
-      "body": "mute",
+      "body": "srp_demo_mute",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2830,9 +2854,9 @@
       "description": "切换静音状态。",
       "actions": [
         {
-          "command": "mute",
+          "command": "srp_demo_mute",
           "arguments": "",
-          "source": "mute"
+          "source": "srp_demo_mute"
         }
       ],
       "area": "mode",
@@ -2870,13 +2894,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:14",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 14,
-      "text": "bind \"mouse3\" \"demo_togglepause\"",
+      "text": "bind \"mouse3\" \"srp_demo_togglepause\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "mouse3",
-      "body": "demo_togglepause",
+      "body": "srp_demo_togglepause",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2884,9 +2908,9 @@
       "description": "暂停或继续 Demo。",
       "actions": [
         {
-          "command": "demo_togglepause",
+          "command": "srp_demo_togglepause",
           "arguments": "",
-          "source": "demo_togglepause"
+          "source": "srp_demo_togglepause"
         }
       ],
       "area": "mode",
@@ -2924,13 +2948,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:11",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 11,
-      "text": "bind \"mouse4\" \"gear_down\"",
+      "text": "bind \"mouse4\" \"srp_demo_gear_down\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "mouse4",
-      "body": "gear_down",
+      "body": "srp_demo_gear_down",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2938,9 +2962,9 @@
       "description": "降低 Demo 播放速度。",
       "actions": [
         {
-          "command": "gear_down",
+          "command": "srp_demo_gear_down",
           "arguments": "",
-          "source": "gear_down"
+          "source": "srp_demo_gear_down"
         }
       ],
       "area": "mode",
@@ -2978,13 +3002,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:10",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 10,
-      "text": "bind \"mouse5\" \"gear_up\"",
+      "text": "bind \"mouse5\" \"srp_demo_gear_up\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "mouse5",
-      "body": "gear_up",
+      "body": "srp_demo_gear_up",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -2992,9 +3016,9 @@
       "description": "提高 Demo 播放速度。",
       "actions": [
         {
-          "command": "gear_up",
+          "command": "srp_demo_gear_up",
           "arguments": "",
-          "source": "gear_up"
+          "source": "srp_demo_gear_up"
         }
       ],
       "area": "mode",
@@ -3032,13 +3056,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:21",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 21,
-      "text": "bind \"n\" \"incrementvar cl_drawhud_force_radar -1 1 1\"",
+      "text": "bind \"n\" \"srp_demo_radar\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "n",
-      "body": "incrementvar cl_drawhud_force_radar -1 1 1",
+      "body": "srp_demo_radar",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3046,9 +3070,9 @@
       "description": "循环切换雷达强制显示状态。",
       "actions": [
         {
-          "command": "incrementvar",
-          "arguments": "cl_drawhud_force_radar -1 1 1",
-          "source": "incrementvar cl_drawhud_force_radar -1 1 1"
+          "command": "srp_demo_radar",
+          "arguments": "",
+          "source": "srp_demo_radar"
         }
       ],
       "area": "mode",
@@ -3086,13 +3110,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:13",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 13,
-      "text": "bind \"p\" \"demo_togglepause\"",
+      "text": "bind \"p\" \"srp_demo_togglepause\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "p",
-      "body": "demo_togglepause",
+      "body": "srp_demo_togglepause",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3100,9 +3124,9 @@
       "description": "暂停或继续 Demo。",
       "actions": [
         {
-          "command": "demo_togglepause",
+          "command": "srp_demo_togglepause",
           "arguments": "",
-          "source": "demo_togglepause"
+          "source": "srp_demo_togglepause"
         }
       ],
       "area": "mode",
@@ -3140,13 +3164,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:12",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 12,
-      "text": "bind \"q\" \"demoui\"",
+      "text": "bind \"q\" \"srp_demo_ui\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "q",
-      "body": "demoui",
+      "body": "srp_demo_ui",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3154,9 +3178,9 @@
       "description": "打开 Demo 控制面板。",
       "actions": [
         {
-          "command": "demoui",
+          "command": "srp_demo_ui",
           "arguments": "",
-          "source": "demoui"
+          "source": "srp_demo_ui"
         }
       ],
       "area": "mode",
@@ -3194,13 +3218,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:24",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 24,
-      "text": "bind \"r\" \"mirv_input camera;echo 已进入运镜模式，按Esc退出使路径生效\"",
+      "text": "bind \"r\" \"srp_demo_camera_mode\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "r",
-      "body": "mirv_input camera;echo 已进入运镜模式，按Esc退出使路径生效",
+      "body": "srp_demo_camera_mode",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3208,14 +3232,9 @@
       "description": "进入 HLAE 运镜模式。",
       "actions": [
         {
-          "command": "mirv_input",
-          "arguments": "camera",
-          "source": "mirv_input camera"
-        },
-        {
-          "command": "echo",
-          "arguments": "已进入运镜模式，按Esc退出使路径生效",
-          "source": "echo 已进入运镜模式，按Esc退出使路径生效"
+          "command": "srp_demo_camera_mode",
+          "arguments": "",
+          "source": "srp_demo_camera_mode"
         }
       ],
       "area": "mode",
@@ -3253,13 +3272,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:22",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 22,
-      "text": "bind \"ralt\" \"toggle cl_teamid_overhead_mode 1 3\"",
+      "text": "bind \"ralt\" \"srp_demo_teamid\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "ralt",
-      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "body": "srp_demo_teamid",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3267,9 +3286,9 @@
       "description": "切换队友头顶标识模式。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_teamid_overhead_mode 1 3",
-          "source": "toggle cl_teamid_overhead_mode 1 3"
+          "command": "srp_demo_teamid",
+          "arguments": "",
+          "source": "srp_demo_teamid"
         }
       ],
       "area": "mode",
@@ -3307,13 +3326,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:5",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 5,
-      "text": "bind \"t\" \"campath\"",
+      "text": "bind \"t\" \"srp_demo_campath\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "t",
-      "body": "campath",
+      "body": "srp_demo_campath",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3321,9 +3340,9 @@
       "description": "切换镜头路径启用状态。",
       "actions": [
         {
-          "command": "campath",
+          "command": "srp_demo_campath",
           "arguments": "",
-          "source": "campath"
+          "source": "srp_demo_campath"
         }
       ],
       "area": "mode",
@@ -3361,13 +3380,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:25",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 25,
-      "text": "bind \"u\" \"demo_marktick\"",
+      "text": "bind \"u\" \"srp_demo_marktick\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "u",
-      "body": "demo_marktick",
+      "body": "srp_demo_marktick",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3375,9 +3394,9 @@
       "description": "标记当前 Demo Tick。",
       "actions": [
         {
-          "command": "demo_marktick",
+          "command": "srp_demo_marktick",
           "arguments": "",
-          "source": "demo_marktick"
+          "source": "srp_demo_marktick"
         }
       ],
       "area": "mode",
@@ -3415,13 +3434,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:3",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 3,
-      "text": "bind \"uparrow\" \"rec;demo_resume;checkSetting\"",
+      "text": "bind \"uparrow\" \"srp_demo_record_start\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "uparrow",
-      "body": "rec;demo_resume;checkSetting",
+      "body": "srp_demo_record_start",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3429,19 +3448,9 @@
       "description": "开始 HLAE 录制并继续播放 Demo。",
       "actions": [
         {
-          "command": "rec",
+          "command": "srp_demo_record_start",
           "arguments": "",
-          "source": "rec"
-        },
-        {
-          "command": "demo_resume",
-          "arguments": "",
-          "source": "demo_resume"
-        },
-        {
-          "command": "checkSetting",
-          "arguments": "",
-          "source": "checkSetting"
+          "source": "srp_demo_record_start"
         }
       ],
       "area": "mode",
@@ -3479,13 +3488,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:19",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 19,
-      "text": "bind \"v\" \"toggle crosshair\"",
+      "text": "bind \"v\" \"srp_demo_crosshair\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "v",
-      "body": "toggle crosshair",
+      "body": "srp_demo_crosshair",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3493,9 +3502,9 @@
       "description": "切换准星显示。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "crosshair",
-          "source": "toggle crosshair"
+          "command": "srp_demo_crosshair",
+          "arguments": "",
+          "source": "srp_demo_crosshair"
         }
       ],
       "area": "mode",
@@ -3533,13 +3542,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:18",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 18,
-      "text": "bind \"x\" \"toggle spec_show_xray 0 1\"",
+      "text": "bind \"x\" \"srp_demo_xray\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "x",
-      "body": "toggle spec_show_xray 0 1",
+      "body": "srp_demo_xray",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3547,9 +3556,9 @@
       "description": "切换观察 X 光。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "spec_show_xray 0 1",
-          "source": "toggle spec_show_xray 0 1"
+          "command": "srp_demo_xray",
+          "arguments": "",
+          "source": "srp_demo_xray"
         }
       ],
       "area": "mode",
@@ -3587,13 +3596,13 @@
       "ref": "config/srp-cfg/modes/demo-hlae/keymap.cfg:6",
       "path": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "line": 6,
-      "text": "bind \"y\" \"campath_draw\"",
+      "text": "bind \"y\" \"srp_demo_campath_draw\"",
       "fileId": "file:config/srp-cfg/modes/demo-hlae/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "y",
-      "body": "campath_draw",
+      "body": "srp_demo_campath_draw",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -3601,9 +3610,9 @@
       "description": "切换镜头路径显示。",
       "actions": [
         {
-          "command": "campath_draw",
+          "command": "srp_demo_campath_draw",
           "arguments": "",
-          "source": "campath_draw"
+          "source": "srp_demo_campath_draw"
         }
       ],
       "area": "mode",
@@ -4019,13 +4028,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:17",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 17,
-      "text": "bind \".\" \"toggle r_aoproxy_show 1 0;echo 切换实体显示updated!\"",
+      "text": "bind \".\" \"srp_prac_aoproxy\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": ".",
-      "body": "toggle r_aoproxy_show 1 0;echo 切换实体显示updated!",
+      "body": "srp_prac_aoproxy",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4033,14 +4042,9 @@
       "description": "切换实体 AO 代理显示。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "r_aoproxy_show 1 0",
-          "source": "toggle r_aoproxy_show 1 0"
-        },
-        {
-          "command": "echo",
-          "arguments": "切换实体显示updated!",
-          "source": "echo 切换实体显示updated!"
+          "command": "srp_prac_aoproxy",
+          "arguments": "",
+          "source": "srp_prac_aoproxy"
         }
       ],
       "area": "mode",
@@ -4078,13 +4082,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:16",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 16,
-      "text": "bind \",\" \"ent_fire smokegrenade_projectile kill;ent_fire flashbang_projectile kill;ent_fire incgrenade_projectile kill;ent_fire molotov_projectile kill;ent_fire hegrenade_projectile kill;ent_fire decoy_projectile kill;stopsound;echo 已清除道具!\"",
+      "text": "bind \",\" \"srp_prac_clear_grenades\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": ",",
-      "body": "ent_fire smokegrenade_projectile kill;ent_fire flashbang_projectile kill;ent_fire incgrenade_projectile kill;ent_fire molotov_projectile kill;ent_fire hegrenade_projectile kill;ent_fire decoy_projectile kill;stopsound;echo 已清除道具!",
+      "body": "srp_prac_clear_grenades",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4092,44 +4096,9 @@
       "description": "清除场上全部投掷物并停止残留声音。",
       "actions": [
         {
-          "command": "ent_fire",
-          "arguments": "smokegrenade_projectile kill",
-          "source": "ent_fire smokegrenade_projectile kill"
-        },
-        {
-          "command": "ent_fire",
-          "arguments": "flashbang_projectile kill",
-          "source": "ent_fire flashbang_projectile kill"
-        },
-        {
-          "command": "ent_fire",
-          "arguments": "incgrenade_projectile kill",
-          "source": "ent_fire incgrenade_projectile kill"
-        },
-        {
-          "command": "ent_fire",
-          "arguments": "molotov_projectile kill",
-          "source": "ent_fire molotov_projectile kill"
-        },
-        {
-          "command": "ent_fire",
-          "arguments": "hegrenade_projectile kill",
-          "source": "ent_fire hegrenade_projectile kill"
-        },
-        {
-          "command": "ent_fire",
-          "arguments": "decoy_projectile kill",
-          "source": "ent_fire decoy_projectile kill"
-        },
-        {
-          "command": "stopsound",
+          "command": "srp_prac_clear_grenades",
           "arguments": "",
-          "source": "stopsound"
-        },
-        {
-          "command": "echo",
-          "arguments": "已清除道具!",
-          "source": "echo 已清除道具!"
+          "source": "srp_prac_clear_grenades"
         }
       ],
       "area": "mode",
@@ -4167,13 +4136,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:18",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 18,
-      "text": "bind \"/\" \"toggle sv_infinite_ammo 1 2;echo 弹夹容量状态切换!\"",
+      "text": "bind \"/\" \"srp_prac_infammo\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "/",
-      "body": "toggle sv_infinite_ammo 1 2;echo 弹夹容量状态切换!",
+      "body": "srp_prac_infammo",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4181,14 +4150,9 @@
       "description": "切换无限弹匣与无限备弹。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "sv_infinite_ammo 1 2",
-          "source": "toggle sv_infinite_ammo 1 2"
-        },
-        {
-          "command": "echo",
-          "arguments": "弹夹容量状态切换!",
-          "source": "echo 弹夹容量状态切换!"
+          "command": "srp_prac_infammo",
+          "arguments": "",
+          "source": "srp_prac_infammo"
         }
       ],
       "area": "mode",
@@ -4280,13 +4244,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:21",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 21,
-      "text": "bind \"downarrow\" \"bot_kill;echo bot已全部处死!\"",
+      "text": "bind \"downarrow\" \"srp_prac_bot_kill\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "downarrow",
-      "body": "bot_kill;echo bot已全部处死!",
+      "body": "srp_prac_bot_kill",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4294,14 +4258,9 @@
       "description": "处死全部 Bot。",
       "actions": [
         {
-          "command": "bot_kill",
+          "command": "srp_prac_bot_kill",
           "arguments": "",
-          "source": "bot_kill"
-        },
-        {
-          "command": "echo",
-          "arguments": "bot已全部处死!",
-          "source": "echo bot已全部处死!"
+          "source": "srp_prac_bot_kill"
         }
       ],
       "area": "mode",
@@ -4339,13 +4298,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:2",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 2,
-      "text": "bind \"f1\" \"give item_assaultsuit;echo 已补甲!\"",
+      "text": "bind \"f1\" \"srp_prac_armor\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f1",
-      "body": "give item_assaultsuit;echo 已补甲!",
+      "body": "srp_prac_armor",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4353,14 +4312,9 @@
       "description": "补充头盔与护甲。",
       "actions": [
         {
-          "command": "give",
-          "arguments": "item_assaultsuit",
-          "source": "give item_assaultsuit"
-        },
-        {
-          "command": "echo",
-          "arguments": "已补甲!",
-          "source": "echo 已补甲!"
+          "command": "srp_prac_armor",
+          "arguments": "",
+          "source": "srp_prac_armor"
         }
       ],
       "area": "mode",
@@ -4398,13 +4352,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:11",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 11,
-      "text": "bind \"f12\" \"toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo bhop状态已更新\"",
+      "text": "bind \"f12\" \"srp_prac_bhop\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f12",
-      "body": "toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo bhop状态已更新",
+      "body": "srp_prac_bhop",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4412,29 +4366,9 @@
       "description": "切换连跳训练环境。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "sv_enablebunnyhopping",
-          "source": "toggle sv_enablebunnyhopping"
-        },
-        {
-          "command": "toggle",
-          "arguments": "sv_autobunnyhopping",
-          "source": "toggle sv_autobunnyhopping"
-        },
-        {
-          "command": "toggle",
-          "arguments": "cl_showpos",
-          "source": "toggle cl_showpos"
-        },
-        {
-          "command": "toggle",
-          "arguments": "sv_airaccelerate 1000 12",
-          "source": "toggle sv_airaccelerate 1000 12"
-        },
-        {
-          "command": "echo",
-          "arguments": "bhop状态已更新",
-          "source": "echo bhop状态已更新"
+          "command": "srp_prac_bhop",
+          "arguments": "",
+          "source": "srp_prac_bhop"
         }
       ],
       "area": "mode",
@@ -4472,13 +4406,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:3",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 3,
-      "text": "bind \"f2\" \"toggle sv_regeneration_force_on 0 1;echo 自动回血状态updated!\"",
+      "text": "bind \"f2\" \"srp_prac_regen\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f2",
-      "body": "toggle sv_regeneration_force_on 0 1;echo 自动回血状态updated!",
+      "body": "srp_prac_regen",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4486,14 +4420,9 @@
       "description": "切换自动回血。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "sv_regeneration_force_on 0 1",
-          "source": "toggle sv_regeneration_force_on 0 1"
-        },
-        {
-          "command": "echo",
-          "arguments": "自动回血状态updated!",
-          "source": "echo 自动回血状态updated!"
+          "command": "srp_prac_regen",
+          "arguments": "",
+          "source": "srp_prac_regen"
         }
       ],
       "area": "mode",
@@ -4585,13 +4514,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:5",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 5,
-      "text": "bind \"f4\" \"bot_add;mp_death_drop_gun 0;echo 已添加bot!\"",
+      "text": "bind \"f4\" \"srp_prac_bot_add\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f4",
-      "body": "bot_add;mp_death_drop_gun 0;echo 已添加bot!",
+      "body": "srp_prac_bot_add",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4599,19 +4528,9 @@
       "description": "添加 Bot 并关闭 Bot 死亡掉枪。",
       "actions": [
         {
-          "command": "bot_add",
+          "command": "srp_prac_bot_add",
           "arguments": "",
-          "source": "bot_add"
-        },
-        {
-          "command": "mp_death_drop_gun",
-          "arguments": "0",
-          "source": "mp_death_drop_gun 0"
-        },
-        {
-          "command": "echo",
-          "arguments": "已添加bot!",
-          "source": "echo 已添加bot!"
+          "source": "srp_prac_bot_add"
         }
       ],
       "area": "mode",
@@ -4649,13 +4568,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:6",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 6,
-      "text": "bind \"f5\" \"toggle bot_crouch;echo bot姿势updated!\"",
+      "text": "bind \"f5\" \"srp_prac_bot_crouch\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f5",
-      "body": "toggle bot_crouch;echo bot姿势updated!",
+      "body": "srp_prac_bot_crouch",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4663,14 +4582,9 @@
       "description": "切换 Bot 蹲伏。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "bot_crouch",
-          "source": "toggle bot_crouch"
-        },
-        {
-          "command": "echo",
-          "arguments": "bot姿势updated!",
-          "source": "echo bot姿势updated!"
+          "command": "srp_prac_bot_crouch",
+          "arguments": "",
+          "source": "srp_prac_bot_crouch"
         }
       ],
       "area": "mode",
@@ -4708,13 +4622,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:7",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 7,
-      "text": "bind \"f6\" \"toggle bot_mimic 0 -1;echo bot模仿状态updated!\"",
+      "text": "bind \"f6\" \"srp_prac_bot_mimic\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f6",
-      "body": "toggle bot_mimic 0 -1;echo bot模仿状态updated!",
+      "body": "srp_prac_bot_mimic",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4722,14 +4636,9 @@
       "description": "切换 Bot 镜像模仿。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "bot_mimic 0 -1",
-          "source": "toggle bot_mimic 0 -1"
-        },
-        {
-          "command": "echo",
-          "arguments": "bot模仿状态updated!",
-          "source": "echo bot模仿状态updated!"
+          "command": "srp_prac_bot_mimic",
+          "arguments": "",
+          "source": "srp_prac_bot_mimic"
         }
       ],
       "area": "mode",
@@ -4767,13 +4676,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:8",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 8,
-      "text": "bind \"f7\" \"toggle fov_cs_debug 0 30;echo 视野状态updated!\"",
+      "text": "bind \"f7\" \"srp_prac_fov\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f7",
-      "body": "toggle fov_cs_debug 0 30;echo 视野状态updated!",
+      "body": "srp_prac_fov",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4781,14 +4690,9 @@
       "description": "切换调试广角视野。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "fov_cs_debug 0 30",
-          "source": "toggle fov_cs_debug 0 30"
-        },
-        {
-          "command": "echo",
-          "arguments": "视野状态updated!",
-          "source": "echo 视野状态updated!"
+          "command": "srp_prac_fov",
+          "arguments": "",
+          "source": "srp_prac_fov"
         }
       ],
       "area": "mode",
@@ -4826,13 +4730,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:9",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 9,
-      "text": "bind \"f8\" \"bot_kick;mp_death_drop_gun 1;echo bot已经被全部踢出!\"",
+      "text": "bind \"f8\" \"srp_prac_bot_kick\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f8",
-      "body": "bot_kick;mp_death_drop_gun 1;echo bot已经被全部踢出!",
+      "body": "srp_prac_bot_kick",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4840,19 +4744,9 @@
       "description": "踢出全部 Bot 并恢复死亡掉枪。",
       "actions": [
         {
-          "command": "bot_kick",
+          "command": "srp_prac_bot_kick",
           "arguments": "",
-          "source": "bot_kick"
-        },
-        {
-          "command": "mp_death_drop_gun",
-          "arguments": "1",
-          "source": "mp_death_drop_gun 1"
-        },
-        {
-          "command": "echo",
-          "arguments": "bot已经被全部踢出!",
-          "source": "echo bot已经被全部踢出!"
+          "source": "srp_prac_bot_kick"
         }
       ],
       "area": "mode",
@@ -4890,13 +4784,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:10",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 10,
-      "text": "bind \"f9\" \"toggle mp_teammates_are_enemies 0 1;echo 友伤状态切换!\"",
+      "text": "bind \"f9\" \"srp_prac_teammates_enemies\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "f9",
-      "body": "toggle mp_teammates_are_enemies 0 1;echo 友伤状态切换!",
+      "body": "srp_prac_teammates_enemies",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4904,14 +4798,9 @@
       "description": "切换队友互为敌人。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "mp_teammates_are_enemies 0 1",
-          "source": "toggle mp_teammates_are_enemies 0 1"
-        },
-        {
-          "command": "echo",
-          "arguments": "友伤状态切换!",
-          "source": "echo 友伤状态切换!"
+          "command": "srp_prac_teammates_enemies",
+          "arguments": "",
+          "source": "srp_prac_teammates_enemies"
         }
       ],
       "area": "mode",
@@ -4949,13 +4838,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:13",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 13,
-      "text": "bind \"k\" \"toggle cl_showpos 0 1\"",
+      "text": "bind \"k\" \"srp_prac_showpos\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "k",
-      "body": "toggle cl_showpos 0 1",
+      "body": "srp_prac_showpos",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -4963,9 +4852,9 @@
       "description": "切换速度与坐标显示。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_showpos 0 1",
-          "source": "toggle cl_showpos 0 1"
+          "command": "srp_prac_showpos",
+          "arguments": "",
+          "source": "srp_prac_showpos"
         }
       ],
       "area": "mode",
@@ -5003,13 +4892,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:14",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 14,
-      "text": "bind \"l\" \"sv_rethrow_last_grenade;echo 已重新投掷!\"",
+      "text": "bind \"l\" \"srp_prac_rethrow\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "l",
-      "body": "sv_rethrow_last_grenade;echo 已重新投掷!",
+      "body": "srp_prac_rethrow",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5017,14 +4906,9 @@
       "description": "重新投掷上一颗投掷物。",
       "actions": [
         {
-          "command": "sv_rethrow_last_grenade",
+          "command": "srp_prac_rethrow",
           "arguments": "",
-          "source": "sv_rethrow_last_grenade"
-        },
-        {
-          "command": "echo",
-          "arguments": "已重新投掷!",
-          "source": "echo 已重新投掷!"
+          "source": "srp_prac_rethrow"
         }
       ],
       "area": "mode",
@@ -5062,13 +4946,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:23",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 23,
-      "text": "bind \"mouse5\" \"bot_stop 1;bot_place;echo 成功放置bot!\"",
+      "text": "bind \"mouse5\" \"srp_prac_bot_place\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "mouse5",
-      "body": "bot_stop 1;bot_place;echo 成功放置bot!",
+      "body": "srp_prac_bot_place",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5076,19 +4960,9 @@
       "description": "在准星位置放置并冻结 Bot。",
       "actions": [
         {
-          "command": "bot_stop",
-          "arguments": "1",
-          "source": "bot_stop 1"
-        },
-        {
-          "command": "bot_place",
+          "command": "srp_prac_bot_place",
           "arguments": "",
-          "source": "bot_place"
-        },
-        {
-          "command": "echo",
-          "arguments": "成功放置bot!",
-          "source": "echo 成功放置bot!"
+          "source": "srp_prac_bot_place"
         }
       ],
       "area": "mode",
@@ -5126,13 +5000,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:15",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 15,
-      "text": "bind \"n\" \"noclip\"",
+      "text": "bind \"n\" \"srp_prac_noclip\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "n",
-      "body": "noclip",
+      "body": "srp_prac_noclip",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5140,9 +5014,9 @@
       "description": "切换飞行模式。",
       "actions": [
         {
-          "command": "noclip",
+          "command": "srp_prac_noclip",
           "arguments": "",
-          "source": "noclip"
+          "source": "srp_prac_noclip"
         }
       ],
       "area": "mode",
@@ -5180,13 +5054,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:19",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 19,
-      "text": "bind \"ralt\" \"toggle cl_teamid_overhead_mode 1 3\"",
+      "text": "bind \"ralt\" \"srp_prac_teamid\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "ralt",
-      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "body": "srp_prac_teamid",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5194,9 +5068,9 @@
       "description": "切换队友头顶标识模式。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_teamid_overhead_mode 1 3",
-          "source": "toggle cl_teamid_overhead_mode 1 3"
+          "command": "srp_prac_teamid",
+          "arguments": "",
+          "source": "srp_prac_teamid"
         }
       ],
       "area": "mode",
@@ -5234,13 +5108,13 @@
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:22",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 22,
-      "text": "bind \"rightarrow\" \"mp_restartgame 1;mp_death_drop_gun 1;echo 1秒后游戏将重新开始!\"",
+      "text": "bind \"rightarrow\" \"srp_prac_restart\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "rightarrow",
-      "body": "mp_restartgame 1;mp_death_drop_gun 1;echo 1秒后游戏将重新开始!",
+      "body": "srp_prac_restart",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5248,19 +5122,9 @@
       "description": "一秒后重启训练回合。",
       "actions": [
         {
-          "command": "mp_restartgame",
-          "arguments": "1",
-          "source": "mp_restartgame 1"
-        },
-        {
-          "command": "mp_death_drop_gun",
-          "arguments": "1",
-          "source": "mp_death_drop_gun 1"
-        },
-        {
-          "command": "echo",
-          "arguments": "1秒后游戏将重新开始!",
-          "source": "echo 1秒后游戏将重新开始!"
+          "command": "srp_prac_restart",
+          "arguments": "",
+          "source": "srp_prac_restart"
         }
       ],
       "area": "mode",
@@ -5460,13 +5324,13 @@
       "ref": "config/srp-cfg/modes/preview/keymap.cfg:4",
       "path": "config/srp-cfg/modes/preview/keymap.cfg",
       "line": 4,
-      "text": "bind \"c\" \"toggle r_dof_override;echo 景深状态已更新!\"",
+      "text": "bind \"c\" \"srp_preview_dof\"",
       "fileId": "file:config/srp-cfg/modes/preview/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "c",
-      "body": "toggle r_dof_override;echo 景深状态已更新!",
+      "body": "srp_preview_dof",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5474,14 +5338,9 @@
       "description": "切换预览景深。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "r_dof_override",
-          "source": "toggle r_dof_override"
-        },
-        {
-          "command": "echo",
-          "arguments": "景深状态已更新!",
-          "source": "echo 景深状态已更新!"
+          "command": "srp_preview_dof",
+          "arguments": "",
+          "source": "srp_preview_dof"
         }
       ],
       "area": "mode",
@@ -5627,13 +5486,13 @@
       "ref": "config/srp-cfg/modes/preview/keymap.cfg:3",
       "path": "config/srp-cfg/modes/preview/keymap.cfg",
       "line": 3,
-      "text": "bind \"x\" \"toggle cl_lock_camera;echo 摄像机视角固定状态已更新!\"",
+      "text": "bind \"x\" \"srp_preview_lock\"",
       "fileId": "file:config/srp-cfg/modes/preview/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "x",
-      "body": "toggle cl_lock_camera;echo 摄像机视角固定状态已更新!",
+      "body": "srp_preview_lock",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5641,14 +5500,9 @@
       "description": "切换预览摄像机锁定。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_lock_camera",
-          "source": "toggle cl_lock_camera"
-        },
-        {
-          "command": "echo",
-          "arguments": "摄像机视角固定状态已更新!",
-          "source": "echo 摄像机视角固定状态已更新!"
+          "command": "srp_preview_lock",
+          "arguments": "",
+          "source": "srp_preview_lock"
         }
       ],
       "area": "mode",
@@ -5686,13 +5540,13 @@
       "ref": "config/srp-cfg/modes/preview/keymap.cfg:2",
       "path": "config/srp-cfg/modes/preview/keymap.cfg",
       "line": 2,
-      "text": "bind \"z\" \"toggle cl_drawhud;echo HUD状态已更新!\"",
+      "text": "bind \"z\" \"srp_preview_hud\"",
       "fileId": "file:config/srp-cfg/modes/preview/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "z",
-      "body": "toggle cl_drawhud;echo HUD状态已更新!",
+      "body": "srp_preview_hud",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -5700,14 +5554,9 @@
       "description": "切换预览 HUD。",
       "actions": [
         {
-          "command": "toggle",
-          "arguments": "cl_drawhud",
-          "source": "toggle cl_drawhud"
-        },
-        {
-          "command": "echo",
-          "arguments": "HUD状态已更新!",
-          "source": "echo HUD状态已更新!"
+          "command": "srp_preview_hud",
+          "arguments": "",
+          "source": "srp_preview_hud"
         }
       ],
       "area": "mode",
@@ -5742,9 +5591,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#-",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:53",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:71",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 53,
+      "line": 71,
       "text": "bind \"-\" \"keyhud\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -5796,31 +5645,26 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#'",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:52",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:36",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 52,
-      "text": "bind \"'\" \"radio2;slot12\"",
+      "line": 36,
+      "text": "bind \"'\" \"radio2\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "'",
-      "body": "radio2;slot12",
+      "body": "radio2",
       "target": "",
       "arguments": "",
       "optional": false,
       "ordinal": 1,
-      "description": "打开无线电菜单并切换 X 光/医疗针槽。",
+      "description": "打开无线电菜单",
       "actions": [
         {
           "command": "radio2",
           "arguments": "",
           "source": "radio2"
-        },
-        {
-          "command": "slot12",
-          "arguments": "",
-          "source": "slot12"
         }
       ],
       "area": "preset",
@@ -5852,12 +5696,66 @@
     }
   },
   {
+    "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%3D",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:35",
+      "path": "config/srp-cfg/presets/default/keymap.cfg",
+      "line": 35,
+      "text": "bind \"=\" \"slot12\"",
+      "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "=",
+      "body": "slot12",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "切换医疗针槽。",
+      "actions": [
+        {
+          "command": "slot12",
+          "arguments": "",
+          "source": "slot12"
+        }
+      ],
+      "area": "preset",
+      "module": "default",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:%3D",
+      "name": "="
+    },
+    "semantic": {
+      "title": "= -> slot12",
+      "summary": "切换医疗针槽。",
+      "tags": [
+        "bind",
+        "preset",
+        "default",
+        "keymap"
+      ],
+      "keywords": [
+        "=",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%5B",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:79",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:78",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 79,
+      "line": 78,
       "text": "bind \"[\" \"srp_autoview_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -5909,9 +5807,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%5C",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:50",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:67",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 50,
+      "line": 67,
       "text": "bind \"\\\" \"say_team .hp\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -5963,9 +5861,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%5D",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:80",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:79",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 80,
+      "line": 79,
       "text": "bind \"]\" \"srp_demo_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6017,9 +5915,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%60",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:46",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:48",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 46,
+      "line": 48,
       "text": "bind \"`\" \"toggleconsole\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6395,9 +6293,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#7",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:71",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:72",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 71,
+      "line": 72,
       "text": "bind \"7\" \"keyc\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6449,9 +6347,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#8",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:72",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:73",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 72,
+      "line": 73,
       "text": "bind \"8\" \"keyv\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6503,9 +6401,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#9",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:76",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:75",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 76,
+      "line": 75,
       "text": "bind \"9\" \"srp_preview_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6611,9 +6509,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#alt",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:44",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:46",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 44,
+      "line": 46,
       "text": "bind \"alt\" \"+radialradio\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6719,9 +6617,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#backspace",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:67",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:64",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 67,
+      "line": 64,
       "text": "bind \"backspace\" \"sellbackall\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6935,9 +6833,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#del",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:68",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:65",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 68,
+      "line": 65,
       "text": "bind \"del\" \"toggle volume 0.10 1.00\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -6979,60 +6877,6 @@
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
       "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
       "relation": ""
-    },
-    "curation": {
-      "status": "generated",
-      "source": "generator"
-    }
-  },
-  {
-    "id": "binding:config/srp-cfg/presets/default/keymap.cfg#downarrow",
-    "type": "binding",
-    "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:74",
-      "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 74,
-      "text": "bind \"downarrow\" \"switchthrow\"",
-      "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
-      "kind": "bind",
-      "command": "bind",
-      "symbol": "",
-      "key": "downarrow",
-      "body": "switchthrow",
-      "target": "",
-      "arguments": "",
-      "optional": false,
-      "ordinal": 1,
-      "description": "切换投掷物准星显示。",
-      "actions": [
-        {
-          "command": "switchthrow",
-          "arguments": "",
-          "source": "switchthrow"
-        }
-      ],
-      "area": "preset",
-      "module": "default",
-      "role": "keymap",
-      "entryId": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:downarrow",
-      "name": "downarrow"
-    },
-    "semantic": {
-      "title": "downarrow -> switchthrow",
-      "summary": "切换投掷物准星显示。",
-      "tags": [
-        "bind",
-        "preset",
-        "default",
-        "keymap"
-      ],
-      "keywords": [
-        "downarrow",
-        "bind"
-      ],
-      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
-      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
-      "relation": "调用 alias switchthrow，定义于 srp-cfg/features/crosshair-view/runtime.cfg:46，内容 nothrow;alias switchthrow throw"
     },
     "curation": {
       "status": "generated",
@@ -7151,9 +6995,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f10",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:65",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:62",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 65,
+      "line": 62,
       "text": "bind \"f10\" \"buy vesthelm\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7205,9 +7049,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f11",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:66",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:63",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 66,
+      "line": 63,
       "text": "bind \"f11\" \"buy defuser\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7259,9 +7103,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f3",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:58",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:55",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 58,
+      "line": 55,
       "text": "bind \"f3\" \"buy secondary4\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7313,9 +7157,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f4",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:59",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:56",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 59,
+      "line": 56,
       "text": "bind \"f4\" \"buy rifle1\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7367,9 +7211,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f5",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:60",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:57",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 60,
+      "line": 57,
       "text": "bind \"f5\" \"buy hegrenade\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7421,9 +7265,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f6",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:61",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:58",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 61,
+      "line": 58,
       "text": "bind \"f6\" \"buy flashbang\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7475,9 +7319,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f7",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:62",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:59",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 62,
+      "line": 59,
       "text": "bind \"f7\" \"buy smokegrenade\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7529,9 +7373,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f8",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:63",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:60",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 63,
+      "line": 60,
       "text": "bind \"f8\" \"buy molotov;buy incgrenade\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7588,9 +7432,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#f9",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:64",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:61",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 64,
+      "line": 61,
       "text": "bind \"f9\" \"buy vest\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7696,9 +7540,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#h",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:47",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:49",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 47,
+      "line": 49,
       "text": "bind \"h\" \"switchhands\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7750,9 +7594,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#i",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:39",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:41",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 39,
+      "line": 41,
       "text": "bind \"i\" \"messagemode2\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7804,9 +7648,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#j",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:77",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:76",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 77,
+      "line": 76,
       "text": "bind \"j\" \"srp_knife\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7858,9 +7702,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#k",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:49",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:66",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 49,
+      "line": 66,
       "text": "bind \"k\" \"say_team !drop\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7897,65 +7741,6 @@
       ],
       "keywords": [
         "k",
-        "bind"
-      ],
-      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
-      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
-      "relation": ""
-    },
-    "curation": {
-      "status": "generated",
-      "source": "generator"
-    }
-  },
-  {
-    "id": "binding:config/srp-cfg/presets/default/keymap.cfg#leftarrow",
-    "type": "binding",
-    "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:73",
-      "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 73,
-      "text": "bind \"leftarrow\" \"toggle cl_crosshairdot 1 0;echo 准星中心点状态更新!\"",
-      "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
-      "kind": "bind",
-      "command": "bind",
-      "symbol": "",
-      "key": "leftarrow",
-      "body": "toggle cl_crosshairdot 1 0;echo 准星中心点状态更新!",
-      "target": "",
-      "arguments": "",
-      "optional": false,
-      "ordinal": 1,
-      "description": "切换准星中心点。",
-      "actions": [
-        {
-          "command": "toggle",
-          "arguments": "cl_crosshairdot 1 0",
-          "source": "toggle cl_crosshairdot 1 0"
-        },
-        {
-          "command": "echo",
-          "arguments": "准星中心点状态更新!",
-          "source": "echo 准星中心点状态更新!"
-        }
-      ],
-      "area": "preset",
-      "module": "default",
-      "role": "keymap",
-      "entryId": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:leftarrow",
-      "name": "leftarrow"
-    },
-    "semantic": {
-      "title": "leftarrow -> toggle cl_crosshairdot 1 0;echo 准星中心点状态更新!",
-      "summary": "切换准星中心点。",
-      "tags": [
-        "bind",
-        "preset",
-        "default",
-        "keymap"
-      ],
-      "keywords": [
-        "leftarrow",
         "bind"
       ],
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
@@ -8241,9 +8026,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#mouse3",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:43",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:45",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 43,
+      "line": 45,
       "text": "bind \"mouse3\" \"player_ping\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8295,9 +8080,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#mouse4",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:42",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:44",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 42,
+      "line": 44,
       "text": "bind \"mouse4\" \"+voicerecord\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8349,9 +8134,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#mwheeldown",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:41",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:43",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 41,
+      "line": 43,
       "text": "bind \"mwheeldown\" \"+jump\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8403,9 +8188,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#mwheelup",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:40",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:42",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 40,
+      "line": 42,
       "text": "bind \"mwheelup\" \"+jump\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8457,16 +8242,16 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#n",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:51",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:68",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 51,
-      "text": "bind \"n\" \"teamid\"",
+      "line": 68,
+      "text": "bind \"n\" \"toggle cl_teamid_overhead_mode 1 3\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "n",
-      "body": "teamid",
+      "body": "toggle cl_teamid_overhead_mode 1 3",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -8474,9 +8259,9 @@
       "description": "切换队友头顶标识模式。",
       "actions": [
         {
-          "command": "teamid",
-          "arguments": "",
-          "source": "teamid"
+          "command": "toggle",
+          "arguments": "cl_teamid_overhead_mode 1 3",
+          "source": "toggle cl_teamid_overhead_mode 1 3"
         }
       ],
       "area": "preset",
@@ -8511,9 +8296,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#o",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:75",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:74",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 75,
+      "line": 74,
       "text": "bind \"o\" \"srp_reload\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8565,9 +8350,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#p",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:78",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:77",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 78,
+      "line": 77,
       "text": "bind \"p\" \"srp_practice_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8727,9 +8512,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#ralt",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:45",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:47",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 45,
+      "line": 47,
       "text": "bind \"ralt\" \"noclip\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -8943,9 +8728,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#t",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:48",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:50",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 48,
+      "line": 50,
       "text": "bind \"t\" \"toggleradarscale\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -9051,9 +8836,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#u",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:38",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:40",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 38,
+      "line": 40,
       "text": "bind \"u\" \"messagemode\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -9267,9 +9052,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#y",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:37",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:39",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 37,
+      "line": 39,
       "text": "bind \"y\" \"+spray_menu\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -9375,9 +9160,9 @@
     "id": "binding:config/srp-cfg/presets/echo/keymap.cfg#%5C",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/echo/keymap.cfg:46",
+      "ref": "config/srp-cfg/presets/echo/keymap.cfg:51",
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
-      "line": 46,
+      "line": 51,
       "text": "bind \"\\\" \"say_team .hp\"",
       "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
       "kind": "bind",
@@ -10131,9 +9916,9 @@
     "id": "binding:config/srp-cfg/presets/echo/keymap.cfg#del",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/echo/keymap.cfg:52",
+      "ref": "config/srp-cfg/presets/echo/keymap.cfg:49",
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
-      "line": 52,
+      "line": 49,
       "text": "bind \"del\" \"toggle volume 0.10 1.00\"",
       "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
       "kind": "bind",
@@ -10455,9 +10240,9 @@
     "id": "binding:config/srp-cfg/presets/echo/keymap.cfg#k",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/echo/keymap.cfg:45",
+      "ref": "config/srp-cfg/presets/echo/keymap.cfg:50",
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
-      "line": 45,
+      "line": 50,
       "text": "bind \"k\" \"say_team !drop\"",
       "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
       "kind": "bind",
@@ -10995,9 +10780,9 @@
     "id": "binding:config/srp-cfg/presets/echo/keymap.cfg#n",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/echo/keymap.cfg:47",
+      "ref": "config/srp-cfg/presets/echo/keymap.cfg:52",
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
-      "line": 47,
+      "line": 52,
       "text": "bind \"n\" \"toggle cl_teamid_overhead_mode 1 3\"",
       "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
       "kind": "bind",
@@ -11864,9 +11649,9 @@
     "id": "binding:config/srp-cfg/presets/visionl/keymap.cfg#%5C",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:45",
+      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:50",
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
-      "line": 45,
+      "line": 50,
       "text": "bind \"\\\" \"say_team .hp\"",
       "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
       "kind": "bind",
@@ -12674,9 +12459,9 @@
     "id": "binding:config/srp-cfg/presets/visionl/keymap.cfg#del",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:51",
+      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:48",
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
-      "line": 51,
+      "line": 48,
       "text": "bind \"del\" \"toggle volume 0.10 1.00\"",
       "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
       "kind": "bind",
@@ -12998,9 +12783,9 @@
     "id": "binding:config/srp-cfg/presets/visionl/keymap.cfg#k",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:44",
+      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:49",
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
-      "line": 44,
+      "line": 49,
       "text": "bind \"k\" \"say_team !drop\"",
       "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
       "kind": "bind",
@@ -13484,9 +13269,9 @@
     "id": "binding:config/srp-cfg/presets/visionl/keymap.cfg#n",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:46",
+      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:51",
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
-      "line": 46,
+      "line": 51,
       "text": "bind \"n\" \"toggle cl_teamid_overhead_mode 1 3\"",
       "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
       "kind": "bind",
@@ -14358,9 +14143,9 @@
     "id": "binding:config/srp-cfg/presets/yszh/keymap.cfg#%5C",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:50",
+      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:55",
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
-      "line": 50,
+      "line": 55,
       "text": "bind \"\\\" \"say_team .hp\"",
       "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
       "kind": "bind",
@@ -15168,9 +14953,9 @@
     "id": "binding:config/srp-cfg/presets/yszh/keymap.cfg#del",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:56",
+      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:53",
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
-      "line": 56,
+      "line": 53,
       "text": "bind \"del\" \"toggle volume 0.10 1.00\"",
       "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
       "kind": "bind",
@@ -15546,9 +15331,9 @@
     "id": "binding:config/srp-cfg/presets/yszh/keymap.cfg#k",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:49",
+      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:54",
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
-      "line": 49,
+      "line": 54,
       "text": "bind \"k\" \"say_team !drop\"",
       "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
       "kind": "bind",
@@ -16086,9 +15871,9 @@
     "id": "binding:config/srp-cfg/presets/yszh/keymap.cfg#n",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:51",
+      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:56",
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
-      "line": 51,
+      "line": 56,
       "text": "bind \"n\" \"toggle cl_teamid_overhead_mode 1 3\"",
       "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
       "kind": "bind",
