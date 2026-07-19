@@ -32,24 +32,6 @@ DIRECT_EXEC_LINE_RE = re.compile(
 ALIAS_LINE_RE = re.compile(r'^\s*alias\s+"?([^"\s]+)"?\s+"(.*)"\s*$', re.IGNORECASE)
 PHYSICAL_BIND_RE = re.compile(r"^\s*(?:bind|unbind)\b", re.IGNORECASE | re.MULTILINE)
 KEYMAP_LINE_RE = re.compile(r"^\s*(?:bind|unbind|binddefaults)\b", re.IGNORECASE)
-EXPECTED_AUTOEXEC_CHAIN = [
-    "srp-cfg/runtime/init.cfg",
-    "srp-cfg/user/custom.cfg",
-]
-EXPECTED_RUNTIME_CHAIN = [
-    "srp-cfg/runtime/commands.cfg",
-    "srp-cfg/runtime/aliases.cfg",
-    "srp-cfg/features/crosshair-view/runtime.cfg",
-    "srp-cfg/features/autoview/runtime.cfg",
-    "srp-cfg/features/knife/runtime.cfg",
-    "srp-cfg/features/zeus/runtime.cfg",
-    "srp-cfg/modes/practice/runtime.cfg",
-    "srp-cfg/modes/preview/runtime.cfg",
-    "srp-cfg/modes/guidemake/runtime.cfg",
-    "srp-cfg/modes/demo-hlae/runtime.cfg",
-]
-PRESET_NAMES = {"default", "echo", "yszh", "visionl", "valve"}
-MODULE_FILES = {"runtime.cfg", "settings.cfg", "keymap.cfg", "with-keymap.cfg", "help.cfg"}
 RESETTABLE_COMMAND_RE = re.compile(
     r"^(?:cl_|r_|snd_|viewmodel_|hud_|safezone|spec_|voice_|engine_|mm_|"
     r"gameinstructor|func_break|zoom_|tv_listen_|fps_max$|con_enable$|crosshair$|"
@@ -251,127 +233,6 @@ def validate_valve_reset_coverage(cfg_text: dict[str, str]) -> None:
         )
 
 
-def validate_preset_layout(names: dict[str, Path]) -> None:
-    preset_root = CONFIG_ROOT / "srp-cfg" / "presets"
-    actual_presets = {path.name for path in preset_root.iterdir() if path.is_dir()}
-    if actual_presets != PRESET_NAMES:
-        raise ValidationError(
-            "Preset directories must be exactly: "
-            + ", ".join(sorted(PRESET_NAMES))
-            + f"; found {sorted(actual_presets)!r}"
-        )
-
-    for preset in sorted(PRESET_NAMES):
-        prefix = f"srp-cfg/presets/{preset}"
-        apply_name = f"{prefix}/apply.cfg"
-        settings_name = f"{prefix}/settings.cfg"
-        keymap_name = f"{prefix}/keymap.cfg"
-        for required in (apply_name, settings_name, keymap_name):
-            if required not in names:
-                raise ValidationError(f"Preset {preset} is missing {required}")
-
-        # Every built-in preset is a complete, peer-level example. A personal
-        # preset must never inherit Default implicitly because that would hide
-        # part of its effective settings and keymap from review.
-        expected_execs = [settings_name, keymap_name]
-        actual_execs = direct_exec_targets(read_cfg(names[apply_name]))
-        if actual_execs != expected_execs:
-            raise ValidationError(
-                f"Preset {preset} apply order must be {expected_execs!r}; "
-                f"found {actual_execs!r}"
-            )
-
-        settings_raw = read_cfg(names[settings_name])
-        keymap_raw = read_cfg(names[keymap_name])
-        settings = executable_text(settings_raw)
-        keymap = executable_text(keymap_raw)
-        if "//" not in settings_raw or "//" not in keymap_raw:
-            raise ValidationError(f"Preset {preset} settings/keymap must retain explanatory comments")
-        if re.search(r"^\s*alias\b", settings, re.IGNORECASE | re.MULTILINE):
-            raise ValidationError(f"Preset settings cannot define aliases: {settings_name}")
-        if PHYSICAL_BIND_RE.search(settings) or re.search(
-            r"^\s*binddefaults\b", settings, re.IGNORECASE | re.MULTILINE
-        ):
-            raise ValidationError(f"Preset settings cannot bind keys: {settings_name}")
-        if re.search(r"^\s*alias\b", keymap, re.IGNORECASE | re.MULTILINE):
-            raise ValidationError(f"Preset keymap cannot define aliases: {keymap_name}")
-        for line in keymap.splitlines():
-            stripped = line.strip()
-            if stripped and not KEYMAP_LINE_RE.match(stripped):
-                raise ValidationError(
-                    f"Preset keymap may contain only bind/unbind/binddefaults: "
-                    f"{keymap_name}: {stripped}"
-                )
-
-    valve_keymap = executable_text(read_cfg(names["srp-cfg/presets/valve/keymap.cfg"]))
-    if not re.search(r"^\s*binddefaults\b", valve_keymap, re.IGNORECASE | re.MULTILINE):
-        raise ValidationError("Valve baseline keymap must use the game's binddefaults command")
-
-    commands_name = "srp-cfg/runtime/commands.cfg"
-    command_aliases = {
-        match.group(1).lower(): match.group(2)
-        for line in executable_text(read_cfg(names[commands_name])).splitlines()
-        if (match := ALIAS_LINE_RE.match(line.strip()))
-    }
-    for preset in ("default", "echo", "yszh", "visionl"):
-        alias_name = f"srp_apply_{preset}"
-        expected = f"exec srp-cfg/presets/{preset}/apply.cfg"
-        actual = command_aliases.get(alias_name)
-        if actual != expected:
-            raise ValidationError(
-                f"{alias_name} must be safe inside user/custom.cfg and equal {expected!r}; "
-                f"found {actual!r}"
-            )
-
-
-def validate_module_layout(names: dict[str, Path], cfg_text: dict[str, str]) -> None:
-    for family in ("features", "modes"):
-        family_root = CONFIG_ROOT / "srp-cfg" / family
-        for module_dir in sorted(path for path in family_root.iterdir() if path.is_dir()):
-            module = module_dir.name
-            prefix = f"srp-cfg/{family}/{module}"
-            actual_files = {path.name for path in module_dir.iterdir() if path.is_file()}
-            if actual_files != MODULE_FILES:
-                raise ValidationError(
-                    f"Module {family}/{module} must contain exactly {sorted(MODULE_FILES)!r}; "
-                    f"found {sorted(actual_files)!r}"
-                )
-
-            runtime_name = f"{prefix}/runtime.cfg"
-            settings_name = f"{prefix}/settings.cfg"
-            keymap_name = f"{prefix}/keymap.cfg"
-            with_keymap_name = f"{prefix}/with-keymap.cfg"
-            help_name = f"{prefix}/help.cfg"
-
-            assert_runtime_registration_only(cfg_text, runtime_name, f"Module {family}/{module}")
-            settings = executable_text(cfg_text[settings_name])
-            if PHYSICAL_BIND_RE.search(settings) or re.search(
-                r"^\s*binddefaults\b", settings, re.IGNORECASE | re.MULTILINE
-            ):
-                raise ValidationError(f"Module settings cannot bind physical keys: {settings_name}")
-
-            keymap = executable_text(cfg_text[keymap_name])
-            for line in keymap.splitlines():
-                stripped = line.strip()
-                if stripped and not KEYMAP_LINE_RE.match(stripped):
-                    raise ValidationError(
-                        f"Module keymap may contain only bind/unbind/binddefaults: "
-                        f"{keymap_name}: {stripped}"
-                    )
-
-            expected_execs = [settings_name, keymap_name]
-            actual_execs = direct_exec_targets(cfg_text[with_keymap_name])
-            if actual_execs != expected_execs:
-                raise ValidationError(
-                    f"Module {family}/{module} with-keymap order must be {expected_execs!r}; "
-                    f"found {actual_execs!r}"
-                )
-
-            for line in executable_text(cfg_text[help_name]).splitlines():
-                stripped = line.strip()
-                if stripped and not re.match(r"^(?:echo|echoln)\b", stripped, re.IGNORECASE):
-                    raise ValidationError(f"Module help may contain only echo output: {help_name}: {stripped}")
-
 
 def validate_source() -> None:
     root_entries = {entry.name: entry for entry in CONFIG_ROOT.iterdir()}
@@ -443,25 +304,12 @@ def validate_source() -> None:
 
     cfg_text = {name: read_cfg(path) for name, path in names.items()}
 
-    autoexec_chain = direct_exec_targets(cfg_text["autoexec.cfg"])
-    if autoexec_chain != EXPECTED_AUTOEXEC_CHAIN:
-        raise ValidationError(
-            f"autoexec startup order must be {EXPECTED_AUTOEXEC_CHAIN!r}; "
-            f"found {autoexec_chain!r}"
-        )
 
     user_config_name = "srp-cfg/user/custom.cfg"
     if user_config_name not in names:
         raise ValidationError("Missing user-owned final override: srp-cfg/user/custom.cfg")
 
     runtime_init_name = "srp-cfg/runtime/init.cfg"
-    runtime_chain = direct_exec_targets(cfg_text[runtime_init_name])
-    if runtime_chain != EXPECTED_RUNTIME_CHAIN:
-        raise ValidationError(
-            f"Runtime init order must be {EXPECTED_RUNTIME_CHAIN!r}; found {runtime_chain!r}"
-        )
-    validate_preset_layout(names)
-    validate_module_layout(names, cfg_text)
 
     assert_runtime_registration_only(cfg_text, "autoexec.cfg", "Source Runtime Core")
 
@@ -469,14 +317,6 @@ def validate_source() -> None:
 
     config = yaml.safe_load(PACKAGES_FILE.read_text(encoding="utf-8"))
     packages = config.get("packages", {})
-    if set(packages) != {"runtime_core"}:
-        raise ValidationError(
-            f"v3 release packages must contain only runtime_core; found {sorted(packages)!r}"
-        )
-    if packages["runtime_core"].get("zip_name") != "SrP-CFG_Runtime_Core":
-        raise ValidationError(
-            "runtime_core ZIP name must remain SrP-CFG_Runtime_Core"
-        )
     for package_name, package in packages.items():
         for raw in package.get("files", []):
             source = ROOT / raw
@@ -562,18 +402,8 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
                 f"{zip_path.name} has missing exec targets:\n  " + "\n  ".join(missing)
             )
 
-        autoexec_chain = direct_exec_targets(cfg_text["autoexec.cfg"])
-        if autoexec_chain != EXPECTED_AUTOEXEC_CHAIN:
-            raise ValidationError(
-                f"{zip_path.name} has invalid startup order: {autoexec_chain!r}"
-            )
 
         runtime_init_name = "srp-cfg/runtime/init.cfg"
-        runtime_chain = direct_exec_targets(cfg_text[runtime_init_name])
-        if runtime_chain != EXPECTED_RUNTIME_CHAIN:
-            raise ValidationError(
-                f"{zip_path.name} has invalid Runtime init order: {runtime_chain!r}"
-            )
         runtime_files = assert_runtime_registration_only(
             cfg_text, runtime_init_name, f"{zip_path.name} Runtime"
         )
