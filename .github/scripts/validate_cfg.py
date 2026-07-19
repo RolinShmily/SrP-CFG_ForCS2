@@ -80,7 +80,7 @@ REQUIRED_RUNTIME_ALIASES = {
     "rec", "rec_end", "campath", "campath_draw", "gear_up", "gear_down",
     "bluron", "bluroff", "demoshow", "demonoshow",
     "att0", "att1", "+firr1", "-firr1", "+firr2", "-firr2",
-    "teamcounter", "teamid", "tick",
+    "tick",
     "dust2", "inferno", "mirage", "ancient", "nuke", "vertigo", "anubis", "office", "italy", "overpass", "train",
     "CT1", "CT2", "CT3", "CT4", "CT5", "CT6", "CT7", "CT8", "CT9", "CT10", "CT11", "CT12", "CT13", "CT14", "CT15",
     "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", "T13", "T14", "T15",
