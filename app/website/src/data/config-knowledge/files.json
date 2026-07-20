@@ -873,8 +873,8 @@
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 1,
       "text": "echo ═══════════════════ 刀具模型帮助 ══════════════════",
-      "lineCount": 17,
-      "sha256": "127306f316dbc6571a4f0ad16ed76d94995a18350c76fabe8f54175e01a95486",
+      "lineCount": 18,
+      "sha256": "6159e9a76db4a5b2cc7b586847f287411d18cd8d07a86848298daff06aed6f54",
       "area": "feature",
       "module": "knife",
       "role": "help"
@@ -938,7 +938,7 @@
       "line": 1,
       "text": "// Knife model command vocabulary. Loaded by Runtime; no preference or key is changed here.",
       "lineCount": 68,
-      "sha256": "d9a5ca27d351582c256d8510c9eb0a6cad026992b6224a80b7777ff002171494",
+      "sha256": "dfc3936e0ffeee7ba3039bfc6352e58c4939c18897f54d2260ea25a2e2e5dd6f",
       "area": "feature",
       "module": "knife",
       "role": "runtime"
@@ -992,8 +992,8 @@
       "path": "config/srp-cfg/features/knife/settings.cfg",
       "line": 1,
       "text": "// Knife has no physical keymap or persistent preference; this refreshes its command library.",
-      "lineCount": 4,
-      "sha256": "23a0d78c9a08b5cf37d81b2f3402780e85cb2896e4018ec4838e8a2aa5339554",
+      "lineCount": 7,
+      "sha256": "93820315ab394df2a53a56b54d50d200a33dcec8091beffafd8b55b1db103fe8",
       "area": "feature",
       "module": "knife",
       "role": "settings"
@@ -1028,7 +1028,7 @@
       "line": 1,
       "text": "exec srp-cfg/features/knife/settings.cfg // 注册匕首模型命令库。",
       "lineCount": 3,
-      "sha256": "652bd27a00329ccd610e614641971a0e52f553ab9fc8026e0349100e0d744609",
+      "sha256": "e927ac21e0005bf45628c6b4e6908c73ea2dbde6f612a97875b95fc5ae4dd8eb",
       "area": "feature",
       "module": "knife",
       "role": "composition"
@@ -2980,7 +2980,7 @@
       "line": 1,
       "text": "// SrP recommended keymap example. Runtime owns every referenced alias.",
       "lineCount": 80,
-      "sha256": "74e2526a5322df15b576f7c3b82cb2e59db0d110e6626675f044f2c77b8b6133",
+      "sha256": "3d96a8b811fe4e3cd4a84c71437a948a61d8082ad0e296a223bf96ef7d2acf51",
       "area": "preset",
       "module": "default",
       "role": "keymap"
@@ -3216,7 +3216,7 @@
       "line": 1,
       "text": "// Echo example: complete personal keymap.",
       "lineCount": 60,
-      "sha256": "e009611737a6981beb4f2d4501113f0d1414c63f28a04b9f8a2adc6401f8078c",
+      "sha256": "7f1b00abb23cfc2ada3012942ddfbe04d2a0c359a1e66601be20ae54a2b2d8ac",
       "area": "preset",
       "module": "echo",
       "role": "keymap"
@@ -3652,7 +3652,7 @@
       "line": 1,
       "text": "// VisionL example: complete personal keymap.",
       "lineCount": 59,
-      "sha256": "c2618e3a8d8bd0c035151fc08f26ed1ed7e7fb148cf00503f241b712acfdb631",
+      "sha256": "4aaef57717f26acc5dfe79f31a30e972ba184a3aaf792befd3492563925c27c9",
       "area": "preset",
       "module": "visionl",
       "role": "keymap"
@@ -3875,7 +3875,7 @@
       "line": 1,
       "text": "// YSZH example: complete personal keymap.",
       "lineCount": 64,
-      "sha256": "277e3245629a77177e3939fdf56c324b378618a2159c0c455dbd0ed60e3cdba3",
+      "sha256": "2b9ed03523bf9cb3075a3970c702c0288e83924b8e2013758c1ff0357fc70f27",
       "area": "preset",
       "module": "yszh",
       "role": "keymap"
@@ -4110,8 +4110,8 @@
       "path": "config/srp-cfg/runtime/commands.cfg",
       "line": 1,
       "text": "// Built-in Preset starting points. These aliases are safe to call from user/custom.cfg.",
-      "lineCount": 47,
-      "sha256": "9d61e530748499376a687270c14f4f64d4266cb39cb49e7b60ada903dc9645ba",
+      "lineCount": 48,
+      "sha256": "00a86cf479eb978d31e2c3c7aecfb187328fca29bfeca38b029e67c2ec411cc6",
       "area": "runtime",
       "module": "runtime",
       "role": "runtime"

@@ -15385,7 +15385,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:10",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 10,
-      "text": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
+      "text": "echo ── 编号 515–526 ──",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15393,15 +15393,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
+      "arguments": "── 编号 515–526 ──",
       "optional": false,
       "ordinal": 10,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
-          "source": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀"
+          "arguments": "── 编号 515–526 ──",
+          "source": "echo ── 编号 515–526 ──"
         }
       ],
       "area": "feature",
@@ -15436,7 +15436,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:11",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 11,
-      "text": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
+      "text": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15444,15 +15444,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
+      "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
       "optional": false,
       "ordinal": 11,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
-          "source": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔"
+          "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
+          "source": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首"
         }
       ],
       "area": "feature",
@@ -15487,7 +15487,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:12",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 12,
-      "text": "echo 57 医疗针 | 59 默认匕首 |",
+      "text": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15495,15 +15495,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "57 医疗针 | 59 默认匕首 |",
+      "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
       "optional": false,
       "ordinal": 12,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "57 医疗针 | 59 默认匕首 |",
-          "source": "echo 57 医疗针 | 59 默认匕首 |"
+          "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
+          "source": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀"
         }
       ],
       "area": "feature",
@@ -15538,7 +15538,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:13",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 13,
-      "text": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型",
+      "text": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15546,15 +15546,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
+      "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
       "optional": false,
       "ordinal": 13,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
-          "source": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型"
+          "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
+          "source": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔"
         }
       ],
       "area": "feature",
@@ -15589,7 +15589,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:14",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 14,
-      "text": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
+      "text": "echo 57 医疗针 | 59 默认匕首 |",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15597,15 +15597,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
+      "arguments": "57 医疗针 | 59 默认匕首 |",
       "optional": false,
       "ordinal": 14,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
-          "source": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。"
+          "arguments": "57 医疗针 | 59 默认匕首 |",
+          "source": "echo 57 医疗针 | 59 默认匕首 |"
         }
       ],
       "area": "feature",
@@ -15640,7 +15640,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:15",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 15,
-      "text": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "text": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15648,15 +15648,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
       "optional": false,
       "ordinal": 15,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
-          "source": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。"
+          "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
+          "source": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。"
         }
       ],
       "area": "feature",
@@ -15691,6 +15691,57 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:16",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 16,
+      "text": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "fileId": "file:config/srp-cfg/features/knife/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "optional": false,
+      "ordinal": 16,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+          "source": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "echo · command",
+      "summary": "echo ═════════════════════════════════════════════════，定义于 config/srp-cfg/features/knife/help.cfg:16。",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_knife -> srp-cfg/features/knife/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:17",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/help.cfg:17",
+      "path": "config/srp-cfg/features/knife/help.cfg",
+      "line": 17,
       "text": "echo ═════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
@@ -15701,7 +15752,7 @@
       "target": "",
       "arguments": "═════════════════════════════════════════════════",
       "optional": false,
-      "ordinal": 16,
+      "ordinal": 17,
       "description": "",
       "actions": [
         {
@@ -15716,7 +15767,7 @@
     },
     "semantic": {
       "title": "echo · command",
-      "summary": "echo ═════════════════════════════════════════════════，定义于 config/srp-cfg/features/knife/help.cfg:16。",
+      "summary": "echo ═════════════════════════════════════════════════，定义于 config/srp-cfg/features/knife/help.cfg:17。",
       "tags": [
         "command",
         "feature",
@@ -15793,7 +15844,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:3",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 3,
-      "text": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
+      "text": "echo srp_knife_keys : 接管 J 键，用于轮换切刀具模型。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15801,15 +15852,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
+      "arguments": "srp_knife_keys : 接管 J 键，用于轮换切刀具模型。",
       "optional": false,
       "ordinal": 3,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
-          "source": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。"
+          "arguments": "srp_knife_keys : 接管 J 键，用于轮换切刀具模型。",
+          "source": "echo srp_knife_keys : 接管 J 键，用于轮换切刀具模型。"
         }
       ],
       "area": "feature",
@@ -15844,7 +15895,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:4",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 4,
-      "text": "echo Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
+      "text": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15852,15 +15903,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
+      "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
       "optional": false,
       "ordinal": 4,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
-          "source": "echo Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。"
+          "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
+          "source": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型"
         }
       ],
       "area": "feature",
@@ -15895,7 +15946,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:5",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 5,
-      "text": "echo ── 编号 500–514 ──",
+      "text": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15903,15 +15954,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "── 编号 500–514 ──",
+      "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
       "optional": false,
       "ordinal": 5,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "── 编号 500–514 ──",
-          "source": "echo ── 编号 500–514 ──"
+          "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
+          "source": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。"
         }
       ],
       "area": "feature",
@@ -15946,7 +15997,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:6",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 6,
-      "text": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
+      "text": "echo Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -15954,15 +16005,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
+      "arguments": "Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。",
       "optional": false,
       "ordinal": 6,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
-          "source": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀"
+          "arguments": "Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。",
+          "source": "echo Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。"
         }
       ],
       "area": "feature",
@@ -15997,7 +16048,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:7",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 7,
-      "text": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
+      "text": "echo ── 编号 500–514 ──",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -16005,15 +16056,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
+      "arguments": "── 编号 500–514 ──",
       "optional": false,
       "ordinal": 7,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
-          "source": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀"
+          "arguments": "── 编号 500–514 ──",
+          "source": "echo ── 编号 500–514 ──"
         }
       ],
       "area": "feature",
@@ -16048,7 +16099,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:8",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 8,
-      "text": "echo ── 编号 515–526 ──",
+      "text": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -16056,15 +16107,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "── 编号 515–526 ──",
+      "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
       "optional": false,
       "ordinal": 8,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "── 编号 515–526 ──",
-          "source": "echo ── 编号 515–526 ──"
+          "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
+          "source": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀"
         }
       ],
       "area": "feature",
@@ -16099,7 +16150,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:9",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 9,
-      "text": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
+      "text": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -16107,15 +16158,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
+      "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
       "optional": false,
       "ordinal": 9,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
-          "source": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首"
+          "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
+          "source": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀"
         }
       ],
       "area": "feature",
@@ -16199,9 +16250,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_500",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:40",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:42",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 40,
+      "line": 42,
       "text": "alias \"-srp_knife_500\" \"ent_fire weapon_knife changesubclass 500; alias +srp_knife_switch +srp_knife_505; alias -srp_knife_switch -srp_knife_505; say_team 已切换：刺刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16266,9 +16317,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_503",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:44",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:46",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 44,
+      "line": 46,
       "text": "alias \"-srp_knife_503\" \"ent_fire weapon_knife changesubclass 503; alias +srp_knife_switch +srp_knife_521; alias -srp_knife_switch -srp_knife_521; say_team 已切换：海豹短刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16333,9 +16384,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_505",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:42",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:44",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 42,
+      "line": 44,
       "text": "alias \"-srp_knife_505\" \"ent_fire weapon_knife changesubclass 505; alias +srp_knife_switch +srp_knife_503; alias -srp_knife_switch -srp_knife_503; say_team 已切换：折叠刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16400,9 +16451,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_506",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:60",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:62",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 60,
+      "line": 62,
       "text": "alias \"-srp_knife_506\" \"ent_fire weapon_knife changesubclass 506; alias +srp_knife_switch +srp_knife_512; alias -srp_knife_switch -srp_knife_512; say_team 已切换：穿肠刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16467,9 +16518,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_507",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:32",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:34",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 32,
+      "line": 34,
       "text": "alias \"-srp_knife_507\" \"ent_fire weapon_knife changesubclass 507; alias +srp_knife_switch +srp_knife_508; alias -srp_knife_switch -srp_knife_508; say_team 已切换：爪子刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16534,9 +16585,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_508",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:34",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:36",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 34,
+      "line": 36,
       "text": "alias \"-srp_knife_508\" \"ent_fire weapon_knife changesubclass 508; alias +srp_knife_switch +srp_knife_523; alias -srp_knife_switch -srp_knife_523; say_team 已切换：M9刺刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16601,9 +16652,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_509",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:58",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:60",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 58,
+      "line": 60,
       "text": "alias \"-srp_knife_509\" \"ent_fire weapon_knife changesubclass 509; alias +srp_knife_switch +srp_knife_506; alias -srp_knife_switch -srp_knife_506; say_team 已切换：猎杀者匕首\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16668,9 +16719,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_512",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:62",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:64",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 62,
+      "line": 64,
       "text": "alias \"-srp_knife_512\" \"ent_fire weapon_knife changesubclass 512; alias +srp_knife_switch +srp_knife_516; alias -srp_knife_switch -srp_knife_516; say_team 已切换：弯刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16735,9 +16786,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_515",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:30",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:32",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 30,
+      "line": 32,
       "text": "alias \"-srp_knife_515\" \"ent_fire weapon_knife changesubclass 515; alias +srp_knife_switch +srp_knife_507; alias -srp_knife_switch -srp_knife_507; say_team 已切换：蝴蝶刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16802,16 +16853,16 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_516",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:64",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:66",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 64,
-      "text": "alias \"-srp_knife_516\" \"ent_fire weapon_knife changesubclass 516; alias +srp_knife_switch +srp_knife_520; alias -srp_knife_switch -srp_knife_520; say_team 已切换：暗影双匕\"",
+      "line": 66,
+      "text": "alias \"-srp_knife_516\" \"ent_fire weapon_knife changesubclass 516; alias +srp_knife_switch +srp_knife_59; alias -srp_knife_switch -srp_knife_59; say_team 已切换：暗影双匕\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
       "command": "alias",
       "symbol": "-srp_knife_516",
       "key": "",
-      "body": "ent_fire weapon_knife changesubclass 516; alias +srp_knife_switch +srp_knife_520; alias -srp_knife_switch -srp_knife_520; say_team 已切换：暗影双匕",
+      "body": "ent_fire weapon_knife changesubclass 516; alias +srp_knife_switch +srp_knife_59; alias -srp_knife_switch -srp_knife_59; say_team 已切换：暗影双匕",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -16825,13 +16876,13 @@
         },
         {
           "command": "alias",
-          "arguments": "+srp_knife_switch +srp_knife_520",
-          "source": "alias +srp_knife_switch +srp_knife_520"
+          "arguments": "+srp_knife_switch +srp_knife_59",
+          "source": "alias +srp_knife_switch +srp_knife_59"
         },
         {
           "command": "alias",
-          "arguments": "-srp_knife_switch -srp_knife_520",
-          "source": "alias -srp_knife_switch -srp_knife_520"
+          "arguments": "-srp_knife_switch -srp_knife_59",
+          "source": "alias -srp_knife_switch -srp_knife_59"
         },
         {
           "command": "say_team",
@@ -16869,9 +16920,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_517",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:54",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:56",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 54,
+      "line": 56,
       "text": "alias \"-srp_knife_517\" \"ent_fire weapon_knife changesubclass 517; alias +srp_knife_switch +srp_knife_518; alias -srp_knife_switch -srp_knife_518; say_team 已切换：绳系匕首\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -16936,9 +16987,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_518",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:56",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:58",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 56,
+      "line": 58,
       "text": "alias \"-srp_knife_518\" \"ent_fire weapon_knife changesubclass 518; alias +srp_knife_switch +srp_knife_509; alias -srp_knife_switch -srp_knife_509; say_team 已切换：求生匕首\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17003,9 +17054,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_519",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:50",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:52",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 50,
+      "line": 52,
       "text": "alias \"-srp_knife_519\" \"ent_fire weapon_knife changesubclass 519; alias +srp_knife_switch +srp_knife_526; alias -srp_knife_switch -srp_knife_526; say_team 已切换：熊刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17070,16 +17121,16 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_520",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:66",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:30",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 66,
-      "text": "alias \"-srp_knife_520\" \"ent_fire weapon_knife changesubclass 520; alias +srp_knife_switch +srp_knife_59; alias -srp_knife_switch -srp_knife_59; say_team 已切换：折刀\"",
+      "line": 30,
+      "text": "alias \"-srp_knife_520\" \"ent_fire weapon_knife changesubclass 520; alias +srp_knife_switch +srp_knife_515; alias -srp_knife_switch -srp_knife_515; say_team 已切换：折刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
       "command": "alias",
       "symbol": "-srp_knife_520",
       "key": "",
-      "body": "ent_fire weapon_knife changesubclass 520; alias +srp_knife_switch +srp_knife_59; alias -srp_knife_switch -srp_knife_59; say_team 已切换：折刀",
+      "body": "ent_fire weapon_knife changesubclass 520; alias +srp_knife_switch +srp_knife_515; alias -srp_knife_switch -srp_knife_515; say_team 已切换：折刀",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -17093,13 +17144,13 @@
         },
         {
           "command": "alias",
-          "arguments": "+srp_knife_switch +srp_knife_59",
-          "source": "alias +srp_knife_switch +srp_knife_59"
+          "arguments": "+srp_knife_switch +srp_knife_515",
+          "source": "alias +srp_knife_switch +srp_knife_515"
         },
         {
           "command": "alias",
-          "arguments": "-srp_knife_switch -srp_knife_59",
-          "source": "alias -srp_knife_switch -srp_knife_59"
+          "arguments": "-srp_knife_switch -srp_knife_515",
+          "source": "alias -srp_knife_switch -srp_knife_515"
         },
         {
           "command": "say_team",
@@ -17137,9 +17188,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_521",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:46",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:48",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 46,
+      "line": 48,
       "text": "alias \"-srp_knife_521\" \"ent_fire weapon_knife changesubclass 521; alias +srp_knife_switch +srp_knife_522; alias -srp_knife_switch -srp_knife_522; say_team 已切换：流浪者匕首\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17204,9 +17255,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_522",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:48",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:50",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 48,
+      "line": 50,
       "text": "alias \"-srp_knife_522\" \"ent_fire weapon_knife changesubclass 522; alias +srp_knife_switch +srp_knife_519; alias -srp_knife_switch -srp_knife_519; say_team 已切换：短剑\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17271,9 +17322,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_523",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:36",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:38",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 36,
+      "line": 38,
       "text": "alias \"-srp_knife_523\" \"ent_fire weapon_knife changesubclass 523; alias +srp_knife_switch +srp_knife_525; alias -srp_knife_switch -srp_knife_525; say_team 已切换：锯齿爪刀\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17338,9 +17389,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_525",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:38",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:40",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 38,
+      "line": 40,
       "text": "alias \"-srp_knife_525\" \"ent_fire weapon_knife changesubclass 525; alias +srp_knife_switch +srp_knife_500; alias -srp_knife_switch -srp_knife_500; say_team 已切换：骷髅匕首\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17405,9 +17456,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:-srp_knife_526",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:52",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:54",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 52,
+      "line": 54,
       "text": "alias \"-srp_knife_526\" \"ent_fire weapon_knife changesubclass 526; alias +srp_knife_switch +srp_knife_517; alias -srp_knife_switch -srp_knife_517; say_team 已切换：尼泊尔\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17475,13 +17526,13 @@
       "ref": "config/srp-cfg/features/knife/runtime.cfg:68",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
       "line": 68,
-      "text": "alias \"-srp_knife_59\" \"ent_fire weapon_knife changesubclass 59; alias +srp_knife_switch +srp_knife_515; alias -srp_knife_switch -srp_knife_515; say_team 已切换：默认匕首\"",
+      "text": "alias \"-srp_knife_59\" \"ent_fire weapon_knife changesubclass 59; alias +srp_knife_switch +srp_knife_520; alias -srp_knife_switch -srp_knife_520; say_team 已切换：默认匕首\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
       "command": "alias",
       "symbol": "-srp_knife_59",
       "key": "",
-      "body": "ent_fire weapon_knife changesubclass 59; alias +srp_knife_switch +srp_knife_515; alias -srp_knife_switch -srp_knife_515; say_team 已切换：默认匕首",
+      "body": "ent_fire weapon_knife changesubclass 59; alias +srp_knife_switch +srp_knife_520; alias -srp_knife_switch -srp_knife_520; say_team 已切换：默认匕首",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -17495,13 +17546,13 @@
         },
         {
           "command": "alias",
-          "arguments": "+srp_knife_switch +srp_knife_515",
-          "source": "alias +srp_knife_switch +srp_knife_515"
+          "arguments": "+srp_knife_switch +srp_knife_520",
+          "source": "alias +srp_knife_switch +srp_knife_520"
         },
         {
           "command": "alias",
-          "arguments": "-srp_knife_switch -srp_knife_515",
-          "source": "alias -srp_knife_switch -srp_knife_515"
+          "arguments": "-srp_knife_switch -srp_knife_520",
+          "source": "alias -srp_knife_switch -srp_knife_520"
         },
         {
           "command": "say_team",
@@ -17542,13 +17593,13 @@
       "ref": "config/srp-cfg/features/knife/runtime.cfg:28",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
       "line": 28,
-      "text": "alias \"-srp_knife_switch\" \"-srp_knife_515\"",
+      "text": "alias \"-srp_knife_switch\" \"-srp_knife_520\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
       "command": "alias",
       "symbol": "-srp_knife_switch",
       "key": "",
-      "body": "-srp_knife_515",
+      "body": "-srp_knife_520",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -17556,9 +17607,9 @@
       "description": "切刀循环入口抬起。",
       "actions": [
         {
-          "command": "-srp_knife_515",
+          "command": "-srp_knife_520",
           "arguments": "",
-          "source": "-srp_knife_515"
+          "source": "-srp_knife_520"
         }
       ],
       "area": "feature",
@@ -17591,9 +17642,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_500",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:39",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:41",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 39,
+      "line": 41,
       "text": "alias \"+srp_knife_500\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17643,9 +17694,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_503",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:43",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:45",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 43,
+      "line": 45,
       "text": "alias \"+srp_knife_503\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17695,9 +17746,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_505",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:41",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:43",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 41,
+      "line": 43,
       "text": "alias \"+srp_knife_505\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17747,9 +17798,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_506",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:59",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:61",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 59,
+      "line": 61,
       "text": "alias \"+srp_knife_506\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17799,9 +17850,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_507",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:31",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:33",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 31,
+      "line": 33,
       "text": "alias \"+srp_knife_507\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17851,9 +17902,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_508",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:33",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:35",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 33,
+      "line": 35,
       "text": "alias \"+srp_knife_508\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17903,9 +17954,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_509",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:57",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:59",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 57,
+      "line": 59,
       "text": "alias \"+srp_knife_509\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -17955,9 +18006,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_512",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:61",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:63",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 61,
+      "line": 63,
       "text": "alias \"+srp_knife_512\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18007,9 +18058,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_515",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:29",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:31",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 29,
+      "line": 31,
       "text": "alias \"+srp_knife_515\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18059,9 +18110,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_516",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:63",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:65",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 63,
+      "line": 65,
       "text": "alias \"+srp_knife_516\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18111,9 +18162,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_517",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:53",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:55",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 53,
+      "line": 55,
       "text": "alias \"+srp_knife_517\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18163,9 +18214,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_518",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:55",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:57",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 55,
+      "line": 57,
       "text": "alias \"+srp_knife_518\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18215,9 +18266,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_519",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:49",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:51",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 49,
+      "line": 51,
       "text": "alias \"+srp_knife_519\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18267,9 +18318,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_520",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:65",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:29",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 65,
+      "line": 29,
       "text": "alias \"+srp_knife_520\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18319,9 +18370,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_521",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:45",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:47",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 45,
+      "line": 47,
       "text": "alias \"+srp_knife_521\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18371,9 +18422,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_522",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:47",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:49",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 47,
+      "line": 49,
       "text": "alias \"+srp_knife_522\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18423,9 +18474,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_523",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:35",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:37",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 35,
+      "line": 37,
       "text": "alias \"+srp_knife_523\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18475,9 +18526,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_525",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:37",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:39",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 37,
+      "line": 39,
       "text": "alias \"+srp_knife_525\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18527,9 +18578,9 @@
     "id": "entry:config/srp-cfg/features/knife/runtime.cfg#alias:%2Bsrp_knife_526",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/runtime.cfg:51",
+      "ref": "config/srp-cfg/features/knife/runtime.cfg:53",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
-      "line": 51,
+      "line": 53,
       "text": "alias \"+srp_knife_526\" \"srp_knife_switch_source\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
@@ -18634,13 +18685,13 @@
       "ref": "config/srp-cfg/features/knife/runtime.cfg:27",
       "path": "config/srp-cfg/features/knife/runtime.cfg",
       "line": 27,
-      "text": "alias \"+srp_knife_switch\" \"+srp_knife_515\"",
+      "text": "alias \"+srp_knife_switch\" \"+srp_knife_520\"",
       "fileId": "file:config/srp-cfg/features/knife/runtime.cfg",
       "kind": "alias",
       "command": "alias",
       "symbol": "+srp_knife_switch",
       "key": "",
-      "body": "+srp_knife_515",
+      "body": "+srp_knife_520",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -18648,9 +18699,9 @@
       "description": "切刀循环入口按下。",
       "actions": [
         {
-          "command": "+srp_knife_515",
+          "command": "+srp_knife_520",
           "arguments": "",
-          "source": "+srp_knife_515"
+          "source": "+srp_knife_520"
         }
       ],
       "area": "feature",
@@ -20043,12 +20094,114 @@
     }
   },
   {
+    "id": "entry:config/srp-cfg/features/knife/settings.cfg#command:-srp_knife_switch",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:5",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 5,
+      "text": "-srp_knife_switch",
+      "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
+      "kind": "command",
+      "command": "-srp_knife_switch",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "消除按键抖动",
+      "actions": [
+        {
+          "command": "-srp_knife_switch",
+          "arguments": "",
+          "source": "-srp_knife_switch"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "-srp_knife_switch · command",
+      "summary": "消除按键抖动",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "-srp_knife_switch"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "entry:config/srp-cfg/features/knife/settings.cfg#command:%2Bsrp_knife_switch",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:4",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 4,
+      "text": "+srp_knife_switch",
+      "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
+      "kind": "command",
+      "command": "+srp_knife_switch",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "消除按键抖动",
+      "actions": [
+        {
+          "command": "+srp_knife_switch",
+          "arguments": "",
+          "source": "+srp_knife_switch"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "+srp_knife_switch · command",
+      "summary": "消除按键抖动",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "+srp_knife_switch"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "entry:config/srp-cfg/features/knife/settings.cfg#command:echo",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/features/knife/settings.cfg:3",
+      "ref": "config/srp-cfg/features/knife/settings.cfg:6",
       "path": "config/srp-cfg/features/knife/settings.cfg",
-      "line": 3,
+      "line": 6,
       "text": "echo \"[SrP-CFG] Knife command library ready; use srp_help_knife for model IDs.\"",
       "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
       "kind": "command",
@@ -20094,12 +20247,63 @@
     }
   },
   {
-    "id": "entry:config/srp-cfg/features/knife/settings.cfg#exec:srp-cfg%2Ffeatures%2Fknife%2Fruntime.cfg",
+    "id": "entry:config/srp-cfg/features/knife/settings.cfg#command:sv_cheats",
     "type": "entry",
     "source": {
       "ref": "config/srp-cfg/features/knife/settings.cfg:2",
       "path": "config/srp-cfg/features/knife/settings.cfg",
       "line": 2,
+      "text": "sv_cheats 1",
+      "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
+      "kind": "command",
+      "command": "sv_cheats",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "1",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开启作弊模式",
+      "actions": [
+        {
+          "command": "sv_cheats",
+          "arguments": "1",
+          "source": "sv_cheats 1"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "sv_cheats · command",
+      "summary": "开启作弊模式",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "sv_cheats"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "entry:config/srp-cfg/features/knife/settings.cfg#exec:srp-cfg%2Ffeatures%2Fknife%2Fruntime.cfg",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:3",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 3,
       "text": "exec srp-cfg/features/knife/runtime.cfg",
       "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
       "kind": "exec",
@@ -20138,6 +20342,57 @@
       "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
       "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:77、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
       "relation": "直接加载 srp-cfg/features/knife/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "entry:config/srp-cfg/features/knife/with-keymap.cfg#command:echo",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/with-keymap.cfg:3",
+      "path": "config/srp-cfg/features/knife/with-keymap.cfg",
+      "line": 3,
+      "text": "echo [SrP-CFG] Knife keymap applied: J",
+      "fileId": "file:config/srp-cfg/features/knife/with-keymap.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "[SrP-CFG] Knife keymap applied: J",
+      "optional": false,
+      "ordinal": 1,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "[SrP-CFG] Knife keymap applied: J",
+          "source": "echo [SrP-CFG] Knife keymap applied: J"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "echo · command",
+      "summary": "echo [SrP-CFG] Knife keymap applied: J，定义于 config/srp-cfg/features/knife/with-keymap.cfg:3。",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "composition"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
     },
     "curation": {
       "status": "generated",
@@ -64693,13 +64948,13 @@
       "ref": "config/srp-cfg/presets/default/keymap.cfg:76",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
       "line": 76,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -64707,9 +64962,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -72698,13 +72953,13 @@
       "ref": "config/srp-cfg/presets/echo/keymap.cfg:58",
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
       "line": 58,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -72712,9 +72967,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -89174,13 +89429,13 @@
       "ref": "config/srp-cfg/presets/visionl/keymap.cfg:57",
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
       "line": 57,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -89188,9 +89443,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -97189,13 +97444,13 @@
       "ref": "config/srp-cfg/presets/yszh/keymap.cfg:62",
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
       "line": 62,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -97203,9 +97458,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -104685,9 +104940,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_demo",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:28",
+      "ref": "config/srp-cfg/runtime/commands.cfg:29",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 28,
+      "line": 29,
       "text": "alias \"srp_demo\" \"exec srp-cfg/modes/demo-hlae/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -104735,9 +104990,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_demo_keys",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:29",
+      "ref": "config/srp-cfg/runtime/commands.cfg:30",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 29,
+      "line": 30,
       "text": "alias \"srp_demo_keys\" \"exec srp-cfg/modes/demo-hlae/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -104785,9 +105040,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_guidemake",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:30",
+      "ref": "config/srp-cfg/runtime/commands.cfg:31",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 30,
+      "line": 31,
       "text": "alias \"srp_guidemake\" \"exec srp-cfg/modes/guidemake/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -104835,9 +105090,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_guidemake_keys",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:31",
+      "ref": "config/srp-cfg/runtime/commands.cfg:32",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 31,
+      "line": 32,
       "text": "alias \"srp_guidemake_keys\" \"exec srp-cfg/modes/guidemake/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -104885,9 +105140,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:34",
+      "ref": "config/srp-cfg/runtime/commands.cfg:35",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 34,
+      "line": 35,
       "text": "alias \"srp_help\" \"exec srp-cfg/helps/index.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -104935,9 +105190,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_autoview",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:38",
+      "ref": "config/srp-cfg/runtime/commands.cfg:39",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 38,
+      "line": 39,
       "text": "alias \"srp_help_autoview\" \"exec srp-cfg/features/autoview/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -104985,9 +105240,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_crosshair",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:37",
+      "ref": "config/srp-cfg/runtime/commands.cfg:38",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 37,
+      "line": 38,
       "text": "alias \"srp_help_crosshair\" \"exec srp-cfg/features/crosshair-view/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105035,9 +105290,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_demo",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:44",
+      "ref": "config/srp-cfg/runtime/commands.cfg:45",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 44,
+      "line": 45,
       "text": "alias \"srp_help_demo\" \"exec srp-cfg/modes/demo-hlae/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105085,9 +105340,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_guidemake",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:43",
+      "ref": "config/srp-cfg/runtime/commands.cfg:44",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 43,
+      "line": 44,
       "text": "alias \"srp_help_guidemake\" \"exec srp-cfg/modes/guidemake/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105135,9 +105390,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_knife",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:39",
+      "ref": "config/srp-cfg/runtime/commands.cfg:40",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 39,
+      "line": 40,
       "text": "alias \"srp_help_knife\" \"exec srp-cfg/features/knife/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105185,9 +105440,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_practice",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:41",
+      "ref": "config/srp-cfg/runtime/commands.cfg:42",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 41,
+      "line": 42,
       "text": "alias \"srp_help_practice\" \"exec srp-cfg/modes/practice/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105235,9 +105490,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_presets",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:35",
+      "ref": "config/srp-cfg/runtime/commands.cfg:36",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 35,
+      "line": 36,
       "text": "alias \"srp_help_presets\" \"exec srp-cfg/helps/presets.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105285,9 +105540,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_preview",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:42",
+      "ref": "config/srp-cfg/runtime/commands.cfg:43",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 42,
+      "line": 43,
       "text": "alias \"srp_help_preview\" \"exec srp-cfg/modes/preview/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105335,9 +105590,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_reset",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:36",
+      "ref": "config/srp-cfg/runtime/commands.cfg:37",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 36,
+      "line": 37,
       "text": "alias \"srp_help_reset\" \"exec srp-cfg/presets/valve/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105385,9 +105640,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_zeus",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:40",
+      "ref": "config/srp-cfg/runtime/commands.cfg:41",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 40,
+      "line": 41,
       "text": "alias \"srp_help_zeus\" \"exec srp-cfg/features/zeus/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105482,12 +105737,62 @@
     }
   },
   {
+    "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_knife_keys",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/runtime/commands.cfg:22",
+      "path": "config/srp-cfg/runtime/commands.cfg",
+      "line": 22,
+      "text": "alias \"srp_knife_keys\" \"exec srp-cfg/features/knife/with-keymap.cfg\"",
+      "fileId": "file:config/srp-cfg/runtime/commands.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_knife_keys",
+      "key": "",
+      "body": "exec srp-cfg/features/knife/with-keymap.cfg",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "注册入口 srp_knife：执行 srp-cfg/features/knife/with-keymap.cfg。",
+      "actions": [
+        {
+          "command": "exec",
+          "arguments": "srp-cfg/features/knife/with-keymap.cfg",
+          "source": "exec srp-cfg/features/knife/with-keymap.cfg"
+        }
+      ],
+      "area": "runtime",
+      "module": "runtime",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "srp_knife_keys · alias",
+      "summary": "注册入口 srp_knife：执行 srp-cfg/features/knife/with-keymap.cfg。",
+      "tags": [
+        "alias",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_knife_keys",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg",
+      "relation": "加载文件 srp-cfg/features/knife/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_practice",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:24",
+      "ref": "config/srp-cfg/runtime/commands.cfg:25",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 24,
+      "line": 25,
       "text": "alias \"srp_practice\" \"exec srp-cfg/modes/practice/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105535,9 +105840,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_practice_keys",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:25",
+      "ref": "config/srp-cfg/runtime/commands.cfg:26",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 25,
+      "line": 26,
       "text": "alias \"srp_practice_keys\" \"exec srp-cfg/modes/practice/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105585,9 +105890,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_preview",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:26",
+      "ref": "config/srp-cfg/runtime/commands.cfg:27",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 26,
+      "line": 27,
       "text": "alias \"srp_preview\" \"exec srp-cfg/modes/preview/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105635,9 +105940,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_preview_keys",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:27",
+      "ref": "config/srp-cfg/runtime/commands.cfg:28",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 27,
+      "line": 28,
       "text": "alias \"srp_preview_keys\" \"exec srp-cfg/modes/preview/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -105685,9 +105990,9 @@
     "id": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_reload",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:46",
+      "ref": "config/srp-cfg/runtime/commands.cfg:47",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 46,
+      "line": 47,
       "text": "alias \"srp_reload\" \"exec autoexec.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",

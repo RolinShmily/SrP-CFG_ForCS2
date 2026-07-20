@@ -10644,7 +10644,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:10",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 10,
-      "text": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
+      "text": "echo ── 编号 515–526 ──",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -10652,15 +10652,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
+      "arguments": "── 编号 515–526 ──",
       "optional": false,
       "ordinal": 10,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
-          "source": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀"
+          "arguments": "── 编号 515–526 ──",
+          "source": "echo ── 编号 515–526 ──"
         }
       ],
       "area": "feature",
@@ -10668,7 +10668,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:10",
       "name": "echo",
-      "value": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀"
+      "value": "── 编号 515–526 ──"
     },
     "semantic": {
       "title": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
@@ -10698,7 +10698,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:11",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 11,
-      "text": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
+      "text": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -10706,15 +10706,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
+      "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
       "optional": false,
       "ordinal": 11,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
-          "source": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔"
+          "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
+          "source": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首"
         }
       ],
       "area": "feature",
@@ -10722,7 +10722,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:11",
       "name": "echo",
-      "value": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔"
+      "value": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首"
     },
     "semantic": {
       "title": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
@@ -10752,7 +10752,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:12",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 12,
-      "text": "echo 57 医疗针 | 59 默认匕首 |",
+      "text": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -10760,15 +10760,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "57 医疗针 | 59 默认匕首 |",
+      "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
       "optional": false,
       "ordinal": 12,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "57 医疗针 | 59 默认匕首 |",
-          "source": "echo 57 医疗针 | 59 默认匕首 |"
+          "arguments": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀",
+          "source": "echo 519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀"
         }
       ],
       "area": "feature",
@@ -10776,7 +10776,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:12",
       "name": "echo",
-      "value": "57 医疗针 | 59 默认匕首 |"
+      "value": "519 熊刀 | 520 折刀 | 521 流浪者匕首 | 522 短剑 | 523 锯齿爪刀"
     },
     "semantic": {
       "title": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
@@ -10806,7 +10806,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:13",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 13,
-      "text": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型",
+      "text": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -10814,15 +10814,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
+      "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
       "optional": false,
       "ordinal": 13,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
-          "source": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型"
+          "arguments": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔",
+          "source": "echo 524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔"
         }
       ],
       "area": "feature",
@@ -10830,7 +10830,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:13",
       "name": "echo",
-      "value": "输入 srp_knife_switch(J) 轮换手持刀具模型"
+      "value": "524 默认匕首 | 525 骷髅匕首 | 526 尼泊尔"
     },
     "semantic": {
       "title": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
@@ -10860,7 +10860,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:14",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 14,
-      "text": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
+      "text": "echo 57 医疗针 | 59 默认匕首 |",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -10868,15 +10868,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
+      "arguments": "57 医疗针 | 59 默认匕首 |",
       "optional": false,
       "ordinal": 14,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
-          "source": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。"
+          "arguments": "57 医疗针 | 59 默认匕首 |",
+          "source": "echo 57 医疗针 | 59 默认匕首 |"
         }
       ],
       "area": "feature",
@@ -10884,7 +10884,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:14",
       "name": "echo",
-      "value": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。"
+      "value": "57 医疗针 | 59 默认匕首 |"
     },
     "semantic": {
       "title": "echo ═════════════════════════════════════════════════",
@@ -10914,7 +10914,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:15",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 15,
-      "text": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "text": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -10922,15 +10922,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
       "optional": false,
       "ordinal": 15,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
-          "source": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。"
+          "arguments": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。",
+          "source": "echo 示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。"
         }
       ],
       "area": "feature",
@@ -10938,7 +10938,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:15",
       "name": "echo",
-      "value": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。"
+      "value": "示例：输入 507 执行 subclass_create 507，并在准星位置生成爪子刀模型。"
     },
     "semantic": {
       "title": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
@@ -10968,6 +10968,60 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:16",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 16,
+      "text": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "fileId": "file:config/srp-cfg/features/knife/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+      "optional": false,
+      "ordinal": 16,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。",
+          "source": "echo 如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:16",
+      "name": "echo",
+      "value": "如果数字 alias 有响应但没有生成模型，请检查当前服务器是否允许 subclass_create。"
+    },
+    "semantic": {
+      "title": "echo ═════════════════════════════════════════════════",
+      "summary": "echo ═════════════════════════════════════════════════，定义于 config/srp-cfg/features/knife/help.cfg:16。",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_knife -> srp-cfg/features/knife/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/features/knife/help.cfg#echo:17",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/help.cfg:17",
+      "path": "config/srp-cfg/features/knife/help.cfg",
+      "line": 17,
       "text": "echo ═════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
@@ -10978,7 +11032,7 @@
       "target": "",
       "arguments": "═════════════════════════════════════════════════",
       "optional": false,
-      "ordinal": 16,
+      "ordinal": 17,
       "description": "",
       "actions": [
         {
@@ -10990,13 +11044,13 @@
       "area": "feature",
       "module": "knife",
       "role": "help",
-      "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:16",
+      "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:17",
       "name": "echo",
       "value": "═════════════════════════════════════════════════"
     },
     "semantic": {
       "title": "echo ═════════════════════════════════════════════════",
-      "summary": "echo ═════════════════════════════════════════════════，定义于 config/srp-cfg/features/knife/help.cfg:16。",
+      "summary": "echo ═════════════════════════════════════════════════，定义于 config/srp-cfg/features/knife/help.cfg:17。",
       "tags": [
         "command",
         "feature",
@@ -11076,7 +11130,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:3",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 3,
-      "text": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
+      "text": "echo srp_knife_keys : 接管 J 键，用于轮换切刀具模型。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11084,15 +11138,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
+      "arguments": "srp_knife_keys : 接管 J 键，用于轮换切刀具模型。",
       "optional": false,
       "ordinal": 3,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
-          "source": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。"
+          "arguments": "srp_knife_keys : 接管 J 键，用于轮换切刀具模型。",
+          "source": "echo srp_knife_keys : 接管 J 键，用于轮换切刀具模型。"
         }
       ],
       "area": "feature",
@@ -11100,7 +11154,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:3",
       "name": "echo",
-      "value": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。"
+      "value": "srp_knife_keys : 接管 J 键，用于轮换切刀具模型。"
     },
     "semantic": {
       "title": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
@@ -11130,7 +11184,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:4",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 4,
-      "text": "echo Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
+      "text": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11138,15 +11192,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
+      "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
       "optional": false,
       "ordinal": 4,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
-          "source": "echo Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。"
+          "arguments": "输入 srp_knife_switch(J) 轮换手持刀具模型",
+          "source": "echo 输入 srp_knife_switch(J) 轮换手持刀具模型"
         }
       ],
       "area": "feature",
@@ -11154,7 +11208,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:4",
       "name": "echo",
-      "value": "Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。"
+      "value": "输入 srp_knife_switch(J) 轮换手持刀具模型"
     },
     "semantic": {
       "title": "echo Default Preset 把 J 绑定到 srp_knife；knife/keymap.cfg 本身故意不提供默认键位。",
@@ -11184,7 +11238,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:5",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 5,
-      "text": "echo ── 编号 500–514 ──",
+      "text": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11192,15 +11246,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "── 编号 500–514 ──",
+      "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
       "optional": false,
       "ordinal": 5,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "── 编号 500–514 ──",
-          "source": "echo ── 编号 500–514 ──"
+          "arguments": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。",
+          "source": "echo 使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。"
         }
       ],
       "area": "feature",
@@ -11208,7 +11262,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:5",
       "name": "echo",
-      "value": "── 编号 500–514 ──"
+      "value": "使用条件：进入允许 subclass_create 的本地/调试环境后，在控制台输入三位编号。"
     },
     "semantic": {
       "title": "echo ── 编号 500–514 ──",
@@ -11238,7 +11292,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:6",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 6,
-      "text": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
+      "text": "echo Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11246,15 +11300,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
+      "arguments": "Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。",
       "optional": false,
       "ordinal": 6,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
-          "source": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀"
+          "arguments": "Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。",
+          "source": "echo Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。"
         }
       ],
       "area": "feature",
@@ -11262,7 +11316,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:6",
       "name": "echo",
-      "value": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀"
+      "value": "Default Preset 把 J 绑定到 srp_knife_keys；knife/keymap.cfg 本身故意不提供默认键位。"
     },
     "semantic": {
       "title": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
@@ -11292,7 +11346,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:7",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 7,
-      "text": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
+      "text": "echo ── 编号 500–514 ──",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11300,15 +11354,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
+      "arguments": "── 编号 500–514 ──",
       "optional": false,
       "ordinal": 7,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
-          "source": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀"
+          "arguments": "── 编号 500–514 ──",
+          "source": "echo ── 编号 500–514 ──"
         }
       ],
       "area": "feature",
@@ -11316,7 +11370,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:7",
       "name": "echo",
-      "value": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀"
+      "value": "── 编号 500–514 ──"
     },
     "semantic": {
       "title": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
@@ -11346,7 +11400,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:8",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 8,
-      "text": "echo ── 编号 515–526 ──",
+      "text": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11354,15 +11408,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "── 编号 515–526 ──",
+      "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
       "optional": false,
       "ordinal": 8,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "── 编号 515–526 ──",
-          "source": "echo ── 编号 515–526 ──"
+          "arguments": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀",
+          "source": "echo 500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀"
         }
       ],
       "area": "feature",
@@ -11370,7 +11424,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:8",
       "name": "echo",
-      "value": "── 编号 515–526 ──"
+      "value": "500 刺刀 | 503 海豹短刀 | 505 折叠刀 | 506 穿肠刀 | 507 爪子刀"
     },
     "semantic": {
       "title": "echo ── 编号 515–526 ──",
@@ -11400,7 +11454,7 @@
       "ref": "config/srp-cfg/features/knife/help.cfg:9",
       "path": "config/srp-cfg/features/knife/help.cfg",
       "line": 9,
-      "text": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
+      "text": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
       "fileId": "file:config/srp-cfg/features/knife/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -11408,15 +11462,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
+      "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
       "optional": false,
       "ordinal": 9,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
-          "source": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首"
+          "arguments": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀",
+          "source": "echo 508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀"
         }
       ],
       "area": "feature",
@@ -11424,7 +11478,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/features/knife/help.cfg#command:echo:9",
       "name": "echo",
-      "value": "515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首"
+      "value": "508 M9刺刀 | 509 猎杀者匕首 | 512 弯刀 | 514 鲍伊猎刀"
     },
     "semantic": {
       "title": "echo 515 蝴蝶刀 | 516 暗影双匕 | 517 系绳匕首 | 518 求生匕首",
@@ -11448,12 +11502,120 @@
     }
   },
   {
+    "id": "setting:config/srp-cfg/features/knife/settings.cfg#-srp_knife_switch",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:5",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 5,
+      "text": "-srp_knife_switch",
+      "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
+      "kind": "command",
+      "command": "-srp_knife_switch",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "消除按键抖动",
+      "actions": [
+        {
+          "command": "-srp_knife_switch",
+          "arguments": "",
+          "source": "-srp_knife_switch"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "settings",
+      "entryId": "entry:config/srp-cfg/features/knife/settings.cfg#command:-srp_knife_switch",
+      "name": "-srp_knife_switch",
+      "value": ""
+    },
+    "semantic": {
+      "title": "-srp_knife_switch",
+      "summary": "消除按键抖动",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "-srp_knife_switch"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/features/knife/settings.cfg#%2Bsrp_knife_switch",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:4",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 4,
+      "text": "+srp_knife_switch",
+      "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
+      "kind": "command",
+      "command": "+srp_knife_switch",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "消除按键抖动",
+      "actions": [
+        {
+          "command": "+srp_knife_switch",
+          "arguments": "",
+          "source": "+srp_knife_switch"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "settings",
+      "entryId": "entry:config/srp-cfg/features/knife/settings.cfg#command:%2Bsrp_knife_switch",
+      "name": "+srp_knife_switch",
+      "value": ""
+    },
+    "semantic": {
+      "title": "+srp_knife_switch",
+      "summary": "消除按键抖动",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "+srp_knife_switch"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "setting:config/srp-cfg/features/knife/settings.cfg#echo",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/features/knife/settings.cfg:3",
+      "ref": "config/srp-cfg/features/knife/settings.cfg:6",
       "path": "config/srp-cfg/features/knife/settings.cfg",
-      "line": 3,
+      "line": 6,
       "text": "echo \"[SrP-CFG] Knife command library ready; use srp_help_knife for model IDs.\"",
       "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
       "kind": "command",
@@ -11494,6 +11656,114 @@
       ],
       "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
       "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:77、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/features/knife/settings.cfg#sv_cheats",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/settings.cfg:2",
+      "path": "config/srp-cfg/features/knife/settings.cfg",
+      "line": 2,
+      "text": "sv_cheats 1",
+      "fileId": "file:config/srp-cfg/features/knife/settings.cfg",
+      "kind": "command",
+      "command": "sv_cheats",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "1",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开启作弊模式",
+      "actions": [
+        {
+          "command": "sv_cheats",
+          "arguments": "1",
+          "source": "sv_cheats 1"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "settings",
+      "entryId": "entry:config/srp-cfg/features/knife/settings.cfg#command:sv_cheats",
+      "name": "sv_cheats",
+      "value": "1"
+    },
+    "semantic": {
+      "title": "sv_cheats 1",
+      "summary": "开启作弊模式",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "settings"
+      ],
+      "keywords": [
+        "sv_cheats"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_knife -> srp-cfg/features/knife/settings.cfg；别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg -> srp-cfg/features/knife/settings.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/features/knife/with-keymap.cfg#echo",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/features/knife/with-keymap.cfg:3",
+      "path": "config/srp-cfg/features/knife/with-keymap.cfg",
+      "line": 3,
+      "text": "echo [SrP-CFG] Knife keymap applied: J",
+      "fileId": "file:config/srp-cfg/features/knife/with-keymap.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "[SrP-CFG] Knife keymap applied: J",
+      "optional": false,
+      "ordinal": 1,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "[SrP-CFG] Knife keymap applied: J",
+          "source": "echo [SrP-CFG] Knife keymap applied: J"
+        }
+      ],
+      "area": "feature",
+      "module": "knife",
+      "role": "composition",
+      "entryId": "entry:config/srp-cfg/features/knife/with-keymap.cfg#command:echo",
+      "name": "echo",
+      "value": "[SrP-CFG] Knife keymap applied: J"
+    },
+    "semantic": {
+      "title": "echo [SrP-CFG] Knife keymap applied: J",
+      "summary": "echo [SrP-CFG] Knife keymap applied: J，定义于 config/srp-cfg/features/knife/with-keymap.cfg:3。",
+      "tags": [
+        "command",
+        "feature",
+        "knife",
+        "composition"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_knife_keys -> srp-cfg/features/knife/with-keymap.cfg；按键入口 j@srp-cfg/presets/default/keymap.cfg:76、j@srp-cfg/presets/echo/keymap.cfg:58、j@srp-cfg/presets/visionl/keymap.cfg:57、j@srp-cfg/presets/yszh/keymap.cfg:62",
       "relation": ""
     },
     "curation": {

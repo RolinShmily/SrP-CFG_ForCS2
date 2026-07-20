@@ -7651,13 +7651,13 @@
       "ref": "config/srp-cfg/presets/default/keymap.cfg:76",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
       "line": 76,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -7665,9 +7665,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -10189,13 +10189,13 @@
       "ref": "config/srp-cfg/presets/echo/keymap.cfg:58",
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
       "line": 58,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -10203,9 +10203,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -12732,13 +12732,13 @@
       "ref": "config/srp-cfg/presets/visionl/keymap.cfg:57",
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
       "line": 57,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -12746,9 +12746,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",
@@ -15280,13 +15280,13 @@
       "ref": "config/srp-cfg/presets/yszh/keymap.cfg:62",
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
       "line": 62,
-      "text": "bind \"j\" \"srp_knife\"",
+      "text": "bind \"j\" \"srp_knife_keys\"",
       "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "j",
-      "body": "srp_knife",
+      "body": "srp_knife_keys",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -15294,9 +15294,9 @@
       "description": "切换匕首模型。",
       "actions": [
         {
-          "command": "srp_knife",
+          "command": "srp_knife_keys",
           "arguments": "",
-          "source": "srp_knife"
+          "source": "srp_knife_keys"
         }
       ],
       "area": "preset",

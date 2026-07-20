@@ -176,7 +176,7 @@ test("regeneration preserves manual semantic fields while refreshing source fact
   });
 });
 
-test("default preset preserves the exact J to srp_knife binding", () => {
+test("default preset preserves the exact J to srp_knife_keys binding", () => {
   const analysis = analyzeConfigDirectory(CONFIG_ROOT);
   const knowledge = validateCuratedKnowledge(analysis, loadCuratedKnowledge(KNOWLEDGE_ROOT));
   const binding = knowledge.collections.bindings.find(
@@ -185,8 +185,8 @@ test("default preset preserves the exact J to srp_knife binding", () => {
       entity.source.key === "j",
   );
   assert.ok(binding);
-  assert.equal(binding.source.body, "srp_knife");
-  assert.equal(binding.source.text, 'bind "j" "srp_knife"');
+  assert.equal(binding.source.body, "srp_knife_keys");
+  assert.equal(binding.source.text, 'bind "j" "srp_knife_keys"');
 });
 
 test("v3 dataset is built only from validated production local entities", () => {
