@@ -10433,7 +10433,7 @@
       "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:2",
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 2,
-      "text": "cl_crosshair_drawoutline \"false\"",
+      "text": "cl_crosshair_drawoutline \"true\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
       "kind": "command",
       "command": "cl_crosshair_drawoutline",
@@ -10441,15 +10441,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "\"false\"",
+      "arguments": "\"true\"",
       "optional": false,
       "ordinal": 1,
-      "description": "将准星描边设为false：关闭线条外缘描边。",
+      "description": "将准星描边设为true：开启线条外缘描边。",
       "actions": [
         {
           "command": "cl_crosshair_drawoutline",
-          "arguments": "\"false\"",
-          "source": "cl_crosshair_drawoutline \"false\""
+          "arguments": "\"true\"",
+          "source": "cl_crosshair_drawoutline \"true\""
         }
       ],
       "area": "feature",
@@ -11045,7 +11045,7 @@
       "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:14",
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 14,
-      "text": "cl_crosshaircolor_r \"0\"",
+      "text": "cl_crosshaircolor_r \"255\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
       "kind": "command",
       "command": "cl_crosshaircolor_r",
@@ -11053,15 +11053,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "\"0\"",
+      "arguments": "\"255\"",
       "optional": false,
       "ordinal": 1,
-      "description": "将自定义准星红色通道设为 0（0–255）；颜色模式 5 时生效。",
+      "description": "将自定义准星红色通道设为 255（0–255）；颜色模式 5 时生效。",
       "actions": [
         {
           "command": "cl_crosshaircolor_r",
-          "arguments": "\"0\"",
-          "source": "cl_crosshaircolor_r \"0\""
+          "arguments": "\"255\"",
+          "source": "cl_crosshaircolor_r \"255\""
         }
       ],
       "area": "feature",

@@ -661,7 +661,7 @@
       "line": 1,
       "text": "// SrP-CFG 准星预设 07；修改后可在控制台执行 c07 立即预览。",
       "lineCount": 21,
-      "sha256": "7a81f0393c9e8721bfd0451a8517abde5b071c0de82239d043c42773d0fb0dd1",
+      "sha256": "c7ecfb337ee2eaade7812c6d397100a7451636008b29daf4bf30a242f1913379",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
