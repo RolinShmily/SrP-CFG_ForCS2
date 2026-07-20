@@ -4346,18 +4346,18 @@
     }
   },
   {
-    "id": "binding:config/srp-cfg/modes/practice/keymap.cfg#f12",
+    "id": "binding:config/srp-cfg/modes/practice/keymap.cfg#f10",
     "type": "binding",
     "source": {
       "ref": "config/srp-cfg/modes/practice/keymap.cfg:11",
       "path": "config/srp-cfg/modes/practice/keymap.cfg",
       "line": 11,
-      "text": "bind \"f12\" \"srp_prac_bhop\"",
+      "text": "bind \"f10\" \"srp_prac_bhop\"",
       "fileId": "file:config/srp-cfg/modes/practice/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
-      "key": "f12",
+      "key": "f10",
       "body": "srp_prac_bhop",
       "target": "",
       "arguments": "",
@@ -4374,11 +4374,11 @@
       "area": "mode",
       "module": "practice",
       "role": "keymap",
-      "entryId": "entry:config/srp-cfg/modes/practice/keymap.cfg#bind:f12",
-      "name": "f12"
+      "entryId": "entry:config/srp-cfg/modes/practice/keymap.cfg#bind:f10",
+      "name": "f10"
     },
     "semantic": {
-      "title": "f12 -> toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo bhop状态已更新",
+      "title": "f10 -> srp_prac_bhop",
       "summary": "切换连跳训练环境。",
       "tags": [
         "bind",
@@ -4387,12 +4387,12 @@
         "keymap"
       ],
       "keywords": [
-        "f12",
+        "f10",
         "bind"
       ],
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
-      "activation": "别名 srp_practice_keys -> srp-cfg/modes/practice/with-keymap.cfg -> srp-cfg/modes/practice/keymap.cfg；按键入口 p@srp-cfg/presets/default/keymap.cfg:78、p@srp-cfg/presets/echo/keymap.cfg:59、p@srp-cfg/presets/visionl/keymap.cfg:58、p@srp-cfg/presets/yszh/keymap.cfg:63",
-      "relation": ""
+      "activation": "别名 srp_practice_keys -> srp-cfg/modes/practice/with-keymap.cfg -> srp-cfg/modes/practice/keymap.cfg；按键入口 p@srp-cfg/presets/default/keymap.cfg:77、p@srp-cfg/presets/echo/keymap.cfg:59、p@srp-cfg/presets/visionl/keymap.cfg:58、p@srp-cfg/presets/yszh/keymap.cfg:63",
+      "relation": "调用 alias srp_prac_bhop，定义于 srp-cfg/modes/practice/runtime.cfg:24，内容 toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo bhop状态已更新"
     },
     "curation": {
       "status": "generated",
@@ -5588,6 +5588,1096 @@
     }
   },
   {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#%2C",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:6",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 6,
+      "text": "bind \",\" \"srp_pwa_prac_clear_smokes;srp_pwa_prac_switch_flash\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": ",",
+      "body": "srp_pwa_prac_clear_smokes;srp_pwa_prac_switch_flash",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "清除烟雾弹 开关闪光弹效果",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_clear_smokes",
+          "arguments": "",
+          "source": "srp_pwa_prac_clear_smokes"
+        },
+        {
+          "command": "srp_pwa_prac_switch_flash",
+          "arguments": "",
+          "source": "srp_pwa_prac_switch_flash"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:%2C",
+      "name": ","
+    },
+    "semantic": {
+      "title": ", -> srp_pwa_prac_clear_smokes;srp_pwa_prac_switch_flash",
+      "summary": "清除烟雾弹 开关闪光弹效果",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        ",",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_clear_smokes，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:5，内容 say .qy；调用 alias srp_pwa_prac_switch_flash，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:6，内容 say .sg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#downarrow",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:2",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 2,
+      "text": "bind \"downarrow\" \"srp_pwa_prac_bot_kick\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "downarrow",
+      "body": "srp_pwa_prac_bot_kick",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "清除光标指向的bot",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_bot_kick",
+          "arguments": "",
+          "source": "srp_pwa_prac_bot_kick"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:downarrow",
+      "name": "downarrow"
+    },
+    "semantic": {
+      "title": "downarrow -> srp_pwa_prac_bot_kick",
+      "summary": "清除光标指向的bot",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "downarrow",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_bot_kick，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:2，内容 say .kick"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f1",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:16",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 16,
+      "text": "bind \"f1\" \"srp_pwa_prac_grenades\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f1",
+      "body": "srp_pwa_prac_grenades",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关道具训练",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_grenades",
+          "arguments": "",
+          "source": "srp_pwa_prac_grenades"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f1",
+      "name": "f1"
+    },
+    "semantic": {
+      "title": "f1 -> srp_pwa_prac_grenades",
+      "summary": "开关道具训练",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f1",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_grenades，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:21，内容 say .u"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f10",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:18",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 18,
+      "text": "bind \"f10\" \"srp_pwa_prac_breaks\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f10",
+      "body": "srp_pwa_prac_breaks",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "破坏物品",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_breaks",
+          "arguments": "",
+          "source": "srp_pwa_prac_breaks"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f10",
+      "name": "f10"
+    },
+    "semantic": {
+      "title": "f10 -> srp_pwa_prac_breaks",
+      "summary": "破坏物品",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f10",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_breaks，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:19，内容 say .break"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f11",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:19",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 19,
+      "text": "bind \"f11\" \"srp_pwa_prac_recover\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f11",
+      "body": "srp_pwa_prac_recover",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "恢复物品",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_recover",
+          "arguments": "",
+          "source": "srp_pwa_prac_recover"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f11",
+      "name": "f11"
+    },
+    "semantic": {
+      "title": "f11 -> srp_pwa_prac_recover",
+      "summary": "恢复物品",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f11",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_recover，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:20，内容 say .recover"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f2",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:7",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 7,
+      "text": "bind \"f2\" \"srp_pwa_prac_god\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f2",
+      "body": "srp_pwa_prac_god",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关上帝模式",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_god",
+          "arguments": "",
+          "source": "srp_pwa_prac_god"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f2",
+      "name": "f2"
+    },
+    "semantic": {
+      "title": "f2 -> srp_pwa_prac_god",
+      "summary": "开关上帝模式",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f2",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_god，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:16，内容 say .god"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f3",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:15",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 15,
+      "text": "bind \"f3\" \"srp_pwa_prac_follow_grenades\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f3",
+      "body": "srp_pwa_prac_follow_grenades",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关追踪道具",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_follow_grenades",
+          "arguments": "",
+          "source": "srp_pwa_prac_follow_grenades"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f3",
+      "name": "f3"
+    },
+    "semantic": {
+      "title": "f3 -> srp_pwa_prac_follow_grenades",
+      "summary": "开关追踪道具",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f3",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_follow_grenades，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:15，内容 say .cam"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f4",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:17",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 17,
+      "text": "bind \"f4\" \"srp_pwa_prac_menus\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f4",
+      "body": "srp_pwa_prac_menus",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关指令墙",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_menus",
+          "arguments": "",
+          "source": "srp_pwa_prac_menus"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f4",
+      "name": "f4"
+    },
+    "semantic": {
+      "title": "f4 -> srp_pwa_prac_menus",
+      "summary": "开关指令墙",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f4",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_menus，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:22，内容 say .menu"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f5",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:11",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 11,
+      "text": "bind \"f5\" \"srp_pwa_prac_rethrow_2\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f5",
+      "body": "srp_pwa_prac_rethrow_2",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第二颗投掷物",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_rethrow_2",
+          "arguments": "",
+          "source": "srp_pwa_prac_rethrow_2"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f5",
+      "name": "f5"
+    },
+    "semantic": {
+      "title": "f5 -> srp_pwa_prac_rethrow_2",
+      "summary": "重新投掷倒数第二颗投掷物",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f5",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_rethrow_2，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:10，内容 say .ct2"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f6",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:12",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 12,
+      "text": "bind \"f6\" \"srp_pwa_prac_rethrow_3\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f6",
+      "body": "srp_pwa_prac_rethrow_3",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第三颗投掷物",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_rethrow_3",
+          "arguments": "",
+          "source": "srp_pwa_prac_rethrow_3"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f6",
+      "name": "f6"
+    },
+    "semantic": {
+      "title": "f6 -> srp_pwa_prac_rethrow_3",
+      "summary": "重新投掷倒数第三颗投掷物",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f6",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_rethrow_3，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:11，内容 say .ct3"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f7",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:13",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 13,
+      "text": "bind \"f7\" \"srp_pwa_prac_rethrow_4\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f7",
+      "body": "srp_pwa_prac_rethrow_4",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第四颗投掷物",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_rethrow_4",
+          "arguments": "",
+          "source": "srp_pwa_prac_rethrow_4"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f7",
+      "name": "f7"
+    },
+    "semantic": {
+      "title": "f7 -> srp_pwa_prac_rethrow_4",
+      "summary": "重新投掷倒数第四颗投掷物",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f7",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_rethrow_4，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:12，内容 say .ct4"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f8",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:14",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 14,
+      "text": "bind \"f8\" \"srp_pwa_prac_rethrow_5\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f8",
+      "body": "srp_pwa_prac_rethrow_5",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第五颗投掷物",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_rethrow_5",
+          "arguments": "",
+          "source": "srp_pwa_prac_rethrow_5"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f8",
+      "name": "f8"
+    },
+    "semantic": {
+      "title": "f8 -> srp_pwa_prac_bot_kickall",
+      "summary": "清除所有bot",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f8",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_bot_kickall，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:3，内容 say .kickall"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#f9",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:9",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 9,
+      "text": "bind \"f9\" \"srp_pwa_prac_team_attack\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "f9",
+      "body": "srp_pwa_prac_team_attack",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关友伤",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_team_attack",
+          "arguments": "",
+          "source": "srp_pwa_prac_team_attack"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f9",
+      "name": "f9"
+    },
+    "semantic": {
+      "title": "f9 -> srp_pwa_prac_team_attack",
+      "summary": "开关友伤",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "f9",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_team_attack，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:17，内容 say .ys"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#k",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:3",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 3,
+      "text": "bind \"k\" \"srp_pwa_prac_bot_kickall\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "k",
+      "body": "srp_pwa_prac_bot_kickall",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "清除所有bot",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_bot_kickall",
+          "arguments": "",
+          "source": "srp_pwa_prac_bot_kickall"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:k",
+      "name": "k"
+    },
+    "semantic": {
+      "title": "k -> srp_pwa_prac_bot_kickall",
+      "summary": "清除所有bot",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "k",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_bot_kickall，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:3，内容 say .kickall"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#l",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:10",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 10,
+      "text": "bind \"l\" \"srp_pwa_prac_rethrow\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "l",
+      "body": "srp_pwa_prac_rethrow",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷上一颗投掷物",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_rethrow",
+          "arguments": "",
+          "source": "srp_pwa_prac_rethrow"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:l",
+      "name": "l"
+    },
+    "semantic": {
+      "title": "l -> srp_pwa_prac_rethrow",
+      "summary": "重新投掷上一颗投掷物",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "l",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_rethrow，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:8，内容 say .tz"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#mouse4",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 1,
+      "text": "bind \"mouse4\" \"srp_pwa_prac_bot_add\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "mouse4",
+      "body": "srp_pwa_prac_bot_add",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "在当前玩家位置添加 Bot",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_bot_add",
+          "arguments": "",
+          "source": "srp_pwa_prac_bot_add"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:mouse4",
+      "name": "mouse4"
+    },
+    "semantic": {
+      "title": "mouse4 -> srp_pwa_prac_bot_add",
+      "summary": "在当前玩家位置添加 Bot",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "mouse4",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_bot_add，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:1，内容 say .bot"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#n",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:8",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 8,
+      "text": "bind \"n\" \"srp_pwa_prac_noclip\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "n",
+      "body": "srp_pwa_prac_noclip",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "切换飞行模式。",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_noclip",
+          "arguments": "",
+          "source": "srp_pwa_prac_noclip"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:n",
+      "name": "n"
+    },
+    "semantic": {
+      "title": "n -> srp_pwa_prac_noclip",
+      "summary": "切换飞行模式。",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "n",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_noclip，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:24，内容 noclip"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#n:2",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:20",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 20,
+      "text": "bind \"n\" \"srp_pwa_prac_noclip\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "n",
+      "body": "srp_pwa_prac_noclip",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 2,
+      "description": "切换飞行",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_noclip",
+          "arguments": "",
+          "source": "srp_pwa_prac_noclip"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:n:2",
+      "name": "n"
+    },
+    "semantic": {
+      "title": "n -> srp_pwa_prac_noclip",
+      "summary": "切换飞行",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "n",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_noclip，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:24，内容 noclip"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#rightarrow",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:4",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 4,
+      "text": "bind \"rightarrow\" \"srp_pwa_prac_restart\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "rightarrow",
+      "body": "srp_pwa_prac_restart",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重置游戏",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_restart",
+          "arguments": "",
+          "source": "srp_pwa_prac_restart"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:rightarrow",
+      "name": "rightarrow"
+    },
+    "semantic": {
+      "title": "rightarrow -> srp_pwa_prac_restart",
+      "summary": "重置游戏",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "rightarrow",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_restart，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:4，内容 say .cz"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#uparrow",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:5",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 5,
+      "text": "bind \"uparrow\" \"srp_pwa_prac_switch_preview;srp_pwa_prac_switch_impacts\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "uparrow",
+      "body": "srp_pwa_prac_switch_preview;srp_pwa_prac_switch_impacts",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关预览窗 开关子弹落点",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_switch_preview",
+          "arguments": "",
+          "source": "srp_pwa_prac_switch_preview"
+        },
+        {
+          "command": "srp_pwa_prac_switch_impacts",
+          "arguments": "",
+          "source": "srp_pwa_prac_switch_impacts"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:uparrow",
+      "name": "uparrow"
+    },
+    "semantic": {
+      "title": "uparrow -> srp_pwa_prac_switch_preview;srp_pwa_prac_switch_impacts",
+      "summary": "开关预览窗 开关子弹落点",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "uparrow",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_switch_preview，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:7，内容 say .up；调用 alias srp_pwa_prac_switch_impacts，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:14，内容 say .bi"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#-",
     "type": "binding",
     "source": {
@@ -5753,9 +6843,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%5B",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:78",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:79",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 78,
+      "line": 79,
       "text": "bind \"[\" \"srp_autoview_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -5861,9 +6951,9 @@
     "id": "binding:config/srp-cfg/presets/default/keymap.cfg#%5D",
     "type": "binding",
     "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:79",
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:80",
       "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 79,
+      "line": 80,
       "text": "bind \"]\" \"srp_demo_keys\"",
       "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
       "kind": "bind",
@@ -7584,6 +8674,60 @@
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
       "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
       "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/presets/default/keymap.cfg#home",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:78",
+      "path": "config/srp-cfg/presets/default/keymap.cfg",
+      "line": 78,
+      "text": "bind \"home\" \"srp_pwa_prac_keys\"",
+      "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "home",
+      "body": "srp_pwa_prac_keys",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "进入完美跑图模式并应用键位。",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_keys",
+          "arguments": "",
+          "source": "srp_pwa_prac_keys"
+        }
+      ],
+      "area": "preset",
+      "module": "default",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:home",
+      "name": "home"
+    },
+    "semantic": {
+      "title": "home -> srp_pwa_prac_keys",
+      "summary": "进入完美跑图模式并应用键位。",
+      "tags": [
+        "bind",
+        "preset",
+        "default",
+        "keymap"
+      ],
+      "keywords": [
+        "home",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
+      "relation": "调用 alias srp_pwa_prac_keys，定义于 srp-cfg/runtime/commands.cfg:28，内容 exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
     },
     "curation": {
       "status": "generated",
@@ -10183,6 +11327,60 @@
     }
   },
   {
+    "id": "binding:config/srp-cfg/presets/echo/keymap.cfg#home",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/presets/echo/keymap.cfg:60",
+      "path": "config/srp-cfg/presets/echo/keymap.cfg",
+      "line": 60,
+      "text": "bind \"home\" \"srp_pwa_prac_keys\"",
+      "fileId": "file:config/srp-cfg/presets/echo/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "home",
+      "body": "srp_pwa_prac_keys",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "进入完美跑图模式并应用键位。",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_keys",
+          "arguments": "",
+          "source": "srp_pwa_prac_keys"
+        }
+      ],
+      "area": "preset",
+      "module": "echo",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/presets/echo/keymap.cfg#bind:home",
+      "name": "home"
+    },
+    "semantic": {
+      "title": "home -> srp_pwa_prac_keys",
+      "summary": "进入完美跑图模式并应用键位。",
+      "tags": [
+        "bind",
+        "preset",
+        "echo",
+        "keymap"
+      ],
+      "keywords": [
+        "home",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_echo -> srp-cfg/presets/echo/apply.cfg -> srp-cfg/presets/echo/keymap.cfg",
+      "relation": "调用 alias srp_pwa_prac_keys，定义于 srp-cfg/runtime/commands.cfg:28，内容 exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "binding:config/srp-cfg/presets/echo/keymap.cfg#j",
     "type": "binding",
     "source": {
@@ -12726,6 +13924,60 @@
     }
   },
   {
+    "id": "binding:config/srp-cfg/presets/visionl/keymap.cfg#home",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/presets/visionl/keymap.cfg:59",
+      "path": "config/srp-cfg/presets/visionl/keymap.cfg",
+      "line": 59,
+      "text": "bind \"home\" \"srp_pwa_prac_keys\"",
+      "fileId": "file:config/srp-cfg/presets/visionl/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "home",
+      "body": "srp_pwa_prac_keys",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "进入完美跑图模式并应用键位。",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_keys",
+          "arguments": "",
+          "source": "srp_pwa_prac_keys"
+        }
+      ],
+      "area": "preset",
+      "module": "visionl",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/presets/visionl/keymap.cfg#bind:home",
+      "name": "home"
+    },
+    "semantic": {
+      "title": "home -> srp_pwa_prac_keys",
+      "summary": "进入完美跑图模式并应用键位。",
+      "tags": [
+        "bind",
+        "preset",
+        "visionl",
+        "keymap"
+      ],
+      "keywords": [
+        "home",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_visionl -> srp-cfg/presets/visionl/apply.cfg -> srp-cfg/presets/visionl/keymap.cfg",
+      "relation": "调用 alias srp_pwa_prac_keys，定义于 srp-cfg/runtime/commands.cfg:28，内容 exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "binding:config/srp-cfg/presets/visionl/keymap.cfg#j",
     "type": "binding",
     "source": {
@@ -15213,6 +16465,60 @@
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
       "activation": "别名 srp_apply_yszh -> srp-cfg/presets/yszh/apply.cfg -> srp-cfg/presets/yszh/keymap.cfg",
       "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "binding:config/srp-cfg/presets/yszh/keymap.cfg#home",
+    "type": "binding",
+    "source": {
+      "ref": "config/srp-cfg/presets/yszh/keymap.cfg:64",
+      "path": "config/srp-cfg/presets/yszh/keymap.cfg",
+      "line": 64,
+      "text": "bind \"home\" \"srp_pwa_prac_keys\"",
+      "fileId": "file:config/srp-cfg/presets/yszh/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "home",
+      "body": "srp_pwa_prac_keys",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "进入完美跑图模式并应用键位。",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_keys",
+          "arguments": "",
+          "source": "srp_pwa_prac_keys"
+        }
+      ],
+      "area": "preset",
+      "module": "yszh",
+      "role": "keymap",
+      "entryId": "entry:config/srp-cfg/presets/yszh/keymap.cfg#bind:home",
+      "name": "home"
+    },
+    "semantic": {
+      "title": "home -> srp_pwa_prac_keys",
+      "summary": "进入完美跑图模式并应用键位。",
+      "tags": [
+        "bind",
+        "preset",
+        "yszh",
+        "keymap"
+      ],
+      "keywords": [
+        "home",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_yszh -> srp-cfg/presets/yszh/apply.cfg -> srp-cfg/presets/yszh/keymap.cfg",
+      "relation": "调用 alias srp_pwa_prac_keys，定义于 srp-cfg/runtime/commands.cfg:28，内容 exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
     },
     "curation": {
       "status": "generated",

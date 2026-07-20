@@ -30536,6 +30536,1248 @@
     }
   },
   {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_bot_add",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 1,
+      "text": "alias \"srp_pwa_prac_bot_add\" \"say .bot\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_bot_add",
+      "key": "",
+      "body": "say .bot",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "在当前玩家位置添加 Bot",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".bot",
+          "source": "say .bot"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_bot_add",
+      "name": "srp_pwa_prac_bot_add"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_bot_add",
+      "summary": "在当前玩家位置添加 Bot",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_bot_add",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_bot_kick",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:2",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 2,
+      "text": "alias \"srp_pwa_prac_bot_kick\" \"say .kick\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_bot_kick",
+      "key": "",
+      "body": "say .kick",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "清除光标指向的bot",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".kick",
+          "source": "say .kick"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_bot_kick",
+      "name": "srp_pwa_prac_bot_kick"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_bot_kick",
+      "summary": "清除光标指向的bot",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_bot_kick",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_bot_kickall",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:3",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 3,
+      "text": "alias \"srp_pwa_prac_bot_kickall\" \"say .kickall\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_bot_kickall",
+      "key": "",
+      "body": "say .kickall",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "清除所有bot",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".kickall",
+          "source": "say .kickall"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_bot_kickall",
+      "name": "srp_pwa_prac_bot_kickall"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_bot_kickall",
+      "summary": "清除所有bot",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_bot_kickall",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_breaks",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:19",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 19,
+      "text": "alias \"srp_pwa_prac_breaks\" \"say .break\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_breaks",
+      "key": "",
+      "body": "say .break",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "破坏物品",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".break",
+          "source": "say .break"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_breaks",
+      "name": "srp_pwa_prac_breaks"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_breaks",
+      "summary": "破坏物品",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_breaks",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_clear_smokes",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:5",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 5,
+      "text": "alias \"srp_pwa_prac_clear_smokes\" \"say .qy\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_clear_smokes",
+      "key": "",
+      "body": "say .qy",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "清除烟雾弹",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".qy",
+          "source": "say .qy"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_clear_smokes",
+      "name": "srp_pwa_prac_clear_smokes"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_clear_smokes",
+      "summary": "清除烟雾弹",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_clear_smokes",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_follow_grenades",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:15",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 15,
+      "text": "alias \"srp_pwa_prac_follow_grenades\" \"say .cam\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_follow_grenades",
+      "key": "",
+      "body": "say .cam",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关追踪道具",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".cam",
+          "source": "say .cam"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_follow_grenades",
+      "name": "srp_pwa_prac_follow_grenades"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_follow_grenades",
+      "summary": "开关追踪道具",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_follow_grenades",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_god",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:16",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 16,
+      "text": "alias \"srp_pwa_prac_god\" \"say .god\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_god",
+      "key": "",
+      "body": "say .god",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关上帝模式",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".god",
+          "source": "say .god"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_god",
+      "name": "srp_pwa_prac_god"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_god",
+      "summary": "开关上帝模式",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_god",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_grenades",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:21",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 21,
+      "text": "alias \"srp_pwa_prac_grenades\" \"say .u\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_grenades",
+      "key": "",
+      "body": "say .u",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关道具训练",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".u",
+          "source": "say .u"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_grenades",
+      "name": "srp_pwa_prac_grenades"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_grenades",
+      "summary": "开关道具训练",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_grenades",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_menus",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:22",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 22,
+      "text": "alias \"srp_pwa_prac_menus\" \"say .menu\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_menus",
+      "key": "",
+      "body": "say .menu",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关指令墙",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".menu",
+          "source": "say .menu"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_menus",
+      "name": "srp_pwa_prac_menus"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_menus",
+      "summary": "开关指令墙",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_menus",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_noclip",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:24",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 24,
+      "text": "alias \"srp_pwa_prac_noclip\" \"noclip\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_noclip",
+      "key": "",
+      "body": "noclip",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "切换飞行。",
+      "actions": [
+        {
+          "command": "noclip",
+          "arguments": "",
+          "source": "noclip"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_noclip",
+      "name": "srp_pwa_prac_noclip"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_noclip",
+      "summary": "切换飞行。",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_noclip",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_recover",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:20",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 20,
+      "text": "alias \"srp_pwa_prac_recover\" \"say .recover\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_recover",
+      "key": "",
+      "body": "say .recover",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "恢复物品",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".recover",
+          "source": "say .recover"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_recover",
+      "name": "srp_pwa_prac_recover"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_recover",
+      "summary": "恢复物品",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_recover",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_restart",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:4",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 4,
+      "text": "alias \"srp_pwa_prac_restart\" \"say .cz\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_restart",
+      "key": "",
+      "body": "say .cz",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重置游戏",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".cz",
+          "source": "say .cz"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_restart",
+      "name": "srp_pwa_prac_restart"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_restart",
+      "summary": "重置游戏",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_restart",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:8",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 8,
+      "text": "alias \"srp_pwa_prac_rethrow\" \"say .tz\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow",
+      "key": "",
+      "body": "say .tz",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷上一颗投掷物",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".tz",
+          "source": "say .tz"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow",
+      "name": "srp_pwa_prac_rethrow"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow",
+      "summary": "重新投掷上一颗投掷物",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_1",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:9",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 9,
+      "text": "alias \"srp_pwa_prac_rethrow_1\" \"say .ct\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_1",
+      "key": "",
+      "body": "say .ct",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷上一颗投掷物",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".ct",
+          "source": "say .ct"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_1",
+      "name": "srp_pwa_prac_rethrow_1"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow_1",
+      "summary": "重新投掷上一颗投掷物",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_1",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_2",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:10",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 10,
+      "text": "alias \"srp_pwa_prac_rethrow_2\" \"say .ct2\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_2",
+      "key": "",
+      "body": "say .ct2",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第二颗投掷物",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".ct2",
+          "source": "say .ct2"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_2",
+      "name": "srp_pwa_prac_rethrow_2"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow_2",
+      "summary": "重新投掷倒数第二颗投掷物",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_2",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_3",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:11",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 11,
+      "text": "alias \"srp_pwa_prac_rethrow_3\" \"say .ct3\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_3",
+      "key": "",
+      "body": "say .ct3",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第三颗投掷物",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".ct3",
+          "source": "say .ct3"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_3",
+      "name": "srp_pwa_prac_rethrow_3"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow_3",
+      "summary": "重新投掷倒数第三颗投掷物",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_3",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_4",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:12",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 12,
+      "text": "alias \"srp_pwa_prac_rethrow_4\" \"say .ct4\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_4",
+      "key": "",
+      "body": "say .ct4",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第四颗投掷物",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".ct4",
+          "source": "say .ct4"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_4",
+      "name": "srp_pwa_prac_rethrow_4"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow_4",
+      "summary": "重新投掷倒数第四颗投掷物",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_4",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_5",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:13",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 13,
+      "text": "alias \"srp_pwa_prac_rethrow_5\" \"say .ct5\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_5",
+      "key": "",
+      "body": "say .ct5",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "重新投掷倒数第五颗投掷物",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".ct5",
+          "source": "say .ct5"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_5",
+      "name": "srp_pwa_prac_rethrow_5"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow_5",
+      "summary": "重新投掷倒数第五颗投掷物",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_5",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_spawns",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:18",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 18,
+      "text": "alias \"srp_pwa_prac_spawns\" \"say .s\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_spawns",
+      "key": "",
+      "body": "say .s",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "传送至出生点菜单",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".s",
+          "source": "say .s"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_spawns",
+      "name": "srp_pwa_prac_spawns"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_spawns",
+      "summary": "传送至出生点菜单",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_spawns",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_switch_flash",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:6",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 6,
+      "text": "alias \"srp_pwa_prac_switch_flash\" \"say .sg\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_switch_flash",
+      "key": "",
+      "body": "say .sg",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关闪光弹效果",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".sg",
+          "source": "say .sg"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_switch_flash",
+      "name": "srp_pwa_prac_switch_flash"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_switch_flash",
+      "summary": "开关闪光弹效果",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_switch_flash",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_switch_impacts",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:14",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 14,
+      "text": "alias \"srp_pwa_prac_switch_impacts\" \"say .bi\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_switch_impacts",
+      "key": "",
+      "body": "say .bi",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关子弹落点",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".bi",
+          "source": "say .bi"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_switch_impacts",
+      "name": "srp_pwa_prac_switch_impacts"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_switch_impacts",
+      "summary": "开关子弹落点",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_switch_impacts",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_switch_preview",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:7",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 7,
+      "text": "alias \"srp_pwa_prac_switch_preview\" \"say .up\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_switch_preview",
+      "key": "",
+      "body": "say .up",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关预览窗",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".up",
+          "source": "say .up"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_switch_preview",
+      "name": "srp_pwa_prac_switch_preview"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_switch_preview",
+      "summary": "开关预览窗",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_switch_preview",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_team_attack",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:17",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 17,
+      "text": "alias \"srp_pwa_prac_team_attack\" \"say .ys\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_team_attack",
+      "key": "",
+      "body": "say .ys",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关友伤",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".ys",
+          "source": "say .ys"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_team_attack",
+      "name": "srp_pwa_prac_team_attack"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_team_attack",
+      "summary": "开关友伤",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_team_attack",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "alias:config/srp-cfg/runtime/aliases.cfg#keyhud",
     "type": "alias",
     "source": {
@@ -31198,9 +32440,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_demo",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:29",
+      "ref": "config/srp-cfg/runtime/commands.cfg:31",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 29,
+      "line": 31,
       "text": "alias \"srp_demo\" \"exec srp-cfg/modes/demo-hlae/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31250,9 +32492,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_demo_keys",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:30",
+      "ref": "config/srp-cfg/runtime/commands.cfg:32",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 30,
+      "line": 32,
       "text": "alias \"srp_demo_keys\" \"exec srp-cfg/modes/demo-hlae/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31302,9 +32544,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_guidemake",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:31",
+      "ref": "config/srp-cfg/runtime/commands.cfg:33",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 31,
+      "line": 33,
       "text": "alias \"srp_guidemake\" \"exec srp-cfg/modes/guidemake/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31354,9 +32596,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_guidemake_keys",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:32",
+      "ref": "config/srp-cfg/runtime/commands.cfg:34",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 32,
+      "line": 34,
       "text": "alias \"srp_guidemake_keys\" \"exec srp-cfg/modes/guidemake/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31406,9 +32648,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:35",
+      "ref": "config/srp-cfg/runtime/commands.cfg:37",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 35,
+      "line": 37,
       "text": "alias \"srp_help\" \"exec srp-cfg/helps/index.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31458,9 +32700,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_autoview",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:39",
+      "ref": "config/srp-cfg/runtime/commands.cfg:41",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 39,
+      "line": 41,
       "text": "alias \"srp_help_autoview\" \"exec srp-cfg/features/autoview/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31510,9 +32752,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_crosshair",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:38",
+      "ref": "config/srp-cfg/runtime/commands.cfg:40",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 38,
+      "line": 40,
       "text": "alias \"srp_help_crosshair\" \"exec srp-cfg/features/crosshair-view/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31562,9 +32804,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_demo",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:45",
+      "ref": "config/srp-cfg/runtime/commands.cfg:48",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 45,
+      "line": 48,
       "text": "alias \"srp_help_demo\" \"exec srp-cfg/modes/demo-hlae/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31614,9 +32856,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_guidemake",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:44",
+      "ref": "config/srp-cfg/runtime/commands.cfg:47",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 44,
+      "line": 47,
       "text": "alias \"srp_help_guidemake\" \"exec srp-cfg/modes/guidemake/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31666,9 +32908,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_knife",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:40",
+      "ref": "config/srp-cfg/runtime/commands.cfg:42",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 40,
+      "line": 42,
       "text": "alias \"srp_help_knife\" \"exec srp-cfg/features/knife/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31718,9 +32960,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_practice",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:42",
+      "ref": "config/srp-cfg/runtime/commands.cfg:44",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 42,
+      "line": 44,
       "text": "alias \"srp_help_practice\" \"exec srp-cfg/modes/practice/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31770,9 +33012,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_presets",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:36",
+      "ref": "config/srp-cfg/runtime/commands.cfg:38",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 36,
+      "line": 38,
       "text": "alias \"srp_help_presets\" \"exec srp-cfg/helps/presets.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31822,9 +33064,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_preview",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:43",
+      "ref": "config/srp-cfg/runtime/commands.cfg:46",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 43,
+      "line": 46,
       "text": "alias \"srp_help_preview\" \"exec srp-cfg/modes/preview/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31871,12 +33113,64 @@
     }
   },
   {
+    "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_pwa_prac",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/runtime/commands.cfg:45",
+      "path": "config/srp-cfg/runtime/commands.cfg",
+      "line": 45,
+      "text": "alias \"srp_help_pwa_prac\" \"exec srp-cfg/modes/pwa-prac/help.cfg\"",
+      "fileId": "file:config/srp-cfg/runtime/commands.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_help_pwa_prac",
+      "key": "",
+      "body": "exec srp-cfg/modes/pwa-prac/help.cfg",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "注册入口 srp_help_pwa_prac：执行 srp-cfg/modes/pwa-prac/help.cfg。",
+      "actions": [
+        {
+          "command": "exec",
+          "arguments": "srp-cfg/modes/pwa-prac/help.cfg",
+          "source": "exec srp-cfg/modes/pwa-prac/help.cfg"
+        }
+      ],
+      "area": "runtime",
+      "module": "runtime",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_help_pwa_prac",
+      "name": "srp_help_pwa_prac"
+    },
+    "semantic": {
+      "title": "alias srp_help_pwa_prac",
+      "summary": "注册入口 srp_help_pwa_prac：执行 srp-cfg/modes/pwa-prac/help.cfg。",
+      "tags": [
+        "alias",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_help_pwa_prac",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg",
+      "relation": "加载文件 srp-cfg/modes/pwa-prac/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_reset",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:37",
+      "ref": "config/srp-cfg/runtime/commands.cfg:39",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 37,
+      "line": 39,
       "text": "alias \"srp_help_reset\" \"exec srp-cfg/presets/valve/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -31926,9 +33220,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_help_zeus",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:41",
+      "ref": "config/srp-cfg/runtime/commands.cfg:43",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 41,
+      "line": 43,
       "text": "alias \"srp_help_zeus\" \"exec srp-cfg/features/zeus/help.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -32186,9 +33480,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_preview",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:27",
+      "ref": "config/srp-cfg/runtime/commands.cfg:29",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 27,
+      "line": 29,
       "text": "alias \"srp_preview\" \"exec srp-cfg/modes/preview/settings.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -32238,9 +33532,9 @@
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_preview_keys",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:28",
+      "ref": "config/srp-cfg/runtime/commands.cfg:30",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 28,
+      "line": 30,
       "text": "alias \"srp_preview_keys\" \"exec srp-cfg/modes/preview/with-keymap.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",
@@ -32287,12 +33581,116 @@
     }
   },
   {
+    "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_pwa_prac",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/runtime/commands.cfg:27",
+      "path": "config/srp-cfg/runtime/commands.cfg",
+      "line": 27,
+      "text": "alias \"srp_pwa_prac\" \"exec srp-cfg/modes/pwa-prac/settings.cfg\"",
+      "fileId": "file:config/srp-cfg/runtime/commands.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac",
+      "key": "",
+      "body": "exec srp-cfg/modes/pwa-prac/settings.cfg",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "注册入口 srp_pwa_prac：执行 srp-cfg/modes/pwa-prac/settings.cfg。",
+      "actions": [
+        {
+          "command": "exec",
+          "arguments": "srp-cfg/modes/pwa-prac/settings.cfg",
+          "source": "exec srp-cfg/modes/pwa-prac/settings.cfg"
+        }
+      ],
+      "area": "runtime",
+      "module": "runtime",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_pwa_prac",
+      "name": "srp_pwa_prac"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac",
+      "summary": "注册入口 srp_pwa_prac：执行 srp-cfg/modes/pwa-prac/settings.cfg。",
+      "tags": [
+        "alias",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg",
+      "relation": "加载文件 srp-cfg/modes/pwa-prac/settings.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_pwa_prac_keys",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/runtime/commands.cfg:28",
+      "path": "config/srp-cfg/runtime/commands.cfg",
+      "line": 28,
+      "text": "alias \"srp_pwa_prac_keys\" \"exec srp-cfg/modes/pwa-prac/with-keymap.cfg\"",
+      "fileId": "file:config/srp-cfg/runtime/commands.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_keys",
+      "key": "",
+      "body": "exec srp-cfg/modes/pwa-prac/with-keymap.cfg",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "注册入口 srp_pwa_prac_keys：执行 srp-cfg/modes/pwa-prac/with-keymap.cfg。",
+      "actions": [
+        {
+          "command": "exec",
+          "arguments": "srp-cfg/modes/pwa-prac/with-keymap.cfg",
+          "source": "exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
+        }
+      ],
+      "area": "runtime",
+      "module": "runtime",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/runtime/commands.cfg#alias:srp_pwa_prac_keys",
+      "name": "srp_pwa_prac_keys"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_keys",
+      "summary": "注册入口 srp_pwa_prac_keys：执行 srp-cfg/modes/pwa-prac/with-keymap.cfg。",
+      "tags": [
+        "alias",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_keys",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/runtime/commands.cfg",
+      "relation": "加载文件 srp-cfg/modes/pwa-prac/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "alias:config/srp-cfg/runtime/commands.cfg#srp_reload",
     "type": "alias",
     "source": {
-      "ref": "config/srp-cfg/runtime/commands.cfg:47",
+      "ref": "config/srp-cfg/runtime/commands.cfg:50",
       "path": "config/srp-cfg/runtime/commands.cfg",
-      "line": 47,
+      "line": 50,
       "text": "alias \"srp_reload\" \"exec autoexec.cfg\"",
       "fileId": "file:config/srp-cfg/runtime/commands.cfg",
       "kind": "alias",

@@ -1248,8 +1248,8 @@
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 1,
       "text": "echo ═══════════════════════════ SrP-CFG v3 帮助 ═══════════════════════════",
-      "lineCount": 24,
-      "sha256": "b69405092af578446ae6c32c7115d3e7582123b6d3df02c41f66ab2f1201f381",
+      "lineCount": 25,
+      "sha256": "a1102b676ce34076e53c73a2d072c24400211a9ce2ebf695c2e79e91a88a80e8",
       "area": "help",
       "module": "help",
       "role": "help"
@@ -1799,7 +1799,7 @@
       "line": 1,
       "text": "echo ═══════════════════ 跑图练习帮助 ══════════════════",
       "lineCount": 22,
-      "sha256": "9c9da8e6cce505783eafe3369023f355b571f7f29d8c71f41bc2b2e1b3220aab",
+      "sha256": "95633fe77f9e87423e1632d81992da4d693567952111ccdc949a346c086f7ae6",
       "area": "mode",
       "module": "practice",
       "role": "help"
@@ -1832,7 +1832,7 @@
       "line": 1,
       "text": "// Optional practice workspace keys. Use srp_practice for settings without these bindings.",
       "lineCount": 24,
-      "sha256": "cb693885a4aabe5b75eee137c5477ac9c1d39fabaa1b72d9f4a5c1b77c4bc4db",
+      "sha256": "c40b4bc25e161fd18653807a2c7ca102588fa4436fffa4b3ce51135a1221745c",
       "area": "mode",
       "module": "practice",
       "role": "keymap"
@@ -2938,6 +2938,215 @@
     }
   },
   {
+    "id": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ 完美世界跑图练习帮助 ════════════════",
+      "lineCount": 14,
+      "sha256": "546dcb5619061fd445d129c0716bc089f6a42fb46f8cc8762a01ca7232e97c84",
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "summary": "控制台帮助；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 1,
+      "text": "bind \"mouse4\" \"srp_pwa_prac_bot_add\" // 在当前玩家位置添加 Bot",
+      "lineCount": 20,
+      "sha256": "7da143eb7e54837c312e92b8e8bea7aa256beebd8e63839e675d8c325deaccb0",
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "summary": "物理键位；21 类命令，0 个 alias，20 个 bind。",
+      "tags": [
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "srp_pwa_prac_bot_add",
+        "srp_pwa_prac_bot_kick",
+        "srp_pwa_prac_bot_kickall",
+        "srp_pwa_prac_restart",
+        "srp_pwa_prac_switch_preview",
+        "srp_pwa_prac_switch_impacts",
+        "srp_pwa_prac_clear_smokes",
+        "srp_pwa_prac_switch_flash",
+        "srp_pwa_prac_god",
+        "srp_pwa_prac_noclip",
+        "srp_pwa_prac_team_attack",
+        "srp_pwa_prac_rethrow",
+        "srp_pwa_prac_rethrow_2",
+        "srp_pwa_prac_rethrow_3",
+        "srp_pwa_prac_rethrow_4",
+        "srp_pwa_prac_rethrow_5",
+        "srp_pwa_prac_follow_grenades",
+        "srp_pwa_prac_grenades",
+        "srp_pwa_prac_menus",
+        "srp_pwa_prac_breaks",
+        "srp_pwa_prac_recover"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 1,
+      "text": "alias \"srp_pwa_prac_bot_add\" \"say .bot\" // 在当前玩家位置添加 Bot",
+      "lineCount": 24,
+      "sha256": "50eee480c7df95cd177117b78d0ed8a0bc52d35721993220ba830e764c23d292",
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "summary": "运行时注册；2 类命令，23 个 alias，0 个 bind。",
+      "tags": [
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "say",
+        "noclip",
+        "srp_pwa_prac_bot_add",
+        "srp_pwa_prac_bot_kick",
+        "srp_pwa_prac_bot_kickall",
+        "srp_pwa_prac_restart",
+        "srp_pwa_prac_clear_smokes",
+        "srp_pwa_prac_switch_flash",
+        "srp_pwa_prac_switch_preview",
+        "srp_pwa_prac_rethrow",
+        "srp_pwa_prac_rethrow_1",
+        "srp_pwa_prac_rethrow_2",
+        "srp_pwa_prac_rethrow_3",
+        "srp_pwa_prac_rethrow_4",
+        "srp_pwa_prac_rethrow_5",
+        "srp_pwa_prac_switch_impacts",
+        "srp_pwa_prac_follow_grenades",
+        "srp_pwa_prac_god",
+        "srp_pwa_prac_team_attack",
+        "srp_pwa_prac_spawns",
+        "srp_pwa_prac_breaks",
+        "srp_pwa_prac_recover",
+        "srp_pwa_prac_grenades",
+        "srp_pwa_prac_menus",
+        "srp_pwa_prac_noclip"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/pwa-prac/settings.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/settings.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/settings.cfg",
+      "line": 1,
+      "text": "// Perfect World practice server and training settings.",
+      "lineCount": 3,
+      "sha256": "01dd7b7e6e55e446b6f4eaea4e79cdc0eba0b774a538f9adca61bd1546c3846f",
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "settings"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/pwa-prac/settings.cfg",
+      "summary": "功能设置；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "mode",
+        "pwa-prac",
+        "settings"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_pwa_prac -> srp-cfg/modes/pwa-prac/settings.cfg；别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/settings.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "file:config/srp-cfg/modes/pwa-prac/with-keymap.cfg",
+    "type": "file",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/with-keymap.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/with-keymap.cfg",
+      "line": 1,
+      "text": "// Perfect World Practice mode plus the optional physical-key workspace.",
+      "lineCount": 4,
+      "sha256": "262363ed19444e14f864933788ce38f306badd41f2f40f126e2f47561f52bdcb",
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "composition"
+    },
+    "semantic": {
+      "title": "config/srp-cfg/modes/pwa-prac/with-keymap.cfg",
+      "summary": "设置与键位组合入口；1 类命令，0 个 alias，0 个 bind。",
+      "tags": [
+        "mode",
+        "pwa-prac",
+        "composition"
+      ],
+      "keywords": [
+        "exec"
+      ],
+      "scope": "组合入口；先执行 settings.cfg，再执行 keymap.cfg，同时应用状态与物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "file:config/srp-cfg/presets/default/apply.cfg",
     "type": "file",
     "source": {
@@ -2979,8 +3188,8 @@
       "path": "config/srp-cfg/presets/default/keymap.cfg",
       "line": 1,
       "text": "// SrP recommended keymap example. Runtime owns every referenced alias.",
-      "lineCount": 80,
-      "sha256": "3d96a8b811fe4e3cd4a84c71437a948a61d8082ad0e296a223bf96ef7d2acf51",
+      "lineCount": 81,
+      "sha256": "5e5de182023e61add7d58bb21dd27d5aec6f096ac3a94dfab5f74b187d75c98e",
       "area": "preset",
       "module": "default",
       "role": "keymap"
@@ -3215,8 +3424,8 @@
       "path": "config/srp-cfg/presets/echo/keymap.cfg",
       "line": 1,
       "text": "// Echo example: complete personal keymap.",
-      "lineCount": 60,
-      "sha256": "7f1b00abb23cfc2ada3012942ddfbe04d2a0c359a1e66601be20ae54a2b2d8ac",
+      "lineCount": 61,
+      "sha256": "74bf7161bcfde3abce127ec4a12ad78d03efa489a62a73ee4b9293e653e27f9d",
       "area": "preset",
       "module": "echo",
       "role": "keymap"
@@ -3651,8 +3860,8 @@
       "path": "config/srp-cfg/presets/visionl/keymap.cfg",
       "line": 1,
       "text": "// VisionL example: complete personal keymap.",
-      "lineCount": 59,
-      "sha256": "4aaef57717f26acc5dfe79f31a30e972ba184a3aaf792befd3492563925c27c9",
+      "lineCount": 60,
+      "sha256": "afc4ea6f6996cde1da1886d5b173f444990e8691514d71e021304ea535057e43",
       "area": "preset",
       "module": "visionl",
       "role": "keymap"
@@ -3874,8 +4083,8 @@
       "path": "config/srp-cfg/presets/yszh/keymap.cfg",
       "line": 1,
       "text": "// YSZH example: complete personal keymap.",
-      "lineCount": 64,
-      "sha256": "2b9ed03523bf9cb3075a3970c702c0288e83924b8e2013758c1ff0357fc70f27",
+      "lineCount": 65,
+      "sha256": "be1dcdf8df806cb5058035b5e5dfcaf1fb93d27da4d93229a996c8cbb652b3fe",
       "area": "preset",
       "module": "yszh",
       "role": "keymap"
@@ -4110,8 +4319,8 @@
       "path": "config/srp-cfg/runtime/commands.cfg",
       "line": 1,
       "text": "// Built-in Preset starting points. These aliases are safe to call from user/custom.cfg.",
-      "lineCount": 48,
-      "sha256": "00a86cf479eb978d31e2c3c7aecfb187328fca29bfeca38b029e67c2ec411cc6",
+      "lineCount": 51,
+      "sha256": "cebf19bef0eda32fe059f81c047402914abcdcff54ece892995045fdd6c31ae9",
       "area": "runtime",
       "module": "runtime",
       "role": "runtime"
@@ -4177,8 +4386,8 @@
       "path": "config/srp-cfg/runtime/init.cfg",
       "line": 1,
       "text": "// ══════════════════════════════════════════════════════════════════",
-      "lineCount": 29,
-      "sha256": "e3c29bf78d201e269e376837281a612317807d8b9aaaa972db71d93df3e2f20b",
+      "lineCount": 30,
+      "sha256": "6a69d0430ff215d22534ec60275fb12a06e109cd1ca70637b1e3e7fa36382c20",
       "area": "runtime",
       "module": "runtime",
       "role": "bootstrap"

@@ -22,6 +22,7 @@ srp_help
 | `srp_help_knife` | 匕首模型数字编号 |
 | `srp_help_zeus` | att0、att1、+firr 攻击包装 |
 | `srp_help_practice` | spawn、gkd、gg、plant、xray 等跑图黑话 |
+| `srp_help_pwa_prac` | 完美世界跑图专属键位映射说明 |
 | `srp_help_preview` | depre、changeblur、changefov、changeang |
 | `srp_help_guidemake` | srp_guide_* 地图指南命令 |
 | `srp_help_demo` | HLAE 录制、镜头、速度与显示命令 |

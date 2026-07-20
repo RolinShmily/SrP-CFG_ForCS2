@@ -12948,7 +12948,7 @@
       "ref": "config/srp-cfg/helps/index.cfg:18",
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 18,
-      "text": "echo srp_help_guidemake : Annotation 地图指南创建、保存与提交。",
+      "text": "echo srp_help_pwa_prac  : 完美世界跑图按键映射。",
       "fileId": "file:config/srp-cfg/helps/index.cfg",
       "kind": "command",
       "command": "echo",
@@ -12956,15 +12956,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "srp_help_guidemake : Annotation 地图指南创建、保存与提交。",
+      "arguments": "srp_help_pwa_prac  : 完美世界跑图按键映射。",
       "optional": false,
       "ordinal": 18,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "srp_help_guidemake : Annotation 地图指南创建、保存与提交。",
-          "source": "echo srp_help_guidemake : Annotation 地图指南创建、保存与提交。"
+          "arguments": "srp_help_pwa_prac  : 完美世界跑图按键映射。",
+          "source": "echo srp_help_pwa_prac  : 完美世界跑图按键映射。"
         }
       ],
       "area": "help",
@@ -12972,7 +12972,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:18",
       "name": "echo",
-      "value": "srp_help_guidemake : Annotation 地图指南创建、保存与提交。"
+      "value": "srp_help_pwa_prac  : 完美世界跑图按键映射。"
     },
     "semantic": {
       "title": "echo 普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
@@ -13000,7 +13000,7 @@
       "ref": "config/srp-cfg/helps/index.cfg:19",
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 19,
-      "text": "echo srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。",
+      "text": "echo srp_help_guidemake : Annotation 地图指南创建、保存与提交。",
       "fileId": "file:config/srp-cfg/helps/index.cfg",
       "kind": "command",
       "command": "echo",
@@ -13008,15 +13008,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。",
+      "arguments": "srp_help_guidemake : Annotation 地图指南创建、保存与提交。",
       "optional": false,
       "ordinal": 19,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。",
-          "source": "echo srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。"
+          "arguments": "srp_help_guidemake : Annotation 地图指南创建、保存与提交。",
+          "source": "echo srp_help_guidemake : Annotation 地图指南创建、保存与提交。"
         }
       ],
       "area": "help",
@@ -13024,7 +13024,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:19",
       "name": "echo",
-      "value": "srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。"
+      "value": "srp_help_guidemake : Annotation 地图指南创建、保存与提交。"
     },
     "semantic": {
       "title": "echo srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
@@ -13104,7 +13104,7 @@
       "ref": "config/srp-cfg/helps/index.cfg:20",
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 20,
-      "text": "echo ── 入口规则 ──",
+      "text": "echo srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。",
       "fileId": "file:config/srp-cfg/helps/index.cfg",
       "kind": "command",
       "command": "echo",
@@ -13112,15 +13112,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "── 入口规则 ──",
+      "arguments": "srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。",
       "optional": false,
       "ordinal": 20,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "── 入口规则 ──",
-          "source": "echo ── 入口规则 ──"
+          "arguments": "srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。",
+          "source": "echo srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。"
         }
       ],
       "area": "help",
@@ -13128,7 +13128,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:20",
       "name": "echo",
-      "value": "── 入口规则 ──"
+      "value": "srp_help_demo      : HLAE 录制、运镜、播放速度和破坏性键位。"
     },
     "semantic": {
       "title": "echo ═══════════════════════════════════════════════════════════════════════",
@@ -13156,7 +13156,7 @@
       "ref": "config/srp-cfg/helps/index.cfg:21",
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 21,
-      "text": "echo 普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
+      "text": "echo ── 入口规则 ──",
       "fileId": "file:config/srp-cfg/helps/index.cfg",
       "kind": "command",
       "command": "echo",
@@ -13164,15 +13164,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
+      "arguments": "── 入口规则 ──",
       "optional": false,
       "ordinal": 21,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
-          "source": "echo 普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。"
+          "arguments": "── 入口规则 ──",
+          "source": "echo ── 入口规则 ──"
         }
       ],
       "area": "help",
@@ -13180,7 +13180,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:21",
       "name": "echo",
-      "value": "普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。"
+      "value": "── 入口规则 ──"
     },
     "semantic": {
       "title": "echo 普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
@@ -13208,7 +13208,7 @@
       "ref": "config/srp-cfg/helps/index.cfg:22",
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 22,
-      "text": "echo srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
+      "text": "echo 普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
       "fileId": "file:config/srp-cfg/helps/index.cfg",
       "kind": "command",
       "command": "echo",
@@ -13216,15 +13216,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
+      "arguments": "普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
       "optional": false,
       "ordinal": 22,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
-          "source": "echo srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。"
+          "arguments": "普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。",
+          "source": "echo 普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。"
         }
       ],
       "area": "help",
@@ -13232,7 +13232,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:22",
       "name": "echo",
-      "value": "srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。"
+      "value": "普通 srp_* 入口只应用 settings；带 _keys 的入口还会执行 keymap 并覆盖物理按键。"
     },
     "semantic": {
       "title": "echo srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
@@ -13260,6 +13260,58 @@
       "ref": "config/srp-cfg/helps/index.cfg:23",
       "path": "config/srp-cfg/helps/index.cfg",
       "line": 23,
+      "text": "echo srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
+      "fileId": "file:config/srp-cfg/helps/index.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
+      "optional": false,
+      "ordinal": 23,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。",
+          "source": "echo srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。"
+        }
+      ],
+      "area": "help",
+      "module": "help",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:23",
+      "name": "echo",
+      "value": "srp_reload 重新执行完整启动链；最终结果取决于 user/custom.cfg 中的 Preset 与个人覆盖。"
+    },
+    "semantic": {
+      "title": "echo ═══════════════════════════════════════════════════════════════════════",
+      "summary": "echo ═══════════════════════════════════════════════════════════════════════，定义于 config/srp-cfg/helps/index.cfg:23。",
+      "tags": [
+        "command",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help -> srp-cfg/helps/index.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/helps/index.cfg#echo:24",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/helps/index.cfg:24",
+      "path": "config/srp-cfg/helps/index.cfg",
+      "line": 24,
       "text": "echo ═══════════════════════════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/helps/index.cfg",
       "kind": "command",
@@ -13270,7 +13322,7 @@
       "target": "",
       "arguments": "═══════════════════════════════════════════════════════════════════════",
       "optional": false,
-      "ordinal": 23,
+      "ordinal": 24,
       "description": "",
       "actions": [
         {
@@ -13282,13 +13334,13 @@
       "area": "help",
       "module": "help",
       "role": "help",
-      "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:23",
+      "entryId": "entry:config/srp-cfg/helps/index.cfg#command:echo:24",
       "name": "echo",
       "value": "═══════════════════════════════════════════════════════════════════════"
     },
     "semantic": {
       "title": "echo ═══════════════════════════════════════════════════════════════════════",
-      "summary": "echo ═══════════════════════════════════════════════════════════════════════，定义于 config/srp-cfg/helps/index.cfg:23。",
+      "summary": "echo ═══════════════════════════════════════════════════════════════════════，定义于 config/srp-cfg/helps/index.cfg:24。",
       "tags": [
         "command",
         "help"
@@ -19748,7 +19800,7 @@
       "ref": "config/srp-cfg/modes/practice/help.cfg:16",
       "path": "config/srp-cfg/modes/practice/help.cfg",
       "line": 16,
-      "text": "echo srp_prac_bhop(F12) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角",
+      "text": "echo srp_prac_bhop(F10) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角",
       "fileId": "file:config/srp-cfg/modes/practice/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -19756,15 +19808,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "srp_prac_bhop(F12) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角",
+      "arguments": "srp_prac_bhop(F10) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角",
       "optional": false,
       "ordinal": 16,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "srp_prac_bhop(F12) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角",
-          "source": "echo srp_prac_bhop(F12) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角"
+          "arguments": "srp_prac_bhop(F10) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角",
+          "source": "echo srp_prac_bhop(F10) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角"
         }
       ],
       "area": "mode",
@@ -19772,7 +19824,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/modes/practice/help.cfg#command:echo:16",
       "name": "echo",
-      "value": "srp_prac_bhop(F12) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角"
+      "value": "srp_prac_bhop(F10) / _noclip(N) / _fov(F7) : 连跳 / 飞行 / 广角"
     },
     "semantic": {
       "title": "echo 注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。",
@@ -26862,6 +26914,762 @@
       ],
       "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
       "activation": "别名 srp_preview -> srp-cfg/modes/preview/settings.cfg；别名 srp_preview_keys -> srp-cfg/modes/preview/with-keymap.cfg -> srp-cfg/modes/preview/settings.cfg；按键入口 9@srp-cfg/presets/default/keymap.cfg:76",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:1",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 1,
+      "text": "echo ═════════════════ 完美世界跑图练习帮助 ════════════════",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "═════════════════ 完美世界跑图练习帮助 ════════════════",
+      "optional": false,
+      "ordinal": 1,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "═════════════════ 完美世界跑图练习帮助 ════════════════",
+          "source": "echo ═════════════════ 完美世界跑图练习帮助 ════════════════"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo",
+      "name": "echo",
+      "value": "═════════════════ 完美世界跑图练习帮助 ════════════════"
+    },
+    "semantic": {
+      "title": "echo ═════════════════ 完美世界跑图练习帮助 ════════════════",
+      "summary": "echo ═════════════════ 完美世界跑图练习帮助 ════════════════，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:1。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:10",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:10",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 10,
+      "text": "echo 环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)",
+      "optional": false,
+      "ordinal": 10,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)",
+          "source": "echo 环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:10",
+      "name": "echo",
+      "value": "环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)"
+    },
+    "semantic": {
+      "title": "echo 环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)",
+      "summary": "echo 环境重置: RIGHT(重置游戏), F9(友伤), F10(破坏物品), F11(恢复物品)，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:10。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:11",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:11",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 11,
+      "text": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "optional": false,
+      "ordinal": 11,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+          "source": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:11",
+      "name": "echo",
+      "value": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)"
+    },
+    "semantic": {
+      "title": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "summary": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:11。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:12",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:12",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 12,
+      "text": "echo 注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。",
+      "optional": false,
+      "ordinal": 12,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。",
+          "source": "echo 注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:12",
+      "name": "echo",
+      "value": "注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。"
+    },
+    "semantic": {
+      "title": "echo 注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。",
+      "summary": "echo 注意：_keys 会覆盖上述按键；退出后应重新应用个人 Preset 或执行 srp_reload。，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:12。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:13",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:13",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 13,
+      "text": "echo ═══════════════════════════════════════════════════",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "═══════════════════════════════════════════════════",
+      "optional": false,
+      "ordinal": 13,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "═══════════════════════════════════════════════════",
+          "source": "echo ═══════════════════════════════════════════════════"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:13",
+      "name": "echo",
+      "value": "═══════════════════════════════════════════════════"
+    },
+    "semantic": {
+      "title": "echo ═══════════════════════════════════════════════════",
+      "summary": "echo ═══════════════════════════════════════════════════，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:13。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:2",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:2",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 2,
+      "text": "echo srp_pwa_prac      : 提示应用，不修改物理键位。",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "srp_pwa_prac      : 提示应用，不修改物理键位。",
+      "optional": false,
+      "ordinal": 2,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "srp_pwa_prac      : 提示应用，不修改物理键位。",
+          "source": "echo srp_pwa_prac      : 提示应用，不修改物理键位。"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:2",
+      "name": "echo",
+      "value": "srp_pwa_prac      : 提示应用，不修改物理键位。"
+    },
+    "semantic": {
+      "title": "echo srp_pwa_prac      : 提示应用，不修改物理键位。",
+      "summary": "echo srp_pwa_prac      : 提示应用，不修改物理键位。，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:2。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:3",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:3",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 3,
+      "text": "echo srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。",
+      "optional": false,
+      "ordinal": 3,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。",
+          "source": "echo srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:3",
+      "name": "echo",
+      "value": "srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。"
+    },
+    "semantic": {
+      "title": "echo srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。",
+      "summary": "echo srp_pwa_prac_keys : 执行 pwa-prac/keymap.cfg 覆盖训练工作区键位。，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:3。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:4",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:4",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 4,
+      "text": "echo ── 完美世界专属指令 ──",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "── 完美世界专属指令 ──",
+      "optional": false,
+      "ordinal": 4,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "── 完美世界专属指令 ──",
+          "source": "echo ── 完美世界专属指令 ──"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:4",
+      "name": "echo",
+      "value": "── 完美世界专属指令 ──"
+    },
+    "semantic": {
+      "title": "echo ── 完美世界专属指令 ──",
+      "summary": "echo ── 完美世界专属指令 ──，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:4。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:5",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:5",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 5,
+      "text": "echo 完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。",
+      "optional": false,
+      "ordinal": 5,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。",
+          "source": "echo 完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:5",
+      "name": "echo",
+      "value": "完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。"
+    },
+    "semantic": {
+      "title": "echo 完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。",
+      "summary": "echo 完美跑图依赖服务端指令 (.bot, .kick, .qy 等)，此模式为其映射了对应按键。，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:5。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:6",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:6",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 6,
+      "text": "echo ── 主要训练指令 (结合 _keys 工作区默认键位) ──",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "── 主要训练指令 (结合 _keys 工作区默认键位) ──",
+      "optional": false,
+      "ordinal": 6,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "── 主要训练指令 (结合 _keys 工作区默认键位) ──",
+          "source": "echo ── 主要训练指令 (结合 _keys 工作区默认键位) ──"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:6",
+      "name": "echo",
+      "value": "── 主要训练指令 (结合 _keys 工作区默认键位) ──"
+    },
+    "semantic": {
+      "title": "echo ── 主要训练指令 (结合 _keys 工作区默认键位) ──",
+      "summary": "echo ── 主要训练指令 (结合 _keys 工作区默认键位) ──，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:6。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:7",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:7",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 7,
+      "text": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "optional": false,
+      "ordinal": 7,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+          "source": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:7",
+      "name": "echo",
+      "value": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
+    },
+    "semantic": {
+      "title": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "summary": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:7。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:8",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:8",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 8,
+      "text": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "optional": false,
+      "ordinal": 8,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+          "source": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:8",
+      "name": "echo",
+      "value": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+    },
+    "semantic": {
+      "title": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), F8(清除所有)",
+      "summary": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), F8(清除所有)，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:8。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/help.cfg#echo:9",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:9",
+      "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
+      "line": 9,
+      "text": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
+      "optional": false,
+      "ordinal": 9,
+      "description": "",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
+          "source": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "help",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:9",
+      "name": "echo",
+      "value": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)"
+    },
+    "semantic": {
+      "title": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
+      "summary": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)，定义于 config/srp-cfg/modes/pwa-prac/help.cfg:9。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "help"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅输出控制台帮助文本，不应改变配置状态或物理键位。",
+      "activation": "别名 srp_help_pwa_prac -> srp-cfg/modes/pwa-prac/help.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "setting:config/srp-cfg/modes/pwa-prac/settings.cfg#echo",
+    "type": "setting",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/settings.cfg:2",
+      "path": "config/srp-cfg/modes/pwa-prac/settings.cfg",
+      "line": 2,
+      "text": "echo \"[SrP-CFG] Perfect World Practice mode applied; use srp_pwa_prac_keys for the workspace keymap.\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/settings.cfg",
+      "kind": "command",
+      "command": "echo",
+      "symbol": "",
+      "key": "",
+      "body": "",
+      "target": "",
+      "arguments": "\"[SrP-CFG] Perfect World Practice mode applied; use srp_pwa_prac_keys for the workspace keymap.\"",
+      "optional": false,
+      "ordinal": 1,
+      "description": "在控制台输出应用完成提示。",
+      "actions": [
+        {
+          "command": "echo",
+          "arguments": "\"[SrP-CFG] Perfect World Practice mode applied; use srp_pwa_prac_keys for the workspace keymap.\"",
+          "source": "echo \"[SrP-CFG] Perfect World Practice mode applied; use srp_pwa_prac_keys for the workspace keymap.\""
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "settings",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/settings.cfg#command:echo",
+      "name": "echo",
+      "value": "\"[SrP-CFG] Perfect World Practice mode applied; use srp_pwa_prac_keys for the workspace keymap.\""
+    },
+    "semantic": {
+      "title": "echo \"[SrP-CFG] Perfect World Practice mode applied; use srp_pwa_prac_keys for the workspace keymap.\"",
+      "summary": "在控制台输出应用完成提示。",
+      "tags": [
+        "command",
+        "mode",
+        "pwa-prac",
+        "settings"
+      ],
+      "keywords": [
+        "echo"
+      ],
+      "scope": "仅在对应模块入口被调用时应用功能或模式状态；按架构约定不安装物理键位。",
+      "activation": "别名 srp_pwa_prac -> srp-cfg/modes/pwa-prac/settings.cfg；别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/settings.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
       "relation": ""
     },
     "curation": {
@@ -58355,9 +59163,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:17",
+      "ref": "config/srp-cfg/runtime/init.cfg:18",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 17,
+      "line": 18,
       "text": "echo ══════════════════════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58408,9 +59216,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:10",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:26",
+      "ref": "config/srp-cfg/runtime/init.cfg:27",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 26,
+      "line": 27,
       "text": "echo SrP-CFG Runtime Enabled!",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58461,9 +59269,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:11",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:27",
+      "ref": "config/srp-cfg/runtime/init.cfg:28",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 27,
+      "line": 28,
       "text": "echo 输入 srp_help 查看模块入口；个人偏好请编辑 srp-cfg/user/custom.cfg。",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58514,9 +59322,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:12",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:28",
+      "ref": "config/srp-cfg/runtime/init.cfg:29",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 28,
+      "line": 29,
       "text": "echo ══════════════════════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58567,9 +59375,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:2",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:18",
+      "ref": "config/srp-cfg/runtime/init.cfg:19",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 18,
+      "line": 19,
       "text": "echo       ____           ____             ____   _____    ____",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58620,9 +59428,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:3",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:19",
+      "ref": "config/srp-cfg/runtime/init.cfg:20",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 19,
+      "line": 20,
       "text": "echo      / ___|   _ __  |  _ \\           / ___| |  ___|  / ___|",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58673,9 +59481,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:4",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:20",
+      "ref": "config/srp-cfg/runtime/init.cfg:21",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 20,
+      "line": 21,
       "text": "echo      \\___ \\  | '__| | |_) |  _____  | |     | |_    | |  _",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58726,9 +59534,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:5",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:21",
+      "ref": "config/srp-cfg/runtime/init.cfg:22",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 21,
+      "line": 22,
       "text": "echo       ___) | | |    |  __/  |_____| | |___  |  _|   | |_| |",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58779,9 +59587,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:6",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:22",
+      "ref": "config/srp-cfg/runtime/init.cfg:23",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 22,
+      "line": 23,
       "text": "echo      |____/  |_|    |_|              \\____| |_|      \\____|",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58832,9 +59640,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:7",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:23",
+      "ref": "config/srp-cfg/runtime/init.cfg:24",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 23,
+      "line": 24,
       "text": "echo ══════════════════════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58885,9 +59693,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:8",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:24",
+      "ref": "config/srp-cfg/runtime/init.cfg:25",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 24,
+      "line": 25,
       "text": "echo 官网地址: cfg.srprolin.top",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
@@ -58938,9 +59746,9 @@
     "id": "setting:config/srp-cfg/runtime/init.cfg#echo:9",
     "type": "setting",
     "source": {
-      "ref": "config/srp-cfg/runtime/init.cfg:25",
+      "ref": "config/srp-cfg/runtime/init.cfg:26",
       "path": "config/srp-cfg/runtime/init.cfg",
-      "line": 25,
+      "line": 26,
       "text": "echo ══════════════════════════════════════════════════════════════════",
       "fileId": "file:config/srp-cfg/runtime/init.cfg",
       "kind": "command",
