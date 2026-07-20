@@ -62965,7 +62965,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:11",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 11,
-      "text": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "text": "echo 视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -62973,15 +62973,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)",
       "optional": false,
       "ordinal": 11,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
-          "source": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)"
+          "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)",
+          "source": "echo 视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)"
         }
       ],
       "area": "mode",
@@ -63520,34 +63520,81 @@
     }
   },
   {
+    "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:.",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:7",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 7,
+      "text": "bind \".\" \"srp_pwa_prac_switch_flash\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": ".",
+      "body": "srp_pwa_prac_switch_flash",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "开关闪光弹效果",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_switch_flash",
+          "arguments": "",
+          "source": "srp_pwa_prac_switch_flash"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": ". · bind",
+      "summary": "开关闪光弹效果",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        ".",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_switch_flash，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:6，内容 say .sg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:%2C",
     "type": "entry",
     "source": {
       "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:6",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "line": 6,
-      "text": "bind \",\" \"srp_pwa_prac_clear_smokes;srp_pwa_prac_switch_flash\"",
+      "text": "bind \",\" \"srp_pwa_prac_clear_smokes\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": ",",
-      "body": "srp_pwa_prac_clear_smokes;srp_pwa_prac_switch_flash",
+      "body": "srp_pwa_prac_clear_smokes",
       "target": "",
       "arguments": "",
       "optional": false,
       "ordinal": 1,
-      "description": "清除烟雾弹 开关闪光弹效果",
+      "description": "清除烟雾弹",
       "actions": [
         {
           "command": "srp_pwa_prac_clear_smokes",
           "arguments": "",
           "source": "srp_pwa_prac_clear_smokes"
-        },
-        {
-          "command": "srp_pwa_prac_switch_flash",
-          "arguments": "",
-          "source": "srp_pwa_prac_switch_flash"
         }
       ],
       "area": "mode",
@@ -63632,9 +63679,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f1",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:17",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:18",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 17,
+      "line": 18,
       "text": "bind \"f1\" \"srp_pwa_prac_grenades\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63684,9 +63731,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f10",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:19",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:20",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 19,
+      "line": 20,
       "text": "bind \"f10\" \"srp_pwa_prac_breaks\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63736,9 +63783,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f11",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:20",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:21",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 20,
+      "line": 21,
       "text": "bind \"f11\" \"srp_pwa_prac_recover\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63788,9 +63835,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f2",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:7",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:8",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 7,
+      "line": 8,
       "text": "bind \"f2\" \"srp_pwa_prac_god\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63840,9 +63887,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f3",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:16",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:17",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 16,
+      "line": 17,
       "text": "bind \"f3\" \"srp_pwa_prac_follow_grenades\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63892,9 +63939,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f4",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:18",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:19",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 18,
+      "line": 19,
       "text": "bind \"f4\" \"srp_pwa_prac_menus\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63944,9 +63991,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f5",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:12",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:13",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 12,
+      "line": 13,
       "text": "bind \"f5\" \"srp_pwa_prac_rethrow_2\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63996,9 +64043,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f6",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:13",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:14",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 13,
+      "line": 14,
       "text": "bind \"f6\" \"srp_pwa_prac_rethrow_3\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64048,9 +64095,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f7",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:14",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:15",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 14,
+      "line": 15,
       "text": "bind \"f7\" \"srp_pwa_prac_rethrow_4\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64100,9 +64147,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f8",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:15",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:16",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 15,
+      "line": 16,
       "text": "bind \"f8\" \"srp_pwa_prac_rethrow_5\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64152,9 +64199,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f9",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:9",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:10",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 9,
+      "line": 10,
       "text": "bind \"f9\" \"srp_pwa_prac_team_attack\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64204,9 +64251,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:j",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:10",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:11",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 10,
+      "line": 11,
       "text": "bind \"j\" \"srp_pwa_prac_rethrow_position\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64308,9 +64355,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:l",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:11",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:12",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 11,
+      "line": 12,
       "text": "bind \"l\" \"srp_pwa_prac_rethrow_1\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64412,9 +64459,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:n",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:8",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:9",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 8,
+      "line": 9,
       "text": "bind \"n\" \"srp_pwa_prac_noclip\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64464,9 +64511,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:n:2",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:21",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:22",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 21,
+      "line": 22,
       "text": "bind \"n\" \"srp_pwa_prac_noclip\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",

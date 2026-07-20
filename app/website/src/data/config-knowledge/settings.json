@@ -27036,7 +27036,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:11",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 11,
-      "text": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "text": "echo 视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -27044,15 +27044,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
+      "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)",
       "optional": false,
       "ordinal": 11,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",
-          "source": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)"
+          "arguments": "视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)",
+          "source": "echo 视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)"
         }
       ],
       "area": "mode",
@@ -27060,7 +27060,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:11",
       "name": "echo",
-      "value": "视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)"
+      "value": "视觉效果: UP(预览窗+子弹落点), ,(清除烟雾), .(开关闪光)"
     },
     "semantic": {
       "title": "echo 视觉效果: UP(预览窗+子弹落点), ,(清烟+开关闪光)",

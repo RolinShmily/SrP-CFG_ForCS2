@@ -2946,7 +2946,7 @@
       "line": 1,
       "text": "echo ═════════════════ 完美世界跑图练习帮助 ════════════════",
       "lineCount": 14,
-      "sha256": "df4b658eaec60bbf23e20340fbc666dfdc0ba5f766adc8bcfd247115ce9adc8e",
+      "sha256": "f4a521017bd527a02e7a263a476571f662fd6aed83583ed3873341de1ff49798",
       "area": "mode",
       "module": "pwa-prac",
       "role": "help"
@@ -2978,8 +2978,8 @@
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "line": 1,
       "text": "bind \"mouse4\" \"srp_pwa_prac_bot_add\" // 在当前玩家位置添加 Bot",
-      "lineCount": 21,
-      "sha256": "5eb414871a2e90368a79ee4126f504bcc5e6bd735329cd4030080f6de4c181ce",
+      "lineCount": 22,
+      "sha256": "82c914d5218e9c06bb6799890258411ba84b0e2a84bc03ece99ad56a82a92571",
       "area": "mode",
       "module": "pwa-prac",
       "role": "keymap"
