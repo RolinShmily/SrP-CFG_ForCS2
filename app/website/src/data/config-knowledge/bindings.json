@@ -6506,18 +6506,18 @@
     }
   },
   {
-    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#mouse4",
+    "id": "binding:config/srp-cfg/modes/pwa-prac/keymap.cfg#mouse5",
     "type": "binding",
     "source": {
       "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:1",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "line": 1,
-      "text": "bind \"mouse4\" \"srp_pwa_prac_bot_add\"",
+      "text": "bind \"mouse5\" \"srp_pwa_prac_bot_add\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
-      "key": "mouse4",
+      "key": "mouse5",
       "body": "srp_pwa_prac_bot_add",
       "target": "",
       "arguments": "",
@@ -6534,11 +6534,11 @@
       "area": "mode",
       "module": "pwa-prac",
       "role": "keymap",
-      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:mouse4",
-      "name": "mouse4"
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:mouse5",
+      "name": "mouse5"
     },
     "semantic": {
-      "title": "mouse4 -> srp_pwa_prac_bot_add",
+      "title": "mouse5 -> srp_pwa_prac_bot_add",
       "summary": "在当前玩家位置添加 Bot",
       "tags": [
         "bind",
@@ -6547,7 +6547,7 @@
         "keymap"
       ],
       "keywords": [
-        "mouse4",
+        "mouse5",
         "bind"
       ],
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",

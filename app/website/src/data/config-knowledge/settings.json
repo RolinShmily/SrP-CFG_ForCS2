@@ -27522,7 +27522,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:8",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 8,
-      "text": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "text": "echo Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -27530,15 +27530,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "arguments": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
       "optional": false,
       "ordinal": 8,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
-          "source": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+          "arguments": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+          "source": "echo Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)"
         }
       ],
       "area": "mode",
@@ -27546,7 +27546,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:8",
       "name": "echo",
-      "value": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+      "value": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)"
     },
     "semantic": {
       "title": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), F8(清除所有)",

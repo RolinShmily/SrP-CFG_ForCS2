@@ -63424,7 +63424,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:8",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 8,
-      "text": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "text": "echo Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -63432,15 +63432,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "arguments": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
       "optional": false,
       "ordinal": 8,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)",
-          "source": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+          "arguments": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+          "source": "echo Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)"
         }
       ],
       "area": "mode",
@@ -64404,18 +64404,18 @@
     }
   },
   {
-    "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:mouse4",
+    "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:mouse5",
     "type": "entry",
     "source": {
       "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:1",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "line": 1,
-      "text": "bind \"mouse4\" \"srp_pwa_prac_bot_add\"",
+      "text": "bind \"mouse5\" \"srp_pwa_prac_bot_add\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
-      "key": "mouse4",
+      "key": "mouse5",
       "body": "srp_pwa_prac_bot_add",
       "target": "",
       "arguments": "",
@@ -64434,7 +64434,7 @@
       "role": "keymap"
     },
     "semantic": {
-      "title": "mouse4 · bind",
+      "title": "mouse5 · bind",
       "summary": "在当前玩家位置添加 Bot",
       "tags": [
         "bind",
@@ -64443,7 +64443,7 @@
         "keymap"
       ],
       "keywords": [
-        "mouse4",
+        "mouse5",
         "bind"
       ],
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
