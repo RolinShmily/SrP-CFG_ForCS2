@@ -27522,7 +27522,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:8",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 8,
-      "text": "echo Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "text": "echo Bot控制: MOUSE5(添加Bot), RSHIFT(添加蹲姿Bot), DOWN(清除指向Bot), K(清除所有)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -27530,15 +27530,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
+      "arguments": "Bot控制: MOUSE5(添加Bot), RSHIFT(添加蹲姿Bot), DOWN(清除指向Bot), K(清除所有)",
       "optional": false,
       "ordinal": 8,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)",
-          "source": "echo Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+          "arguments": "Bot控制: MOUSE5(添加Bot), RSHIFT(添加蹲姿Bot), DOWN(清除指向Bot), K(清除所有)",
+          "source": "echo Bot控制: MOUSE5(添加Bot), RSHIFT(添加蹲姿Bot), DOWN(清除指向Bot), K(清除所有)"
         }
       ],
       "area": "mode",
@@ -27546,7 +27546,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:8",
       "name": "echo",
-      "value": "Bot控制: MOUSE5(添加Bot), DOWN(清除指向Bot), K(清除所有)"
+      "value": "Bot控制: MOUSE5(添加Bot), RSHIFT(添加蹲姿Bot), DOWN(清除指向Bot), K(清除所有)"
     },
     "semantic": {
       "title": "echo Bot控制: MOUSE4(添加Bot), DOWN(清除指向Bot), F8(清除所有)",
@@ -27576,7 +27576,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:9",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 9,
-      "text": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
+      "text": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行), RALT(队友标识)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -27584,15 +27584,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
+      "arguments": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行), RALT(队友标识)",
       "optional": false,
       "ordinal": 9,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",
-          "source": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)"
+          "arguments": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行), RALT(队友标识)",
+          "source": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行), RALT(队友标识)"
         }
       ],
       "area": "mode",
@@ -27600,7 +27600,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:9",
       "name": "echo",
-      "value": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)"
+      "value": "辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行), RALT(队友标识)"
     },
     "semantic": {
       "title": "echo 辅助开关: F1(道具训练), F2(上帝模式), F3(追踪道具), F4(指令墙), N(飞行)",

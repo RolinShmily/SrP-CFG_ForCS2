@@ -39,9 +39,11 @@ description: 专为完美世界对战平台跑图服务器设计的键位映射
 | 清除烟雾弹 | `,` | `.qy` |
 | 开关闪光弹效果 | `.` | `.sg` |
 | 添加 Bot | `MOUSE5` | `.bot` |
+| 添加蹲姿 Bot | `RSHIFT` | `pwa_bot_add_crouch` |
 | 清除指向的 Bot | `↓` | `.kick` |
 | 预览窗+子弹落点 | `↑` | `.up` + `.bi` |
 | 重置游戏 | `→` | `.cz` |
+| 切换队友头顶标识 | `RALT` | `toggle cl_teamid_overhead_mode 1 3` |
 
 ## 相关文件
 
