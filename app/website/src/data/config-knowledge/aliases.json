@@ -2035,23 +2035,23 @@
       "ref": "config/srp-cfg/features/crosshair-view/runtime.cfg:17",
       "path": "config/srp-cfg/features/crosshair-view/runtime.cfg",
       "line": 17,
-      "text": "alias \"srp_c07_info\" \"echo 您当前使用的是 c07 准星预设! 准星代码: CSGO-mFiak-CTXws-wdhEJ-i3CK3-y5LsE\"",
+      "text": "alias \"srp_c07_info\" \"echo 您当前使用的是 c07 准星预设! 准星代码: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/runtime.cfg",
       "kind": "alias",
       "command": "alias",
       "symbol": "srp_c07_info",
       "key": "",
-      "body": "echo 您当前使用的是 c07 准星预设! 准星代码: CSGO-mFiak-CTXws-wdhEJ-i3CK3-y5LsE",
+      "body": "echo 您当前使用的是 c07 准星预设! 准星代码: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE",
       "target": "",
       "arguments": "",
       "optional": false,
       "ordinal": 1,
-      "description": "注册 alias srp_c07_info：输出“您当前使用的是 c07 准星预设! 准星代码: CSGO-mFiak-CTXws-wdhEJ-i3CK3-y5LsE”。",
+      "description": "注册 alias srp_c07_info：输出“您当前使用的是 c07 准星预设! 准星代码: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE”。",
       "actions": [
         {
           "command": "echo",
-          "arguments": "您当前使用的是 c07 准星预设! 准星代码: CSGO-mFiak-CTXws-wdhEJ-i3CK3-y5LsE",
-          "source": "echo 您当前使用的是 c07 准星预设! 准星代码: CSGO-mFiak-CTXws-wdhEJ-i3CK3-y5LsE"
+          "arguments": "您当前使用的是 c07 准星预设! 准星代码: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE",
+          "source": "echo 您当前使用的是 c07 准星预设! 准星代码: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE"
         }
       ],
       "area": "feature",

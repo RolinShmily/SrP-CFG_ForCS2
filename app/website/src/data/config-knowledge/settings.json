@@ -10050,7 +10050,7 @@
       "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:16",
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 16,
-      "text": "cl_crosshairgap \"-2.900000\"",
+      "text": "cl_crosshairgap \"-2.300000\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
       "kind": "command",
       "command": "cl_crosshairgap",
@@ -10058,15 +10058,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "\"-2.900000\"",
+      "arguments": "\"-2.300000\"",
       "optional": false,
       "ordinal": 1,
-      "description": "将准星中心间距设为 -2.900000；值越小线段越靠近中心，负值会进一步收紧。",
+      "description": "将准星中心间距设为 -2.300000；值越小线段越靠近中心，负值会进一步收紧。",
       "actions": [
         {
           "command": "cl_crosshairgap",
-          "arguments": "\"-2.900000\"",
-          "source": "cl_crosshairgap \"-2.900000\""
+          "arguments": "\"-2.300000\"",
+          "source": "cl_crosshairgap \"-2.300000\""
         }
       ],
       "area": "feature",
@@ -10074,7 +10074,7 @@
       "role": "library",
       "entryId": "entry:config/srp-cfg/features/crosshair-view/library/07.cfg#command:cl_crosshairgap",
       "name": "cl_crosshairgap",
-      "value": "\"-2.900000\""
+      "value": "\"-2.300000\""
     },
     "semantic": {
       "title": "cl_crosshairgap \"-2.900000\"",
@@ -10158,7 +10158,7 @@
       "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:18",
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 18,
-      "text": "cl_crosshairsize \"1.500000\"",
+      "text": "cl_crosshairsize \"0.00000\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
       "kind": "command",
       "command": "cl_crosshairsize",
@@ -10166,15 +10166,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "\"1.500000\"",
+      "arguments": "\"0.00000\"",
       "optional": false,
       "ordinal": 1,
-      "description": "将每条准星线段长度设为 1.500000；数值越大线段越长。",
+      "description": "将每条准星线段长度设为 0.00000；数值越大线段越长。",
       "actions": [
         {
           "command": "cl_crosshairsize",
-          "arguments": "\"1.500000\"",
-          "source": "cl_crosshairsize \"1.500000\""
+          "arguments": "\"0.00000\"",
+          "source": "cl_crosshairsize \"0.00000\""
         }
       ],
       "area": "feature",
@@ -10182,7 +10182,7 @@
       "role": "library",
       "entryId": "entry:config/srp-cfg/features/crosshair-view/library/07.cfg#command:cl_crosshairsize",
       "name": "cl_crosshairsize",
-      "value": "\"1.500000\""
+      "value": "\"0.00000\""
     },
     "semantic": {
       "title": "cl_crosshairsize \"1.500000\"",
@@ -10212,7 +10212,7 @@
       "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:19",
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 19,
-      "text": "cl_crosshairstyle \"5\"",
+      "text": "cl_crosshairstyle \"4\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
       "kind": "command",
       "command": "cl_crosshairstyle",
@@ -10220,15 +10220,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "\"5\"",
+      "arguments": "\"4\"",
       "optional": false,
       "ordinal": 1,
-      "description": "将准星样式设为 5（传统动态）。",
+      "description": "将准星样式设为 4。",
       "actions": [
         {
           "command": "cl_crosshairstyle",
-          "arguments": "\"5\"",
-          "source": "cl_crosshairstyle \"5\""
+          "arguments": "\"4\"",
+          "source": "cl_crosshairstyle \"4\""
         }
       ],
       "area": "feature",
@@ -10236,7 +10236,7 @@
       "role": "library",
       "entryId": "entry:config/srp-cfg/features/crosshair-view/library/07.cfg#command:cl_crosshairstyle",
       "name": "cl_crosshairstyle",
-      "value": "\"5\""
+      "value": "\"4\""
     },
     "semantic": {
       "title": "cl_crosshairstyle \"5\"",
@@ -10266,7 +10266,7 @@
       "ref": "config/srp-cfg/features/crosshair-view/library/07.cfg:20",
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 20,
-      "text": "cl_crosshairthickness \"0.000000\"",
+      "text": "cl_crosshairthickness \"0.100000\"",
       "fileId": "file:config/srp-cfg/features/crosshair-view/library/07.cfg",
       "kind": "command",
       "command": "cl_crosshairthickness",
@@ -10274,15 +10274,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "\"0.000000\"",
+      "arguments": "\"0.100000\"",
       "optional": false,
       "ordinal": 1,
-      "description": "将准星线段粗细设为 0.000000；数值越大线条越粗。",
+      "description": "将准星线段粗细设为 0.100000；数值越大线条越粗。",
       "actions": [
         {
           "command": "cl_crosshairthickness",
-          "arguments": "\"0.000000\"",
-          "source": "cl_crosshairthickness \"0.000000\""
+          "arguments": "\"0.100000\"",
+          "source": "cl_crosshairthickness \"0.100000\""
         }
       ],
       "area": "feature",
@@ -10290,7 +10290,7 @@
       "role": "library",
       "entryId": "entry:config/srp-cfg/features/crosshair-view/library/07.cfg#command:cl_crosshairthickness",
       "name": "cl_crosshairthickness",
-      "value": "\"0.000000\""
+      "value": "\"0.100000\""
     },
     "semantic": {
       "title": "cl_crosshairthickness \"0.000000\"",

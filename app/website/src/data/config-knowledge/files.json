@@ -660,8 +660,8 @@
       "path": "config/srp-cfg/features/crosshair-view/library/07.cfg",
       "line": 1,
       "text": "// SrP-CFG 准星预设 07；修改后可在控制台执行 c07 立即预览。",
-      "lineCount": 22,
-      "sha256": "f86b9648084ea78893e94ca2a662336b6aeffb2fa027487f48edba1df82dea33",
+      "lineCount": 21,
+      "sha256": "7a81f0393c9e8721bfd0451a8517abde5b071c0de82239d043c42773d0fb0dd1",
       "area": "feature",
       "module": "crosshair-view",
       "role": "library"
@@ -713,7 +713,7 @@
       "line": 1,
       "text": "// Persistent crosshair/viewmodel command vocabulary.",
       "lineCount": 65,
-      "sha256": "1d5775cc8b7601fe07e27d04f2ab7c515c38bd9ef1dc1ef1ccb6399e31e9fb45",
+      "sha256": "a6cb250e879a3859b113f59d1fb97c7005d0919362f77a0f45d0811d399927ae",
       "area": "feature",
       "module": "crosshair-view",
       "role": "runtime"
