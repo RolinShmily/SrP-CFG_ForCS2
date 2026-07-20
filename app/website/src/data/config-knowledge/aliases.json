@@ -31184,60 +31184,6 @@
     }
   },
   {
-    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow",
-    "type": "alias",
-    "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:8",
-      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
-      "line": 8,
-      "text": "alias \"srp_pwa_prac_rethrow\" \"say .tz\"",
-      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
-      "kind": "alias",
-      "command": "alias",
-      "symbol": "srp_pwa_prac_rethrow",
-      "key": "",
-      "body": "say .tz",
-      "target": "",
-      "arguments": "",
-      "optional": false,
-      "ordinal": 1,
-      "description": "重新投掷上一颗投掷物",
-      "actions": [
-        {
-          "command": "say",
-          "arguments": ".tz",
-          "source": "say .tz"
-        }
-      ],
-      "area": "mode",
-      "module": "pwa-prac",
-      "role": "runtime",
-      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow",
-      "name": "srp_pwa_prac_rethrow"
-    },
-    "semantic": {
-      "title": "alias srp_pwa_prac_rethrow",
-      "summary": "重新投掷上一颗投掷物",
-      "tags": [
-        "alias",
-        "mode",
-        "pwa-prac",
-        "runtime"
-      ],
-      "keywords": [
-        "srp_pwa_prac_rethrow",
-        "alias"
-      ],
-      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
-      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
-      "relation": ""
-    },
-    "curation": {
-      "status": "generated",
-      "source": "generator"
-    }
-  },
-  {
     "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_1",
     "type": "alias",
     "source": {
@@ -31496,6 +31442,60 @@
       ],
       "keywords": [
         "srp_pwa_prac_rethrow_5",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "alias:config/srp-cfg/modes/pwa-prac/runtime.cfg#srp_pwa_prac_rethrow_position",
+    "type": "alias",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:8",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 8,
+      "text": "alias \"srp_pwa_prac_rethrow_position\" \"say .tz\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_position",
+      "key": "",
+      "body": "say .tz",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "回到上一次投掷位置",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".tz",
+          "source": "say .tz"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime",
+      "entryId": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_position",
+      "name": "srp_pwa_prac_rethrow_position"
+    },
+    "semantic": {
+      "title": "alias srp_pwa_prac_rethrow_position",
+      "summary": "回到上一次投掷位置",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_position",
         "alias"
       ],
       "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",

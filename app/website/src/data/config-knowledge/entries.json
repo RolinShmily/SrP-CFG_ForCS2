@@ -63373,7 +63373,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:7",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 7,
-      "text": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "text": "echo 投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -63381,15 +63381,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "arguments": "投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
       "optional": false,
       "ordinal": 7,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
-          "source": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
+          "arguments": "投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+          "source": "echo 投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
         }
       ],
       "area": "mode",
@@ -63632,9 +63632,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f1",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:16",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:17",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 16,
+      "line": 17,
       "text": "bind \"f1\" \"srp_pwa_prac_grenades\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63684,9 +63684,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f10",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:18",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:19",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 18,
+      "line": 19,
       "text": "bind \"f10\" \"srp_pwa_prac_breaks\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63736,9 +63736,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f11",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:19",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:20",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 19,
+      "line": 20,
       "text": "bind \"f11\" \"srp_pwa_prac_recover\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63840,9 +63840,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f3",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:15",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:16",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 15,
+      "line": 16,
       "text": "bind \"f3\" \"srp_pwa_prac_follow_grenades\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63892,9 +63892,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f4",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:17",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:18",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 17,
+      "line": 18,
       "text": "bind \"f4\" \"srp_pwa_prac_menus\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63944,9 +63944,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f5",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:11",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:12",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 11,
+      "line": 12,
       "text": "bind \"f5\" \"srp_pwa_prac_rethrow_2\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -63996,9 +63996,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f6",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:12",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:13",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 12,
+      "line": 13,
       "text": "bind \"f6\" \"srp_pwa_prac_rethrow_3\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64048,9 +64048,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f7",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:13",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:14",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 13,
+      "line": 14,
       "text": "bind \"f7\" \"srp_pwa_prac_rethrow_4\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64100,9 +64100,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:f8",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:14",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:15",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 14,
+      "line": 15,
       "text": "bind \"f8\" \"srp_pwa_prac_rethrow_5\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -64201,6 +64201,58 @@
     }
   },
   {
+    "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:j",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:10",
+      "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "line": 10,
+      "text": "bind \"j\" \"srp_pwa_prac_rethrow_position\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "j",
+      "body": "srp_pwa_prac_rethrow_position",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "回到上一次投掷位置",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_rethrow_position",
+          "arguments": "",
+          "source": "srp_pwa_prac_rethrow_position"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "j · bind",
+      "summary": "回到上一次投掷位置",
+      "tags": [
+        "bind",
+        "mode",
+        "pwa-prac",
+        "keymap"
+      ],
+      "keywords": [
+        "j",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_pwa_prac_keys -> srp-cfg/modes/pwa-prac/with-keymap.cfg -> srp-cfg/modes/pwa-prac/keymap.cfg；按键入口 home@srp-cfg/presets/default/keymap.cfg:78、home@srp-cfg/presets/echo/keymap.cfg:60、home@srp-cfg/presets/visionl/keymap.cfg:59、home@srp-cfg/presets/yszh/keymap.cfg:64",
+      "relation": "调用 alias srp_pwa_prac_rethrow_position，定义于 srp-cfg/modes/pwa-prac/runtime.cfg:8，内容 say .tz"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:k",
     "type": "entry",
     "source": {
@@ -64256,16 +64308,16 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:l",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:10",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:11",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 10,
-      "text": "bind \"l\" \"srp_pwa_prac_rethrow\"",
+      "line": 11,
+      "text": "bind \"l\" \"srp_pwa_prac_rethrow_1\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
       "command": "bind",
       "symbol": "",
       "key": "l",
-      "body": "srp_pwa_prac_rethrow",
+      "body": "srp_pwa_prac_rethrow_1",
       "target": "",
       "arguments": "",
       "optional": false,
@@ -64273,9 +64325,9 @@
       "description": "重新投掷上一颗投掷物",
       "actions": [
         {
-          "command": "srp_pwa_prac_rethrow",
+          "command": "srp_pwa_prac_rethrow_1",
           "arguments": "",
-          "source": "srp_pwa_prac_rethrow"
+          "source": "srp_pwa_prac_rethrow_1"
         }
       ],
       "area": "mode",
@@ -64412,9 +64464,9 @@
     "id": "entry:config/srp-cfg/modes/pwa-prac/keymap.cfg#bind:n:2",
     "type": "entry",
     "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:20",
+      "ref": "config/srp-cfg/modes/pwa-prac/keymap.cfg:21",
       "path": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
-      "line": 20,
+      "line": 21,
       "text": "bind \"n\" \"srp_pwa_prac_noclip\"",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/keymap.cfg",
       "kind": "bind",
@@ -65194,58 +65246,6 @@
     }
   },
   {
-    "id": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow",
-    "type": "entry",
-    "source": {
-      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:8",
-      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
-      "line": 8,
-      "text": "alias \"srp_pwa_prac_rethrow\" \"say .tz\"",
-      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
-      "kind": "alias",
-      "command": "alias",
-      "symbol": "srp_pwa_prac_rethrow",
-      "key": "",
-      "body": "say .tz",
-      "target": "",
-      "arguments": "",
-      "optional": false,
-      "ordinal": 1,
-      "description": "重新投掷上一颗投掷物",
-      "actions": [
-        {
-          "command": "say",
-          "arguments": ".tz",
-          "source": "say .tz"
-        }
-      ],
-      "area": "mode",
-      "module": "pwa-prac",
-      "role": "runtime"
-    },
-    "semantic": {
-      "title": "srp_pwa_prac_rethrow · alias",
-      "summary": "重新投掷上一颗投掷物",
-      "tags": [
-        "alias",
-        "mode",
-        "pwa-prac",
-        "runtime"
-      ],
-      "keywords": [
-        "srp_pwa_prac_rethrow",
-        "alias"
-      ],
-      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
-      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
-      "relation": ""
-    },
-    "curation": {
-      "status": "generated",
-      "source": "generator"
-    }
-  },
-  {
     "id": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_1",
     "type": "entry",
     "source": {
@@ -65494,6 +65494,58 @@
       ],
       "keywords": [
         "srp_pwa_prac_rethrow_5",
+        "alias"
+      ],
+      "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",
+      "activation": "别名 srp_reload -> autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg；按键入口 o@srp-cfg/presets/default/keymap.cfg:74、o@srp-cfg/presets/echo/keymap.cfg:57、o@srp-cfg/presets/visionl/keymap.cfg:56、o@srp-cfg/presets/yszh/keymap.cfg:61；启动链 autoexec.cfg -> srp-cfg/runtime/init.cfg -> srp-cfg/modes/pwa-prac/runtime.cfg",
+      "relation": ""
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
+    "id": "entry:config/srp-cfg/modes/pwa-prac/runtime.cfg#alias:srp_pwa_prac_rethrow_position",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/modes/pwa-prac/runtime.cfg:8",
+      "path": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "line": 8,
+      "text": "alias \"srp_pwa_prac_rethrow_position\" \"say .tz\"",
+      "fileId": "file:config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "kind": "alias",
+      "command": "alias",
+      "symbol": "srp_pwa_prac_rethrow_position",
+      "key": "",
+      "body": "say .tz",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "回到上一次投掷位置",
+      "actions": [
+        {
+          "command": "say",
+          "arguments": ".tz",
+          "source": "say .tz"
+        }
+      ],
+      "area": "mode",
+      "module": "pwa-prac",
+      "role": "runtime"
+    },
+    "semantic": {
+      "title": "srp_pwa_prac_rethrow_position · alias",
+      "summary": "回到上一次投掷位置",
+      "tags": [
+        "alias",
+        "mode",
+        "pwa-prac",
+        "runtime"
+      ],
+      "keywords": [
+        "srp_pwa_prac_rethrow_position",
         "alias"
       ],
       "scope": "Runtime 初始化时注册命令或 alias；按架构约定不主动应用个人偏好或物理键位。",

@@ -27468,7 +27468,7 @@
       "ref": "config/srp-cfg/modes/pwa-prac/help.cfg:7",
       "path": "config/srp-cfg/modes/pwa-prac/help.cfg",
       "line": 7,
-      "text": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "text": "echo 投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
       "fileId": "file:config/srp-cfg/modes/pwa-prac/help.cfg",
       "kind": "command",
       "command": "echo",
@@ -27476,15 +27476,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+      "arguments": "投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
       "optional": false,
       "ordinal": 7,
       "description": "",
       "actions": [
         {
           "command": "echo",
-          "arguments": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
-          "source": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
+          "arguments": "投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
+          "source": "echo 投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
         }
       ],
       "area": "mode",
@@ -27492,7 +27492,7 @@
       "role": "help",
       "entryId": "entry:config/srp-cfg/modes/pwa-prac/help.cfg#command:echo:7",
       "name": "echo",
-      "value": "投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
+      "value": "投掷物复现: J(返回投掷位), L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)"
     },
     "semantic": {
       "title": "echo 投掷物复现: L(上1颗), F5(倒数第2), F6(倒数第3), F7(倒数第4), F8(倒数第5)",
