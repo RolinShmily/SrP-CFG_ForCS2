@@ -74160,7 +74160,7 @@
       "ref": "config/srp-cfg/presets/default/settings.cfg:78",
       "path": "config/srp-cfg/presets/default/settings.cfg",
       "line": 78,
-      "text": "r_fullscreen_gamma 2.6",
+      "text": "r_fullscreen_gamma 2.3",
       "fileId": "file:config/srp-cfg/presets/default/settings.cfg",
       "kind": "command",
       "command": "r_fullscreen_gamma",
@@ -74168,15 +74168,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "2.6",
+      "arguments": "2.3",
       "optional": false,
       "ordinal": 1,
       "description": "全屏亮度 Gamma 值。",
       "actions": [
         {
           "command": "r_fullscreen_gamma",
-          "arguments": "2.6",
-          "source": "r_fullscreen_gamma 2.6"
+          "arguments": "2.3",
+          "source": "r_fullscreen_gamma 2.3"
         }
       ],
       "area": "preset",
@@ -82119,7 +82119,7 @@
       "ref": "config/srp-cfg/presets/echo/settings.cfg:77",
       "path": "config/srp-cfg/presets/echo/settings.cfg",
       "line": 77,
-      "text": "r_fullscreen_gamma 2.6",
+      "text": "r_fullscreen_gamma 2.3",
       "fileId": "file:config/srp-cfg/presets/echo/settings.cfg",
       "kind": "command",
       "command": "r_fullscreen_gamma",
@@ -82127,15 +82127,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "2.6",
+      "arguments": "2.3",
       "optional": false,
       "ordinal": 1,
       "description": "全屏亮度 Gamma 值。",
       "actions": [
         {
           "command": "r_fullscreen_gamma",
-          "arguments": "2.6",
-          "source": "r_fullscreen_gamma 2.6"
+          "arguments": "2.3",
+          "source": "r_fullscreen_gamma 2.3"
         }
       ],
       "area": "preset",
@@ -98594,7 +98594,7 @@
       "ref": "config/srp-cfg/presets/visionl/settings.cfg:78",
       "path": "config/srp-cfg/presets/visionl/settings.cfg",
       "line": 78,
-      "text": "r_fullscreen_gamma 2.6",
+      "text": "r_fullscreen_gamma 2.3",
       "fileId": "file:config/srp-cfg/presets/visionl/settings.cfg",
       "kind": "command",
       "command": "r_fullscreen_gamma",
@@ -98602,15 +98602,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "2.6",
+      "arguments": "2.3",
       "optional": false,
       "ordinal": 1,
       "description": "全屏亮度 Gamma 值。",
       "actions": [
         {
           "command": "r_fullscreen_gamma",
-          "arguments": "2.6",
-          "source": "r_fullscreen_gamma 2.6"
+          "arguments": "2.3",
+          "source": "r_fullscreen_gamma 2.3"
         }
       ],
       "area": "preset",
@@ -106812,7 +106812,7 @@
       "ref": "config/srp-cfg/presets/yszh/settings.cfg:78",
       "path": "config/srp-cfg/presets/yszh/settings.cfg",
       "line": 78,
-      "text": "r_fullscreen_gamma 2.6",
+      "text": "r_fullscreen_gamma 2.3",
       "fileId": "file:config/srp-cfg/presets/yszh/settings.cfg",
       "kind": "command",
       "command": "r_fullscreen_gamma",
@@ -106820,15 +106820,15 @@
       "key": "",
       "body": "",
       "target": "",
-      "arguments": "2.6",
+      "arguments": "2.3",
       "optional": false,
       "ordinal": 1,
       "description": "全屏亮度 Gamma 值。",
       "actions": [
         {
           "command": "r_fullscreen_gamma",
-          "arguments": "2.6",
-          "source": "r_fullscreen_gamma 2.6"
+          "arguments": "2.3",
+          "source": "r_fullscreen_gamma 2.3"
         }
       ],
       "area": "preset",

@@ -3279,7 +3279,7 @@
       "line": 1,
       "text": "// SrP recommended preference example.",
       "lineCount": 121,
-      "sha256": "4d451f613f3d0fcf23a2c61ba072c41d48b2caf8816f1fe574443394d7c346bf",
+      "sha256": "f13a57947fb2486d09de94c2cf81dbadd4020e712ced6afdb489c4cf5de4601a",
       "area": "preset",
       "module": "default",
       "role": "settings"
@@ -3503,7 +3503,7 @@
       "line": 1,
       "text": "// Echo example: complete personal preference set.",
       "lineCount": 119,
-      "sha256": "544eaecdfa1627c947303563300f1b401f5e0c79c0c35c9bf160918ac89a2163",
+      "sha256": "285e801111ed335eb92c77c29ed7d43bec2c9ca17441847ff5180a1ce99b0f9b",
       "area": "preset",
       "module": "echo",
       "role": "settings"
@@ -3938,7 +3938,7 @@
       "line": 1,
       "text": "// VisionL example: complete personal preference set.",
       "lineCount": 120,
-      "sha256": "28c05e88fc994469c5320780c2476a231454576f5e6ed048ff1cf6d97f32d10e",
+      "sha256": "c56ff13a81b778f69746152dea13146af999bcf0188a14c4d666d5aea0450820",
       "area": "preset",
       "module": "visionl",
       "role": "settings"
@@ -4166,7 +4166,7 @@
       "line": 1,
       "text": "// YSZH example: complete personal preference set.",
       "lineCount": 120,
-      "sha256": "ed844f535d0194c34a21cf484ca0b52b96675c16d8ca7119962f6b6050f8b5a8",
+      "sha256": "8e9924dddd171816c759e678a61937416f512776b8cbee7a009fe786539c5b4a",
       "area": "preset",
       "module": "yszh",
       "role": "settings"
