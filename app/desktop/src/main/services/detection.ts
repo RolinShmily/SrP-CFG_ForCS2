@@ -54,20 +54,59 @@ const REGISTRY_PATHS: Array<{ hive: string; key: string; value: string }> = [
 // ── Steam Detection ──────────────────────────────────────────
 
 export async function detectSteamPath(log: LogFn): Promise<string | null> {
+  const candidates = new Set<string>();
+
   for (const rp of REGISTRY_PATHS) {
     const val = await readRegistryValue(rp.hive, rp.key, rp.value);
     if (!val) continue;
-
     const p = val.replace(/\//g, "\\").replace(/\\$/, "");
-    const exe = path.join(p, "steam.exe");
-    if (fs.existsSync(p) && fs.existsSync(exe)) {
-      log({
-        category: "path-detection",
-        level: "success",
-        message: `Steam 路径：${p}`,
-      });
-      return p;
+    if (fs.existsSync(p)) {
+      candidates.add(p);
     }
+  }
+
+  const defaultPaths = [
+    "C:\\Program Files (x86)\\Steam",
+    "C:\\Program Files\\Steam",
+    "C:\\Steam",
+    "D:\\Steam",
+    "E:\\Steam",
+  ];
+  for (const p of defaultPaths) {
+    if (fs.existsSync(p)) {
+      candidates.add(p);
+    }
+  }
+
+  let bestPath: string | null = null;
+  let bestScore = -1;
+
+  for (const p of candidates) {
+    const exe = path.join(p, "steam.exe");
+    if (!fs.existsSync(exe)) continue;
+
+    let score = 1;
+    const loginVdf = path.join(p, "config", "loginusers.vdf");
+    const userdata = path.join(p, "userdata");
+    const libVdf = path.join(p, "steamapps", "libraryfolders.vdf");
+
+    if (fs.existsSync(loginVdf)) score += 10;
+    if (fs.existsSync(userdata)) score += 10;
+    if (fs.existsSync(libVdf)) score += 5;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestPath = p;
+    }
+  }
+
+  if (bestPath) {
+    log({
+      category: "path-detection",
+      level: "success",
+      message: `Steam 路径：${bestPath}`,
+    });
+    return bestPath;
   }
 
   log({
@@ -88,25 +127,34 @@ function parseLibraryPaths(vdfContent: string): string[] {
 export function readLibraryPaths(
   steamRoot: string,
   log: LogFn,
-): string[] | null {
+): string[] {
   const vdf = path.join(steamRoot, "steamapps", "libraryfolders.vdf");
-  if (!fs.existsSync(vdf)) {
+  let paths: string[] = [];
+  if (fs.existsSync(vdf)) {
+    paths = parseLibraryPaths(fs.readFileSync(vdf, "utf-8"));
+  } else {
     log({
       category: "path-detection",
-      level: "error",
-      message: "未找到 libraryfolders.vdf",
+      level: "warning",
+      message: "未找到 libraryfolders.vdf，将仅尝试 Steam 根路径",
     });
-    return null;
   }
-  return parseLibraryPaths(fs.readFileSync(vdf, "utf-8"));
+
+  if (!paths.includes(steamRoot)) {
+    paths.unshift(steamRoot);
+  }
+  return paths;
 }
 
-function cs2GameDir(library: string): string {
+function cs2GameDir(library: string, content?: string): string {
+  const folderName =
+    (content ? parseAcfValue(content, "installdir") : null) ||
+    "Counter-Strike Global Offensive";
   return path.join(
     library,
     "steamapps",
     "common",
-    "Counter-Strike Global Offensive",
+    folderName,
   );
 }
 
@@ -131,27 +179,30 @@ export function detectCs2InstallState(
     if (!fs.existsSync(manifestPath)) continue;
 
     const content = fs.readFileSync(manifestPath, "utf-8");
-    const stateFlags = parseAcfValue(content, "StateFlags");
-    const installDir = cs2GameDir(lib);
+    const stateFlagsStr = parseAcfValue(content, "StateFlags");
+    const installDir = cs2GameDir(lib, content);
 
-    if (stateFlags === "4") {
-      log({
-        category: "steam-status",
-        level: "success",
-        message: "CS2 已安装",
-        detail: installDir,
-      });
-      return { state: "installed", installDir };
-    }
+    if (stateFlagsStr) {
+      const flags = parseInt(stateFlagsStr, 10);
+      if (!isNaN(flags) && ((flags & 4) !== 0 || flags === 4)) {
+        if ((flags & 2) !== 0) {
+          log({
+            category: "steam-status",
+            level: "warning",
+            message: "CS2 有可用更新",
+            detail: installDir,
+          });
+          return { state: "needs-update", installDir };
+        }
 
-    if (stateFlags === "6") {
-      log({
-        category: "steam-status",
-        level: "warning",
-        message: "CS2 有可用更新",
-        detail: installDir,
-      });
-      return { state: "needs-update", installDir };
+        log({
+          category: "steam-status",
+          level: "success",
+          message: "CS2 已安装",
+          detail: installDir,
+        });
+        return { state: "installed", installDir };
+      }
     }
   }
 
@@ -309,6 +360,8 @@ export function detectSteamUsers(
   const content = fs.readFileSync(vdfPath, "utf-8");
   const users: SteamUser[] = [];
   let currentUser: SteamUser | null = null;
+  let maxTimestampUser: SteamUser | null = null;
+  let maxTimestamp = -1;
 
   // Match each user block: "7656119..." { ... }
   const userBlockRe = /"(\d{17,})"\s*\{([^}]*)\}/g;
@@ -320,17 +373,38 @@ export function detectSteamUsers(
 
     const personaName =
       block.match(/"PersonaName"\s+"([^"]+)"/)?.[1] ?? undefined;
+
+    const autoLogin =
+      block.match(/"AutoLogin"\s+"(\d+)"/)?.[1] === "1";
     const allowAutoLogin =
       block.match(/"AllowAutoLogin"\s+"(\d+)"/)?.[1] === "1";
+    const mostRecent =
+      block.match(/"mostrecent"\s+"(\d+)"/)?.[1] === "1";
+    const isAutoLogin = autoLogin || allowAutoLogin || mostRecent;
+
+    const timestampStr = block.match(/"Timestamp"\s+"(\d+)"/)?.[1];
+    const timestamp = timestampStr ? parseInt(timestampStr, 10) : 0;
 
     const accountId = (BigInt(steamId64) - STEAM_ID_OFFSET).toString();
 
     const user: SteamUser = { steamId64, accountId, personaName };
     users.push(user);
 
-    if (allowAutoLogin) {
+    if (isAutoLogin && !currentUser) {
       currentUser = user;
     }
+
+    if (timestamp > maxTimestamp) {
+      maxTimestamp = timestamp;
+      maxTimestampUser = user;
+    }
+  }
+
+  // Fallback: If no account is explicitly marked as auto-login, pick the most recent account
+  if (!currentUser && maxTimestampUser) {
+    currentUser = maxTimestampUser;
+  } else if (!currentUser && users.length === 1) {
+    currentUser = users[0];
   }
 
   const hasAutoLoginUser = currentUser !== null;
@@ -378,9 +452,7 @@ export async function detectAll(log: LogFn): Promise<DetectionResult> {
     };
   }
 
-  const libraries = readLibraryPaths(steamPath, log);
-  const libs = libraries ?? [];
-
+  const libs = readLibraryPaths(steamPath, log);
   const { state: cs2InstallState, installDir: cs2InstallDir } =
     libs.length > 0
       ? detectCs2InstallState(steamPath, libs, log)
