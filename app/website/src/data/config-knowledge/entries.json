@@ -67679,6 +67679,58 @@
     }
   },
   {
+    "id": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:end",
+    "type": "entry",
+    "source": {
+      "ref": "config/srp-cfg/presets/default/keymap.cfg:78",
+      "path": "config/srp-cfg/presets/default/keymap.cfg",
+      "line": 78,
+      "text": "bind \"end\" \"srp_pwa_prac_keys\"",
+      "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
+      "kind": "bind",
+      "command": "bind",
+      "symbol": "",
+      "key": "end",
+      "body": "srp_pwa_prac_keys",
+      "target": "",
+      "arguments": "",
+      "optional": false,
+      "ordinal": 1,
+      "description": "进入完美跑图模式并应用键位。",
+      "actions": [
+        {
+          "command": "srp_pwa_prac_keys",
+          "arguments": "",
+          "source": "srp_pwa_prac_keys"
+        }
+      ],
+      "area": "preset",
+      "module": "default",
+      "role": "keymap"
+    },
+    "semantic": {
+      "title": "end · bind",
+      "summary": "进入完美跑图模式并应用键位。",
+      "tags": [
+        "bind",
+        "preset",
+        "default",
+        "keymap"
+      ],
+      "keywords": [
+        "end",
+        "bind"
+      ],
+      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
+      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
+      "relation": "调用 alias srp_pwa_prac_keys，定义于 srp-cfg/runtime/commands.cfg:28，内容 exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
+    },
+    "curation": {
+      "status": "generated",
+      "source": "generator"
+    }
+  },
+  {
     "id": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:f",
     "type": "entry",
     "source": {
@@ -68301,58 +68353,6 @@
       "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
       "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
       "relation": ""
-    },
-    "curation": {
-      "status": "generated",
-      "source": "generator"
-    }
-  },
-  {
-    "id": "entry:config/srp-cfg/presets/default/keymap.cfg#bind:home",
-    "type": "entry",
-    "source": {
-      "ref": "config/srp-cfg/presets/default/keymap.cfg:78",
-      "path": "config/srp-cfg/presets/default/keymap.cfg",
-      "line": 78,
-      "text": "bind \"home\" \"srp_pwa_prac_keys\"",
-      "fileId": "file:config/srp-cfg/presets/default/keymap.cfg",
-      "kind": "bind",
-      "command": "bind",
-      "symbol": "",
-      "key": "home",
-      "body": "srp_pwa_prac_keys",
-      "target": "",
-      "arguments": "",
-      "optional": false,
-      "ordinal": 1,
-      "description": "进入完美跑图模式并应用键位。",
-      "actions": [
-        {
-          "command": "srp_pwa_prac_keys",
-          "arguments": "",
-          "source": "srp_pwa_prac_keys"
-        }
-      ],
-      "area": "preset",
-      "module": "default",
-      "role": "keymap"
-    },
-    "semantic": {
-      "title": "home · bind",
-      "summary": "进入完美跑图模式并应用键位。",
-      "tags": [
-        "bind",
-        "preset",
-        "default",
-        "keymap"
-      ],
-      "keywords": [
-        "home",
-        "bind"
-      ],
-      "scope": "仅在带 _keys 的入口、with-keymap 组合入口或 Preset 应用时执行；会修改物理键位。",
-      "activation": "别名 srp_apply_default -> srp-cfg/presets/default/apply.cfg -> srp-cfg/presets/default/keymap.cfg",
-      "relation": "调用 alias srp_pwa_prac_keys，定义于 srp-cfg/runtime/commands.cfg:28，内容 exec srp-cfg/modes/pwa-prac/with-keymap.cfg"
     },
     "curation": {
       "status": "generated",

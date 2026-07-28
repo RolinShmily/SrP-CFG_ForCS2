@@ -3189,7 +3189,7 @@
       "line": 1,
       "text": "// SrP recommended keymap example. Runtime owns every referenced alias.",
       "lineCount": 81,
-      "sha256": "5e5de182023e61add7d58bb21dd27d5aec6f096ac3a94dfab5f74b187d75c98e",
+      "sha256": "8da77b38eff97ee76ad6c92974894fba0cfdc894edfccfe01855eb6ab30ca638",
       "area": "preset",
       "module": "default",
       "role": "keymap"
