@@ -3425,7 +3425,7 @@
       "line": 1,
       "text": "// Echo example: complete personal keymap.",
       "lineCount": 61,
-      "sha256": "74bf7161bcfde3abce127ec4a12ad78d03efa489a62a73ee4b9293e653e27f9d",
+      "sha256": "aade167afca208780b33483cc1692c1f1c636c04e902769712e212213f46087d",
       "area": "preset",
       "module": "echo",
       "role": "keymap"
@@ -3861,7 +3861,7 @@
       "line": 1,
       "text": "// VisionL example: complete personal keymap.",
       "lineCount": 60,
-      "sha256": "afc4ea6f6996cde1da1886d5b173f444990e8691514d71e021304ea535057e43",
+      "sha256": "d4d95b000049c61fe57f226cf403a479519c1741b58103738fe0eea07929f867",
       "area": "preset",
       "module": "visionl",
       "role": "keymap"
@@ -4084,7 +4084,7 @@
       "line": 1,
       "text": "// YSZH example: complete personal keymap.",
       "lineCount": 65,
-      "sha256": "be1dcdf8df806cb5058035b5e5dfcaf1fb93d27da4d93229a996c8cbb652b3fe",
+      "sha256": "1361888259e6514511ee8119086dfdb5d4ecbbe20b9904a408a5dc40987cdb36",
       "area": "preset",
       "module": "yszh",
       "role": "keymap"
