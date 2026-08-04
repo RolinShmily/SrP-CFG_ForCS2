@@ -6,7 +6,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router";
 import { Card, SectionHeader } from "@srp-cfg/ui";
-import type { ImageMetadata } from "astro";
 import quickStartImg from "../../assets/desktop-quick-start.png";
 import downloadImg from "../../assets/desktop-download.png";
 import installImg from "../../assets/desktop-install.png";
@@ -15,18 +14,14 @@ import recoveryCenterImg from "../../assets/desktop-recovery-center.png";
 import currentInstallationImg from "../../assets/desktop-current-installation.png";
 import aboutImg from "../../assets/desktop-about.png";
 
-// Astro 的 astro/client 把 *.png 类型声明为 ImageMetadata（astro:assets 产物），
-// 但 Vite 构建下运行时实际是 URL 字符串（build/client/assets/*.png）。
-// 待 L3.7 删除 Astro 结构（astro/client 类型消失）后可去掉此转换。
-const toUrl = (m: ImageMetadata): string => m as unknown as string;
-
-const quickStartUrl = toUrl(quickStartImg);
-const downloadUrl = toUrl(downloadImg);
-const installUrl = toUrl(installImg);
-const userConfigUrl = toUrl(userConfigImg);
-const recoveryCenterUrl = toUrl(recoveryCenterImg);
-const currentInstallationUrl = toUrl(currentInstallationImg);
-const aboutUrl = toUrl(aboutImg);
+// Vite 原生 import PNG：运行时为 URL 字符串（build/client/assets/*.png），直接作 <img src>。
+const quickStartUrl = quickStartImg;
+const downloadUrl = downloadImg;
+const installUrl = installImg;
+const userConfigUrl = userConfigImg;
+const recoveryCenterUrl = recoveryCenterImg;
+const currentInstallationUrl = currentInstallationImg;
+const aboutUrl = aboutImg;
 
 const screenshots = [
   {

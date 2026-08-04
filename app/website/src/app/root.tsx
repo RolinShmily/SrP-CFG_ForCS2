@@ -6,6 +6,7 @@
  * - body：skip-link + 内容 + <ScrollRestoration/> + <Scripts/>
  *
  * 待 Astro 迁移完成后删除旧结构（src/layouts/*.astro 等）。
+ *（L3 收尾已完成：Astro 旧结构已删，本注释仅留档）
  */
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import "../styles/global.css";

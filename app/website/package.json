@@ -4,24 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "check": "astro check",
-    "build:web": "velite --clean && react-router build",
-    "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts src/worker.test.ts",
-    "deploy": "astro build && npx wrangler deploy"
+    "dev": "vite dev",
+    "build": "velite --clean && react-router build",
+    "preview": "vite preview",
+    "deploy": "pnpm build && npx wrangler deploy",
+    "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts src/worker.test.ts"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.2.6",
-    "@astrojs/sitemap": "^3.3.1",
     "@react-router/dev": "^7.18.2",
     "@react-router/node": "^7.18.2",
     "@srp-cfg/ui": "workspace:*",
     "@vitejs/plugin-react": "^5.2.0",
-    "astro": "^5.7.13",
     "isbot": "^5",
-    "lucide-astro": "^0.556.0",
     "lucide-react": "^0.511.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -32,7 +26,6 @@
     "vite": "^6.4.2"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
     "@tailwindcss/vite": "^4.3.0",
     "tailwindcss": "^4.1.6",
     "typescript": "~5.8.3"

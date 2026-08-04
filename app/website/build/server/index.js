@@ -256,6 +256,36 @@ const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   __proto__: null,
   default: layout
 }, Symbol.toStringTag, { value: "Module" }));
+const variants = {
+  accent: "bg-accent text-bg hover:bg-accent-light hover:-translate-y-0.5 hover:shadow-accent-glow",
+  ghost: "bg-transparent text-text-secondary border border-border-highlight hover:border-text-muted hover:text-text"
+};
+const sizes = {
+  sm: "text-sm px-3.5 py-2",
+  md: "text-base px-5 py-3",
+  lg: "text-lg px-8 py-4"
+};
+function ButtonLink({
+  to,
+  variant = "accent",
+  size = "md",
+  className,
+  children
+}) {
+  return /* @__PURE__ */ jsx(
+    Link,
+    {
+      to,
+      className: clsx(
+        "inline-flex items-center justify-center gap-2.5 font-display font-semibold tracking-wide rounded-[6px] transition-all duration-200 cursor-pointer no-underline",
+        variants[variant],
+        sizes[size],
+        className
+      ),
+      children
+    }
+  );
+}
 const paddings = {
   none: "",
   sm: "p-3",
@@ -377,36 +407,6 @@ function CopyButton({
         /* @__PURE__ */ jsx("span", { children: copied ? copiedLabel : defaultLabel }),
         children
       ]
-    }
-  );
-}
-const variants = {
-  accent: "bg-accent text-bg hover:bg-accent-light hover:-translate-y-0.5 hover:shadow-accent-glow",
-  ghost: "bg-transparent text-text-secondary border border-border-highlight hover:border-text-muted hover:text-text"
-};
-const sizes = {
-  sm: "text-sm px-3.5 py-2",
-  md: "text-base px-5 py-3",
-  lg: "text-lg px-8 py-4"
-};
-function ButtonLink({
-  to,
-  variant = "accent",
-  size = "md",
-  className,
-  children
-}) {
-  return /* @__PURE__ */ jsx(
-    Link,
-    {
-      to,
-      className: clsx(
-        "inline-flex items-center justify-center gap-2.5 font-display font-semibold tracking-wide rounded-[6px] transition-all duration-200 cursor-pointer no-underline",
-        variants[variant],
-        sizes[size],
-        className
-      ),
-      children
     }
   );
 }
@@ -698,14 +698,13 @@ const userConfigImg = "/assets/desktop-user-config-CFJms_Xe.png";
 const recoveryCenterImg = "/assets/desktop-recovery-center-CCdP6YTZ.png";
 const currentInstallationImg = "/assets/desktop-current-installation-C32H1cdF.png";
 const aboutImg = "/assets/desktop-about-D3_01Nn0.png";
-const toUrl = (m) => m;
-const quickStartUrl = toUrl(quickStartImg);
-const downloadUrl = toUrl(downloadImg);
-const installUrl = toUrl(installImg);
-const userConfigUrl = toUrl(userConfigImg);
-const recoveryCenterUrl = toUrl(recoveryCenterImg);
-const currentInstallationUrl = toUrl(currentInstallationImg);
-const aboutUrl = toUrl(aboutImg);
+const quickStartUrl = quickStartImg;
+const downloadUrl = downloadImg;
+const installUrl = installImg;
+const userConfigUrl = userConfigImg;
+const recoveryCenterUrl = recoveryCenterImg;
+const currentInstallationUrl = currentInstallationImg;
+const aboutUrl = aboutImg;
 const screenshots = [
   {
     src: quickStartUrl,
@@ -2827,7 +2826,7 @@ const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: commands,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-DrQZ2J-V.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-BA3xTYRq.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js"], "css": ["/assets/root-BlQOOfP8.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-CGglTzyg.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/navigation-IywTUcR9.js", "/assets/github-Sb1PQ1Py.js", "/assets/x-DAmmfS5z.js", "/assets/menu-CVsJQI5g.js", "/assets/book-open-DotJL0PM.js", "/assets/download-Btl4jWHg.js", "/assets/createLucideIcon-C3Bzz8Wx.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-CWpTGtnj.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Badge-OlOBJAuu.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/download-Btl4jWHg.js", "/assets/book-open-DotJL0PM.js", "/assets/Card-DdScE1Ii.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/gamepad-2-CVyXlCP4.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-D2MvJmS2.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Card-DdScE1Ii.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/Badge-OlOBJAuu.js", "/assets/navigation-IywTUcR9.js", "/assets/download-Btl4jWHg.js", "/assets/createLucideIcon-C3Bzz8Wx.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-B1M-yJha.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Card-DdScE1Ii.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/navigation-IywTUcR9.js", "/assets/github-Sb1PQ1Py.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/boxes-1r3_WYqC.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-ikLKQm7F.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/docs-data-B8_XiKoD.js", "/assets/terminal-BAs3hzkp.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/boxes-1r3_WYqC.js", "/assets/book-open-DotJL0PM.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs-detail": { "id": "routes/docs-detail", "parentId": "layout", "path": "/docs/:slug", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-detail-DTmtZ2UM.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Card-DdScE1Ii.js", "/assets/docs-data-B8_XiKoD.js", "/assets/menu-CVsJQI5g.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/x-DAmmfS5z.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-Vqyhy15B.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/x-DAmmfS5z.js", "/assets/Card-DdScE1Ii.js", "/assets/Badge-OlOBJAuu.js", "/assets/terminal-BAs3hzkp.js", "/assets/book-open-DotJL0PM.js", "/assets/gamepad-2-CVyXlCP4.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-25b52ee7.js", "version": "25b52ee7", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-DrQZ2J-V.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-DR75q6jF.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js"], "css": ["/assets/root-JwMh2_LQ.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-CGglTzyg.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/navigation-IywTUcR9.js", "/assets/github-Sb1PQ1Py.js", "/assets/x-DAmmfS5z.js", "/assets/menu-CVsJQI5g.js", "/assets/book-open-DotJL0PM.js", "/assets/download-Btl4jWHg.js", "/assets/createLucideIcon-C3Bzz8Wx.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-BvoApXJp.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Badge-OlOBJAuu.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/download-Btl4jWHg.js", "/assets/book-open-DotJL0PM.js", "/assets/Card-DdScE1Ii.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/gamepad-2-CVyXlCP4.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-D2MvJmS2.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Card-DdScE1Ii.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/Badge-OlOBJAuu.js", "/assets/navigation-IywTUcR9.js", "/assets/download-Btl4jWHg.js", "/assets/createLucideIcon-C3Bzz8Wx.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-B1M-yJha.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Card-DdScE1Ii.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/navigation-IywTUcR9.js", "/assets/github-Sb1PQ1Py.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/boxes-1r3_WYqC.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-ikLKQm7F.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/docs-data-B8_XiKoD.js", "/assets/terminal-BAs3hzkp.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/boxes-1r3_WYqC.js", "/assets/book-open-DotJL0PM.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs-detail": { "id": "routes/docs-detail", "parentId": "layout", "path": "/docs/:slug", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-detail-DTmtZ2UM.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/Card-DdScE1Ii.js", "/assets/docs-data-B8_XiKoD.js", "/assets/menu-CVsJQI5g.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/x-DAmmfS5z.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-Vqyhy15B.js", "imports": ["/assets/chunk-62JRHF6Z-BWKVPo1m.js", "/assets/SectionHeader-M-MCP-W6.js", "/assets/createLucideIcon-C3Bzz8Wx.js", "/assets/x-DAmmfS5z.js", "/assets/Card-DdScE1Ii.js", "/assets/Badge-OlOBJAuu.js", "/assets/terminal-BAs3hzkp.js", "/assets/book-open-DotJL0PM.js", "/assets/gamepad-2-CVyXlCP4.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-2c1cd3f2.js", "version": "2c1cd3f2", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "v8_passThroughRequests": false, "v8_trailingSlashAwareDataRequests": false, "unstable_previewServerPrerendering": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
