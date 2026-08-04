@@ -14,12 +14,22 @@
   "dependencies": {
     "@astrojs/mdx": "^4.2.6",
     "@astrojs/sitemap": "^3.3.1",
+    "@react-router/dev": "^7.18.2",
+    "@react-router/node": "^7.18.2",
+    "@srp-cfg/ui": "workspace:*",
+    "@vitejs/plugin-react": "^5.2.0",
     "astro": "^5.7.13",
-    "lucide-astro": "^0.556.0"
+    "isbot": "^5",
+    "lucide-astro": "^0.556.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router": "^7.18.2",
+    "react-router-dom": "^7.18.2",
+    "vite": "^6.4.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@tailwindcss/vite": "^4.1.6",
+    "@tailwindcss/vite": "^4.3.0",
     "tailwindcss": "^4.1.6",
     "typescript": "~5.8.3"
   }

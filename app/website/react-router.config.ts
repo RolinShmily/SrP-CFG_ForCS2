@@ -5,11 +5,14 @@
  * - prerender：构建时预渲染的路由清单（首版 5 个静态页面，
  *   后续按 tasks/layer-3-website-react/TASK.md 3.1 节扩展 /docs/* 等动态路由）
  *
+ * 注意：@react-router/dev v7.18+ 用默认导出配置对象（config 模块仅有类型导出）。
+ *
  * 待 Astro 迁移完成后删除旧结构（astro.config.ts / src/pages/*.astro）。
  */
-import { defineConfig } from "react-router/config";
+import type { Config } from "@react-router/dev/config";
 
-export default defineConfig({
+export default {
+  appDirectory: "src/app",
   ssr: true,
   prerender: ["/", "/download", "/about", "/docs", "/commands"],
-});
+} satisfies Config;
