@@ -1,7 +1,7 @@
 /**
  * Velite 内容管线配置（L3.3，替代 Astro Content Collections — D8）。
  *
- * - root: src/content —— 16 篇文档 md 原地由 Velite 管理（旧 Astro 结构保留到迁移完成）
+ * - root: content —— 16 篇文档 md 由 Velite 管理（L3 收尾迁出 src/content，随 Astro 旧结构删除）
  * - docs collection schema 与旧 content.config.ts 对齐（title 必填 / description 可选）
  * - s.markdown()：构建期渲染 md → HTML（GFM + rehype-slug 锚点，与 Astro 的 GitHub 风格 slug 一致）
  * - s.toc()：构建期从 md 提取目录树（h2 顶层 + h3 嵌套），供 DocsToc 使用
@@ -13,7 +13,7 @@ import { defineConfig, s } from "velite";
 import rehypeSlug from "rehype-slug";
 
 export default defineConfig({
-  root: "src/content",
+  root: "content",
   output: {
     data: ".velite",
     assets: "public/static",
