@@ -9,7 +9,7 @@ export default function TitleBar() {
 
   return (
     <div className="flex items-center justify-between h-10 bg-bg-card border-b border-border px-3">
-      <div className="flex items-center gap-2 flex-1 h-full drag-region">
+      <div className="flex items-center gap-2 flex-1 h-full" data-tauri-drag-region="deep">
         <span className="font-display text-sm font-bold text-accent">
           SrP-CFG
         </span>

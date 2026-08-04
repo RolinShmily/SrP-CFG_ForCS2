@@ -142,7 +142,8 @@ textarea {
 ::-webkit-scrollbar-thumb { background: var(--color-border-highlight); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-faint); }
 
-.drag-region { -webkit-app-region: drag; }
+/* 注：Tauri v2 窗口拖拽用 data-tauri-drag-region 属性（见 TitleBar.tsx），
+   -webkit-app-region 为 Electron 机制，已移除 */
 
 /* Release notes markdown rendering */
 .release-notes { font-size: 13px; line-height: 1.7; color: var(--color-text-secondary); }

@@ -602,6 +602,12 @@ pub fn download_from_url(url: &str, file_name: &str) -> Result<DownloadEntry, St
     let result = (|| -> Result<u64, String> {
         let agent = ureq::Agent::config_builder()
             .timeout_global(Some(std::time::Duration::from_secs(60)))
+            // 同 updater.rs：显式 native-tls provider，避免 ureq 3.3 默认 Rustls panic
+            .tls_config(
+                ureq::tls::TlsConfig::builder()
+                    .provider(ureq::tls::TlsProvider::NativeTls)
+                    .build(),
+            )
             .build()
             .new_agent();
         let resp = agent

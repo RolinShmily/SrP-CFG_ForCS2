@@ -27,90 +27,94 @@ import type {
  * tasks/layer-2-desktop-tauri/api-contract.md），renderer 的 `window.api.*`
  * 调用点零改动。实现内部走 Tauri `invoke()` / `listen()`。
  *
- * Rust 侧 command 名与这里传入的字符串一一对应（`src-tauri/src/commands/`）。
+ * 命令名 = Rust 侧 `#[tauri::command]` 函数名（snake_case，见
+ * `src-tauri/src/commands/`）；参数 key 按 `rename_all = "camelCase"`
+ * 转换（如 accountId / usePersonalCfg / file_name → fileName）。
+ * （2026-08 L2 遗留收尾：实测发现旧实现误用 Electron 时代
+ *  "installer:detectAll" 式通道名，全部命令名已修正为真实注册名。）
  */
 export function createApi(): ElectronAPI {
   return {
     // ── Window controls ──
-    minimize: () => invoke("window:minimize"),
-    maximize: () => invoke("window:maximize"),
-    close: () => invoke("window:close"),
-    isMaximized: () => invoke("window:isMaximized"),
+    minimize: () => invoke("minimize"),
+    maximize: () => invoke("maximize"),
+    close: () => invoke("close"),
+    isMaximized: () => invoke("is_maximized"),
 
     // ── Detection ──
-    detectAll: () => invoke<DetectionResult>("installer:detectAll"),
+    detectAll: () => invoke<DetectionResult>("detect_all"),
     setCurrentUser: (accountId) =>
-      invoke<UserConfigSelection>("installer:setCurrentUser", { accountId }),
+      invoke<UserConfigSelection>("set_current_user", { accountId }),
 
     // ── User-owned final override layer ──
-    getUserConfig: () => invoke<UserConfigDocument>("userConfig:get"),
+    getUserConfig: () => invoke<UserConfigDocument>("user_config_get"),
     saveUserConfig: (content) =>
-      invoke<UserConfigDocument>("userConfig:save", { content }),
-    openUserConfigFolder: () => invoke("userConfig:openFolder"),
+      invoke<UserConfigDocument>("user_config_save", { content }),
+    openUserConfigFolder: () => invoke("user_config_open_folder"),
 
     // ── VCFG snapshot ──
     captureVcfgSnapshot: () =>
-      invoke<VcfgSnapshot | null>("vcfg:captureSnapshot"),
+      invoke<VcfgSnapshot | null>("vcfg_capture_snapshot"),
     generateCfgFromSnapshot: (options) =>
-      invoke<string | null>("vcfg:generateCfg", { options }),
+      invoke<string | null>("vcfg_generate_cfg", { options }),
 
     // ── Upload / Staging ──
     uploadFiles: (filePaths) =>
-      invoke<UploadEntry>("installer:uploadFiles", { filePaths }),
-    getUploadHistory: () => invoke<UploadEntry[]>("installer:getUploadHistory"),
+      invoke<UploadEntry>("upload_files", { filePaths }),
+    getUploadHistory: () => invoke<UploadEntry[]>("get_upload_history"),
 
     // ── Uploaded entries ──
-    getUploadedEntries: () => invoke<UploadedEntry[]>("installer:getUploadedEntries"),
+    getUploadedEntries: () => invoke<UploadedEntry[]>("get_uploaded_entries"),
     installFromUpload: (folderName, mode, usePersonalCfg) =>
-      invoke<InstallResult | AppendConflictResult>("installer:installFromUpload", {
+      invoke<InstallResult | AppendConflictResult>("install_from_upload", {
         folderName,
         mode,
         usePersonalCfg,
       }),
     deleteUploadEntry: (folderName) =>
-      invoke("installer:deleteUploadEntry", { folderName }),
-    openUploadsFolder: () => invoke("installer:openUploadsFolder"),
+      invoke("delete_upload_entry", { folderName }),
+    openUploadsFolder: () => invoke("open_uploads_folder"),
 
     // ── Applied Config (install.json) ──
-    getInstalledData: () => invoke<InstalledData>("installer:getInstalledData"),
+    getInstalledData: () => invoke<InstalledData>("get_installed_data"),
     deleteInstalledItem: (category, name) =>
-      invoke<boolean>("installer:deleteInstalledItem", { category, name }),
+      invoke<boolean>("delete_installed_item", { category, name }),
     clearInstallCategory: (category) =>
-      invoke<number>("installer:clearInstallCategory", { category }),
+      invoke<number>("clear_install_category", { category }),
 
     // ── Open item ──
     openItem: (storage, category, name) =>
-      invoke<boolean>("installer:openItem", { storage, category, name }),
+      invoke<boolean>("open_item", { storage, category, name }),
 
     // ── Conflict Recovery (res.json) ──
-    getResData: () => invoke<ResData>("installer:getResData"),
+    getResData: () => invoke<ResData>("get_res_data"),
     restoreFromRes: (category, name) =>
-      invoke<boolean>("installer:restoreFromRes", { category, name }),
+      invoke<boolean>("restore_from_res", { category, name }),
     deleteResItem: (category, name) =>
-      invoke<boolean>("installer:deleteResItem", { category, name }),
+      invoke<boolean>("delete_res_item", { category, name }),
     clearResCategory: (category) =>
-      invoke<void>("installer:clearResCategory", { category }),
+      invoke<void>("clear_res_category", { category }),
     restoreResCategory: (category) =>
-      invoke<number>("installer:restoreResCategory", { category }),
+      invoke<number>("restore_res_category", { category }),
 
     // ── Backup (save.json) ──
-    getSaveData: () => invoke<SaveData>("installer:getSaveData"),
-    restoreFromSave: () => invoke<boolean>("installer:restoreFromSave"),
+    getSaveData: () => invoke<SaveData>("get_save_data"),
+    restoreFromSave: () => invoke<boolean>("restore_from_save"),
     deleteSaveItem: (category, name) =>
-      invoke<boolean>("installer:deleteSaveItem", { category, name }),
+      invoke<boolean>("delete_save_item", { category, name }),
     clearSaveCategory: (category) =>
-      invoke<void>("installer:clearSaveCategory", { category }),
+      invoke<void>("clear_save_category", { category }),
     restoreSaveCategory: (category) =>
-      invoke<number>("installer:restoreSaveCategory", { category }),
+      invoke<number>("restore_save_category", { category }),
     restoreSaveItem: (category, name) =>
-      invoke<boolean>("installer:restoreSaveItem", { category, name }),
-    openSaveFolder: () => invoke("installer:openSaveFolder"),
-    openResFolder: () => invoke("installer:openResFolder"),
-    openVcfgSnapshotsFolder: () => invoke("installer:openVcfgSnapshotsFolder"),
+      invoke<boolean>("restore_save_item", { category, name }),
+    openSaveFolder: () => invoke("open_save_folder"),
+    openResFolder: () => invoke("open_res_folder"),
+    openVcfgSnapshotsFolder: () => invoke("open_vcfg_snapshots_folder"),
 
     // ── Append conflict confirmation ──
     confirmAppend: (folderName, source, proceed, usePersonalCfg) =>
-      invoke<InstallResult | null>("installer:confirmAppend", {
+      invoke<InstallResult | null>("confirm_append", {
         folderName,
         source,
         proceed,
@@ -119,30 +123,30 @@ export function createApi(): ElectronAPI {
 
     // ── Downloads ──
     downloadFromUrl: (url, fileName) =>
-      invoke<DownloadEntry | null>("installer:downloadFromUrl", { url, fileName }),
-    getDownloadEntries: () => invoke<DownloadEntry[]>("installer:getDownloadEntries"),
+      invoke<DownloadEntry | null>("download_from_url", { url, fileName }),
+    getDownloadEntries: () => invoke<DownloadEntry[]>("get_download_entries"),
     deleteDownload: (folderName) =>
-      invoke("installer:deleteDownload", { folderName }),
+      invoke("delete_download", { folderName }),
     installFromDownload: (folderName, mode, usePersonalCfg) =>
-      invoke<InstallResult | AppendConflictResult>("installer:installFromDownload", {
+      invoke<InstallResult | AppendConflictResult>("install_from_download", {
         folderName,
         mode,
         usePersonalCfg,
       }),
-    openDownloadsFolder: () => invoke("installer:openDownloadsFolder"),
+    openDownloadsFolder: () => invoke("open_downloads_folder"),
 
     // ── App Info ──
-    getVersion: () => invoke<string>("app:getVersion"),
-    getLatestVersion: () => invoke<string>("app:getLatestVersion"),
+    getVersion: () => invoke<string>("app_get_version"),
+    getLatestVersion: () => invoke<string>("app_get_latest_version"),
 
     // ── Updater ──
     checkForUpdate: (force) =>
-      invoke<UpdateCheckResult>("updater:check", { force }),
-    dismissUpdate: (version) => invoke("updater:dismiss", { version }),
-    getUpdateHistory: () => invoke<GitHubRelease[] | null>("updater:history"),
+      invoke<UpdateCheckResult>("updater_check", { force }),
+    dismissUpdate: (version) => invoke("updater_dismiss", { version }),
+    getUpdateHistory: () => invoke<GitHubRelease[] | null>("updater_history"),
 
     // ── Shell ──
-    openExternal: (url) => invoke("shell:openExternal", { url }),
+    openExternal: (url) => invoke("shell_open_external", { url }),
 
     // ── Utils ──
     getFilePaths: (files) => {

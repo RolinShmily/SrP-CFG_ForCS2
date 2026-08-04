@@ -79,6 +79,13 @@ struct GitHubReleaseRaw {
 fn fetch_all_releases() -> Result<Vec<GitHubReleaseRaw>, String> {
     let agent = ureq::Agent::config_builder()
         .timeout_global(Some(HTTP_TIMEOUT))
+        // ureq 3.3 默认 TLS provider 为 Rustls（即使未编译该 feature 也会在 https 时 panic）；
+        // 本工程编译 native-tls（Windows SChannel），必须显式指定 provider。
+        .tls_config(
+            ureq::tls::TlsConfig::builder()
+                .provider(ureq::tls::TlsProvider::NativeTls)
+                .build(),
+        )
         .build()
         .new_agent();
     let resp = agent
