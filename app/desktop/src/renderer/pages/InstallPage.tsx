@@ -5,7 +5,7 @@ import UploadZone from "../components/UploadZone";
 import UploadedList from "../components/UploadedList";
 import DownloadsList from "../components/DownloadsList";
 import InstallActions from "../components/InstallActions";
-import PageHeader from "../components/PageHeader";
+import { PageHeader } from "@srp-cfg/ui";
 import type { DetectionResult, AppendConflictResult, InstallResult } from "../types";
 
 interface Props {

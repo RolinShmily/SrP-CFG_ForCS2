@@ -15,7 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { ResData, SaveData, CategoryData, UserConfigDocument } from "../types";
-import PageHeader from "../components/PageHeader";
+import { PageHeader } from "@srp-cfg/ui";
 
 const sectionIcons: Record<string, React.ReactNode> = {
   gameCfg: <FileText size={16} className="text-teal" />,

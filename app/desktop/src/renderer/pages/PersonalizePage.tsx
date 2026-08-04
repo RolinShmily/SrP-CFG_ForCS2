@@ -17,7 +17,7 @@ import {
   Wand2,
 } from "lucide-react";
 import type { DetectionResult, UserConfigDocument, VcfgSnapshot } from "../types";
-import PageHeader from "../components/PageHeader";
+import { PageHeader } from "@srp-cfg/ui";
 
 interface Props {
   detection: DetectionResult | null;

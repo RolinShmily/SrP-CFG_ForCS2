@@ -52,8 +52,8 @@ Layer 4  CI/CD 与发布（website CI + tauri build + 打包链）← 依赖 L2/
 
 | 层 | 状态 | 备注 |
 | :--- | :--- | :--- |
-| [Layer 0](./layer-0-baseline/TASK.md) | ⏳ 进行中 | 分支已建，写快照/黄金样本中 |
-| [Layer 1](./layer-1-shared-ui/TASK.md) | ⬜ 未开始 | |
+| [Layer 0](./layer-0-baseline/TASK.md) | ✅ 完成 | 分支 ✓ 构建基线 ✓ 契约/清单 3 份 ✓ |
+| [Layer 1](./layer-1-shared-ui/TASK.md) | 🔄 进行中 | 9 组件已抽，Desktop 已接入 2 处，构建/类型检查通过 |
 | [Layer 2](./layer-2-desktop-tauri/TASK.md) | ⬜ 未开始 | |
 | [Layer 3](./layer-3-website-react/TASK.md) | ⬜ 未开始 | |
 | [Layer 4](./layer-4-ci-release/TASK.md) | ⬜ 未开始 | |

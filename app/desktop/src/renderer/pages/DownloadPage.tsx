@@ -8,7 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { REPO_URL, dl } from "../lib/downloads";
-import PageHeader from "../components/PageHeader";
+import { PageHeader } from "@srp-cfg/ui";
 
 const packages = [
   {

@@ -15,7 +15,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import type { CategoryData, InstalledData, UserConfigDocument } from "../types";
-import PageHeader from "../components/PageHeader";
+import { PageHeader } from "@srp-cfg/ui";
 
 type CategoryKey = "gameCfg" | "userCfg" | "annotations" | "video";
 

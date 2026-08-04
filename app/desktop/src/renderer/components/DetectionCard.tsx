@@ -1,5 +1,5 @@
-import { Cloud, Database, RefreshCw, User } from "lucide-react";
-import PathRow from "./PathRow";
+import { Cloud, Database, Folder, RefreshCw, User } from "lucide-react";
+import { LabeledValue } from "@srp-cfg/ui";
 import type { DetectionResult } from "../types";
 
 interface Props {
@@ -36,10 +36,10 @@ export default function DetectionCard({
 
       {detection ? (
         <>
-          <PathRow label="Steam 根目录" value={detection.steamPath} />
-          <PathRow label="游戏 CFG 路径" value={detection.cs2CfgPath} />
-          <PathRow label="地图指南路径" value={detection.annotationsPath} />
-          <PathRow label="账号本地状态目录" value={detection.userCfgPath} />
+          <LabeledValue icon={<Folder size={14} />} label="Steam 根目录" value={detection.steamPath} />
+          <LabeledValue icon={<Folder size={14} />} label="游戏 CFG 路径" value={detection.cs2CfgPath} />
+          <LabeledValue icon={<Folder size={14} />} label="地图指南路径" value={detection.annotationsPath} />
+          <LabeledValue icon={<Folder size={14} />} label="账号本地状态目录" value={detection.userCfgPath} />
 
           {detection.vcfgState.available && (
             <>

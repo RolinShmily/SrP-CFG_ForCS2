@@ -9,7 +9,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { WEBSITE_URL, REPO_URL } from "../lib/downloads";
-import PageHeader from "../components/PageHeader";
+import { PageHeader } from "@srp-cfg/ui";
 
 const steps = [
   {

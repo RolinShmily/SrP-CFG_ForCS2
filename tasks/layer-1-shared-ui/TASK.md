@@ -12,28 +12,20 @@
 
 ## 任务
 
-- [ ] **1.1 完善 @srp-cfg/ui 包配置**
-  - `package.json`：增加 `react`/`react-dom` peerDeps（已有）、`tsconfig`（JSX、paths）、Tailwind 消费说明。
-  - 增加 Storybook 或至少一个 playground 页面（可选，先不引入重量级工具，用 website 页面当 playground）。
-  - 确认 monorepo 内两个消费端都能直接 import 源码（Vite 天然支持 workspace 源码，无需构建步骤）。
+- [x] **1.1 完善 @srp-cfg/ui 包配置**
+  - ✅ 新增 `tsconfig.json`（bundler 解析、react-jsx）与 `README.md`（约定/tokens/校验命令）
+  - ✅ 确认 exports 指向源码（`./src/index.ts`），Vite 消费端直接编译，无需构建步骤
+  - ✅ 确认双端 token 同名（desktop/website 各自 @theme 定义同名变量，值不同 → 组件自适应）
 
-- [ ] **1.2 抽取基础组件（A 档）**
-  - 从 Desktop 抽取/抽象以下组件（具体实现以现有代码为准）：
-    - `Card`（Desktop 大量 `bg-bg-card border-border rounded-[12px]` 卡片结构）
-    - `PageHeader`（已有现成，直接搬）
-    - `LabeledValue`（源自 `PathRow`，label/value 行，泛化）
-    - `Modal`（源自 `ConfirmAppendModal` / `UpdateModal` 的结构：遮罩 + 面板 + 关闭）
-    - `Badge` / `Tag`（Desktop 安装包内 flag 标签样式）
-    - `CopyButton`（Desktop 复制指令按钮行为，含"已复制"反馈）
-    - `CodeBlock` / `InlineCode`
-    - `Skeleton`（Desktop/Website 加载占位）
-    - `EmptyState`（空结果提示）
-  - 每抽取一个：`@srp-cfg/ui` 导出 + Desktop 改引用 + 视觉回归确认。
+- [x] **1.2 抽取基础组件（A 档）**
+  - ✅ 已抽取 9 个组件进 `@srp-cfg/ui`：Card / PageHeader / SectionHeader / LabeledValue / Badge / Modal / CopyButton / Skeleton / EmptyState（+ 已有 Button）
+  - ✅ Desktop 已接入：6 个页面改用共享 PageHeader，DetectionCard 改用 LabeledValue；本地 PageHeader.tsx / PathRow.tsx 已删除
+  - ✅ 验证：`tsc -p tsconfig.renderer.json` 通过；`vite build` 通过（1665 模块 / 2.7s）
+  - ⏳ 待后续：Modal/CopyButton/Badge 在 Desktop 页面中的实际替换（L2.7 接入或后续页面重构时顺带）
 
-- [ ] **1.3 统一 design tokens**
-  - 对比 `app/desktop/src/renderer/styles/global.css` 与 `app/website/src/styles/global.css` 的 CSS 变量，整理出一份共享 token 清单。
-  - 共享组件内部一律使用 token 类名（不写死颜色值）。
-  - 产出：`@srp-cfg/ui` 内 `tokens.md` 或注释说明。
+- [x] **1.3 统一 design tokens**
+  - ✅ 核对 desktop/website 两套 `global.css`：**token 变量名完全一致，值不同**（桌面 bg #0b0d14 vs 网站 #090b10；accent #e8790c vs #f28a1a；radius 8px vs 12px）
+  - ✅ 结论：不做值统一（保持两端各自主题），共享组件只引用 token 名；已在 `@srp-cfg/ui/README.md` 记录 token 清单与约束
 
 - [ ] **1.4 Website 组件 React 化清单**
   - 盘点 website 16 个 `.astro` 组件，标记：
