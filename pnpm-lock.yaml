@@ -136,6 +136,9 @@ importers:
       lucide-astro:
         specifier: ^0.556.0
         version: 0.556.0(astro@5.18.1(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(terser@5.47.1)(typescript@5.8.3)(yaml@2.9.0))
+      lucide-react:
+        specifier: ^0.511.0
+        version: 0.511.0(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
