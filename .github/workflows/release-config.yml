@@ -145,3 +145,5 @@ jobs:
           fail_on_unmatched_files: true
           prerelease: false
           draft: false
+          # 支持覆盖既有 tag（如 v3.1.10 重打）时重传同名资产
+          overwrite: true

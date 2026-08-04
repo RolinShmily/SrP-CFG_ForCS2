@@ -196,6 +196,8 @@ jobs:
             SrP-CFG_Installer.msi
             SrP-CFG_Setup_x64.exe
           fail_on_unmatched_files: true
+          # 支持覆盖既有 tag（如 v3.1.10 重打）时重传同名资产
+          overwrite: true
 
       - name: Upload desktop update marker to Release
         if: needs.detect-changes.outputs.has_desktop_changes == 'true'
@@ -204,3 +206,4 @@ jobs:
           tag_name: ${{ github.ref_name }}
           files: DESKTOP_UPDATE_MARKER
           fail_on_unmatched_files: true
+          overwrite: true
