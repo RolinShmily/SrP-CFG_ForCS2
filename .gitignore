@@ -35,3 +35,6 @@ tasks/layer-0-baseline/scripts/golden-node.cjs
 
 # Tauri generated schemas
 app/desktop/src-tauri/gen/schemas/
+
+# TypeScript incremental build cache
+*.tsbuildinfo

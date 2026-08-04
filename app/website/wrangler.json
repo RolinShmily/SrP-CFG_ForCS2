@@ -1,7 +1,8 @@
 {
 	"name": "srp-cfg",
 	"assets": {
-		"directory": "./build/client"
+		"directory": "./build/client",
+		"binding": "ASSETS"
 	},
 	"main": "./src/worker.ts",
 	"compatibility_date": "2025-01-01",

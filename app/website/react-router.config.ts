@@ -14,6 +14,12 @@ import commandsJson from "./public/data/commands.json";
 export default {
   appDirectory: "src/app",
   ssr: true,
+  // Lazy route discovery（fog-of-war）会在客户端拉取 /__manifest 路由清单补丁；
+  // 静态托管（Cloudflare Workers Static Assets）无服务器端点可服务该请求，
+  // 且本应用全部 2806 页已 SSG 预渲染、完整 manifest 已内联在 HTML 中——
+  // 用 mode: "initial" 在首屏文档加载时载入全部路由，彻底去掉 /__manifest 依赖。
+  // （TASK-prod-routing-fix：/__manifest 500 → 客户端路由断裂）
+  routeDiscovery: { mode: "initial" },
   prerender: [
     "/",
     "/download",
