@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@srp-cfg/ui": "workspace:*",
+    "@tauri-apps/api": "^2.11.1",
     "archiver": "^7.0.1",
     "electron-squirrel-startup": "^1.0.1",
     "extract-zip": "^2.0.1",
