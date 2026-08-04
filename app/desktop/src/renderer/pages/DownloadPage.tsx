@@ -8,7 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { REPO_URL, dl } from "../lib/downloads";
-import { PageHeader } from "@srp-cfg/ui";
+import { Card, PageHeader } from "@srp-cfg/ui";
 
 const packages = [
   {
@@ -124,7 +124,7 @@ export default function DownloadPage() {
       </section>
 
       {/* Info box */}
-      <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 flex gap-4">
+      <Card padding="lg" className="flex gap-4">
         <div className="w-10 h-10 rounded-[var(--radius-sm)] bg-accent-bg border border-accent/10 flex items-center justify-center flex-shrink-0">
           <Info size={18} className="text-accent" />
         </div>
@@ -147,7 +147,7 @@ export default function DownloadPage() {
             中找到。
           </p>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

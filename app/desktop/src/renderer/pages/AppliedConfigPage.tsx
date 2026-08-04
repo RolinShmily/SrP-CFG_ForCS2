@@ -15,7 +15,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import type { CategoryData, InstalledData, UserConfigDocument } from "../types";
-import { PageHeader } from "@srp-cfg/ui";
+import { Card, PageHeader } from "@srp-cfg/ui";
 
 type CategoryKey = "gameCfg" | "userCfg" | "annotations" | "video";
 
@@ -144,14 +144,14 @@ export default function AppliedConfigPage() {
       />
 
       <section className="grid grid-cols-1 gap-3 2xl:grid-cols-3">
-        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-4">
+        <Card>
           <div className="flex items-center gap-2 text-teal">
             <Boxes size={17} />
             <span className="font-display text-sm font-semibold">Runtime</span>
           </div>
           <p className="mt-2 text-sm font-semibold text-text">{userConfig?.runtimeInstalled ? "已检测到" : "未检测到"}</p>
           <p className="mt-1 text-xs text-text-muted">{runtimeCategory ? `安装目标：${runtimeTarget}` : "没有安装器追踪的 CFG 目录"}</p>
-        </div>
+        </Card>
 
         <div className="rounded-[var(--radius)] border border-accent/30 bg-accent-bg p-4">
           <div className="flex items-center gap-2 text-accent">
@@ -162,14 +162,14 @@ export default function AppliedConfigPage() {
           <p className="ui-micro mt-1 truncate font-mono" title={userConfig?.path ?? undefined}>{userConfig?.path ?? "未检测到路径"}</p>
         </div>
 
-        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-4">
+        <Card>
           <div className="flex items-center gap-2 text-blue">
             <Database size={17} />
             <span className="font-display text-sm font-semibold">安装器清单</span>
           </div>
           <p className="mt-2 text-sm font-semibold text-text">{totalManaged} 个顶层受管项</p>
           <p className="mt-1 text-xs text-text-muted">只记录安装器部署的 CFG、指南与视频文件</p>
-        </div>
+        </Card>
       </section>
 
       <div className="ui-body flex gap-3 rounded-[var(--radius)] border border-teal/25 bg-teal/5 px-4 py-3">
@@ -199,7 +199,7 @@ export default function AppliedConfigPage() {
               ...data.files.map((name) => ({ name, isDir: false })),
             ];
             return (
-              <div key={key} className="rounded-[var(--radius)] border border-border bg-bg-card">
+              <Card key={key} padding="none">
                 <div className="flex flex-wrap items-stretch justify-between gap-y-2 border-b border-transparent">
                   <button
                     type="button"
@@ -274,7 +274,7 @@ export default function AppliedConfigPage() {
                     {data.path && <p className="ui-micro border-t border-border pt-2 font-mono break-all">{data.path}</p>}
                   </div>
                 )}
-              </div>
+              </Card>
             );
           })}
         </section>

@@ -15,7 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { ResData, SaveData, CategoryData, UserConfigDocument } from "../types";
-import { PageHeader } from "@srp-cfg/ui";
+import { Card, PageHeader } from "@srp-cfg/ui";
 
 const sectionIcons: Record<string, React.ReactNode> = {
   gameCfg: <FileText size={16} className="text-teal" />,
@@ -219,7 +219,7 @@ export default function BackupRestorePage() {
 
       <div className="grid grid-cols-1 gap-5">
         {/* ── Runtime rollback (save.json) ─────────────────────── */}
-        <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
+        <Card className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <Save size={16} className="text-green" />
@@ -349,10 +349,10 @@ export default function BackupRestorePage() {
               );
             })
           )}
-        </div>
+        </Card>
 
         {/* ── Pre-install originals (res.json) ────────────────── */}
-        <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-3">
+        <Card className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <AlertTriangle size={16} className="text-accent" />
@@ -463,10 +463,10 @@ export default function BackupRestorePage() {
               );
             })
           )}
-        </div>
+        </Card>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius)] border border-border bg-bg-card p-4">
+      <Card className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-start gap-3">
           <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-accent-bg border border-accent/10 flex items-center justify-center shrink-0">
             <Database size={16} className="text-accent" />
@@ -487,7 +487,7 @@ export default function BackupRestorePage() {
           <FolderOpen size={13} />
           打开快照目录
         </button>
-      </div>
+      </Card>
     </div>
   );
 }

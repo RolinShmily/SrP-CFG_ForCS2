@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* 扫描共享组件库（@srp-cfg/ui，workspace 包在 app/shared/ui，不在 Vite 根内）
+ * @tailwindcss/postcss 的文件扫描以 CSS 文件所在目录为基准，不会自动跨到兄弟目录。 */
+@source "../../../../shared/ui/src";
+
 @theme {
   --color-bg: #0b0d14;
   --color-bg-card: #10131c;

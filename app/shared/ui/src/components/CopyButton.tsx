@@ -9,7 +9,16 @@ interface CopyButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   defaultLabel?: string;
   /** 成功态高亮 */
   highlightOnCopied?: boolean;
+  /** 颜色变体（default 为中性，accent/teal/red 用于命令操作按钮） */
+  variant?: "default" | "accent" | "teal" | "red";
 }
+
+const variantClasses: Record<NonNullable<CopyButtonProps["variant"]>, string> = {
+  default: "bg-bg border-border text-text-muted hover:border-accent-bg hover:text-accent",
+  accent: "bg-accent-bg border-accent/35 text-accent hover:border-accent/60",
+  teal: "bg-teal/5 border-teal/35 text-teal hover:border-teal/65",
+  red: "bg-red/5 border-red/40 text-red hover:border-red/60",
+};
 
 /**
  * 复制按钮：点击复制 + “已复制”反馈（1.5s 复原）。
@@ -20,6 +29,7 @@ export function CopyButton({
   copiedLabel = "已复制",
   defaultLabel = "复制",
   highlightOnCopied = true,
+  variant = "default",
   className,
   onClick,
   children,
@@ -38,14 +48,16 @@ export function CopyButton({
     }
   };
 
+  // 成功态单独成组，避免与 variant 颜色在 CSS 中互相覆盖
+  const colorClasses =
+    copied && highlightOnCopied ? "border-green/30 bg-green/5 text-green" : variantClasses[variant];
+
   return (
     <button
       type="button"
       className={clsx(
-        "flex items-center gap-1 rounded-[6px] bg-bg border border-border px-2.5 py-1 font-display text-xs font-semibold transition-colors cursor-pointer",
-        copied && highlightOnCopied
-          ? "border-green/30 bg-green/5 text-green"
-          : "text-text-muted hover:border-accent-bg hover:text-accent",
+        "flex items-center gap-1 rounded-[6px] border px-2.5 py-1 font-display text-xs font-semibold transition-colors cursor-pointer",
+        colorClasses,
         className,
       )}
       onClick={handleClick}

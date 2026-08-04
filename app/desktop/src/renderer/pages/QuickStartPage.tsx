@@ -9,7 +9,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { WEBSITE_URL, REPO_URL } from "../lib/downloads";
-import { PageHeader } from "@srp-cfg/ui";
+import { Card, PageHeader } from "@srp-cfg/ui";
 
 const steps = [
   {
@@ -69,7 +69,7 @@ export default function QuickStartPage() {
         ))}
       </section>
 
-      <section className="p-5 bg-bg-card border border-border rounded-[var(--radius)]">
+      <Card padding="lg">
         <h2 className="ui-section-title mb-2 flex items-center gap-2">
           <BookOpen size={16} className="text-accent" />
           项目官网与文档
@@ -96,9 +96,9 @@ export default function QuickStartPage() {
             <ExternalLink size={12} />
           </button>
         </div>
-      </section>
+      </Card>
 
-      <section className="p-5 bg-bg-card border border-border rounded-[var(--radius)]">
+      <Card padding="lg">
         <h2 className="ui-section-title mb-3 flex items-center gap-2">
           <AlertTriangle size={16} className="text-accent" />
           注意事项
@@ -119,7 +119,7 @@ export default function QuickStartPage() {
           <li>仅部署 .cfg 与支持的 .txt；.vcfg、.vcfg_lastclouded 和其他格式会被阻止或过滤</li>
           <li>安装时若游戏目录存在冲突文件，原文件会显示在恢复中心的「安装前原文件」区域</li>
         </ul>
-      </section>
+      </Card>
     </div>
   );
 }

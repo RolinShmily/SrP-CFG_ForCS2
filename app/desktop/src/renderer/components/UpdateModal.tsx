@@ -8,7 +8,7 @@ import {
   Monitor,
   Loader2,
 } from "lucide-react";
-import { Modal } from "@srp-cfg/ui";
+import { Modal, Badge } from "@srp-cfg/ui";
 import type { GitHubRelease } from "../types";
 import { REPO_URL } from "../lib/downloads";
 
@@ -48,16 +48,16 @@ function ReleaseSection({ release }: { release: GitHubRelease }) {
               v{release.tagName}
             </span>
             {release.hasDesktopAssets && (
-              <span className="inline-flex items-center gap-1.5 rounded bg-green/10 px-2 py-0.5 text-xs text-green">
+              <Badge variant="green" size="md" className="gap-1.5">
                 <Monitor size={14} />
                 软件
-              </span>
+              </Badge>
             )}
             {release.hasConfigAssets && (
-              <span className="inline-flex items-center gap-1.5 rounded bg-accent-bg px-2 py-0.5 text-xs text-accent-light">
+              <Badge variant="accent" size="md" className="gap-1.5 text-accent-light">
                 <Package size={14} />
                 配置包
-              </span>
+              </Badge>
             )}
             {date && <span className="text-xs text-text-faint">{date}</span>}
           </div>

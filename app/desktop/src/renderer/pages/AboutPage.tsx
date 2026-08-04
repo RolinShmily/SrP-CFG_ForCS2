@@ -11,6 +11,7 @@ import {
   Server,
   Code,
 } from "lucide-react";
+import { Card } from "@srp-cfg/ui";
 import blogSvg from "../assets/svg/blog-solid-full.svg?raw";
 import bilibiliSvg from "../assets/svg/bilibili.svg?raw";
 import githubSvg from "../assets/svg/github-brands-solid-full.svg?raw";
@@ -72,7 +73,7 @@ export default function AboutPage() {
         {/* Left column */}
         <div className="space-y-5">
           {/* Project intro */}
-          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-4">
+          <Card padding="lg" className="space-y-4">
             <h2 className="ui-section-title">项目简介</h2>
             <div className="ui-body space-y-3">
               <p>
@@ -91,10 +92,10 @@ export default function AboutPage() {
                 选择内置 Preset 起点，并在后续行继续覆盖；该文件由安装器在更新、恢复和卸载 Runtime 时保护。
               </p>
             </div>
-          </div>
+          </Card>
 
           {/* Tech stack — with restored original sizing (p-3, text-sm, Icon size=14) */}
-          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
+          <Card padding="lg" className="space-y-3">
             <h2 className="ui-section-title flex items-center gap-2">
               <Boxes size={18} className="text-teal" />
               技术栈
@@ -113,13 +114,13 @@ export default function AboutPage() {
                 );
               })}
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Right column */}
         <div className="space-y-5">
           {/* Quick links */}
-          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
+          <Card padding="lg" className="space-y-3">
             <h2 className="ui-section-title">快速链接</h2>
             <div className="space-y-2">
               {links.map((link) => {
@@ -145,10 +146,10 @@ export default function AboutPage() {
                 );
               })}
             </div>
-          </div>
+          </Card>
 
           {/* Contributors */}
-          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-5 space-y-3">
+          <Card padding="lg" className="space-y-3">
             <h2 className="ui-section-title flex items-center gap-2">
               <User size={18} className="text-accent" />
               贡献者
@@ -199,10 +200,10 @@ export default function AboutPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* License */}
-          <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 flex items-center gap-3">
+          <Card className="flex items-center gap-3">
             <Shield size={18} className="text-text-muted flex-shrink-0" />
             <div>
               <div className="ui-panel-title text-text">开源许可</div>
@@ -210,7 +211,7 @@ export default function AboutPage() {
                 自定义许可证，详见仓库根目录 LICENSE 文件
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

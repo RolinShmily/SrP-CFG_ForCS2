@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Braces,
   Check,
-  Copy,
   Database,
   FolderOpen,
   Loader2,
@@ -12,12 +11,11 @@ import {
   Save,
   ShieldCheck,
   Undo2,
-  SlidersHorizontal,
   UserRoundCog,
   Wand2,
 } from "lucide-react";
 import type { DetectionResult, UserConfigDocument, VcfgSnapshot } from "../types";
-import { PageHeader } from "@srp-cfg/ui";
+import { Badge, CopyButton, PageHeader } from "@srp-cfg/ui";
 
 interface Props {
   detection: DetectionResult | null;
@@ -42,7 +40,6 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
   const [vcfgSnapshot, setVcfgSnapshot] = useState<VcfgSnapshot | null>(null);
   const [importing, setImporting] = useState(false);
   const [generating, setGenerating] = useState(false);
@@ -105,16 +102,6 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
       setSaving(false);
     }
   }, [content]);
-
-  const copyCommand = useCallback(async (command: string) => {
-    try {
-      await navigator.clipboard.writeText(command);
-      setCopiedCommand(command);
-      window.setTimeout(() => setCopiedCommand(null), 1600);
-    } catch {
-      setError(`无法写入剪贴板，请手动复制 ${command}`);
-    }
-  }, []);
 
   const setBasePreset = useCallback((preset: string) => {
     const command = `srp_apply_${preset}`;
@@ -433,9 +420,7 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_var(--color-accent-glow)]" />
               <span className="font-mono text-xs text-text">srp-cfg/user/custom.cfg</span>
-              <span className="ui-micro rounded bg-bg-raised px-1.5 py-0.5 font-mono">
-                {document?.target === "account" ? "账号 CFG 目录" : "游戏 CFG 目录"}
-              </span>
+              <Badge>{document?.target === "account" ? "账号 CFG 目录" : "游戏 CFG 目录"}</Badge>
             </div>
             <p className="ui-micro mt-1 truncate font-mono select-text" title={document?.path ?? undefined}>
               {document?.path ?? "未找到可用路径"}
@@ -505,14 +490,12 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
             <p className="font-display text-sm font-semibold">让当前游戏会话立即生效</p>
             <p className="mt-0.5 text-xs text-text-muted">保存后执行重载；它会重新注册 Runtime，再按 custom.cfg 中的顺序执行 Preset 起点和个人差异。</p>
           </div>
-          <button
-            type="button"
-            onClick={() => void copyCommand("srp_reload")}
-            className="flex min-h-8 shrink-0 items-center gap-2 rounded-[var(--radius-sm)] border border-border-highlight bg-bg-raised px-3 font-mono text-xs text-text transition-colors hover:border-accent/60 hover:text-accent"
-          >
-            {copiedCommand === "srp_reload" ? <Check size={14} className="text-green" /> : <Copy size={14} />}
-            {copiedCommand === "srp_reload" ? "已复制" : "srp_reload"}
-          </button>
+          <CopyButton
+            text="srp_reload"
+            defaultLabel="srp_reload"
+            copiedLabel="已复制"
+            className="shrink-0 px-3 font-mono"
+          />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div>
@@ -521,28 +504,26 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
               复制安全重置命令：只把 SrP-CFG 涉及的偏好恢复到已审计的 Valve 基线。不会直接删除 VCFG、_lastclouded、remotecache.vdf、未知 ConVar 或视频设置。
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => void copyCommand("srp_reset_valve_settings")}
-            className="flex min-h-8 shrink-0 items-center gap-2 rounded-[var(--radius-sm)] border border-teal/35 bg-teal/5 px-3 font-mono text-xs text-teal transition-colors hover:border-teal/65 hover:bg-teal/10"
-          >
-            {copiedCommand === "srp_reset_valve_settings" ? <Check size={14} className="text-green" /> : <SlidersHorizontal size={14} />}
-            {copiedCommand === "srp_reset_valve_settings" ? "已复制" : "清理 ConVar"}
-          </button>
+          <CopyButton
+            text="srp_reset_valve_settings"
+            defaultLabel="清理 ConVar"
+            copiedLabel="已复制"
+            variant="teal"
+            className="shrink-0 px-3 font-mono"
+          />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div>
             <p className="font-display text-sm font-semibold">临时回到 Valve 测试基线</p>
             <p className="mt-0.5 text-xs text-text-muted">只重置当前状态，不修改 custom.cfg 或直接写 VCFG；测试结束后用 srp_reload 返回个人配置。</p>
           </div>
-          <button
-            type="button"
-            onClick={() => void copyCommand("srp_reset_valve")}
-            className="flex min-h-8 shrink-0 items-center gap-2 rounded-[var(--radius-sm)] border border-accent/35 bg-accent-bg px-3 font-mono text-xs text-accent transition-colors hover:border-accent/65"
-          >
-            {copiedCommand === "srp_reset_valve" ? <Check size={14} className="text-green" /> : <Copy size={14} />}
-            {copiedCommand === "srp_reset_valve" ? "已复制" : "srp_reset_valve"}
-          </button>
+          <CopyButton
+            text="srp_reset_valve"
+            defaultLabel="srp_reset_valve"
+            copiedLabel="已复制"
+            variant="accent"
+            className="shrink-0 px-3 font-mono"
+          />
         </div>
       </section>
     </div>
