@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-05（**遗留收尾全部完成 + 新发现问题**：迁移验证+修复 f7f2fa6、物理拖拽人工验证、正式图标 0e09eb6、GH Actions 真实触发验证通过（v3.1.10 Release 全绿，updater 端到端 hasDesktopUpdate:true）；**⚠️ v3.1.10 首次生产部署 Vite+React 站点后用户反馈：除首页外其他路由严重问题**——已定位：react-router 客户端请求 `/__manifest` 路由发现端点 → worker 对非资产路径抛 1101 异常 → 500 → 客户端路由断裂。详见四-6 与任务书 `tasks/layer-3-website-react/TASK-prod-routing-fix.md`）
+> 更新时间：2026-08-06（**网站生产路由问题已修复并部署**：根因 = wrangler.json assets 缺 `binding` 导致 `env.ASSETS` undefined（platform-direct 模式）→ 非资产路径 TypeError 1101；react-router lazy 路由发现拉 `/__manifest` → 500 → 客户端路由断裂。修复 = `routeDiscovery: { mode: "initial" }` + `assets.binding: "ASSETS"`，commit ac887fc，workflow_dispatch 部署 run 30916591921 全绿，生产 curl + headless Edge 双验通过。详见任务书 `tasks/layer-3-website-react/TASK-prod-routing-fix.md`）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -115,7 +115,7 @@
 - 验证：生成 icon.ico vs 官方 0% 差；安装版 exe 内嵌图标 1.0% 差（32px 缩样）；重装后应用正常
 - ⚠️ 坑：改图标后需删 `src-tauri/target/release/build/srp-cfg-desktop-*` 再构建（tauri-build 的 resource.lib 是缓存的，不删会链接旧图标）
 
-### ⚠️ 6. 网站生产路由问题（2026-08-05 用户反馈，诊断进行中）→ 任务书：`tasks/layer-3-website-react/TASK-prod-routing-fix.md`
+### ✅ 6. 网站生产路由问题 — 已修复并部署（2026-08-06，ac887fc）
 - **现象**：v3.1.10 tag 首次生产部署 Vite+React 站点后，**除首页外其他路由都有严重问题**（用户原话）
 - **已确认事实**：
   1. `/__manifest` → **500 error 1101**（Cloudflare worker 异常）；**任意不存在路径**（如 /nonexistent-page-xyz）→ 500 1101（应为 404）——worker 对非资产路径抛异常
@@ -126,7 +126,7 @@
 - **修复方向（待验证，见任务书）**：worker 1101 根因（ASSETS 绑定/部署配置 vs 平台行为）、wrangler.json 层能否处理 /__manifest（不可改 worker.ts）、react-router routeDiscovery 配置（能否去掉 lazy manifest 拉取）、本地 wrangler dev 复现
 
 ### ✅ 已完成（不再执行）
-- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）
+- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）、**网站生产路由问题修复**（ac887fc，详见四-6）
 
 ## 五、关键技术参考
 
@@ -181,5 +181,5 @@
 32. **Windows 工作区 pnpm-lock.yaml 需随仓库同步（2026-08-05 实测）**：工作区 lockfile 可能比仓库旧（如 vite 6.4.3 vs 仓库 6.4.2）→ `pnpm tauri build` 的 renderer 产物与仓库 dist 不一致（JS 哈希不同）。同步 lockfile 后 `pnpm install --registry=https://registry.npmmirror.com` 对齐。另外**工作区非 git 仓库**（无 .gitignore）→ Tailwind v4 自动扫描会把 node_modules 也扫进去，CSS 多 19 个死工具类（container/z-3/w-6 等，~3.6KB）；CI 上 git checkout 无此问题，仓库 dist 为基准。工作区构建产物与仓库 dist 不一致时先查这两点
 33. **真实安装验收产物留存在本机**：`%LOCALAPPDATA%\SrP-CFG Installer`（NSIS 静默安装产物，含全部修复 + 迁移 fix + 正式图标）；`%APPDATA%/top.srprolin.cfg` 为真实迁移后数据（.migrated=1，legacy 目录已清空）；备份在 `C:\Users\Rolin\srp-cfg-build\backup\migration-20260804-204128\`
 34. **改图标后 exe 图标不更新（2026-08-05 实测，0e09eb6）**：tauri-build 的 `target/release/build/srp-cfg-desktop-*/out/resource.lib`（windres 产物）是缓存的——`tauri icon` 重生成 icons/ 后直接 `pnpm tauri build`，exe 内嵌的还是旧图标（ExtractAssociatedIcon 直方图可验证）。**必须删 `target/release/build/srp-cfg-desktop-*` 再构建**。验证方法：PowerShell `[System.Drawing.Icon]::ExtractAssociatedIcon(<exe>).ToBitmap().Save(...)` 后用 ImageMagick 与源图对比
-35. **生产站点非资产路径 500（2026-08-05 实测，v3.1.10 首部署）**：`https://cfg.srprolin.top/__manifest` 及任意不存在路径（/nonexistent-page-xyz）返回 **500 error 1101（worker 异常）**，正确应为 404。worker.ts 对非 /api/chat 只 `env.ASSETS.fetch(request)`（111 行）——`ASSETS.fetch` 对缺失文件抛异常而非 404（原因待查：部署的 assets 绑定 vs 平台行为）。react-router v7.18 客户端路由发现拉取 `/__manifest`（routeDiscovery lazy）→ 500 → 控制台 `Failed to fetch manifest patches Error: 500` → 客户端路由断裂。修复见 `tasks/layer-3-website-react/TASK-prod-routing-fix.md`；**铁律：worker.ts/ai-stream.ts 不可改**
-36. **本机到 Cloudflare 的 HTTPS 被证书拦截（2026-08-05 实测）**：本机（WSL + Windows）访问 `cfg.srprolin.top` 间歇性 SSL 握手失败/证书错误（Edge 报 ERR_CERT_COMMON_NAME_INVALID，Subject: shou1.186288.xyz；PowerShell 报"未能为 SSL/TLS 安全通道建立信任关系"），curl 多重试可得 200。**客户端浏览器渲染测试在本机不可靠**——验证生产站点需换网络路径（VPN/代理）或依赖 curl 服务端响应 + wrangler dev --local 本地复现
+35. **生产站点非资产路径 500（已修复 2026-08-06，ac887fc）**：根因 = `wrangler.json` assets 缺 `binding` 字段 → platform-direct「平台直供」模式 → `env.ASSETS` undefined → worker.ts:111 对非资产路径抛 TypeError → 500 1101；react-router lazy 路由发现拉 `/__manifest` → 500 → 客户端路由断裂。修复 = `routeDiscovery: { mode: "initial" }`（不再拉 /__manifest）+ `assets.binding: "ASSETS"`（缺失路径 404）。**后续网站部署注意事项：assets 必须保留 `binding` 字段**（否则 worker 对任何缺失路径抛 1101）；完整记录见任务书 TASK-prod-routing-fix.md
+36. **本机到 Cloudflare 的 HTTPS 被证书拦截（2026-08-05 实测）**：本机（WSL + Windows）访问 `cfg.srprolin.top` 间歇性 SSL 握手失败/证书错误（Edge 报 ERR_CERT_COMMON_NAME_INVALID，Subject: shou1.186288.xyz；PowerShell 报"未能为 SSL/TLS 安全通道建立信任关系"），curl 多重试可得 200。**客户端浏览器渲染测试在本机不可靠**——生产浏览器验证可用 headless Edge `--ignore-certificate-errors` + CDP 绕过（2026-08-06 已用此法完成生产客户端导航验收）；其余场景依赖 curl 服务端响应 + wrangler dev --local 本地复现
