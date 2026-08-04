@@ -24,6 +24,7 @@
 | **npm 官方源不可用** | `CERT_HAS_EXPIRED`/`ECONNRESET` 频繁。**所有 pnpm install 必须加 `--registry=https://registry.npmmirror.com`** |
 | **WSL 环境** | Ubuntu-on-Windows。desktop 的 Electron 打包无法在本环境验证（win32 目标），L2 的 Windows 部分需 Windows 实机 |
 | **Rust 可用但无 webkit2gtk** | `cargo 1.97` 可用；但 tauri 壳编译需要 `webkit2gtk-4.1`（无 sudo 装不了）→ **纯逻辑必须放 `core/` crate**，测试用 `cargo test -p srp-cfg-core` |
+| **Desktop Tailwind 不扫共享库** | `@tailwindcss/postcss` 以 CSS 文件目录为基准做文件扫描，不会跨到 `app/shared/ui`。**桌面端必须在 `src/renderer/styles/global.css` 顶部保留 `@source "../../../../shared/ui/src"`**（L2.7 已加；曾导致共享组件专属类缺失）；website 用 `@tailwindcss/vite`（模块图扫描）无此问题 |
 | **GitHub API 限流** | 未认证 60 次/h/IP。版本注入（vite 插件构建时 fetch）瞬时失败会回落 `0.0.0`——**这是机制预期**（旧 Astro 同样回落），CI 配 `GITHUB_TOKEN` 后稳定 |
 | **共享组件 lint 约束** | `grep -rn "window.api\|electron\|@tauri-apps\|astro:" app/shared/ui/src` 必须为空 |
 
@@ -41,6 +42,7 @@
 ### 🔄 L2 Desktop → Tauri — 进行中（core 完成，Windows 部分待实机）
 - `a5a41b9` workspace + core crate（vcfg/version/conflicts，**26 测试**）；`a40c1fa` IPC 适配层；`a08ac67` migrate.rs（**4 测试**）+ tauri.conf.json
 - **cargo test 总计 31 个全绿**
+- `c436140` **L2.7 组件替换完成（WSL）**：ConfirmAppendModal→共享 Modal；PersonalizePage→CopyButton×3（新增 variant 默认/accent/teal/red）+ Badge；AppliedConfig/BackupRestore/Download/QuickStart/About→共享 Card；UpdateModal 徽章→Badge（新增 size sm/md）；并修复 desktop Tailwind 不扫 `app/shared/ui` 的问题（global.css `@source`）。验证：`tsc -p app/desktop/tsconfig.renderer.json` + `vite build` 全过
 - ⚠️ 剩余（需 Windows 实机）：Rust services（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 打包验证。详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
 ### ✅ L3 Website → Vite+React — 完成（页面迁移 + SEO + Astro 结构删除 + 部署链路统一）
@@ -56,18 +58,23 @@
 - `62b4cc5`：L3 收尾③ 部署链路统一（wrangler assets → `./build/client`，`wrangler dev --local` 验证通过）
 - `ccecc19`：docs——PROGRESS/README 勾选 L3 收尾完成
 - `c91b676`：build——layout.tsx 注释清理后同步 build/client 产物
+- `70aa5c9`/`954f113`：**L3 可选遗留完成**——`/commands/{name}` 指令详情静态页（2785 条全量 SSG 预渲染 + DefinedTerm JSON-LD）+ /commands FAQPage JSON-LD；sitemap 增至 2806 URL。`pnpm build:web`（17s）+ tsc 无新增错误
+
+### 🔄 L4 CI/CD — 前半完成（WSL），剩余待 Windows
+- `bed306a`：deploy-website.yml 构建步骤注入 GITHUB_TOKEN（版本注入插件防 0.0.0 回落）；release-desktop.yml build-app 加 Rust toolchain（dtolnay stable + msvc target）+ cargo 缓存（swatinem，src-tauri/target）+ `cargo test -p srp-cfg-core`（31 通过）；**Electron 打包链未动**（4.2 tauri build 切换 / 4.3 清理待后续）
 
 ## 四、下一步任务（按优先级）
 
 ### 1. L2 Desktop → Tauri 剩余部分（**需 Windows 实机**，见 AGENT-START.md 新提示词）
-- Rust services 迁移（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 2.5/2.6 测试与检测验证 + 2.7 组件替换 + 2.8 打包
-- 详见 `tasks/layer-2-desktop-tauri/TASK.md`；WSL 环境只能做前端部分（2.7）
+- Rust services 迁移（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 2.5/2.6 测试与检测验证 + 2.8 打包
+- 2.7 组件替换已在 WSL 完成（c436140），实机只需视觉回归
+- 详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
-### 2. L4 CI/CD（本环境可部分验证）
-- website CI 换 vite build（含 velite）；desktop CI 加 Rust toolchain + cargo 缓存；删 msi/ 与 electron-forge
+### 2. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache）
+- 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新
 
-### 3. L3 可选遗留（本环境可做，非阻塞）
-- `/commands/{name}` 指令详情静态页（3.4 可选）；JSON-LD 扩展（FAQ/指令数据集）
+### 3. L3 可选遗留 — 已完成
+- `/commands/{name}` 指令详情静态页（70aa5c9）+ JSON-LD 扩展（FAQ/DefinedTerm 指令数据集）均已完成，`pnpm build:web` + tsc 验证通过
 
 ## 五、关键技术参考
 
@@ -94,6 +101,8 @@
 4. **Velite 0.4 坑**：`s.slug()` 只校验不派生路径（需 `s.path().transform()`）；生成 `index.js` 含 `with { type: 'json' }`（Vite 6 解析不稳定）→ 代码直接 import `docs.json`。数据源在 `app/website/content/`（L3 收尾迁出 `src/content`）
 5. **commands.json 打包**：2785 条随路由 chunk 打包（gzip ~169KB），构建有 chunk 体积警告属预期
 6. **tsc 遗留 1 个错误**（非本次引入，勿修错地方）：`vite.config.ts` ×1（Plugin 类型，根/子 vite 6.4.2/6.4.3 hoisting）。曾尝试 dedupe：pnpm 10 不读 package.json 的 `pnpm.overrides`，改 pnpm-workspace.yaml 会影响 desktop 的 vite 解析，未做——留待 L4 或 desktop 一起处理。原 astro.config 的 2 个错误已随删除消失
-7. 共享组件剩余替换（Modal/CopyButton/Badge 在 Desktop 其他页面的应用）在 L2.7
+7. 共享组件替换（Modal/CopyButton/Badge/Card）已全部接入 Desktop 页面（L2.7，c436140）；剩余视觉回归需 Windows 实机
 8. 新 agent 首次跑 install 记得带 `--registry=https://registry.npmmirror.com`
 9. **wrangler.json 的 `assets.directory` 已指向 `./build/client`**（62b4cc5 统一）——后续不要再改回 ./dist；bindings（AI/Vectorize）拓扑零改动
+10. **build/client 按仓库惯例随提交同步**（L3 起每次构建产物会提交）；指令详情页使 sitemap 增至 2806 URL，属预期
+11. **desktop Tailwind `@source`**：`app/desktop/src/renderer/styles/global.css` 顶部的 `@source "../../../../shared/ui/src"` 不可删除——移除会导致共享组件专属类（如 CopyButton 的 teal/accent 变体）静默缺失
