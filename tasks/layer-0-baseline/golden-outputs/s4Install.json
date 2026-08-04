@@ -1,0 +1,527 @@
+{
+  "freshOverlay": {
+    "result": {
+      "filesInstalled": 2,
+      "dirsInstalled": 2
+    },
+    "install": {
+      "gameCfg": {
+        "files": [
+          "autoexec.cfg"
+        ],
+        "dirs": [
+          "presets"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [
+          "local"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [
+          "cs2_video.txt"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    },
+    "res": {
+      "gameCfg": {
+        "files": [
+          "autoexec.cfg"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [
+          "cs2_video.txt"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    },
+    "save": {
+      "gameCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    },
+    "gameCfgTree": [
+      "autoexec.cfg",
+      "cs2_video.txt",
+      "custom.cfg",
+      "maps/dust2_comp.cfg",
+      "presets/yszh.cfg",
+      "srp-cfg/user/custom.cfg"
+    ],
+    "userCfgTree": [
+      "cs2_machine_convars.vcfg",
+      "cs2_user_convars_0_slot0.vcfg",
+      "cs2_user_keys_0_slot0.vcfg",
+      "cs2_user_keys_0_slot0.vcfg_lastclouded",
+      "cs2_video.txt",
+      "custom-user.cfg"
+    ]
+  },
+  "reinstallOverlay": {
+    "result": {
+      "filesInstalled": 2,
+      "dirsInstalled": 2
+    },
+    "install": {
+      "gameCfg": {
+        "files": [
+          "autoexec.cfg"
+        ],
+        "dirs": [
+          "presets"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [
+          "local"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [
+          "cs2_video.txt"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    },
+    "res": {
+      "gameCfg": {
+        "files": [
+          "autoexec.cfg"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [
+          "cs2_video.txt"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    },
+    "save": {
+      "gameCfg": {
+        "files": [
+          "autoexec.cfg"
+        ],
+        "dirs": [
+          "presets"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [
+          "local"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [
+          "cs2_video.txt"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    }
+  },
+  "appendConflictsReal": {
+    "needsConfirm": false,
+    "conflicts": [
+      {
+        "category": "gameCfg",
+        "names": [
+          "autoexec.cfg",
+          "presets"
+        ]
+      },
+      {
+        "category": "annotations",
+        "names": [
+          "local"
+        ]
+      },
+      {
+        "category": "video",
+        "names": [
+          "cs2_video.txt"
+        ]
+      }
+    ]
+  },
+  "appendDeploy": {
+    "result": {
+      "filesInstalled": 2,
+      "dirsInstalled": 2
+    },
+    "install": {
+      "gameCfg": {
+        "files": [
+          "autoexec.cfg"
+        ],
+        "dirs": [
+          "presets"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      "userCfg": {
+        "files": [],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      },
+      "annotations": {
+        "files": [],
+        "dirs": [
+          "local"
+        ],
+        "path": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      "video": {
+        "files": [
+          "cs2_video.txt"
+        ],
+        "dirs": [],
+        "path": "<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    }
+  },
+  "appendConflictsTwo": {
+    "needsConfirm": true,
+    "conflicts": [
+      {
+        "category": "gameCfg",
+        "names": [
+          "a.cfg"
+        ]
+      }
+    ]
+  },
+  "appendConflictsFour": {
+    "needsConfirm": false,
+    "conflicts": [
+      {
+        "category": "gameCfg",
+        "names": [
+          "a.cfg",
+          "b.cfg",
+          "c.cfg",
+          "d.cfg"
+        ]
+      }
+    ]
+  },
+  "appendConflictsPersonal": {
+    "needsConfirm": false,
+    "conflicts": []
+  },
+  "logs": [
+    {
+      "category": "install",
+      "level": "progress",
+      "message": "覆盖安装：清空暂存区..."
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "CFG 文件：2 个"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "地图指南文件：1 个"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "视频预设文件：1 个"
+    },
+    {
+      "category": "file-ops",
+      "level": "warning",
+      "message": "跳过 2 个不支持的文件"
+    },
+    {
+      "category": "file-ops",
+      "level": "warning",
+      "message": "已阻止 1 个 VCFG 文件",
+      "detail": "VCFG 由 CS2 与 Steam Cloud 管理，不能作为普通预设覆盖安装。"
+    },
+    {
+      "category": "install",
+      "level": "progress",
+      "message": "覆盖部署到游戏目录..."
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "冲突文件已转移：autoexec.cfg",
+      "detail": "可在「恢复中心」中恢复"
+    },
+    {
+      "category": "file-ops",
+      "level": "success",
+      "message": "已保留用户偏好文件",
+      "detail": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg/srp-cfg/user/custom.cfg"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "游戏 CFG：1 个文件，1 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "地图指南：0 个文件，1 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "冲突文件已转移：cs2_video.txt",
+      "detail": "可在「恢复中心」中恢复"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "视频预设：1 个文件，0 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "部署完成：2 个文件，2 个目录"
+    },
+    {
+      "category": "install",
+      "level": "progress",
+      "message": "覆盖安装：清空暂存区..."
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "CFG 文件：2 个"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "地图指南文件：1 个"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "视频预设文件：1 个"
+    },
+    {
+      "category": "file-ops",
+      "level": "warning",
+      "message": "跳过 2 个不支持的文件"
+    },
+    {
+      "category": "file-ops",
+      "level": "warning",
+      "message": "已阻止 1 个 VCFG 文件",
+      "detail": "VCFG 由 CS2 与 Steam Cloud 管理，不能作为普通预设覆盖安装。"
+    },
+    {
+      "category": "install",
+      "level": "progress",
+      "message": "覆盖部署到游戏目录..."
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已安装备份已转移：autoexec.cfg",
+      "detail": "可在「恢复中心」中恢复"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已安装备份已转移：presets",
+      "detail": "可在「恢复中心」中恢复"
+    },
+    {
+      "category": "file-ops",
+      "level": "success",
+      "message": "已保留用户偏好文件",
+      "detail": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg/srp-cfg/user/custom.cfg"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "游戏 CFG：1 个文件，1 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已安装备份已转移：local",
+      "detail": "可在「恢复中心」中恢复"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "地图指南：0 个文件，1 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已安装备份已转移：cs2_video.txt",
+      "detail": "可在「恢复中心」中恢复"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "视频预设：1 个文件，0 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "部署完成：2 个文件，2 个目录"
+    },
+    {
+      "category": "install",
+      "level": "progress",
+      "message": "追加安装：合并文件..."
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "CFG 文件：2 个"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "地图指南文件：1 个"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "视频预设文件：1 个"
+    },
+    {
+      "category": "file-ops",
+      "level": "warning",
+      "message": "跳过 2 个不支持的文件"
+    },
+    {
+      "category": "file-ops",
+      "level": "warning",
+      "message": "已阻止 1 个 VCFG 文件",
+      "detail": "VCFG 由 CS2 与 Steam Cloud 管理，不能作为普通预设覆盖安装。"
+    },
+    {
+      "category": "install",
+      "level": "progress",
+      "message": "追加部署到游戏目录..."
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已覆盖：autoexec.cfg"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已覆盖：presets"
+    },
+    {
+      "category": "file-ops",
+      "level": "success",
+      "message": "已保留用户偏好文件",
+      "detail": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg/srp-cfg/user/custom.cfg"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "游戏 CFG：1 个文件，1 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已覆盖：local"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "地图指南：0 个文件，1 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "info",
+      "message": "已覆盖：cs2_video.txt"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "视频预设：1 个文件，0 个目录已部署"
+    },
+    {
+      "category": "install",
+      "level": "success",
+      "message": "追加部署完成：2 个文件，2 个目录"
+    }
+  ]
+}

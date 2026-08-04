@@ -1,0 +1,4 @@
+"config"
+{
+	"bindings" { "x" "say blocked" }
+}

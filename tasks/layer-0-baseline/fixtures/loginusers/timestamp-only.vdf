@@ -1,0 +1,15 @@
+"users"
+{
+	"76561197960265728"
+	{
+		"AccountName" "alice01"
+		"PersonaName" "Alice"
+		"Timestamp" "1700000000"
+	}
+	"76561198032473940"
+	{
+		"AccountName" "bob02"
+		"PersonaName" "Bob"
+		"Timestamp" "1800000000"
+	}
+}

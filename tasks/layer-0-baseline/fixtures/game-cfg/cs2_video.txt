@@ -1,0 +1,5 @@
+"VideoConfig"
+{
+	"setting.defaultres" "1280"
+	"setting.defaultresheight" "720"
+}

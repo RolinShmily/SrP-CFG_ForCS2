@@ -35,23 +35,19 @@
   - 用途：L3 保留 AI、指令中心预渲染时对照。
   - 产出：✅ `layer-3-website-react/api-contract.md`
 
-- [ ] **0.6 黄金样本记录**
-  - 记录 Desktop 关键业务路径的验收清单（供 L2 Rust 重写后逐条对照）：
-    1. Steam 路径检测（注册表读取）
-    2. VCFG 解析与快照生成
-    3. 上传/下载包 staging（zip 解压、目录归类）
-    4. overlay/append 两种安装模式
-    5. 冲突检测与 res.json 恢复
-    6. save.json 备份/恢复
-  - 无法在 CI 无头环境执行 GUI 的，以"手动验收清单"形式记录。
-  - 产出：`layer-2-desktop-tauri/golden-checklist.md`。
+- [x] **0.6 黄金样本记录**
+  - ✅ Track B 已落地（2026-08-04，WSL）：`fixtures/`（伪 Steam 目录 / 上传包 zip+目录 / 游戏 CFG 冲突场景，30 文件）+ `scripts/golden-node.mjs`（Node 版执行器，stub electron/winreg，**117 条断言全 PASS**）+ `golden-outputs/*.json`（双版输出落盘）
+  - 产出：`layer-0-baseline/golden-samples.md`（5+2 条业务路径 × 输入→期望输出 + Rust core 84 测试逐条对照，勾选率 100% ≥80%）
+  - 复现：`bash tasks/layer-0-baseline/scripts/run-golden.sh` + `cargo test -p srp-cfg-core`
+  - 遗留：注册表读取 / `detectSteamPath` 为 Windows 实机验收项（L2.6）
+  - 注：AGENT-START 要求产出 `golden-samples.md`（而非本清单原写的 `layer-2-desktop-tauri/golden-checklist.md`），以 AGENT-START 为准
 
 ## 验收标准
 
-- [ ] 分支存在且工作区干净
-- [ ] website 构建通过
-- [ ] desktop 构建通过（若环境受限，记录阻塞原因）
-- [ ] 3 份契约/清单文档落盘（组件清单、API 契约、黄金样本）
+- [x] 分支存在且工作区干净
+- [x] website 构建通过
+- [x] desktop 构建通过（若环境受限，记录阻塞原因）
+- [x] 3 份契约/清单文档落盘（组件清单、API 契约、黄金样本）
 
 ## 基线验证记录
 

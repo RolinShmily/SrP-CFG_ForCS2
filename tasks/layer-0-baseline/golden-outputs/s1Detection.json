@@ -1,0 +1,314 @@
+{
+  "installed": {
+    "libs": [
+      "<sandbox>/steam-installed",
+      "C:\\Program Files (x86)\\Steam\\steamapps",
+      "D:\\SteamLibrary\\steamapps"
+    ],
+    "state": "installed",
+    "installDir": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive",
+    "cfgPath": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg",
+    "annotationsPath": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local",
+    "users": [
+      {
+        "steamId64": "76561197960265728",
+        "accountId": "0",
+        "personaName": "Alice"
+      },
+      {
+        "steamId64": "76561198032473940",
+        "accountId": "72208212",
+        "personaName": "Bob"
+      },
+      {
+        "steamId64": "76561198104803300",
+        "accountId": "144537572",
+        "personaName": "Carol"
+      }
+    ],
+    "currentUser": {
+      "steamId64": "76561197960265728",
+      "accountId": "0",
+      "personaName": "Alice"
+    },
+    "hasAutoLoginUser": true,
+    "userCfgPath": "<sandbox>/steam-installed/userdata/0/730/local/cfg",
+    "vcfgState": {
+      "available": true,
+      "bindings": 3,
+      "analogBindings": 1,
+      "cloudConvars": 3,
+      "machineConvars": 2,
+      "hasCloudMirror": true,
+      "hasVideoConfig": true
+    },
+    "logs": [
+      {
+        "category": "steam-status",
+        "level": "success",
+        "message": "CS2 已安装",
+        "detail": "<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "游戏CFG 路径：<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "地图指南 路径：<sandbox>/steam-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      {
+        "category": "steam-status",
+        "level": "success",
+        "message": "当前登录用户：Alice",
+        "detail": "SteamID64: 76561197960265728"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "账号本地状态目录：<sandbox>/steam-installed/userdata/0/730/local/cfg"
+      }
+    ]
+  },
+  "update": {
+    "libs": [
+      "<sandbox>/steam-update",
+      "C:\\Program Files (x86)\\Steam\\steamapps",
+      "D:\\SteamLibrary\\steamapps"
+    ],
+    "state": "needs-update",
+    "installDir": "<sandbox>/steam-update/steamapps/common/Counter-Strike Global Offensive",
+    "cfgPath": "<sandbox>/steam-update/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg",
+    "annotationsPath": "<sandbox>/steam-update/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local",
+    "users": [
+      {
+        "steamId64": "76561197960265728",
+        "accountId": "0",
+        "personaName": "Alice"
+      },
+      {
+        "steamId64": "76561198032473940",
+        "accountId": "72208212",
+        "personaName": "Bob"
+      },
+      {
+        "steamId64": "76561198104803300",
+        "accountId": "144537572",
+        "personaName": "Carol"
+      }
+    ],
+    "currentUser": {
+      "steamId64": "76561197960265728",
+      "accountId": "0",
+      "personaName": "Alice"
+    },
+    "hasAutoLoginUser": true,
+    "userCfgPath": "<sandbox>/steam-update/userdata/0/730/local/cfg",
+    "vcfgState": {
+      "available": true,
+      "bindings": 3,
+      "analogBindings": 1,
+      "cloudConvars": 3,
+      "machineConvars": 2,
+      "hasCloudMirror": true,
+      "hasVideoConfig": true
+    },
+    "logs": [
+      {
+        "category": "steam-status",
+        "level": "warning",
+        "message": "CS2 有可用更新",
+        "detail": "<sandbox>/steam-update/steamapps/common/Counter-Strike Global Offensive"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "游戏CFG 路径：<sandbox>/steam-update/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "地图指南 路径：<sandbox>/steam-update/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      {
+        "category": "steam-status",
+        "level": "success",
+        "message": "当前登录用户：Alice",
+        "detail": "SteamID64: 76561197960265728"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "账号本地状态目录：<sandbox>/steam-update/userdata/0/730/local/cfg"
+      }
+    ]
+  },
+  "not-installed": {
+    "libs": [
+      "<sandbox>/steam-not-installed",
+      "C:\\Program Files (x86)\\Steam\\steamapps",
+      "D:\\SteamLibrary\\steamapps"
+    ],
+    "state": "not-installed",
+    "installDir": null,
+    "cfgPath": "<sandbox>/steam-not-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg",
+    "annotationsPath": "<sandbox>/steam-not-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local",
+    "users": [
+      {
+        "steamId64": "76561197960265728",
+        "accountId": "0",
+        "personaName": "Alice"
+      },
+      {
+        "steamId64": "76561198032473940",
+        "accountId": "72208212",
+        "personaName": "Bob"
+      },
+      {
+        "steamId64": "76561198104803300",
+        "accountId": "144537572",
+        "personaName": "Carol"
+      }
+    ],
+    "currentUser": {
+      "steamId64": "76561197960265728",
+      "accountId": "0",
+      "personaName": "Alice"
+    },
+    "hasAutoLoginUser": true,
+    "userCfgPath": "<sandbox>/steam-not-installed/userdata/0/730/local/cfg",
+    "vcfgState": {
+      "available": true,
+      "bindings": 3,
+      "analogBindings": 1,
+      "cloudConvars": 3,
+      "machineConvars": 2,
+      "hasCloudMirror": true,
+      "hasVideoConfig": true
+    },
+    "logs": [
+      {
+        "category": "steam-status",
+        "level": "error",
+        "message": "未检测到 CS2 安装"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "游戏CFG 路径：<sandbox>/steam-not-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "地图指南 路径：<sandbox>/steam-not-installed/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      {
+        "category": "steam-status",
+        "level": "success",
+        "message": "当前登录用户：Alice",
+        "detail": "SteamID64: 76561197960265728"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "账号本地状态目录：<sandbox>/steam-not-installed/userdata/0/730/local/cfg"
+      }
+    ]
+  },
+  "no-manifest": {
+    "libs": [
+      "<sandbox>/steam-no-manifest",
+      "C:\\Program Files (x86)\\Steam\\steamapps",
+      "D:\\SteamLibrary\\steamapps"
+    ],
+    "state": "not-installed",
+    "installDir": null,
+    "cfgPath": "<sandbox>/steam-no-manifest/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg",
+    "annotationsPath": "<sandbox>/steam-no-manifest/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local",
+    "users": [
+      {
+        "steamId64": "76561197960265728",
+        "accountId": "0",
+        "personaName": "Alice"
+      },
+      {
+        "steamId64": "76561198032473940",
+        "accountId": "72208212",
+        "personaName": "Bob"
+      },
+      {
+        "steamId64": "76561198104803300",
+        "accountId": "144537572",
+        "personaName": "Carol"
+      }
+    ],
+    "currentUser": {
+      "steamId64": "76561197960265728",
+      "accountId": "0",
+      "personaName": "Alice"
+    },
+    "hasAutoLoginUser": true,
+    "userCfgPath": "<sandbox>/steam-no-manifest/userdata/0/730/local/cfg",
+    "vcfgState": {
+      "available": true,
+      "bindings": 3,
+      "analogBindings": 1,
+      "cloudConvars": 3,
+      "machineConvars": 2,
+      "hasCloudMirror": true,
+      "hasVideoConfig": true
+    },
+    "logs": [
+      {
+        "category": "steam-status",
+        "level": "error",
+        "message": "未检测到 CS2 安装"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "游戏CFG 路径：<sandbox>/steam-no-manifest/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "地图指南 路径：<sandbox>/steam-no-manifest/steamapps/common/Counter-Strike Global Offensive/game/csgo/annotations/local"
+      },
+      {
+        "category": "steam-status",
+        "level": "success",
+        "message": "当前登录用户：Alice",
+        "detail": "SteamID64: 76561197960265728"
+      },
+      {
+        "category": "path-detection",
+        "level": "success",
+        "message": "账号本地状态目录：<sandbox>/steam-no-manifest/userdata/0/730/local/cfg"
+      }
+    ]
+  },
+  "loginusers": {
+    "auto-login": {
+      "count": 3,
+      "current": "Alice",
+      "hasAutoLogin": true
+    },
+    "timestamp-only": {
+      "count": 2,
+      "current": "Bob",
+      "hasAutoLogin": true
+    },
+    "single-user": {
+      "count": 1,
+      "current": "Solo",
+      "hasAutoLogin": true
+    },
+    "empty": {
+      "count": 0,
+      "current": null,
+      "hasAutoLogin": false
+    }
+  }
+}

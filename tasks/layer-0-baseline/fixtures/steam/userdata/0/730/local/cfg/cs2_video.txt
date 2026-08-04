@@ -1,0 +1,6 @@
+"VideoConfig"
+{
+	"setting.defaultres" "1920"
+	"setting.defaultresheight" "1080"
+	"setting.fullscreen" "1"
+}

@@ -1,0 +1,49 @@
+{
+  "snapshot": {
+    "schemaVersion": 1,
+    "capturedAt": 0,
+    "userCfgPath": "<sandbox>/steam-installed/userdata/0/730/local/cfg",
+    "bindings": {
+      "a": "say_team pushed_a",
+      "j": "+forward",
+      "t": "say_team hi"
+    },
+    "analogBindings": {
+      "joy_forward": "+forward"
+    },
+    "userConvars": {
+      "fps_max": "0",
+      "cl_crosshairsize": "3.5",
+      "name": "Alice with space"
+    },
+    "machineConvars": {
+      "r_fullscreen_gamma": "2.2",
+      "video_upscale_enabled": "0"
+    }
+  },
+  "state": {
+    "available": true,
+    "bindings": 3,
+    "analogBindings": 1,
+    "cloudConvars": 3,
+    "machineConvars": 2,
+    "hasCloudMirror": true,
+    "hasVideoConfig": true
+  },
+  "convars": {
+    "cl_crosshair_size": "3",
+    "fps_max": "144"
+  },
+  "baseline": {
+    "first": {
+      "path": "<sandbox>/appdata/srp-cfg/vcfg-snapshots/0/baseline.json",
+      "created": true
+    },
+    "second": {
+      "path": "<sandbox>/appdata/srp-cfg/vcfg-snapshots/0/baseline.json",
+      "created": false
+    }
+  },
+  "cfgFromSnapshotSelfBaseline": "// ── 按键绑定 ──\nbind \"a\" \"say_team pushed_a\"\nbind \"j\" \"+forward\"\nbind \"t\" \"say_team hi\"\n// ── 模拟轴绑定 ──\nbind \"joy_forward\" \"+forward\"",
+  "cfgFromSnapshotEmptyBaseline": "// ── 个人偏好设置（仅与 Valve 默认值不同的项）──\ncl_crosshairsize 3.5\nfps_max 0\nname \"Alice with space\"\n// ── 机器设置（仅与 Valve 默认值不同的项）──\nr_fullscreen_gamma 2.2\nvideo_upscale_enabled 0"
+}

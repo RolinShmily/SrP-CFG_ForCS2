@@ -1,0 +1,13 @@
+"config"
+{
+	"bindings"
+	{
+		"a" "say_team pushed_a"
+		"j" "+forward"
+		"t" "say_team hi"
+	}
+	"analogbindings"
+	{
+		"joy_forward" "+forward"
+	}
+}
