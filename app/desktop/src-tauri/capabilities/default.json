@@ -1,9 +1,10 @@
 {
   "identifier": "default",
-  "description": "主窗口默认能力：核心 API + opener（打开外部链接/文件路径） + dialog（文件选择）",
+  "description": "主窗口默认能力：核心 API + opener（打开外部链接/文件路径） + dialog（文件选择） + 窗口拖拽（TitleBar data-tauri-drag-region）",
   "windows": ["main"],
   "permissions": [
     "core:default",
+    "core:window:allow-start-dragging",
     "opener:default",
     "dialog:default"
   ]
