@@ -49,6 +49,7 @@
 - 提交 `718f48b` + 推 `refactor/tauri-vite-react`
 - `gh workflow run deploy-website.yml --ref refactor/tauri-vite-react`（run 30918405839 ✓ 56s，纯网站部署不触发 release 流程）
 - 生产 curl：`/download/` `/about/` `/docs/srpcfg-1/` 均 200；下载页 HTML 含 `SrP-CFG_Setup_x64.exe`、**0 处 Portable/便携**；关于页 HTML 0 Astro / 0 Electron，含 Tauri v2 + React Router 7
+- **（追加）覆盖 v3.1.10 tag 重新发布**（用户指示，2026-08-06）：`git tag -f -a v3.1.10 HEAD` + force push → 3 工作流全绿（deploy-website 30919141455 / release-desktop 30919141042 / release-config 30919140884）。前提改动：两个 release 工作流 softprops 加 `overwrite: true`（be0a39ef，否则同名资产重传失败）。Release v3.1.10 资产全部刷新：MSI 4.03MB / NSIS 2.79MB / config zip / DESKTOP_UPDATE_MARKER；**桌面包含新的 About 文案**（build-app 从含 718f48b 的 tag 重建）；生产站点经 tag 触发的 deploy 再次验证全过（/__manifest 404 保持）
 
 ## 五、验收标准
 
@@ -61,5 +62,6 @@
 ## 六、备注 / 遗留
 
 - 桌面端内容（AboutPage）仅改渲染层；如需用户可见，需重新 `pnpm tauri build` 发版（本次未发版，桌面 About 页改动随下次 Desktop release 生效；当前机器上安装的 3.1.6 仍是旧文案）
+  → **已解决**：2026-08-06 覆盖 v3.1.10 tag（be0a39ef）重新发布，release-desktop 从含 718f48b 的 tag 重建，MSI/NSIS 已含新 About 文案；已安装 3.1.6 用户会收到 v3.1.10 更新提示（hasDesktopUpdate:true）
 - 下载镜像前缀 `DL_MIRROR_PREFIX = "https://gh.269601.xyz/"`（navigation.ts）不变
 - 若后续 Release 流程恢复 Portable 打包，需同步下载页 installers 数组

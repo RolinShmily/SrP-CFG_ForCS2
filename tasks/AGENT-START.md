@@ -112,7 +112,7 @@ TASK-about-download-content-fix.md 与 PROGRESS 四-7）。
 
 ### 下一步候选（按需，未指派）
 - 用户最终确认：真实网络下生产站点路由/内容已恢复正常（本机被证书拦截，用 `--ignore-certificate-errors` headless Edge 可绕过）
-- 桌面 About 页新文案随下次 Desktop release 生效（本次只改渲染层未发版；机器上安装的 3.1.6 仍旧）
+- ✅ 桌面 About 页新文案已随 v3.1.10 tag 覆盖重发生效（2026-08-06：`git tag -f -a v3.1.10 HEAD` + force push，3 工作流全绿，release 资产全刷新；release 工作流已加 `overwrite: true` 支持重打 tag）
 - 用户计划将 `refactor/tauri-vite-react` 合并到 main（需带上 origin/main 的 c73de80 每日命令库自动提交）
 
 ### 状态（已完成，勿重复）

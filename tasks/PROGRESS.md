@@ -132,7 +132,8 @@
 - **README + 文档中心**：README 新增「技术栈」表 + 项目结构注释精确化；docs srpcfg-1.md 末尾新增「项目工具链」表（随 Velite 重生成 .velite/docs.json + build/client）
 - 验证：build:web + tsc（web/desktop renderer）零错 + ai-stream 12/12 + 本地 headless Edge 实测（下载页无 Portable、Runtime Core 卡单边框、关于页新栈、docs 含工具链表）；桌面 dist 同步
 - 部署：workflow_dispatch（run 30918405839 ✓ 56s）；生产 curl 验：下载页含 Setup EXE 且 0 处 Portable、关于页 0 Astro/0 Electron 含 Tauri+RR7
-- ⚠️ desktop 改动仅渲染层，未发版：桌面 About 页新文案随下次 Desktop release 生效（机器上安装的 3.1.6 仍旧）
+- **（追加）v3.1.10 tag 已覆盖重发**（用户指示）：`git tag -f -a v3.1.10 HEAD`（be0a39ef）+ force push → 3 工作流全绿（website 30919141455 / desktop 30919141042 / config 30919140884）；release 资产全刷新（MSI 4.03MB/NSIS 2.79MB/config zip/MARKER），桌面含新 About 文案；release 工作流 softprops 加 `overwrite: true`（be0a39ef）支持重打 tag 重传资产
+- ⚠️ desktop 改动（AboutPage）已随 tag 重发生效；机器上安装的 3.1.6 会提示更新到 v3.1.10
 
 ### ✅ 已完成（不再执行）
 - L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）、**网站生产路由问题修复**（ac887fc，详见四-6）、**网站/桌面内容更新**（718f48b，详见四-7）
