@@ -145,10 +145,24 @@ export function createApi(): ElectronAPI {
     openExternal: (url) => invoke("shell:openExternal", { url }),
 
     // ── Utils ──
-    getFilePaths: () => {
-      // TODO(L2.2): Electron 的 webUtils.getPathForFile 在 Tauri 无等价物。
-      // UploadZone 将改用 @tauri-apps/plugin-dialog 或拖拽插件提供真实路径。
-      return [];
+    getFilePaths: (files) => {
+      // L2.2 遗留收尾（换实现不改签名）：Tauri v2 无 Electron webUtils.getPathForFile
+      // 等价物——拖拽路径经 tauri://drag-drop（onDragDropEvent）事件获取、对话框路径由
+      // @tauri-apps/plugin-dialog 的 open() 直接返回字符串数组。本方法对传入的路径字符串
+      // 做归一化/去重；File 对象无法取真实路径（Tauri 限制）时返回 []。
+      const list = files
+        ? Array.isArray(files)
+          ? files
+          : Array.from(files as ArrayLike<unknown>)
+        : [];
+      const paths: string[] = [];
+      for (const item of list) {
+        if (typeof item === "string") {
+          const p = item.trim();
+          if (p && !paths.includes(p)) paths.push(p);
+        }
+      }
+      return paths;
     },
 
     // ── Logs ──

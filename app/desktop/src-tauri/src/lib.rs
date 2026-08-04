@@ -22,6 +22,7 @@ use std::sync::Mutex;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_dialog::init())
         .manage(Mutex::new(state::AppState::default()))
         .manage(Mutex::new(None::<state::PendingAppend>))
         .setup(|app| {

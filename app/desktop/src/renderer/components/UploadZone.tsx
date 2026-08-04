@@ -1,4 +1,7 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { open } from "@tauri-apps/plugin-dialog";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
+import type { UnlistenFn } from "@tauri-apps/api/event";
 import { Upload, CheckCircle } from "lucide-react";
 
 interface Props {
@@ -10,13 +13,6 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const getPaths = (fileList: FileList): string[] => {
-    const arr: File[] = [];
-    for (let i = 0; i < fileList.length; i++) arr.push(fileList[i]);
-    return window.api.getFilePaths(arr);
-  };
 
   const handleFiles = useCallback(
     async (filePaths: string[]) => {
@@ -36,42 +32,51 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
     [uploading, onUploadComplete],
   );
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(false);
-      if (disabled) return;
-      handleFiles(getPaths(e.dataTransfer.files));
-    },
-    [disabled, handleFiles],
-  );
+  // L2.2 遗留收尾：Tauri 拖拽由窗口层拦截（HTML5 drop 不触发），
+  // 经 onDragDropEvent 获取真实文件/文件夹路径（含 tauri://drag-drop 事件）。
+  useEffect(() => {
+    let unlisten: UnlistenFn | undefined;
+    let cancelled = false;
+    getCurrentWebview()
+      .onDragDropEvent((event) => {
+        if (cancelled) return;
+        if (event.payload.type === "enter" || event.payload.type === "over") {
+          if (!disabled) setIsDragging(true);
+        } else if (event.payload.type === "leave") {
+          setIsDragging(false);
+        } else if (event.payload.type === "drop") {
+          setIsDragging(false);
+          if (disabled) return;
+          handleFiles(window.api.getFilePaths(event.payload.paths));
+        }
+      })
+      .then((fn) => {
+        unlisten = fn;
+      })
+      .catch(() => {
+        // 非 Tauri 环境（如纯 vite dev 预览）下无拖拽事件，忽略
+      });
+    return () => {
+      cancelled = true;
+      unlisten?.();
+    };
+  }, [handleFiles, disabled]);
 
-  const handleDragOver = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!disabled) setIsDragging(true);
-    },
-    [disabled],
-  );
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  }, []);
-
-  const handleClick = () => {
-    if (!disabled) inputRef.current?.click();
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    handleFiles(getPaths(files));
-    e.target.value = "";
-  };
+  // L2.2 遗留收尾：文件选择改用 @tauri-apps/plugin-dialog 原生对话框
+  // （Tauri 下 File 对象无真实路径，无法走原 <input type="file"> 流程）。
+  const handleClick = useCallback(async () => {
+    if (disabled) return;
+    const selected = await open({
+      multiple: true,
+      directory: false,
+      filters: [{ name: "配置文件", extensions: ["zip", "cfg", "txt"] }],
+    });
+    if (!selected) return;
+    const paths = (Array.isArray(selected) ? selected : [selected]).filter(
+      (p): p is string => typeof p === "string",
+    );
+    handleFiles(window.api.getFilePaths(paths));
+  }, [disabled, handleFiles]);
 
   return (
     <div className="space-y-3">
@@ -80,9 +85,6 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
         tabIndex={disabled ? -1 : 0}
         aria-disabled={disabled}
         aria-busy={uploading}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
         onClick={handleClick}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -101,16 +103,6 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
           }
         `}
       >
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept=".zip,.cfg,.txt"
-          aria-label="选择要上传的配置文件"
-          className="hidden"
-          onChange={handleInputChange}
-        />
-
         {uploading ? (
           <div className="animate-spin w-8 h-8 border-2 border-accent border-t-transparent rounded-full" />
         ) : (
@@ -119,7 +111,7 @@ export default function UploadZone({ onUploadComplete, disabled }: Props) {
 
         <div className="text-center">
           <p className="ui-body">
-            {uploading ? "正在处理..." : "拖拽文件到此处或点击选择"}
+            {uploading ? "正在处理..." : "拖拽文件/文件夹到此处，或点击选择"}
           </p>
           <p className="ui-caption mt-1 text-text-faint">
             支持 .zip、.cfg、.txt 文件及文件夹
