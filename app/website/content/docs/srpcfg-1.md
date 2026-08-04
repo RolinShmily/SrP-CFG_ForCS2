@@ -201,6 +201,20 @@ config/
 
 ---
 
+## 项目工具链
+
+SrP-CFG 由桌面安装器与官网两部分组成，共享同一套 `config/` 配置源：
+
+| 组件 | 技术 |
+| :--- | :--- |
+| 桌面安装器 | Tauri v2 + React 19（Rust 后端，`core/` 纯逻辑 crate，NSIS + MSI 安装包） |
+| 官网 / 文档中心 | Vite + React Router 7（SSG 预渲染 2800+ 页）+ Velite 内容管线 |
+| 指令检索中心 | 构建期 SSG 预渲染 2785 条指令详情 + 客户端检索 + AI 助手（`/api/chat`） |
+| AI 服务 | Cloudflare Workers + Vectorize + Workers AI |
+| 样式 / 组件 | TailwindCSS v4 + `@srp-cfg/ui` 共享组件库 |
+
+---
+
 ## 继续阅读
 
 - [使用指南](/docs/srpcfg-3)

@@ -8,21 +8,22 @@ import {
   Monitor,
   Atom,
   Paintbrush,
-  Server,
   Code,
+  Terminal,
 } from "lucide-react";
 import { Card } from "@srp-cfg/ui";
 import blogSvg from "../assets/svg/blog-solid-full.svg?raw";
 import bilibiliSvg from "../assets/svg/bilibili.svg?raw";
 import githubSvg from "../assets/svg/github-brands-solid-full.svg?raw";
 
+// 与重构后（L2）实际技术栈一致：Tauri v2 + Rust 后端 + React 19 前端。
 const techStack = [
-  { name: "Electron", desc: "桌面应用框架", icon: Monitor },
-  { name: "React", desc: "UI 组件库", icon: Atom },
+  { name: "Tauri v2", desc: "桌面应用框架", icon: Monitor },
+  { name: "Rust", desc: "后端与 core 纯逻辑 crate", icon: Terminal },
+  { name: "React 19", desc: "前端 UI 框架", icon: Atom },
+  { name: "Vite", desc: "构建工具", icon: Zap },
   { name: "TypeScript", desc: "类型安全语言", icon: Code },
   { name: "TailwindCSS", desc: "原子化 CSS", icon: Paintbrush },
-  { name: "Node.js", desc: "运行时环境", icon: Server },
-  { name: "Vite", desc: "构建工具", icon: Zap },
 ];
 
 const links = [
@@ -65,7 +66,7 @@ export default function AboutPage() {
         />
         <h1 className="ui-page-title">关于 SrP-CFG</h1>
         <p className="ui-page-description mt-1">
-          适用于 CS2 各场景的 CFG 预设文件，由 RoL1n 开发维护
+          面向 CS2 的模块化 CFG Runtime、Preset 案例与用户配置系统，由 RoL1n 开发维护
         </p>
       </div>
 

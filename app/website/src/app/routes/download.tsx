@@ -19,10 +19,13 @@ const cardLinkHover =
   "transition-[background-color,border-color,box-shadow,transform] duration-200 group-hover:-translate-y-0.5 group-hover:border-border-highlight group-hover:bg-bg-hover group-hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)]";
 
 // featured 卡需 border-accent/20，但 Tailwind 排序中 border-accent/* 恒在 border-border 之前，
-// 无法经 Card className 覆盖（Card 基础类带 border-border），故 featured 卡用原生 div 精确还原。
+// 无法经 Card className 覆盖（Card 基础类带 border-border），故两种形态都用原生 div 精确还原：
+// - featured：accent 边框 + 悬停特效
+// - 普通：等同 Card 基础类（border-border + bg-bg-card）
 const featuredCard =
   "rounded-[var(--radius)] border border-accent/20 bg-bg-card p-6 " + cardLinkHover;
-const plainCard = "p-6 " + cardLinkHover;
+const plainCard =
+  "rounded-[var(--radius)] border border-border bg-bg-card p-6 " + cardLinkHover;
 
 export default function DownloadPage() {
   return (
@@ -96,9 +99,8 @@ export default function DownloadPage() {
                 rel="noopener"
                 className="group block no-underline"
               >
-                <div className={pkg.featured ? featuredCard : undefined}>
-                  <Card padding="none" className={pkg.featured ? undefined : plainCard}>
-                    <div className="mb-3 flex items-center gap-3">
+                <div className={pkg.featured ? featuredCard : plainCard}>
+                  <div className="mb-3 flex items-center gap-3">
                     <div
                       className={
                         pkg.featured
@@ -107,7 +109,11 @@ export default function DownloadPage() {
                       }
                     >
                       <Download
-                        className={pkg.featured ? "h-[18px] w-[18px] text-accent" : "h-[18px] w-[18px] text-text-muted"}
+                        className={
+                          pkg.featured
+                            ? "h-[18px] w-[18px] text-accent"
+                            : "h-[18px] w-[18px] text-text-muted"
+                        }
                         strokeWidth={1.8}
                       />
                     </div>
@@ -130,7 +136,6 @@ export default function DownloadPage() {
                   </h3>
                   <p className="mb-4 text-sm leading-7 text-text-secondary">{pkg.desc}</p>
                   <span className="font-mono text-xs text-text-faint">{pkg.file}</span>
-                  </Card>
                 </div>
               </a>
             ))}

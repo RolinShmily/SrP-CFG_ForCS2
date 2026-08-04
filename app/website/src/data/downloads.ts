@@ -13,11 +13,11 @@ export const installers = [
     badge: "推荐",
   },
   {
-    name: "便携版 (Portable)",
-    desc: "解压即用，无需安装，适合 U 盘携带或多实例隔离场景",
-    file: "SrP-CFG_Portable.zip",
-    url: dl("SrP-CFG_Portable.zip"),
-    badge: "Portable",
+    name: "Setup 安装程序 (EXE)",
+    desc: "NSIS 自包含安装向导，双击运行即可安装，无需额外依赖",
+    file: "SrP-CFG_Setup_x64.exe",
+    url: dl("SrP-CFG_Setup_x64.exe"),
+    badge: "Setup",
   },
 ];
 

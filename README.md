@@ -18,7 +18,7 @@
 
 SrP-CFG v3 把配置拆成四个明确边界：**Runtime 注册能力，Preset 提供确定性起点，User 保存个人最终覆盖，VCFG 由 CS2 / Steam Cloud 管理当前可持久状态**。普通用户只需维护 `srp-cfg/user/custom.cfg`，无需修改仓库内的功能或案例文件。
 
-1. 从[下载页](https://cfg.srprolin.top/download)获取 MSI / Portable，或直接下载 Runtime Core。
+1. 从[下载页](https://cfg.srprolin.top/download)获取 MSI / Setup (EXE) 安装包，或直接下载 Runtime Core。
 2. 使用 Desktop 检测 Steam、CS2 与当前账号路径，并安装到 `game/csgo/cfg/`。
 3. 在“我的配置”中选择一种模式：
    - **Runtime + VCFG**：不启用 `srp_apply_*`，普通设置继续由游戏保存。
@@ -121,8 +121,8 @@ SrP-CFG_ForCS2/
 │       ├── presets/                # Default / 朋友案例 / Valve 基线
 │       └── user/custom.cfg         # 用户唯一配置窗口
 ├── app/
-│   ├── website/                    # Vite + React 官网与文档中心
-│   ├── desktop/                    # Tauri v2 + React 桌面端（Rust 后端）
+│   ├── website/                    # 官网与文档中心（Vite + React Router 7 SSG，2800+ 页预渲染，Velite 内容管线）
+│   ├── desktop/                    # 桌面安装器（Tauri v2 + React 19，Rust 后端 + core 纯逻辑 crate）
 │   └── shared/                     # 共享类型、UI 与内容
 ├── .github/                        # CI、Release 与打包脚本
 └── README.md
@@ -161,6 +161,16 @@ python .github/scripts/validate_cfg.py
 python .github/scripts/build_packages.py
 python .github/scripts/validate_cfg.py --packages
 ```
+
+## 技术栈
+
+| 组件 | 技术 |
+| :--- | :--- |
+| 桌面安装器 | Tauri v2 + React 19（Rust 后端，`core/` 纯逻辑 crate） |
+| 官网 / 文档中心 | Vite + React Router 7（SSG 预渲染 2800+ 页）+ Velite 内容管线 |
+| 指令检索中心 | 构建期 SSG 预渲染 2785 条指令详情 + 客户端检索 |
+| AI 助手 | Cloudflare Workers + Vectorize + Workers AI（`/api/chat`） |
+| 样式 / 组件 | TailwindCSS v4 + `@srp-cfg/ui` 共享组件库 |
 
 ## 仓库活动
 

@@ -8,8 +8,10 @@ import type { MetaFunction } from "react-router";
 import {
   Atom,
   Boxes,
+  Cloud,
   Code,
   ExternalLink,
+  FileText,
   Github,
   Monitor,
   Paintbrush,
@@ -29,13 +31,17 @@ export const meta: MetaFunction = () => [
   { name: "description", content: "SrP-CFG 项目介绍与开源信息" },
 ];
 
+// 与项目重构后（L2/L3）实际技术栈一致：桌面 Tauri v2（Rust 后端）、
+// 官网 Vite + React Router 7 SSG + Velite + Tailwind v4，部署 Cloudflare Workers。
 const techStack = [
-  { name: "Astro", desc: "静态站点生成框架", icon: Zap },
-  { name: "Electron", desc: "桌面应用框架", icon: Monitor },
-  { name: "React", desc: "共享 UI 组件库", icon: Atom },
-  { name: "TailwindCSS", desc: "原子化 CSS 框架", icon: Paintbrush },
-  { name: "Node.js", desc: "运行时环境", icon: Server },
+  { name: "Vite", desc: "网站构建工具", icon: Zap },
+  { name: "React Router 7", desc: "框架模式 SSG（2800+ 页预渲染）", icon: Server },
+  { name: "React 19", desc: "前端 UI 框架", icon: Atom },
+  { name: "Tauri v2", desc: "桌面应用框架（Rust 后端）", icon: Monitor },
   { name: "TypeScript", desc: "类型安全的开发语言", icon: Code },
+  { name: "TailwindCSS", desc: "原子化 CSS 框架", icon: Paintbrush },
+  { name: "Velite", desc: "文档内容管线", icon: FileText },
+  { name: "Cloudflare Workers", desc: "网站托管与 AI 服务", icon: Cloud },
 ];
 
 const links = [
