@@ -1,0 +1,1 @@
+const s="https://github.com/RolinShmily/SrP-CFG_ForCS2",a=`${s}/releases`,e="https://gh.269601.xyz/",l=`${s}/releases/latest/download`,o=[{href:"/",label:"首页"},{href:"/download",label:"下载"},{href:"/docs",label:"文档"},{href:"/commands",label:"指令"},{href:"/about",label:"关于"}];export{e as D,s as R,a,l as b,o as n};

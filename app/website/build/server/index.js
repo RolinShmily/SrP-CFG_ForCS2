@@ -5,7 +5,7 @@ import { ServerRouter, UNSAFE_withComponentProps, Outlet, Meta, Links, ScrollRes
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { useState } from "react";
-import { Github, X, Menu, BookOpen, Download, Cloud, FileCode2, UserRoundCog, Check, ArrowDownRight, Blocks, SlidersHorizontal, CloudCog, ArrowUpRight, PackageCheck, Gamepad2, Package, Info } from "lucide-react";
+import { Github, X, Menu, BookOpen, Download, Cloud, FileCode2, UserRoundCog, Check, ArrowDownRight, Blocks, SlidersHorizontal, CloudCog, ArrowUpRight, PackageCheck, Gamepad2, Package, Info, ExternalLink, Boxes, Zap, Monitor, Atom, Paintbrush, Server, Code, User, Shield } from "lucide-react";
 import { clsx } from "clsx";
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
@@ -899,7 +899,7 @@ function CTA() {
     ] })
   ] }) }) });
 }
-const meta$1 = () => [{
+const meta$2 = () => [{
   title: "SrP-CFG v3 — CS2 模块化 CFG Runtime"
 }, {
   name: "description",
@@ -913,7 +913,7 @@ const home = UNSAFE_withComponentProps(function HomePage() {
 const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: home,
-  meta: meta$1
+  meta: meta$2
 }, Symbol.toStringTag, { value: "Module" }));
 const dl = (file) => `${DL_MIRROR_PREFIX}${RELEASE_DOWNLOAD_BASE}/${file}`;
 const installers = [
@@ -942,7 +942,7 @@ const packages = [
     featured: true
   }
 ];
-const meta = () => [{
+const meta$1 = () => [{
   title: "下载 — SrP-CFG"
 }, {
   name: "description",
@@ -1094,23 +1094,257 @@ const download = UNSAFE_withComponentProps(function DownloadPage() {
 const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: download,
-  meta
+  meta: meta$1
 }, Symbol.toStringTag, { value: "Module" }));
+const blogSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640"><path d="M288 88C288 74.7 298.7 64 312 64C457.8 64 576 182.2 576 328C576 341.3 565.3 352 552 352C538.7 352 528 341.3 528 328C528 208.7 431.3 112 312 112C298.7 112 288 101.3 288 88zM144 160C170.5 160 192 181.5 192 208L192 432C192 458.5 213.5 480 240 480C266.5 480 288 458.5 288 432C288 405.5 266.5 384 240 384C231.2 384 224 376.8 224 368L224 304C224 295.2 231.2 288 240 288C319.5 288 384 352.5 384 432C384 511.5 319.5 576 240 576C160.5 576 96 511.5 96 432L96 208C96 181.5 117.5 160 144 160zM312 160C404.8 160 480 235.2 480 328C480 341.3 469.3 352 456 352C442.7 352 432 341.3 432 328C432 261.7 378.3 208 312 208C298.7 208 288 197.3 288 184C288 170.7 298.7 160 312 160z"/></svg>';
+const bilibiliSvg = '<svg fill="currentColor" fill-rule="evenodd" height="1em" style="flex:none;line-height:1" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><title>bilibili</title><path clip-rule="evenodd" d="M4.977 3.561a1.31 1.31 0 111.818-1.884l2.828 2.728c.08.078.149.163.205.254h4.277a1.32 1.32 0 01.205-.254l2.828-2.728a1.31 1.31 0 011.818 1.884L17.82 4.66h.848A5.333 5.333 0 0124 9.992v7.34a5.333 5.333 0 01-5.333 5.334H5.333A5.333 5.333 0 010 17.333V9.992a5.333 5.333 0 015.333-5.333h.781L4.977 3.56zm.356 3.67a2.667 2.667 0 00-2.666 2.667v7.529a2.667 2.667 0 002.666 2.666h13.334a2.667 2.667 0 002.666-2.666v-7.53a2.667 2.667 0 00-2.666-2.666H5.333zm1.334 5.192a1.333 1.333 0 112.666 0v1.192a1.333 1.333 0 11-2.666 0v-1.192zM16 11.09c-.736 0-1.333.597-1.333 1.333v1.192a1.333 1.333 0 102.666 0v-1.192c0-.736-.597-1.333-1.333-1.333z"></path></svg>';
+const githubSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 640"><path d="M237.9 461.4C237.9 463.4 235.6 465 232.7 465C229.4 465.3 227.1 463.7 227.1 461.4C227.1 459.4 229.4 457.8 232.3 457.8C235.3 457.5 237.9 459.1 237.9 461.4zM206.8 456.9C206.1 458.9 208.1 461.2 211.1 461.8C213.7 462.8 216.7 461.8 217.3 459.8C217.9 457.8 216 455.5 213 454.6C210.4 453.9 207.5 454.9 206.8 456.9zM251 455.2C248.1 455.9 246.1 457.8 246.4 460.1C246.7 462.1 249.3 463.4 252.3 462.7C255.2 462 257.2 460.1 256.9 458.1C256.6 456.2 253.9 454.9 251 455.2zM316.8 72C178.1 72 72 177.3 72 316C72 426.9 141.8 521.8 241.5 555.2C254.3 557.5 258.8 549.6 258.8 543.1C258.8 536.9 258.5 502.7 258.5 481.7C258.5 481.7 188.5 496.7 173.8 451.9C173.8 451.9 162.4 422.8 146 415.3C146 415.3 123.1 399.6 147.6 399.9C147.6 399.9 172.5 401.9 186.2 425.7C208.1 464.3 244.8 453.2 259.1 446.6C261.4 430.6 267.9 419.5 275.1 412.9C219.2 406.7 162.8 398.6 162.8 302.4C162.8 274.9 170.4 261.1 186.4 243.5C183.8 237 175.3 210.2 189 175.6C209.9 169.1 258 202.6 258 202.6C278 197 299.5 194.1 320.8 194.1C342.1 194.1 363.6 197 383.6 202.6C383.6 202.6 431.7 169 452.6 175.6C466.3 210.3 457.8 237 455.2 243.5C471.2 261.2 481 275 481 302.4C481 398.9 422.1 406.6 366.2 412.9C375.4 420.8 383.2 435.8 383.2 459.3C383.2 493 382.9 534.7 382.9 542.9C382.9 549.4 387.5 557.3 400.2 555C500.2 521.8 568 426.9 568 316C568 177.3 455.5 72 316.8 72zM169.2 416.9C167.9 417.9 168.2 420.2 169.9 422.1C171.5 423.7 173.8 424.4 175.1 423.1C176.4 422.1 176.1 419.8 174.4 417.9C172.8 416.3 170.5 415.6 169.2 416.9zM158.4 408.8C157.7 410.1 158.7 411.7 160.7 412.7C162.3 413.7 164.3 413.4 165 412C165.7 410.7 164.7 409.1 162.7 408.1C160.7 407.5 159.1 407.8 158.4 408.8zM190.8 444.4C189.2 445.7 189.8 448.7 192.1 450.6C194.4 452.9 197.3 453.2 198.6 451.6C199.9 450.3 199.3 447.3 197.3 445.4C195.1 443.1 192.1 442.8 190.8 444.4zM179.4 429.7C177.8 430.7 177.8 433.3 179.4 435.6C181 437.9 183.7 438.9 185 437.9C186.6 436.6 186.6 434 185 431.7C183.6 429.4 181 428.4 179.4 429.7z"/></svg>';
+const meta = () => [{
+  title: "关于 — SrP-CFG"
+}, {
+  name: "description",
+  content: "SrP-CFG 项目介绍与开源信息"
+}];
+const techStack = [{
+  name: "Astro",
+  desc: "静态站点生成框架",
+  icon: Zap
+}, {
+  name: "Electron",
+  desc: "桌面应用框架",
+  icon: Monitor
+}, {
+  name: "React",
+  desc: "共享 UI 组件库",
+  icon: Atom
+}, {
+  name: "TailwindCSS",
+  desc: "原子化 CSS 框架",
+  icon: Paintbrush
+}, {
+  name: "Node.js",
+  desc: "运行时环境",
+  icon: Server
+}, {
+  name: "TypeScript",
+  desc: "类型安全的开发语言",
+  icon: Code
+}];
+const links = [{
+  label: "GitHub 仓库",
+  url: REPO_URL,
+  icon: Github
+}, {
+  label: "GitHub Release",
+  url: RELEASES_URL,
+  icon: Github
+}, {
+  label: "SrP-CFG 视频系列",
+  url: "https://space.bilibili.com/422744280/lists/6770542",
+  icon: ExternalLink
+}, {
+  label: "关于 CFG 你要了解的二三事",
+  url: "https://blog.srprolin.top/posts/srp-cfg/",
+  icon: ExternalLink
+}];
+const contributors = [{
+  name: "RoL1n",
+  role: "开发维护",
+  github: "RolinShmily",
+  blog: "https://blog.srprolin.top",
+  bilibili: "https://space.bilibili.com/422744280"
+}];
+const cardHover = "transition-colors duration-200 group-hover:border-border-highlight group-hover:bg-bg-hover";
 const about = UNSAFE_withComponentProps(function AboutPage() {
-  return /* @__PURE__ */ jsxs("main", {
-    className: "mx-auto w-full max-w-[var(--site-width)] px-[var(--content-gutter)] py-10",
-    children: [/* @__PURE__ */ jsx("h1", {
-      className: "font-display text-2xl font-bold text-text",
-      children: "关于页（迁移骨架占位）"
-    }), /* @__PURE__ */ jsx("p", {
-      className: "mt-2 text-sm text-text-muted",
-      children: "占位内容：后续迁移自 src/pages/about.astro。"
-    })]
+  return /* @__PURE__ */ jsx("section", {
+    className: "pb-16 pt-28 sm:pb-20 sm:pt-32",
+    children: /* @__PURE__ */ jsxs("div", {
+      className: "mx-auto max-w-[1200px] px-5 sm:px-7",
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "mb-10 flex justify-center",
+        children: /* @__PURE__ */ jsx("img", {
+          src: "/favicon.ico",
+          alt: "SrP-CFG Logo",
+          width: "112",
+          height: "112",
+          className: "h-28 w-28 rounded-2xl border border-border shadow-[0_0_40px_rgba(242,138,26,0.14)]"
+        })
+      }), /* @__PURE__ */ jsx(SectionHeader, {
+        level: "h1",
+        label: "About",
+        title: "关于 SrP-CFG",
+        description: "面向 CS2 的模块化 CFG Runtime、Preset 案例与用户配置系统，由 RoL1n 开发维护"
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "mx-auto grid max-w-[1000px] grid-cols-1 gap-16 lg:grid-cols-[1fr_1fr]",
+        children: [/* @__PURE__ */ jsxs("div", {
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "mb-6 font-display text-2xl font-semibold",
+            children: "项目简介"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "mb-10 space-y-4 leading-8 text-text-secondary",
+            children: [/* @__PURE__ */ jsx("p", {
+              children: "SrP-CFG v3 是一套把功能模板、Preset 案例和用户配置分离的 CS2 CFG 系统。Runtime 提供准星视角、跑图练习、Demo 录制等能力，内置案例提供可选推荐值，用户层保存个人差异。"
+            }), /* @__PURE__ */ jsxs("p", {
+              children: ["根目录只保留", " ", /* @__PURE__ */ jsx("code", {
+                className: "rounded bg-bg-raised px-1.5 py-0.5 font-mono text-sm text-accent-light",
+                children: "autoexec.cfg"
+              }), " ", "启动引导，所有 Runtime、Preset、Feature 与 Mode 统一位于", " ", /* @__PURE__ */ jsx("code", {
+                className: "rounded bg-bg-raised px-1.5 py-0.5 font-mono text-sm text-accent-light",
+                children: "srp-cfg/"
+              }), "；用户只需要编辑最后加载的", " ", /* @__PURE__ */ jsx("code", {
+                className: "rounded bg-bg-raised px-1.5 py-0.5 font-mono text-sm text-accent-light",
+                children: "srp-cfg/user/custom.cfg"
+              }), "。"]
+            })]
+          }), /* @__PURE__ */ jsx("h2", {
+            className: "mb-6 font-display text-2xl font-semibold",
+            children: "快速链接"
+          }), /* @__PURE__ */ jsx("div", {
+            className: "space-y-3",
+            children: links.map((link) => {
+              const Icon = link.icon;
+              return /* @__PURE__ */ jsx("a", {
+                href: link.url,
+                target: "_blank",
+                rel: "noopener",
+                className: "group block no-underline",
+                children: /* @__PURE__ */ jsxs(Card, {
+                  padding: "none",
+                  className: `flex min-h-14 items-center gap-3 p-4 ${cardHover}`,
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] border border-[rgba(232,121,12,0.12)] bg-accent-bg text-accent",
+                    children: /* @__PURE__ */ jsx(Icon, {
+                      className: "h-4 w-4"
+                    })
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "font-display text-sm font-medium text-text-secondary transition-colors group-hover:text-accent",
+                    children: link.label
+                  })]
+                })
+              }, link.label);
+            })
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          children: [/* @__PURE__ */ jsxs("h2", {
+            className: "mb-6 flex items-center gap-3 font-display text-2xl font-semibold",
+            children: [/* @__PURE__ */ jsx(Boxes, {
+              className: "h-6 w-6 text-teal"
+            }), "技术栈"]
+          }), /* @__PURE__ */ jsx("div", {
+            className: "mb-12 grid grid-cols-2 gap-3",
+            children: techStack.map((tech) => {
+              const Icon = tech.icon;
+              return /* @__PURE__ */ jsxs(Card, {
+                padding: "none",
+                className: "p-4",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "mb-1 flex items-center gap-2",
+                  children: [/* @__PURE__ */ jsx(Icon, {
+                    className: "h-4 w-4 text-text-muted"
+                  }), /* @__PURE__ */ jsx("div", {
+                    className: "font-display text-base font-semibold text-text",
+                    children: tech.name
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "text-xs text-text-muted",
+                  children: tech.desc
+                })]
+              }, tech.name);
+            })
+          }), /* @__PURE__ */ jsxs("h2", {
+            className: "mb-6 flex items-center gap-3 font-display text-2xl font-semibold",
+            children: [/* @__PURE__ */ jsx(User, {
+              className: "h-6 w-6 text-accent"
+            }), "贡献者"]
+          }), /* @__PURE__ */ jsx("div", {
+            className: "space-y-3",
+            children: contributors.map((c) => /* @__PURE__ */ jsxs(Card, {
+              padding: "none",
+              className: "flex flex-wrap items-center gap-4 p-4",
+              children: [/* @__PURE__ */ jsx("img", {
+                src: "/avatar.jpg",
+                alt: c.name,
+                width: "48",
+                height: "48",
+                loading: "lazy",
+                className: "h-12 w-12 rounded-full border border-[rgba(232,121,12,0.12)] object-cover"
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "font-display text-base font-semibold",
+                  children: c.name
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "text-xs text-text-muted",
+                  children: c.role
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "ml-auto flex flex-wrap items-center justify-end gap-2",
+                children: [/* @__PURE__ */ jsxs("a", {
+                  href: c.blog,
+                  target: "_blank",
+                  rel: "noopener",
+                  className: "flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-bg-raised px-3 text-xs text-text-muted no-underline transition-colors hover:border-accent/30 hover:text-accent",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "h-3.5 w-3.5 text-text-muted",
+                    dangerouslySetInnerHTML: {
+                      __html: blogSvg
+                    }
+                  }), /* @__PURE__ */ jsx("span", {
+                    children: "博客"
+                  })]
+                }), /* @__PURE__ */ jsxs("a", {
+                  href: c.bilibili,
+                  target: "_blank",
+                  rel: "noopener",
+                  className: "flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-bg-raised px-3 text-xs text-text-muted no-underline transition-colors hover:border-accent/30 hover:text-accent",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "h-3.5 w-3.5 text-text-muted",
+                    dangerouslySetInnerHTML: {
+                      __html: bilibiliSvg
+                    }
+                  }), /* @__PURE__ */ jsx("span", {
+                    children: "B站"
+                  })]
+                }), /* @__PURE__ */ jsxs("a", {
+                  href: `https://github.com/${c.github}`,
+                  target: "_blank",
+                  rel: "noopener",
+                  className: "flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-bg-raised px-3 text-xs text-text-muted no-underline transition-colors hover:border-accent/30 hover:text-accent",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "h-3.5 w-3.5 text-text-muted",
+                    dangerouslySetInnerHTML: {
+                      __html: githubSvg
+                    }
+                  }), /* @__PURE__ */ jsx("span", {
+                    children: "GitHub"
+                  })]
+                })]
+              })]
+            }, c.github))
+          }), /* @__PURE__ */ jsxs(Card, {
+            padding: "none",
+            className: "mt-8 flex items-center gap-4 p-5",
+            children: [/* @__PURE__ */ jsx(Shield, {
+              className: "h-5 w-5 text-text-muted",
+              strokeWidth: 1.8
+            }), /* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "font-display text-sm font-semibold",
+                children: "开源许可"
+              }), /* @__PURE__ */ jsx("div", {
+                className: "text-xs text-text-muted",
+                children: "本仓库代码以自定义许可证发布，详见仓库根目录 LICENSE 文件"
+              })]
+            })]
+          })]
+        })]
+      })]
+    })
   });
 });
 const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: about
+  default: about,
+  meta
 }, Symbol.toStringTag, { value: "Module" }));
 const docs = UNSAFE_withComponentProps(function DocsPage() {
   return /* @__PURE__ */ jsxs("main", {
@@ -1144,7 +1378,7 @@ const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   __proto__: null,
   default: commands
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-7vJmYhde.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-xUct2dzH.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": ["/assets/root-BdZSxivU.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-ZGW_6gF6.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/navigation-DLKXNsBJ.js", "/assets/download-ucwZBGak.js", "/assets/book-open-BibnRe20.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-CNhAq6uH.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/Badge-N9T1fWoB.js", "/assets/download-ucwZBGak.js", "/assets/book-open-BibnRe20.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-ZPI5sJAx.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/Badge-N9T1fWoB.js", "/assets/navigation-DLKXNsBJ.js", "/assets/download-ucwZBGak.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-C0gVTsU8.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-D_Ps-E2q.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-D67C7O6s.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-3a4cf25f.js", "version": "3a4cf25f", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-7vJmYhde.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-xUct2dzH.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": ["/assets/root-BdZSxivU.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-XOjdEpPN.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/navigation-IywTUcR9.js", "/assets/github-Cm0jTM8L.js", "/assets/createLucideIcon-DbLFbklK.js", "/assets/book-open-CLzZjsWY.js", "/assets/download-DZlwvSMy.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-Cg7E6Rss.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/Badge-CdyBWgI_.js", "/assets/createLucideIcon-DbLFbklK.js", "/assets/download-DZlwvSMy.js", "/assets/book-open-CLzZjsWY.js", "/assets/SectionHeader-BkPLa8hg.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-Behs_grw.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/SectionHeader-BkPLa8hg.js", "/assets/Badge-CdyBWgI_.js", "/assets/navigation-IywTUcR9.js", "/assets/download-DZlwvSMy.js", "/assets/createLucideIcon-DbLFbklK.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-FzNOPfei.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/SectionHeader-BkPLa8hg.js", "/assets/navigation-IywTUcR9.js", "/assets/github-Cm0jTM8L.js", "/assets/createLucideIcon-DbLFbklK.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-D_Ps-E2q.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-D67C7O6s.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-ef814cab.js", "version": "ef814cab", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "v8_passThroughRequests": false, "v8_trailingSlashAwareDataRequests": false, "unstable_previewServerPrerendering": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
