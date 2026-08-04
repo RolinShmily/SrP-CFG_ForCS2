@@ -52,7 +52,7 @@ Layer 4  CI/CD 与发布（website CI + tauri build + 打包链）← 依赖 L2/
 
 | 层 | 状态 | 备注 |
 | :--- | :--- | :--- |
-| [Layer 0](./layer-0-baseline/TASK.md) | 🔄 除 0.6 外完成 | 分支 ✓ 构建基线 ✓ 契约/清单 3 份 ✓；**0.6 黄金样本未勾选**（Track B 主线，产出 golden-samples.md 供 L2 验收对照 ≥80%） |
+| [Layer 0](./layer-0-baseline/TASK.md) | ✅ 完成 | 分支 ✓ 构建基线 ✓ 契约/清单 3 份 ✓；**0.6 黄金样本已落地**（Track B：fixtures + Node 执行器 117 断言 + golden-samples.md，Rust 84 测试对照 100%） |
 | [Layer 1](./layer-1-shared-ui/TASK.md) | ✅ 主体完成 | 9 组件已抽，Desktop 已接入（PageHeader×6/LabeledValue），tsc + vite build 通过；剩余替换待 L2.7 |
 | [Layer 2](./layer-2-desktop-tauri/TASK.md) | 🔄 进行中 | core crate 84 测试 ✓（staging/installer/updater/detection 纯逻辑全量）/ IPC 适配层 ✓ / tauri.conf ✓ / 2.7 组件替换 ✓（WSL）/ 版本同步脚本 ✓；待 Windows：fs/winreg 壳层、commands 注册、2.6 实机验收、2.8 打包 |
 | [Layer 3](./layer-3-website-react/TASK.md) | ✅ 完成 | 页面迁移 + Velite + 指令 SEO + AI worker 集成 + L3 收尾全部完成；可选遗留（/commands/{name} 详情页 + JSON-LD 指令数据集）已完成；`tsc -b` 零错误 |

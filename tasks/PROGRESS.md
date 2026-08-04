@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L2 core 纯逻辑全量完成 84 测试；AGENT-START 已更新为 L2 收尾提示词）
+> 更新时间：2026-08-04（L2 core 纯逻辑全量完成 84 测试；L0.6 黄金样本已落地（Track B）；AGENT-START 已更新为 L2 收尾提示词）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md）
 
@@ -30,10 +30,10 @@
 
 ## 三、当前进度（分支上 35 个提交，main..HEAD）
 
-### 🔄 L0 基线 — 完成（除 0.6 黄金样本，WSL 可做）
+### ✅ L0 基线 — 全部完成（含 0.6 黄金样本，2026-08-04 Track B 落地）
 - 提交 `9b5342e`：tasks/ 五层任务文档 + 契约/清单 3 份
 - website 基线构建验证通过（21 页 / 3.1MB / dist）
-- ⚠️ **0.6 黄金样本记录未勾选**（见「下一步任务 1.5」）——L2 验收标准要求对照 ≥80%
+- ✅ **0.6 黄金样本**：`tasks/layer-0-baseline/` 下 fixtures（30 文件）+ `scripts/golden-node.mjs`（Node 版执行器，117 断言全 PASS）+ `golden-outputs/*.json` + `golden-samples.md`（5+2 业务路径 × 输入→期望输出，Rust core 84 测试逐条对照，勾选率 100% ≥80%）；复现：`bash tasks/layer-0-baseline/scripts/run-golden.sh` + `cargo test -p srp-cfg-core`；注册表读取为 Windows 实机验收项（L2.6）
 
 ### ✅ L1 共享组件库 — 主体完成
 - 提交 `57f0f21`：`@srp-cfg/ui` 新增 9 组件（Card/PageHeader/SectionHeader/LabeledValue/Badge/Modal/CopyButton/Skeleton/EmptyState）
@@ -68,9 +68,9 @@
 
 ## 四、下一步任务（按优先级）
 
-### 1. L0.6 黄金样本记录（**WSL 可做**，Track B 主线）
-- 0.6 一直未勾选。建 fixtures（伪 Steam 目录/上传包/游戏 CFG）→ Node 版（`app/desktop/src/main/services/*.ts` 纯函数，stub electron）与 Rust 版（core 84 测试同款输入）双版输出对照，产出 `golden-samples.md` 验收清单，勾选率 ≥80%
-- 详见 `tasks/layer-0-baseline/TASK.md` 0.6 节
+### ✅ 1. L0.6 黄金样本记录 — 已完成（2026-08-04，Track B）
+- fixtures（伪 Steam 目录 / 上传包 zip+目录 / 游戏 CFG 冲突场景）+ Node 版执行器（stub electron/winreg，117 断言全 PASS）+ `golden-samples.md`（输入→期望输出 + Rust 84 测试对照，100% ≥80%）
+- Windows 实机验收 L2 时直接引用 `golden-samples.md` §1（注册表三分支）与 §7 遗留项
 
 ### 2. L2 Desktop → Tauri 收尾（**需 Windows 实机**，见 AGENT-START.md 新提示词）
 - **core 纯逻辑已完成**（7 模块 / 84 测试，lib.rs 导出全部 API）。剩余 = fs/winreg 壳层接线：
@@ -80,7 +80,7 @@
 - 详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
 ### 3. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache + 版本同步脚本）
-- 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新
+- 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新（现状记录见 `layer-0-baseline/golden-samples.md` §8）
 
 ### 4. L3 可选遗留 — 已完成
 - `/commands/{name}` 指令详情静态页（70aa5c9）+ JSON-LD 扩展（FAQ/DefinedTerm 指令数据集）均已完成，`pnpm build:web` + tsc 验证通过
@@ -117,3 +117,4 @@
 11. **desktop Tailwind `@source`**：`app/desktop/src/renderer/styles/global.css` 顶部的 `@source "../../../../shared/ui/src"` 不可删除——移除会导致共享组件专属类（如 CopyButton 的 teal/accent 变体）静默缺失
 12. **版本统一脚本**：`pnpm sync:version`（`app/desktop/scripts/sync-tauri-version.mjs`）——发版前跑，或 CI 用 `--check`；core/ 子 crate 版本（0.1.0）不参与同步
 13. **core 新增纯逻辑约束**：必须保持「无 tauri/fs/平台依赖」（只允许 serde/serde_json），否则 WSL 无法测试；壳层（I/O）按 core lib.rs 导出的 API 接线
+14. **L0.6 黄金样本**（Track B 已交付）：`tasks/layer-0-baseline/` 下 fixtures + `scripts/golden-node.mjs`（117 断言）+ `golden-outputs/` + `golden-samples.md`；复现 `bash tasks/layer-0-baseline/scripts/run-golden.sh`；`.sandbox/` 与 `scripts/golden-node.cjs`（esbuild 产物）已 gitignore；Windows 实机验收 L2 时直接引用 golden-samples.md（注册表三分支在 §1/§7）
