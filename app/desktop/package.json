@@ -5,38 +5,34 @@
   "description": "SrP-CFG Installer — CS2 配置预设管理器",
   "main": ".vite/build/main.js",
   "scripts": {
-    "start": "cmd /c \"chcp 65001 >nul && electron-forge start\"",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "build": "electron-forge package"
+    "dev:renderer": "vite",
+    "build:renderer": "vite build",
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "start": "tauri dev",
+    "package": "tauri build",
+    "make": "tauri build"
   },
   "dependencies": {
     "@srp-cfg/ui": "workspace:*",
     "@tauri-apps/api": "^2.11.1",
-    "archiver": "^7.0.1",
-    "electron-squirrel-startup": "^1.0.1",
     "extract-zip": "^2.0.1",
     "lucide-react": "^0.511.0",
     "marked": "^18.0.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.1",
-    "winreg": "^1.2.5"
+    "react-router-dom": "^7.6.1"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.8.1",
-    "@electron-forge/maker-squirrel": "^7.8.1",
-    "@electron-forge/maker-zip": "^7.8.1",
-    "@electron-forge/plugin-vite": "^7.11.1",
+    "@tauri-apps/cli": "^2",
     "@tailwindcss/postcss": "^4.1.6",
-    "@types/archiver": "^7.0.0",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
-    "@types/winreg": "^1.2.36",
     "@vitejs/plugin-react": "^5.1.2",
-    "electron": "^36.3.2",
     "postcss": "^8.5.4",
     "tailwindcss": "^4.1.6",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "vite": "^6.0.0"
   }
 }

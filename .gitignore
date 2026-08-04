@@ -32,3 +32,6 @@ app/desktop/src-tauri/target/
 # L0.6 golden samples: sandbox + esbuild bundle artifact
 tasks/layer-0-baseline/.sandbox/
 tasks/layer-0-baseline/scripts/golden-node.cjs
+
+# Tauri generated schemas
+app/desktop/src-tauri/gen/schemas/

@@ -76,7 +76,7 @@ SrP-CFG v3 把配置拆成四个明确边界：**Runtime 注册能力，Preset �
 
 ## Installer 安装器
 
-在 [Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或[项目下载页](https://cfg.srprolin.top/download)获取 MSI / Portable。Desktop 把暂存、路径检测、部署、用户配置和恢复边界集中到一个可审计界面中。
+在 [Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或[项目下载页](https://cfg.srprolin.top/download)获取 MSI / Setup 安装包（Tauri v2 构建，NSIS+MSI，安装包 ≤20MB）。Desktop 把暂存、路径检测、部署、用户配置和恢复边界集中到一个可审计界面中。
 
 ### 功能说明
 
@@ -121,23 +121,23 @@ SrP-CFG_ForCS2/
 │       ├── presets/                # Default / 朋友案例 / Valve 基线
 │       └── user/custom.cfg         # 用户唯一配置窗口
 ├── app/
-│   ├── website/                    # Astro 官网与文档中心
-│   ├── desktop/                    # Electron + React 桌面端
+│   ├── website/                    # Vite + React 官网与文档中心
+│   ├── desktop/                    # Tauri v2 + React 桌面端（Rust 后端）
 │   └── shared/                     # 共享类型、UI 与内容
-├── msi/                            # WiX v6 MSI 项目
 ├── .github/                        # CI、Release 与打包脚本
 └── README.md
 ```
 
 ## 运行环境
 
-**普通用户：** 下载 `SrP-CFG_Installer.msi`、`SrP-CFG_Portable.zip` 或 `SrP-CFG_Runtime_Core.zip` 即可使用。
+**普通用户：** 下载 `SrP-CFG_Installer.msi`、`SrP-CFG_Setup_x64.exe` 或 `SrP-CFG_Runtime_Core.zip` 即可使用。
 
 **开发者环境：**
 
 - [Node.js](https://nodejs.org/) 22+
 - [pnpm](https://pnpm.io/) 10+
-- [.NET 8 SDK](https://dotnet.microsoft.com/) 与 [WiX Toolset v6](https://wixtoolset.org/)（仅 MSI）
+- [Rust](https://www.rust-lang.org/)（MSVC toolchain，构建 Tauri 桌面端）
+- [Visual Studio Build Tools](https://visualstudio.microsoft.com/)（MSVC C++ 工具集）
 
 ### 开发
 
@@ -151,8 +151,7 @@ pnpm dev:desktop
 
 ```bash
 pnpm build:web
-pnpm package:desktop
-pnpm build:msi
+pnpm --filter @srp-cfg/desktop tauri build   # NSIS + MSI 安装包（src-tauri/target/release/bundle/）
 
 pnpm --filter @srp-cfg/website check
 pnpm check:config-index

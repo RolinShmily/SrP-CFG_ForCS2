@@ -58,7 +58,7 @@ jobs:
           echo "📌 Comparing $PREV_TAG → ${{ github.ref_name }}"
           CHANGED=$(git diff --name-only "$PREV_TAG" HEAD)
 
-          if echo "$CHANGED" | grep -qE '^(app/desktop/|msi/)'; then
+          if echo "$CHANGED" | grep -qE '^app/desktop/'; then
             echo "✅ Desktop files changed, will build MSI and portable"
             echo "has_desktop_changes=true" >> $GITHUB_OUTPUT
           else
@@ -76,11 +76,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -95,9 +90,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # ── Rust（Tauri 后端，L2）──────────────────────────────────
-      # 仅补齐 toolchain + 缓存 + core 纯逻辑测试；Electron 打包链（package/MSI/portable）
-      # 保持不变（L4 后续再切换到 tauri build，见 tasks/layer-4-ci-release/TASK.md 4.2/4.3）。
+      # ── Rust（Tauri 后端）──────────────────────────────────────
       - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -106,7 +99,6 @@ jobs:
       - name: Cache cargo registry and build target
         uses: swatinem/rust-cache@v2
         with:
-          # 缓存 ~/.cargo registry/git + app/desktop/src-tauri/target（首次 5-10 分钟 → 后续 ~1 分钟）
           workspaces: app/desktop/src-tauri -> target
 
       - name: Run Rust core tests
@@ -114,7 +106,8 @@ jobs:
         working-directory: app/desktop/src-tauri
         run: cargo test -p srp-cfg-core
 
-      - name: Inject version
+      # ── 版本统一：package.json 唯一来源 → tauri.conf.json + Cargo.toml ──
+      - name: Inject version and sync
         shell: bash
         run: |
           VERSION="${{ needs.validate-tag.outputs.version }}"
@@ -125,21 +118,19 @@ jobs:
             pkg.version = '${VERSION}';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
-          echo "✅ Desktop app version set to ${VERSION}"
+          cd ../..
+          pnpm sync:version
+          echo "✅ Desktop version set to ${VERSION} (package.json + tauri.conf.json + Cargo.toml)"
 
-      - name: Package Electron app
-        run: pnpm --filter @srp-cfg/desktop package
-
-      - name: Harvest Electron app files for MSI
-        run: node msi/harvest.js "app/desktop/out/SrP-CFG Installer-win32-x64" msi/ElectronAppFiles.wxs
-
-      - name: Build MSI
-        run: dotnet build msi/Setup.wixproj -c Release -p:Version=${{ needs.validate-tag.outputs.version }}
+      # ── Tauri build（NSIS + MSI，≤20MB）───────────────────────
+      - name: Build Tauri bundles (NSIS + MSI)
+        run: pnpm --filter @srp-cfg/desktop tauri build
 
       - name: Stage MSI
         shell: bash
         run: |
-          cp msi/bin/Release/SrP-CFG_Installer_Setup.msi "SrP-CFG_Installer.msi"
+          MSI=$(ls app/desktop/src-tauri/target/release/bundle/msi/*.msi | head -1)
+          cp "$MSI" "SrP-CFG_Installer.msi"
           echo "✅ MSI: SrP-CFG_Installer.msi"
           ls -lh "SrP-CFG_Installer.msi"
 
@@ -149,19 +140,20 @@ jobs:
           name: msi-installer
           path: SrP-CFG_Installer.msi
 
-      - name: Create portable ZIP
+      - name: Stage NSIS setup
         shell: bash
         run: |
-          PORTABLE_NAME="SrP-CFG_Portable.zip"
-          7z a -tzip "$PORTABLE_NAME" "app/desktop/out/SrP-CFG Installer-win32-x64/" -r
-          echo "✅ Portable: $PORTABLE_NAME"
-          ls -lh "$PORTABLE_NAME"
+          NSIS=$(ls app/desktop/src-tauri/target/release/bundle/nsis/*-setup.exe | head -1)
+          cp "$NSIS" "SrP-CFG_Setup_x64.exe"
+          echo "✅ NSIS: SrP-CFG_Setup_x64.exe"
+          ls -lh "SrP-CFG_Setup_x64.exe"
 
-      - name: Upload portable artifact
+      - name: Upload NSIS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: portable-zip
-          path: SrP-CFG_Portable.zip
+          name: nsis-installer
+          path: SrP-CFG_Setup_x64.exe
+
   # ============================================
   # 上传桌面端产物到 GitHub Release
   # ============================================
@@ -180,29 +172,29 @@ jobs:
           name: msi-installer
           path: .
 
-      - name: Download portable artifact
+      - name: Download NSIS artifact
         uses: actions/download-artifact@v4
         with:
-          name: portable-zip
+          name: nsis-installer
           path: .
 
       - name: Verify build artifacts
         run: |
           echo "=== Build artifacts ==="
-          ls -lh SrP-CFG_Installer.msi SrP-CFG_Portable.zip 2>&1
+          ls -lh SrP-CFG_Installer.msi SrP-CFG_Setup_x64.exe 2>&1
           echo "======================"
 
       - name: Create desktop update marker (if desktop code changed)
         if: needs.detect-changes.outputs.has_desktop_changes == 'true'
         run: echo "1" > DESKTOP_UPDATE_MARKER
 
-      - name: Upload MSI and Portable to Release
+      - name: Upload MSI and NSIS to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: |
             SrP-CFG_Installer.msi
-            SrP-CFG_Portable.zip
+            SrP-CFG_Setup_x64.exe
           fail_on_unmatched_files: true
 
       - name: Upload desktop update marker to Release
