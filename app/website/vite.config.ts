@@ -12,7 +12,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { readdirSync, writeFileSync } from "fs";
 import { join, relative, sep } from "path";
-import { defineConfig, type Plugin } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 import { fetchLatestVersion } from "./src/data/version";
 
 const SITE_URL = "https://srprolin.top";
@@ -21,7 +21,7 @@ const SITE_URL = "https://srprolin.top";
  * 构建/启动时获取 GitHub Releases 最新版本（失败回落 "0.0.0"，逻辑见 fetchLatestVersion），
  * 经 define 注入全局常量 __SRP_CFG_LATEST_VERSION__，SSG 产物直接带上真实版本号。
  */
-function latestVersionPlugin(): Plugin {
+function latestVersionPlugin(): PluginOption {
   return {
     name: "srp-cfg-latest-version",
     async config() {
@@ -40,7 +40,7 @@ function latestVersionPlugin(): Plugin {
  * 遍历 build/client 下所有 index.html（SSG 预渲染产物）推导 URL 清单，
  * 站点根 https://srprolin.top（与旧 astro.config.ts 一致）。
  */
-function sitemapPlugin(): Plugin {
+function sitemapPlugin(): PluginOption {
   return {
     name: "srp-cfg-sitemap",
     apply: "build",
@@ -75,5 +75,7 @@ export default defineConfig({
     reactRouter(),
     latestVersionPlugin(),
     sitemapPlugin(),
-  ],
+    // 根/子 vite（6.4.2/6.4.3）hoisting 导致两份 @types/estree，Plugin 类型身份不一致；
+    // 运行时由 esbuild 转译不受影响，仅类型检查需要对齐（见 tasks/PROGRESS.md 遗留 6）
+  ] as PluginOption[],
 });
