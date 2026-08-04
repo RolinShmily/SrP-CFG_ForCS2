@@ -29,7 +29,7 @@
 
 ## 验收标准
 
-- [ ] ⚠️ GitHub Actions 全绿（website deploy + desktop release）（需推送 tag 触发真实 CI，本机不可执行）
+- [x] ⚠️ GitHub Actions 全绿（website deploy + desktop release）（✅ 2026-08-05：v3.1.10 tag 触发 3 工作流全绿，Release 发布 MSI/NSIS/Runtime_Core.zip + DESKTOP_UPDATE_MARKER，updater 端到端验证通过）
 - [x] 发布产物：NSIS exe + MSI，体积达标（2.5MB / 3.6MB；zip 便携包由 NSIS 承担）
 - [x] 旧打包链文件全部清除，仓库无 electron-forge / WiX 残留（src/main/services + preload 为黄金样本参考保留）
 

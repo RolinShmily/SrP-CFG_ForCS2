@@ -135,12 +135,13 @@ GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26
 - **真实安装验收全通过**：备份 → 删 `top.srprolin.cfg` → `pnpm tauri build` → NSIS 静默装到 `%LOCALAPPDATA%\SrP-CFG Installer` → 首启动：283 文件/7 类字节级一致迁移（vs 备份 0 缺失 0 差）、legacy 清空、.migrated 写入；CDP 实测 detectAll + getUserConfig 均正常
 - 注意：安装包若未重新打包仍是旧代码（无 4+1 个 bug 修复）——打包前先同步源码；机器上留有已安装的验收产物（见 PROGRESS.md 注意点 33）
 
-### 4. GitHub Actions 真实触发验证（L4 遗留）⏳（待用户确认后推 tag）
-- 推 `v*` tag 触发 release-desktop.yml（windows-latest：rust toolchain + pnpm install + tauri build +
-  NSIS/MSI 上传）+ deploy-website.yml 全绿确认；注意 windows-latest 上是干净环境，验证
-  `pnpm install` + `tauri build` 链路与本地一致（tauri build CLI 自动带 custom-protocol，无坑）；
-  版本注入在 CI 有 GITHUB_TOKEN 不再回落 0.0.0
-- **注意：推 tag 会在真实仓库发布 GitHub Release（v3.1.10，Tauri 版），属公开外部副作用，必须先经用户确认**；最新 tag v3.1.9 为旧 Electron 版，当前分支已含全部 Tauri 修复（含迁移 fix f7f2fa6），推荐 tag 指向当前 HEAD
+### ✅ 4. GitHub Actions 真实触发验证（L4 遗留）— 已完成（2026-08-05，v3.1.10）
+- 流程：推 `refactor/tauri-vite-react` 到 origin（新建远程分支，无 workflow 触发）→ 推 `v3.1.10` annotated tag（e79c3aa）→ **3 工作流全绿**：
+  - release-desktop.yml（#50）：windows-latest 干净环境 pnpm install + rust toolchain + cargo test core + tauri build（CLI 自动带 custom-protocol）→ Release v3.1.10：NSIS 2.5MB + MSI 2.5MB + DESKTOP_UPDATE_MARKER
+  - release-config.yml（#31）：Runtime_Core.zip 配置包
+  - deploy-website.yml（#93）：网站部署
+- **端到端**：安装版 3.1.6 updater → hasUpdate:true、hasDesktopUpdate:true（含变更日志）；cache.json 更新
+- 用户后续将 refactor 合并 main（注意远程 main 领先 1 个自动提交 c73de80）
 
 ### ✅ 5. 正式图标替换 — 已完成（2026-08-05，0e09eb6）
 - 源：`app/desktop/resources/icon.ico`（= 用户指定 `C:\Users\Rolin\Downloads\icon.ico`，字节一致；重构前 Electron 软件图标）→ `tauri icon` 重生成全套

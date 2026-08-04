@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-05（L4 遗留收尾：**真实升级迁移验证完成并揪出修复 1 个隐藏 bug**（迁移被 staging 预建目录跳过，f7f2fa6）；**TitleBar 物理拖拽已人工验证通过**；**正式图标已替换**（0e09eb6，用原软件 resources/icon.ico 重生成全套）；剩 GH Actions 真实触发（需推 tag，待用户确认））
+> 更新时间：2026-08-05（**全部遗留收尾完成**：迁移验证+修复 f7f2fa6、物理拖拽人工验证、正式图标 0e09eb6、**GH Actions 真实触发验证通过**——v3.1.10 tag 发布真实 Release，3 工作流全绿，updater 端到端验证 hasDesktopUpdate:true）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -101,10 +101,14 @@
 - **附带发现（构建环境）**：Windows 工作区 pnpm-lock.yaml 是旧的（vite 6.4.3，仓库已 6.4.2）→ 构建产物 JS 与仓库不一致；已同步 lockfile + `pnpm install` 对齐（vite 6.4.2，JS 字节一致）；CSS 多 19 个死工具类源于工作区非 git 仓库（Tailwind v4 无 .gitignore 扫描了 node_modules），CI 上 git checkout 不存在此问题，仓库 dist 为基准
 - 注：机器上现留有**已安装的 SrP-CFG Installer 3.1.6**（真实安装验收产物，含全部修复），不需要可卸载
 
-### 4. L4 遗留：GitHub Actions 真实触发验证 ⏳（待用户确认后推 tag）
-- 推 `v*` tag 触发 release-desktop.yml 全绿（windows-latest 上 Rust toolchain + pnpm install + tauri build + 上传 NSIS/MSI）+ deploy-website.yml 正常
-- **注意**：推 tag 会在真实仓库发布 GitHub Release（v3.1.10，Tauri 版），属公开外部副作用，需用户确认；最新 tag v3.1.9 为旧 Electron 版，当前分支已含全部 Tauri 修复（含迁移 fix f7f2fa6），推荐 tag 指向当前 HEAD
-- 版本注入在 CI 有 GITHUB_TOKEN 不再回落 0.0.0
+### ✅ 4. L4 遗留：GitHub Actions 真实触发验证 — 已完成（2026-08-05，v3.1.10）
+- 流程：推 `refactor/tauri-vite-react` 分支到 origin（新建远程分支，不触发任何 workflow）→ 推 `v3.1.10` annotated tag（指向 e79c3aa，含全部修复）→ 3 个工作流全部触发且全绿：
+  - **release-desktop.yml**（run #50）：validate-tag → detect-changes → build-app（windows-latest：pnpm install + Rust toolchain + cargo test core + tauri build）→ release-desktop → **发布 GitHub Release v3.1.10**：`SrP-CFG_Setup_x64.exe`（NSIS 2.5MB）+ `SrP-CFG_Installer.msi`（2.5MB）+ `DESKTOP_UPDATE_MARKER`
+  - **release-config.yml**（run #31）：v3 配置包 → `SrP-CFG_Runtime_Core.zip` 上传到同一 Release
+  - **deploy-website.yml**（run #93）：网站部署（tag 触发）
+- **端到端 updater 验证**：安装版应用（3.1.6）checkForUpdate(true) → hasUpdate:true、**hasDesktopUpdate:true**（v3.1.10 含 DESKTOP_UPDATE_MARKER）、hasConfigUpdate:true、releases 列表含 v3.1.10 完整变更日志；cache.json 已更新（104KB）
+- 注：远程 main（c73de80）比本地 main 多 1 个自动提交（c73de80 每日命令库更新）；refactor 领先 origin/main 58、落后 1——**用户计划将 refactor 合并到 main**（需带上 c73de80）
+- 体积：CI 构建 MSI 2.5MB / NSIS 2.5MB（≤20MB ✓，本地构建为 MSI 3.7MB——CI 产物略小）
 
 ### ✅ 5. 正式图标替换 — 已完成（2026-08-05，0e09eb6）
 - 源：`app/desktop/resources/icon.ico`（与 `C:\Users\Rolin\Downloads\icon.ico` 字节一致 md5=6ef8adac；即重构前 Electron 软件图标，forge.config `icon: ./resources/icon`）→ `tauri icon` 重生成全套（32x32/128x128/128x128@2x/icon.ico/icon.png + 1024 源图 icon-source.png）
