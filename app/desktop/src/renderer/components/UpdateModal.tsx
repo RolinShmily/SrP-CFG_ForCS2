@@ -1,7 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { marked } from "marked";
 import {
-  X,
   ChevronDown,
   ExternalLink,
   Globe,
@@ -9,6 +8,7 @@ import {
   Monitor,
   Loader2,
 } from "lucide-react";
+import { Modal } from "@srp-cfg/ui";
 import type { GitHubRelease } from "../types";
 import { REPO_URL } from "../lib/downloads";
 
@@ -141,115 +141,91 @@ export default function UpdateModal({
       .finally(() => setLoading(false));
   }, [open]);
 
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
-
   if (!open) return null;
 
   const isLoading = checking || loading;
   const hasNewer = releases.some((r) => compareVersions(r.tagName, currentVersion) > 0);
 
+  const footer = !isLoading ? (
+    <>
+      <button
+        type="button"
+        onClick={() => window.api.openExternal("https://cfg.srprolin.top")}
+        className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border-none bg-accent px-4 text-sm font-medium text-bg transition-colors hover:bg-accent/90"
+      >
+        <Globe size={14} />
+        官网下载
+      </button>
+      <button
+        type="button"
+        onClick={() => window.api.openExternal(`${REPO_URL}/releases/latest`)}
+        className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border border-border bg-transparent px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover"
+      >
+        <ExternalLink size={14} />
+        GitHub Release
+      </button>
+    </>
+  ) : undefined;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div aria-hidden="true" className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div role="dialog" aria-modal="true" aria-labelledby="update-modal-title" className="relative mx-4 flex max-h-[80vh] w-full max-w-lg flex-col rounded-[var(--radius)] border border-border bg-bg-card shadow-xl">
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
-          <h2 id="update-modal-title" className="ui-section-title">检查更新</h2>
+    <Modal
+      open={open}
+      title="检查更新"
+      onClose={onClose}
+      labelledBy="update-modal-title"
+      maxWidth="max-w-lg"
+      scrollable
+      footer={footer}
+    >
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12 text-text-muted">
+          <Loader2 size={20} className="animate-spin mr-2" />
+          <span className="text-sm">正在检查更新...</span>
+        </div>
+      ) : error && releases.length === 0 ? (
+        <div className="text-center py-12 space-y-3">
+          <p className="text-red text-sm">获取更新信息失败，请检查网络连接</p>
           <button
             type="button"
-            autoFocus
-            aria-label="关闭更新窗口"
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center border-none bg-transparent text-text-muted transition-colors hover:bg-bg-hover hover:text-text"
+            onClick={() => {
+              setLoading(true);
+              setError(false);
+              window.api.getUpdateHistory()
+                .then((r) => { if (r) setReleases(r); else setError(true); })
+                .catch(() => setError(true))
+                .finally(() => setLoading(false));
+            }}
+            className="min-h-9 rounded-[var(--radius)] border border-border bg-bg-raised px-4 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
           >
-            <X size={18} />
+            重试
           </button>
         </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 py-4">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12 text-text-muted">
-              <Loader2 size={20} className="animate-spin mr-2" />
-              <span className="text-sm">正在检查更新...</span>
-            </div>
-          ) : error && releases.length === 0 ? (
-            <div className="text-center py-12 space-y-3">
-              <p className="text-red text-sm">获取更新信息失败，请检查网络连接</p>
-              <button
-                type="button"
-                onClick={() => {
-                  setLoading(true);
-                  setError(false);
-                  window.api.getUpdateHistory()
-                    .then((r) => { if (r) setReleases(r); else setError(true); })
-                    .catch(() => setError(true))
-                    .finally(() => setLoading(false));
-                }}
-                className="min-h-9 rounded-[var(--radius)] border border-border bg-bg-raised px-4 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
-              >
-                重试
-              </button>
-            </div>
-          ) : releases.length === 0 ? (
-            <div className="text-center py-12 text-text-muted text-sm">
-              暂无更新记录
-            </div>
-          ) : (
-            <>
-              {!hasNewer && currentVersion && (
-                <div className="flex items-center justify-center gap-2 py-3 mb-3 bg-green/10 text-green text-sm rounded-[var(--radius)]">
-                  <span className="font-display font-semibold">v{currentVersion}</span>
-                  <span>当前已是最新版本</span>
-                </div>
-              )}
-              {hasNewer && currentVersion && latestVersion && (
-                <div className="flex items-center justify-center gap-3 py-2.5 mb-3 text-sm text-text-muted bg-bg-raised rounded-[var(--radius)]">
-                  <span>当前 <span className="font-mono text-text-secondary">v{currentVersion}</span></span>
-                  <span className="text-border">|</span>
-                  <span>最新 <span className="font-mono text-accent">v{latestVersion}</span></span>
-                </div>
-              )}
-              <div className="space-y-2">
-                {releases.map((release) => (
-                  <ReleaseSection key={release.tagName} release={release} />
-                ))}
-              </div>
-            </>
-          )}
+      ) : releases.length === 0 ? (
+        <div className="text-center py-12 text-text-muted text-sm">
+          暂无更新记录
         </div>
-
-        {/* Footer */}
-        {!isLoading && (
-          <div className="flex flex-wrap items-center gap-3 border-t border-border px-5 py-4 shrink-0">
-            <button
-              type="button"
-              onClick={() =>
-                window.api.openExternal("https://cfg.srprolin.top")
-              }
-              className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border-none bg-accent px-4 text-sm font-medium text-bg transition-colors hover:bg-accent/90"
-            >
-              <Globe size={14} />
-              官网下载
-            </button>
-            <button
-              type="button"
-              onClick={() => window.api.openExternal(`${REPO_URL}/releases/latest`)}
-              className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border border-border bg-transparent px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover"
-            >
-              <ExternalLink size={14} />
-              GitHub Release
-            </button>
+      ) : (
+        <>
+          {!hasNewer && currentVersion && (
+            <div className="flex items-center justify-center gap-2 py-3 mb-3 bg-green/10 text-green text-sm rounded-[var(--radius)]">
+              <span className="font-display font-semibold">v{currentVersion}</span>
+              <span>当前已是最新版本</span>
+            </div>
+          )}
+          {hasNewer && currentVersion && latestVersion && (
+            <div className="flex items-center justify-center gap-3 py-2.5 mb-3 text-sm text-text-muted bg-bg-raised rounded-[var(--radius)]">
+              <span>当前 <span className="font-mono text-text-secondary">v{currentVersion}</span></span>
+              <span className="text-border">|</span>
+              <span>最新 <span className="font-mono text-accent">v{latestVersion}</span></span>
+            </div>
+          )}
+          <div className="space-y-2">
+            {releases.map((release) => (
+              <ReleaseSection key={release.tagName} release={release} />
+            ))}
           </div>
-        )}
-      </div>
-    </div>
+        </>
+      )}
+    </Modal>
   );
 }

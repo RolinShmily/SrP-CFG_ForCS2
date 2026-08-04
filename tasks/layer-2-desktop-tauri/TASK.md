@@ -27,6 +27,18 @@ app/desktop/
 └── src/renderer/           # 保留，仅替换 api 适配层 + 共享组件引用
 ```
 
+## 平台依赖说明（重要）
+
+| 任务 | 本环境（WSL/Linux） | Windows 环境 |
+| :--- | :--- | :--- |
+| 2.1 骨架 + tauri.conf.json | ✅ 已完成 | 验证 `tauri dev` |
+| 2.2 IPC 适配层 | ✅ 已完成（getFilePaths 待插件化） | 验证事件推送 |
+| 2.3 迁移决策 core | ✅ 已完成（4 测试） | 验证真实复制执行 |
+| 2.4 Rust services（detection/staging/installer/updater） | ❌ 无法编译验证（缺 webkit + winreg 平台依赖） | **需在 Windows 完成** |
+| 2.5/2.6 后端测试 + 检测功能验证 | 仅 core 纯逻辑（31 测试） | **检测功能（注册表/Steam）需 Windows 实机验收** |
+| 2.7 前端组件替换 | ✅ 可做 | 视觉回归 |
+| 2.8 打包 | ❌ | **需在 Windows 完成** |
+
 ## 任务
 
 ### 2.1 Tauri 骨架

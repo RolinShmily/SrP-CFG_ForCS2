@@ -12,6 +12,10 @@ interface ModalProps {
   footer?: ReactNode;
   /** 面板最大宽度（Tailwind 类） */
   maxWidth?: string;
+  /** 内容区可滚动（面板限高，用于长内容弹窗） */
+  scrollable?: boolean;
+  /** 面板最大高度（Tailwind 类，scrollable 时生效） */
+  maxHeight?: string;
   labelledBy?: string;
 }
 
@@ -28,6 +32,8 @@ export function Modal({
   children,
   footer,
   maxWidth = "max-w-md",
+  scrollable = false,
+  maxHeight = "max-h-[80vh]",
   labelledBy,
 }: ModalProps) {
   useEffect(() => {
@@ -55,6 +61,7 @@ export function Modal({
         className={clsx(
           "relative mx-4 w-full overflow-hidden rounded-[var(--radius)] border border-border bg-bg-card shadow-2xl",
           maxWidth,
+          scrollable && `flex flex-col ${maxHeight}`,
         )}
       >
         {(title || icon) && (
@@ -78,9 +85,16 @@ export function Modal({
             </button>
           </div>
         )}
-        <div className="px-5 py-4">{children}</div>
+        <div className={clsx("px-5 py-4", scrollable && "flex-1 overflow-y-auto")}>
+          {children}
+        </div>
         {footer && (
-          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border bg-bg-raised/50 px-5 py-4">
+          <div
+            className={clsx(
+              "flex flex-wrap items-center justify-end gap-3 border-t border-border bg-bg-raised/50 px-5 py-4",
+              scrollable && "shrink-0",
+            )}
+          >
             {footer}
           </div>
         )}
