@@ -7,11 +7,29 @@
 //! 对应原 Electron 版 `app/desktop/src/main/services/*.ts` 中的纯逻辑部分。
 
 pub mod conflicts;
+pub mod installer;
 pub mod migrate;
+pub mod staging;
+pub mod updater;
 pub mod vcfg;
 pub mod version;
 
 pub use conflicts::{AppendConflict, AppendConflictDecision, CategoryKey};
+pub use installer::{
+    category, category_mut, clear_category, install_from_backup, merge_append, normalize_category,
+    normalize_state, ordered_union, plan_overlay_category, remove_item, restore_item, update_paths,
+    CategoryState, DeployAction, EntryList, InstallState, OverlayPlan,
+};
 pub use migrate::{plan_migration, should_migrate, MigrationAction};
+pub use staging::{
+    classify_file, executable_line, exec_target, folders_to_remove, inspect_cfg_files,
+    is_runtime_registration_only, is_timestamp_folder, next_timestamp_folder, plan_staging,
+    staging_destination, ConfigImpact, StagedCategory, StagedConfigKind, StagingPlan,
+    UploadFileType, upload_file_type,
+};
+pub use updater::{
+    build_result, filter_at_least, filter_newer, has_config_assets, has_desktop_assets, is_cache_fresh,
+    is_dismissed, map_release, sort_newest_first, Release, UpdateCheckResult,
+};
 pub use vcfg::{parse_cfg_convars, snapshot_to_cfg, SnapshotToCfgOptions};
 pub use version::compare_versions;

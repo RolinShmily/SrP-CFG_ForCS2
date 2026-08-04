@@ -165,7 +165,7 @@ fn is_cfg_directive(code: &str) -> bool {
             && lower[d.len()..]
                 .chars()
                 .next()
-                .map_or(true, |c| !(c.is_alphanumeric() || c == '_'))
+                .is_none_or(|c| !(c.is_alphanumeric() || c == '_'))
     })
 }
 
