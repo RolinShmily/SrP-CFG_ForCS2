@@ -3,7 +3,8 @@
 //! 对应原 `app/desktop/src/main/services/installer.ts` 的 `checkAppendConflicts`。
 //! 文件存在性检查（fs）由壳层完成，本模块只做集合运算与阈值决策。
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum CategoryKey {
     GameCfg,
     UserCfg,

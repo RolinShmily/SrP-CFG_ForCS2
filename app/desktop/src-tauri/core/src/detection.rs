@@ -93,10 +93,13 @@ pub fn cs2_game_dir(library: &str, acf_content: Option<&str>) -> String {
 /// CS2 安装状态（对应 TS `detectCs2InstallState` 的每个 manifest 判定分支）：
 /// - manifest 不存在 / StateFlags 缺失 / 非 4 位 → None（继续下一个库）
 /// - `(flags & 4) != 0 || flags == 4` 判定已装；再按 `(flags & 2)` 区分 needs-update
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// 序列化为 `"installed" | "needs-update" | "not-installed"`（对齐 renderer `Cs2InstallState`）。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize, Default)]
+#[serde(rename_all = "kebab-case")]
 pub enum Cs2InstallState {
     Installed,
     NeedsUpdate,
+    #[default]
     NotInstalled,
 }
 
@@ -126,14 +129,17 @@ pub fn steam_id64_to_account_id(steam_id64: &str) -> Option<String> {
     Some((id.saturating_sub(STEAM_ID_OFFSET)).to_string())
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// 序列化为 `{ steamId64, accountId, personaName }`（对齐 renderer `SteamUser`）。
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SteamUser {
     pub steam_id64: String,
     pub account_id: String,
     pub persona_name: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LoginUsers {
     pub users: Vec<SteamUser>,
     pub current_user: Option<SteamUser>,

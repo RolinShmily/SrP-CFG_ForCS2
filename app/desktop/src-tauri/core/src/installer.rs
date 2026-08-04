@@ -17,14 +17,16 @@ use std::collections::HashSet;
 // 清单结构（对应 TS CategoryData / InstallState）
 // ─────────────────────────────────────────────
 
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CategoryState {
     pub files: Vec<String>,
     pub dirs: Vec<String>,
     pub path: String,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct InstallState {
     pub game_cfg: CategoryState,
     pub user_cfg: CategoryState,

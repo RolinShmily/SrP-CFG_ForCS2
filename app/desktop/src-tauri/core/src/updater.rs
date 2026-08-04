@@ -10,8 +10,9 @@
 
 use crate::version::compare_versions;
 
-/// 归一化后的 Release（对应 TS GitHubRelease）。
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// 归一化后的 Release（对应 TS GitHubRelease，序列化 camelCase）。
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Release {
     pub tag_name: String,
     pub name: String,
@@ -22,8 +23,9 @@ pub struct Release {
     pub has_config_assets: bool,
 }
 
-/// 更新检测结果（对应 TS UpdateCheckResult）。
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+/// 更新检测结果（对应 TS UpdateCheckResult，序列化 camelCase）。
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UpdateCheckResult {
     pub current_version: String,
     pub has_update: bool,

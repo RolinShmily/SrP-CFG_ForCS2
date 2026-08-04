@@ -15,7 +15,9 @@ pub mod updater;
 pub mod vcfg;
 pub mod version;
 
-pub use conflicts::{AppendConflict, AppendConflictDecision, CategoryKey};
+pub use conflicts::{
+    decide_append_conflicts, AppendConflict, AppendConflictDecision, CategoryInput, CategoryKey,
+};
 pub use detection::{
     cs2_game_dir, cs2_manifest_state, parse_acf_value, parse_library_paths, parse_login_users,
     steam_id64_to_account_id, Cs2InstallState, LoginUsers, SteamUser, DEFAULT_CS2_FOLDER,
@@ -37,5 +39,8 @@ pub use updater::{
     build_result, filter_at_least, filter_newer, has_config_assets, has_desktop_assets, is_cache_fresh,
     is_dismissed, map_release, sort_newest_first, Release, UpdateCheckResult,
 };
-pub use vcfg::{parse_cfg_convars, snapshot_to_cfg, SnapshotToCfgOptions};
+pub use vcfg::{
+    child, count_entries, normalize_cfg_value, parse_cfg_convars, parse_vdf, snapshot_to_cfg,
+    string_entries, SnapshotToCfgOptions, VdfNode, VdfValue,
+};
 pub use version::compare_versions;
