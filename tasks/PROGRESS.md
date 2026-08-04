@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L3 收尾完成；AGENT-START 已更新为 L2 续作提示词）
+> 更新时间：2026-08-04（L2 core 纯逻辑全量完成 84 测试；AGENT-START 已更新为 L2 收尾提示词）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md）
 
@@ -28,11 +28,12 @@
 | **GitHub API 限流** | 未认证 60 次/h/IP。版本注入（vite 插件构建时 fetch）瞬时失败会回落 `0.0.0`——**这是机制预期**（旧 Astro 同样回落），CI 配 `GITHUB_TOKEN` 后稳定 |
 | **共享组件 lint 约束** | `grep -rn "window.api\|electron\|@tauri-apps\|astro:" app/shared/ui/src` 必须为空 |
 
-## 三、当前进度（分支上 24 个提交，main..HEAD）
+## 三、当前进度（分支上 35 个提交，main..HEAD）
 
-### ✅ L0 基线 — 完成
+### 🔄 L0 基线 — 完成（除 0.6 黄金样本，WSL 可做）
 - 提交 `9b5342e`：tasks/ 五层任务文档 + 契约/清单 3 份
 - website 基线构建验证通过（21 页 / 3.1MB / dist）
+- ⚠️ **0.6 黄金样本记录未勾选**（见「下一步任务 1.5」）——L2 验收标准要求对照 ≥80%
 
 ### ✅ L1 共享组件库 — 主体完成
 - 提交 `57f0f21`：`@srp-cfg/ui` 新增 9 组件（Card/PageHeader/SectionHeader/LabeledValue/Badge/Modal/CopyButton/Skeleton/EmptyState）
@@ -67,15 +68,21 @@
 
 ## 四、下一步任务（按优先级）
 
-### 1. L2 Desktop → Tauri 剩余部分（**需 Windows 实机**，见 AGENT-START.md 新提示词）
-- Rust services 迁移（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 2.5/2.6 测试与检测验证 + 2.8 打包
+### 1. L0.6 黄金样本记录（**WSL 可做**，Track B 主线）
+- 0.6 一直未勾选。建 fixtures（伪 Steam 目录/上传包/游戏 CFG）→ Node 版（`app/desktop/src/main/services/*.ts` 纯函数，stub electron）与 Rust 版（core 84 测试同款输入）双版输出对照，产出 `golden-samples.md` 验收清单，勾选率 ≥80%
+- 详见 `tasks/layer-0-baseline/TASK.md` 0.6 节
+
+### 2. L2 Desktop → Tauri 收尾（**需 Windows 实机**，见 AGENT-START.md 新提示词）
+- **core 纯逻辑已完成**（7 模块 / 84 测试，lib.rs 导出全部 API）。剩余 = fs/winreg 壳层接线：
+  `src-tauri/src/services/`（detection 注册表 + staging zip + installer 落盘 + updater 网络）→ 全部调用 core 纯逻辑
+- commands 注册（原 ipc.ts 40+ handler → `#[tauri::command]`，签名对齐 api-contract.md）+ 2.6 检测实机验收 + 2.8 打包（NSIS/MSI ≤20MB）
 - 2.7 组件替换已在 WSL 完成（c436140），实机只需视觉回归
 - 详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
-### 2. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache + 版本同步脚本）
+### 3. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache + 版本同步脚本）
 - 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新
 
-### 3. L3 可选遗留 — 已完成
+### 4. L3 可选遗留 — 已完成
 - `/commands/{name}` 指令详情静态页（70aa5c9）+ JSON-LD 扩展（FAQ/DefinedTerm 指令数据集）均已完成，`pnpm build:web` + tsc 验证通过
 
 ## 五、关键技术参考
@@ -87,7 +94,7 @@
 | Website /api/chat + commands.json 契约 | `tasks/layer-3-website-react/api-contract.md` |
 | 组件抽取归类 | `tasks/layer-1-shared-ui/component-inventory.md` |
 | 共享库约定（token/边界/校验命令） | `app/shared/ui/README.md` |
-| Rust 纯逻辑（可测部分） | `app/desktop/src-tauri/core/src/`（vcfg/version/conflicts/migrate） |
+| Rust 纯逻辑（可测部分） | `app/desktop/src-tauri/core/src/`（vcfg/version/conflicts/migrate/staging/installer/updater/detection，**84 测试**，lib.rs 导出全部 API） |
 | Tauri IPC 适配层 | `app/desktop/src/renderer/lib/api.ts` |
 | Website React 结构 | `app/website/src/app/`（root/layout/routes/components/commands/docs） |
 | **Velite 内容管线** | `app/website/velite.config.ts`（root: **content**，L3 收尾迁出 src/content）+ `src/app/components/docs/docs-data.ts`（生成物 `.velite/docs.json` 已提交，`react-router build` 依赖它存在） |
@@ -108,3 +115,5 @@
 9. **wrangler.json 的 `assets.directory` 已指向 `./build/client`**（62b4cc5 统一）——后续不要再改回 ./dist；bindings（AI/Vectorize）拓扑零改动
 10. **build/client 按仓库惯例随提交同步**（L3 起每次构建产物会提交）；指令详情页使 sitemap 增至 2806 URL，属预期
 11. **desktop Tailwind `@source`**：`app/desktop/src/renderer/styles/global.css` 顶部的 `@source "../../../../shared/ui/src"` 不可删除——移除会导致共享组件专属类（如 CopyButton 的 teal/accent 变体）静默缺失
+12. **版本统一脚本**：`pnpm sync:version`（`app/desktop/scripts/sync-tauri-version.mjs`）——发版前跑，或 CI 用 `--check`；core/ 子 crate 版本（0.1.0）不参与同步
+13. **core 新增纯逻辑约束**：必须保持「无 tauri/fs/平台依赖」（只允许 serde/serde_json），否则 WSL 无法测试；壳层（I/O）按 core lib.rs 导出的 API 接线
