@@ -5,7 +5,7 @@
  * - LATEST_VERSION 构建期注入见 data/version.ts（此页不展示版本号，保留给首页）
  */
 import type { MetaFunction } from "react-router";
-import { Download, Info, Package } from "lucide-react";
+import { Download, Github, Info, Package } from "lucide-react";
 import { Badge, Card, SectionHeader } from "@srp-cfg/ui";
 import { installers, packages } from "../../data/downloads";
 import { RELEASES_URL } from "../../data/navigation";
@@ -15,17 +15,24 @@ export const meta: MetaFunction = () => [
   { name: "description", content: "下载 SrP-CFG 安装器和 v3 配置包" },
 ];
 
-const cardLinkHover =
-  "transition-[background-color,border-color,box-shadow,transform] duration-200 group-hover:-translate-y-0.5 group-hover:border-border-highlight group-hover:bg-bg-hover group-hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)]";
+// 卡片不再是整卡链接（改为卡片内两个下载按钮），悬停只做轻微高亮
+const cardHover =
+  "transition-colors duration-200 hover:border-border-highlight hover:bg-bg-hover";
+
+// 两个下载按钮：国内加速（accent，推荐） / GitHub 源（中性描边）
+const downloadPrimary =
+  "inline-flex min-h-10 items-center gap-2 rounded-[6px] bg-accent px-4 font-display text-sm font-semibold text-bg transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-accent-glow";
+const downloadSecondary =
+  "inline-flex min-h-10 items-center gap-2 rounded-[6px] border border-border bg-transparent px-4 font-display text-sm font-semibold text-text-secondary transition-colors hover:border-text-muted hover:text-text";
 
 // featured 卡需 border-accent/20，但 Tailwind 排序中 border-accent/* 恒在 border-border 之前，
 // 无法经 Card className 覆盖（Card 基础类带 border-border），故两种形态都用原生 div 精确还原：
 // - featured：accent 边框 + 悬停特效
 // - 普通：等同 Card 基础类（border-border + bg-bg-card）
 const featuredCard =
-  "rounded-[var(--radius)] border border-accent/20 bg-bg-card p-6 " + cardLinkHover;
+  "rounded-[var(--radius)] border border-accent/20 bg-bg-card p-6 " + cardHover;
 const plainCard =
-  "rounded-[var(--radius)] border border-border bg-bg-card p-6 " + cardLinkHover;
+  "rounded-[var(--radius)] border border-border bg-bg-card p-6 " + cardHover;
 
 export default function DownloadPage() {
   return (
@@ -45,35 +52,40 @@ export default function DownloadPage() {
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {installers.map((item) => (
-              <a
+              <Card
                 key={item.file}
-                href={item.url}
-                target="_blank"
-                rel="noopener"
-                className="group block no-underline"
+                padding="none"
+                className="group p-8 transition-colors duration-200 hover:border-border-highlight hover:bg-bg-hover"
               >
-                <Card padding="none" className={`p-8 ${cardLinkHover}`}>
-                  <div className="mb-4 flex items-start justify-between">
-                    <div>
-                      <h3 className="mb-1 font-display text-xl font-semibold transition-colors group-hover:text-accent">
-                        {item.name}
-                      </h3>
-                      <span className="font-mono text-sm text-text-faint">{item.file}</span>
-                    </div>
-                    <Badge
-                      variant="accent"
-                      className="rounded-[4px] border border-[rgba(232,121,12,0.12)] px-3 py-1 text-xs tracking-wider"
-                    >
-                      {item.badge}
-                    </Badge>
+                <div className="mb-4 flex items-start justify-between">
+                  <div>
+                    <h3 className="mb-1 font-display text-xl font-semibold transition-colors group-hover:text-accent">
+                      {item.name}
+                    </h3>
+                    <span className="font-mono text-sm text-text-faint">{item.file}</span>
                   </div>
-                  <p className="mb-6 text-sm leading-7 text-text-secondary">{item.desc}</p>
-                  <div className="flex items-center gap-2 font-display text-sm font-semibold text-accent">
+                  <Badge
+                    variant="accent"
+                    className="rounded-[4px] border border-[rgba(232,121,12,0.12)] px-3 py-1 text-xs tracking-wider"
+                  >
+                    {item.badge}
+                  </Badge>
+                </div>
+                <p className="mb-6 text-sm leading-7 text-text-secondary">{item.desc}</p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <a href={item.mirrorUrl} target="_blank" rel="noopener" className={downloadPrimary}>
                     <Download className="h-4 w-4" />
-                    点击下载
-                  </div>
-                </Card>
-              </a>
+                    国内加速下载
+                    <span className="rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider">
+                      推荐
+                    </span>
+                  </a>
+                  <a href={item.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
+                    <Github className="h-4 w-4" />
+                    GitHub 源下载
+                  </a>
+                </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -92,13 +104,7 @@ export default function DownloadPage() {
           </div>
           <div className="grid grid-cols-1 gap-5">
             {packages.map((pkg) => (
-              <a
-                key={pkg.file}
-                href={pkg.url}
-                target="_blank"
-                rel="noopener"
-                className="group block no-underline"
-              >
+              <div key={pkg.file} className="group block">
                 <div className={pkg.featured ? featuredCard : plainCard}>
                   <div className="mb-3 flex items-center gap-3">
                     <div
@@ -135,9 +141,24 @@ export default function DownloadPage() {
                     {pkg.name}
                   </h3>
                   <p className="mb-4 text-sm leading-7 text-text-secondary">{pkg.desc}</p>
-                  <span className="font-mono text-xs text-text-faint">{pkg.file}</span>
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <span className="font-mono text-xs text-text-faint">{pkg.file}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <a href={pkg.mirrorUrl} target="_blank" rel="noopener" className={downloadPrimary}>
+                      <Download className="h-4 w-4" />
+                      国内加速下载
+                      <span className="rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider">
+                        推荐
+                      </span>
+                    </a>
+                    <a href={pkg.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
+                      <Github className="h-4 w-4" />
+                      GitHub 源下载
+                    </a>
+                  </div>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         </div>
@@ -149,7 +170,8 @@ export default function DownloadPage() {
           <div>
             <h2 className="mb-1 font-display text-base font-semibold">使用说明</h2>
             <p className="text-sm leading-7 text-text-secondary">
-              下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。所有文件也可在{" "}
+              下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。每个下载项提供
+              国内加速（镜像，推荐）与 GitHub 源（直连）两个入口，均指向官方 GitHub Release 资产；所有文件也可在{" "}
               <a
                 href={RELEASES_URL}
                 target="_blank"

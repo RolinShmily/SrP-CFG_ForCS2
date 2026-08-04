@@ -18,5 +18,9 @@ export const CONFIG_PACKAGE_FILE = "SrP-CFG_Runtime_Core.zip";
 export const INSTALLER_MSI = "SrP-CFG_Installer.msi";
 
 // 拼接：镜像前缀(可空) + GitHub Release latest/download 基底 + 文件名
+// 国内加速下载（带镜像前缀）
 export const dl = (file: string): string =>
   `${DL_MIRROR_PREFIX}${RELEASE_DOWNLOAD_BASE}/${file}`;
+
+// GitHub 直连下载（无镜像前缀）
+export const dlGithub = (file: string): string => `${RELEASE_DOWNLOAD_BASE}/${file}`;

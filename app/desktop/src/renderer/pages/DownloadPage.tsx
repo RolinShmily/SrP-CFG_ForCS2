@@ -1,13 +1,11 @@
-import { useState } from "react";
 import {
   ArrowDownToLine,
   ExternalLink,
   Info,
   Package,
   Star,
-  Loader2,
 } from "lucide-react";
-import { REPO_URL, dl } from "../lib/downloads";
+import { REPO_URL, dl, dlGithub } from "../lib/downloads";
 import { Card, PageHeader } from "@srp-cfg/ui";
 
 const packages = [
@@ -15,25 +13,15 @@ const packages = [
     name: "Runtime Core",
     desc: "唯一配置包：功能 Runtime、用户 custom.cfg、Default/Echo/YSZH/VisionL 案例与 Valve 重置基线",
     file: "SrP-CFG_Runtime_Core.zip",
-    url: dl("SrP-CFG_Runtime_Core.zip"),
+    // 国内加速（镜像前缀，推荐） / GitHub 源（直连）
+    mirrorUrl: dl("SrP-CFG_Runtime_Core.zip"),
+    githubUrl: dlGithub("SrP-CFG_Runtime_Core.zip"),
     badge: "RUNTIME + USER",
     featured: true,
   },
 ];
 
 export default function DownloadPage() {
-  const [downloading, setDownloading] = useState<string | null>(null);
-
-  const handleDownloadInApp = async (url: string, fileName: string) => {
-    if (downloading) return;
-    setDownloading(fileName);
-    try {
-      await window.api.downloadFromUrl(url, fileName);
-    } finally {
-      setDownloading(null);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -92,29 +80,27 @@ export default function DownloadPage() {
                 <span className="break-all font-mono text-xs text-text-faint">
                   {pkg.file}
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => handleDownloadInApp(pkg.url, pkg.file)}
-                    disabled={downloading !== null}
-                    title="下载到应用内，可在安装页直接使用"
-                    className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border-none bg-accent px-3 text-xs font-medium text-bg transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-50"
+                    onClick={() => window.api.openExternal(pkg.mirrorUrl)}
+                    title="国内加速镜像下载（推荐）"
+                    className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius-sm)] border-none bg-accent px-4 text-xs font-semibold text-bg transition-colors hover:bg-accent-light"
                   >
-                    {downloading === pkg.file ? (
-                      <Loader2 size={12} className="animate-spin" />
-                    ) : (
-                      <ArrowDownToLine size={12} />
-                    )}
-                    下载到应用
+                    <ArrowDownToLine size={13} />
+                    国内加速下载
+                    <span className="rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wide">
+                      推荐
+                    </span>
                   </button>
                   <button
                     type="button"
-                    aria-label="在浏览器中下载 Runtime Core"
-                    onClick={() => window.api.openExternal("https://cfg.srprolin.top/download/")}
-                    title="在浏览器中下载"
-                    className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-transparent text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
+                    onClick={() => window.api.openExternal(pkg.githubUrl)}
+                    title="GitHub Releases 源下载"
+                    className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-transparent px-4 text-xs font-medium text-text-secondary transition-colors hover:border-text-muted hover:text-text"
                   >
-                    <ExternalLink size={14} />
+                    <ExternalLink size={13} />
+                    GitHub 源下载
                   </button>
                 </div>
               </div>
@@ -131,8 +117,8 @@ export default function DownloadPage() {
         <div>
           <h2 className="ui-panel-title mb-1">使用说明</h2>
           <p className="ui-body">
-            「下载到应用」会将配置包保存到应用管理目录，在安装页面的「已下载配置包」中可直接选择安装。
-            所有文件也可在{" "}
+            推荐使用「国内加速下载」；两个入口都指向官方 GitHub Release 资产（国内加速走镜像，
+            GitHub 源直连）。下载配置包后，拖入安装窗口或在安装页点击选择文件即可导入。所有文件也可在{" "}
             <button
               type="button"
               onClick={() =>

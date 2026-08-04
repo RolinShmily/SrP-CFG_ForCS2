@@ -424,7 +424,7 @@ function CopyButton({
     }
   );
 }
-const LATEST_VERSION = "3.1.10";
+const LATEST_VERSION = "0.0.0";
 const trace = [
   {
     step: "01",
@@ -988,20 +988,23 @@ const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: home,
   meta: meta$6
 }, Symbol.toStringTag, { value: "Module" }));
-const dl = (file) => `${DL_MIRROR_PREFIX}${RELEASE_DOWNLOAD_BASE}/${file}`;
+const mirror = (file) => `${DL_MIRROR_PREFIX}${RELEASE_DOWNLOAD_BASE}/${file}`;
+const direct = (file) => `${RELEASE_DOWNLOAD_BASE}/${file}`;
 const installers = [
   {
     name: "MSI 安装包",
     desc: "推荐方式。通过 Windows 安装向导安装到 Program Files，支持开始菜单和桌面快捷方式",
     file: "SrP-CFG_Installer.msi",
-    url: dl("SrP-CFG_Installer.msi"),
+    mirrorUrl: mirror("SrP-CFG_Installer.msi"),
+    githubUrl: direct("SrP-CFG_Installer.msi"),
     badge: "推荐"
   },
   {
     name: "Setup 安装程序 (EXE)",
     desc: "NSIS 自包含安装向导，双击运行即可安装，无需额外依赖",
     file: "SrP-CFG_Setup_x64.exe",
-    url: dl("SrP-CFG_Setup_x64.exe"),
+    mirrorUrl: mirror("SrP-CFG_Setup_x64.exe"),
+    githubUrl: direct("SrP-CFG_Setup_x64.exe"),
     badge: "Setup"
   }
 ];
@@ -1009,7 +1012,8 @@ const packages = [
   {
     name: "Runtime Core",
     file: "SrP-CFG_Runtime_Core.zip",
-    url: dl("SrP-CFG_Runtime_Core.zip"),
+    mirrorUrl: mirror("SrP-CFG_Runtime_Core.zip"),
+    githubUrl: direct("SrP-CFG_Runtime_Core.zip"),
     desc: "唯一配置包：Runtime + User + 内置 Preset 案例；在 custom.cfg 中选择起点并写入个人差异",
     badge: "推荐",
     featured: true
@@ -1021,9 +1025,11 @@ const meta$5 = () => [{
   name: "description",
   content: "下载 SrP-CFG 安装器和 v3 配置包"
 }];
-const cardLinkHover = "transition-[background-color,border-color,box-shadow,transform] duration-200 group-hover:-translate-y-0.5 group-hover:border-border-highlight group-hover:bg-bg-hover group-hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)]";
-const featuredCard = "rounded-[var(--radius)] border border-accent/20 bg-bg-card p-6 " + cardLinkHover;
-const plainCard = "rounded-[var(--radius)] border border-border bg-bg-card p-6 " + cardLinkHover;
+const cardHover$1 = "transition-colors duration-200 hover:border-border-highlight hover:bg-bg-hover";
+const downloadPrimary = "inline-flex min-h-10 items-center gap-2 rounded-[6px] bg-accent px-4 font-display text-sm font-semibold text-bg transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-accent-glow";
+const downloadSecondary = "inline-flex min-h-10 items-center gap-2 rounded-[6px] border border-border bg-transparent px-4 font-display text-sm font-semibold text-text-secondary transition-colors hover:border-text-muted hover:text-text";
+const featuredCard = "rounded-[var(--radius)] border border-accent/20 bg-bg-card p-6 " + cardHover$1;
+const plainCard = "rounded-[var(--radius)] border border-border bg-bg-card p-6 " + cardHover$1;
 const download = UNSAFE_withComponentProps(function DownloadPage() {
   return /* @__PURE__ */ jsx("section", {
     className: "pb-16 pt-28 sm:pb-20 sm:pt-32",
@@ -1043,39 +1049,50 @@ const download = UNSAFE_withComponentProps(function DownloadPage() {
           }), "安装器"]
         }), /* @__PURE__ */ jsx("div", {
           className: "grid grid-cols-1 gap-6 md:grid-cols-2",
-          children: installers.map((item) => /* @__PURE__ */ jsx("a", {
-            href: item.url,
-            target: "_blank",
-            rel: "noopener",
-            className: "group block no-underline",
-            children: /* @__PURE__ */ jsxs(Card, {
-              padding: "none",
-              className: `p-8 ${cardLinkHover}`,
+          children: installers.map((item) => /* @__PURE__ */ jsxs(Card, {
+            padding: "none",
+            className: "group p-8 transition-colors duration-200 hover:border-border-highlight hover:bg-bg-hover",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "mb-4 flex items-start justify-between",
               children: [/* @__PURE__ */ jsxs("div", {
-                className: "mb-4 flex items-start justify-between",
-                children: [/* @__PURE__ */ jsxs("div", {
-                  children: [/* @__PURE__ */ jsx("h3", {
-                    className: "mb-1 font-display text-xl font-semibold transition-colors group-hover:text-accent",
-                    children: item.name
-                  }), /* @__PURE__ */ jsx("span", {
-                    className: "font-mono text-sm text-text-faint",
-                    children: item.file
-                  })]
-                }), /* @__PURE__ */ jsx(Badge, {
-                  variant: "accent",
-                  className: "rounded-[4px] border border-[rgba(232,121,12,0.12)] px-3 py-1 text-xs tracking-wider",
-                  children: item.badge
+                children: [/* @__PURE__ */ jsx("h3", {
+                  className: "mb-1 font-display text-xl font-semibold transition-colors group-hover:text-accent",
+                  children: item.name
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "font-mono text-sm text-text-faint",
+                  children: item.file
                 })]
-              }), /* @__PURE__ */ jsx("p", {
-                className: "mb-6 text-sm leading-7 text-text-secondary",
-                children: item.desc
-              }), /* @__PURE__ */ jsxs("div", {
-                className: "flex items-center gap-2 font-display text-sm font-semibold text-accent",
+              }), /* @__PURE__ */ jsx(Badge, {
+                variant: "accent",
+                className: "rounded-[4px] border border-[rgba(232,121,12,0.12)] px-3 py-1 text-xs tracking-wider",
+                children: item.badge
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "mb-6 text-sm leading-7 text-text-secondary",
+              children: item.desc
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex flex-wrap items-center gap-3",
+              children: [/* @__PURE__ */ jsxs("a", {
+                href: item.mirrorUrl,
+                target: "_blank",
+                rel: "noopener",
+                className: downloadPrimary,
                 children: [/* @__PURE__ */ jsx(Download, {
                   className: "h-4 w-4"
-                }), "点击下载"]
+                }), "国内加速下载", /* @__PURE__ */ jsx("span", {
+                  className: "rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider",
+                  children: "推荐"
+                })]
+              }), /* @__PURE__ */ jsxs("a", {
+                href: item.githubUrl,
+                target: "_blank",
+                rel: "noopener",
+                className: downloadSecondary,
+                children: [/* @__PURE__ */ jsx(Github, {
+                  className: "h-4 w-4"
+                }), "GitHub 源下载"]
               })]
-            })
+            })]
           }, item.file))
         })]
       }), /* @__PURE__ */ jsxs("div", {
@@ -1095,11 +1112,8 @@ const download = UNSAFE_withComponentProps(function DownloadPage() {
           }), " ", "作为起点，再把个人差异写在下面；也可以完全交给 VCFG。"]
         }), /* @__PURE__ */ jsx("div", {
           className: "grid grid-cols-1 gap-5",
-          children: packages.map((pkg) => /* @__PURE__ */ jsx("a", {
-            href: pkg.url,
-            target: "_blank",
-            rel: "noopener",
-            className: "group block no-underline",
+          children: packages.map((pkg) => /* @__PURE__ */ jsx("div", {
+            className: "group block",
             children: /* @__PURE__ */ jsxs("div", {
               className: pkg.featured ? featuredCard : plainCard,
               children: [/* @__PURE__ */ jsxs("div", {
@@ -1125,9 +1139,34 @@ const download = UNSAFE_withComponentProps(function DownloadPage() {
               }), /* @__PURE__ */ jsx("p", {
                 className: "mb-4 text-sm leading-7 text-text-secondary",
                 children: pkg.desc
-              }), /* @__PURE__ */ jsx("span", {
-                className: "font-mono text-xs text-text-faint",
-                children: pkg.file
+              }), /* @__PURE__ */ jsx("div", {
+                className: "mb-5 flex flex-wrap items-center justify-between gap-3",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "font-mono text-xs text-text-faint",
+                  children: pkg.file
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "flex flex-wrap items-center gap-3",
+                children: [/* @__PURE__ */ jsxs("a", {
+                  href: pkg.mirrorUrl,
+                  target: "_blank",
+                  rel: "noopener",
+                  className: downloadPrimary,
+                  children: [/* @__PURE__ */ jsx(Download, {
+                    className: "h-4 w-4"
+                  }), "国内加速下载", /* @__PURE__ */ jsx("span", {
+                    className: "rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider",
+                    children: "推荐"
+                  })]
+                }), /* @__PURE__ */ jsxs("a", {
+                  href: pkg.githubUrl,
+                  target: "_blank",
+                  rel: "noopener",
+                  className: downloadSecondary,
+                  children: [/* @__PURE__ */ jsx(Github, {
+                    className: "h-4 w-4"
+                  }), "GitHub 源下载"]
+                })]
               })]
             })
           }, pkg.file))
@@ -1147,7 +1186,7 @@ const download = UNSAFE_withComponentProps(function DownloadPage() {
             children: "使用说明"
           }), /* @__PURE__ */ jsxs("p", {
             className: "text-sm leading-7 text-text-secondary",
-            children: ["下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。所有文件也可在", " ", /* @__PURE__ */ jsx("a", {
+            children: ["下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。每个下载项提供 国内加速（镜像，推荐）与 GitHub 源（直连）两个入口，均指向官方 GitHub Release 资产；所有文件也可在", " ", /* @__PURE__ */ jsx("a", {
               href: RELEASES_URL,
               target: "_blank",
               rel: "noopener",
@@ -3082,7 +3121,7 @@ const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: commandDetail,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-DN3STvVT.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-Bs-I9Wkl.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js"], "css": ["/assets/root-nsJ-X9jG.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-B8hbTxmq.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/navigation-IywTUcR9.js", "/assets/github-YdpmrXtg.js", "/assets/x-CZ7aIJKd.js", "/assets/menu-BV403Vvd.js", "/assets/book-open-l4dvTbr9.js", "/assets/download-BRrVaQGP.js", "/assets/createLucideIcon-CSIXUbmW.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-xmVvBUDP.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Badge-C2UTpf-b.js", "/assets/cloud-BEnvgMW5.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/download-BRrVaQGP.js", "/assets/book-open-l4dvTbr9.js", "/assets/Card-DA7DuV9j.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/gamepad-2-6J0sdaNJ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-3HSiTf0h.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/Badge-C2UTpf-b.js", "/assets/navigation-IywTUcR9.js", "/assets/download-BRrVaQGP.js", "/assets/createLucideIcon-CSIXUbmW.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-CaiRSiC6.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/navigation-IywTUcR9.js", "/assets/github-YdpmrXtg.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/boxes-CNuYZWmC.js", "/assets/file-text-CLC6qGEz.js", "/assets/cloud-BEnvgMW5.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-Dto4Tsxg.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/docs-data-B2Dr8nkg.js", "/assets/terminal-D1kYhRr-.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/boxes-CNuYZWmC.js", "/assets/book-open-l4dvTbr9.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs-detail": { "id": "routes/docs-detail", "parentId": "layout", "path": "/docs/:slug", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-detail-CoAqCxmi.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/docs-data-B2Dr8nkg.js", "/assets/menu-BV403Vvd.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/x-CZ7aIJKd.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-Bg8bnrDZ.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/x-CZ7aIJKd.js", "/assets/CommandCard-CR_GvHr3.js", "/assets/terminal-D1kYhRr-.js", "/assets/book-open-l4dvTbr9.js", "/assets/gamepad-2-6J0sdaNJ.js", "/assets/Card-DA7DuV9j.js", "/assets/Badge-C2UTpf-b.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/command-detail": { "id": "routes/command-detail", "parentId": "layout", "path": "/commands/:name", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/command-detail-DzxiLsEO.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/Badge-C2UTpf-b.js", "/assets/CommandCard-CR_GvHr3.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/file-text-CLC6qGEz.js", "/assets/book-open-l4dvTbr9.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-543c3f13.js", "version": "543c3f13", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-DN3STvVT.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-g1UE343s.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js"], "css": ["/assets/root-CQnd1fq3.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-DQzXHG5k.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/navigation-C3OdwsC1.js", "/assets/x-CZ7aIJKd.js", "/assets/menu-BV403Vvd.js", "/assets/book-open-l4dvTbr9.js", "/assets/download-BRrVaQGP.js", "/assets/createLucideIcon-CSIXUbmW.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-CtRz0MEb.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Badge-C2UTpf-b.js", "/assets/cloud-BEnvgMW5.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/download-BRrVaQGP.js", "/assets/book-open-l4dvTbr9.js", "/assets/Card-DA7DuV9j.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/gamepad-2-6J0sdaNJ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-D6Q1XvXn.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/Badge-C2UTpf-b.js", "/assets/navigation-C3OdwsC1.js", "/assets/download-BRrVaQGP.js", "/assets/createLucideIcon-CSIXUbmW.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about--59SeDC8.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/navigation-C3OdwsC1.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/boxes-CNuYZWmC.js", "/assets/file-text-CLC6qGEz.js", "/assets/cloud-BEnvgMW5.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-Dto4Tsxg.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/docs-data-B2Dr8nkg.js", "/assets/terminal-D1kYhRr-.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/boxes-CNuYZWmC.js", "/assets/book-open-l4dvTbr9.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs-detail": { "id": "routes/docs-detail", "parentId": "layout", "path": "/docs/:slug", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-detail-CoAqCxmi.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/docs-data-B2Dr8nkg.js", "/assets/menu-BV403Vvd.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/x-CZ7aIJKd.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-Bg8bnrDZ.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/SectionHeader-DZcCZ-6H.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/x-CZ7aIJKd.js", "/assets/CommandCard-CR_GvHr3.js", "/assets/terminal-D1kYhRr-.js", "/assets/book-open-l4dvTbr9.js", "/assets/gamepad-2-6J0sdaNJ.js", "/assets/Card-DA7DuV9j.js", "/assets/Badge-C2UTpf-b.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/command-detail": { "id": "routes/command-detail", "parentId": "layout", "path": "/commands/:name", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/command-detail-DzxiLsEO.js", "imports": ["/assets/chunk-62JRHF6Z-Crvolnfe.js", "/assets/Card-DA7DuV9j.js", "/assets/Badge-C2UTpf-b.js", "/assets/CommandCard-CR_GvHr3.js", "/assets/createLucideIcon-CSIXUbmW.js", "/assets/file-text-CLC6qGEz.js", "/assets/book-open-l4dvTbr9.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-c25fdb35.js", "version": "c25fdb35", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "v8_passThroughRequests": false, "v8_trailingSlashAwareDataRequests": false, "unstable_previewServerPrerendering": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
