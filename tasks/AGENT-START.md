@@ -113,7 +113,7 @@ TASK-about-download-content-fix.md 与 PROGRESS 四-7）。
 ### 下一步候选（按需，未指派）
 - 用户最终确认：真实网络下生产站点路由/内容已恢复正常（本机被证书拦截，用 `--ignore-certificate-errors` headless Edge 可绕过）
 - ✅ 桌面 About 页新文案已随 v3.1.10 tag 覆盖重发生效（2026-08-06：`git tag -f -a v3.1.10 HEAD` + force push，3 工作流全绿，release 资产全刷新；release 工作流已加 `overwrite: true` 支持重打 tag）
-- 用户计划将 `refactor/tauri-vite-react` 合并到 main（需带上 origin/main 的 c73de80 每日命令库自动提交）
+- ✅ **`refactor/tauri-vite-react` 已合并到 main**（2026-08-06，d8e08e72：refactor 合并 origin/main 的 c73de80 自动 commit【仅 last_sha.txt】→ main 快进 → push；main push 触发 deploy-website run 30926134980 全绿；每日 update-commands cron 02:00 继续在 main 上自动提交）
 
 ### 状态（已完成，勿重复）
 - 遗留收尾全部完成：getFilePaths（443bb84）/ 2.7 验收（4+1 bug）/ 物理拖拽人工验证 / 截图存档（d3dbf29）/ 迁移验证+修复（f7f2fa6）/ GH Actions 真实触发（v3.1.10 三工作流全绿）/ 正式图标（0e09eb6）

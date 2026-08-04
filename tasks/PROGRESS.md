@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-06（**网站生产路由问题已修复并部署**（ac887fc，详见四-6）；**网站/桌面内容更新已完成并部署**（718f48b：关于页技术栈对齐 Tauri/Vite-RR7、下载页便携版→Setup EXE、Runtime Core 卡双边框 bug、README+文档中心技术栈，详见四-7 与任务书 TASK-about-download-content-fix.md））
+> 更新时间：2026-08-06（**refactor 已合并到 main**（d8e08e72，含 c73de80 自动 commit 合并）；此前：网站路由修复 + 内容更新 + 下载双按钮/应用内下载/镜像修复均已部署并发布 v3.1.10（4 次覆盖重发），详见四-6/四-7）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -138,8 +138,17 @@
 - **（追加 3）应用内下载静默失败根因 + 修复**（2026-08-06，a5057c9d，用户手动验证通过）：用户反馈下载后安装页看不到包。**根因**：镜像 `gh.269601.xyz` 的 chunked 编码响应 ureq 3.3 无法解析（`protocol: chunk expected crlf as next character`）→ `download_from_url` 报错 → staging 目录删除 → 安装页（目录扫描）看不到；且按钮 try/finally 无 catch → 静默失败无提示。直连 GitHub 正常。用独立 ureq 3.3 测试程序实测：ghproxy.net / gh-proxy.com / ghfast.top / gh.llkk.cc 兼容，ghproxy.cc 证书过期，mirror.ghproxy.com 530。**修复**：`DL_MIRROR_PREFIX` → `https://ghproxy.net/`（website navigation.ts + desktop lib/downloads.ts，注释警告换镜像必须过 ureq 3.3 实测）+ desktop `handleDownloadInApp` 加 catch 显示行内红字错误（可切换来源重试）。工作区 exe 已重建（内嵌新 dist index-BpT33P3D.js），**用户手动验证：下载落盘 `%APPDATA%\top.srprolin.cfg\download\<日期-序号>\SrP-CFG_Runtime_Core.zip`，安装页可见**。v3.1.10 tag 第 4 次覆盖重发（a5057c9d），3 工作流全绿，生产站镜像已换（ghproxy×3、0 旧镜像）
 - ⚠️ desktop 改动（AboutPage）已随 tag 重发生效；机器上安装的 3.1.6 会提示更新到 v3.1.10
 
+### ✅ 8. refactor 合并到 main — 已完成（2026-08-06，d8e08e72）
+- 用户指示合并 `refactor/tauri-vite-react` → `main`，处理自动 commit
+- 自动 commit（c73de80「chore(auto): update CS2 console commands database」）只改 `.github/scripts/last_sha.txt`（1 行标记），无命令数据冲突
+- 流程：refactor 上 `git merge origin/main`（合并 c73de80，仅 last_sha.txt）→ push refactor → main 快进到 d8e08e72 → push main
+- main push 触发 deploy-website（run 30926134980 ✓ 50s，仅 website 工作流；release-desktop/release-config 只监听 tag 不触发）
+- 生产验证：`/` `/download/` 200、`/__manifest` 404、下载页 ghproxy×3
+- 每日 update-commands 工作流（cron 02:00 UTC）将继续在 main 上自动提交（固定路径文件，无影响）
+- v3.1.10 tag 保持在 e25e7b2e（与 main 仅差合并 commit + last_sha，无功能差异，未再移动）
+
 ### ✅ 已完成（不再执行）
-- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）、**网站生产路由问题修复**（ac887fc，详见四-6）、**网站/桌面内容更新**（718f48b，详见四-7）
+- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）、**网站生产路由问题修复**（ac887fc，详见四-6）、**网站/桌面内容更新**（718f48b，详见四-7）、**refactor→main 合并**（d8e08e72，详见四-8）
 
 ## 五、关键技术参考
 
