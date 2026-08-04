@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L2 core 纯逻辑全量完成 84 测试；L0.6 黄金样本已落地（Track B）；AGENT-START 已更新为 L2 收尾提示词）
+> 更新时间：2026-08-04（L2 收尾完成：Rust 壳层 + commands 49 个 + 2.6 实机验收 + 2.8 打包 NSIS 2.5MB/MSI 3.6MB；L4 后半完成；L0.6 黄金样本已落地）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md）
 
@@ -40,11 +40,15 @@
 - Desktop 已接入（`92310ca`）；两端 global.css token 同名不同值；图标一律内联 SVG；零依赖
 - 验证：`tsc -p app/desktop/tsconfig.renderer.json` + `vite build` 均通过
 
-### 🔄 L2 Desktop → Tauri — 进行中（core 纯逻辑全量完成，Windows 实机部分待实机）
+### ✅ L2 Desktop → Tauri — 完成（Windows 实机收尾 2026-08-04）
 - `a5a41b9` workspace + core crate（vcfg/version/conflicts）；`a40c1fa` IPC 适配层；`a08ac67` migrate.rs + tauri.conf.json
-- **core crate 纯逻辑全量迁移完成（WSL 可测）**：`c436140` L2.7 组件替换；`3c0298f` staging/installer/updater 纯逻辑（归类/Runtime 包识别/overlay 规划/append 合并/清单规范化/release 解析）+ 版本同步脚本；`16f3325` detection 纯逻辑（loginusers.vdf 用户识别/ACF StateFlags/libraryfolders）；`22a76f6` 清理误提交的 src-tauri/target（467 文件/136MB）
-- **cargo test 84 个全绿（31 → 84），clippy 0 警告**
-- ⚠️ 剩余（需 Windows 实机）：Rust services 的 fs/winreg 壳层（detection 注册表、staging zip、installer 落盘）、commands 注册（#[tauri::command]）、2.6 检测实机验收、2.8 打包。详见 `tasks/layer-2-desktop-tauri/TASK.md`
+- **core crate 纯逻辑全量**：`c436140` L2.7 组件替换；`3c0298f` staging/installer/updater 纯逻辑 + 版本同步脚本；`16f3325` detection 纯逻辑；`22a76f6` 清理误提交 target；**84 测试全绿，clippy 0 警告**
+- **Windows 实机收尾（本次）**：
+  - 壳层 `src-tauri/src/services/`：detection（winreg 注册表 + fs 扫描 → core）、staging（zip 解压 + 归类）、installer（三清单 + 部署/恢复）、updater（GitHub 网络 + 缓存）、vcfg/user_config/migrate；全部调用 core 纯逻辑只做 I/O
+  - commands 注册 49 个 `#[tauri::command]`（对应 api.ts 命令名，window.api 签名零改动）；`log:new` → emit/listen
+  - **2.6 实机验收通过**：`cargo test -- --ignored detect_all` 本机实测 Steam=C:\Program Files (x86)\Steam、CS2 installed(D:)、3 账号、当前用户 RoL1n_SrP、VCFG 79/2/92/338
+  - **2.8 打包成功**：`tauri build` NSIS 2.5MB + MSI 3.6MB（≤20MB ✓，原 Electron 100MB → 降幅 97%）；build.rs/icons 补齐、license 接入根 LICENSE
+  - 遗留：`getFilePaths` stub（UploadZone 待插件化）、2.7 视觉回归 GUI 目验、tauri dev 全功能手动验收
 
 ### ✅ L3 Website → Vite+React — 完成（页面迁移 + SEO + Astro 结构删除 + 部署链路统一）
 - `a65659b`/`d1194df`/`c21c7fb`：骨架 + 布局（vite/react-router config、root/layout、Nav/Footer、routes.ts）
@@ -61,10 +65,11 @@
 - `c91b676`：build——layout.tsx 注释清理后同步 build/client 产物
 - `70aa5c9`/`954f113`：**L3 可选遗留完成**——`/commands/{name}` 指令详情静态页（2785 条全量 SSG 预渲染 + DefinedTerm JSON-LD）+ /commands FAQPage JSON-LD；sitemap 增至 2806 URL。`pnpm build:web`（17s）+ tsc 无新增错误
 
-### 🔄 L4 CI/CD — 前半完成（WSL），剩余待 Windows
-- `bed306a`：deploy-website.yml 构建步骤注入 GITHUB_TOKEN（版本注入插件防 0.0.0 回落）；release-desktop.yml build-app 加 Rust toolchain（dtolnay stable + msvc target）+ cargo 缓存（swatinem，src-tauri/target）+ `cargo test -p srp-cfg-core`；**Electron 打包链未动**
-- `3c0298f`：**版本统一机制** `app/desktop/scripts/sync-tauri-version.mjs`（package.json 唯一来源 → tauri.conf.json + Cargo.toml[package]；`--check` 供 CI；根脚本 `pnpm sync:version`）
-- 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新
+### ✅ L4 CI/CD — 完成（后半 Windows 实机 2026-08-04）
+- `bed306a`：deploy-website GITHUB_TOKEN + release-desktop Rust toolchain/cargo 缓存 + core 测试
+- `3c0298f`：版本统一机制 `pnpm sync:version`（`--check` 供 CI）
+- **后半完成（本次）**：release-desktop.yml 切 `tauri build`（NSIS+MSI 上传，删 Portable.zip）；删 `msi/`、electron-forge 配置/依赖（forge.config.ts、vite.main/preload/renderer.config.ts、@electron-forge/*、electron、electron-winstaller、archiver、winreg）、onlyBuiltDependencies 清理；根 README 发布说明更新（Tauri v2/NSIS+MSI/Rust+MSVC）；`src/main/services/*.ts` + `src/preload/preload.ts` 保留为 L0.6 黄金样本参考（不参与构建）
+- 遗留：L4 验收 28（真实升级路径迁移验证）、GitHub Actions 真实触发验证（需推 tag）
 
 ## 四、下一步任务（按优先级）
 
@@ -72,15 +77,17 @@
 - fixtures（伪 Steam 目录 / 上传包 zip+目录 / 游戏 CFG 冲突场景）+ Node 版执行器（stub electron/winreg，117 断言全 PASS）+ `golden-samples.md`（输入→期望输出 + Rust 84 测试对照，100% ≥80%）
 - Windows 实机验收 L2 时直接引用 `golden-samples.md` §1（注册表三分支）与 §7 遗留项
 
-### 2. L2 Desktop → Tauri 收尾（**需 Windows 实机**，见 AGENT-START.md 新提示词）
+### ✅ 2. L2 Desktop → Tauri 收尾 — 已完成（2026-08-04 Windows 实机）
+- 壳层 services + 49 commands + 2.6 实机验收 + 2.8 打包（NSIS 2.5MB / MSI 3.6MB）；详见上方 L2 进度段
+- 遗留：getFilePaths 插件化、2.7 视觉回归 GUI、tauri dev 全功能手动验收
 - **core 纯逻辑已完成**（7 模块 / 84 测试，lib.rs 导出全部 API）。剩余 = fs/winreg 壳层接线：
   `src-tauri/src/services/`（detection 注册表 + staging zip + installer 落盘 + updater 网络）→ 全部调用 core 纯逻辑
 - commands 注册（原 ipc.ts 40+ handler → `#[tauri::command]`，签名对齐 api-contract.md）+ 2.6 检测实机验收 + 2.8 打包（NSIS/MSI ≤20MB）
 - 2.7 组件替换已在 WSL 完成（c436140），实机只需视觉回归
 - 详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
-### 3. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache + 版本同步脚本）
-- 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新（现状记录见 `layer-0-baseline/golden-samples.md` §8）
+### ✅ 3. L4 CI/CD — 已完成（release-desktop 切 tauri build、electron-forge/WiX 清理、README 更新）
+- 遗留：真实升级路径迁移验证（L4 验收 28）、推 tag 触发真实 CI 验证
 
 ### 4. L3 可选遗留 — 已完成
 - `/commands/{name}` 指令详情静态页（70aa5c9）+ JSON-LD 扩展（FAQ/DefinedTerm 指令数据集）均已完成，`pnpm build:web` + tsc 验证通过
@@ -117,4 +124,8 @@
 11. **desktop Tailwind `@source`**：`app/desktop/src/renderer/styles/global.css` 顶部的 `@source "../../../../shared/ui/src"` 不可删除——移除会导致共享组件专属类（如 CopyButton 的 teal/accent 变体）静默缺失
 12. **版本统一脚本**：`pnpm sync:version`（`app/desktop/scripts/sync-tauri-version.mjs`）——发版前跑，或 CI 用 `--check`；core/ 子 crate 版本（0.1.0）不参与同步
 13. **core 新增纯逻辑约束**：必须保持「无 tauri/fs/平台依赖」（只允许 serde/serde_json），否则 WSL 无法测试；壳层（I/O）按 core lib.rs 导出的 API 接线
-14. **L0.6 黄金样本**（Track B 已交付）：`tasks/layer-0-baseline/` 下 fixtures + `scripts/golden-node.mjs`（117 断言）+ `golden-outputs/` + `golden-samples.md`；复现 `bash tasks/layer-0-baseline/scripts/run-golden.sh`；`.sandbox/` 与 `scripts/golden-node.cjs`（esbuild 产物）已 gitignore；Windows 实机验收 L2 时直接引用 golden-samples.md（注册表三分支在 §1/§7）
+14. **L0.6 黄金样本**（Track B 已交付）：`tasks/layer-0-baseline/` 下 fixtures + `scripts/golden-node.mjs`（117 断言）+ `golden-outputs/` + `golden-samples.md`；复现 `bash tasks/layer-0-baseline/scripts/run-golden.sh`；`.sandbox/` 与 `scripts/golden-node.cjs`（esbuild 产物）已 gitignore
+15. **L2/L4 Windows 实机收尾已完成**（2026-08-04）：壳层 + 49 commands + 2.6 实机验收 + 2.8 打包（NSIS 2.5MB/MSI 3.6MB）+ release-desktop 切 tauri build + electron-forge/WiX 清理
+16. **Windows 侧构建环境**（本机实测可用）：Windows 侧 rustup 1.97.1（rsproxy 镜像）+ MSVC 14.51 BuildTools + cargo 镜像（C:\Users\Rolin\.cargo\config.toml → rsproxy）+ 构建用本地盘工作区（C:\Users\Rolin\srp-cfg-build，因 \\wsl$ 9p 上无法增量编译/重装 node_modules）；`CARGO_TARGET_DIR` 指本地盘
+17. **electron-forge 已删但保留**：`src/main/services/*.ts`（golden runner 依赖）+ `src/preload/preload.ts`（API 契约基准）为参考实现保留，不参与构建；tsconfig.json 主进程配置保留供参考
+18. **L4 遗留**：真实升级路径迁移验证（L2.3 在真实安装场景）、GitHub Actions 真实触发（需推 tag）；L2 遗留：getFilePaths 插件化、2.7 视觉回归 GUI 目验

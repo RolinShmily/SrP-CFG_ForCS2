@@ -193,8 +193,11 @@ steam-<variant>/                       variant = installed | update | not-instal
 
 ---
 
-## 8. 根 README 发布说明现状核对（非阻塞记录）
+## 8. 根 README 发布说明（2026-08-04 L4 后半已切换）
 
-- `README.md` 当前仍为 **Electron + WiX v6 MSI（.NET 8）** 描述：`msi/` 目录、`pnpm build:msi`、`electron-forge`（见 README L77/125/127/140/155）
-- 按任务要求：**打包链（L4 后半）未切换前只记录、不修改**；等 Windows 实机 `tauri build`（NSIS+MSI）切换后，再更新 README 的发布产物（MSI/Portable → NSIS exe/MSI）与工程说明（desktop/ Electron → Tauri）
-- 本文件即此记录的载体；PROGRESS.md 遗留注意点同步登记
+- **打包链已切换为 Tauri v2**（L4 后半完成，2026-08-04）：
+  - README 发布产物：`SrP-CFG_Installer.msi` + `SrP-CFG_Setup_x64.exe`（NSIS），体积 ≤20MB（实测 2.5MB/3.6MB）
+  - 工程说明：desktop = Tauri v2 + React；开发环境 = Rust（MSVC）+ VS Build Tools（移除 .NET/WiX）
+  - 构建命令：`pnpm --filter @srp-cfg/desktop tauri build`
+- **electron-forge / WiX 已清理**：`msi/`、`forge.config.ts`、`vite.main/preload/renderer.config.ts`、@electron-forge/* 依赖均删除
+- 保留：`src/main/services/*.ts` + `src/preload/preload.ts` 作为 L0.6 黄金样本 Node 版参照（不参与构建）
