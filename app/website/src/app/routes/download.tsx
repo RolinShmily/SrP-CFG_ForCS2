@@ -76,9 +76,6 @@ export default function DownloadPage() {
                   <a href={item.mirrorUrl} target="_blank" rel="noopener" className={downloadPrimary}>
                     <Download className="h-4 w-4" />
                     国内加速下载
-                    <span className="rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider">
-                      推荐
-                    </span>
                   </a>
                   <a href={item.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
                     <Github className="h-4 w-4" />
@@ -148,9 +145,6 @@ export default function DownloadPage() {
                     <a href={pkg.mirrorUrl} target="_blank" rel="noopener" className={downloadPrimary}>
                       <Download className="h-4 w-4" />
                       国内加速下载
-                      <span className="rounded bg-bg/20 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider">
-                        推荐
-                      </span>
                     </a>
                     <a href={pkg.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
                       <Github className="h-4 w-4" />
@@ -171,7 +165,7 @@ export default function DownloadPage() {
             <h2 className="mb-1 font-display text-base font-semibold">使用说明</h2>
             <p className="text-sm leading-7 text-text-secondary">
               下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。每个下载项提供
-              国内加速（镜像，推荐）与 GitHub 源（直连）两个入口，均指向官方 GitHub Release 资产；所有文件也可在{" "}
+              国内加速（镜像）与 GitHub 源（直连）两个入口，均指向官方 GitHub Release 资产；所有文件也可在{" "}
               <a
                 href={RELEASES_URL}
                 target="_blank"
