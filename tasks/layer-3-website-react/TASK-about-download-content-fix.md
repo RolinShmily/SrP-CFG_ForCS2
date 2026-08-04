@@ -65,3 +65,18 @@
   → **已解决**：2026-08-06 覆盖 v3.1.10 tag（be0a39ef）重新发布，release-desktop 从含 718f48b 的 tag 重建，MSI/NSIS 已含新 About 文案；已安装 3.1.6 用户会收到 v3.1.10 更新提示（hasDesktopUpdate:true）
 - 下载镜像前缀 `DL_MIRROR_PREFIX = "https://gh.269601.xyz/"`（navigation.ts）不变
 - 若后续 Release 流程恢复 Portable 打包，需同步下载页 installers 数组
+
+## 附：数据目录对照（用户问“原来那些 json 和文件临时目录改到哪里去了”）
+
+原 Electron 逻辑与新 Tauri 实现**机制完全保留**，仅数据根目录迁移（D2 决策 + f7f2fa6 一次性迁移）：
+
+| 内容 | Electron 旧路径 | Tauri 新路径 | 说明 |
+| :--- | :--- | :--- | :--- |
+| 数据根 | `%APPDATA%\srp-cfg` | `%APPDATA%\top.srprolin.cfg`（app_data_dir） | 首启动一次性迁移旧数据 |
+| 下载包 | `download\<日期-序号>\*.zip` | 同上子目录 | 目录扫描列出，无 JSON |
+| 上传 | `upload\<日期-序号>\` | 同上 | 目录扫描 |
+| 三清单 JSON | `install.json` / `res.json` / `save.json` | 同文件名（installer.rs json_path） | 受管文件/恢复原文件/保存配置 |
+| 解压临时目录 | `_extract_<时间戳>` | 同（staging.rs 三处） | 用完即删 |
+| 更新缓存 | userData/update-cache | `update-cache` | 允许重建不迁移 |
+
+下载包实际路径示例：`%APPDATA%\top.srprolin.cfg\download\2026-08-04-0001\SrP-CFG_Runtime_Core.zip`
