@@ -39,11 +39,11 @@
 - Desktop 已接入（`92310ca`）；两端 global.css token 同名不同值；图标一律内联 SVG；零依赖
 - 验证：`tsc -p app/desktop/tsconfig.renderer.json` + `vite build` 均通过
 
-### 🔄 L2 Desktop → Tauri — 进行中（core 完成，Windows 部分待实机）
-- `a5a41b9` workspace + core crate（vcfg/version/conflicts，**26 测试**）；`a40c1fa` IPC 适配层；`a08ac67` migrate.rs（**4 测试**）+ tauri.conf.json
-- **cargo test 总计 31 个全绿**
-- `c436140` **L2.7 组件替换完成（WSL）**：ConfirmAppendModal→共享 Modal；PersonalizePage→CopyButton×3（新增 variant 默认/accent/teal/red）+ Badge；AppliedConfig/BackupRestore/Download/QuickStart/About→共享 Card；UpdateModal 徽章→Badge（新增 size sm/md）；并修复 desktop Tailwind 不扫 `app/shared/ui` 的问题（global.css `@source`）。验证：`tsc -p app/desktop/tsconfig.renderer.json` + `vite build` 全过
-- ⚠️ 剩余（需 Windows 实机）：Rust services（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 打包验证。详见 `tasks/layer-2-desktop-tauri/TASK.md`
+### 🔄 L2 Desktop → Tauri — 进行中（core 纯逻辑全量完成，Windows 实机部分待实机）
+- `a5a41b9` workspace + core crate（vcfg/version/conflicts）；`a40c1fa` IPC 适配层；`a08ac67` migrate.rs + tauri.conf.json
+- **core crate 纯逻辑全量迁移完成（WSL 可测）**：`c436140` L2.7 组件替换；`3c0298f` staging/installer/updater 纯逻辑（归类/Runtime 包识别/overlay 规划/append 合并/清单规范化/release 解析）+ 版本同步脚本；`16f3325` detection 纯逻辑（loginusers.vdf 用户识别/ACF StateFlags/libraryfolders）；`22a76f6` 清理误提交的 src-tauri/target（467 文件/136MB）
+- **cargo test 84 个全绿（31 → 84），clippy 0 警告**
+- ⚠️ 剩余（需 Windows 实机）：Rust services 的 fs/winreg 壳层（detection 注册表、staging zip、installer 落盘）、commands 注册（#[tauri::command]）、2.6 检测实机验收、2.8 打包。详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
 ### ✅ L3 Website → Vite+React — 完成（页面迁移 + SEO + Astro 结构删除 + 部署链路统一）
 - `a65659b`/`d1194df`/`c21c7fb`：骨架 + 布局（vite/react-router config、root/layout、Nav/Footer、routes.ts）
@@ -61,7 +61,9 @@
 - `70aa5c9`/`954f113`：**L3 可选遗留完成**——`/commands/{name}` 指令详情静态页（2785 条全量 SSG 预渲染 + DefinedTerm JSON-LD）+ /commands FAQPage JSON-LD；sitemap 增至 2806 URL。`pnpm build:web`（17s）+ tsc 无新增错误
 
 ### 🔄 L4 CI/CD — 前半完成（WSL），剩余待 Windows
-- `bed306a`：deploy-website.yml 构建步骤注入 GITHUB_TOKEN（版本注入插件防 0.0.0 回落）；release-desktop.yml build-app 加 Rust toolchain（dtolnay stable + msvc target）+ cargo 缓存（swatinem，src-tauri/target）+ `cargo test -p srp-cfg-core`（31 通过）；**Electron 打包链未动**（4.2 tauri build 切换 / 4.3 清理待后续）
+- `bed306a`：deploy-website.yml 构建步骤注入 GITHUB_TOKEN（版本注入插件防 0.0.0 回落）；release-desktop.yml build-app 加 Rust toolchain（dtolnay stable + msvc target）+ cargo 缓存（swatinem，src-tauri/target）+ `cargo test -p srp-cfg-core`；**Electron 打包链未动**
+- `3c0298f`：**版本统一机制** `app/desktop/scripts/sync-tauri-version.mjs`（package.json 唯一来源 → tauri.conf.json + Cargo.toml[package]；`--check` 供 CI；根脚本 `pnpm sync:version`）
+- 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新
 
 ## 四、下一步任务（按优先级）
 
@@ -70,7 +72,7 @@
 - 2.7 组件替换已在 WSL 完成（c436140），实机只需视觉回归
 - 详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
-### 2. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache）
+### 2. L4 CI/CD（前半已做：website 构建 token + desktop Rust toolchain/cache + 版本同步脚本）
 - 待 Windows：`tauri build` 切换（NSIS/MSI）、删 `msi/` 与 electron-forge、onlyBuiltDependencies 清理、根 README 发布说明更新
 
 ### 3. L3 可选遗留 — 已完成
@@ -100,7 +102,7 @@
 3. **版本注入回落**：GitHub 未认证限流时构建产物显示 `0.0.0`（旧 Astro 同样行为）；CI 配 GITHUB_TOKEN 后稳定
 4. **Velite 0.4 坑**：`s.slug()` 只校验不派生路径（需 `s.path().transform()`）；生成 `index.js` 含 `with { type: 'json' }`（Vite 6 解析不稳定）→ 代码直接 import `docs.json`。数据源在 `app/website/content/`（L3 收尾迁出 `src/content`）
 5. **commands.json 打包**：2785 条随路由 chunk 打包（gzip ~169KB），构建有 chunk 体积警告属预期
-6. **tsc 遗留 1 个错误**（非本次引入，勿修错地方）：`vite.config.ts` ×1（Plugin 类型，根/子 vite 6.4.2/6.4.3 hoisting）。曾尝试 dedupe：pnpm 10 不读 package.json 的 `pnpm.overrides`，改 pnpm-workspace.yaml 会影响 desktop 的 vite 解析，未做——留待 L4 或 desktop 一起处理。原 astro.config 的 2 个错误已随删除消失
+6. **tsc 遗留 1 个错误已解决（19093f7）**：`vite.config.ts` plugins 数组 `as PluginOption[]`（根/子 vite 6.4.2/6.4.3 hoisting 导致两份 @types/estree，类型身份不一致）。`tsc -b` 现零错误；未改依赖解析
 7. 共享组件替换（Modal/CopyButton/Badge/Card）已全部接入 Desktop 页面（L2.7，c436140）；剩余视觉回归需 Windows 实机
 8. 新 agent 首次跑 install 记得带 `--registry=https://registry.npmmirror.com`
 9. **wrangler.json 的 `assets.directory` 已指向 `./build/client`**（62b4cc5 统一）——后续不要再改回 ./dist；bindings（AI/Vectorize）拓扑零改动
