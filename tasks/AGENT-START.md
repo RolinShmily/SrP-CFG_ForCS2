@@ -3,9 +3,9 @@
 你是 SrP-CFG 重构项目的执行 agent，接手 **L2/L4 遗留收尾**。主链已全部完成：core crate 纯逻辑
 （7 模块 / 84 测试）、L2 Desktop → Tauri（Rust 壳层 + 49 commands + 2.6 实机验收 + 2.8 打包
 NSIS 2.5MB / MSI 3.6MB）、L4 后半（release-desktop 切 tauri build + electron-forge/WiX 清理）、
-L0.6 黄金样本（Track B）。剩余为遗留项：getFilePaths 插件化、2.7 视觉回归 + tauri dev 全功能
-验收、真实升级迁移验证、GitHub Actions 真实触发、正式图标替换。本机（Win11 26200 + WSL Arch）
-即 Windows 实机。
+L0.6 黄金样本（Track B）。剩余为遗留项：**getFilePaths 插件化✅（已完成 443bb84）**、2.7 视觉回归 +
+tauri dev 全功能验收（**进行中，已实测揪出并修复 3 个隐藏 bug，待提交**）、真实升级迁移验证、
+GitHub Actions 真实触发、正式图标替换。本机（Win11 26200 + WSL Arch）即 Windows 实机。
 
 ## 第一步：读文件（必须按顺序读完再动手）
 
@@ -32,6 +32,25 @@ L0.6 黄金样本（Track B）。剩余为遗留项：getFilePaths 插件化、2
   - Windows 侧命令模板：`cmd.exe /c 'pushd C:\Users\Rolin\srp-cfg-build\app\desktop && set PATH=C:\Users\Rolin\.cargo\bin;C:\Users\Rolin\AppData\Roaming\npm;%PATH% && pnpm tauri build'`
   - cargo（Windows 侧）跑测试：`CARGO_TARGET_DIR=C:\Users\Rolin\srp-cfg-target` + `CARGO_INCREMENTAL=0`
   - 源码改动后：`cp -r app/desktop/* $W/app/desktop/` 同步（注意排除 target）
+- **IPC 命令名铁律（已修，勿回退）**：api.ts 的 invoke 字符串 = Rust `#[tauri::command]` 函数名
+  （snake_case：`detect_all`/`updater_check`/`user_config_save`...），**不是** Electron 时代
+  `"installer:detectAll"` 式通道名（全部 49 个调用运行时失败，tsc 验不出）；参数 key 按
+  `rename_all = "camelCase"`（accountId/usePersonalCfg/file_name→fileName），枚举 camelCase
+  （overlay/append/upload/download/install/save/res）。改动 Rust command 名必须同步 api.ts
+- **ureq TLS 铁律（已修）**：ureq 3.3 默认 TLS provider 是 Rustls 且未编译该 feature → https 直接
+  panic；必须显式 `.tls_config(ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls).build())`
+  （路径 `ureq::tls::`）。所有新 https 请求（updater/download）都要带
+- **TitleBar 拖拽铁律**：Tauri v2 只认 `data-tauri-drag-region` 属性（=deep 子树可拖，按钮自动阻断），
+  `-webkit-app-region: drag` 是 Electron 机制无效
+- **dev 进程树会被 WSL interop 静默回收**（无崩溃记录）：稳定 GUI 验收用 `pnpm tauri build` 产出
+  release exe + schtasks 独立启动（`run-release.bat`：设 `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=
+  --remote-debugging-port=9223` 再启动 exe；`schtasks /create ... /sc once /st 23:59 /f && /run`）
+- **vite HMR 读 Windows 工作区文件**：WSL 改 renderer 后必须同步到 `C:\Users\Rolin\srp-cfg-build\
+  app\desktop` 对应文件，否则 dev/release 里是旧代码（构建前务必全量同步）
+- **GUI 验收手段（CDP）**：启动时设 `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=9222`，
+  `curl http://127.0.0.1:9222/json` 拿 webSocketDebuggerUrl → node（v24 内置 WebSocket）Runtime.evaluate
+  驱动页面/断言 DOM（`/tmp/cdp.mjs` 助手：`node /tmp/cdp.mjs "<expr>"`）；原生对话框用 PowerShell
+  EnumWindows/GetWindowText 验证 + SendKeys ESC 关闭；窗口拖拽/按钮用 SetCursorPos + mouse_event 模拟
 - **绝对不要修改**：
   - `app/website/src/worker.ts`、`app/website/src/lib/ai-stream.ts`（AI 服务，L3 零改动保留）
   - `app/website/wrangler.json` 的 bindings（AI/Vectorize）与 assets 指向（`./build/client`，勿改回）
@@ -45,18 +64,22 @@ L0.6 黄金样本（Track B）。剩余为遗留项：getFilePaths 插件化、2
 
 ## 本次任务：遗留收尾（按优先级）
 
-### 1. getFilePaths 插件化（L2 遗留）
-- 现状：`src/renderer/lib/api.ts` 的 `getFilePaths` 返回 []；UploadZone 上传无真实文件路径
-- 方案：改用 `@tauri-apps/plugin-dialog`（open 多选文件/目录）或拖拽事件解析路径；
-  保持 `getFilePaths(files)` 签名不变，renderer 调用点零改动
-- 涉及：desktop 加 `@tauri-apps/plugin-dialog` 依赖 + Rust 侧 `tauri-plugin-dialog` 注册 +
-  api.ts 实现 + UploadZone 触发方式适配；capabilities 需加 `dialog:default` 权限
-- 验证：Windows 实机 `tauri dev` 上传流程可用（或至少构建通过 + 单元层面验证）
+### 1. getFilePaths 插件化（L2 遗留）✅ 已完成（443bb84 + 6e8472f）
+- 已实现：`@tauri-apps/plugin-dialog` 2.7.2（JS）+ `tauri-plugin-dialog`（Rust 注册）+ `dialog:default` capability；
+  UploadZone 点击 → 原生对话框（.zip/.cfg/.txt 多选）、拖拽 → `onDragDropEvent`（tauri://drag-drop）真实路径（含文件夹）；
+  api.ts `getFilePaths(files)` 换实现不改签名（路径字符串归一化/去重，File 对象返回 []）
+- 验证：WSL tsc + vite build ✓、core 84 测试 ✓、Windows `tauri build` NSIS 2.6MB/MSI 3.7MB ✓
 
-### 2. 2.7 视觉回归 + tauri dev 全功能验收（L2 遗留）
-- 本机 `pnpm tauri dev`（本地盘工作区）：全页面可用性、TitleBar 拖拽/最小化/最大化/关闭、
-  `log:new` 实时日志推送、检测/上传/overlay/append/恢复全流程 GUI 目验
-- 对照 `tasks/layer-0-baseline/golden-samples.md` 期望清单逐项勾选
+### 2. 2.7 视觉回归 + tauri dev 全功能验收（L2 遗留）⚠️ 进行中
+- **已修 3 个隐藏 bug（未提交！git status 有 M api.ts / updater.rs / staging.rs / TitleBar.tsx / global.css）**：
+  - IPC 命令名全断：api.ts 曾用 `"installer:detectAll"` 式通道名，Rust 实际注册 snake_case 函数名 → 全部 49 个调用运行时失败；
+    已改 api.ts invoke 字符串为真实命令名（detect_all/updater_check/...，参数 key camelCase）
+  - ureq 3.3 TLS panic：显式 `ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls)`（updater.rs + staging.rs）
+  - TitleBar 拖拽：改 `data-tauri-drag-region="deep"`（Tauri v2 不认 -webkit-app-region）
+- **已实测通过（CDP）**：detectAll（Steam/CS2 installed(D:)/3 账号/VCFG 79 与 golden 一致）、全数据命令、log:new 实时日志、
+  maximize 切换、UploadZone 原生对话框、checkForUpdate 不再 panic（hasUpdate:false 疑似限流待核对）
+- **未完成**：TitleBar 拖拽/最小化/关闭实测（鼠标模拟）、全 7 页逐一目验、updater 结果核对
+- **注意**：dev 进程树会被 WSL interop 静默回收 → 稳定验收用 release exe + schtasks 独立启动（见环境铁律）
 
 ### 3. 真实升级路径迁移验证（L4 验收 28）
 - 制造/保留旧版数据 `%APPDATA%/srp-cfg` → 安装新版 `SrP-CFG Installer_3.1.6_x64-setup.exe`
