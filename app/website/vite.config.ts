@@ -10,8 +10,12 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { readdirSync, writeFileSync } from "fs";
+import { join, relative, sep } from "path";
 import { defineConfig, type Plugin } from "vite";
 import { fetchLatestVersion } from "./src/data/version";
+
+const SITE_URL = "https://srprolin.top";
 
 /**
  * 构建/启动时获取 GitHub Releases 最新版本（失败回落 "0.0.0"，逻辑见 fetchLatestVersion），
@@ -31,11 +35,45 @@ function latestVersionPlugin(): Plugin {
   };
 }
 
+/**
+ * 构建期生成 sitemap.xml（替换 @astrojs/sitemap，L3.7）。
+ * 遍历 build/client 下所有 index.html（SSG 预渲染产物）推导 URL 清单，
+ * 站点根 https://srprolin.top（与旧 astro.config.ts 一致）。
+ */
+function sitemapPlugin(): Plugin {
+  return {
+    name: "srp-cfg-sitemap",
+    apply: "build",
+    closeBundle() {
+      const outDir = "build/client";
+      const urls: string[] = [];
+      const walk = (dir: string) => {
+        for (const entry of readdirSync(dir, { withFileTypes: true })) {
+          const full = join(dir, entry.name);
+          if (entry.isDirectory()) walk(full);
+          else if (entry.name === "index.html") {
+            const rel = relative(outDir, dir).split(sep).join("/");
+            urls.push(rel ? `/${rel}/` : "/");
+          }
+        }
+      };
+      walk(outDir);
+      urls.sort();
+      const lastmod = new Date().toISOString().slice(0, 10);
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
+        .map((u) => `  <url><loc>${SITE_URL}${u}</loc><lastmod>${lastmod}</lastmod></url>`)
+        .join("\n")}\n</urlset>\n`;
+      writeFileSync(join(outDir, "sitemap.xml"), xml);
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
     reactRouter(),
     latestVersionPlugin(),
+    sitemapPlugin(),
   ],
 });
