@@ -3,6 +3,7 @@
  * 容器用共享 Card（hoverable 与旧 hover 完全一致）；flag 徽章用共享 Badge；
  * 复制按钮用共享 CopyButton（含“已复制”反馈）；数值说明用 <details> 展开。
  */
+import { Link } from "react-router";
 import { Badge, Card, CopyButton } from "@srp-cfg/ui";
 import type { CommandRecord, CommandValueInfo } from "./commands-data";
 
@@ -14,7 +15,7 @@ function formatRange(range?: { min?: string; max?: string }): string {
   return "";
 }
 
-function ValueDetails({ value }: { value: CommandValueInfo }) {
+export function ValueDetails({ value }: { value: CommandValueInfo }) {
   const constraint = formatRange(value.constraint);
   const documentedRange = formatRange(value.documented_range);
   const summaryTags = [
@@ -64,13 +65,13 @@ export function CommandCard({ cmd }: { cmd: CommandRecord }) {
     >
       <div>
         <div className="mb-2.5 flex items-start justify-between gap-3">
-          <code
-            title="点击复制"
-            className="break-all cursor-pointer select-all font-mono text-base font-bold text-accent transition-colors group-hover:text-accent-light"
-            onClick={() => navigator.clipboard.writeText(cmd.n).catch(() => {})}
+          <Link
+            to={`/commands/${cmd.n}`}
+            title="查看指令详情"
+            className="break-all font-mono text-base font-bold text-accent transition-colors hover:text-accent-light"
           >
             {cmd.n}
-          </code>
+          </Link>
           <div className="flex flex-shrink-0 flex-wrap items-center gap-1.5">
             {cmd.t === "var" ? (
               <span className="rounded border border-border bg-bg px-2 py-0.5 font-mono text-xs text-text-muted">
@@ -111,6 +112,12 @@ export function CommandCard({ cmd }: { cmd: CommandRecord }) {
           ))}
         </div>
         <CopyButton text={cmd.n} className="flex-shrink-0" />
+        <Link
+          to={`/commands/${cmd.n}`}
+          className="flex-shrink-0 rounded-[6px] border border-border bg-bg px-2.5 py-1 font-display text-xs font-semibold text-text-muted transition-colors hover:border-accent-bg hover:text-accent"
+        >
+          详情
+        </Link>
       </div>
     </Card>
   );

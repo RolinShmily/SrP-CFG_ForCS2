@@ -8,6 +8,7 @@
  * /docs         -> docs（文档中心索引）
  * /docs/:slug   -> docs-detail（文档详情，16 篇，数据来自 Velite .velite）
  * /commands     -> commands
+ * /commands/:name -> command-detail（指令详情静态页，2785 条，L3.4 可选增量）
  *
  * 待 Astro 迁移完成后删除 src/pages/* 与 src/layouts/*。
  */
@@ -21,5 +22,6 @@ export default [
     route("/docs", "routes/docs.tsx"),
     route("/docs/:slug", "routes/docs-detail.tsx"),
     route("/commands", "routes/commands.tsx"),
+    route("/commands/:name", "routes/command-detail.tsx"),
   ]),
 ] satisfies RouteConfig;

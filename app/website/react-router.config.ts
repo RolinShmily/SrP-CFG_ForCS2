@@ -9,6 +9,7 @@
  */
 import type { Config } from "@react-router/dev/config";
 import docs from "./.velite/docs.json";
+import commandsJson from "./public/data/commands.json";
 
 export default {
   appDirectory: "src/app",
@@ -20,5 +21,7 @@ export default {
     "/docs",
     ...docs.map((doc) => `/docs/${doc.slug}`),
     "/commands",
+    // 指令详情静态页：全部 2785 条预渲染（L3.4 可选增量）
+    ...commandsJson.map((cmd) => `/commands/${cmd.n}`),
   ],
 } satisfies Config;

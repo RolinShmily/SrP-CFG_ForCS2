@@ -41,6 +41,46 @@ export const meta: MetaFunction = () => [
   },
 ];
 
+// FAQ JSON-LD（L3.4 可选增量：与指令详情页的 DefinedTerm 组成结构化数据，便于富摘要）
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "如何在 CS2 中打开控制台？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "在游戏设置 → 游戏 中开启「启用开发者控制台」，然后按键盘左上角的 ~ 键打开控制台，输入指令后回车执行。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "输入的指令没有生效怎么办？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "先确认控制台已开启（设置 → 游戏 → 启用开发者控制台），并检查指令拼写是否完整；部分指令需要 sv_cheats 1 或仅离线练习模式可用，作弊分类指令在官方匹配中会被拦截。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "变量和命令有什么区别？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "变量（Var）存储配置值，例如 cl_crosshair_size 可设为数字并在游戏中持久保存；命令（Cmd）是触发动作的指令，例如 +forward 或 noclip，多数命令没有默认值。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "如何恢复指令的默认值？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "在控制台输入指令名加默认值即可恢复，例如 cl_crosshair_size 1；本站每条指令详情页都标注了官方默认值。",
+      },
+    },
+  ],
+};
+
 const categoryIcons: Record<string, typeof Search> = {
   all: Layers,
   network: Network,
@@ -101,6 +141,11 @@ export default function CommandsPage() {
           label="Commands"
           title="指令中心"
           description="收录 CS2 官方控制台指令与变量，支持中文/英文/拼音检索，并展示中文释义、默认值、引擎 Min/Max 约束与明确的离散取值。"
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
 
         <div className="mt-12 flex flex-col items-start gap-6 xl:flex-row">
