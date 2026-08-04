@@ -8,5 +8,6 @@
       "@/*": ["src/*"],
       "@shared/*": ["../shared/*"]
     }
-  }
+  },
+  "include": [".astro/types.d.ts", ".velite", "**/*"]
 }

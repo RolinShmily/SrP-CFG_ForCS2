@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/favicon.ico"/><meta name="referrer" content="origin"/><meta name="theme-color" content="#090b10"/><meta name="color-scheme" content="dark"/><link rel="icon" type="image/x-icon" href="/favicon.ico"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><title>preview 模式 — SrP-CFG 文档</title><meta name="description" content="饰品截图模式，含景深、FOV 调节、摄像机锁定"/><link rel="modulepreload" href="/assets/entry.client-DrQZ2J-V.js"/><link rel="modulepreload" href="/assets/chunk-62JRHF6Z-BWKVPo1m.js"/><link rel="modulepreload" href="/assets/root-yPwnwGzF.js"/><link rel="modulepreload" href="/assets/layout-7xElGVpq.js"/><link rel="modulepreload" href="/assets/navigation-IywTUcR9.js"/><link rel="modulepreload" href="/assets/github-Sb1PQ1Py.js"/><link rel="modulepreload" href="/assets/x-bscOztqE.js"/><link rel="modulepreload" href="/assets/book-open-DotJL0PM.js"/><link rel="modulepreload" href="/assets/download-Btl4jWHg.js"/><link rel="modulepreload" href="/assets/createLucideIcon-C3Bzz8Wx.js"/><link rel="modulepreload" href="/assets/docs-detail-B8ZwhI0K.js"/><link rel="modulepreload" href="/assets/Card-DdScE1Ii.js"/><link rel="modulepreload" href="/assets/docs-data-B8_XiKoD.js"/><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&amp;display=swap" rel="stylesheet" media="print"/><noscript><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&amp;display=swap" rel="stylesheet"/></noscript><link rel="stylesheet" href="/assets/root-B0It-9oG.css"/></head><body><a class="skip-link" href="#main-content">跳到主要内容</a><nav class="fixed inset-x-0 top-0 z-[100] border-b border-border bg-bg/95" aria-label="主导航"><div class="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between px-5 sm:px-7"><a aria-label="SrP-CFG 首页" class="group flex min-h-11 items-center gap-3 no-underline" href="/" data-discover="true"><img src="/favicon.ico" alt="" width="32" height="32" class="h-8 w-8 rounded-[7px]"/><span class="leading-none"><span class="block font-display text-lg font-bold tracking-[0.08em] text-text group-hover:text-accent">SrP-CFG</span><span class="mt-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-text-faint">v3 Runtime</span></span></a><div class="hidden items-center gap-1 md:flex"><a class="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 font-display text-sm font-semibold no-underline transition-colors duration-200 text-text-muted hover:bg-bg-hover hover:text-text" href="/" data-discover="true">首页</a><a class="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 font-display text-sm font-semibold no-underline transition-colors duration-200 text-text-muted hover:bg-bg-hover hover:text-text" href="/download" data-discover="true">下载</a><a aria-current="page" class="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 font-display text-sm font-semibold no-underline transition-colors duration-200 bg-accent-bg text-accent" href="/docs" data-discover="true">文档</a><a class="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 font-display text-sm font-semibold no-underline transition-colors duration-200 text-text-muted hover:bg-bg-hover hover:text-text" href="/commands" data-discover="true">指令</a><a class="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-4 font-display text-sm font-semibold no-underline transition-colors duration-200 text-text-muted hover:bg-bg-hover hover:text-text" href="/about" data-discover="true">关于</a><span class="mx-2 h-5 w-px bg-border" aria-hidden="true"></span><a href="https://github.com/RolinShmily/SrP-CFG_ForCS2" target="_blank" rel="noopener" class="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 font-display text-sm font-semibold text-text-muted no-underline transition-colors duration-200 hover:bg-bg-hover hover:text-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github h-4 w-4" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>GitHub</a></div><button type="button" class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-bg-card text-text-secondary transition-colors hover:border-border-highlight hover:text-text md:hidden" aria-label="打开主导航" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5" aria-hidden="true"><path d="M4 12h16"></path><path d="M4 18h16"></path><path d="M4 6h16"></path></svg></button></div></nav><main id="main-content" tabindex="-1"><div data-doc-layout="true"><div class="sticky top-16 z-[70] mt-16 border-b border-border bg-bg-card lg:hidden"><div class="grid grid-cols-2"><button type="button" aria-label="打开文档菜单" aria-controls="mobile-doc-menu" aria-expanded="false" class="flex min-h-12 items-center justify-center gap-2 text-sm font-semibold text-text-muted transition-colors hover:bg-bg-hover hover:text-text border-r border-border"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-4 w-4" aria-hidden="true"><path d="M4 12h16"></path><path d="M4 18h16"></path><path d="M4 6h16"></path></svg>文档菜单</button><button type="button" aria-label="打开本页目录" aria-controls="mobile-toc-panel" aria-expanded="false" class="flex min-h-12 items-center justify-center gap-2 text-sm font-semibold text-text-muted transition-colors hover:bg-bg-hover hover:text-text disabled:cursor-not-allowed disabled:opacity-40"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-of-contents h-4 w-4" aria-hidden="true"><path d="M16 12H3"></path><path d="M16 18H3"></path><path d="M16 6H3"></path><path d="M21 12h.01"></path><path d="M21 18h.01"></path><path d="M21 6h.01"></path></svg>本页目录</button></div></div><div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-5 py-10 sm:px-7 lg:grid-cols-[220px_minmax(0,760px)] lg:justify-center lg:gap-10 lg:pb-20 lg:pt-28 xl:grid-cols-[220px_minmax(0,760px)_220px] xl:gap-12"><aside class="hidden lg:block"><div class="sticky top-24"><nav aria-label="文档导航"><a class="mb-5 flex min-h-11 items-center justify-between rounded-[var(--radius-sm)] border border-border bg-bg-card px-3.5 font-display text-sm font-bold text-text no-underline transition-colors hover:border-border-highlight hover:text-accent" href="/docs" data-discover="true"><span>全部文档</span><span class="font-mono text-[10px] text-text-faint">INDEX</span></a><div class="space-y-5"><section aria-label="开始与原理"><div class="mb-1.5 flex items-center justify-between px-3"><span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-faint">开始与原理</span><span class="font-mono text-[10px] text-text-faint">04</span></div><ul class="space-y-0.5"><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/srpcfg-1" data-discover="true">SrP-CFG v3</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/srpcfg-3" data-discover="true">使用指南</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/autoexec" data-discover="true">autoexec.cfg</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/vcfg" data-discover="true">VCFG 与 Steam Cloud</a></li></ul></section><section aria-label="功能"><div class="mb-1.5 flex items-center justify-between px-3"><span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-faint">功能</span><span class="font-mono text-[10px] text-text-faint">04</span></div><ul class="space-y-0.5"><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/crosshair_view" data-discover="true">crosshair-view 功能</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/autoview" data-discover="true">autoview 功能</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/knife" data-discover="true">knife 功能</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/zeus" data-discover="true">zeus 功能</a></li></ul></section><section aria-label="模式"><div class="mb-1.5 flex items-center justify-between px-3"><span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-faint">模式</span><span class="font-mono text-[10px] text-text-faint">04</span></div><ul class="space-y-0.5"><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/practice" data-discover="true">practice 模式</a></li><li><a aria-current="page" class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-accent bg-accent-bg text-accent" href="/docs/previewmode" data-discover="true">preview 模式</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/guidemake" data-discover="true">guidemake 模式</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/demo_hlae" data-discover="true">demo-hlae 模式</a></li></ul></section><section aria-label="参考"><div class="mb-1.5 flex items-center justify-between px-3"><span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-faint">参考</span><span class="font-mono text-[10px] text-text-faint">04</span></div><ul class="space-y-0.5"><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/helps" data-discover="true">控制台帮助系统</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/cs2_video" data-discover="true">cs2_video.txt</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/annotations" data-discover="true">annotations 地图道具指南</a></li><li><a class="flex min-h-11 items-center rounded-[var(--radius-sm)] border-l-2 px-3 py-2 font-display text-sm font-semibold leading-5 no-underline transition-colors duration-200 border-transparent text-text-muted hover:bg-bg-hover hover:text-text" href="/docs/pwa_prac" data-discover="true">pwa-prac 完美世界跑图模式</a></li></ul></section></div></nav></div></aside><article class="min-w-0 pb-8"><nav aria-label="面包屑" class="mb-7 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-text-faint"><a class="text-text-muted no-underline hover:text-accent" href="/docs" data-discover="true">Docs</a><span aria-hidden="true">/</span><span aria-current="page">preview 模式</span></nav><header class="mb-10 border-b border-border pb-8"><p class="font-mono text-xs uppercase tracking-[0.16em] text-accent">SrP-CFG Documentation</p><h1 class="mt-3 font-display text-[clamp(2.25rem,6vw,4rem)] font-bold leading-[1.04] tracking-[-0.025em] text-text">preview 模式</h1><p class="mt-4 max-w-[680px] text-base leading-7 text-text-secondary sm:text-lg sm:leading-8">饰品截图模式，含景深、FOV 调节、摄像机锁定</p></header><div class="prose-doc"><blockquote>
+<p>设置文件：<code>srp-cfg/modes/preview/settings.cfg</code></p>
+</blockquote>
+<h2 id="简介">简介</h2>
+<p>preview 模式提供饰品截图专用的预设环境。加载后自动关闭 HUD、开启景深效果、拉长 FOV、固定摄像机视角，方便拍摄饰品检视截图。</p>
+<p>需要在自建房或作弊服务器中使用（需要 sv_cheats 权限）。</p>
+<h2 id="激活方式">激活方式</h2>
+<p>推荐输入 <code>srp_preview</code>，只应用预览模式设置。需要快捷键表时输入 <code>srp_preview_keys</code>，它会额外重绑方向键、<code>-</code>、<code>=</code>、<code>Z/X/C/V</code>；Default 案例中的 <code>9</code> 键调用该命令。</p>
+<h2 id="首次加载预设">首次加载预设</h2>
+<p>加载时自动应用以下设置：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">预设项</th><th align="left">初始状态</th><th align="left">说明</th></tr></thead><tbody><tr><td align="left">HUD</td><td align="left">关闭</td><td align="left">消除界面干扰，画面更干净</td></tr><tr><td align="left">景深 (DOF)</td><td align="left">开启</td><td align="left">模拟相机虚化效果，突出饰品主体</td></tr><tr><td align="left">FOV</td><td align="left">110</td><td align="left">拉长视角，显示更多画面</td></tr><tr><td align="left">摄像机</td><td align="left">固定</td><td align="left">视角不会随鼠标移动，便于构图</td></tr></tbody></table>
+<h2 id="可选按键表">可选按键表</h2>
+<p>下表快捷键仅在执行 <code>srp_preview_keys</code> 后生效。使用 <code>srp_preview</code> 时，可通过 settings 文件定义的 alias 或控制台命令操作，不会自动占用这些实体键。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">功能</th><th align="left">快捷键</th><th align="left">控制台别名</th></tr></thead><tbody><tr><td align="left">FOV 视角调节</td><td align="left"><code>↓</code></td><td align="left"><code>changefov</code></td></tr><tr><td align="left">向左旋转视角</td><td align="left"><code>-</code></td><td align="left"><code>changeang--</code></td></tr><tr><td align="left">向右旋转视角</td><td align="left"><code>=</code></td><td align="left"><code>changeang++</code></td></tr><tr><td align="left">开关 HUD</td><td align="left"><code>z</code></td><td align="left"><code>srp_preview_hud</code></td></tr><tr><td align="left">是否固定摄像机视角</td><td align="left"><code>x</code></td><td align="left"><code>srp_preview_lock</code></td></tr><tr><td align="left">是否开启景深</td><td align="left"><code>c</code></td><td align="left"><code>srp_preview_dof</code></td></tr><tr><td align="left">调节景深深度</td><td align="left"><code>v</code></td><td align="left"><code>changeblur</code></td></tr><tr><td align="left">恢复默认设置</td><td align="left">-</td><td align="left"><code>depre</code></td></tr></tbody></table>
+<h2 id="景深参数说明">景深参数说明</h2>
+<p>按 <code>v</code> 键循环切换以下景深深度：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">深度值</th><th align="left">效果</th></tr></thead><tbody><tr><td align="left">50</td><td align="left">极浅景深，背景严重虚化</td></tr><tr><td align="left">100</td><td align="left">浅景深</td></tr><tr><td align="left">500</td><td align="left">中等景深</td></tr><tr><td align="left">1000</td><td align="left">默认景深，推荐使用</td></tr><tr><td align="left">3000</td><td align="left">极深景深，画面几乎全清晰</td></tr></tbody></table>
+<h2 id="恢复正常">恢复正常</h2>
+<p>控制台输入 <code>depre</code> 可一键恢复所有设置为默认状态（HUD 开启、景深关闭、FOV 重置、摄像机解锁）。</p>
+<h2 id="相关文件">相关文件</h2>
+<ul>
+<li><a href="/docs/autoexec">autoexec.cfg</a> — v3 Runtime、内置 Preset 与用户层入口</li>
+</ul>
+<h2 id="注意事项">注意事项</h2>
+<ul>
+<li>仅在自建房/作弊服务器中有效（需要 sv_cheats 1）</li>
+<li>恢复默认请使用 <code>depre</code> 命令，而非手动逐项调整</li>
+<li><code>_keys</code> 入口产生的实体绑定会进入 user keys VCFG；<code>depre</code> 恢复画面设置，不负责恢复全部按键</li>
+</ul></div><nav aria-label="前后篇文档" class="mt-14 grid grid-cols-1 gap-3 border-t border-border pt-6 sm:grid-cols-2"><a class="group block no-underline" href="/docs/practice" data-discover="true"><div class="rounded-[var(--radius)] border border-border bg-bg-card p-4 transition-colors duration-200 group-hover:border-border-highlight group-hover:bg-bg-hover"><span class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-3.5 w-3.5" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>上一篇</span><strong class="mt-2 block font-display text-sm text-text-secondary group-hover:text-accent">practice 模式</strong></div></a><a class="group block no-underline" href="/docs/guidemake" data-discover="true"><div class="rounded-[var(--radius)] border border-border bg-bg-card p-4 text-right transition-colors duration-200 group-hover:border-border-highlight group-hover:bg-bg-hover"><span class="flex items-center justify-end gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint">下一篇<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-3.5 w-3.5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></span><strong class="mt-2 block font-display text-sm text-text-secondary group-hover:text-accent">guidemake 模式</strong></div></a></nav></article><aside class="hidden xl:block"><div class="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto pb-8 pr-1"><nav aria-label="本页目录"><div class="mb-3 flex items-center justify-between"><span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-faint">On this page</span><span class="font-mono text-[10px] text-text-faint">08</span></div><ul class="border-l border-border"><li><a href="#简介" data-toc-link="true" data-toc-target="简介" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">简介</a></li><li><a href="#激活方式" data-toc-link="true" data-toc-target="激活方式" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">激活方式</a></li><li><a href="#首次加载预设" data-toc-link="true" data-toc-target="首次加载预设" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">首次加载预设</a></li><li><a href="#可选按键表" data-toc-link="true" data-toc-target="可选按键表" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">可选按键表</a></li><li><a href="#景深参数说明" data-toc-link="true" data-toc-target="景深参数说明" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">景深参数说明</a></li><li><a href="#恢复正常" data-toc-link="true" data-toc-target="恢复正常" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">恢复正常</a></li><li><a href="#相关文件" data-toc-link="true" data-toc-target="相关文件" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">相关文件</a></li><li><a href="#注意事项" data-toc-link="true" data-toc-target="注意事项" class="-ml-px block border-l pr-2 text-sm leading-5 text-text-muted no-underline transition-colors duration-200 hover:border-border-highlight hover:text-text py-1.5 pl-3 border-transparent">注意事项</a></li></ul></nav></div></aside></div></div></main><footer class="border-t border-border py-9 sm:py-12"><div class="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-6 px-5 sm:px-7 md:flex-row md:items-center"><div class="flex items-center gap-3"><img src="/favicon.ico" alt="" width="28" height="28" class="h-7 w-7 rounded-md"/><div><span class="block font-display text-sm font-bold tracking-[0.08em] text-text-secondary">SrP-CFG</span><span class="block font-mono text-[10px] uppercase tracking-[0.14em] text-text-faint">CS2 configuration runtime</span></div></div><div class="flex flex-wrap items-center gap-x-2 gap-y-1"><a class="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 font-display text-sm font-semibold text-text-muted no-underline transition-colors duration-200 hover:bg-bg-hover hover:text-accent" href="/docs" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-4 w-4" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>项目文档</a><a class="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 font-display text-sm font-semibold text-text-muted no-underline transition-colors duration-200 hover:bg-bg-hover hover:text-accent" href="/download" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download h-4 w-4" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg>前往下载</a><a href="https://github.com/RolinShmily/SrP-CFG_ForCS2" target="_blank" rel="noopener" class="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 font-display text-sm font-semibold text-text-muted no-underline transition-colors duration-200 hover:bg-bg-hover hover:text-accent"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github h-4 w-4" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>GitHub</a></div></div></footer><script>((storageKey2, restoreKey) => {
+    if (!window.history.state || !window.history.state.key) {
+      let key = Math.random().toString(32).slice(2);
+      window.history.replaceState({ key }, "");
+    }
+    try {
+      let positions = JSON.parse(sessionStorage.getItem(storageKey2) || "{}");
+      let storedY = positions[restoreKey || window.history.state.key];
+      if (typeof storedY === "number") {
+        window.scrollTo(0, storedY);
+      }
+    } catch (error) {
+      console.error(error);
+      sessionStorage.removeItem(storageKey2);
+    }
+  })("react-router-scroll-positions", null)</script><script>window.__reactRouterContext = {"basename":"/","future":{"unstable_optimizeDeps":false,"v8_passThroughRequests":false,"v8_trailingSlashAwareDataRequests":false,"unstable_previewServerPrerendering":false,"v8_middleware":false,"v8_splitRouteModules":false,"v8_viteEnvironmentApi":false},"routeDiscovery":{"mode":"lazy","manifestPath":"/__manifest"},"ssr":true,"isSpaMode":false};window.__reactRouterContext.stream = new ReadableStream({start(controller){window.__reactRouterContext.streamController = controller;}}).pipeThrough(new TextEncoderStream());</script><script type="module" async="">;
+import * as route0 from "/assets/root-yPwnwGzF.js";
+import * as route1 from "/assets/layout-7xElGVpq.js";
+import * as route2 from "/assets/docs-detail-B8ZwhI0K.js";
+  window.__reactRouterManifest = {
+  "entry": {
+    "module": "/assets/entry.client-DrQZ2J-V.js",
+    "imports": [
+      "/assets/chunk-62JRHF6Z-BWKVPo1m.js"
+    ],
+    "css": []
+  },
+  "routes": {
+    "root": {
+      "id": "root",
+      "path": "",
+      "hasAction": false,
+      "hasLoader": false,
+      "hasClientAction": false,
+      "hasClientLoader": false,
+      "hasClientMiddleware": false,
+      "hasDefaultExport": true,
+      "hasErrorBoundary": false,
+      "module": "/assets/root-yPwnwGzF.js",
+      "imports": [
+        "/assets/chunk-62JRHF6Z-BWKVPo1m.js"
+      ],
+      "css": [
+        "/assets/root-B0It-9oG.css"
+      ]
+    },
+    "layout": {
+      "id": "layout",
+      "parentId": "root",
+      "hasAction": false,
+      "hasLoader": false,
+      "hasClientAction": false,
+      "hasClientLoader": false,
+      "hasClientMiddleware": false,
+      "hasDefaultExport": true,
+      "hasErrorBoundary": false,
+      "module": "/assets/layout-7xElGVpq.js",
+      "imports": [
+        "/assets/chunk-62JRHF6Z-BWKVPo1m.js",
+        "/assets/navigation-IywTUcR9.js",
+        "/assets/github-Sb1PQ1Py.js",
+        "/assets/x-bscOztqE.js",
+        "/assets/book-open-DotJL0PM.js",
+        "/assets/download-Btl4jWHg.js",
+        "/assets/createLucideIcon-C3Bzz8Wx.js"
+      ],
+      "css": []
+    },
+    "routes/docs-detail": {
+      "id": "routes/docs-detail",
+      "parentId": "layout",
+      "path": "/docs/:slug",
+      "hasAction": false,
+      "hasLoader": true,
+      "hasClientAction": false,
+      "hasClientLoader": false,
+      "hasClientMiddleware": false,
+      "hasDefaultExport": true,
+      "hasErrorBoundary": false,
+      "module": "/assets/docs-detail-B8ZwhI0K.js",
+      "imports": [
+        "/assets/chunk-62JRHF6Z-BWKVPo1m.js",
+        "/assets/Card-DdScE1Ii.js",
+        "/assets/docs-data-B8_XiKoD.js",
+        "/assets/x-bscOztqE.js",
+        "/assets/createLucideIcon-C3Bzz8Wx.js"
+      ],
+      "css": []
+    },
+    "routes/home": {
+      "id": "routes/home",
+      "parentId": "layout",
+      "path": "/",
+      "hasAction": false,
+      "hasLoader": false,
+      "hasClientAction": false,
+      "hasClientLoader": false,
+      "hasClientMiddleware": false,
+      "hasDefaultExport": true,
+      "hasErrorBoundary": false,
+      "module": "/assets/home-C18DE2_p.js",
+      "imports": [
+        "/assets/chunk-62JRHF6Z-BWKVPo1m.js",
+        "/assets/Badge-OlOBJAuu.js",
+        "/assets/createLucideIcon-C3Bzz8Wx.js",
+        "/assets/download-Btl4jWHg.js",
+        "/assets/book-open-DotJL0PM.js",
+        "/assets/Card-DdScE1Ii.js",
+        "/assets/SectionHeader-M-MCP-W6.js"
+      ],
+      "css": []
+    },
+    "routes/docs": {
+      "id": "routes/docs",
+      "parentId": "layout",
+      "path": "/docs",
+      "hasAction": false,
+      "hasLoader": false,
+      "hasClientAction": false,
+      "hasClientLoader": false,
+      "hasClientMiddleware": false,
+      "hasDefaultExport": true,
+      "hasErrorBoundary": false,
+      "module": "/assets/docs-BJX1hmgq.js",
+      "imports": [
+        "/assets/chunk-62JRHF6Z-BWKVPo1m.js",
+        "/assets/docs-data-B8_XiKoD.js",
+        "/assets/createLucideIcon-C3Bzz8Wx.js",
+        "/assets/boxes-1r3_WYqC.js",
+        "/assets/book-open-DotJL0PM.js"
+      ],
+      "css": []
+    }
+  },
+  "url": "/assets/manifest-cb82d6b6.js",
+  "version": "cb82d6b6"
+};
+  window.__reactRouterRouteModules = {"root":route0,"layout":route1,"routes/docs-detail":route2};
+
+import("/assets/entry.client-DrQZ2J-V.js");</script><!--$?--><template id="B:0"></template><!--/$--><script id="_R_">requestAnimationFrame(function(){$RT=performance.now()});</script><div hidden id="S:0"><script>window.__reactRouterContext.streamController.enqueue("[{\"_1\":2,\"_3\":-5,\"_4\":-5},\"loaderData\",{\"_5\":6},\"actionData\",\"errors\",\"routes/docs-detail\",{\"_7\":8,\"_9\":10,\"_11\":12,\"_13\":14,\"_15\":16},\"title\",\"preview 模式\",\"description\",\"饰品截图模式，含景深、FOV 调节、摄像机锁定\",\"slug\",\"previewmode\",\"content\",\"\u003cblockquote\u003e\\n\u003cp\u003e设置文件：\u003ccode\u003esrp-cfg/modes/preview/settings.cfg\u003c/code\u003e\u003c/p\u003e\\n\u003c/blockquote\u003e\\n\u003ch2 id=\\\"简介\\\"\u003e简介\u003c/h2\u003e\\n\u003cp\u003epreview 模式提供饰品截图专用的预设环境。加载后自动关闭 HUD、开启景深效果、拉长 FOV、固定摄像机视角，方便拍摄饰品检视截图。\u003c/p\u003e\\n\u003cp\u003e需要在自建房或作弊服务器中使用（需要 sv_cheats 权限）。\u003c/p\u003e\\n\u003ch2 id=\\\"激活方式\\\"\u003e激活方式\u003c/h2\u003e\\n\u003cp\u003e推荐输入 \u003ccode\u003esrp_preview\u003c/code\u003e，只应用预览模式设置。需要快捷键表时输入 \u003ccode\u003esrp_preview_keys\u003c/code\u003e，它会额外重绑方向键、\u003ccode\u003e-\u003c/code\u003e、\u003ccode\u003e=\u003c/code\u003e、\u003ccode\u003eZ/X/C/V\u003c/code\u003e；Default 案例中的 \u003ccode\u003e9\u003c/code\u003e 键调用该命令。\u003c/p\u003e\\n\u003ch2 id=\\\"首次加载预设\\\"\u003e首次加载预设\u003c/h2\u003e\\n\u003cp\u003e加载时自动应用以下设置：\u003c/p\u003e\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth align=\\\"left\\\"\u003e预设项\u003c/th\u003e\u003cth align=\\\"left\\\"\u003e初始状态\u003c/th\u003e\u003cth align=\\\"left\\\"\u003e说明\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003eHUD\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e关闭\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e消除界面干扰，画面更干净\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e景深 (DOF)\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e开启\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e模拟相机虚化效果，突出饰品主体\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003eFOV\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e110\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e拉长视角，显示更多画面\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e摄像机\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e固定\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e视角不会随鼠标移动，便于构图\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\\n\u003ch2 id=\\\"可选按键表\\\"\u003e可选按键表\u003c/h2\u003e\\n\u003cp\u003e下表快捷键仅在执行 \u003ccode\u003esrp_preview_keys\u003c/code\u003e 后生效。使用 \u003ccode\u003esrp_preview\u003c/code\u003e 时，可通过 settings 文件定义的 alias 或控制台命令操作，不会自动占用这些实体键。\u003c/p\u003e\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth align=\\\"left\\\"\u003e功能\u003c/th\u003e\u003cth align=\\\"left\\\"\u003e快捷键\u003c/th\u003e\u003cth align=\\\"left\\\"\u003e控制台别名\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003eFOV 视角调节\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003e↓\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003echangefov\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e向左旋转视角\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003e-\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003echangeang--\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e向右旋转视角\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003e=\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003echangeang++\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e开关 HUD\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003ez\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003esrp_preview_hud\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e是否固定摄像机视角\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003ex\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003esrp_preview_lock\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e是否开启景深\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003ec\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003esrp_preview_dof\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e调节景深深度\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003ev\u003c/code\u003e\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003echangeblur\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e恢复默认设置\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e-\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e\u003ccode\u003edepre\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\\n\u003ch2 id=\\\"景深参数说明\\\"\u003e景深参数说明\u003c/h2\u003e\\n\u003cp\u003e按 \u003ccode\u003ev\u003c/code\u003e 键循环切换以下景深深度：\u003c/p\u003e\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth align=\\\"left\\\"\u003e深度值\u003c/th\u003e\u003cth align=\\\"left\\\"\u003e效果\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e50\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e极浅景深，背景严重虚化\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e100\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e浅景深\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e500\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e中等景深\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e1000\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e默认景深，推荐使用\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd align=\\\"left\\\"\u003e3000\u003c/td\u003e\u003ctd align=\\\"left\\\"\u003e极深景深，画面几乎全清晰\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\\n\u003ch2 id=\\\"恢复正常\\\"\u003e恢复正常\u003c/h2\u003e\\n\u003cp\u003e控制台输入 \u003ccode\u003edepre\u003c/code\u003e 可一键恢复所有设置为默认状态（HUD 开启、景深关闭、FOV 重置、摄像机解锁）。\u003c/p\u003e\\n\u003ch2 id=\\\"相关文件\\\"\u003e相关文件\u003c/h2\u003e\\n\u003cul\u003e\\n\u003cli\u003e\u003ca href=\\\"/docs/autoexec\\\"\u003eautoexec.cfg\u003c/a\u003e — v3 Runtime、内置 Preset 与用户层入口\u003c/li\u003e\\n\u003c/ul\u003e\\n\u003ch2 id=\\\"注意事项\\\"\u003e注意事项\u003c/h2\u003e\\n\u003cul\u003e\\n\u003cli\u003e仅在自建房/作弊服务器中有效（需要 sv_cheats 1）\u003c/li\u003e\\n\u003cli\u003e恢复默认请使用 \u003ccode\u003edepre\u003c/code\u003e 命令，而非手动逐项调整\u003c/li\u003e\\n\u003cli\u003e\u003ccode\u003e_keys\u003c/code\u003e 入口产生的实体绑定会进入 user keys VCFG；\u003ccode\u003edepre\u003c/code\u003e 恢复画面设置，不负责恢复全部按键\u003c/li\u003e\\n\u003c/ul\u003e\",\"toc\",[17,18,19,20,21,22,23,24],{\"_7\":48,\"_26\":49,\"_28\":50},{\"_7\":45,\"_26\":46,\"_28\":47},{\"_7\":42,\"_26\":43,\"_28\":44},{\"_7\":39,\"_26\":40,\"_28\":41},{\"_7\":36,\"_26\":37,\"_28\":38},{\"_7\":33,\"_26\":34,\"_28\":35},{\"_7\":30,\"_26\":31,\"_28\":32},{\"_7\":25,\"_26\":27,\"_28\":29},\"注意事项\",\"url\",\"#注意事项\",\"items\",[],\"相关文件\",\"#相关文件\",[],\"恢复正常\",\"#恢复正常\",[],\"景深参数说明\",\"#景深参数说明\",[],\"可选按键表\",\"#可选按键表\",[],\"首次加载预设\",\"#首次加载预设\",[],\"激活方式\",\"#激活方式\",[],\"简介\",\"#简介\",[]]\n");</script><!--$?--><template id="B:1"></template><!--/$--></div><script>$RB=[];$RV=function(a){$RT=performance.now();for(var b=0;b<a.length;b+=2){var c=a[b],e=a[b+1];null!==e.parentNode&&e.parentNode.removeChild(e);var f=c.parentNode;if(f){var g=c.previousSibling,h=0;do{if(c&&8===c.nodeType){var d=c.data;if("/$"===d||"/&"===d)if(0===h)break;else h--;else"$"!==d&&"$?"!==d&&"$~"!==d&&"$!"!==d&&"&"!==d||h++}d=c.nextSibling;f.removeChild(c);c=d}while(c);for(;e.firstChild;)f.insertBefore(e.firstChild,c);g.data="$";g._reactRetry&&requestAnimationFrame(g._reactRetry)}}a.length=0};
+$RC=function(a,b){if(b=document.getElementById(b))(a=document.getElementById(a))?(a.previousSibling.data="$~",$RB.push(a,b),2===$RB.length&&("number"!==typeof $RT?requestAnimationFrame($RV.bind(null,$RB)):(a=performance.now(),setTimeout($RV.bind(null,$RB),2300>a&&2E3<a?2300-a:$RT+300-a)))):b.parentNode.removeChild(b)};$RC("B:0","S:0")</script><div hidden id="S:1"><script>window.__reactRouterContext.streamController.close();</script></div><script>$RC("B:1","S:1")</script></body></html>

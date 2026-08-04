@@ -179,3 +179,197 @@ main {
     color: #111827;
   }
 }
+
+/* ============================================================
+ * 文档中心（L3.3）—— prose-doc 渲染样式 + 移动端面板滚动锁
+ * 迁移自旧 DocLayout.astro 的 <style>（Astro :global() 已转普通选择器）
+ * ============================================================ */
+
+body.doc-panel-open {
+  overflow: hidden;
+}
+
+.prose-doc {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+.prose-doc h2,
+.prose-doc h3 {
+  scroll-margin-top: 7rem;
+  color: var(--color-text);
+  font-family: var(--font-display);
+}
+
+.prose-doc h2 {
+  margin: 3.25rem 0 1.1rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.7rem;
+  font-size: clamp(1.55rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.prose-doc h3 {
+  margin: 2.25rem 0 0.8rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.prose-doc p {
+  margin: 0 0 1.25rem;
+}
+
+.prose-doc a {
+  color: var(--color-accent-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 179, 79, 0.35);
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.prose-doc a:hover {
+  color: var(--color-accent);
+  text-decoration-color: currentColor;
+}
+
+.prose-doc strong {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.prose-doc blockquote {
+  margin: 1.75rem 0;
+  border: 1px solid rgba(242, 138, 26, 0.22);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--color-accent-bg);
+  padding: 1rem 1.1rem;
+  color: var(--color-text-secondary);
+}
+
+.prose-doc blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-doc table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.75rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  border-collapse: collapse;
+  background: var(--color-bg-card);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.prose-doc thead th {
+  border-bottom: 1px solid var(--color-border-highlight);
+  background: var(--color-bg-raised);
+  padding: 0.8rem 1rem;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.prose-doc tbody td {
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.72rem 1rem;
+}
+
+.prose-doc tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.prose-doc tbody tr:hover {
+  background: var(--color-bg-hover);
+}
+
+.prose-doc code {
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background: var(--color-bg-raised);
+  padding: 0.12em 0.38em;
+  color: var(--color-accent-light);
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+}
+
+.prose-doc pre {
+  max-width: 100%;
+  margin: 1.6rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #0a0d13;
+  padding: 1.1rem 1.2rem;
+  line-height: 1.7;
+}
+
+.prose-doc pre code {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.84rem;
+  overflow-wrap: normal;
+}
+
+.prose-doc ul,
+.prose-doc ol {
+  margin: 0 0 1.4rem;
+  padding-left: 1.45rem;
+}
+
+.prose-doc li {
+  margin-bottom: 0.45rem;
+}
+
+.prose-doc li::marker {
+  color: var(--color-accent);
+}
+
+.prose-doc hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+[data-toc-link].toc-active {
+  border-left-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+@media (max-width: 640px) {
+  .prose-doc {
+    font-size: 0.975rem;
+  }
+
+  .prose-doc table {
+    font-size: 0.82rem;
+  }
+}
+
+@media print {
+  nav,
+  aside,
+  footer,
+  [aria-label="前后篇文档"] {
+    display: none !important;
+  }
+
+  .prose-doc,
+  .prose-doc h2,
+  .prose-doc h3 {
+    color: #111827;
+  }
+}
