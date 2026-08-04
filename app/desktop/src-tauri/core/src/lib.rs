@@ -7,9 +7,11 @@
 //! 对应原 Electron 版 `app/desktop/src/main/services/*.ts` 中的纯逻辑部分。
 
 pub mod conflicts;
+pub mod migrate;
 pub mod vcfg;
 pub mod version;
 
 pub use conflicts::{AppendConflict, AppendConflictDecision, CategoryKey};
+pub use migrate::{plan_migration, should_migrate, MigrationAction};
 pub use vcfg::{parse_cfg_convars, snapshot_to_cfg, SnapshotToCfgOptions};
 pub use version::compare_versions;

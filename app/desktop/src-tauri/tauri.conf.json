@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SrP-CFG Installer",
+  "version": "3.1.6",
+  "identifier": "top.srprolin.cfg",
+  "build": {
+    "beforeDevCommand": "pnpm --dir .. dev:renderer",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "pnpm --dir .. build:renderer",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "SrP-CFG Installer",
+        "width": 1707,
+        "height": 960,
+        "minWidth": 896,
+        "minHeight": 504,
+        "decorations": false,
+        "backgroundColor": "#0b0d14",
+        "resizable": true,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "category": "Utility",
+    "shortDescription": "CS2 配置预设管理器",
+    "longDescription": "SrP-CFG Installer — CS2 配置预设管理器",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": false
+      },
+      "msi": {
+        "language": "zh-CN"
+      }
+    }
+  }
+}
