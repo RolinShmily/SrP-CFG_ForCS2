@@ -1,6 +1,0 @@
-"VideoConfig"
-{
-	"setting.defaultres" "2560"
-	"setting.defaultresheight" "1440"
-	"setting.fullscreen" "0"
-}

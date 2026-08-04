@@ -76,6 +76,6 @@ export default defineConfig({
     latestVersionPlugin(),
     sitemapPlugin(),
     // 根/子 vite（6.4.2/6.4.3）hoisting 导致两份 @types/estree，Plugin 类型身份不一致；
-    // 运行时由 esbuild 转译不受影响，仅类型检查需要对齐（见 tasks/PROGRESS.md 遗留 6）
+    // 运行时由 esbuild 转译不受影响，仅类型检查需要对齐（vite 双版本 hoisting）
   ] as PluginOption[],
 });

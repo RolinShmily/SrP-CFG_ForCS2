@@ -24,7 +24,7 @@ import type {
  * Tauri IPC 适配层（L2.2）。
  *
  * 保持 `ElectronAPI` 签名与 Electron 版 preload 完全一致（见
- * tasks/layer-2-desktop-tauri/api-contract.md），renderer 的 `window.api.*`
+ * `app/desktop/src/preload/preload.ts` 契约基准），renderer 的 `window.api.*`
  * 调用点零改动。实现内部走 Tauri `invoke()` / `listen()`。
  *
  * 命令名 = Rust 侧 `#[tauri::command]` 函数名（snake_case，见

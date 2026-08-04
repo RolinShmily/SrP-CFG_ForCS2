@@ -1,9 +1,0 @@
-"config"
-{
-	"convars"
-	{
-		"fps_max" "0"
-		"cl_crosshairsize" "3.5"
-		"name" "Alice with space"
-	}
-}

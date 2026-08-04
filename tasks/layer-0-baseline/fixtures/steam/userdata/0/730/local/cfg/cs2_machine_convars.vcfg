@@ -1,8 +1,0 @@
-"config"
-{
-	"convars"
-	{
-		"r_fullscreen_gamma" "2.2"
-		"video_upscale_enabled" "0"
-	}
-}
