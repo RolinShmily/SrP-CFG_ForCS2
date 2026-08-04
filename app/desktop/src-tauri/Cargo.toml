@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+members = ["core", "."]
+
+[package]
+name = "srp-cfg-desktop"
+version = "3.1.6"
+edition = "2021"
+
+# ── Tauri 壳（Windows 目标构建）──────────────────────────────
+# 注意：本 crate 依赖 tauri，Linux 上需要 webkit2gtk-4.1 才能编译；
+# 纯业务逻辑都在 core/ 子 crate，可用 `cargo test -p srp-cfg-core` 在任意平台测试。
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+srp-cfg-core = { path = "./core" }
+
+[lib]
+name = "srp_cfg_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]

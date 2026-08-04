@@ -1,0 +1,7 @@
+[package]
+name = "srp-cfg-core"
+version = "0.1.0"
+edition = "2021"
+description = "SrP-CFG 纯业务逻辑核心（无 tauri/平台依赖，可跨平台单元测试）"
+
+[dependencies]
