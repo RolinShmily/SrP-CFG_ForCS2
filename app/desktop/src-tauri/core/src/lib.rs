@@ -7,6 +7,7 @@
 //! 对应原 Electron 版 `app/desktop/src/main/services/*.ts` 中的纯逻辑部分。
 
 pub mod conflicts;
+pub mod detection;
 pub mod installer;
 pub mod migrate;
 pub mod staging;
@@ -15,6 +16,11 @@ pub mod vcfg;
 pub mod version;
 
 pub use conflicts::{AppendConflict, AppendConflictDecision, CategoryKey};
+pub use detection::{
+    cs2_game_dir, cs2_manifest_state, parse_acf_value, parse_library_paths, parse_login_users,
+    steam_id64_to_account_id, Cs2InstallState, LoginUsers, SteamUser, DEFAULT_CS2_FOLDER,
+    STEAM_ID_OFFSET,
+};
 pub use installer::{
     category, category_mut, clear_category, install_from_backup, merge_append, normalize_category,
     normalize_state, ordered_union, plan_overlay_category, remove_item, restore_item, update_paths,

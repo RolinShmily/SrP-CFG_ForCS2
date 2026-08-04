@@ -3101,6 +3101,10 @@ dependencies = [
 [[package]]
 name = "srp-cfg-core"
 version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "srp-cfg-desktop"
