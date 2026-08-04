@@ -1,18 +1,21 @@
 # 新 Agent 启动提示词（可直接用于 `pi -p --no-session "..."`）
 
-你是 SrP-CFG 重构项目的执行 agent，接手 **网站生产路由问题修复**。主链 + 全部遗留收尾已完成：
+你是 SrP-CFG 重构项目的执行 agent。主链 + 全部遗留收尾已完成：
 core crate（7 模块 / 84 测试）、L2 Desktop → Tauri（49 commands + 2.6 实机验收 + 2.8 打包 NSIS/MSI）、
 L3 网站 Vite+React（SSG 2806 页）、L4 CI/CD、迁移修复 f7f2fa6、物理拖拽人工验证、正式图标 0e09eb6、
 **v3.1.10 已发布且 3 工作流全绿**（2026-08-05）。
-**⚠️ 新问题（本次任务）**：v3.1.10 首次生产部署 Vite+React 站点后，用户反馈**除首页外其他路由都有严重问题**——
-已定位：react-router 客户端拉取 `/__manifest`（路由发现）→ worker 对非资产路径抛 1101 异常 → 500 → 客户端路由断裂。
-**任务书**：`tasks/layer-3-website-react/TASK-prod-routing-fix.md`（诊断事实、修复方向、验收标准已备好）。
+**✅ 网站生产路由问题已修复并部署**（2026-08-06，ac887fc：routeDiscovery initial + assets.binding ASSETS，
+详见任务书 TASK-prod-routing-fix.md 与 PROGRESS 四-6）。
+**✅ 网站/桌面内容更新已修复并部署**（2026-08-06，718f48b：关于页技术栈对齐 Tauri/Vite-RR7、下载页
+便携版→Setup EXE、Runtime Core 卡双边框 bug、README+文档中心技术栈，详见任务书
+TASK-about-download-content-fix.md 与 PROGRESS 四-7）。
 本机（Win11 26200 + WSL Arch）即 Windows 实机。
 
 ## 第一步：读文件（必须按顺序读完再动手）
 
 1. `tasks/PROGRESS.md` —— 交接手册（进度、环境坑、下一步任务、遗留注意点 1-36）
-2. `tasks/layer-3-website-react/TASK-prod-routing-fix.md` —— **本次任务书（网站路由修复）**
+2. `tasks/layer-3-website-react/TASK-prod-routing-fix.md` —— 网站路由修复任务书（已完成，勿重复）
+   与 `tasks/layer-3-website-react/TASK-about-download-content-fix.md` —— 内容更新任务书（已完成，勿重复）
 3. `tasks/README.md` —— 分层任务总览 + 架构决策表 D1-D10（必须遵守）
 4. `tasks/layer-3-website-react/TASK.md` —— L3（网站结构/部署链路/D6/D9）
 5. 涉及部署链路时加读：`app/website/wrangler.json` + `.github/workflows/deploy-website.yml`
@@ -94,26 +97,25 @@ L3 网站 Vite+React（SSG 2806 页）、L4 CI/CD、迁移修复 f7f2fa6、物�
 - **保留参考实现（勿删）**：`app/desktop/src/main/services/*.ts`（L0.6 golden runner 依赖）+
   `app/desktop/src/preload/preload.ts`（API 契约基准）——electron-forge 已删但这两个保留，不参与构建
 
-## 本次任务：网站生产路由问题修复（见任务书 TASK-prod-routing-fix.md）
+## 本次任务：网站两项已全部完成（勿重复），当前状态与后续方向
 
-### ⚠️ 1. 复现 + 定位根因（wrangler dev --local）
-- `pnpm build:web` → `cd app/website && npx wrangler dev --local`（assets 生效）→ curl `localhost:8787/__manifest` 与任意不存在路径：本地是否同样 500/1101？
-- 若本地正常（404）→ 问题在部署/平台侧（对比 CI 部署产物与本地 build/client）；若本地同 500 → 完全本地可复现
+### ✅ 已完成（2026-08-06，勿重复）
+1. **网站生产路由问题**（ac887fc，已部署 run 30916591921）：根因 = wrangler.json assets 缺 `binding`
+   → `env.ASSETS` undefined → worker 对非资产路径 TypeError 1101；react-router lazy 路由发现拉 `/__manifest`
+   → 500 → 客户端路由断裂。修复 = `routeDiscovery: { mode: "initial" }`（不再拉 /__manifest）+
+   `assets.binding: "ASSETS"`（缺失路径 404）。生产 curl + headless Edge 双验通过。
+   **后续网站部署务必保留 assets.binding 字段**（PROGRESS 注意点 35）
+2. **网站/桌面内容更新**（718f48b，已部署 run 30918405839）：关于页技术栈对齐（Tauri v2 / Vite+RR7 SSG /
+   Rust / React 19 / Velite / Cloudflare Workers）、下载页便携版→Setup EXE（Release 只发 exe+msi）、
+   Runtime Core 卡双边框 bug 修复（单原生 div）、README 技术栈表 + docs srpcfg-1 项目工具链表。
+   生产 curl 验：下载页 0 处 Portable、关于页 0 Astro/0 Electron
 
-### 2. 修复（铁律：worker.ts / ai-stream.ts / wrangler.json bindings 绝对不可改）
-候选方向（详见任务书四-2）：
-- ASSETS.fetch 1101 根因（绑定/部署配置/平台行为）
-- react-router routeDiscovery lazy → 能否只依赖内联 manifest 不拉 /__manifest
-- wrangler.json 层兑底（assets 规则/not_found_handling，需确认客户端回退行为）
-- 最小改动 + 本地验证（wrangler dev --local 下 /__manifest 正确、无 manifest 错误、导航正常）
+### 下一步候选（按需，未指派）
+- 用户最终确认：真实网络下生产站点路由/内容已恢复正常（本机被证书拦截，用 `--ignore-certificate-errors` headless Edge 可绕过）
+- 桌面 About 页新文案随下次 Desktop release 生效（本次只改渲染层未发版；机器上安装的 3.1.6 仍旧）
+- 用户计划将 `refactor/tauri-vite-react` 合并到 main（需带上 origin/main 的 c73de80 每日命令库自动提交）
 
-### 3. 部署 + 生产验收
-- 提交（feat(website): / fix(website):）+ 同步 build/client → 推分支（deploy-website 监听 main 与 v* tag；
-  当前 refactor 未合并 main，可推 v3.1.11 tag 或经用户同意合并/直推 main）
-- 生产验证：curl /__manifest 不再 500、各路由 200；客户端导航测试需可靠网络路径（本机被证书拦截）
-- 用户确认：除首页外全部路由恢复正常
-
-### 4. 状态（已完成，勿重复）
+### 状态（已完成，勿重复）
 - 遗留收尾全部完成：getFilePaths（443bb84）/ 2.7 验收（4+1 bug）/ 物理拖拽人工验证 / 截图存档（d3dbf29）/ 迁移验证+修复（f7f2fa6）/ GH Actions 真实触发（v3.1.10 三工作流全绿）/ 正式图标（0e09eb6）
 - 机器上留有已安装的 SrP-CFG 3.1.6（验收产物，含全部修复 + 正式图标）
 

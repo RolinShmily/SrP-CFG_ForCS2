@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-06（**网站生产路由问题已修复并部署**：根因 = wrangler.json assets 缺 `binding` 导致 `env.ASSETS` undefined（platform-direct 模式）→ 非资产路径 TypeError 1101；react-router lazy 路由发现拉 `/__manifest` → 500 → 客户端路由断裂。修复 = `routeDiscovery: { mode: "initial" }` + `assets.binding: "ASSETS"`，commit ac887fc，workflow_dispatch 部署 run 30916591921 全绿，生产 curl + headless Edge 双验通过。详见任务书 `tasks/layer-3-website-react/TASK-prod-routing-fix.md`）
+> 更新时间：2026-08-06（**网站生产路由问题已修复并部署**（ac887fc，详见四-6）；**网站/桌面内容更新已完成并部署**（718f48b：关于页技术栈对齐 Tauri/Vite-RR7、下载页便携版→Setup EXE、Runtime Core 卡双边框 bug、README+文档中心技术栈，详见四-7 与任务书 TASK-about-download-content-fix.md））
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -125,8 +125,17 @@
   5. ⚠️ 本机网络路径到 Cloudflare 被证书拦截（Edge 报 ERR_CERT_COMMON_NAME_INVALID，Subject: shou1.186288.xyz），本地浏览器无法可靠做客户端导航测试（用户侧可访问但路由断裂）；WSL curl 多次重试可得 200（内容可信）
 - **修复方向（待验证，见任务书）**：worker 1101 根因（ASSETS 绑定/部署配置 vs 平台行为）、wrangler.json 层能否处理 /__manifest（不可改 worker.ts）、react-router routeDiscovery 配置（能否去掉 lazy manifest 拉取）、本地 wrangler dev 复现
 
+### ✅ 7. 网站/桌面内容更新 — 已完成并部署（2026-08-06，718f48b，任务书 TASK-about-download-content-fix.md）
+- **关于页**（website + desktop）：技术栈卡对齐重构后实际栈——website 8 项（Vite / React Router 7 SSG 2800+ 页 / React 19 / Tauri v2（Rust 后端）/ TypeScript / TailwindCSS / Velite / Cloudflare Workers）；desktop 6 项（Tauri v2 / Rust core crate / React 19 / Vite / TypeScript / TailwindCSS），简介与 website 对齐
+- **下载页便携版**：Release 只发布 exe+msi（L4 已删 Portable.zip），原「便携版 (Portable)」卡是死链 → 改为「Setup 安装程序 (EXE)」（`SrP-CFG_Setup_x64.exe`）；README 快速开始同步改「MSI / Setup (EXE)」
+- **Runtime Core 卡双边框 bug**：外层 div（border-accent/20）+ 内层 Card（自带 border-border）→ 双层边框；改两种形态单原生 div（featured accent 边框 / 普通 border-border），消除嵌套
+- **README + 文档中心**：README 新增「技术栈」表 + 项目结构注释精确化；docs srpcfg-1.md 末尾新增「项目工具链」表（随 Velite 重生成 .velite/docs.json + build/client）
+- 验证：build:web + tsc（web/desktop renderer）零错 + ai-stream 12/12 + 本地 headless Edge 实测（下载页无 Portable、Runtime Core 卡单边框、关于页新栈、docs 含工具链表）；桌面 dist 同步
+- 部署：workflow_dispatch（run 30918405839 ✓ 56s）；生产 curl 验：下载页含 Setup EXE 且 0 处 Portable、关于页 0 Astro/0 Electron 含 Tauri+RR7
+- ⚠️ desktop 改动仅渲染层，未发版：桌面 About 页新文案随下次 Desktop release 生效（机器上安装的 3.1.6 仍旧）
+
 ### ✅ 已完成（不再执行）
-- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）、**网站生产路由问题修复**（ac887fc，详见四-6）
+- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）、**网站生产路由问题修复**（ac887fc，详见四-6）、**网站/桌面内容更新**（718f48b，详见四-7）
 
 ## 五、关键技术参考
 
