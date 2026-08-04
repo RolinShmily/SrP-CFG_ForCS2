@@ -1,8 +1,7 @@
 /**
  * 首页 /（对应原 src/pages/index.astro，React 化）。
  * 组装 Hero / Features / Showcase / Steps / CTA；meta 对齐原 MainLayout 的 title/description。
- * TODO(L3.2 下载页)：LATEST_VERSION 由 data/version.ts 顶层 await 提供，
- * 现以静态 "3" 渲染（见 components/Hero.tsx / TerminalDemo.tsx），下载页迁移时统一改 SSG loader。
+ * LATEST_VERSION 已改为 vite 插件构建期注入（见 data/version.ts / vite.config.ts）。
  */
 import type { MetaFunction } from "react-router";
 import { Hero } from "../components/Hero";

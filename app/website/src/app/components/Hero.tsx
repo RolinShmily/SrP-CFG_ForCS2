@@ -1,15 +1,13 @@
 /**
  * Hero —— 首页首屏（对应原 Hero.astro，React 化）。
  * 保留 tech-grid / hero-reveal 动画类（global.css 定义）；
- * LATEST_VERSION 暂为静态 "3"（见 TerminalDemo TODO，等 L3.2 下载页统一处理）。
+ * LATEST_VERSION 由 vite 插件构建期注入（见 data/version.ts）。
  */
 import { ArrowDownRight, BookOpen, Download } from "lucide-react";
 import { Link } from "react-router";
 import { ButtonLink } from "./ButtonLink";
 import { TerminalDemo } from "./TerminalDemo";
-
-// TODO(L3.2 下载页)：data/version.ts 顶层 await 需改为 SSG loader / 构建期注入
-const LATEST_VERSION = "3";
+import { LATEST_VERSION } from "../../data/version";
 
 const stats = [
   { label: "Release model", value: "1 Runtime Core" },

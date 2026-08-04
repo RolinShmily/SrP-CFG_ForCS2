@@ -5,7 +5,7 @@ import { ServerRouter, UNSAFE_withComponentProps, Outlet, Meta, Links, ScrollRes
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { useState } from "react";
-import { Github, X, Menu, BookOpen, Download, Cloud, FileCode2, UserRoundCog, Check, ArrowDownRight, Blocks, SlidersHorizontal, CloudCog, ArrowUpRight, PackageCheck, Gamepad2 } from "lucide-react";
+import { Github, X, Menu, BookOpen, Download, Cloud, FileCode2, UserRoundCog, Check, ArrowDownRight, Blocks, SlidersHorizontal, CloudCog, ArrowUpRight, PackageCheck, Gamepad2, Package, Info } from "lucide-react";
 import { clsx } from "clsx";
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
@@ -125,6 +125,9 @@ const route0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: root
 }, Symbol.toStringTag, { value: "Module" }));
 const REPO_URL = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
+const RELEASES_URL = `${REPO_URL}/releases`;
+const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
+const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;
 const navLinks = [
   { href: "/", label: "首页" },
   { href: "/download", label: "下载" },
@@ -365,7 +368,7 @@ function ButtonLink({
     }
   );
 }
-const LATEST_VERSION$1 = "3";
+const LATEST_VERSION = "3.1.9";
 const trace = [
   {
     step: "01",
@@ -410,7 +413,7 @@ function TerminalDemo() {
           ] }),
           /* @__PURE__ */ jsxs("span", { className: "font-mono text-[10px] uppercase tracking-[0.16em] text-text-faint", children: [
             "runtime_boot_trace / v",
-            LATEST_VERSION$1
+            LATEST_VERSION
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "p-4 sm:p-6", children: [
@@ -461,7 +464,6 @@ function TerminalDemo() {
     }
   );
 }
-const LATEST_VERSION = "3";
 const stats = [
   { label: "Release model", value: "1 Runtime Core" },
   { label: "Source tree", value: "84 CFG" },
@@ -897,7 +899,7 @@ function CTA() {
     ] })
   ] }) }) });
 }
-const meta = () => [{
+const meta$1 = () => [{
   title: "SrP-CFG v3 — CS2 模块化 CFG Runtime"
 }, {
   name: "description",
@@ -911,23 +913,188 @@ const home = UNSAFE_withComponentProps(function HomePage() {
 const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: home,
-  meta
+  meta: meta$1
 }, Symbol.toStringTag, { value: "Module" }));
+const dl = (file) => `${DL_MIRROR_PREFIX}${RELEASE_DOWNLOAD_BASE}/${file}`;
+const installers = [
+  {
+    name: "MSI 安装包",
+    desc: "推荐方式。通过 Windows 安装向导安装到 Program Files，支持开始菜单和桌面快捷方式",
+    file: "SrP-CFG_Installer.msi",
+    url: dl("SrP-CFG_Installer.msi"),
+    badge: "推荐"
+  },
+  {
+    name: "便携版 (Portable)",
+    desc: "解压即用，无需安装，适合 U 盘携带或多实例隔离场景",
+    file: "SrP-CFG_Portable.zip",
+    url: dl("SrP-CFG_Portable.zip"),
+    badge: "Portable"
+  }
+];
+const packages = [
+  {
+    name: "Runtime Core",
+    file: "SrP-CFG_Runtime_Core.zip",
+    url: dl("SrP-CFG_Runtime_Core.zip"),
+    desc: "唯一配置包：Runtime + User + 内置 Preset 案例；在 custom.cfg 中选择起点并写入个人差异",
+    badge: "推荐",
+    featured: true
+  }
+];
+const meta = () => [{
+  title: "下载 — SrP-CFG"
+}, {
+  name: "description",
+  content: "下载 SrP-CFG 安装器和 v3 配置包"
+}];
+const cardLinkHover = "transition-[background-color,border-color,box-shadow,transform] duration-200 group-hover:-translate-y-0.5 group-hover:border-border-highlight group-hover:bg-bg-hover group-hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)]";
+const featuredCard = "rounded-[var(--radius)] border border-accent/20 bg-bg-card p-6 " + cardLinkHover;
+const plainCard = "p-6 " + cardLinkHover;
 const download = UNSAFE_withComponentProps(function DownloadPage() {
-  return /* @__PURE__ */ jsxs("main", {
-    className: "mx-auto w-full max-w-[var(--site-width)] px-[var(--content-gutter)] py-10",
-    children: [/* @__PURE__ */ jsx("h1", {
-      className: "font-display text-2xl font-bold text-text",
-      children: "下载页（迁移骨架占位）"
-    }), /* @__PURE__ */ jsx("p", {
-      className: "mt-2 text-sm text-text-muted",
-      children: "占位内容：后续迁移自 src/pages/download.astro（版本获取 + 下载入口）。"
-    })]
+  return /* @__PURE__ */ jsx("section", {
+    className: "pb-16 pt-28 sm:pb-20 sm:pt-32",
+    children: /* @__PURE__ */ jsxs("div", {
+      className: "mx-auto max-w-[1200px] px-5 sm:px-7",
+      children: [/* @__PURE__ */ jsx(SectionHeader, {
+        level: "h1",
+        label: "Download",
+        title: "下载中心",
+        description: "获取 Desktop 安装器与唯一 Runtime Core。所有 v3 功能、Preset 案例和用户入口都在同一个配置包中。"
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "mb-20",
+        children: [/* @__PURE__ */ jsxs("h2", {
+          className: "mb-8 flex items-center gap-3 font-display text-2xl font-semibold",
+          children: [/* @__PURE__ */ jsx(Download, {
+            className: "h-6 w-6 text-accent"
+          }), "安装器"]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 gap-6 md:grid-cols-2",
+          children: installers.map((item) => /* @__PURE__ */ jsx("a", {
+            href: item.url,
+            target: "_blank",
+            rel: "noopener",
+            className: "group block no-underline",
+            children: /* @__PURE__ */ jsxs(Card, {
+              padding: "none",
+              className: `p-8 ${cardLinkHover}`,
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "mb-4 flex items-start justify-between",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("h3", {
+                    className: "mb-1 font-display text-xl font-semibold transition-colors group-hover:text-accent",
+                    children: item.name
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "font-mono text-sm text-text-faint",
+                    children: item.file
+                  })]
+                }), /* @__PURE__ */ jsx(Badge, {
+                  variant: "accent",
+                  className: "rounded-[4px] border border-[rgba(232,121,12,0.12)] px-3 py-1 text-xs tracking-wider",
+                  children: item.badge
+                })]
+              }), /* @__PURE__ */ jsx("p", {
+                className: "mb-6 text-sm leading-7 text-text-secondary",
+                children: item.desc
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "flex items-center gap-2 font-display text-sm font-semibold text-accent",
+                children: [/* @__PURE__ */ jsx(Download, {
+                  className: "h-4 w-4"
+                }), "点击下载"]
+              })]
+            })
+          }, item.file))
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        children: [/* @__PURE__ */ jsxs("h2", {
+          className: "mb-8 flex items-center gap-3 font-display text-2xl font-semibold",
+          children: [/* @__PURE__ */ jsx(Package, {
+            className: "h-6 w-6 text-teal"
+          }), "v3 配置包"]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "mb-6 rounded-[8px] border border-[rgba(232,121,12,0.18)] bg-accent-bg p-4 text-sm leading-[1.75] text-text-secondary",
+          children: ["现在只发行 Runtime Core。安装后在", " ", /* @__PURE__ */ jsx("code", {
+            className: "font-mono text-[0.9em] text-accent-light",
+            children: "user/custom.cfg"
+          }), " ", "中启用一个", /* @__PURE__ */ jsx("code", {
+            className: "font-mono text-[0.9em] text-accent-light",
+            children: "srp_apply_*"
+          }), " ", "作为起点，再把个人差异写在下面；也可以完全交给 VCFG。"]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 gap-5",
+          children: packages.map((pkg) => /* @__PURE__ */ jsx("a", {
+            href: pkg.url,
+            target: "_blank",
+            rel: "noopener",
+            className: "group block no-underline",
+            children: /* @__PURE__ */ jsx("div", {
+              className: pkg.featured ? featuredCard : void 0,
+              children: /* @__PURE__ */ jsxs(Card, {
+                padding: "none",
+                className: pkg.featured ? void 0 : plainCard,
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "mb-3 flex items-center gap-3",
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: pkg.featured ? "flex h-10 w-10 items-center justify-center rounded-[6px] border border-[rgba(232,121,12,0.12)] bg-accent-bg" : "flex h-10 w-10 items-center justify-center rounded-[6px] border border-border bg-bg-raised",
+                    children: /* @__PURE__ */ jsx(Download, {
+                      className: pkg.featured ? "h-[18px] w-[18px] text-accent" : "h-[18px] w-[18px] text-text-muted",
+                      strokeWidth: 1.8
+                    })
+                  }), pkg.featured ? /* @__PURE__ */ jsx("span", {
+                    className: "rounded bg-accent px-2 py-1 font-mono text-xs font-bold tracking-wide text-bg",
+                    children: pkg.badge
+                  }) : /* @__PURE__ */ jsx(Badge, {
+                    variant: "default",
+                    outline: true,
+                    className: "bg-bg-raised px-2 py-1 text-xs font-bold tracking-wide",
+                    children: pkg.badge
+                  })]
+                }), /* @__PURE__ */ jsx("h3", {
+                  className: "mb-1.5 font-display text-lg font-semibold transition-colors group-hover:text-accent",
+                  children: pkg.name
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "mb-4 text-sm leading-7 text-text-secondary",
+                  children: pkg.desc
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "font-mono text-xs text-text-faint",
+                  children: pkg.file
+                })]
+              })
+            })
+          }, pkg.file))
+        })]
+      }), /* @__PURE__ */ jsxs(Card, {
+        padding: "none",
+        className: "mt-12 flex gap-4 p-6",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-[6px] border border-[rgba(232,121,12,0.12)] bg-accent-bg",
+          children: /* @__PURE__ */ jsx(Info, {
+            className: "h-[18px] w-[18px] text-accent",
+            strokeWidth: 1.8
+          })
+        }), /* @__PURE__ */ jsxs("div", {
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "mb-1 font-display text-base font-semibold",
+            children: "使用说明"
+          }), /* @__PURE__ */ jsxs("p", {
+            className: "text-sm leading-7 text-text-secondary",
+            children: ["下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。所有文件也可在", " ", /* @__PURE__ */ jsx("a", {
+              href: RELEASES_URL,
+              target: "_blank",
+              rel: "noopener",
+              className: "text-accent hover:underline",
+              children: "GitHub Releases"
+            }), " ", "找到。"]
+          })]
+        })]
+      })]
+    })
   });
 });
 const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: download
+  default: download,
+  meta
 }, Symbol.toStringTag, { value: "Module" }));
 const about = UNSAFE_withComponentProps(function AboutPage() {
   return /* @__PURE__ */ jsxs("main", {
@@ -977,7 +1144,7 @@ const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   __proto__: null,
   default: commands
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-7vJmYhde.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-DwBj_YJc.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": ["/assets/root-BEtRH8CL.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-DuwrJB8P.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/download-ByjpPFAe.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-Bwvdx0ua.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/download-ByjpPFAe.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-CR3XnSTX.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-C0gVTsU8.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-D_Ps-E2q.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-D67C7O6s.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-a51d844e.js", "version": "a51d844e", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-7vJmYhde.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/root-xUct2dzH.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": ["/assets/root-BdZSxivU.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "layout": { "id": "layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/layout-ZGW_6gF6.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/navigation-DLKXNsBJ.js", "/assets/download-ucwZBGak.js", "/assets/book-open-BibnRe20.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "layout", "path": "/", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/home-CNhAq6uH.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/Badge-N9T1fWoB.js", "/assets/download-ucwZBGak.js", "/assets/book-open-BibnRe20.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/download": { "id": "routes/download", "parentId": "layout", "path": "/download", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/download-ZPI5sJAx.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js", "/assets/Badge-N9T1fWoB.js", "/assets/navigation-DLKXNsBJ.js", "/assets/download-ucwZBGak.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "layout", "path": "/about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/about-C0gVTsU8.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/docs": { "id": "routes/docs", "parentId": "layout", "path": "/docs", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/docs-D_Ps-E2q.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/commands": { "id": "routes/commands", "parentId": "layout", "path": "/commands", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasDefaultExport": true, "hasErrorBoundary": false, "module": "/assets/commands-D67C7O6s.js", "imports": ["/assets/chunk-62JRHF6Z-nF-r9U12.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-3a4cf25f.js", "version": "3a4cf25f", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "v8_passThroughRequests": false, "v8_trailingSlashAwareDataRequests": false, "unstable_previewServerPrerendering": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };

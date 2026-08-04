@@ -5,10 +5,7 @@
  */
 import { Check, Cloud, FileCode2, UserRoundCog } from "lucide-react";
 import { Badge } from "@srp-cfg/ui";
-
-// TODO(L3.2 下载页)：LATEST_VERSION 来自 data/version.ts（顶层 await），暂以静态 "3" 渲染，
-// 待下载页迁移时改 SSG loader / 构建期注入。
-const LATEST_VERSION = "3";
+import { LATEST_VERSION } from "../../data/version";
 
 const trace = [
   {
