@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L2 遗留收尾基本完成：getFilePaths 插件化✅ + **tauri 全功能验收实测揪出并修复 4+1 个隐藏 bug 全部提交**——IPC 命令名/ureq TLS/TitleBar 拖拽机制/updater GitHub null body/拖拽 ACL；7 页目验+窗口控制+updater 全通过；剩 TitleBar 物理拖拽目验（环境受限）与 L4 迁移验证、GH Actions）
+> 更新时间：2026-08-05（L4 遗留收尾：**真实升级迁移验证完成并揪出修复 1 个隐藏 bug**——迁移被 staging 预建目录跳过（f7f2fa6），修复后真实安装场景全通过（283 文件字节级一致 + .migrated）；TitleBar 物理拖拽已移交人工（测试规范见 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`）；剩 GH Actions 真实触发（需推 tag，待用户确认））
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -92,16 +92,19 @@
 ### ⏳ 2. L2 遗留：2.7 视觉回归 + `tauri dev` 全功能手动验收 — 基本完成（4+1 bug 已修提交，剩物理拖拽目验）
 - **已实测（CDP + release exe）**：IPC 全链路、detectAll 与 golden 一致、全数据命令、`log:new` 实时日志、**窗口控制四连测**（maximize/restore/minimize/close）、UploadZone 原生对话框、**updater 修复后 hasUpdate:true（3.1.9）**、全 7 页渲染目验
 - **已修 5 个问题并提交（27f8f9d/5b8eb94/418c2d4/556fc21）**：IPC 命令名、ureq TLS、TitleBar drag-region 属性、**updater GitHub null body（v3.1.4 body:null 导致 serde 解析失败）**、**拖拽 ACL（core:window:allow-start-dragging）**
-- **未完成**：TitleBar 物理拖拽 OS 循环目验（受本机 FLUTTERVIEW 终端遮挡，需先最小化终端再补验）、每页截图存档（可选）
+- **未完成**：TitleBar 物理拖拽 OS 循环目验 → **已移交人工**（2026-08-05）：agent 用 mouse_event 合成拖拽一次未动（合成输入不入 WebView2 拖拽捕获，不作为失败依据）；人工测试规范见 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`（环境准备：先最小化 QuarkCloudDrive 播放器窗口 + 终端再拖拽；判定表 + 验证命令）；另发现此前记载的"FLUTTERVIEW 终端遮挡"实为 **QuarkCloudDrive（夸克网盘）播放器窗口**（FLUTTER_RUNNER_WIN32_WINDOW），非开发终端；每页截图存档（可选）
 - 注意：dev 进程树会被 WSL interop 回收 → 稳定验收用 release exe + schtasks；**直接 cargo build 必须带 --features tauri/custom-protocol**（否则 exe 无前端产物加载 devUrl）
 
-### 3. L4 遗留：真实升级路径迁移验证（L4 验收 28）⏳
-- 现状：`%APPDATA%/top.srprolin.cfg` 已有完整迁移产物（install/save/res/upload/download/annotations/cfg/video + `.migrated`），说明此前启动已跑过一次迁移；来源 `%APPDATA%/srp-cfg` 旧数据仍在（含 cfg/autoexec.cfg、download/2026-07-28-0001 等）
-- 建议正式验收：备份两个目录 → 删 `top.srprolin.cfg` → **先重新 `pnpm tauri build` 打包含全部修复的安装包**（现有 `src-tauri/target/release/bundle/nsis/SrP-CFG Installer_3.1.6_x64-setup.exe` 是旧代码）→ 安装 → 首启动核对清单完整 + `.migrated` 标记
+### ✅ 3. L4 遗留：真实升级路径迁移验证（L4 验收 28）— 已完成（2026-08-05，揪出并修复 1 个隐藏 bug）
+- **发现的 bug（f7f2fa6，勿回退）**：`initialize_staging_area()` 在 `run_migration()` 之前创建同名 7 个目录（cfg/annotations/video/upload/download/save/res）→ `plan_migration` 把旧数据全判为 Skip → `should_migrate=false` → **旧 `%APPDATA%/srp-cfg` 数据永不迁移、不写 .migrated**（静默数据不可见）。修复：lib.rs 调整顺序（先迁移后建目录）+ migrate.rs 忽略空目录（骨架目录不算真实数据）
+- **验收流程（真实安装场景）**：备份两目录 → 删 `top.srprolin.cfg` → 重新 `pnpm tauri build`（含全部修复）→ NSIS 静默安装（`/S` → `%LOCALAPPDATA%\SrP-CFG Installer`）→ 首启动核对：**283 文件/7 类字节级一致迁移（vs 备份 0 缺失 0 大小差）、legacy 目录清空、.migrated 写入**；CDP 实测 detectAll（Steam+CS2 installed+3 账号）、getUserConfig 读到迁移后 custom.cfg、UI 正常
+- **附带发现（构建环境）**：Windows 工作区 pnpm-lock.yaml 是旧的（vite 6.4.3，仓库已 6.4.2）→ 构建产物 JS 与仓库不一致；已同步 lockfile + `pnpm install` 对齐（vite 6.4.2，JS 字节一致）；CSS 多 19 个死工具类源于工作区非 git 仓库（Tailwind v4 无 .gitignore 扫描了 node_modules），CI 上 git checkout 不存在此问题，仓库 dist 为基准
+- 注：机器上现留有**已安装的 SrP-CFG Installer 3.1.6**（真实安装验收产物，含全部修复），不需要可卸载
 
-### 4. L4 遗留：GitHub Actions 真实触发验证
-- 推 `v*` tag → release-desktop.yml 全绿（windows-latest 上 Rust toolchain + pnpm install + tauri build + 上传 NSIS/MSI）；deploy-website.yml 正常
-- 本机无法执行，需在真实 repo 触发
+### 4. L4 遗留：GitHub Actions 真实触发验证 ⏳（待用户确认后推 tag）
+- 推 `v*` tag 触发 release-desktop.yml 全绿（windows-latest 上 Rust toolchain + pnpm install + tauri build + 上传 NSIS/MSI）+ deploy-website.yml 正常
+- **注意**：推 tag 会在真实仓库发布 GitHub Release（v3.1.10，Tauri 版），属公开外部副作用，需用户确认；最新 tag v3.1.9 为旧 Electron 版，当前分支已含全部 Tauri 修复（含迁移 fix f7f2fa6），推荐 tag 指向当前 HEAD
+- 版本注入在 CI 有 GITHUB_TOKEN 不再回落 0.0.0
 
 ### 5. 可选：正式图标替换
 - `src-tauri/icons/` 当前为脚本生成的占位图标（深蓝底十字）；可用品牌图源 `tauri icon` 重新生成全套
@@ -157,4 +160,7 @@
 27. **Windows curl.exe SChannel CRL 吊销检查离线**：本机 `curl.exe https://...` 报 `CRYPT_E_REVOCATION_OFFLINE (0x80092013)`（curl 显式请求 CRL 校验，机器连不上 CRL 服务器）；PowerShell Invoke-WebRequest/.NET HttpClient 正常；App 内 ureq(native-tls/schannel) 不受影响（独立测试通过）。查 GitHub API 建议用 WSL curl 或 PowerShell
 28. **capabilities ACL 与拖拽（已修 418c2d4）**：`core:window:default` 权限集**不含** `allow-start-dragging`；新增 capabilities 权限后需重新 `cargo build`（ACL 编译进二进制）
 29. **Windows 构建产物路径双轨**：`CARGO_TARGET_DIR=C:\Users\Rolin\srp-cfg-target`（测试/临时构建）与 `src-tauri/target/`（tauri build 默认）是两套目录；run-release.bat 指向 `src-tauri/target/release/`，用 srp-cfg-target 构建后需手动 cp exe 过去再启动
-30. **本机 FLUTTERVIEW 终端遮挡（GUI 验收环境限制）**：当前登录会话运行 pi 的终端是 Flutter 窗口（class=FLUTTERVIEW，rect≈60,9-2505,1335），**常驻全屏前台并不断抢回前台**，盖住 srp-cfg 应用 → 物理鼠标点击/拖拽落不到 app。绕过：窗口命令用 CDP 直调 `window.api.*` 验证（实测通过）；物理拖拽 OS 循环验证需先把终端最小化/移开。SetWindowPos(HWND_TOPMOST) 也压不住。窗口控制/鼠标模拟助手：`C:\Users\Rolin\srp-cfg-build\winctl.ps1`（rect/move/click/state）+ `cursormove.ps1`（纯光标移动+Release 配合 OS 拖拽循环）；CDP 助手 `/tmp/cdp.mjs "<expr>" [port]`（支持端口参数，本机 9223）
+30. **本机全屏窗口遮挡（GUI 验收环境限制，2026-08-05 更新）**：此前记载的"FLUTTERVIEW 终端遮挡"实为 **QuarkCloudDrive（夸克网盘）播放器窗口**（class=FLUTTER_RUNNER_WIN32_WINDOW，pid=quark_cloud_drive，常驻 52,35-2513,1370 全屏并抢前台）；开发终端是 Windows Terminal（class=CASCADIA_HOSTING_WINDOW_CLASS）。两者都全屏盖住 app → 物理鼠标点击/拖拽前需先把它们最小化/移开。窗口控制/鼠标模拟助手：`winctl.ps1`（rect/move/click/state）+ `cursormove.ps1`；窗口最小化/还原/置前助手 `winman.ps1 -Action minimize|restore|front -Hwnd 0x...`（2026-08-05 新增，保存 hwnd 可还原）；CDP 助手 `/tmp/cdp.mjs "<expr>" [port]`（本机 9223）
+31. **迁移被 staging 预建目录跳过（已修 f7f2fa6，勿回退）**：`initialize_staging_area()` 会先建 cfg/annotations/video/upload/download/save/res 七个目录到 `app_data_dir()`；若在 `run_migration()` 之前执行，`plan_migration` 会把旧数据全判 Skip → 迁移静默不执行（不写 .migrated）。已修：顺序调整（先迁移）+ migrate.rs 对空目录不算"已有"。改迁移相关代码时保持这两点
+32. **Windows 工作区 pnpm-lock.yaml 需随仓库同步（2026-08-05 实测）**：工作区 lockfile 可能比仓库旧（如 vite 6.4.3 vs 仓库 6.4.2）→ `pnpm tauri build` 的 renderer 产物与仓库 dist 不一致（JS 哈希不同）。同步 lockfile 后 `pnpm install --registry=https://registry.npmmirror.com` 对齐。另外**工作区非 git 仓库**（无 .gitignore）→ Tailwind v4 自动扫描会把 node_modules 也扫进去，CSS 多 19 个死工具类（container/z-3/w-6 等，~3.6KB）；CI 上 git checkout 无此问题，仓库 dist 为基准。工作区构建产物与仓库 dist 不一致时先查这两点
+33. **真实安装验收产物留存在本机**：`%LOCALAPPDATA%\SrP-CFG Installer`（NSIS 静默安装产物，含全部修复 + 迁移 fix）；`%APPDATA%/top.srprolin.cfg` 为真实迁移后数据（.migrated=1，legacy 目录已清空）；备份在 `C:\Users\Rolin\srp-cfg-build\backup\migration-20260804-204128\`

@@ -3,11 +3,12 @@
 你是 SrP-CFG 重构项目的执行 agent，接手 **L2/L4 遗留收尾**。主链已全部完成：core crate 纯逻辑
 （7 模块 / 84 测试）、L2 Desktop → Tauri（Rust 壳层 + 49 commands + 2.6 实机验收 + 2.8 打包
 NSIS 2.5MB / MSI 3.6MB）、L4 后半（release-desktop 切 tauri build + electron-forge/WiX 清理）、
-L0.6 黄金样本（Track B）。**遗留收尾已推进到最后一程（2026-08-04 晚，4 个 commit）**：
-getFilePaths 插件化✅（443bb84）、**tauri 全功能验收实测揪出并修复 4+1 个隐藏 bug 并全部提交**
-（27f8f9d IPC 命令名 / 5b8eb94 updater GitHub null body / 418c2d4 TitleBar 拖拽 ACL /
-556fc21 renderer dist 刷新）、2.7 视觉回归 7 页目验 + 窗口控制 + updater 全通过。
-**剩余**：TitleBar 物理拖拽目验（环境受限，见铁律）、每页截图存档（可选）、L4 真实升级迁移验证、
+L0.6 黄金样本（Track B）。**遗留收尾已推进到最后一程（2026-08-05）**：
+getFilePaths 插件化✅（443bb84）、tauri 全功能验收 4+1 个隐藏 bug 已修✅（27f8f9d/5b8eb94/418c2d4/556fc21）、
+2.7 视觉回归 7 页目验 + 窗口控制 + updater 全通过、**L4 真实升级迁移验证完成并揪出修复 1 个隐藏 bug**
+（迁移被 staging 预建目录跳过，f7f2fa6——修复后真实安装场景 283 文件字节级一致迁移）。
+**剩余**：TitleBar 物理拖拽目验（**已移交人工**，规范见 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`）、
+每页截图存档（可选）、GitHub Actions 真实触发（推 tag 会发布真实 Release，**需用户确认**）、正式图标替换（可选）。
 GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26200 + WSL Arch）即 Windows 实机。
 
 ## 第一步：读文件（必须按顺序读完再动手）
@@ -125,26 +126,21 @@ GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26
     getLatestVersion→3.1.9、getUpdateHistory→10 条、cache.json 写入、UI 更新列表正常显示
   - UploadZone 原生对话框（点击弹出"打开"对话框，ESC 关闭后应用正常）
 - **未完成/待办**：
-  - ⏳ **TitleBar 物理拖拽 OS 循环目验**：ACL 已修（start_dragging 命令可调用），拖拽机制链路已确认
-    （属性+drag.js+权限），但受本机 FLUTTERVIEW 终端常驻前台遮挡，物理拖拽未能最终目验 →
-    **建议把终端最小化/移开后补验**（winctl.ps1 -Action move 模拟）；CDP 合成 mousedown 需 detail:1
+  - ⏳ **TitleBar 物理拖拽 OS 循环目验** → **已移交人工**（2026-08-05）：agent 用 mouse_event 合成拖拽一次未动（合成输入不入 WebView2 拖拽捕获，不作失败依据）；**人工测试规范**：`tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`（环境准备：先最小化 QuarkCloudDrive 播放器窗口 + Windows Terminal 再拖拽；判定表 + winctl.ps1 验证命令；拖拽点示例 Left+400,Top+15）
   - ⏳ 每页截图存档（可选，视觉回归记录）
   - 注：dev 进程树会被 WSL interop 静默回收 → 稳定验收用 release exe + schtasks（见环境铁律）
 
-### 3. 真实升级路径迁移验证（L4 验收 28）⏳
-- 现状：`%APPDATA%/top.srprolin.cfg` 已存在完整迁移产物（install.json/save.json/res.json/upload/
-  download/annotations/cfg/video + `.migrated` 标记）——**说明此前某次启动已跑过一次性迁移**（来源
-  `%APPDATA%/srp-cfg` 旧数据仍在，含 cfg/autoexec.cfg、download/2026-07-28-0001 等）。
-  建议补做正式验收流程：备份现有两个目录 → 删除 `top.srprolin.cfg` → 装新版
-  `SrP-CFG Installer_3.1.6_x64-setup.exe`（`src-tauri/target/release/bundle/nsis/`，需先 `pnpm tauri build`
-  重新打包含全部修复的版本）→ 首启动后核对 app_data_dir() 清单完整 + `.migrated` 标记 + 数据一致性
-- 注意：安装包若未重新打包仍是旧代码（无 4 个 bug 修复）——打包前先同步源码
+### ✅ 3. 真实升级路径迁移验证（L4 验收 28）— 已完成（2026-08-05，揪出并修复 1 个隐藏 bug）
+- **发现的 bug（f7f2fa6，勿回退）**：`initialize_staging_area()` 在 `run_migration()` 之前建同名 7 目录 → 迁移计划全判 Skip → **旧数据永不迁移、不写 .migrated**（静默数据不可见）。修复：lib.rs 顺序（先迁移）+ migrate.rs 忽略空目录
+- **真实安装验收全通过**：备份 → 删 `top.srprolin.cfg` → `pnpm tauri build` → NSIS 静默装到 `%LOCALAPPDATA%\SrP-CFG Installer` → 首启动：283 文件/7 类字节级一致迁移（vs 备份 0 缺失 0 差）、legacy 清空、.migrated 写入；CDP 实测 detectAll + getUserConfig 均正常
+- 注意：安装包若未重新打包仍是旧代码（无 4+1 个 bug 修复）——打包前先同步源码；机器上留有已安装的验收产物（见 PROGRESS.md 注意点 33）
 
-### 4. GitHub Actions 真实触发验证（L4 遗留）⏳
+### 4. GitHub Actions 真实触发验证（L4 遗留）⏳（待用户确认后推 tag）
 - 推 `v*` tag 触发 release-desktop.yml（windows-latest：rust toolchain + pnpm install + tauri build +
   NSIS/MSI 上传）+ deploy-website.yml 全绿确认；注意 windows-latest 上是干净环境，验证
   `pnpm install` + `tauri build` 链路与本地一致（tauri build CLI 自动带 custom-protocol，无坑）；
   版本注入在 CI 有 GITHUB_TOKEN 不再回落 0.0.0
+- **注意：推 tag 会在真实仓库发布 GitHub Release（v3.1.10，Tauri 版），属公开外部副作用，必须先经用户确认**；最新 tag v3.1.9 为旧 Electron 版，当前分支已含全部 Tauri 修复（含迁移 fix f7f2fa6），推荐 tag 指向当前 HEAD
 
 ### 5. 可选：正式图标替换
 - `src-tauri/icons/` 现为占位图标（脚本生成）；拿到品牌源图后 `pnpm tauri icon <src.png>` 重生成
