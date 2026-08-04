@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L3 页面迁移 + SEO 收尾完成）
+> 更新时间：2026-08-04（L3 收尾完成：Astro 旧结构已删、部署链路已统一）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md）
 
@@ -27,7 +27,7 @@
 | **GitHub API 限流** | 未认证 60 次/h/IP。版本注入（vite 插件构建时 fetch）瞬时失败会回落 `0.0.0`——**这是机制预期**（旧 Astro 同样回落），CI 配 `GITHUB_TOKEN` 后稳定 |
 | **共享组件 lint 约束** | `grep -rn "window.api\|electron\|@tauri-apps\|astro:" app/shared/ui/src` 必须为空 |
 
-## 三、当前进度（分支上 17 个提交）
+## 三、当前进度（分支上 20 个提交）
 
 ### ✅ L0 基线 — 完成
 - 提交 `9b5342e`：tasks/ 五层任务文档 + 契约/清单 3 份
@@ -43,7 +43,7 @@
 - **cargo test 总计 31 个全绿**
 - ⚠️ 剩余（需 Windows 实机）：Rust services（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 打包验证。详见 `tasks/layer-2-desktop-tauri/TASK.md`
 
-### ✅ L3 Website → Vite+React — 页面迁移 + SEO 完成（剩 Astro 结构删除与部署链路收尾）
+### ✅ L3 Website → Vite+React — 完成（页面迁移 + SEO + Astro 结构删除 + 部署链路统一）
 - `a65659b`/`d1194df`/`c21c7fb`：骨架 + 布局（vite/react-router config、root/layout、Nav/Footer、routes.ts）
 - `3954011`：**首页** React 化（Hero/Features/Showcase/Steps/CTA/TerminalDemo/ButtonLink）
 - `fe186a9`：**下载页** React 化 + **版本注入机制**（vite 插件 config hook fetch → define 注入 `__SRP_CFG_LATEST_VERSION__`，替代 Astro 顶层 await）
@@ -51,17 +51,19 @@
 - `f6eecb3`：**文档中心** Velite 管线（16 篇 md → sitemap/详情预渲染/TOC/侧边导航）
 - `677e21c`：**指令检索中心** SEO 化（commands.json 随包打包 + 首屏 50 卡预渲染 + AI 面板 Turnstile/SSE）
 - `f60786e`：**3.7 SEO 收尾**（sitemap.xml 插件 + robots.txt + SoftwareApplication JSON-LD）
+- `919302a`：L3 收尾① Velite 数据源迁出 `src/content` → `content/`（root 同步，产物不变）
+- `589fa79`：L3 收尾② 删除 Astro 旧结构 + scripts/依赖/tsconfig 切到 Vite+React Router
+- `62b4cc5`：L3 收尾③ 部署链路统一（wrangler assets → `./build/client`，`wrangler dev --local` 验证通过）
 
 ## 四、下一步任务（按优先级）
 
-### 1. L3 收尾（本环境可完整验证，推荐优先）
-见 `tasks/AGENT-START.md`（已更新为 L3 收尾提示词）：
-- [ ] 删除 Astro 旧结构（`src/pages/` `src/layouts/` `src/content/` `astro.config.ts` `content.config.ts`）
-  - **注意**：`src/content/docs/` 16 篇 md 是 Velite 数据源——删除前先把 md 移到独立目录并更新 `velite.config.ts` root，或直接保留 md 目录（只删 astro 特有文件）
-- [ ] package.json 清理 astro 依赖（astro/@astrojs/*/lucide-astro）+ scripts 切到 react-router（dev/build/preview）
-- [ ] tsconfig 不再 extends astro/tsconfigs/strict（改 vite 标准，注意保留 jsx/路径别名/.velite include）
-- [ ] 部署链路统一：react-router 输出 `build/`，`wrangler.json` assets 指向 `./dist`（L3.5 遗留）——配置输出目录或改 wrangler；deploy 脚本换 `velite --clean && react-router build && wrangler deploy`
-- [ ] 可选：`/commands/{name}` 指令详情静态页（3.4 可选）；JSON-LD 扩展（FAQ/指令数据集）
+### 1. L3 收尾 ✅ 已完成（提交 919302a / 589fa79 / 62b4cc5）
+- [x] Velite 数据源迁移：`src/content/` → `content/`（root 同步，`.velite` 产物不变）
+- [x] 删除 Astro 旧结构（src/pages/ layouts/ components/*.astro astro.config.ts content.config.ts package-lock.json）
+- [x] package.json 清理 astro 依赖（astro/@astrojs/*/lucide-astro）+ scripts 切到 react-router（dev/build/preview/deploy）
+- [x] tsconfig 改 vite 标准（不再 extends astro/tsconfigs/strict，保留 jsx/路径别名/.velite include）
+- [x] 部署链路统一：wrangler.json assets → `./build/client`，`wrangler dev --local` 本地验证通过
+- [ ] 可选（遗留，非阻塞）：`/commands/{name}` 指令详情静态页（3.4 可选）；JSON-LD 扩展（FAQ/指令数据集）
 
 ### 2. L2 Windows 实机部分
 - Rust services 迁移（detection/staging/installer/updater）+ commands 注册 + tauri dev 手动验收
@@ -82,18 +84,18 @@
 | Rust 纯逻辑（可测部分） | `app/desktop/src-tauri/core/src/`（vcfg/version/conflicts/migrate） |
 | Tauri IPC 适配层 | `app/desktop/src/renderer/lib/api.ts` |
 | Website React 结构 | `app/website/src/app/`（root/layout/routes/components/commands/docs） |
-| **Velite 内容管线** | `app/website/velite.config.ts` + `src/app/components/docs/docs-data.ts`（生成物 `.velite/docs.json` 已提交，`react-router build` 依赖它存在） |
+| **Velite 内容管线** | `app/website/velite.config.ts`（root: **content**，L3 收尾迁出 src/content）+ `src/app/components/docs/docs-data.ts`（生成物 `.velite/docs.json` 已提交，`react-router build` 依赖它存在） |
 | **版本注入机制** | `app/website/vite.config.ts`（srp-cfg-latest-version 插件）+ `src/data/version.ts` |
 | **sitemap/JSON-LD** | `app/website/vite.config.ts`（srp-cfg-sitemap 插件）+ `src/app/routes/home.tsx` + `public/robots.txt` |
-| 旧 Astro 结构（待删） | `app/website/src/pages/` `layouts/` `content/` `content.config.ts` `astro.config.ts` |
+| 旧 Astro 结构（已删） | 已删除（919302a/589fa79）；对照历史看 `git show ba2ad47:app/website/src/pages` 等 |
 
 ## 六、遗留注意点（交接时别忘）
 
 1. `api.ts` 的 `getFilePaths` 是 stub（返回 []）→ UploadZone 需改用 tauri 拖拽/对话框插件（L2）
-2. **部署链路未统一**：react-router 输出 `build/`，`wrangler.json` assets 指向 `./dist` → L3 收尾/L4 需统一（配置输出目录或改 wrangler）
+2. ~~部署链路未统一~~ → **已统一（62b4cc5）**：`wrangler.json` assets → `./build/client`（react-router SSG 输出）；`wrangler dev --local` 已验证静态页 + `/api/chat` 走 worker 逻辑（无 Turnstile 时返回错误 JSON，无需真连 AI）
 3. **版本注入回落**：GitHub 未认证限流时构建产物显示 `0.0.0`（旧 Astro 同样行为）；CI 配 GITHUB_TOKEN 后稳定
-4. **Velite 0.4 坑**：`s.slug()` 只校验不派生路径（需 `s.path().transform()`）；生成 `index.js` 含 `with { type: 'json' }`（Vite 6 解析不稳定）→ 代码直接 import `docs.json`
+4. **Velite 0.4 坑**：`s.slug()` 只校验不派生路径（需 `s.path().transform()`）；生成 `index.js` 含 `with { type: 'json' }`（Vite 6 解析不稳定）→ 代码直接 import `docs.json`。数据源在 `app/website/content/`（L3 收尾迁出 `src/content`）
 5. **commands.json 打包**：2785 条随路由 chunk 打包（gzip ~169KB），构建有 chunk 体积警告属预期
-6. **tsc 既有 3 个错误**（非本次引入，勿修错地方）：`astro.config.ts` ×2（@types/hast 双版本）+ `vite.config.ts` ×1（Plugin 类型，根/子 vite 6.4.2/6.4.3 hoisting）——删除 Astro 结构后前两个自然消失，vite.config 的可顺手 dedupe 或留
+6. **tsc 遗留 1 个错误**（非本次引入，勿修错地方）：`vite.config.ts` ×1（Plugin 类型，根/子 vite 6.4.2/6.4.3 hoisting）。曾尝试 dedupe：pnpm 10 不读 package.json 的 `pnpm.overrides`，改 pnpm-workspace.yaml 会影响 desktop 的 vite 解析，未做——留待 L4 或 desktop 一起处理。原 astro.config 的 2 个错误已随删除消失
 7. 共享组件剩余替换（Modal/CopyButton/Badge 在 Desktop 其他页面的应用）在 L2.7
 8. 新 agent 首次跑 install 记得带 `--registry=https://registry.npmmirror.com`
