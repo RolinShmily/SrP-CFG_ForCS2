@@ -1,6 +1,6 @@
 # TitleBar 物理拖拽 OS 循环验收 —— 人工测试规范
 
-> 状态：⏳ **待人工执行**（2026-08-04 晚由 agent 自动模拟失败后移交人工；机制链路已确认，见下）
+> 状态：✅ **已人工验证通过**（2026-08-05，用户手动实测符合目标结果：拖拽移动正常、按钮区不可拖、三按钮功能正常、无 ACL 报错）
 > 分支：`refactor/tauri-vite-react` ｜ 涉及修复（已提交，勿回退）：`27f8f9d`（drag-region 属性）、`418c2d4`（ACL）
 > 复现产物：`C:\Users\Rolin\srp-cfg-build\app\desktop\src-tauri\target\release\srp-cfg-desktop.exe`（含全部修复）
 

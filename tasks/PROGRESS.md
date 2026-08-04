@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-05（L4 遗留收尾：**真实升级迁移验证完成并揪出修复 1 个隐藏 bug**——迁移被 staging 预建目录跳过（f7f2fa6），修复后真实安装场景全通过（283 文件字节级一致 + .migrated）；TitleBar 物理拖拽已移交人工（测试规范见 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`）；剩 GH Actions 真实触发（需推 tag，待用户确认））
+> 更新时间：2026-08-05（L4 遗留收尾：**真实升级迁移验证完成并揪出修复 1 个隐藏 bug**（迁移被 staging 预建目录跳过，f7f2fa6）；**TitleBar 物理拖拽已人工验证通过**（用户手动实测，符合目标结果）；剩 GH Actions 真实触发（需推 tag，待用户确认））
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -60,7 +60,7 @@
     5. `418c2d4` **TitleBar 拖拽 ACL**：capabilities/default.json 只有 core:default/opener:default/dialog:default，但 `core:window:default` 不含 `allow-start-dragging` → drag.js invoke 被 ACL 拒。已加 `core:window:allow-start-dragging`
     6. `556fc21` renderer dist 刷新：仓库内 `app/desktop/dist` 曾含旧命令名（443bb84 时未重建），已重新 vite build 同步
   - ✅ **修复后 CDP 实测全部通过（release exe + schtasks 独立启动）**：detectAll（Steam=C:\Program Files (x86)\Steam、CS2 installed(D:)、3 账号、VCFG 79 bindings 与 golden 一致）、全数据命令（version 3.1.6 / upload history / installed / res / save / userConfig）、`log:new` 实时日志、**窗口控制（maximize→zoomed / toggle→restore / minimize→iconic / close→进程退出）**、UploadZone 原生对话框（ESC 关闭后应用正常）、**updater（checkForUpdate→hasUpdate:true 含 3.1.9/3.1.8/3.1.7，hasConfigUpdate:true 且 hasDesktopUpdate:false 正确——新版为 config-only；getLatestVersion→3.1.9；getUpdateHistory→10 条；cache.json 写入；UI 更新列表正常）**、全 7 页逐一渲染目验（无报错文案）
-  - ⏳ 未完成：**TitleBar 物理拖拽 OS 循环目验**（ACL 已修、start_dragging 命令可调用、机制链路已确认；但本机 FLUTTERVIEW 终端常驻前台遮挡 app 窗口，物理拖拽需先把终端最小化/移开后补验，见注意点 30）、每页截图存档（可选）
+  - ✅ **TitleBar 物理拖拽 OS 循环目验已人工验证通过**（2026-08-05，用户手动实测符合目标结果；agent 自动模拟一次未动仅作记录）、每页截图已存档（`tasks/layer-2-desktop-tauri/screenshots/`，d3dbf29）
 
 ### ✅ L3 Website → Vite+React — 完成（页面迁移 + SEO + Astro 结构删除 + 部署链路统一）
 - `a65659b`/`d1194df`/`c21c7fb`：骨架 + 布局（vite/react-router config、root/layout、Nav/Footer、routes.ts）
@@ -89,10 +89,10 @@
 - `@tauri-apps/plugin-dialog` + Rust `tauri-plugin-dialog` + `dialog:default`；UploadZone 点击 → 原生对话框、拖拽 → `onDragDropEvent` 真实路径；api.ts getFilePaths 换实现不改签名
 - 验证：WSL tsc + vite build ✓、core 84 测试 ✓、Windows `tauri build` NSIS 2.6MB/MSI 3.7MB ✓
 
-### ⏳ 2. L2 遗留：2.7 视觉回归 + `tauri dev` 全功能手动验收 — 基本完成（4+1 bug 已修提交，剩物理拖拽目验）
+### ✅ 2. L2 遗留：2.7 视觉回归 + `tauri dev` 全功能手动验收 — 已完成（4+1 bug 已修提交；物理拖拽已人工验证通过）
 - **已实测（CDP + release exe）**：IPC 全链路、detectAll 与 golden 一致、全数据命令、`log:new` 实时日志、**窗口控制四连测**（maximize/restore/minimize/close）、UploadZone 原生对话框、**updater 修复后 hasUpdate:true（3.1.9）**、全 7 页渲染目验
 - **已修 5 个问题并提交（27f8f9d/5b8eb94/418c2d4/556fc21）**：IPC 命令名、ureq TLS、TitleBar drag-region 属性、**updater GitHub null body（v3.1.4 body:null 导致 serde 解析失败）**、**拖拽 ACL（core:window:allow-start-dragging）**
-- **未完成**：TitleBar 物理拖拽 OS 循环目验 → **已移交人工**（2026-08-05）：agent 用 mouse_event 合成拖拽一次未动（合成输入不入 WebView2 拖拽捕获，不作为失败依据）；人工测试规范见 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`（环境准备：先最小化 QuarkCloudDrive 播放器窗口 + 终端再拖拽；判定表 + 验证命令）；另发现此前记载的"FLUTTERVIEW 终端遮挡"实为 **QuarkCloudDrive（夸克网盘）播放器窗口**（FLUTTER_RUNNER_WIN32_WINDOW），非开发终端；每页截图存档（可选）
+- **未完成**：TitleBar 物理拖拽 OS 循环目验 → **已人工验证通过**（2026-08-05，用户手动实测符合目标结果：拖拽移动正常、按钮区不可拖、三按钮功能正常、无 ACL 报错）；agent 自动模拟一次未动（合成输入不入 WebView2 拖拽捕获，不作失败依据）仅作记录；每页截图存档（可选）
 - 注意：dev 进程树会被 WSL interop 回收 → 稳定验收用 release exe + schtasks；**直接 cargo build 必须带 --features tauri/custom-protocol**（否则 exe 无前端产物加载 devUrl）
 
 ### ✅ 3. L4 遗留：真实升级路径迁移验证（L4 验收 28）— 已完成（2026-08-05，揪出并修复 1 个隐藏 bug）

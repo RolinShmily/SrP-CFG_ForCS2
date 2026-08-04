@@ -7,8 +7,8 @@ L0.6 黄金样本（Track B）。**遗留收尾已推进到最后一程（2026-0
 getFilePaths 插件化✅（443bb84）、tauri 全功能验收 4+1 个隐藏 bug 已修✅（27f8f9d/5b8eb94/418c2d4/556fc21）、
 2.7 视觉回归 7 页目验 + 窗口控制 + updater 全通过、**L4 真实升级迁移验证完成并揪出修复 1 个隐藏 bug**
 （迁移被 staging 预建目录跳过，f7f2fa6——修复后真实安装场景 283 文件字节级一致迁移）。
-**剩余**：TitleBar 物理拖拽目验（**已移交人工**，规范见 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`）、
-每页截图存档（可选）、GitHub Actions 真实触发（推 tag 会发布真实 Release，**需用户确认**）、正式图标替换（可选）。
+**剩余**：GitHub Actions 真实触发（推 tag 会发布真实 Release，**需用户确认**）、正式图标替换（可选）。
+TitleBar 物理拖拽已**人工验证通过**（2026-08-05）；每页截图已存档（`tasks/layer-2-desktop-tauri/screenshots/`）。
 GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26200 + WSL Arch）即 Windows 实机。
 
 ## 第一步：读文件（必须按顺序读完再动手）
@@ -126,8 +126,8 @@ GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26
     getLatestVersion→3.1.9、getUpdateHistory→10 条、cache.json 写入、UI 更新列表正常显示
   - UploadZone 原生对话框（点击弹出"打开"对话框，ESC 关闭后应用正常）
 - **未完成/待办**：
-  - ⏳ **TitleBar 物理拖拽 OS 循环目验** → **已移交人工**（2026-08-05）：agent 用 mouse_event 合成拖拽一次未动（合成输入不入 WebView2 拖拽捕获，不作失败依据）；**人工测试规范**：`tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md`（环境准备：先最小化 QuarkCloudDrive 播放器窗口 + Windows Terminal 再拖拽；判定表 + winctl.ps1 验证命令；拖拽点示例 Left+400,Top+15）
-  - ⏳ 每页截图存档（可选，视觉回归记录）
+  - ✅ **TitleBar 物理拖拽 OS 循环目验 — 已人工验证通过**（2026-08-05，用户手动实测符合目标结果：拖拽移动正常、按钮区不可拖、三按钮功能正常、无 ACL 报错）；agent 自动模拟一次未动（合成输入不入 WebView2 拖拽捕获）仅作记录；人工规范 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md` 保留供复盘
+  - ⏳ 每页截图存档（可选，视觉回归记录）→ 已存档：`tasks/layer-2-desktop-tauri/screenshots/` 7 页（d3dbf29）
   - 注：dev 进程树会被 WSL interop 静默回收 → 稳定验收用 release exe + schtasks（见环境铁律）
 
 ### ✅ 3. 真实升级路径迁移验证（L4 验收 28）— 已完成（2026-08-05，揪出并修复 1 个隐藏 bug）
