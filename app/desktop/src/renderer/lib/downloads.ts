@@ -6,7 +6,9 @@ export const WEBSITE_URL = "https://srprolin.top";
 // 下载镜像前缀：纯字符串拼接到 GitHub Release 链接最前面。
 // - 留空字符串 ""        → 直连 GitHub
 // - 填镜像站 URL 且必须以 "/" 结尾 → 全部走镜像
-export const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
+// ⚠️ 必须与 ureq 3.3 下载栈兼容（gh.269601.xyz 的 chunked 响应会让 ureq 报
+//   "protocol: chunk expected crlf" 导致下载静默失败；ghproxy.net 等实测通过）
+export const DL_MIRROR_PREFIX = "https://ghproxy.net/";
 
 // GitHub Release 稳定下载基底（始终指向 latest，要求 asset 文件名固定无版本号）
 export const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;

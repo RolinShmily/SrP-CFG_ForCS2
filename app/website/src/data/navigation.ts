@@ -5,8 +5,11 @@ export const RELEASES_URL = `${REPO_URL}/releases`;
 // - 留空字符串 ""        → 直连 GitHub（默认）
 // - 填镜像站 URL 且必须以 "/" 结尾 → 全部走镜像
 // 例：""                          → 直连 GitHub
-//     "https://gh.269601.xyz/"    → 走镜像站（原 GitHub 链接前置该前缀）
-export const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
+//     "https://ghproxy.net/"      → 走镜像站（原 GitHub 链接前置该前缀）
+// ⚠️ 换镜像前必须用 ureq 3.3（desktop 下载栈）实测兼容——gh.269601.xyz 的 chunked
+//   响应 ureq 无法解析（protocol: chunk expected crlf），下载会静默失败；
+//   ghproxy.net / gh-proxy.com / ghfast.top / gh.llkk.cc 均实测 116802B 完整下载。
+export const DL_MIRROR_PREFIX = "https://ghproxy.net/";
 
 // GitHub Release 稳定下载基底（始终指向 latest，要求 asset 文件名固定无版本号）
 export const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;

@@ -25,13 +25,19 @@ const packages = [
 
 export default function DownloadPage() {
   const [downloading, setDownloading] = useState<string | null>(null);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   // 下载到应用内：保存到软件管理目录（staging），安装页「已下载配置包」可直接选择安装
   const handleDownloadInApp = async (url: string, fileName: string) => {
     if (downloading) return;
     setDownloading(fileName);
+    setDownloadError(null);
     try {
       await window.api.downloadFromUrl(url, fileName);
+    } catch (e) {
+      // 静默失败会让用户误以为已下载（安装页看不到）；显式提示可切换来源重试
+      const message = e instanceof Error ? e.message : String(e);
+      setDownloadError(`下载失败：${message}。可点击另一个按钮切换下载来源重试。`);
     } finally {
       setDownloading(null);
     }
@@ -125,6 +131,11 @@ export default function DownloadPage() {
                     GitHub 源下载
                   </button>
                 </div>
+                {downloadError && (
+                  <p className="mt-3 w-full text-xs leading-5 text-red">
+                    {downloadError}
+                  </p>
+                )}
               </div>
             </div>
           ))}
