@@ -35,10 +35,23 @@ pub fn run_migration() {
         })
         .unwrap_or_default();
 
+    // 目标目录中仅统计"真实数据"条目：空目录视为不存在。
+    // 原因：lib.rs setup 中 staging::initialize_staging_area() 会先创建同名骨架目录
+    // （cfg/annotations/video/upload/download/save/res），若把空目录算作"已有"，
+    // plan_migration 会对旧数据全部 Skip → 真实数据永远不会被迁移（且不写 .migrated）。
     let target_entries: Vec<String> = if target.exists() {
         fs::read_dir(&target)
             .map(|rd| {
                 rd.flatten()
+                    .filter(|e| match e.file_type() {
+                        Ok(ft) if ft.is_dir() => {
+                            // 目录：仅当非空才算已有数据
+                            fs::read_dir(e.path())
+                                .map(|mut rd| rd.next().is_some())
+                                .unwrap_or(false)
+                        }
+                        _ => true,
+                    })
                     .map(|e| e.file_name().to_string_lossy().to_string())
                     .collect()
             })

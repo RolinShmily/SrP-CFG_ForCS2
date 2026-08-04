@@ -27,9 +27,11 @@ pub fn run() {
         .manage(Mutex::new(None::<state::PendingAppend>))
         .setup(|app| {
             ctx::init(app.handle());
-            // 暂存目录初始化 + 旧版 Electron 数据目录一次性迁移（D2）
-            services::staging::initialize_staging_area();
+            // 旧版 Electron 数据目录一次性迁移（D2）必须先于暂存目录初始化：
+            // staging 初始化会创建 cfg/annotations/... 同名骨架目录，若先执行会让
+            // 迁移计划误判"目标已存在"而对旧数据全部 Skip（数据不迁移、不写标记）。
             services::migrate::run_migration();
+            services::staging::initialize_staging_area();
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
