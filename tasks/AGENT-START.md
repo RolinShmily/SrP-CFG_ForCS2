@@ -1,25 +1,23 @@
 # 新 Agent 启动提示词（可直接用于 `pi -p --no-session "..."`）
 
-你是 SrP-CFG 重构项目的执行 agent，接手 **L2/L4 遗留收尾**。主链已全部完成：core crate 纯逻辑
-（7 模块 / 84 测试）、L2 Desktop → Tauri（Rust 壳层 + 49 commands + 2.6 实机验收 + 2.8 打包
-NSIS 2.5MB / MSI 3.6MB）、L4 后半（release-desktop 切 tauri build + electron-forge/WiX 清理）、
-L0.6 黄金样本（Track B）。**遗留收尾已推进到最后一程（2026-08-05）**：
-getFilePaths 插件化✅（443bb84）、tauri 全功能验收 4+1 个隐藏 bug 已修✅（27f8f9d/5b8eb94/418c2d4/556fc21）、
-2.7 视觉回归 7 页目验 + 窗口控制 + updater 全通过、**L4 真实升级迁移验证完成并揪出修复 1 个隐藏 bug**
-（迁移被 staging 预建目录跳过，f7f2fa6——修复后真实安装场景 283 文件字节级一致迁移）。
-**剩余**：GitHub Actions 真实触发（推 tag 会发布真实 Release，**需用户确认**）、正式图标替换（可选）。
-TitleBar 物理拖拽已**人工验证通过**（2026-08-05）；每页截图已存档（`tasks/layer-2-desktop-tauri/screenshots/`）。
-GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26200 + WSL Arch）即 Windows 实机。
+你是 SrP-CFG 重构项目的执行 agent，接手 **网站生产路由问题修复**。主链 + 全部遗留收尾已完成：
+core crate（7 模块 / 84 测试）、L2 Desktop → Tauri（49 commands + 2.6 实机验收 + 2.8 打包 NSIS/MSI）、
+L3 网站 Vite+React（SSG 2806 页）、L4 CI/CD、迁移修复 f7f2fa6、物理拖拽人工验证、正式图标 0e09eb6、
+**v3.1.10 已发布且 3 工作流全绿**（2026-08-05）。
+**⚠️ 新问题（本次任务）**：v3.1.10 首次生产部署 Vite+React 站点后，用户反馈**除首页外其他路由都有严重问题**——
+已定位：react-router 客户端拉取 `/__manifest`（路由发现）→ worker 对非资产路径抛 1101 异常 → 500 → 客户端路由断裂。
+**任务书**：`tasks/layer-3-website-react/TASK-prod-routing-fix.md`（诊断事实、修复方向、验收标准已备好）。
+本机（Win11 26200 + WSL Arch）即 Windows 实机。
 
 ## 第一步：读文件（必须按顺序读完再动手）
 
-1. `tasks/PROGRESS.md` —— 交接手册（进度、环境坑、下一步任务、遗留注意点 1-30）
-2. `tasks/README.md` —— 分层任务总览 + 架构决策表 D1-D10（必须遵守）
-3. `tasks/layer-2-desktop-tauri/TASK.md` —— L2（遗留：getFilePaths / 2.7 视觉回归 / tauri dev 验收）
-4. `tasks/layer-4-ci-release/TASK.md` —— L4（遗留：升级迁移验证 / GH Actions 真实触发）
-5. 涉及 renderer 改动时加读：`tasks/layer-2-desktop-tauri/api-contract.md`（window.api 契约，
-   **签名不可变**）+ `app/desktop/src/renderer/lib/api.ts`（适配层，命令名对应 `src-tauri/src/commands/`）
-6. 涉及 UI 时加读：`tasks/layer-1-shared-ui/component-inventory.md` + `app/shared/ui/README.md`
+1. `tasks/PROGRESS.md` —— 交接手册（进度、环境坑、下一步任务、遗留注意点 1-36）
+2. `tasks/layer-3-website-react/TASK-prod-routing-fix.md` —— **本次任务书（网站路由修复）**
+3. `tasks/README.md` —— 分层任务总览 + 架构决策表 D1-D10（必须遵守）
+4. `tasks/layer-3-website-react/TASK.md` —— L3（网站结构/部署链路/D6/D9）
+5. 涉及部署链路时加读：`app/website/wrangler.json` + `.github/workflows/deploy-website.yml`
+   （main=worker.ts + assets=build/client；**bindings 与 assets 指向勿改**）
+6. 涉及页面/组件时加读：`tasks/layer-1-shared-ui/component-inventory.md` + `app/shared/ui/README.md`
 
 ## 环境铁律
 
@@ -79,6 +77,7 @@ GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26
   物理鼠标点击/拖拽无法直接落到 app 窗口。已绕过的办法：窗口命令用 CDP 直调 `window.api.maximize()/
   minimize()/close()/isMaximized()` 验证（实测全通过）；物理拖拽 OS 循环验证需**先把终端最小化/
   移开**（用户配合）或换无遮挡会话。`SetWindowPos(HWND_TOPMOST)` 也压不住它
+- **⚠️ 本机到 Cloudflare 的 HTTPS 被证书拦截（2026-08-05 实测，PROGRESS 注意点 36）**：访问 `cfg.srprolin.top` 间歇 SSL 失败/证书错误（Edge ERR_CERT_COMMON_NAME_INVALID Subject=shou1.186288.xyz；PowerShell SSL/TLS 信任失败）；curl 多重试可得 200（服务端响应可信）。**本机浏览器渲染/导航测试不可靠**——生产验收需用户配合或换网络路径；开发期用 `wrangler dev --local` + curl 复现
 - **Windows curl.exe SChannel 吊销检查离线**：`curl.exe https://...` 报
   `CRYPT_E_REVOCATION_OFFLINE (0x80092013)`（curl 显式请求 CRL 检查）；PowerShell
   Invoke-WebRequest / .NET HttpClient 正常。App 内 ureq(native-tls/schannel) 不受影响（实测通）。
@@ -95,58 +94,28 @@ GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26
 - **保留参考实现（勿删）**：`app/desktop/src/main/services/*.ts`（L0.6 golden runner 依赖）+
   `app/desktop/src/preload/preload.ts`（API 契约基准）——electron-forge 已删但这两个保留，不参与构建
 
-## 本次任务：遗留收尾（按优先级）
+## 本次任务：网站生产路由问题修复（见任务书 TASK-prod-routing-fix.md）
 
-### 1. getFilePaths 插件化（L2 遗留）✅ 已完成（443bb84 + 6e8472f）
-- 已实现：`@tauri-apps/plugin-dialog` 2.7.2（JS）+ `tauri-plugin-dialog`（Rust 注册）+ `dialog:default` capability；
-  UploadZone 点击 → 原生对话框（.zip/.cfg/.txt 多选）、拖拽 → `onDragDropEvent`（tauri://drag-drop）真实路径（含文件夹）；
-  api.ts `getFilePaths(files)` 换实现不改签名（路径字符串归一化/去重，File 对象返回 []）
-- 验证：WSL tsc + vite build ✓、core 84 测试 ✓、Windows `tauri build` NSIS 2.6MB/MSI 3.7MB ✓
+### ⚠️ 1. 复现 + 定位根因（wrangler dev --local）
+- `pnpm build:web` → `cd app/website && npx wrangler dev --local`（assets 生效）→ curl `localhost:8787/__manifest` 与任意不存在路径：本地是否同样 500/1101？
+- 若本地正常（404）→ 问题在部署/平台侧（对比 CI 部署产物与本地 build/client）；若本地同 500 → 完全本地可复现
 
-### 2. 2.7 视觉回归 + tauri dev 全功能验收（L2 遗留）✅ 基本完成（4+1 个 bug 已修并提交）
-- **已修 5 个问题（全部已提交，勿回退）**：
-  - `27f8f9d` IPC 命令名全断：api.ts 曾用 `"installer:detectAll"` 式通道名 → 49 个调用运行时失败；
-    已改 api.ts invoke 字符串为真实命令名（detect_all/updater_check/...，参数 key camelCase）
-  - `27f8f9d` ureq 3.3 TLS panic：显式 `ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls)`
-    （updater.rs + staging.rs）
-  - `27f8f9d` TitleBar 拖拽：改 `data-tauri-drag-region="deep"`（Tauri v2 不认 -webkit-app-region）
-  - `5b8eb94` **updater GitHub null body**：v3.1.4 的 body:null 导致整个 release 列表 serde 解析失败 →
-    静默降级 hasUpdate:false（真实环境实测发现；GitHubReleaseRaw 改 Option<String>+#[serde(default)]）
-  - `418c2d4` **TitleBar 拖拽 ACL**：capabilities 缺 `core:window:allow-start-dragging` →
-    invoke 被 ACL 拒；已加
-- **已实测通过（CDP，release exe + schtasks）**：
-  - detectAll（Steam=C:\Program Files (x86)\Steam、CS2 installed(D:)、3 账号、VCFG 79/2/92/338 与 golden 一致）
-  - 全数据命令（version 3.1.6 / upload history / installed / res / save / userConfig）
-  - `log:new` 实时日志（LogPanel 显示路径检测日志）
-  - 全 7 页逐一渲染目验（快速开始/下载/安装/我的配置/恢复中心/当前安装/关于，无报错文案）
-  - **窗口控制实测**：maximize→zoomed、再 maximize→restore（toggle）、minimize→iconic、
-    close→进程退出（CDP 直调 window.api + PowerShell GetWindowRect/IsIconic/IsZoomed 断言）
-  - **updater 修复后实测**：checkForUpdate(true)→hasUpdate:true（v3.1.9/3.1.8/3.1.7，
-    hasConfigUpdate:true、hasDesktopUpdate:false 正确——新版为 config-only 无 DESKTOP_UPDATE_MARKER）、
-    getLatestVersion→3.1.9、getUpdateHistory→10 条、cache.json 写入、UI 更新列表正常显示
-  - UploadZone 原生对话框（点击弹出"打开"对话框，ESC 关闭后应用正常）
-- **未完成/待办**：
-  - ✅ **TitleBar 物理拖拽 OS 循环目验 — 已人工验证通过**（2026-08-05，用户手动实测符合目标结果：拖拽移动正常、按钮区不可拖、三按钮功能正常、无 ACL 报错）；agent 自动模拟一次未动（合成输入不入 WebView2 拖拽捕获）仅作记录；人工规范 `tasks/layer-2-desktop-tauri/manual-titlebar-drag-test.md` 保留供复盘
-  - ⏳ 每页截图存档（可选，视觉回归记录）→ 已存档：`tasks/layer-2-desktop-tauri/screenshots/` 7 页（d3dbf29）
-  - 注：dev 进程树会被 WSL interop 静默回收 → 稳定验收用 release exe + schtasks（见环境铁律）
+### 2. 修复（铁律：worker.ts / ai-stream.ts / wrangler.json bindings 绝对不可改）
+候选方向（详见任务书四-2）：
+- ASSETS.fetch 1101 根因（绑定/部署配置/平台行为）
+- react-router routeDiscovery lazy → 能否只依赖内联 manifest 不拉 /__manifest
+- wrangler.json 层兑底（assets 规则/not_found_handling，需确认客户端回退行为）
+- 最小改动 + 本地验证（wrangler dev --local 下 /__manifest 正确、无 manifest 错误、导航正常）
 
-### ✅ 3. 真实升级路径迁移验证（L4 验收 28）— 已完成（2026-08-05，揪出并修复 1 个隐藏 bug）
-- **发现的 bug（f7f2fa6，勿回退）**：`initialize_staging_area()` 在 `run_migration()` 之前建同名 7 目录 → 迁移计划全判 Skip → **旧数据永不迁移、不写 .migrated**（静默数据不可见）。修复：lib.rs 顺序（先迁移）+ migrate.rs 忽略空目录
-- **真实安装验收全通过**：备份 → 删 `top.srprolin.cfg` → `pnpm tauri build` → NSIS 静默装到 `%LOCALAPPDATA%\SrP-CFG Installer` → 首启动：283 文件/7 类字节级一致迁移（vs 备份 0 缺失 0 差）、legacy 清空、.migrated 写入；CDP 实测 detectAll + getUserConfig 均正常
-- 注意：安装包若未重新打包仍是旧代码（无 4+1 个 bug 修复）——打包前先同步源码；机器上留有已安装的验收产物（见 PROGRESS.md 注意点 33）
+### 3. 部署 + 生产验收
+- 提交（feat(website): / fix(website):）+ 同步 build/client → 推分支（deploy-website 监听 main 与 v* tag；
+  当前 refactor 未合并 main，可推 v3.1.11 tag 或经用户同意合并/直推 main）
+- 生产验证：curl /__manifest 不再 500、各路由 200；客户端导航测试需可靠网络路径（本机被证书拦截）
+- 用户确认：除首页外全部路由恢复正常
 
-### ✅ 4. GitHub Actions 真实触发验证（L4 遗留）— 已完成（2026-08-05，v3.1.10）
-- 流程：推 `refactor/tauri-vite-react` 到 origin（新建远程分支，无 workflow 触发）→ 推 `v3.1.10` annotated tag（e79c3aa）→ **3 工作流全绿**：
-  - release-desktop.yml（#50）：windows-latest 干净环境 pnpm install + rust toolchain + cargo test core + tauri build（CLI 自动带 custom-protocol）→ Release v3.1.10：NSIS 2.5MB + MSI 2.5MB + DESKTOP_UPDATE_MARKER
-  - release-config.yml（#31）：Runtime_Core.zip 配置包
-  - deploy-website.yml（#93）：网站部署
-- **端到端**：安装版 3.1.6 updater → hasUpdate:true、hasDesktopUpdate:true（含变更日志）；cache.json 更新
-- 用户后续将 refactor 合并 main（注意远程 main 领先 1 个自动提交 c73de80）
-
-### ✅ 5. 正式图标替换 — 已完成（2026-08-05，0e09eb6）
-- 源：`app/desktop/resources/icon.ico`（= 用户指定 `C:\Users\Rolin\Downloads\icon.ico`，字节一致；重构前 Electron 软件图标）→ `tauri icon` 重生成全套
-- 验证：icon.ico vs 官方 0% 差、安装版 exe 1.0% 差（缩样）；重装后功能正常
-- ⚠️ 改图标后必须删 `target/release/build/srp-cfg-desktop-*` 再构建（resource.lib 缓存坑）
+### 4. 状态（已完成，勿重复）
+- 遗留收尾全部完成：getFilePaths（443bb84）/ 2.7 验收（4+1 bug）/ 物理拖拽人工验证 / 截图存档（d3dbf29）/ 迁移验证+修复（f7f2fa6）/ GH Actions 真实触发（v3.1.10 三工作流全绿）/ 正式图标（0e09eb6）
+- 机器上留有已安装的 SrP-CFG 3.1.6（验收产物，含全部修复 + 正式图标）
 
 ## 提交规范
 
