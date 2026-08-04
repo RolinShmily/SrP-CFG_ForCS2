@@ -133,6 +133,7 @@
 - 验证：build:web + tsc（web/desktop renderer）零错 + ai-stream 12/12 + 本地 headless Edge 实测（下载页无 Portable、Runtime Core 卡单边框、关于页新栈、docs 含工具链表）；桌面 dist 同步
 - 部署：workflow_dispatch（run 30918405839 ✓ 56s）；生产 curl 验：下载页含 Setup EXE 且 0 处 Portable、关于页 0 Astro/0 Electron 含 Tauri+RR7
 - **（追加）v3.1.10 tag 已覆盖重发**（用户指示）：`git tag -f -a v3.1.10 HEAD`（be0a39ef）+ force push → 3 工作流全绿（website 30919141455 / desktop 30919141042 / config 30919140884）；release 资产全刷新（MSI 4.03MB/NSIS 2.79MB/config zip/MARKER），桌面含新 About 文案；release 工作流 softprops 加 `overwrite: true`（be0a39ef）支持重打 tag 重传资产
+- **（追加）下载页改为每项双按钮**（2026-08-06，632dad83，已部署 run 30920977359）：website 每项从整卡 `<a>` 链接改为两个按钮——「国内加速下载」（accent 橙底 + 推荐 tag，镜像前缀 gh.269601.xyz）/「GitHub 源下载」（中性描边，直连）；desktop「下载到应用」同样改为这两个 openExternal 按钮（新增 `dlGithub()` 无前缀 helper）；生产验证：3 组双按钮、0 整卡链接
 - ⚠️ desktop 改动（AboutPage）已随 tag 重发生效；机器上安装的 3.1.6 会提示更新到 v3.1.10
 
 ### ✅ 已完成（不再执行）
