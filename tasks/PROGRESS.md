@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L3 收尾完成：Astro 旧结构已删、部署链路已统一）
+> 更新时间：2026-08-04（L3 收尾完成；AGENT-START 已更新为 L2 续作提示词）
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md）
 
@@ -27,7 +27,7 @@
 | **GitHub API 限流** | 未认证 60 次/h/IP。版本注入（vite 插件构建时 fetch）瞬时失败会回落 `0.0.0`——**这是机制预期**（旧 Astro 同样回落），CI 配 `GITHUB_TOKEN` 后稳定 |
 | **共享组件 lint 约束** | `grep -rn "window.api\|electron\|@tauri-apps\|astro:" app/shared/ui/src` 必须为空 |
 
-## 三、当前进度（分支上 20 个提交）
+## 三、当前进度（分支上 24 个提交，main..HEAD）
 
 ### ✅ L0 基线 — 完成
 - 提交 `9b5342e`：tasks/ 五层任务文档 + 契约/清单 3 份
@@ -54,23 +54,20 @@
 - `919302a`：L3 收尾① Velite 数据源迁出 `src/content` → `content/`（root 同步，产物不变）
 - `589fa79`：L3 收尾② 删除 Astro 旧结构 + scripts/依赖/tsconfig 切到 Vite+React Router
 - `62b4cc5`：L3 收尾③ 部署链路统一（wrangler assets → `./build/client`，`wrangler dev --local` 验证通过）
+- `ccecc19`：docs——PROGRESS/README 勾选 L3 收尾完成
+- `c91b676`：build——layout.tsx 注释清理后同步 build/client 产物
 
 ## 四、下一步任务（按优先级）
 
-### 1. L3 收尾 ✅ 已完成（提交 919302a / 589fa79 / 62b4cc5）
-- [x] Velite 数据源迁移：`src/content/` → `content/`（root 同步，`.velite` 产物不变）
-- [x] 删除 Astro 旧结构（src/pages/ layouts/ components/*.astro astro.config.ts content.config.ts package-lock.json）
-- [x] package.json 清理 astro 依赖（astro/@astrojs/*/lucide-astro）+ scripts 切到 react-router（dev/build/preview/deploy）
-- [x] tsconfig 改 vite 标准（不再 extends astro/tsconfigs/strict，保留 jsx/路径别名/.velite include）
-- [x] 部署链路统一：wrangler.json assets → `./build/client`，`wrangler dev --local` 本地验证通过
-- [ ] 可选（遗留，非阻塞）：`/commands/{name}` 指令详情静态页（3.4 可选）；JSON-LD 扩展（FAQ/指令数据集）
+### 1. L2 Desktop → Tauri 剩余部分（**需 Windows 实机**，见 AGENT-START.md 新提示词）
+- Rust services 迁移（detection/staging/installer/updater → `src-tauri/src/services/`）+ commands 注册 + 2.5/2.6 测试与检测验证 + 2.7 组件替换 + 2.8 打包
+- 详见 `tasks/layer-2-desktop-tauri/TASK.md`；WSL 环境只能做前端部分（2.7）
 
-### 2. L2 Windows 实机部分
-- Rust services 迁移（detection/staging/installer/updater）+ commands 注册 + tauri dev 手动验收
-- 详见 `tasks/layer-2-desktop-tauri/TASK.md`
-
-### 3. L4 CI/CD（最后）
+### 2. L4 CI/CD（本环境可部分验证）
 - website CI 换 vite build（含 velite）；desktop CI 加 Rust toolchain + cargo 缓存；删 msi/ 与 electron-forge
+
+### 3. L3 可选遗留（本环境可做，非阻塞）
+- `/commands/{name}` 指令详情静态页（3.4 可选）；JSON-LD 扩展（FAQ/指令数据集）
 
 ## 五、关键技术参考
 
@@ -99,3 +96,4 @@
 6. **tsc 遗留 1 个错误**（非本次引入，勿修错地方）：`vite.config.ts` ×1（Plugin 类型，根/子 vite 6.4.2/6.4.3 hoisting）。曾尝试 dedupe：pnpm 10 不读 package.json 的 `pnpm.overrides`，改 pnpm-workspace.yaml 会影响 desktop 的 vite 解析，未做——留待 L4 或 desktop 一起处理。原 astro.config 的 2 个错误已随删除消失
 7. 共享组件剩余替换（Modal/CopyButton/Badge 在 Desktop 其他页面的应用）在 L2.7
 8. 新 agent 首次跑 install 记得带 `--registry=https://registry.npmmirror.com`
+9. **wrangler.json 的 `assets.directory` 已指向 `./build/client`**（62b4cc5 统一）——后续不要再改回 ./dist；bindings（AI/Vectorize）拓扑零改动
