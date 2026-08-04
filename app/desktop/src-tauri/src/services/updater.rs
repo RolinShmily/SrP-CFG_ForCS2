@@ -69,8 +69,13 @@ struct GitHubAssetRaw {
 #[derive(Debug, serde::Deserialize)]
 struct GitHubReleaseRaw {
     tag_name: String,
-    name: String,
-    body: String,
+    /// GitHub API 对无标题的 release 返回 null（如 v3.1.4 的 name 为 null）。
+    #[serde(default)]
+    name: Option<String>,
+    /// GitHub API 对无正文的 release 返回 null（如 v3.1.4 的 body 为 null）；
+    /// 若按 String 严格反序列化会导致整个列表解析失败（L2 遗留验收实测发现）。
+    #[serde(default)]
+    body: Option<String>,
     html_url: String,
     published_at: String,
     assets: Vec<GitHubAssetRaw>,
@@ -104,8 +109,8 @@ fn map_raw(r: &GitHubReleaseRaw) -> Release {
     let asset_names: Vec<String> = r.assets.iter().map(|a| a.name.clone()).collect();
     map_release(
         &r.tag_name,
-        &r.name,
-        &r.body,
+        r.name.as_deref().unwrap_or(""),
+        r.body.as_deref().unwrap_or(""),
         &r.html_url,
         &r.published_at,
         &asset_names,
