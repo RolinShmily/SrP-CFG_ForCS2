@@ -25,3 +25,6 @@ tmp/
 msi/obj/
 msi/bin/
 msi/ElectronAppFiles.wxs
+
+# Rust (cargo build artifacts)
+app/desktop/src-tauri/target/
