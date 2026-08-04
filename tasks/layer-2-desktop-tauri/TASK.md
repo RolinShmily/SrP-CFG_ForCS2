@@ -50,7 +50,7 @@ app/desktop/
 ### 2.2 IPC 适配层（renderer 零改动前提）
 - [x] 前端：`src/renderer/lib/api.ts` 适配层已建，**`window.api` 全部方法签名不变**，内部改调 `@tauri-apps/api/core.invoke()`；Rust 侧 49 个 command 与 api.ts 命令名一一对应。
 - [x] 事件推送：`log:new` → Tauri `emit`/`listen`（api.ts onLog 已实现；Rust `log::send` emit）。
-- [ ] ⚠️ 文件路径获取：`getFilePaths` 仍为 stub（返回 []），UploadZone 需改用拖拽/对话框插件（遗留）。
+- [x] ⚠️ 文件路径获取：getFilePaths 已插件化（443bb84）：`@tauri-apps/plugin-dialog` 原生对话框 + `onDragDropEvent`（tauri://drag-drop）拖拽真实路径（含文件夹），api.ts getFilePaths 换实现不改签名。
 - [x] 标题栏：`TitleBar.tsx` 已加 `data-tauri-drag-region`（L2.7 一并完成）。
 - [x] grep 验证：renderer 内不再出现 `electron` 相关类型引用（api.ts 适配层隔离）。
 
@@ -88,7 +88,7 @@ app/desktop/
 
 ### 2.7 前端接入共享组件（复用 Layer 1）
 - [x] Desktop 组件替换为 `@srp-cfg/ui`（L2.7 提交 c436140 完成）。
-- [ ] ⚠️ 替换后全页面视觉回归确认（需 `tauri dev` GUI 目验，Windows 实机遗留）。
+- [x] ⚠️ 替换后全页面视觉回归确认（2026-08-04 release exe + CDP 目验全 7 页通过；TitleBar 物理拖拽 OS 循环目验受本机终端遮挡待补验，机制链路已确认——drag-region 属性 + drag.js + ACL 均已修，见 PROGRESS.md 注意点 30）。
 
 ### 2.8 打包配置（骨架先行，CI 留到 L4）
 - [x] `tauri.conf.json` 配置 bundle：NSIS + MSI，产品名 `SrP-CFG Installer`，license 已接入（../LICENSE）；WebView2 用 downloadBootstrapper（不打包引导，D5）。

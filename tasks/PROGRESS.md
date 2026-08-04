@@ -1,8 +1,8 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-04（L2 遗留收尾进行中：getFilePaths 插件化已完成并提交；tauri dev 全功能验收中**实测揪出 3 个隐藏 bug**——IPC 命令名全断 / ureq TLS panic / TitleBar 拖拽失效，均已修复待提交）
+> 更新时间：2026-08-04（L2 遗留收尾基本完成：getFilePaths 插件化✅ + **tauri 全功能验收实测揪出并修复 4+1 个隐藏 bug 全部提交**——IPC 命令名/ureq TLS/TitleBar 拖拽机制/updater GitHub null body/拖拽 ACL；7 页目验+窗口控制+updater 全通过；剩 TitleBar 物理拖拽目验（环境受限）与 L4 迁移验证、GH Actions）
 > 分支：`refactor/tauri-vite-react`（基于 main）
-> 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md）
+> 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
 ---
 
@@ -52,12 +52,15 @@
   - 遗留：`getFilePaths` stub（UploadZone 待插件化）、2.7 视觉回归 GUI 目验、tauri dev 全功能手动验收
 - **遗留收尾（本次，2026-08-04）**：
   - ✅ **getFilePaths 插件化已完成并提交**（`443bb84` + `6e8472f`）：`@tauri-apps/plugin-dialog` 2.7.2 + Rust `tauri-plugin-dialog` 注册 + `dialog:default` capability；UploadZone 点击 → 原生对话框（.zip/.cfg/.txt 多选）、拖拽 → `onDragDropEvent` 真实路径（含文件夹）；api.ts getFilePaths 换实现不改签名（路径字符串归一化/去重）
-  - ⚠️ **tauri dev 全功能验收实测揪出 3 个隐藏 bug（均已修复、待提交）**：
-    1. **IPC 命令名全断（致命）**：api.ts 用 Electron 时代 `"installer:detectAll"` 式通道名，但 Rust `#[tauri::command]` 注册的是 snake_case 函数名（`detect_all` 等）→ 49 个 window.api 调用运行时全部失败（此前只做过 tsc 静态验证没跑真机）。已修：api.ts 全部 invoke 字符串改为真实命令名（44 个 invoke + 4 个窗口命令）
-    2. **ureq 3.3 TLS panic（致命）**：updater/download 用 ureq 3.3，默认 TLS provider 是 Rustls 但未编译该 feature（`default-features=false` + `native-tls`）→ `checkForUpdate`/`downloadFromUrl` 一执行就 panic 崩溃（被 bug 1 掩盖）。已修：updater.rs + staging.rs 显式 `ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls)`
-    3. **TitleBar 拖拽失效**：原用 `.drag-region { -webkit-app-region: drag }`（Electron 机制），Tauri v2 只认 `data-tauri-drag-region` 属性（drag.js）→ 窗口不可拖拽。已修：TitleBar 容器加 `data-tauri-drag-region="deep"`（按钮自动阻断拖拽）并删除 CSS
-  - ✅ **修复后 CDP 实测通过**：detectAll（Steam=C:\Program Files (x86)\Steam、CS2 installed(D:)、3 账号、VCFG 79 bindings 与 golden 一致）、全数据命令（version 3.1.6 / upload history / downloads / installed / save / res / userConfig）、`log:new` 实时日志（LogPanel 显示路径检测日志）、isMaximized/maximize 切换、UploadZone 点击弹出原生"打开"对话框（ESC 关闭后应用正常）、checkForUpdate 不再 panic（返回 hasUpdate:false，疑似 GitHub 未认证限流 graceful 回落，待核对）
-  - ⏳ 未完成：TitleBar 拖拽/最小化/关闭实测（鼠标模拟未跑）、全 7 页逐一目验、updater hasUpdate:false 与远端 v3.1.7-9 存在需核对
+  - ✅ **tauri 全功能验收实测揪出并修复 4+1 个隐藏 bug（全部提交，勿回退）**：
+    1. `27f8f9d` **IPC 命令名全断（致命）**：api.ts 用 Electron 时代 `"installer:detectAll"` 式通道名，但 Rust `#[tauri::command]` 注册的是 snake_case 函数名 → 49 个 window.api 调用运行时全部失败。已修：api.ts 全部 invoke 字符串改为真实命令名（44 个 invoke + 4 个窗口命令，参数 key camelCase）
+    2. `27f8f9d` **ureq 3.3 TLS panic（致命）**：默认 TLS provider 是 Rustls 但未编译（default-features=false + native-tls）→ https 直接 panic。已修：updater.rs + staging.rs 显式 `ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls)`
+    3. `27f8f9d` **TitleBar 拖拽机制**：`-webkit-app-region` 仅 Electron 有效；Tauri v2 需 `data-tauri-drag-region="deep"`。已改
+    4. `5b8eb94` **updater GitHub null body（真实环境才发现）**：v3.1.4 的 `body:null` 使整个 release 列表 serde 解析失败 → 静默降级 hasUpdate:false（远端明明有 v3.1.7-9）。已修：GitHubReleaseRaw 的 name/body 改 `Option<String>` + `#[serde(default)]`
+    5. `418c2d4` **TitleBar 拖拽 ACL**：capabilities/default.json 只有 core:default/opener:default/dialog:default，但 `core:window:default` 不含 `allow-start-dragging` → drag.js invoke 被 ACL 拒。已加 `core:window:allow-start-dragging`
+    6. `556fc21` renderer dist 刷新：仓库内 `app/desktop/dist` 曾含旧命令名（443bb84 时未重建），已重新 vite build 同步
+  - ✅ **修复后 CDP 实测全部通过（release exe + schtasks 独立启动）**：detectAll（Steam=C:\Program Files (x86)\Steam、CS2 installed(D:)、3 账号、VCFG 79 bindings 与 golden 一致）、全数据命令（version 3.1.6 / upload history / installed / res / save / userConfig）、`log:new` 实时日志、**窗口控制（maximize→zoomed / toggle→restore / minimize→iconic / close→进程退出）**、UploadZone 原生对话框（ESC 关闭后应用正常）、**updater（checkForUpdate→hasUpdate:true 含 3.1.9/3.1.8/3.1.7，hasConfigUpdate:true 且 hasDesktopUpdate:false 正确——新版为 config-only；getLatestVersion→3.1.9；getUpdateHistory→10 条；cache.json 写入；UI 更新列表正常）**、全 7 页逐一渲染目验（无报错文案）
+  - ⏳ 未完成：**TitleBar 物理拖拽 OS 循环目验**（ACL 已修、start_dragging 命令可调用、机制链路已确认；但本机 FLUTTERVIEW 终端常驻前台遮挡 app 窗口，物理拖拽需先把终端最小化/移开后补验，见注意点 30）、每页截图存档（可选）
 
 ### ✅ L3 Website → Vite+React — 完成（页面迁移 + SEO + Astro 结构删除 + 部署链路统一）
 - `a65659b`/`d1194df`/`c21c7fb`：骨架 + 布局（vite/react-router config、root/layout、Nav/Footer、routes.ts）
@@ -86,14 +89,15 @@
 - `@tauri-apps/plugin-dialog` + Rust `tauri-plugin-dialog` + `dialog:default`；UploadZone 点击 → 原生对话框、拖拽 → `onDragDropEvent` 真实路径；api.ts getFilePaths 换实现不改签名
 - 验证：WSL tsc + vite build ✓、core 84 测试 ✓、Windows `tauri build` NSIS 2.6MB/MSI 3.7MB ✓
 
-### ⏳ 2. L2 遗留：2.7 视觉回归 + `tauri dev` 全功能手动验收 — 进行中
-- **已实测（CDP 驱动）**：IPC 全链路（命令名已修）、detectAll 与 golden 一致、全数据命令、`log:new` 实时日志、maximize 切换、UploadZone 原生对话框、checkForUpdate 不再 panic
-- **已修 3 个隐藏 bug（待提交）**：IPC 命令名全断（api.ts invoke 字符串）、ureq 3.3 TLS panic（显式 NativeTls provider）、TitleBar 拖拽（data-tauri-drag-region）
-- **未完成**：TitleBar 拖拽/最小化/关闭实测（需鼠标模拟，注意 dev 进程树会被 WSL interop 回收，建议用 release exe + schtasks 独立启动）、全 7 页逐一目验、updater hasUpdate:false 核对（远端有 v3.1.7-9，疑似 GitHub 未认证限流）
-- 注意：dev 会拉起 renderer dev server（vite 5173）+ 窗口；首次 tauri dev 在本地盘工作区跑
+### ⏳ 2. L2 遗留：2.7 视觉回归 + `tauri dev` 全功能手动验收 — 基本完成（4+1 bug 已修提交，剩物理拖拽目验）
+- **已实测（CDP + release exe）**：IPC 全链路、detectAll 与 golden 一致、全数据命令、`log:new` 实时日志、**窗口控制四连测**（maximize/restore/minimize/close）、UploadZone 原生对话框、**updater 修复后 hasUpdate:true（3.1.9）**、全 7 页渲染目验
+- **已修 5 个问题并提交（27f8f9d/5b8eb94/418c2d4/556fc21）**：IPC 命令名、ureq TLS、TitleBar drag-region 属性、**updater GitHub null body（v3.1.4 body:null 导致 serde 解析失败）**、**拖拽 ACL（core:window:allow-start-dragging）**
+- **未完成**：TitleBar 物理拖拽 OS 循环目验（受本机 FLUTTERVIEW 终端遮挡，需先最小化终端再补验）、每页截图存档（可选）
+- 注意：dev 进程树会被 WSL interop 回收 → 稳定验收用 release exe + schtasks；**直接 cargo build 必须带 --features tauri/custom-protocol**（否则 exe 无前端产物加载 devUrl）
 
-### 3. L4 遗留：真实升级路径迁移验证（L4 验收 28）
-- 安装旧版 Electron 数据（`%APPDATA%/srp-cfg`）→ 安装新版 Tauri 安装包 → 首启动迁移到 `app_data_dir()`（%APPDATA%/top.srprolin.cfg），核对 install/save/res/uploads 清单完整、`.migrated` 标记生成
+### 3. L4 遗留：真实升级路径迁移验证（L4 验收 28）⏳
+- 现状：`%APPDATA%/top.srprolin.cfg` 已有完整迁移产物（install/save/res/upload/download/annotations/cfg/video + `.migrated`），说明此前启动已跑过一次迁移；来源 `%APPDATA%/srp-cfg` 旧数据仍在（含 cfg/autoexec.cfg、download/2026-07-28-0001 等）
+- 建议正式验收：备份两个目录 → 删 `top.srprolin.cfg` → **先重新 `pnpm tauri build` 打包含全部修复的安装包**（现有 `src-tauri/target/release/bundle/nsis/SrP-CFG Installer_3.1.6_x64-setup.exe` 是旧代码）→ 安装 → 首启动核对清单完整 + `.migrated` 标记
 
 ### 4. L4 遗留：GitHub Actions 真实触发验证
 - 推 `v*` tag → release-desktop.yml 全绿（windows-latest 上 Rust toolchain + pnpm install + tauri build + 上传 NSIS/MSI）；deploy-website.yml 正常
@@ -103,7 +107,7 @@
 - `src-tauri/icons/` 当前为脚本生成的占位图标（深蓝底十字）；可用品牌图源 `tauri icon` 重新生成全套
 
 ### ✅ 已完成（不再执行）
-- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化
+- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）
 
 ## 五、关键技术参考
 
@@ -142,10 +146,15 @@
 16. **Windows 侧构建环境**（本机实测可用）：Windows 侧 rustup 1.97.1（rsproxy 镜像）+ MSVC 14.51 BuildTools + cargo 镜像（C:\Users\Rolin\.cargo\config.toml → rsproxy）+ 构建用本地盘工作区（C:\Users\Rolin\srp-cfg-build，因 \\wsl$ 9p 上无法增量编译/重装 node_modules）；`CARGO_TARGET_DIR` 指本地盘
 17. **electron-forge 已删但保留**：`src/main/services/*.ts`（golden runner 依赖）+ `src/preload/preload.ts`（API 契约基准）为参考实现保留，不参与构建；tsconfig.json 主进程配置保留供参考
 18. **L4 遗留**：真实升级路径迁移验证（L2.3 在真实安装场景）、GitHub Actions 真实触发（需推 tag）；L2 遗留：getFilePaths 插件化✅（443bb84）、2.7 视觉回归 GUI 目验进行中
-19. **IPC 命令名（已修，待提交）**：api.ts 的 invoke 字符串必须用 Rust `#[tauri::command]` 函数名（snake_case，如 `detect_all`/`updater_check`），**不是** Electron 时代 `"installer:detectAll"` 式通道名——旧的 49 个调用运行时全断（此坑只有真机 tauri dev 才暴露，tsc 验不出）。参数 key 按 Rust 参数名 camelCase（accountId/usePersonalCfg/file_name→fileName）；枚举值 camelCase（overlay/append/upload/download/install/save/res）。校验方法：`node /tmp/cdp.mjs "window.__TAURI_INTERNALS__.invoke('xxx')"`
-20. **ureq 3.3 TLS（已修，待提交）**：`default-features=false` + `native-tls` 时默认 TLS provider 仍是 Rustls 且未编译 → https 请求直接 panic（`uri scheme is https, provider is Rustls...`）。必须显式 `.tls_config(ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls).build())`（注意路径是 `ureq::tls::` 不是 `ureq::`）
-21. **TitleBar 拖拽（已修，待提交）**：Tauri v2 只认 `data-tauri-drag-region` 属性（源码 drag.js），`-webkit-app-region: drag`（Electron 机制）无效；`="deep"` 表示子树可拖、按钮等可点击元素自动阻断
+19. **IPC 命令名（已修并提交 27f8f9d，勿回退）**：api.ts 的 invoke 字符串必须用 Rust `#[tauri::command]` 函数名（snake_case，如 `detect_all`/`updater_check`），**不是** Electron 时代 `"installer:detectAll"` 式通道名——旧的 49 个调用运行时全断（此坑只有真机 tauri dev 才暴露，tsc 验不出）。参数 key 按 Rust 参数名 camelCase（accountId/usePersonalCfg/file_name→fileName）；枚举值 camelCase（overlay/append/upload/download/install/save/res）。校验方法：`node /tmp/cdp.mjs "window.__TAURI_INTERNALS__.invoke('xxx')"`；跨查命令名用 grep（见 AGENT-START）
+20. **ureq 3.3 TLS（已修并提交 27f8f9d，勿回退）**：`default-features=false` + `native-tls` 时默认 TLS provider 仍是 Rustls 且未编译 → https 请求直接 panic（`uri scheme is https, provider is Rustls...`）。必须显式 `.tls_config(ureq::tls::TlsConfig::builder().provider(ureq::tls::TlsProvider::NativeTls).build())`（注意路径是 `ureq::tls::` 不是 `ureq::`）
+21. **TitleBar 拖拽（已修并提交 27f8f9d + 418c2d4，勿回退）**：Tauri v2 只认 `data-tauri-drag-region` 属性（drag.js：`e.button===0 && (e.detail===1||2) && isDragRegion(composedPath)` → invoke `plugin:window|start_dragging`），`-webkit-app-region: drag`（Electron 机制）无效；`="deep"` 表示子树可拖、按钮等可点击元素自动阻断。**必须同时配 ACL**：capabilities/default.json 加 `core:window:allow-start-dragging`（`core:window:default` 不含它，缺了 invoke 被拒 "not allowed by ACL"）。CDP 合成 mousedown 需 `detail:1` 才触发
 22. **tauri dev 进程树会被 WSL interop 静默回收**：dev（bat→pnpm→tauri CLI→vite+cargo→exe）运行数分钟后整体消失，无崩溃记录/无 WER。稳定 GUI 验收建议：`pnpm tauri build` 后用 schtasks 独立启动 release exe（`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=9223`），避免 dev 树被回收
 23. **vite HMR 读的是 Windows 工作区文件**：WSL 改 renderer 代码后必须同步到 `C:\Users\Rolin\srp-cfg-build\app\desktop`（cp 对应文件），否则 dev 里是旧代码
 24. **GUI 验收手段：WebView2 CDP**：启动时设 `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=9222`，`curl http://127.0.0.1:9222/json` 拿 webSocketDebuggerUrl，用 node（v24 内置 WebSocket）做 Runtime.evaluate 驱动页面/断言 DOM（`/tmp/cdp.mjs` 助手）；原生对话框用 PowerShell EnumWindows/GetWindowText 验证、SendKeys ESC 关闭；窗口拖拽用 SetCursorPos + mouse_event 模拟
-25. **updater 待核对**：远端 GitHub 有 v3.1.7-9（带 MSI/Portable 资产），但本机 checkForUpdate 返回 hasUpdate:false —— 网络失败时 graceful 回落到空结果（无错误暴露），疑似 GitHub 未认证限流（60 次/h/IP，本机 curl+app 已消耗），需 GITHUB_TOKEN 或配额恢复后复核
+25. **updater GitHub null body（已修并提交 5b8eb94，勿回退）**：远端 GitHub 有 v3.1.7-9，但 checkForUpdate 返回 hasUpdate:false——根因不是限流：GitHub Releases API 对无正文 release（本仓库 v3.1.4）返回 `body:null`，GitHubReleaseRaw 的 body:String 严格反序列化使**整个 10 条列表解析失败**，Err 分支静默降级为空结果（无任何报错暴露）。已修：name/body 改 `Option<String>` + `#[serde(default)]`，map_raw 用 `as_deref().unwrap_or("")`。修复后实测 hasUpdate:true（3.1.9），hasDesktopUpdate:false 正确（新版无 DESKTOP_UPDATE_MARKER 是 config-only）
+26. **直接 cargo build 必须带 `--features tauri/custom-protocol`（2026-08-04 实测，勿回退）**：Tauri 用 `custom-protocol` feature 决定内嵌前端 assets（`dev: cfg!(not(feature = "custom-protocol"))`）；`tauri build` CLI 自动加该 feature，但**直接 `cargo build --release` 不会** → exe 无内嵌产物、加载 devUrl(localhost:5173) 报 ERR_CONNECTION_REFUSED。构建 exe 用 `cargo build --release --features tauri/custom-protocol`（或走 pnpm tauri build）。**不要**在 Cargo.toml 给 tauri 加默认 custom-protocol（会破坏 tauri dev 的 devUrl/HMR 行为）
+27. **Windows curl.exe SChannel CRL 吊销检查离线**：本机 `curl.exe https://...` 报 `CRYPT_E_REVOCATION_OFFLINE (0x80092013)`（curl 显式请求 CRL 校验，机器连不上 CRL 服务器）；PowerShell Invoke-WebRequest/.NET HttpClient 正常；App 内 ureq(native-tls/schannel) 不受影响（独立测试通过）。查 GitHub API 建议用 WSL curl 或 PowerShell
+28. **capabilities ACL 与拖拽（已修 418c2d4）**：`core:window:default` 权限集**不含** `allow-start-dragging`；新增 capabilities 权限后需重新 `cargo build`（ACL 编译进二进制）
+29. **Windows 构建产物路径双轨**：`CARGO_TARGET_DIR=C:\Users\Rolin\srp-cfg-target`（测试/临时构建）与 `src-tauri/target/`（tauri build 默认）是两套目录；run-release.bat 指向 `src-tauri/target/release/`，用 srp-cfg-target 构建后需手动 cp exe 过去再启动
+30. **本机 FLUTTERVIEW 终端遮挡（GUI 验收环境限制）**：当前登录会话运行 pi 的终端是 Flutter 窗口（class=FLUTTERVIEW，rect≈60,9-2505,1335），**常驻全屏前台并不断抢回前台**，盖住 srp-cfg 应用 → 物理鼠标点击/拖拽落不到 app。绕过：窗口命令用 CDP 直调 `window.api.*` 验证（实测通过）；物理拖拽 OS 循环验证需先把终端最小化/移开。SetWindowPos(HWND_TOPMOST) 也压不住。窗口控制/鼠标模拟助手：`C:\Users\Rolin\srp-cfg-build\winctl.ps1`（rect/move/click/state）+ `cursormove.ps1`（纯光标移动+Release 配合 OS 拖拽循环）；CDP 助手 `/tmp/cdp.mjs "<expr>" [port]`（支持端口参数，本机 9223）
