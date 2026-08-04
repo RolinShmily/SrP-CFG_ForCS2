@@ -53,7 +53,7 @@ Layer 4  CI/CD 与发布（website CI + tauri build + 打包链）← 依赖 L2/
 | 层 | 状态 | 备注 |
 | :--- | :--- | :--- |
 | [Layer 0](./layer-0-baseline/TASK.md) | ✅ 完成 | 分支 ✓ 构建基线 ✓ 契约/清单 3 份 ✓ |
-| [Layer 1](./layer-1-shared-ui/TASK.md) | 🔄 进行中 | 9 组件已抽，Desktop 已接入 2 处，构建/类型检查通过 |
-| [Layer 2](./layer-2-desktop-tauri/TASK.md) | ⬜ 未开始 | |
-| [Layer 3](./layer-3-website-react/TASK.md) | ⬜ 未开始 | |
+| [Layer 1](./layer-1-shared-ui/TASK.md) | ✅ 主体完成 | 9 组件已抽，Desktop 已接入（PageHeader×6/LabeledValue），tsc + vite build 通过；剩余替换待 L2.7 |
+| [Layer 2](./layer-2-desktop-tauri/TASK.md) | 🔄 进行中 | core crate 27 测试 ✓ / IPC 适配层 ✓ / Rust 骨架 ✓；待：tauri.conf、Rust services、数据迁移、打包 |
+| [Layer 3](./layer-3-website-react/TASK.md) | 🔄 进行中 | 3.1 骨架 ✓（可构建可预渲染 5 页）；待：页面迁移、Velite、指令 SEO、AI 集成 |
 | [Layer 4](./layer-4-ci-release/TASK.md) | ⬜ 未开始 | |
