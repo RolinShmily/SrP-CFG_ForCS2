@@ -22,13 +22,14 @@
 | 事项 | 说明 |
 | :--- | :--- |
 | **npm 官方源不可用** | `CERT_HAS_EXPIRED`/`ECONNRESET` 频繁。**所有 pnpm install 必须加 `--registry=https://registry.npmmirror.com`** |
-| **WSL 环境** | Ubuntu-on-Windows。desktop 的 Electron 打包无法在本环境验证（win32 目标），L2 的 Windows 部分需 Windows 实机 |
+| **WSL 环境** | **Arch Linux** on Windows（`wslpath -w /` → `\\wsl.localhost\archlinux\`）。tauri 壳缺 webkit2gtk 无法在 WSL 编译；L2/L4 Windows 部分在本机 Windows 实机完成（见下） |
 | **Rust 可用但无 webkit2gtk** | `cargo 1.97` 可用；但 tauri 壳编译需要 `webkit2gtk-4.1`（无 sudo 装不了）→ **纯逻辑必须放 `core/` crate**，测试用 `cargo test -p srp-cfg-core` |
 | **Desktop Tailwind 不扫共享库** | `@tailwindcss/postcss` 以 CSS 文件目录为基准做文件扫描，不会跨到 `app/shared/ui`。**桌面端必须在 `src/renderer/styles/global.css` 顶部保留 `@source "../../../../shared/ui/src"`**（L2.7 已加；曾导致共享组件专属类缺失）；website 用 `@tailwindcss/vite`（模块图扫描）无此问题 |
 | **GitHub API 限流** | 未认证 60 次/h/IP。版本注入（vite 插件构建时 fetch）瞬时失败会回落 `0.0.0`——**这是机制预期**（旧 Astro 同样回落），CI 配 `GITHUB_TOKEN` 后稳定 |
 | **共享组件 lint 约束** | `grep -rn "window.api\|electron\|@tauri-apps\|astro:" app/shared/ui/src` 必须为空 |
+| **Windows 实机构建** | 本机（Win11 26200）可用：Windows 侧 rustup 1.97.1（rsproxy 镜像）+ MSVC 14.51 BuildTools + node/pnpm 10.32。构建必须在**本地盘工作区**（`C:\Users\Rolin\srp-cfg-build`）：`\\wsl$` 9p 上 cargo 增量锁失败、Windows node 无法解析 Linux 平台二进制（esbuild 等）；`CARGO_TARGET_DIR` 指本地盘。cargo 源已配 rsproxy（`C:\Users\Rolin\.cargo\config.toml`） |
 
-## 三、当前进度（分支上 35 个提交，main..HEAD）
+## 三、当前进度（分支上 41 个提交，main..HEAD）
 
 ### ✅ L0 基线 — 全部完成（含 0.6 黄金样本，2026-08-04 Track B 落地）
 - 提交 `9b5342e`：tasks/ 五层任务文档 + 契约/清单 3 份
@@ -71,26 +72,28 @@
 - **后半完成（本次）**：release-desktop.yml 切 `tauri build`（NSIS+MSI 上传，删 Portable.zip）；删 `msi/`、electron-forge 配置/依赖（forge.config.ts、vite.main/preload/renderer.config.ts、@electron-forge/*、electron、electron-winstaller、archiver、winreg）、onlyBuiltDependencies 清理；根 README 发布说明更新（Tauri v2/NSIS+MSI/Rust+MSVC）；`src/main/services/*.ts` + `src/preload/preload.ts` 保留为 L0.6 黄金样本参考（不参与构建）
 - 遗留：L4 验收 28（真实升级路径迁移验证）、GitHub Actions 真实触发验证（需推 tag）
 
-## 四、下一步任务（按优先级）
+## 四、下一步任务（L2/L4 主链已完成，剩余为遗留收尾，按优先级）
 
-### ✅ 1. L0.6 黄金样本记录 — 已完成（2026-08-04，Track B）
-- fixtures（伪 Steam 目录 / 上传包 zip+目录 / 游戏 CFG 冲突场景）+ Node 版执行器（stub electron/winreg，117 断言全 PASS）+ `golden-samples.md`（输入→期望输出 + Rust 84 测试对照，100% ≥80%）
-- Windows 实机验收 L2 时直接引用 `golden-samples.md` §1（注册表三分支）与 §7 遗留项
+### 1. L2 遗留：文件路径获取插件化（getFilePaths）
+- `api.ts` 的 `getFilePaths` 仍返回 []（stub）；UploadZone 需改用 `@tauri-apps/plugin-dialog`（打开文件对话框）或拖拽插件提供真实路径
+- 涉及：`app/desktop/src/renderer/components/UploadZone.tsx`（renderer 改动，但 window.api 签名不变）
 
-### ✅ 2. L2 Desktop → Tauri 收尾 — 已完成（2026-08-04 Windows 实机）
-- 壳层 services + 49 commands + 2.6 实机验收 + 2.8 打包（NSIS 2.5MB / MSI 3.6MB）；详见上方 L2 进度段
-- 遗留：getFilePaths 插件化、2.7 视觉回归 GUI、tauri dev 全功能手动验收
-- **core 纯逻辑已完成**（7 模块 / 84 测试，lib.rs 导出全部 API）。剩余 = fs/winreg 壳层接线：
-  `src-tauri/src/services/`（detection 注册表 + staging zip + installer 落盘 + updater 网络）→ 全部调用 core 纯逻辑
-- commands 注册（原 ipc.ts 40+ handler → `#[tauri::command]`，签名对齐 api-contract.md）+ 2.6 检测实机验收 + 2.8 打包（NSIS/MSI ≤20MB）
-- 2.7 组件替换已在 WSL 完成（c436140），实机只需视觉回归
-- 详见 `tasks/layer-2-desktop-tauri/TASK.md`
+### 2. L2 遗留：2.7 视觉回归 + `tauri dev` 全功能手动验收
+- 本机 Windows 实机跑 `pnpm tauri dev`：全页面功能可用性（对照 golden-samples 清单）、TitleBar 拖拽、事件推送 `log:new` 实时日志、overlay/append 安装全流程 GUI 目验
+- 注意：dev 会拉起 renderer dev server（vite 5173）+ 窗口；首次 tauri dev 在本地盘工作区跑
 
-### ✅ 3. L4 CI/CD — 已完成（release-desktop 切 tauri build、electron-forge/WiX 清理、README 更新）
-- 遗留：真实升级路径迁移验证（L4 验收 28）、推 tag 触发真实 CI 验证
+### 3. L4 遗留：真实升级路径迁移验证（L4 验收 28）
+- 安装旧版 Electron 数据（`%APPDATA%/srp-cfg`）→ 安装新版 Tauri 安装包 → 首启动迁移到 `app_data_dir()`（%APPDATA%/top.srprolin.cfg），核对 install/save/res/uploads 清单完整、`.migrated` 标记生成
 
-### 4. L3 可选遗留 — 已完成
-- `/commands/{name}` 指令详情静态页（70aa5c9）+ JSON-LD 扩展（FAQ/DefinedTerm 指令数据集）均已完成，`pnpm build:web` + tsc 验证通过
+### 4. L4 遗留：GitHub Actions 真实触发验证
+- 推 `v*` tag → release-desktop.yml 全绿（windows-latest 上 Rust toolchain + pnpm install + tauri build + 上传 NSIS/MSI）；deploy-website.yml 正常
+- 本机无法执行，需在真实 repo 触发
+
+### 5. 可选：正式图标替换
+- `src-tauri/icons/` 当前为脚本生成的占位图标（深蓝底十字）；可用品牌图源 `tauri icon` 重新生成全套
+
+### ✅ 已完成（不再执行）
+- L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）
 
 ## 五、关键技术参考
 
