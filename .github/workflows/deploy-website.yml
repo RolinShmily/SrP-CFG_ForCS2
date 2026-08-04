@@ -48,6 +48,10 @@ jobs:
       - name: Build website
         env:
           PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
+          # 版本注入稳定性：srp-cfg-latest-version 插件构建期 fetch GitHub Releases
+          # （app/website/src/data/version.ts），未认证仅 60 次/h/IP 会瞬时回落 0.0.0；
+          # GITHUB_TOKEN 提供 5000 次/h 配额（见 tasks/PROGRESS.md 环境注意项）。
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm build:web
 
       - name: Deploy to Cloudflare Workers

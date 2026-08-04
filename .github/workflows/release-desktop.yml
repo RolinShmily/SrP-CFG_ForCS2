@@ -95,6 +95,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      # ── Rust（Tauri 后端，L2）──────────────────────────────────
+      # 仅补齐 toolchain + 缓存 + core 纯逻辑测试；Electron 打包链（package/MSI/portable）
+      # 保持不变（L4 后续再切换到 tauri build，见 tasks/layer-4-ci-release/TASK.md 4.2/4.3）。
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo registry and build target
+        uses: swatinem/rust-cache@v2
+        with:
+          # 缓存 ~/.cargo registry/git + app/desktop/src-tauri/target（首次 5-10 分钟 → 后续 ~1 分钟）
+          workspaces: app/desktop/src-tauri -> target
+
+      - name: Run Rust core tests
+        shell: bash
+        working-directory: app/desktop/src-tauri
+        run: cargo test -p srp-cfg-core
+
       - name: Inject version
         shell: bash
         run: |
