@@ -142,9 +142,10 @@ GitHub Actions 真实触发、正式图标替换（可选）。本机（Win11 26
   版本注入在 CI 有 GITHUB_TOKEN 不再回落 0.0.0
 - **注意：推 tag 会在真实仓库发布 GitHub Release（v3.1.10，Tauri 版），属公开外部副作用，必须先经用户确认**；最新 tag v3.1.9 为旧 Electron 版，当前分支已含全部 Tauri 修复（含迁移 fix f7f2fa6），推荐 tag 指向当前 HEAD
 
-### 5. 可选：正式图标替换
-- `src-tauri/icons/` 现为占位图标（脚本生成）；拿到品牌源图后 `pnpm tauri icon <src.png>` 重生成
-  全套（32x32/128x128/128x128@2x/icon.ico/icon.png）
+### ✅ 5. 正式图标替换 — 已完成（2026-08-05，0e09eb6）
+- 源：`app/desktop/resources/icon.ico`（= 用户指定 `C:\Users\Rolin\Downloads\icon.ico`，字节一致；重构前 Electron 软件图标）→ `tauri icon` 重生成全套
+- 验证：icon.ico vs 官方 0% 差、安装版 exe 1.0% 差（缩样）；重装后功能正常
+- ⚠️ 改图标后必须删 `target/release/build/srp-cfg-desktop-*` 再构建（resource.lib 缓存坑）
 
 ## 提交规范
 

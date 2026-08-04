@@ -1,6 +1,6 @@
 # 重构进度汇总 & 交接手册
 
-> 更新时间：2026-08-05（L4 遗留收尾：**真实升级迁移验证完成并揪出修复 1 个隐藏 bug**（迁移被 staging 预建目录跳过，f7f2fa6）；**TitleBar 物理拖拽已人工验证通过**（用户手动实测，符合目标结果）；剩 GH Actions 真实触发（需推 tag，待用户确认））
+> 更新时间：2026-08-05（L4 遗留收尾：**真实升级迁移验证完成并揪出修复 1 个隐藏 bug**（迁移被 staging 预建目录跳过，f7f2fa6）；**TitleBar 物理拖拽已人工验证通过**；**正式图标已替换**（0e09eb6，用原软件 resources/icon.ico 重生成全套）；剩 GH Actions 真实触发（需推 tag，待用户确认））
 > 分支：`refactor/tauri-vite-react`（基于 main）
 > 用途：供新开 agent 无缝继续执行（先读本文件 + `tasks/README.md` + 对应层 TASK.md + `tasks/AGENT-START.md`）
 
@@ -106,8 +106,10 @@
 - **注意**：推 tag 会在真实仓库发布 GitHub Release（v3.1.10，Tauri 版），属公开外部副作用，需用户确认；最新 tag v3.1.9 为旧 Electron 版，当前分支已含全部 Tauri 修复（含迁移 fix f7f2fa6），推荐 tag 指向当前 HEAD
 - 版本注入在 CI 有 GITHUB_TOKEN 不再回落 0.0.0
 
-### 5. 可选：正式图标替换
-- `src-tauri/icons/` 当前为脚本生成的占位图标（深蓝底十字）；可用品牌图源 `tauri icon` 重新生成全套
+### ✅ 5. 正式图标替换 — 已完成（2026-08-05，0e09eb6）
+- 源：`app/desktop/resources/icon.ico`（与 `C:\Users\Rolin\Downloads\icon.ico` 字节一致 md5=6ef8adac；即重构前 Electron 软件图标，forge.config `icon: ./resources/icon`）→ `tauri icon` 重生成全套（32x32/128x128/128x128@2x/icon.ico/icon.png + 1024 源图 icon-source.png）
+- 验证：生成 icon.ico vs 官方 0% 差；安装版 exe 内嵌图标 1.0% 差（32px 缩样）；重装后应用正常
+- ⚠️ 坑：改图标后需删 `src-tauri/target/release/build/srp-cfg-desktop-*` 再构建（tauri-build 的 resource.lib 是缓存的，不删会链接旧图标）
 
 ### ✅ 已完成（不再执行）
 - L0.6 黄金样本（Track B）、L2 收尾（壳层 + 49 commands + 2.6 实机验收 + 2.8 打包）、L4 后半（CI 切换 + 清理）、L3 全部（含可选遗留）、L2 遗留① getFilePaths 插件化、**tauri 全功能验收 4+1 个隐藏 bug 修复**（IPC 命令名/ureq TLS/拖拽机制/updater null body/拖拽 ACL，27f8f9d/5b8eb94/418c2d4/556fc21）
@@ -163,4 +165,5 @@
 30. **本机全屏窗口遮挡（GUI 验收环境限制，2026-08-05 更新）**：此前记载的"FLUTTERVIEW 终端遮挡"实为 **QuarkCloudDrive（夸克网盘）播放器窗口**（class=FLUTTER_RUNNER_WIN32_WINDOW，pid=quark_cloud_drive，常驻 52,35-2513,1370 全屏并抢前台）；开发终端是 Windows Terminal（class=CASCADIA_HOSTING_WINDOW_CLASS）。两者都全屏盖住 app → 物理鼠标点击/拖拽前需先把它们最小化/移开。窗口控制/鼠标模拟助手：`winctl.ps1`（rect/move/click/state）+ `cursormove.ps1`；窗口最小化/还原/置前助手 `winman.ps1 -Action minimize|restore|front -Hwnd 0x...`（2026-08-05 新增，保存 hwnd 可还原）；CDP 助手 `/tmp/cdp.mjs "<expr>" [port]`（本机 9223）
 31. **迁移被 staging 预建目录跳过（已修 f7f2fa6，勿回退）**：`initialize_staging_area()` 会先建 cfg/annotations/video/upload/download/save/res 七个目录到 `app_data_dir()`；若在 `run_migration()` 之前执行，`plan_migration` 会把旧数据全判 Skip → 迁移静默不执行（不写 .migrated）。已修：顺序调整（先迁移）+ migrate.rs 对空目录不算"已有"。改迁移相关代码时保持这两点
 32. **Windows 工作区 pnpm-lock.yaml 需随仓库同步（2026-08-05 实测）**：工作区 lockfile 可能比仓库旧（如 vite 6.4.3 vs 仓库 6.4.2）→ `pnpm tauri build` 的 renderer 产物与仓库 dist 不一致（JS 哈希不同）。同步 lockfile 后 `pnpm install --registry=https://registry.npmmirror.com` 对齐。另外**工作区非 git 仓库**（无 .gitignore）→ Tailwind v4 自动扫描会把 node_modules 也扫进去，CSS 多 19 个死工具类（container/z-3/w-6 等，~3.6KB）；CI 上 git checkout 无此问题，仓库 dist 为基准。工作区构建产物与仓库 dist 不一致时先查这两点
-33. **真实安装验收产物留存在本机**：`%LOCALAPPDATA%\SrP-CFG Installer`（NSIS 静默安装产物，含全部修复 + 迁移 fix）；`%APPDATA%/top.srprolin.cfg` 为真实迁移后数据（.migrated=1，legacy 目录已清空）；备份在 `C:\Users\Rolin\srp-cfg-build\backup\migration-20260804-204128\`
+33. **真实安装验收产物留存在本机**：`%LOCALAPPDATA%\SrP-CFG Installer`（NSIS 静默安装产物，含全部修复 + 迁移 fix + 正式图标）；`%APPDATA%/top.srprolin.cfg` 为真实迁移后数据（.migrated=1，legacy 目录已清空）；备份在 `C:\Users\Rolin\srp-cfg-build\backup\migration-20260804-204128\`
+34. **改图标后 exe 图标不更新（2026-08-05 实测，0e09eb6）**：tauri-build 的 `target/release/build/srp-cfg-desktop-*/out/resource.lib`（windres 产物）是缓存的——`tauri icon` 重生成 icons/ 后直接 `pnpm tauri build`，exe 内嵌的还是旧图标（ExtractAssociatedIcon 直方图可验证）。**必须删 `target/release/build/srp-cfg-desktop-*` 再构建**。验证方法：PowerShell `[System.Drawing.Icon]::ExtractAssociatedIcon(<exe>).ToBitmap().Save(...)` 后用 ImageMagick 与源图对比
