@@ -20,7 +20,8 @@ import {
   readAiEventStream,
 } from "../../../lib/ai-stream";
 
-// Turnstile Site Key 是公开标识，由构建环境变量注入；Secret Key 仅存在于 Worker。
+// Turnstile Site Key 是公开标识，由构建环境变量注入（Vite envPrefix 兼容 PUBLIC_ 前缀，见 vite.config.ts）；
+// Secret Key 仅存在于 Worker。
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "";
 
 type Db = "srpcfg" | "commands";
@@ -170,7 +171,9 @@ export function AiPanel({
 
   const getTurnstileToken = useCallback(async (): Promise<string> => {
     if (!TURNSTILE_SITE_KEY) {
-      throw new Error("Turnstile Site Key 未配置，AI 助手暂时不可用。");
+      throw new Error(
+        "AI 助手安全验证未配置（Turnstile Site Key 缺失）。请站点管理员在部署环境配置后重新构建上线。",
+      );
     }
     const container = turnstileContainerRef.current;
     if (!container) throw new Error("Turnstile 容器不存在，请刷新页面重试。");
@@ -375,7 +378,14 @@ export function AiPanel({
         {/* 面板内容 */}
         <div
           className="relative flex h-[60vh] w-full flex-col overflow-hidden rounded-t-[16px] border border-border bg-bg-card shadow-2xl xl:h-[420px] xl:w-[360px] xl:rounded-[12px]"
-          style={{ minWidth: 300, maxWidth: 500, minHeight: 300, maxHeight: "calc(100vh - 8rem)" }}
+          style={{
+            resize: "both",
+            overflow: "hidden",
+            minWidth: 300,
+            maxWidth: 500,
+            minHeight: 300,
+            maxHeight: "calc(100vh - 8rem)",
+          }}
         >
           {/* 顶栏 */}
           <div className="flex items-center justify-between border-b border-border bg-bg-hover/50 px-4 py-3">
@@ -478,6 +488,25 @@ export function AiPanel({
             <p className="mt-1.5 text-center text-[10px] text-text-faint">
               AI 回复仅供参考，请以游戏内实际效果为准
             </p>
+          </div>
+
+          {/* 右下角可调节窗口大小标记 */}
+          <div
+            className="pointer-events-none absolute bottom-1 right-1 z-30 flex h-4 w-4 select-none items-center justify-center text-text-muted opacity-60"
+            aria-hidden="true"
+          >
+            <svg
+              className="h-3.5 w-3.5"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            >
+              <path d="M14 6L6 14" />
+              <path d="M14 10L10 14" />
+              <path d="M14 14L14 14.01" strokeWidth="2" />
+            </svg>
           </div>
         </div>
       </div>

@@ -78,4 +78,14 @@ export default defineConfig({
     // 根/子 vite（6.4.2/6.4.3）hoisting 导致两份 @types/estree，Plugin 类型身份不一致；
     // 运行时由 esbuild 转译不受影响，仅类型检查需要对齐（vite 双版本 hoisting）
   ] as PluginOption[],
+  // 兼容旧 Astro 的 PUBLIC_ 前缀：Vite 默认只暴露 VITE_* 到 import.meta.env，
+  // 若不加此配置，PUBLIC_TURNSTILE_SITE_KEY 构建期不会注入前端，AI 面板会报
+  // “Turnstile Site Key 未配置”。
+  envPrefix: ["VITE_", "PUBLIC_"],
+  // 本机 /etc/hosts 的 localhost 只解析到 IPv6 ::1，Vite 默认绑定 localhost 会
+  // 只在 IPv6 上监听，Firefox 走 IPv4 时连不上（“无法连接到 localhost:5173”）。
+  // 显式绑定 ::（双栈）让 127.0.0.1 与 [::1] 都能访问。
+  server: {
+    host: "::",
+  },
 });
