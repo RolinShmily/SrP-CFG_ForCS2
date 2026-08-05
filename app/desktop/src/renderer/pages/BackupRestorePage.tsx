@@ -41,14 +41,19 @@ export default function BackupRestorePage() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [res, save, user] = await Promise.all([
-        window.api.getResData(),
-        window.api.getSaveData(),
-        window.api.getUserConfig(),
+      // 各数据源独立容错：单个接口失败（如 getUserConfig）不拖垮其余区块，
+      // 避免“恢复中心”因一个异常而整体显示为空。
+      const [res, save] = await Promise.all([
+        window.api.getResData().catch(() => null),
+        window.api.getSaveData().catch(() => null),
       ]);
       setResData(res);
       setSaveData(save);
-      setUserConfig(user);
+      try {
+        setUserConfig(await window.api.getUserConfig());
+      } catch {
+        setUserConfig(null);
+      }
     } finally {
       setLoading(false);
     }

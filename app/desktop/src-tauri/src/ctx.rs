@@ -19,8 +19,10 @@ pub fn try_handle() -> Option<&'static AppHandle> {
     HANDLE.get()
 }
 
-/// 数据根目录（Tauri app_data_dir，= %APPDATA%/top.srprolin.cfg）。
-/// 对应原 Electron `path.join(app.getPath("appData"), "srp-cfg")`（D2 决策）。
+/// 数据根目录（Tauri app_data_dir，= %APPDATA%/srp-cfg）。
+/// 目录名与最初 Electron 时代的 `srp-cfg` 同名：Electron 老用户升级后直接命中
+/// 同一目录，天然无需迁移；仅上一代 Tauri（identifier = top.srprolin.cfg）用户
+/// 需要由 legacy_base_dir() 一次性迁移（见 services/migrate.rs）。
 /// 无 tauri 环境（单元测试/验收 bin）时回退到临时目录。
 pub fn base_dir() -> std::path::PathBuf {
     if let Some(h) = try_handle() {
@@ -30,16 +32,9 @@ pub fn base_dir() -> std::path::PathBuf {
     }
 }
 
-/// updater 缓存目录（原 Electron userData/update-cache，允许重建不迁移）。
-pub fn user_data_dir() -> std::path::PathBuf {
-    if let Some(h) = try_handle() {
-        h.path().app_data_dir().expect("app_data_dir unavailable")
-    } else {
-        std::env::temp_dir().join("srp-cfg-test-userdata")
-    }
-}
-
-/// 旧版 Electron 数据根目录 `%APPDATA%/srp-cfg`（首启动一次性迁移来源）。
+/// 上一代 Tauri 数据根目录 `%APPDATA%/top.srprolin.cfg`（一次性迁移来源）。
+/// 上一代版本使用 identifier = top.srprolin.cfg，改名回 srp-cfg 后需把存量数据
+/// 迁回新目录；Electron 老用户的 `%APPDATA%/srp-cfg` 与新目录同名，无需迁移。
 pub fn legacy_base_dir() -> std::path::PathBuf {
     let appdata = std::env::var("APPDATA").unwrap_or_else(|_| {
         handle()
@@ -50,5 +45,5 @@ pub fn legacy_base_dir() -> std::path::PathBuf {
             .map(|p| p.to_string_lossy().to_string())
             .unwrap_or_default()
     });
-    std::path::PathBuf::from(appdata).join("srp-cfg")
+    std::path::PathBuf::from(appdata).join("top.srprolin.cfg")
 }

@@ -29,7 +29,7 @@ pub struct UpdateCache {
 }
 
 fn cache_dir() -> PathBuf {
-    ctx::user_data_dir().join("update-cache")
+    ctx::base_dir().join("cache").join("update")
 }
 fn cache_file() -> PathBuf {
     cache_dir().join("cache.json")
@@ -43,7 +43,10 @@ fn load_cache() -> Option<UpdateCache> {
 
 fn save_cache(cache: &UpdateCache) {
     let _ = fs::create_dir_all(cache_dir());
-    let _ = fs::write(cache_file(), serde_json::to_string_pretty(cache).unwrap_or_default());
+    let _ = fs::write(
+        cache_file(),
+        serde_json::to_string_pretty(cache).unwrap_or_default(),
+    );
 }
 
 fn now_ms() -> u64 {
@@ -126,16 +129,19 @@ pub fn check_for_update(force: bool) -> UpdateCheckResult {
     // 自动检查 + 缓存节流
     if !force {
         if let Some(c) = &cache {
-            if c.last_check_time.is_some_and(|t| {
-                is_cache_fresh(Some(t), now_ms(), CHECK_INTERVAL_MS)
-            }) {
+            if c.last_check_time
+                .is_some_and(|t| is_cache_fresh(Some(t), now_ms(), CHECK_INTERVAL_MS))
+            {
                 let all = c
                     .cached_all_releases
                     .clone()
                     .or_else(|| c.cached_releases.clone())
                     .unwrap_or_default();
                 let newer = filter_newer(&all, &current);
-                if is_dismissed(newer.first().map(|r| r.tag_name.as_str()), c.dismissed_version.as_deref()) {
+                if is_dismissed(
+                    newer.first().map(|r| r.tag_name.as_str()),
+                    c.dismissed_version.as_deref(),
+                ) {
                     return build_result(&current, &[]);
                 }
                 return build_result(&current, &newer);
@@ -233,8 +239,11 @@ pub fn dismiss_version(version: &str) {
 pub fn get_latest_version() -> String {
     let cache = load_cache();
     if let Some(c) = &cache {
-        if c.last_check_time.is_some_and(|t| is_cache_fresh(Some(t), now_ms(), CHECK_INTERVAL_MS))
-            && c.cached_all_releases.as_ref().is_some_and(|v| !v.is_empty())
+        if c.last_check_time
+            .is_some_and(|t| is_cache_fresh(Some(t), now_ms(), CHECK_INTERVAL_MS))
+            && c.cached_all_releases
+                .as_ref()
+                .is_some_and(|v| !v.is_empty())
         {
             return c
                 .cached_all_releases

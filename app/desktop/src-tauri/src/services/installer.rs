@@ -18,9 +18,7 @@ use srp_cfg_core::{
 
 use crate::ctx;
 use crate::log;
-use crate::models::{
-    AppendConflictPayload, AppendConflictResult, InstallResult, StorageKind,
-};
+use crate::models::{AppendConflictPayload, AppendConflictResult, InstallResult, StorageKind};
 
 pub use crate::services::user_config::GamePaths;
 
@@ -31,7 +29,13 @@ fn base() -> PathBuf {
 }
 
 fn json_path(name: &str) -> PathBuf {
-    base().join(name)
+    let file = match name {
+        "install" => "install.json",
+        "save" => "overlay.json",
+        "res" => "conflicts.json",
+        _ => return base().join(format!("{name}.json")),
+    };
+    base().join("state").join(file)
 }
 
 // ── 清单读写 ───────────────────────────────────────────────────
@@ -51,16 +55,26 @@ fn write_json(path: &Path, data: &serde_json::Value) {
 
 fn load_state(name: &str) -> InstallState {
     let json = read_json(&json_path(name));
-    let inner = json.and_then(|v| v.get(name).cloned());
+    // 防御性兼容：正常清单以清单名（install/save/res）为顶层 key；
+    // 若历史数据异常地以字面 "name" 为 key，回退读取以避免恢复中心显示为空。
+    let inner = json
+        .as_ref()
+        .and_then(|v| v.get(name))
+        .or_else(|| json.as_ref().and_then(|v| v.get("name")))
+        .cloned();
     normalize_state(inner.as_ref())
 }
 
 fn save_state(name: &str, state: &InstallState) {
-    let wrapper = serde_json::json!({
-        "schemaVersion": 3,
-        name: serde_json::to_value(state).unwrap_or_default(),
-    });
-    write_json(&json_path(name), &wrapper);
+    // 用动态 key 构造顶层包装（避免 json! 宏的裸标识符歧义），
+    // 保证写出 key 为 install/save/res，与 load_state 的 v.get(name) 对应。
+    let mut map = serde_json::Map::new();
+    map.insert("schemaVersion".to_string(), serde_json::json!(3));
+    map.insert(
+        name.to_string(),
+        serde_json::to_value(state).unwrap_or_default(),
+    );
+    write_json(&json_path(name), &serde_json::Value::Object(map));
 }
 
 pub fn load_install_data() -> InstallState {
@@ -157,7 +171,10 @@ fn move_to_target(
         let _ = fs::copy(game_file_path, &dst);
         let _ = fs::remove_file(game_file_path);
     }
-    log::info("install", &format!("{label}已转移：{name}，可在「恢复中心」中恢复"));
+    log::info(
+        "install",
+        &format!("{label}已转移：{name}，可在「恢复中心」中恢复"),
+    );
 }
 
 // ── 用户偏好层保护 ─────────────────────────────────────────────
@@ -291,8 +308,8 @@ pub fn deploy_overlay(
     let mut install_data = load_install_data();
     let mut save_data = load_save_data();
     let mut res_data = load_res_data();
-    let save_base = ctx::base_dir().join("save");
-    let res_base = ctx::base_dir().join("res");
+    let save_base = ctx::base_dir().join("archive").join("overlay");
+    let res_base = ctx::base_dir().join("archive").join("conflicts");
 
     let mut total_files = 0usize;
     let mut total_dirs = 0usize;
@@ -334,10 +351,24 @@ pub fn deploy_overlay(
             for action in &plan.actions {
                 match action {
                     DeployAction::MoveToSave { name, is_dir } => {
-                        move_to_target(&save_base, cat.key, &game_dir.join(name), name, *is_dir, "已安装备份");
+                        move_to_target(
+                            &save_base,
+                            cat.key,
+                            &game_dir.join(name),
+                            name,
+                            *is_dir,
+                            "已安装备份",
+                        );
                     }
                     DeployAction::MoveToRes { name, is_dir } => {
-                        move_to_target(&res_base, cat.key, &game_dir.join(name), name, *is_dir, "冲突文件");
+                        move_to_target(
+                            &res_base,
+                            cat.key,
+                            &game_dir.join(name),
+                            name,
+                            *is_dir,
+                            "冲突文件",
+                        );
                         let res_cat = category_mut(&mut res_data, cat.key);
                         if *is_dir {
                             if !res_cat.dirs.contains(name) {
@@ -389,7 +420,10 @@ pub fn deploy_overlay(
     write_res(&res_data);
     write_install(&install_data);
 
-    log::success("install", &format!("部署完成：{total_files} 个文件，{total_dirs} 个目录"));
+    log::success(
+        "install",
+        &format!("部署完成：{total_files} 个文件，{total_dirs} 个目录"),
+    );
     InstallResult {
         files_installed: total_files,
         dirs_installed: total_dirs,
@@ -452,7 +486,10 @@ pub fn check_append_conflicts(
     }
 }
 
-fn conflicts_payload(inputs: &[CategoryInput], use_personal_cfg: bool) -> Vec<AppendConflictPayload> {
+fn conflicts_payload(
+    inputs: &[CategoryInput],
+    use_personal_cfg: bool,
+) -> Vec<AppendConflictPayload> {
     let mut out = Vec::new();
     for cat in inputs {
         if cat.key == CategoryKey::GameCfg && use_personal_cfg {
@@ -539,7 +576,10 @@ pub fn deploy_append(
     }
 
     write_install(&install_data);
-    log::success("install", &format!("追加部署完成：{total_files} 个文件，{total_dirs} 个目录"));
+    log::success(
+        "install",
+        &format!("追加部署完成：{total_files} 个文件，{total_dirs} 个目录"),
+    );
     InstallResult {
         files_installed: total_files,
         dirs_installed: total_dirs,
@@ -550,8 +590,12 @@ pub fn deploy_append(
 
 pub fn delete_installed_item(cat_key: CategoryKey, name: &str, game_paths: &GamePaths) -> bool {
     let mut install_data = load_install_data();
-    let is_file = category(&install_data, cat_key).files.contains(&name.to_string());
-    let is_dir = category(&install_data, cat_key).dirs.contains(&name.to_string());
+    let is_file = category(&install_data, cat_key)
+        .files
+        .contains(&name.to_string());
+    let is_dir = category(&install_data, cat_key)
+        .dirs
+        .contains(&name.to_string());
     if !is_file && !is_dir {
         log::error("file-ops", &format!("未找到已安装项：{name}"));
         return false;
@@ -598,19 +642,25 @@ pub fn clear_install_category(cat_key: CategoryKey, game_paths: &GamePaths) -> u
     });
     clear_category(category_mut(&mut install_data, cat_key));
     write_install(&install_data);
-    log::success("file-ops", &format!("已卸载 {cat_key:?} 配置，共 {removed} 项"));
+    log::success(
+        "file-ops",
+        &format!("已卸载 {cat_key:?} 配置，共 {removed} 项"),
+    );
     removed
 }
 
 pub fn restore_from_res(cat_key: CategoryKey, name: &str, game_paths: &GamePaths) -> bool {
-    let res_dir = ctx::base_dir().join("res");
+    let res_dir = ctx::base_dir().join("archive").join("conflicts");
     let src_path = res_dir.join(cat_key.as_str()).join(name);
     if !src_path.exists() {
         log::error("file-ops", &format!("恢复源不存在：{name}"));
         return false;
     }
     let Some(game_dir) = game_dir_for(cat_key, game_paths) else {
-        log::error("file-ops", &format!("未检测到游戏目录，无法恢复：{cat_key:?}"));
+        log::error(
+            "file-ops",
+            &format!("未检测到游戏目录，无法恢复：{cat_key:?}"),
+        );
         return false;
     };
     let dst_path = game_dir.join(name);
@@ -670,13 +720,23 @@ pub fn delete_res_item(cat_key: CategoryKey, name: &str) -> bool {
     let mut res_data = load_res_data();
     let (is_file, is_dir) = {
         let cat = category(&res_data, cat_key);
-        (cat.files.contains(&name.to_string()), cat.dirs.contains(&name.to_string()))
+        (
+            cat.files.contains(&name.to_string()),
+            cat.dirs.contains(&name.to_string()),
+        )
     };
     if !is_file && !is_dir {
         log::error("file-ops", &format!("未找到冲突恢复项：{name}"));
         return false;
     }
-    remove_entry(&ctx::base_dir().join("res").join(cat_key.as_str()), name, is_dir);
+    remove_entry(
+        &ctx::base_dir()
+            .join("archive")
+            .join("conflicts")
+            .join(cat_key.as_str()),
+        name,
+        is_dir,
+    );
     {
         let cat = category_mut(&mut res_data, cat_key);
         if is_file {
@@ -691,7 +751,10 @@ pub fn delete_res_item(cat_key: CategoryKey, name: &str) -> bool {
 }
 
 pub fn clear_res_category(cat_key: CategoryKey) {
-    let cat_dir = ctx::base_dir().join("res").join(cat_key.as_str());
+    let cat_dir = ctx::base_dir()
+        .join("archive")
+        .join("conflicts")
+        .join(cat_key.as_str());
     if cat_dir.exists() {
         let _ = fs::remove_dir_all(&cat_dir);
         let _ = fs::create_dir_all(&cat_dir);
@@ -712,10 +775,16 @@ pub fn restore_res_category(cat_key: CategoryKey, game_paths: &GamePaths) -> usi
         return 0;
     }
     let Some(game_dir) = game_dir_for(cat_key, game_paths) else {
-        log::error("file-ops", &format!("未检测到游戏目录，无法恢复：{cat_key:?}"));
+        log::error(
+            "file-ops",
+            &format!("未检测到游戏目录，无法恢复：{cat_key:?}"),
+        );
         return 0;
     };
-    let res_dir = ctx::base_dir().join("res").join(cat_key.as_str());
+    let res_dir = ctx::base_dir()
+        .join("archive")
+        .join("conflicts")
+        .join(cat_key.as_str());
     let mut restored = 0usize;
 
     with_user_custom_preserved(&game_dir, cat_key, || {
@@ -750,13 +819,16 @@ pub fn restore_res_category(cat_key: CategoryKey, game_paths: &GamePaths) -> usi
     let _ = fs::create_dir_all(&res_dir);
     clear_category(category_mut(&mut res_data, cat_key));
     write_res(&res_data);
-    log::success("file-ops", &format!("已恢复 {cat_key:?} 冲突文件，共 {restored} 项"));
+    log::success(
+        "file-ops",
+        &format!("已恢复 {cat_key:?} 冲突文件，共 {restored} 项"),
+    );
     restored
 }
 
 pub fn restore_from_save(game_paths: &GamePaths) -> bool {
     let save_data = load_save_data();
-    let save_dir = ctx::base_dir().join("save");
+    let save_dir = ctx::base_dir().join("archive").join("overlay");
     if !save_dir.exists() {
         log::error("backup", "备份目录不存在");
         return false;
@@ -764,10 +836,22 @@ pub fn restore_from_save(game_paths: &GamePaths) -> bool {
     log::progress("backup", "正在从备份恢复...");
 
     let categories: Vec<(CategoryKey, Option<PathBuf>)> = vec![
-        (CategoryKey::GameCfg, game_paths.game_cfg_path.as_ref().map(PathBuf::from)),
-        (CategoryKey::UserCfg, game_paths.user_cfg_path.as_ref().map(PathBuf::from)),
-        (CategoryKey::Annotations, game_paths.annotations_path.as_ref().map(PathBuf::from)),
-        (CategoryKey::Video, game_paths.user_cfg_path.as_ref().map(PathBuf::from)),
+        (
+            CategoryKey::GameCfg,
+            game_paths.game_cfg_path.as_ref().map(PathBuf::from),
+        ),
+        (
+            CategoryKey::UserCfg,
+            game_paths.user_cfg_path.as_ref().map(PathBuf::from),
+        ),
+        (
+            CategoryKey::Annotations,
+            game_paths.annotations_path.as_ref().map(PathBuf::from),
+        ),
+        (
+            CategoryKey::Video,
+            game_paths.user_cfg_path.as_ref().map(PathBuf::from),
+        ),
     ];
 
     let mut restored = 0usize;
@@ -818,13 +902,23 @@ pub fn delete_save_item(cat_key: CategoryKey, name: &str) -> bool {
     let mut save_data = load_save_data();
     let (is_file, is_dir) = {
         let cat = category(&save_data, cat_key);
-        (cat.files.contains(&name.to_string()), cat.dirs.contains(&name.to_string()))
+        (
+            cat.files.contains(&name.to_string()),
+            cat.dirs.contains(&name.to_string()),
+        )
     };
     if !is_file && !is_dir {
         log::error("file-ops", &format!("未找到配置备份项：{name}"));
         return false;
     }
-    remove_entry(&ctx::base_dir().join("save").join(cat_key.as_str()), name, is_dir);
+    remove_entry(
+        &ctx::base_dir()
+            .join("archive")
+            .join("overlay")
+            .join(cat_key.as_str()),
+        name,
+        is_dir,
+    );
     {
         let cat = category_mut(&mut save_data, cat_key);
         if is_file {
@@ -839,7 +933,10 @@ pub fn delete_save_item(cat_key: CategoryKey, name: &str) -> bool {
 }
 
 pub fn clear_save_category(cat_key: CategoryKey) {
-    let cat_dir = ctx::base_dir().join("save").join(cat_key.as_str());
+    let cat_dir = ctx::base_dir()
+        .join("archive")
+        .join("overlay")
+        .join(cat_key.as_str());
     if cat_dir.exists() {
         let _ = fs::remove_dir_all(&cat_dir);
         let _ = fs::create_dir_all(&cat_dir);
@@ -860,10 +957,16 @@ pub fn restore_save_category(cat_key: CategoryKey, game_paths: &GamePaths) -> us
         return 0;
     }
     let Some(game_dir) = game_dir_for(cat_key, game_paths) else {
-        log::error("file-ops", &format!("未检测到游戏目录，无法恢复：{cat_key:?}"));
+        log::error(
+            "file-ops",
+            &format!("未检测到游戏目录，无法恢复：{cat_key:?}"),
+        );
         return 0;
     };
-    let save_dir = ctx::base_dir().join("save").join(cat_key.as_str());
+    let save_dir = ctx::base_dir()
+        .join("archive")
+        .join("overlay")
+        .join(cat_key.as_str());
     let mut restored = 0usize;
 
     with_user_custom_preserved(&game_dir, cat_key, || {
@@ -900,7 +1003,10 @@ pub fn restore_save_category(cat_key: CategoryKey, game_paths: &GamePaths) -> us
     clear_category(category_mut(&mut save_data, cat_key));
     write_save(&save_data);
 
-    log::success("backup", &format!("已恢复 {cat_key:?} 配置备份，共 {restored} 项"));
+    log::success(
+        "backup",
+        &format!("已恢复 {cat_key:?} 配置备份，共 {restored} 项"),
+    );
     restored
 }
 
@@ -908,17 +1014,27 @@ pub fn restore_save_item(cat_key: CategoryKey, name: &str, game_paths: &GamePath
     let mut save_data = load_save_data();
     let (is_file, is_dir) = {
         let cat = category(&save_data, cat_key);
-        (cat.files.contains(&name.to_string()), cat.dirs.contains(&name.to_string()))
+        (
+            cat.files.contains(&name.to_string()),
+            cat.dirs.contains(&name.to_string()),
+        )
     };
     if !is_file && !is_dir {
         log::error("file-ops", &format!("未找到配置备份项：{name}"));
         return false;
     }
     let Some(game_dir) = game_dir_for(cat_key, game_paths) else {
-        log::error("file-ops", &format!("未检测到游戏目录，无法恢复：{cat_key:?}"));
+        log::error(
+            "file-ops",
+            &format!("未检测到游戏目录，无法恢复：{cat_key:?}"),
+        );
         return false;
     };
-    let src = ctx::base_dir().join("save").join(cat_key.as_str()).join(name);
+    let src = ctx::base_dir()
+        .join("archive")
+        .join("overlay")
+        .join(cat_key.as_str())
+        .join(name);
     if !src.exists() {
         log::error("file-ops", &format!("恢复源不存在：{name}"));
         return false;
@@ -993,8 +1109,16 @@ pub fn open_item(
             };
             game_dir.join(name)
         }
-        StorageKind::Save => ctx::base_dir().join("save").join(category.as_str()).join(name),
-        StorageKind::Res => ctx::base_dir().join("res").join(category.as_str()).join(name),
+        StorageKind::Save => ctx::base_dir()
+            .join("archive")
+            .join("overlay")
+            .join(category.as_str())
+            .join(name),
+        StorageKind::Res => ctx::base_dir()
+            .join("archive")
+            .join("conflicts")
+            .join(category.as_str())
+            .join(name),
     };
     if !file_path.exists() {
         log::error("file-ops", &format!("文件不存在：{name}"));

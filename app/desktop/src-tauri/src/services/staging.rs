@@ -11,20 +11,16 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use srp_cfg_core::{
-    classify_file, folders_to_remove, inspect_cfg_files, is_timestamp_folder, next_timestamp_folder,
-    staging_destination, upload_file_type, StagedCategory, UploadFileType,
+    classify_file, folders_to_remove, inspect_cfg_files, is_timestamp_folder,
+    next_timestamp_folder, staging_destination, upload_file_type, StagedCategory, UploadFileType,
 };
 
 use crate::ctx;
 use crate::log;
-use crate::models::{
-    DownloadEntry, InstallMode, UploadEntry, UploadFileInfo, UploadedEntry,
-};
+use crate::models::{DownloadEntry, InstallMode, UploadEntry, UploadFileInfo, UploadedEntry};
 
 const MAX_UPLOADS: usize = 5;
 const MAX_DOWNLOADS: usize = 5;
-
-const DIRS: [&str; 7] = ["cfg", "annotations", "video", "upload", "download", "save", "res"];
 
 fn base() -> PathBuf {
     ctx::base_dir()
@@ -34,29 +30,44 @@ pub fn dir_path(name: &str) -> PathBuf {
     base().join(name)
 }
 
+/// 安装暂存区（部署到游戏前的中间沙盒）：staging/cfg|annotations|video
 pub fn get_staging_path(name: &str) -> PathBuf {
-    dir_path(name)
+    base().join("staging").join(name)
 }
 
+/// 传输资料库：library/upload（本地上传历史）
 pub fn get_upload_path() -> PathBuf {
-    dir_path("upload")
+    base().join("library").join("upload")
 }
 
+/// 传输资料库：library/download（远程下载历史）
 pub fn get_download_path() -> PathBuf {
-    dir_path("download")
+    base().join("library").join("download")
 }
 
+/// 档案区：archive/overlay（覆盖安装前保存的上一版本）
 pub fn get_save_path() -> PathBuf {
-    dir_path("save")
+    base().join("archive").join("overlay")
 }
 
+/// 档案区：archive/conflicts（全新安装时隔离的冲突原文件）
 pub fn get_res_path() -> PathBuf {
-    dir_path("res")
+    base().join("archive").join("conflicts")
 }
 
 /// 对应 TS `initializeStagingArea`。
 pub fn initialize_staging_area() {
-    for dir in DIRS {
+    for dir in [
+        "staging/cfg",
+        "staging/annotations",
+        "staging/video",
+        "library/upload",
+        "library/download",
+        "archive/overlay",
+        "archive/conflicts",
+        "state",
+        "cache/update",
+    ] {
         let _ = fs::create_dir_all(base().join(dir));
     }
     log::info("file-ops", "目录结构已初始化");
@@ -194,7 +205,10 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
             let size = fs::metadata(zip_path).map(|m| m.len()).unwrap_or(0);
             log::success(
                 "file-ops",
-                &format!("ZIP 已上传：{file_name}（{:.1} MB）", size as f64 / 1024.0 / 1024.0),
+                &format!(
+                    "ZIP 已上传：{file_name}（{:.1} MB）",
+                    size as f64 / 1024.0 / 1024.0
+                ),
             );
 
             if first_entry.is_none() {
@@ -245,7 +259,9 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
                     all_files.push(f);
                 } else {
                     unsupported_skipped.push(
-                        f.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default(),
+                        f.file_name()
+                            .map(|n| n.to_string_lossy().to_string())
+                            .unwrap_or_default(),
                     );
                     has_unsupported = true;
                 }
@@ -268,7 +284,9 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
                             all_files.push(f);
                         } else {
                             unsupported_skipped.push(
-                                f.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default(),
+                                f.file_name()
+                                    .map(|n| n.to_string_lossy().to_string())
+                                    .unwrap_or_default(),
                             );
                             has_unsupported = true;
                         }
@@ -279,7 +297,9 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
                 all_files.push(p.to_path_buf());
             } else {
                 unsupported_skipped.push(
-                    p.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default(),
+                    p.file_name()
+                        .map(|n| n.to_string_lossy().to_string())
+                        .unwrap_or_default(),
                 );
                 has_unsupported = true;
             }
@@ -289,7 +309,11 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
     if has_unsupported {
         log::warning(
             "file-ops",
-            &format!("已过滤 {} 个不支持的文件：{}", unsupported_skipped.len(), unsupported_skipped[..unsupported_skipped.len().min(10)].join(", ")),
+            &format!(
+                "已过滤 {} 个不支持的文件：{}",
+                unsupported_skipped.len(),
+                unsupported_skipped[..unsupported_skipped.len().min(10)].join(", ")
+            ),
         );
     }
 
@@ -310,7 +334,9 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
                 .map(|p| p.to_string_lossy().to_string())
                 .unwrap_or_default()
         } else {
-            src.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default()
+            src.file_name()
+                .map(|n| n.to_string_lossy().to_string())
+                .unwrap_or_default()
         };
         let dst = upload_sub_dir.join(&rel_path);
         if let Some(parent) = dst.parent() {
@@ -324,7 +350,10 @@ pub fn upload_files(file_paths: &[String]) -> UploadEntry {
         .iter()
         .map(|f| get_file_info(f, &upload_sub_dir))
         .collect();
-    log::success("file-ops", &format!("上传完成：{} 个文件（{folder_name}）", files.len()));
+    log::success(
+        "file-ops",
+        &format!("上传完成：{} 个文件（{folder_name}）", files.len()),
+    );
 
     UploadEntry {
         folder_name,
@@ -429,13 +458,19 @@ pub fn process_upload_to_staging(upload_folder: &Path, mode: InstallMode) -> Sta
         log::success("install", &format!("CFG 文件：{} 个", counts.cfg));
     }
     if counts.annotations > 0 {
-        log::success("install", &format!("地图指南文件：{} 个", counts.annotations));
+        log::success(
+            "install",
+            &format!("地图指南文件：{} 个", counts.annotations),
+        );
     }
     if counts.video > 0 {
         log::success("install", &format!("视频预设文件：{} 个", counts.video));
     }
     if counts.unsupported > 0 {
-        log::warning("file-ops", &format!("跳过 {} 个不支持的文件", counts.unsupported));
+        log::warning(
+            "file-ops",
+            &format!("跳过 {} 个不支持的文件", counts.unsupported),
+        );
     }
     if counts.blocked_vcfg > 0 {
         log::warning(
@@ -539,13 +574,24 @@ pub fn get_uploaded_entries() -> Vec<UploadedEntry> {
         }
         let dir = upload_dir.join(&name);
         let all_files = walk_sync_abs(&dir);
-        let zip_files: Vec<_> = all_files.iter().filter(|f| f.extension().map(|x| x == "zip").unwrap_or(false)).collect();
+        let zip_files: Vec<_> = all_files
+            .iter()
+            .filter(|f| f.extension().map(|x| x == "zip").unwrap_or(false))
+            .collect();
         if !zip_files.is_empty() {
             let stat = fs::metadata(zip_files[0]).ok();
             out.push(UploadedEntry {
                 folder_name: name,
-                display_name: zip_files[0].file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default(),
-                timestamp: stat.as_ref().and_then(|m| m.modified().ok()).and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok()).map(|d| d.as_millis() as u64).unwrap_or(0),
+                display_name: zip_files[0]
+                    .file_name()
+                    .map(|n| n.to_string_lossy().to_string())
+                    .unwrap_or_default(),
+                timestamp: stat
+                    .as_ref()
+                    .and_then(|m| m.modified().ok())
+                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                    .map(|d| d.as_millis() as u64)
+                    .unwrap_or(0),
                 size: stat.map(|m| m.len()).unwrap_or(0),
                 file_count: 1,
                 is_zip: true,
@@ -554,15 +600,27 @@ pub fn get_uploaded_entries() -> Vec<UploadedEntry> {
             let cfg_txt: Vec<_> = all_files
                 .iter()
                 .filter(|f| {
-                    let ext = f.extension().map(|x| x.to_string_lossy().to_lowercase()).unwrap_or_default();
+                    let ext = f
+                        .extension()
+                        .map(|x| x.to_string_lossy().to_lowercase())
+                        .unwrap_or_default();
                     ext == "cfg" || ext == "txt"
                 })
                 .collect();
             if cfg_txt.is_empty() {
                 continue;
             }
-            let total_size: u64 = cfg_txt.iter().filter_map(|f| fs::metadata(f).ok()).map(|m| m.len()).sum();
-            let mtime = fs::metadata(&dir).and_then(|m| m.modified()).ok().and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok()).map(|d| d.as_millis() as u64).unwrap_or(0);
+            let total_size: u64 = cfg_txt
+                .iter()
+                .filter_map(|f| fs::metadata(f).ok())
+                .map(|m| m.len())
+                .sum();
+            let mtime = fs::metadata(&dir)
+                .and_then(|m| m.modified())
+                .ok()
+                .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                .map(|d| d.as_millis() as u64)
+                .unwrap_or(0);
             out.push(UploadedEntry {
                 folder_name: name,
                 display_name: format!("{} 个文件", cfg_txt.len()),
@@ -623,7 +681,13 @@ pub fn download_from_url(url: &str, file_name: &str) -> Result<DownloadEntry, St
 
     match result {
         Ok(size) => {
-            log::success("file-ops", &format!("下载完成：{file_name}（{:.1} MB）", size as f64 / 1024.0 / 1024.0));
+            log::success(
+                "file-ops",
+                &format!(
+                    "下载完成：{file_name}（{:.1} MB）",
+                    size as f64 / 1024.0 / 1024.0
+                ),
+            );
             Ok(DownloadEntry {
                 folder_name,
                 file_name: file_name.to_string(),
@@ -664,7 +728,12 @@ pub fn get_download_entries() -> Vec<DownloadEntry> {
         out.push(DownloadEntry {
             folder_name: e.file_name().to_string_lossy().to_string(),
             file_name: file_name.clone(),
-            timestamp: stat.as_ref().and_then(|m| m.modified().ok()).and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok()).map(|d| d.as_millis() as u64).unwrap_or(0),
+            timestamp: stat
+                .as_ref()
+                .and_then(|m| m.modified().ok())
+                .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                .map(|d| d.as_millis() as u64)
+                .unwrap_or(0),
             size: stat.map(|m| m.len()).unwrap_or(0),
         });
     }

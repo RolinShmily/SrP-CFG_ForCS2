@@ -1,9 +1,11 @@
-//! 旧版 Electron 数据目录 → Tauri 原生数据目录的一次性迁移（D2）。
+//! 数据目录一次性迁移（D2）决策逻辑。
 //!
 //! 纯决策逻辑：壳层传入候选路径集合与存在性，本模块产出迁移计划。
 //! 文件复制由壳层（`src-tauri/src/services/migrate.rs`）执行。
 
-/// 旧版 Electron 时代的数据根目录名（`%APPDATA%/srp-cfg` 下的子项）。
+/// 最初 Electron 时代的数据根目录名（`%APPDATA%/srp-cfg`）。
+/// 当前版本 app_data_dir 已回归同名目录，Electron 老用户无需迁移；
+/// 壳层实际迁移来源是上一代 Tauri 的 `%APPDATA%/top.srprolin.cfg`（见 ctx::legacy_base_dir）。
 pub const LEGACY_DATA_ROOT: &str = "srp-cfg";
 
 /// 迁移计划中的单个动作。
@@ -63,9 +65,15 @@ mod tests {
         assert_eq!(
             actions,
             vec![
-                MigrationAction::Move { name: "install.json".into() },
-                MigrationAction::Skip { name: "save.json".into() },
-                MigrationAction::Move { name: "uploads".into() },
+                MigrationAction::Move {
+                    name: "install.json".into()
+                },
+                MigrationAction::Skip {
+                    name: "save.json".into()
+                },
+                MigrationAction::Move {
+                    name: "uploads".into()
+                },
             ]
         );
         assert!(should_migrate(&actions));
@@ -74,7 +82,12 @@ mod tests {
     #[test]
     fn no_migration_when_all_present_or_empty() {
         let actions = plan_migration(&names(&["install.json"]), &names(&["install.json"]));
-        assert_eq!(actions, vec![MigrationAction::Skip { name: "install.json".into() }]);
+        assert_eq!(
+            actions,
+            vec![MigrationAction::Skip {
+                name: "install.json".into()
+            }]
+        );
         assert!(!should_migrate(&actions));
 
         let empty = plan_migration(&[], &[]);
@@ -86,7 +99,12 @@ mod tests {
     fn absent_entries_are_not_part_of_plan() {
         // 旧目录不存在的条目根本不会出现在输入里（壳层只列旧目录实际内容）
         let actions = plan_migration(&names(&["vcfg"]), &names(&[]));
-        assert_eq!(actions, vec![MigrationAction::Move { name: "vcfg".into() }]);
+        assert_eq!(
+            actions,
+            vec![MigrationAction::Move {
+                name: "vcfg".into()
+            }]
+        );
     }
 
     #[test]
@@ -99,8 +117,12 @@ mod tests {
         assert_eq!(
             actions,
             vec![
-                MigrationAction::Skip { name: "install.json".into() },
-                MigrationAction::Move { name: "res.json".into() },
+                MigrationAction::Skip {
+                    name: "install.json".into()
+                },
+                MigrationAction::Move {
+                    name: "res.json".into()
+                },
             ]
         );
     }

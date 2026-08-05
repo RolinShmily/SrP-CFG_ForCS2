@@ -31,6 +31,9 @@ pub fn run() {
             // staging 初始化会创建 cfg/annotations/... 同名骨架目录，若先执行会让
             // 迁移计划误判"目标已存在"而对旧数据全部 Skip（数据不迁移、不写标记）。
             services::migrate::run_migration();
+            // 旧目录布局（根目录平铺）→ 新目录布局（staging/library/archive/state/cache）升级。
+            // 同样必须先于 initialize_staging_area()，避免骨架目录占用新路径导致跳过。
+            services::migrate::upgrade_layout();
             services::staging::initialize_staging_area();
             Ok(())
         })
@@ -108,9 +111,15 @@ mod real_machine_verify {
     fn detect_all_on_real_machine() {
         crate::services::staging::initialize_staging_area();
         let r = crate::services::detection::detect_all();
-        println!("\n==== L2.6 detectAll 实机输出 ====\n{}", serde_json::to_string_pretty(&r).unwrap());
+        println!(
+            "\n==== L2.6 detectAll 实机输出 ====\n{}",
+            serde_json::to_string_pretty(&r).unwrap()
+        );
         // 注册表成功分支：Steam 应被检测到（本机 C:\Program Files (x86)\Steam）
-        assert!(r.steam_path.is_some(), "Steam 未检测到（注册表/默认路径分支失败）");
+        assert!(
+            r.steam_path.is_some(),
+            "Steam 未检测到（注册表/默认路径分支失败）"
+        );
         println!("\n==== 验收项 ====\n- Steam 路径: {:?}\n- CS2 状态: {:?} ({:?})\n- 用户数: {}\n- 当前用户: {:?}\n- VCFG: {}",
             r.steam_path, r.cs2_install_state, r.cs2_install_dir, r.steam_users.len(),
             r.current_user.as_ref().map(|u| u.persona_name.clone().unwrap_or_default()),
