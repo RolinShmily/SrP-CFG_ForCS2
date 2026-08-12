@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ArrowDownToLine, FileText, Play, Clock, Info, RefreshCw, Package, Globe, Layers, PanelLeftClose, PanelLeftOpen, UserRoundCog } from "lucide-react";
 import type { Page } from "../App";
+import { WEBSITE_URL } from "../lib/downloads";
 
 const items: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: "quickstart", label: "快速开始", icon: <Play size={20} /> },
@@ -75,7 +76,7 @@ export default function Sidebar({ current, onNavigate, onCheckUpdate }: Props) {
   );
 
   const handleOpenWebsite = async () => {
-    await window.api.openExternal("https://cfg.srprolin.top/");
+    await window.api.openExternal(WEBSITE_URL);
   };
 
   return (

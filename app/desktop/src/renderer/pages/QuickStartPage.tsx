@@ -7,8 +7,9 @@ import {
   AlertTriangle,
   BookOpen,
   ExternalLink,
+  Globe,
 } from "lucide-react";
-import { WEBSITE_URL, REPO_URL } from "../lib/downloads";
+import { WEBSITE_URL, REPO_URL, DOCS_URL } from "../lib/downloads";
 import { Card, PageHeader } from "@srp-cfg/ui";
 
 const steps = [
@@ -81,6 +82,15 @@ export default function QuickStartPage() {
           <button
             type="button"
             onClick={() => window.api.openExternal(WEBSITE_URL)}
+            className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-3 text-xs font-medium text-text-secondary transition-colors hover:border-border-highlight hover:bg-bg-hover"
+          >
+            <Globe size={14} />
+            项目官网
+            <ExternalLink size={12} />
+          </button>
+          <button
+            type="button"
+            onClick={() => window.api.openExternal(DOCS_URL)}
             className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border-none bg-accent px-3 text-xs font-medium text-bg transition-colors hover:bg-accent-light"
           >
             <BookOpen size={14} />

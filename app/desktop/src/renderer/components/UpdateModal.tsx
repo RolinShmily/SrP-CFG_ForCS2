@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Modal, Badge } from "@srp-cfg/ui";
 import type { GitHubRelease } from "../types";
-import { REPO_URL } from "../lib/downloads";
+import { REPO_URL, WEBSITE_URL } from "../lib/downloads";
 
 interface Props {
   open: boolean;
@@ -150,7 +150,7 @@ export default function UpdateModal({
     <>
       <button
         type="button"
-        onClick={() => window.api.openExternal("https://cfg.srprolin.top")}
+        onClick={() => window.api.openExternal(WEBSITE_URL)}
         className="flex min-h-9 items-center gap-1.5 rounded-[var(--radius)] border-none bg-accent px-4 text-sm font-medium text-bg transition-colors hover:bg-accent/90"
       >
         <Globe size={14} />
