@@ -105,6 +105,25 @@ pnpm check:config-index
 pnpm --filter @srp-cfg/website check
 ```
 
+### 网站 AI 助理配置（Cloudflare Turnstile）
+
+`/commands` 右侧的 AI 配置助理依赖 Cloudflare Turnstile 做人机验证（Site Key 构建期注入前端，Secret Key 仅存于 Worker）：
+
+1. 打开 [Cloudflare Dashboard → Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) → **Add site**，
+   域名填写 `srprolin.top` 与 `cfg.srprolin.top`，获取 **Site Key**（公开）与 **Secret Key**（仅服务端）。
+2. 在 GitHub 仓库 **Settings → Secrets and variables → Actions** 添加：
+   - `PUBLIC_TURNSTILE_SITE_KEY`：Turnstile Site Key
+   - `CLOUDFLARE_TURNSTILE_SECRET`：Turnstile Secret Key
+   - `CLOUDFLARE_API_TOKEN`：Cloudflare API Token（需 Workers Scripts:Edit 权限）
+   - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账号 ID
+3. 重新运行 **Deploy Website** workflow（或推送任意 `app/website/**` 变更触发）。构建时
+   `PUBLIC_TURNSTILE_SITE_KEY` 注入前端（`vite.config.ts` 的 `envPrefix` 已兼容 `PUBLIC_` 前缀），
+   部署后 workflow 会把 Secret Key 写入 Worker 密钥 `TURNSTILE_SECRET_KEY`。
+4. 本地开发：复制 `app/website/.env.example` 为 `app/website/.env` 并填入 Site Key 后运行 `pnpm dev:web`。
+
+> 如果页面提示「Turnstile Site Key 未配置」：说明构建时该变量未进入 `import.meta.env`，
+> 请检查 `.github/workflows/deploy-website.yml` 的 env 注入，以及 Vite `envPrefix` 是否包含 `PUBLIC_`。
+
 ## 项目结构
 
 ```text

@@ -4,6 +4,11 @@ AGENTS.md
 .agents/
 .spec-workflow/
 
+# Local env files (secrets)
+.env
+.env.*
+!.env.example
+
 # Node
 node_modules/
 app/website/dist/

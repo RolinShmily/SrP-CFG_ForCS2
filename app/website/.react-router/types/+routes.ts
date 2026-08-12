@@ -31,16 +31,21 @@ type Pages = {
   "/commands": {
     params: {};
   };
+  "/commands/:name": {
+    params: {
+      "name": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/download" | "/about" | "/docs" | "/docs/:slug" | "/commands";
+    page: "/" | "/download" | "/about" | "/docs" | "/docs/:slug" | "/commands" | "/commands/:name";
   };
   "layout.tsx": {
     id: "layout";
-    page: "/" | "/download" | "/about" | "/docs" | "/docs/:slug" | "/commands";
+    page: "/" | "/download" | "/about" | "/docs" | "/docs/:slug" | "/commands" | "/commands/:name";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -66,6 +71,10 @@ type RouteFiles = {
     id: "routes/commands";
     page: "/commands";
   };
+  "routes/command-detail.tsx": {
+    id: "routes/command-detail";
+    page: "/commands/:name";
+  };
 };
 
 type RouteModules = {
@@ -77,4 +86,5 @@ type RouteModules = {
   "routes/docs": typeof import("./src/app/routes/docs.tsx");
   "routes/docs-detail": typeof import("./src/app/routes/docs-detail.tsx");
   "routes/commands": typeof import("./src/app/routes/commands.tsx");
+  "routes/command-detail": typeof import("./src/app/routes/command-detail.tsx");
 };
