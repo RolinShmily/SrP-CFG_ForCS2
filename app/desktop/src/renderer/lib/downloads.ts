@@ -9,9 +9,10 @@ export const DOCS_URL = `${WEBSITE_URL}/docs`;
 // 下载镜像前缀：纯字符串拼接到 GitHub Release 链接最前面。
 // - 留空字符串 ""        → 直连 GitHub
 // - 填镜像站 URL 且必须以 "/" 结尾 → 全部走镜像
-// ⚠️ 必须与 ureq 3.3 下载栈兼容（gh.269601.xyz 的 chunked 响应会让 ureq 报
-//   "protocol: chunk expected crlf" 导致下载静默失败；ghproxy.net 等实测通过）
-export const DL_MIRROR_PREFIX = "https://ghproxy.net/";
+// ⚠️ 必须与 ureq 3.3 下载栈兼容。历史坑：gh.269601.xyz 曾对 302 重定向响应返回
+//   chunked 编码，ureq 报 "protocol: chunk expected crlf" 导致下载静默失败；
+//   2026-08-12 已用 ureq 3.3.0 实测 gh.269601.xyz 完整下载 116802B 通过。
+export const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
 
 // GitHub Release 稳定下载基底（始终指向 latest，要求 asset 文件名固定无版本号）
 export const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;
