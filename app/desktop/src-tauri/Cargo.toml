@@ -4,7 +4,7 @@ members = ["core", "."]
 
 [package]
 name = "srp-cfg-desktop"
-version = "3.2.2"
+version = "3.2.3"
 edition = "2021"
 
 # ── Tauri 壳（Windows 目标构建）──────────────────────────────
