@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 
 use srp_cfg_core::{
     cs2_game_dir, cs2_manifest_state, parse_library_paths, parse_login_users, Cs2InstallState,
-    LoginUsers,
+    LoginUsers, SteamUser,
 };
 use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
 use winreg::RegKey;
