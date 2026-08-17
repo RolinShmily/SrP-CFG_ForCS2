@@ -75,27 +75,6 @@ export default function DownloadPage({ onNavigate }: Props) {
         description="获取 v3 唯一 Runtime Core；内置 Preset 与用户入口已经包含在同一个包中。"
       />
 
-      {downloadSuccess && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius)] border border-teal/40 bg-teal/10 px-4 py-3.5 text-sm text-teal shadow-sm animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 size={18} className="shrink-0 text-teal" />
-            <span>
-              <strong className="font-semibold">已下载完成！</strong> 配置包 <code className="font-mono bg-teal/20 px-1.5 py-0.5 rounded text-teal">{downloadSuccess}</code> 已保存至应用内。
-            </span>
-          </div>
-          {onNavigate && (
-            <button
-              type="button"
-              onClick={() => onNavigate("install")}
-              className="flex items-center gap-1.5 font-semibold text-teal underline underline-offset-2 hover:opacity-80 transition-opacity bg-transparent border-none p-0 cursor-pointer"
-            >
-              前往安装配置页面
-              <ArrowRight size={14} />
-            </button>
-          )}
-        </div>
-      )}
-
       <div className="ui-body bg-accent-bg border border-accent/20 rounded-[var(--radius)] px-4 py-3">
         现在只发行 Runtime Core。安装后到「我的配置」选择 Default、Echo、YSZH 或 VisionL 作为 custom.cfg 起点，
         再把个人差异写在下面；也可以不选择 Preset，继续让 VCFG 管理普通游戏设置。
