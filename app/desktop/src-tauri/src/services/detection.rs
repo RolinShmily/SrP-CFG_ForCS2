@@ -224,14 +224,69 @@ pub fn detect_user_cfg_path(steam_root: &str, account_id: &str) -> Option<String
 
 // ── Steam users ───────────────────────────────────────────────
 
-/// 对应 TS `detectSteamUsers`：解析 loginusers.vdf（core 纯逻辑）。
+/// 对应 TS `detectSteamUsers`：解析 loginusers.vdf，在缺失时扫描 userdata 兜底。
 pub fn detect_steam_users(steam_root: &str) -> LoginUsers {
     let vdf_path = Path::new(steam_root).join("config").join("loginusers.vdf");
-    let Some(content) = std::fs::read_to_string(&vdf_path).ok() else {
-        log::warning("steam-status", "未找到 loginusers.vdf");
-        return LoginUsers::default();
+    let mut parsed = if let Some(content) = std::fs::read_to_string(&vdf_path).ok() {
+        parse_login_users(&content)
+    } else {
+        log::warning("steam-status", "未找到 loginusers.vdf，尝试从 userdata 目录扫描账号");
+        LoginUsers::default()
     };
-    let parsed = parse_login_users(&content);
+
+    // 兜底补全：当未能定位 current_user 时，扫描 steam_root/userdata 下的数字账号文件夹（网吧无盘或缺失 loginusers.vdf 场景）
+    if parsed.current_user.is_none() {
+        let userdata_dir = Path::new(steam_root).join("userdata");
+        if let Ok(entries) = std::fs::read_dir(&userdata_dir) {
+            let mut scanned: Vec<(std::time::SystemTime, SteamUser)> = Vec::new();
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_dir() {
+                    if let Some(folder_name) = path.file_name().and_then(|n| n.to_str()) {
+                        // 排除 "0" (Steam 共享全局目录) 以及非纯数字名称的文件夹
+                        if folder_name != "0" && folder_name.chars().all(|c| c.is_ascii_digit()) {
+                            let mtime = entry
+                                .metadata()
+                                .and_then(|m| m.modified())
+                                .unwrap_or(std::time::SystemTime::UNIX_EPOCH);
+                            let account_id = folder_name.to_string();
+                            let steam_id64 = (account_id.parse::<u64>().unwrap_or(0)
+                                + srp_cfg_core::detection::STEAM_ID_OFFSET)
+                                .to_string();
+
+                            let existing = parsed.users.iter().find(|u| u.account_id == account_id);
+                            let user = existing.cloned().unwrap_or_else(|| SteamUser {
+                                steam_id64,
+                                account_id: account_id.clone(),
+                                persona_name: Some(format!("账号 ({account_id})")),
+                            });
+                            scanned.push((mtime, user));
+                        }
+                    }
+                }
+            }
+
+            // 按更新修改时间由近到远排序，默认推荐最新活跃的账号
+            scanned.sort_by(|a, b| b.0.cmp(&a.0));
+
+            if !scanned.is_empty() {
+                for (_, u) in &scanned {
+                    if !parsed.users.iter().any(|existing| existing.account_id == u.account_id) {
+                        parsed.users.push(u.clone());
+                    }
+                }
+                parsed.current_user = Some(scanned[0].1.clone());
+                parsed.has_auto_login_user = true;
+                log::success(
+                    "steam-status",
+                    &format!(
+                        "已从 userdata 目录自动识别到账号：{}",
+                        scanned[0].1.account_id
+                    ),
+                );
+            }
+        }
+    }
 
     if let Some(user) = &parsed.current_user {
         log::success(

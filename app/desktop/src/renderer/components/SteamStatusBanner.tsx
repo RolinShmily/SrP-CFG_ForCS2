@@ -40,7 +40,7 @@ export default function SteamStatusBanner({ detection }: Props) {
   if (detection.steamPath && !detection.hasAutoLoginUser) {
     issues.push({
       type: "warning",
-      message: "未检测到自动登录的 Steam 用户，请先登录 Steam",
+      message: "未检测到 Steam 登录账号，个人账号目录不可用（不影响游戏目录安装）",
     });
   }
 

@@ -89,7 +89,7 @@ export default function App() {
 
   const pages: Record<Page, React.ReactNode> = {
     quickstart: <QuickStartPage />,
-    download: <DownloadPage />,
+    download: <DownloadPage onNavigate={setPage} />,
     install: (
       <InstallPage
         detection={detection}

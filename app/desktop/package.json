@@ -1,6 +1,6 @@
 {
   "name": "@srp-cfg/desktop",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "private": true,
   "description": "SrP-CFG Installer — CS2 配置预设管理器",
   "main": ".vite/build/main.js",
