@@ -1,8 +1,8 @@
 <h1 align="center">SrP-CFG v3</h1>
-<h4 align="center">面向 CS2 的模块化 CFG Runtime、桌面安装器与可检索中文知识库</h4>
+<h4 align="center">Modular CS2 CFG Runtime, Desktop Installer & Searchable Knowledge Base</h4>
 <div align="center">
 
-<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/app/website/public/favicon.ico" alt="SrP-CFG 图标">
+<img src="https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@refs/heads/main/app/website/public/favicon.ico" alt="SrP-CFG Icon">
 
 [![stars](https://img.shields.io/github/stars/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=green)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
 [![fork](https://img.shields.io/github/forks/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=critical)](https://github.com/RolinShmily/SrP-CFG_ForCS2)
@@ -10,94 +10,98 @@
 [![release](https://img.shields.io/github/release/RolinShmily/SrP-CFG_ForCS2.svg?style=flat&color=blue)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/RolinShmily/SrP-CFG_ForCS2)
 
+<br>
+
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 </div>
 
-## 快速开始
+## Quick Start
 
-> 安装唯一配置包 `SrP-CFG_Runtime_Core.zip`。游戏内输入 `srp_help` 可随时打开完整控制台帮助。
+> Install the unified configuration package `SrP-CFG_Runtime_Core.zip`. In-game, type `srp_help` anytime to open the full console help menu.
 
-SrP-CFG v3 把配置拆成四个明确边界：**Runtime 注册能力，Preset 提供确定性起点，User 保存个人最终覆盖，VCFG 由 CS2 / Steam Cloud 管理当前可持久状态**。普通用户只需维护 `srp-cfg/user/custom.cfg`，无需修改仓库内的功能或案例文件。
+SrP-CFG v3 separates configuration into four explicit boundaries: **Runtime registers capabilities, Presets provide deterministic baselines, User stores personal overrides, and VCFG is managed by CS2 / Steam Cloud for current persistent state**. Regular users only need to maintain `srp-cfg/user/custom.cfg`, without ever modifying core features or preset files in the repository.
 
-1. 从[下载页](https://cfg.srprolin.top/download)获取 MSI / Setup (EXE) 安装包，或直接下载 Runtime Core。
-2. 使用 Desktop 检测 Steam、CS2 与当前账号路径，并安装到 `game/csgo/cfg/`。
-3. 在“我的配置”中选择一种模式：
-   - **Runtime + VCFG**：不启用 `srp_apply_*`，普通设置继续由游戏保存。
-   - **Preset + User**：启用一个 `srp_apply_default / echo / yszh / visionl`，再在下方写个人差异。
-4. 游戏内执行 `srp_reload` 重放 `Runtime → User` 启动链；执行 `srp_help` 查看模块入口。
+1. Download the MSI / Setup (EXE) installer from the [Download Page](https://cfg.srprolin.top/download), or directly download Runtime Core.
+2. Use Desktop to auto-detect Steam, CS2, and active account paths, then install to `game/csgo/cfg/`.
+3. Choose a mode in "My Config":
+   - **Runtime + VCFG**: Do not enable `srp_apply_*`; standard game settings continue to be managed and persisted by CS2.
+   - **Preset + User**: Enable one preset `srp_apply_default / echo / yszh / visionl`, then write personal overrides below.
+4. In-game, run `srp_reload` to replay the `Runtime → User` startup chain; run `srp_help` to browse module entries.
 
-| 入口 | 作用 | 是否覆盖物理按键 |
+| Entrypoint | Description | Overwrites Physical Keybinds |
 | :--- | :--- | :---: |
-| `srp_help` | 打开功能、模式、Preset 与恢复命令索引 | 否 |
-| `srp_apply_default / echo / yszh / visionl` | 应用完整设置与键位案例 | 是 |
-| `srp_practice` / `srp_preview` / `srp_demo` | 只应用对应会话设置 | 否 |
-| 对应的 `*_keys` 入口 | 设置后再安装工作区键位 | 是 |
-| `srp_reset_valve` | 建立可审计的 Valve 偏好与键位测试基线 | 是 |
-| `srp_reload` | 重新注册 Runtime，并最后执行 `user/custom.cfg` | 取决于 User |
+| `srp_help` | Open index for features, modes, presets, and reset commands | No |
+| `srp_apply_default / echo / yszh / visionl` | Apply full settings and keymap presets | Yes |
+| `srp_practice` / `srp_preview` / `srp_demo` | Apply session-specific settings only | No |
+| Corresponding `*_keys` entry | Install workspace keybinds on top of settings | Yes |
+| `srp_reset_valve` | Establish an auditable Valve baseline for preferences and keybinds | Yes |
+| `srp_reload` | Re-register Runtime and execute `user/custom.cfg` last | Depends on User |
 
-## 能力范围
+## Scope of Capabilities
 
-- **Runtime Core**：准星 / 持枪视角、自动视角、刀具、Zeus、跑图、饰品预览、地图指南和 HLAE Demo 模式。
-- **Desktop**：只读检测 VCFG、管理 `custom.cfg`、安装 / 更新 / 回滚 / 卸载 Runtime，并保护用户配置。
-- **文档中心**：按架构、安装、功能、模式和参考分组；先理解覆盖与持久化边界，再启用功能。
-- **指令中心**：中文 / 英文 / 拼音检索 CS2 官方命令；变量卡片展示默认值、引擎 Min/Max 约束、说明范围与明确离散取值。
-- **双知识库 AI**：独立检索 SrP-CFG 源码结构和 CS2 官方指令数据，避免把项目用法与通用 Cvar 语义混在一起。
+- **Runtime Core**: Crosshair / Viewmodel switcher, Auto-view, Knife inspect tricks, Zeus, Practice mode, Skin preview, Map guides, and HLAE Demo mode.
+- **Desktop**: Read-only VCFG inspection, `custom.cfg` management, Runtime Install / Update / Rollback / Uninstall while strictly safeguarding user configuration.
+- **Documentation Center**: Grouped by Architecture, Installation, Features, Modes, and References; understand override and persistence boundaries before enabling features.
+- **Command Center**: Search official CS2 commands via Chinese / English / Pinyin; ConVar cards show default values, engine Min/Max constraints, description scopes, and explicit discrete values.
+- **Dual Knowledge Base AI**: Independently indexes SrP-CFG source code structure and official CS2 command data, avoiding confusion between project-specific mechanisms and general ConVar semantics.
 
-### 项目入口
+### Project Links
 
-- [官网](https://cfg.srprolin.top/)
-- [文档中心](https://cfg.srprolin.top/docs) · [v3 架构](https://cfg.srprolin.top/docs/srpcfg-1) · [使用指南](https://cfg.srprolin.top/docs/srpcfg-3)
-- [CS2 指令中心](https://cfg.srprolin.top/commands)
-- [下载 Installer / Runtime Core](https://cfg.srprolin.top/download)
+- [Official Website](https://cfg.srprolin.top/)
+- [Documentation Center](https://cfg.srprolin.top/docs) · [v3 Architecture](https://cfg.srprolin.top/docs/srpcfg-1) · [User Guide](https://cfg.srprolin.top/docs/srpcfg-3)
+- [CS2 Command Center](https://cfg.srprolin.top/commands)
+- [Download Installer / Runtime Core](https://cfg.srprolin.top/download)
 - [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-- [关于 CFG 你要了解的二三事](https://blog.srprolin.top/posts/srp-cfg/)
+- [A Deep Dive into CS2 CFGs (Blog)](https://blog.srprolin.top/posts/srp-cfg/)
 
-## Desktop 界面
+## Desktop Interface
 
 <p align="center">
-  <img src="./app/website/src/assets/desktop-user-config.png" alt="SrP-CFG Desktop 我的配置页面" width="100%">
+  <img src="./app/website/src/assets/desktop-user-config.png" alt="SrP-CFG Desktop My Config Page" width="100%">
 </p>
 
 <details>
-  <summary><strong>展开查看其余界面</strong></summary>
+  <summary><strong>Expand to view additional interfaces</strong></summary>
   <br>
   <p align="center">
-    <img src="./app/website/src/assets/desktop-quick-start.png" alt="快速开始页面" width="49%">
-    <img src="./app/website/src/assets/desktop-download.png" alt="配置包下载页面" width="49%">
+    <img src="./app/website/src/assets/desktop-quick-start.png" alt="Quick Start Page" width="49%">
+    <img src="./app/website/src/assets/desktop-download.png" alt="Package Download Page" width="49%">
   </p>
   <p align="center">
-    <img src="./app/website/src/assets/desktop-install.png" alt="安装配置页面" width="49%">
-    <img src="./app/website/src/assets/desktop-recovery-center.png" alt="恢复中心页面" width="49%">
+    <img src="./app/website/src/assets/desktop-install.png" alt="Install Config Page" width="49%">
+    <img src="./app/website/src/assets/desktop-recovery-center.png" alt="Recovery Center Page" width="49%">
   </p>
   <p align="center">
-    <img src="./app/website/src/assets/desktop-current-installation.png" alt="当前安装页面" width="49%">
-    <img src="./app/website/src/assets/desktop-about.png" alt="关于页面" width="49%">
+    <img src="./app/website/src/assets/desktop-current-installation.png" alt="Current Installation Page" width="49%">
+    <img src="./app/website/src/assets/desktop-about.png" alt="About Page" width="49%">
   </p>
 </details>
 
-## Installer 安装器
+## Desktop Installer
 
-在 [Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或[项目下载页](https://cfg.srprolin.top/download)获取 MSI / Setup 安装包（Tauri v2 构建，NSIS+MSI，安装包 ≤20MB）。Desktop 把暂存、路径检测、部署、用户配置和恢复边界集中到一个可审计界面中。
+Download the MSI / Setup installer from [Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Download Page](https://cfg.srprolin.top/download) (Built with Tauri v2, NSIS + MSI, bundle size ≤ 20MB). Desktop unifies staging, path detection, deployment, user config, and recovery boundaries into a single auditable interface.
 
-### 功能说明
+### Features
 
-- 自动检测 Steam、CS2、游戏 CFG、Annotations、Video 与账号 CFG 路径
-- 只读统计当前账号 VCFG 的按键绑定与偏好设置，可按需生成 CFG 命令写入 `custom.cfg`
-- 下载唯一 Runtime Core，或导入 ZIP、CFG、TXT 与文件夹
-- 支持覆盖与追加安装，并记录安装器负责的受管文件
-- 在"我的配置"中直接维护 `user/custom.cfg` 与 `srp_apply_*` 起点，支持从 VCFG 自动写入当前按键与偏好
-- 更新、回滚和卸载 Runtime 时保护用户配置
-- 分开管理上一个 Runtime、安装前原文件与只读 VCFG 快照
-- 支持检查更新、实时日志与安装结果审计
+- Auto-detect Steam, CS2, game CFG, Annotations, Video, and user account CFG paths.
+- Read-only analysis of keybindings and preferences from active account VCFG, with one-click CFG command generation into `custom.cfg`.
+- Download the unified Runtime Core, or import ZIP, CFG, TXT, and directories.
+- Support overwrite and append installation modes, tracking all installer-managed files.
+- Directly manage `user/custom.cfg` and `srp_apply_*` baselines in "My Config", with automated VCFG preference extraction.
+- Safeguard user custom configurations during Runtime updates, rollbacks, and uninstallation.
+- Independently manage previous Runtime backups, pre-install original files, and read-only VCFG snapshots.
+- Built-in update checking, real-time logging, and installation audit logs.
 
-## 数据与 AI 工作流
+## Data & AI Workflows
 
-| 工作流 | 触发条件 | 处理链 | 产物 |
+| Workflow | Trigger | Pipeline | Artifacts |
 | :--- | :--- | :--- | :--- |
-| CS2 指令更新 | 每日 02:00 UTC / 手动 | SteamTracking `commands.txt` + `convars.txt` → Workers AI 中文翻译（仅新增项）→ 数值结构化 → Vectorize 增量同步 | `commands.json`、命令向量索引 |
-| SrP-CFG 源码索引 | `config/**` 推送 / 手动 | CFG 解析与校验 → 按命令、绑定、模块和帮助切片 → BGE-M3 embedding → 独立 Vectorize 索引 | SrP-CFG 源码知识库 |
-| 网站问答 | 用户选择知识库并提问 | Turnstile → 查询 embedding → 仅检索所选物理索引 → Llama 3.2 回答 | 来源边界明确的中文回答 |
+| CS2 Command Updates | Daily 02:00 UTC / Manual | SteamTracking `commands.txt` + `convars.txt` → Workers AI Chinese Translation (new entries only) → Value Structuring → Vectorize Incremental Sync | `commands.json`, Command Vector Index |
+| SrP-CFG Source Index | Push to `config/**` / Manual | CFG Parsing & Validation → Slicing by command, binding, module, and help → BGE-M3 Embedding → Dedicated Vectorize Index | SrP-CFG Source Knowledge Base |
+| Website Q&A | User selects knowledge base & queries | Turnstile → Query Embedding → Targeted Vector Index Search → Llama 3.2 Response | Boundary-explicit Chinese / Bilingual answers |
 
-本地验证数据模型：
+Local validation:
 
 ```bash
 python .github/scripts/test_command_values.py
@@ -105,60 +109,56 @@ pnpm check:config-index
 pnpm --filter @srp-cfg/website check
 ```
 
-### 网站 AI 助理配置（Cloudflare Turnstile）
+### Website AI Assistant Setup (Cloudflare Turnstile)
 
-`/commands` 右侧的 AI 配置助理依赖 Cloudflare Turnstile 做人机验证（Site Key 构建期注入前端，Secret Key 仅存于 Worker）：
+The AI assistant on the right panel of `/commands` uses Cloudflare Turnstile for verification (Site Key injected into frontend at build time; Secret Key stored only in Worker):
 
-1. 打开 [Cloudflare Dashboard → Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) → **Add site**，
-   域名填写 `srprolin.top` 与 `cfg.srprolin.top`，获取 **Site Key**（公开）与 **Secret Key**（仅服务端）。
-2. 在 GitHub 仓库 **Settings → Secrets and variables → Actions** 添加：
-   - `PUBLIC_TURNSTILE_SITE_KEY`：Turnstile Site Key
-   - `CLOUDFLARE_TURNSTILE_SECRET`：Turnstile Secret Key
-   - `CLOUDFLARE_API_TOKEN`：Cloudflare API Token（需 Workers Scripts:Edit 权限）
-   - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账号 ID
-3. 重新运行 **Deploy Website** workflow（或推送任意 `app/website/**` 变更触发）。构建时
-   `PUBLIC_TURNSTILE_SITE_KEY` 注入前端（`vite.config.ts` 的 `envPrefix` 已兼容 `PUBLIC_` 前缀），
-   部署后 workflow 会把 Secret Key 写入 Worker 密钥 `TURNSTILE_SECRET_KEY`。
-4. 本地开发：复制 `app/website/.env.example` 为 `app/website/.env` 并填入 Site Key 后运行 `pnpm dev:web`。
+1. Go to [Cloudflare Dashboard → Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) → **Add site**, add domains `srprolin.top` and `cfg.srprolin.top` to obtain the **Site Key** (public) and **Secret Key** (server-only).
+2. Add secrets under GitHub repository **Settings → Secrets and variables → Actions**:
+   - `PUBLIC_TURNSTILE_SITE_KEY`: Turnstile Site Key
+   - `CLOUDFLARE_TURNSTILE_SECRET`: Turnstile Secret Key
+   - `CLOUDFLARE_API_TOKEN`: Cloudflare API Token (requires Workers Scripts:Edit permissions)
+   - `CLOUDFLARE_ACCOUNT_ID`: Cloudflare Account ID
+3. Trigger the **Deploy Website** workflow (or push changes to `app/website/**`). During build, `PUBLIC_TURNSTILE_SITE_KEY` is injected into the frontend (`vite.config.ts` has `envPrefix` supporting `PUBLIC_`), and the workflow writes the secret into Worker secret `TURNSTILE_SECRET_KEY`.
+4. Local development: Copy `app/website/.env.example` to `app/website/.env`, fill in the Site Key, and run `pnpm dev:web`.
 
-> 如果页面提示「Turnstile Site Key 未配置」：说明构建时该变量未进入 `import.meta.env`，
-> 请检查 `.github/workflows/deploy-website.yml` 的 env 注入，以及 Vite `envPrefix` 是否包含 `PUBLIC_`。
+> If the UI displays "Turnstile Site Key not configured", the variable was not included in `import.meta.env` during build. Check the env injection in `.github/workflows/deploy-website.yml` and ensure Vite's `envPrefix` includes `PUBLIC_`.
 
-## 项目结构
+## Project Structure
 
 ```text
 SrP-CFG_ForCS2/
-├── config/                         # 唯一 Runtime Core 的配置源
-│   ├── autoexec.cfg                # CS2 启动入口
-│   ├── annotations/                # 地图指南资源
-│   ├── video/                      # 视频设置资源
+├── config/                         # Configuration sources for unified Runtime Core
+│   ├── autoexec.cfg                # CS2 startup entrypoint
+│   ├── annotations/                # Map guide resources
+│   ├── video/                      # Video setting resources
 │   └── srp-cfg/
-│       ├── runtime/                # 持久 alias 与模块注册
-│       ├── helps/                  # 控制台帮助入口
-│       ├── features/               # 常驻功能模块
-│       ├── modes/                  # 显式工作模式
-│       ├── presets/                # Default / 朋友案例 / Valve 基线
-│       └── user/custom.cfg         # 用户唯一配置窗口
+│       ├── runtime/                # Persistent aliases & module registrations
+│       ├── helps/                  # Console help entrypoints
+│       ├── features/               # Resident feature modules
+│       ├── modes/                  # Explicit working modes
+│       ├── presets/                # Default / Community cases / Valve baselines
+│       └── user/custom.cfg         # User-exclusive customization window
 ├── app/
-│   ├── website/                    # 官网与文档中心（Vite + React Router 7 SSG，2800+ 页预渲染，Velite 内容管线）
-│   ├── desktop/                    # 桌面安装器（Tauri v2 + React 19，Rust 后端 + core 纯逻辑 crate）
-│   └── shared/                     # 共享类型、UI 与内容
-├── .github/                        # CI、Release 与打包脚本
+│   ├── website/                    # Official site & docs (Vite + React Router 7 SSG, 2800+ pre-rendered pages, Velite content pipeline)
+│   ├── desktop/                    # Desktop installer (Tauri v2 + React 19, Rust backend + pure logic `core/` crate)
+│   └── shared/                     # Shared types, UI components, and content
+├── .github/                        # CI, Release, and packaging workflows
 └── README.md
 ```
 
-## 运行环境
+## Prerequisites & Environment
 
-**普通用户：** 下载 `SrP-CFG_Installer.msi`、`SrP-CFG_Setup_x64.exe` 或 `SrP-CFG_Runtime_Core.zip` 即可使用。
+**General Users:** Download `SrP-CFG_Installer.msi`, `SrP-CFG_Setup_x64.exe`, or `SrP-CFG_Runtime_Core.zip` to get started.
 
-**开发者环境：**
+**Developer Environment:**
 
 - [Node.js](https://nodejs.org/) 22+
 - [pnpm](https://pnpm.io/) 10+
-- [Rust](https://www.rust-lang.org/)（MSVC toolchain，构建 Tauri 桌面端）
-- [Visual Studio Build Tools](https://visualstudio.microsoft.com/)（MSVC C++ 工具集）
+- [Rust](https://www.rust-lang.org/) (MSVC toolchain, for Tauri desktop builds)
+- [Visual Studio Build Tools](https://visualstudio.microsoft.com/) (MSVC C++ toolset)
 
-### 开发
+### Development
 
 ```bash
 pnpm install
@@ -166,11 +166,11 @@ pnpm dev:web
 pnpm dev:desktop
 ```
 
-### 构建与校验
+### Build & Verification
 
 ```bash
 pnpm build:web
-pnpm --filter @srp-cfg/desktop tauri build   # NSIS + MSI 安装包（src-tauri/target/release/bundle/）
+pnpm --filter @srp-cfg/desktop tauri build   # NSIS + MSI installer bundles (src-tauri/target/release/bundle/)
 
 pnpm --filter @srp-cfg/website check
 pnpm check:config-index
@@ -181,16 +181,12 @@ python .github/scripts/build_packages.py
 python .github/scripts/validate_cfg.py --packages
 ```
 
-## 技术栈
+## Tech Stack
 
-| 组件 | 技术 |
+| Component | Technology |
 | :--- | :--- |
-| 桌面安装器 | Tauri v2 + React 19（Rust 后端，`core/` 纯逻辑 crate） |
-| 官网 / 文档中心 | Vite + React Router 7（SSG 预渲染 2800+ 页）+ Velite 内容管线 |
-| 指令检索中心 | 构建期 SSG 预渲染 2785 条指令详情 + 客户端检索 |
-| AI 助手 | Cloudflare Workers + Vectorize + Workers AI（`/api/chat`） |
-| 样式 / 组件 | TailwindCSS v4 + `@srp-cfg/ui` 共享组件库 |
-
-## 仓库活动
-
-![仓库活动](https://repobeats.axiom.co/api/embed/55700fe0f86a32b2418b023fa87c8ec214153ef0.svg "Repobeats analytics image")
+| Desktop Installer | Tauri v2 + React 19 (Rust backend, pure logic `core/` crate) |
+| Official Website / Docs | Vite + React Router 7 (SSG pre-rendering 2800+ pages) + Velite content pipeline |
+| Command Center | Build-time SSG pre-rendering 2785 command details + client-side search |
+| AI Assistant | Cloudflare Workers + Vectorize + Workers AI (`/api/chat`) |
+| Styling / Components | TailwindCSS v4 + `@srp-cfg/ui` shared component library |

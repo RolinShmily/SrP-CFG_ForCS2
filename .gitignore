@@ -3,6 +3,7 @@ AGENTS.md
 .claude
 .agents/
 .spec-workflow/
+.memory/
 
 # Local env files (secrets)
 .env
