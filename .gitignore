@@ -13,8 +13,10 @@ AGENTS.md
 # Node
 node_modules/
 app/website/dist/
+app/website/build/
 app/website/.wrangler/
 app/desktop/out/
+app/desktop/dist/
 app/desktop/.vite/
 app/website/.astro/
 
