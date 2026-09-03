@@ -23,6 +23,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap"
           rel="stylesheet"
@@ -30,6 +31,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
           onLoad={(e) => {
             (e.target as HTMLLinkElement).setAttribute("media", "all");
           }}
+        />
+        <link
+          href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css"
+          rel="stylesheet"
         />
         <noscript>
           <link

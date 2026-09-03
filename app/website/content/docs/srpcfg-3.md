@@ -1,102 +1,91 @@
 ---
-title: 使用指南
-description: 从安装 Runtime Core 到选择 Preset、维护个人配置与 Valve 重置
+title: Desktop 使用指南
+description: 从 Desktop 安装器五阶段流水线到组件部署、配置注入与灾备回滚
 ---
 
-## 第一步：安装唯一配置包
+## Desktop 五阶段使用流程
 
-下载：
-
-```text
-SrP-CFG_Runtime_Core.zip
-```
-
-它已经包含完整 Runtime、Default / Echo / YSZH / VisionL、Valve 基线与用户配置入口，不需要再选择用户专属包或 Presets 包。
-
-1. 启动 SrP-CFG Installer。
-2. 在“下载”页面获取 Runtime Core。
-3. 确认 Steam、CS2 与当前 Steam 账号检测正确。
-4. CFG 目标使用推荐的 `game/csgo/cfg/`。
-5. 首次安装通常使用“覆盖安装”。
-6. 打开“我的配置”，决定下面两种模式中的一种。
-
-## 模式 A：只使用 Runtime 功能
-
-在 `user/custom.cfg` 中保持所有 `srp_apply_*` 都被注释：
+SrP-CFG Desktop 将原本复杂的目录查找与配置部署，拆解为清晰的五阶段流水线：
 
 ```text
-// srp_apply_default
-// srp_apply_echo
-// srp_apply_yszh
-// srp_apply_visionl
+1. 组件下载 ──> 2. 组件安装 ──> 3. 配置注入 ──> 4. 当前安装 ──> 5. 恢复中心
+  (获取组件)      (队列与快照)     (模版与VCFG)     (物理文件树)    (灾备回滚)
 ```
 
-启动时 Runtime 只注册功能和 alias，不主动重放普通偏好与实体键位。你可以继续在 CS2 菜单中修改灵敏度、准星、HUD 和按键，由游戏决定如何写入 VCFG / Steam Cloud。
+---
 
-## 模式 B：Preset 起点 + 个人配置
+## 阶段一：组件下载 (Download)
 
-只启用一个起点，并把所有个人差异写在它下面：
+在桌面端左侧导航进入「**组件下载**」：
 
-```text
-// ─── SrP-CFG Preset Layer ───
-srp_apply_yszh
-// ─── Preset Layer End ───
+1. **官方解耦组件**：
+   - **Runtime Core**（核心必须）：包含 `autoexec.cfg`、完整 `srp-cfg/` 核心机制、Preset 模版案例与用户配置入口。
+   - **Map Guides**（可选标点）：包含各竞技地图的跑位与道具投掷标点集。
+   - **Video Settings**（可选画质）：包含兼顾竞技帧率与画质的 CS2 视频配置模版。
+2. **下载与导入模式**：
+   - 每个组件均支持「国内镜像加速」与「GitHub 直连」双通道，下载后自动进入暂存区并加入预安装队列。
+   - 亦可直接拖入任意自定义的第三方 ZIP、CFG、TXT 或文件夹，安装器会自动进行智能分类与解压暂存。
 
-// ─── SrP-CFG User Layer ───
-// 我的最终语音键
-unbind "v"
-bind "mouse5" "+voicerecord"
+---
 
-// 我的灵敏度与准星
-sensitivity 0.95
-c06
-cyan
-// ─── User Layer End ───
-```
+## 阶段二：组件安装 (Install)
 
-每次启动都会依次执行"Runtime → YSZH → 个人差异"。后面的同名命令会覆盖 Preset，所以不需要复制或修改仓库内的 YSZH 文件。
+进入「**组件安装**」页面：
 
+1. **环境与路径自检**：安装器会自动探测 Steam 根目录、CS2 游戏路径、当前登录 Steam 账号以及各组件目标路径（如 `game/csgo/cfg/`、`game/csgo/annotations/`）。
+2. **预安装队列与差异审计**：查看待安装的配置包，展开「查看待安装文件明细」，提前审查每一项文件的 **[新增]**、**[覆盖]** 或 **[受保护]** 状态。
+3. **独立组件开关**：根据需求自由勾选/取消勾选 Runtime Core、Map Guides 或 Video Config。
+4. **安全保护与自动快照**：
+   - 勾选「自动备份受影响目录（推荐）」：安装执行瞬间会自动打包生成全量快照 ZIP 归档。
+   - 勾选「保护 custom.cfg」：严禁任何安装或更新操作覆盖你的个人配置。
+5. 点击「**立即安装所选组件**」完成物理部署。
 
-## 以 YSZH 用户为例
+---
 
-假设你希望取得 YSZH 的灵敏度、画面、准星和偏好设置，同时保留自己的部分按键：
+## 阶段三：配置注入与偏好定制 (Config Injection)
 
-1. 在安装器“我的配置”页面点击 `srp_apply_yszh`。
-2. 在编辑器中检查该命令只有一行处于启用状态。
-3. 把自己的按键、灵敏度或其他差异写在它下面。
-4. 保存；若 CS2 已运行，在控制台执行 `srp_reload`。
-5. 以后需要持久保留的改动继续写在同一文件中。
+进入「**配置注入**」页面，在此管理唯一的 `srp-cfg/user/custom.cfg`：
 
-如果只在游戏里修改了一个被 YSZH 定义的字段，当前会话会变化，但下一次启动或 `srp_reload` 会再次应用 YSZH。此时把最终值写进 `custom.cfg`，或者注释掉 Preset 命令、改由 VCFG 管理即可。
+### 1. 预设模版快速切换 (Presets)
+顶部提供了多种预设起点，点击即可在编辑器中一键置换：
+- **RoL1n 自用模版 (Default)**：`srp_apply_default`
+- **Echo 模版**：`srp_apply_echo`
+- **YSZH 模版**：`srp_apply_yszh`
+- **VisionL 模版**：`srp_apply_visionl`
+- **CS2 默认设置**：`srp_reset_valve`
+- **无预设 / 纯 CLI 模式**：注释全部预设，完全交由游戏云存档与手动控制台指令
 
-## Default 与其他案例
+### 2. VCFG 偏好智能提取助手
+若你希望保留当前游戏账号里的实际按键与偏好：
+1. 检测卡片会自动匹配当前 Steam 账号的 `cs2_user_keys.vcfg` 与 `cs2_user_convars.vcfg`。
+2. 点击「**读取并注入 VCFG**」，安装器只读解析并对比 Valve 官方默认值，只提取你改过的按键与参数。
+3. 提取结果安全插入在 Preset Layer 与 User Layer 之间。
+4. 若后续不需要，可随时点击「**一键撤销注入**」无损移除。
 
-可选起点为：
+### 3. 内置专业代码编辑器 (CodeMirror 6)
+- 配备 CS2 专有语法高亮（高亮 alias、bind、cvar、武器指令、按键与注释）。
+- 底部直接编写你的最终覆盖代码，快捷键 `Ctrl + S` 快速保存。
 
-```text
-srp_apply_default
-srp_apply_echo
-srp_apply_yszh
-srp_apply_visionl
-```
+---
 
-点击安装器按钮只会修改尚未保存的编辑器草稿；保存后才写入磁盘。四个命令都不会再次调用 `custom.cfg`，因此可以安全地位于该文件顶部。
+## 阶段四：当前安装与文件树 (Current Installation)
 
-若在游戏控制台手动执行 `srp_apply_yszh`，只会立即应用 YSZH，不会自动补上个人覆盖。要按完整配置重新执行，请使用：
+进入「**当前安装**」页面：
+- 实时物理扫描 CS2 安装目录下的三大组件根路径（游戏 CFG、标点集、画质配置）。
+- 点击任意文件节点，右侧即可通过内置编辑器就地查看源码、编辑并保存修改。
 
-```text
-srp_reload
-```
+---
 
-## 从 VCFG 写入当前配置
+## 阶段五：恢复中心与历史快照 (Recovery Center)
 
-桌面安装器的"我的配置"页面支持"写入 VCFG 当前配置"功能：
+进入「**恢复中心**」页面：
+- **全量快照归档**：展示历史每次安装前自动生成的带时间戳全量备份。
+- **一键无损回滚**：随时点击「恢复此快照」，即可将当前环境还原到对应的历史时间点。
+- **自定义保留上限**：可在右上角设定快照最大保留份数（默认为 10 份，采用先进先出 FIFO 自动清理），亦可手动创建永久命名快照。
 
-1. 点击"读取 VCFG"，安装器只读解析当前账号的三个 VCFG 文件。
-2. 勾选要写入的类别（按键绑定、模拟轴绑定、个人偏好、机器设置）。
-3. 点击"写入 custom.cfg"，安装器对比 `presets/valve/settings.cfg` 中的 Valve 默认值，只写入你实际改过的 ConVar；按键绑定全量导出。
-4. 生成结果自动插入到 Preset Layer 和 User Layer 之间的独立分区，重复写入会替换上一次的内容。
-5. 可随时点击"撤销 VCFG 写入"一键移除导入块；撤销操作跨会话有效（标记保存在文件中）。
+---
+
+## 游戏内常用命令与调试
 
 写入后的 `custom.cfg` 布局：
 

@@ -10,7 +10,7 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { readdirSync, writeFileSync } from "fs";
+import { existsSync, readdirSync, writeFileSync } from "fs";
 import { join, relative, sep } from "path";
 import { defineConfig, type PluginOption } from "vite";
 import { fetchLatestVersion } from "./src/data/version";
@@ -46,6 +46,7 @@ function sitemapPlugin(): PluginOption {
     apply: "build",
     closeBundle() {
       const outDir = "build/client";
+      if (!existsSync(outDir)) return;
       const urls: string[] = [];
       const walk = (dir: string) => {
         for (const entry of readdirSync(dir, { withFileTypes: true })) {

@@ -27,12 +27,33 @@ export const installers = [
 
 export const packages = [
   {
-    name: "Runtime Core",
+    name: "Runtime Core 核心配置包",
     file: "SrP-CFG_Runtime_Core.zip",
     mirrorUrl: mirror("SrP-CFG_Runtime_Core.zip"),
     githubUrl: direct("SrP-CFG_Runtime_Core.zip"),
-    desc: "唯一配置包：Runtime + User + 内置 Preset 案例；在 custom.cfg 中选择起点并写入个人差异",
-    badge: "推荐",
+    desc: "核心运行时：包含 autoexec.cfg、srp-cfg/ 核心功能、RoL1n / Echo / YSZH / VisionL 预设案例与 user/custom.cfg 用户入口",
+    badge: "核心推荐",
     featured: true,
+    targetDir: "game/csgo/cfg/",
+  },
+  {
+    name: "Map Guides 跑图道具标点集",
+    file: "SrP-CFG_Map_Guides.zip",
+    mirrorUrl: mirror("SrP-CFG_Map_Guides.zip"),
+    githubUrl: direct("SrP-CFG_Map_Guides.zip"),
+    desc: "解耦扩展包：全地图跑位与烟闪道具标点 annotations（包含 Dust2、Mirage、Inferno、Ancient 等单级目录规范标点）",
+    badge: "可选扩展",
+    featured: false,
+    targetDir: "game/csgo/annotations/",
+  },
+  {
+    name: "Video Settings 视频画质配置",
+    file: "SrP-CFG_Video_Settings.zip",
+    mirrorUrl: mirror("SrP-CFG_Video_Settings.zip"),
+    githubUrl: direct("SrP-CFG_Video_Settings.zip"),
+    desc: "解耦扩展包：CS2 推荐视频与图形设置模版 cs2_video.txt，兼顾竞技帧率稳定性与画面清晰度",
+    badge: "可选扩展",
+    featured: false,
+    targetDir: "game/csgo/cfg/",
   },
 ];

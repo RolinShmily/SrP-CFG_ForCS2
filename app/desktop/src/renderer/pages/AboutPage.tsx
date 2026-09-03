@@ -244,6 +244,38 @@ export default function AboutPage() {
             </div>
           </Card>
 
+          {/* Acknowledgements */}
+          <Card padding="lg" className="space-y-2.5">
+            <div className="flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <div className="space-y-1 flex-1">
+                <div className="text-xs font-semibold text-text flex items-center justify-between">
+                  <span>鸣谢 (Acknowledgements)</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">
+                    OFL-1.1
+                  </span>
+                </div>
+                <p className="text-[11px] text-text-muted leading-relaxed">
+                  感谢 <strong className="text-text">Maple Mono</strong> 开源等宽字体项目（by subframe7536，基于 SIL Open Font License 1.1 开源）。本项目桌面套件代码编辑器与文档中心均采用其作为核心等宽字体。
+                </p>
+                <div className="pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.api.openExternal(
+                        "https://github.com/subframe7536/maple-font"
+                      )
+                    }
+                    className="text-[11px] text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition cursor-pointer"
+                  >
+                    <span>访问 Maple Mono 仓库</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Card>
+
           {/* License */}
           <Card padding="lg" className="space-y-2.5">
             <div className="flex items-start gap-3">

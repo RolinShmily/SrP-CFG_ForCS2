@@ -42,7 +42,7 @@ export default function DownloadPage() {
           level="h1"
           label="Download"
           title="下载中心"
-          description="获取 Desktop 安装器与唯一 Runtime Core。所有 v3 功能、Preset 案例和用户入口都在同一个配置包中。"
+          description="获取 Desktop 桌面安装器与解耦配置组件。所有功能、Preset 模版案例与用户入口清晰独立，按需安装。"
         />
 
         <div className="mb-20">
@@ -90,66 +90,66 @@ export default function DownloadPage() {
         <div>
           <h2 className="mb-8 flex items-center gap-3 font-display text-2xl font-semibold">
             <Package className="h-6 w-6 text-teal" />
-            v3 配置包
+            模块化配置包
           </h2>
           <div className="mb-6 rounded-[8px] border border-[rgba(232,121,12,0.18)] bg-accent-bg p-4 text-sm leading-[1.75] text-text-secondary">
-            现在只发行 Runtime Core。安装后在{" "}
-            <code className="font-mono text-[0.9em] text-accent-light">user/custom.cfg</code>{" "}
-            中启用一个
-            <code className="font-mono text-[0.9em] text-accent-light">srp_apply_*</code>{" "}
-            作为起点，再把个人差异写在下面；也可以完全交给 VCFG。
+            采用解耦组件架构：核心只需安装 <strong className="text-accent">Runtime Core</strong>；地图道具标点集与画质模版作为可选扩展包按需获取。在 Desktop 中亦可直接一键在线下载与分流安装。
           </div>
-          <div className="grid grid-cols-1 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {packages.map((pkg) => (
               <div key={pkg.file} className="group block">
-                <div className={pkg.featured ? featuredCard : plainCard}>
-                  <div className="mb-3 flex items-center gap-3">
-                    <div
-                      className={
-                        pkg.featured
-                          ? "flex h-10 w-10 items-center justify-center rounded-[6px] border border-[rgba(232,121,12,0.12)] bg-accent-bg"
-                          : "flex h-10 w-10 items-center justify-center rounded-[6px] border border-border bg-bg-raised"
-                      }
-                    >
-                      <Download
+                <div className={`${pkg.featured ? featuredCard : plainCard} flex h-full flex-col justify-between`}>
+                  <div>
+                    <div className="mb-3 flex items-center justify-between">
+                      <div
                         className={
                           pkg.featured
-                            ? "h-[18px] w-[18px] text-accent"
-                            : "h-[18px] w-[18px] text-text-muted"
+                            ? "flex h-10 w-10 items-center justify-center rounded-[6px] border border-[rgba(232,121,12,0.12)] bg-accent-bg"
+                            : "flex h-10 w-10 items-center justify-center rounded-[6px] border border-border bg-bg-raised"
                         }
-                        strokeWidth={1.8}
-                      />
-                    </div>
-                    {pkg.featured ? (
-                      <span className="rounded bg-accent px-2 py-1 font-mono text-xs font-bold tracking-wide text-bg">
-                        {pkg.badge}
-                      </span>
-                    ) : (
-                      <Badge
-                        variant="default"
-                        outline
-                        className="bg-bg-raised px-2 py-1 text-xs font-bold tracking-wide"
                       >
-                        {pkg.badge}
-                      </Badge>
-                    )}
+                        <Download
+                          className={
+                            pkg.featured
+                              ? "h-[18px] w-[18px] text-accent"
+                              : "h-[18px] w-[18px] text-text-muted"
+                          }
+                          strokeWidth={1.8}
+                        />
+                      </div>
+                      {pkg.featured ? (
+                        <span className="rounded bg-accent px-2 py-1 font-mono text-xs font-bold tracking-wide text-bg">
+                          {pkg.badge}
+                        </span>
+                      ) : (
+                        <Badge
+                          variant="default"
+                          outline
+                          className="bg-bg-raised px-2 py-1 text-xs font-bold tracking-wide"
+                        >
+                          {pkg.badge}
+                        </Badge>
+                      )}
+                    </div>
+                    <h3 className="mb-1.5 font-display text-lg font-semibold transition-colors group-hover:text-accent">
+                      {pkg.name}
+                    </h3>
+                    <p className="mb-4 text-sm leading-7 text-text-secondary">{pkg.desc}</p>
                   </div>
-                  <h3 className="mb-1.5 font-display text-lg font-semibold transition-colors group-hover:text-accent">
-                    {pkg.name}
-                  </h3>
-                  <p className="mb-4 text-sm leading-7 text-text-secondary">{pkg.desc}</p>
-                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                    <span className="font-mono text-xs text-text-faint">{pkg.file}</span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <a href={pkg.mirrorUrl} target="_blank" rel="noopener" className={downloadPrimary}>
-                      <Download className="h-4 w-4" />
-                      国内加速下载
-                    </a>
-                    <a href={pkg.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
-                      <Github className="h-4 w-4" />
-                      GitHub 源下载
-                    </a>
+                  <div>
+                    <div className="mb-4 border-t border-border pt-3">
+                      <span className="font-mono text-xs text-text-faint">{pkg.file}</span>
+                    </div>
+                    <div className="flex flex-col gap-2.5">
+                      <a href={pkg.mirrorUrl} target="_blank" rel="noopener" className={`${downloadPrimary} justify-center`}>
+                        <Download className="h-4 w-4" />
+                        国内加速下载
+                      </a>
+                      <a href={pkg.githubUrl} target="_blank" rel="noopener" className={`${downloadSecondary} justify-center`}>
+                        <Github className="h-4 w-4" />
+                        GitHub 源下载
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -162,10 +162,9 @@ export default function DownloadPage() {
             <Info className="h-[18px] w-[18px] text-accent" strokeWidth={1.8} />
           </div>
           <div>
-            <h2 className="mb-1 font-display text-base font-semibold">使用说明</h2>
+            <h2 className="mb-1 font-display text-base font-semibold">安装与使用说明</h2>
             <p className="text-sm leading-7 text-text-secondary">
-              下载安装器后双击运行，将配置包（ZIP）直接拖入窗口即可自动完成安装。每个下载项提供
-              国内加速（镜像）与 GitHub 源（直连）两个入口，均指向官方 GitHub Release 资产；所有文件也可在{" "}
+              下载桌面安装器（推荐 MSI 安装向导）运行后，可直接在应用内通过国内加速通道下载组件，或手动拖入本地 ZIP/CFG 配置包。安装器内置自动路径探测、冲突检视、VCFG 偏好一键提取以及灾备全量快照自动归档机制；每个下载项均直连 GitHub Release 官方发布源，亦可在{" "}
               <a
                 href={RELEASES_URL}
                 target="_blank"
@@ -174,7 +173,7 @@ export default function DownloadPage() {
               >
                 GitHub Releases
               </a>{" "}
-              找到。
+              查阅历史发布。
             </p>
           </div>
         </Card>

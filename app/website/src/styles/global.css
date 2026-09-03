@@ -61,6 +61,65 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Maple Mono NF CN 本地字体与回退声明 */
+@font-face {
+  font-family: "Maple Mono NF CN";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("Maple Mono NF CN"),
+    local("Maple Mono NF CN Regular"),
+    local("MapleMono-NF-CN"),
+    local("MapleMono-NF-CN-Regular"),
+    local("Maple Mono CN"),
+    local("Maple Mono CN Regular"),
+    local("MapleMono-CN"),
+    local("Maple Mono NF"),
+    local("Maple Mono"),
+    local("MapleMono");
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src:
+    local("Maple Mono NF CN Bold"),
+    local("MapleMono-NF-CN-Bold"),
+    local("Maple Mono CN Bold"),
+    local("MapleMono-CN-Bold"),
+    local("Maple Mono NF Bold"),
+    local("Maple Mono Bold"),
+    local("MapleMono-Bold");
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("Maple Mono NF CN Italic"),
+    local("MapleMono-NF-CN-Italic"),
+    local("Maple Mono CN Italic"),
+    local("MapleMono-CN-Italic"),
+    local("Maple Mono NF Italic"),
+    local("Maple Mono Italic"),
+    local("MapleMono-Italic");
+}
+
+code,
+pre,
+kbd,
+samp,
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-ligatures: normal;
+}
+
 button,
 input,
 select,
@@ -108,10 +167,19 @@ main {
 
 .tech-grid {
   background-image:
-    linear-gradient(rgba(144, 155, 176, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(144, 155, 176, 0.055) 1px, transparent 1px);
+    linear-gradient(rgba(144, 155, 176, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(144, 155, 176, 0.05) 1px, transparent 1px);
   background-size: 32px 32px;
-  mask-image: linear-gradient(to bottom, black 0%, transparent 88%);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 92%);
+}
+
+.tech-grid-animated {
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(242, 138, 26, 0.08) 0%, transparent 60%),
+    linear-gradient(rgba(144, 155, 176, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(144, 155, 176, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 36px 36px, 36px 36px;
+  mask-image: linear-gradient(to bottom, black 10%, rgba(0,0,0,0.8) 70%, transparent 100%);
 }
 
 .home-section {
@@ -136,6 +204,115 @@ main {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 动态光晕与氛围动画 */
+@keyframes aurora-float-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate(-30px, 20px) scale(1.12);
+    opacity: 0.7;
+  }
+}
+
+@keyframes aurora-float-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(40px, -25px) scale(1.18);
+    opacity: 0.6;
+  }
+}
+
+@keyframes laser-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(242, 138, 26, 0.45);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(242, 138, 26, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(242, 138, 26, 0);
+  }
+}
+
+@keyframes float-y {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shimmer-slide {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-aurora-1 {
+  animation: aurora-float-1 12s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-float-2 15s ease-in-out infinite;
+}
+
+.animate-laser {
+  animation: laser-sweep 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-y 5s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 交互卡片发光边框与平滑过渡 */
+.glow-card-interactive {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-card-interactive:hover {
+  border-color: rgba(242, 138, 26, 0.4);
+  box-shadow: 0 12px 36px -8px rgba(242, 138, 26, 0.14), 0 0 0 1px rgba(242, 138, 26, 0.2);
+  transform: translateY(-2px);
+}
+
+.glow-card-teal:hover {
+  border-color: rgba(94, 234, 212, 0.4);
+  box-shadow: 0 12px 36px -8px rgba(94, 234, 212, 0.14), 0 0 0 1px rgba(94, 234, 212, 0.2);
+  transform: translateY(-2px);
+}
+
+.glow-card-blue:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 12px 36px -8px rgba(96, 165, 250, 0.14), 0 0 0 1px rgba(96, 165, 250, 0.2);
+  transform: translateY(-2px);
 }
 
 ::-webkit-scrollbar {

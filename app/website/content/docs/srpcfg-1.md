@@ -1,9 +1,9 @@
 ---
-title: SrP-CFG v3
+title: 架构分层与设计原理
 description: 功能 Runtime、内置 Preset、用户配置和 VCFG 概览
 ---
 
-## v3 解决什么问题
+## 解决什么问题
 
 CS2 的 VCFG 可以保存当前键位与可归档 ConVar，却不能保存 alias 实现、多文件模块、注释和项目结构。SrP-CFG 因此引入了分层架构，将职责边界清晰划分。
 
@@ -36,13 +36,13 @@ Preset 不是独立启动层，它是 User 层可以调用的一组 Runtime 内�
 
 ---
 
-## 只有一个配置包
+## 解耦组件与包结构
 
-```text
-SrP-CFG_Runtime_Core.zip
-```
+v3 将功能与资源彻底解耦为三个独立的标准化包：
 
-它包含全部 Runtime、Default / Echo / YSZH / VisionL、Valve 基线、`user/custom.cfg`、Feature、Mode 和帮助文件。内置 Preset 不再对应独立 ZIP。
+1. **核心运行时 (`SrP-CFG_Runtime_Core.zip`)**：包含 `autoexec.cfg`、完整 `srp-cfg/` 核心机制、RoL1n / Echo / YSZH / VisionL 预设案例模版、Valve 纯净基线、`user/custom.cfg`、Feature、Mode 与帮助系统。
+2. **跑图道具标点集 (`SrP-CFG_Map_Guides.zip`)**：全地图道具跑位标点集（采用 KV3 格式，存放在 `game/csgo/annotations/<Map>/<Map>.txt` 单级目录中）。
+3. **视频画质配置 (`SrP-CFG_Video_Settings.zip`)**：CS2 推荐视频画质与图形调优模版 `cs2_video.txt`。
 
 ### autoexec 启动只有两步
 
@@ -81,9 +81,9 @@ bind "mouse5" "+voicerecord"
 
 ---
 
-## 内置 Preset
+## 内置 Preset 模版
 
-Default、Echo、YSZH、VisionL 位于：
+RoL1n 自用 (Default)、Echo、YSZH、VisionL 位于：
 
 ```text
 presets/<name>/
@@ -92,13 +92,14 @@ presets/<name>/
 └── apply.cfg      # 继承与执行顺序
 ```
 
-Runtime 注册了四个入口：
+Runtime 注册了对应的快速入口：
 
 ```text
-srp_apply_default
-srp_apply_echo
-srp_apply_yszh
-srp_apply_visionl
+srp_apply_default   // RoL1n 自用模版 (Default)
+srp_apply_echo      // Echo 模版
+srp_apply_yszh      // YSZH 模版
+srp_apply_visionl   // VisionL 模版
+srp_reset_valve     // CS2 默认设置基线
 ```
 
 每个入口只执行对应 Preset 的 `apply.cfg`，不会再次执行 User。这一单向关系既能避免 `custom.cfg → srp_apply_* → custom.cfg` 的无限递归，也能保证位于 Preset 命令之后的个人设置自然覆盖案例值。

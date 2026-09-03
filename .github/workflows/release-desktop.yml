@@ -58,11 +58,11 @@ jobs:
           echo "📌 Comparing $PREV_TAG → ${{ github.ref_name }}"
           CHANGED=$(git diff --name-only "$PREV_TAG" HEAD)
 
-          if echo "$CHANGED" | grep -qE '^app/desktop/'; then
-            echo "✅ Desktop files changed, will build MSI and portable"
+          if echo "$CHANGED" | grep -qE '^app/(desktop|shared)/'; then
+            echo "✅ Desktop files changed, will build and mark desktop update"
             echo "has_desktop_changes=true" >> $GITHUB_OUTPUT
           else
-            echo "ℹ️  No desktop changes detected, skipping build"
+            echo "ℹ️  No desktop files changed (config-only change)"
             echo "has_desktop_changes=false" >> $GITHUB_OUTPUT
           fi
 
@@ -143,7 +143,7 @@ jobs:
       - name: Stage NSIS setup
         shell: bash
         run: |
-          NSIS=$(ls app/desktop/src-tauri/target/release/bundle/nsis/*-setup.exe | head -1)
+          NSIS=$(ls app/desktop/src-tauri/target/release/bundle/nsis/*.exe | head -1)
           cp "$NSIS" "SrP-CFG_Setup_x64.exe"
           echo "✅ NSIS: SrP-CFG_Setup_x64.exe"
           ls -lh "SrP-CFG_Setup_x64.exe"
