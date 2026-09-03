@@ -68,7 +68,7 @@ const contributors = [
 ];
 
 export default function AboutPage() {
-  const [version, setVersion] = useState<string>("3.2.4");
+  const [version, setVersion] = useState<string>("3.3.0");
 
   useEffect(() => {
     window.api

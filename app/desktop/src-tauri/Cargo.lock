@@ -3328,7 +3328,7 @@ dependencies = [
 
 [[package]]
 name = "srp-cfg-desktop"
-version = "3.2.4"
+version = "3.3.0"
 dependencies = [
  "chrono",
  "serde",
