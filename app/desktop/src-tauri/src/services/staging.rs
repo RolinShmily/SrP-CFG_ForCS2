@@ -10,6 +10,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use serde::{Deserialize, Serialize};
+
 use srp_cfg_core::{
     classify_file, folders_to_remove, inspect_cfg_files, is_timestamp_folder,
     next_timestamp_folder, staging_destination, upload_file_type, StagedCategory, UploadFileType,
@@ -521,6 +523,72 @@ pub fn inspect_config_directory(cfg_dir: &Path) -> (String, usize) {
 
 pub fn inspect_staged_config() -> (String, usize) {
     inspect_config_directory(&get_staging_path("cfg"))
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ComponentStagingInfo {
+    pub component_id: String,
+    pub file_count: usize,
+    pub total_size: u64,
+    pub last_modified: Option<u64>,
+    pub is_ready: bool,
+    pub sample_files: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StagingStatus {
+    pub cfg: ComponentStagingInfo,
+    pub annotations: ComponentStagingInfo,
+    pub video: ComponentStagingInfo,
+}
+
+pub fn scan_component_staging(category: &str) -> ComponentStagingInfo {
+    let dir = get_staging_path(category);
+    let mut file_count = 0;
+    let mut total_size = 0u64;
+    let mut last_modified: Option<u64> = None;
+    let mut sample_files = Vec::new();
+
+    if dir.exists() {
+        for f in walk_sync_abs(&dir) {
+            if f.is_file() {
+                file_count += 1;
+                if let Ok(meta) = f.metadata() {
+                    total_size += meta.len();
+                    if let Ok(mtime) = meta.modified() {
+                        if let Ok(dur) = mtime.duration_since(std::time::UNIX_EPOCH) {
+                            let ms = dur.as_millis() as u64;
+                            last_modified = Some(last_modified.map_or(ms, |old| old.max(ms)));
+                        }
+                    }
+                }
+                if sample_files.len() < 5 {
+                    if let Ok(rel) = f.strip_prefix(&dir) {
+                        sample_files.push(rel.to_string_lossy().to_string());
+                    }
+                }
+            }
+        }
+    }
+
+    ComponentStagingInfo {
+        component_id: category.to_string(),
+        file_count,
+        total_size,
+        last_modified,
+        is_ready: file_count > 0,
+        sample_files,
+    }
+}
+
+pub fn get_staging_status() -> StagingStatus {
+    StagingStatus {
+        cfg: scan_component_staging("cfg"),
+        annotations: scan_component_staging("annotations"),
+        video: scan_component_staging("video"),
+    }
 }
 
 // ── Install From Upload ───────────────────────────────────────

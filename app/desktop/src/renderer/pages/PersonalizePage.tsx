@@ -1,37 +1,61 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
-  ArrowRight,
-  Braces,
   Check,
-  Database,
   FolderOpen,
   Loader2,
   RotateCcw,
-  Save,
-  ShieldCheck,
-  Undo2,
+  Sparkles,
   UserRoundCog,
   Wand2,
 } from "lucide-react";
 import type { DetectionResult, UserConfigDocument, VcfgSnapshot } from "../types";
-import { Badge, CopyButton, PageHeader } from "@srp-cfg/ui";
+import { PageHeader } from "@srp-cfg/ui";
+import { CodeEditor } from "../components/CodeEditor";
 
 interface Props {
   detection: DetectionResult | null;
   onDirtyChange: (dirty: boolean) => void;
 }
 
-function formatModifiedAt(value: number | null): string {
-  if (!value) return "尚未写入磁盘";
-  return new Intl.DateTimeFormat("zh-CN", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).format(new Date(value));
-}
+const PRESETS = [
+  {
+    id: "none",
+    name: "无预设 (纯 CLI 模式)",
+    command: "",
+    desc: "不绑定任何额外键位，纯净运行 Runtime Core，在控制台直接输入 CLI 命令即可调用全套功能",
+  },
+  {
+    id: "default",
+    name: "SrP 推荐模版 (Default)",
+    command: "srp_apply_default",
+    desc: "SrP-CFG 推荐的开箱即用综合模版，包含全套常用快捷键与功能绑定",
+  },
+  {
+    id: "echo",
+    name: "Echo 方案",
+    command: "srp_apply_echo",
+    desc: "偏向竞技与简约的键位和准星习惯",
+  },
+  {
+    id: "yszh",
+    name: "YSZH 方案",
+    command: "srp_apply_yszh",
+    desc: "侧重道具练习与投掷物快速定位",
+  },
+  {
+    id: "visionl",
+    name: "VisionL 方案",
+    command: "srp_apply_visionl",
+    desc: "针对高刷新率与轻量化 HUD 的定制方案",
+  },
+  {
+    id: "valve",
+    name: "CS2 默认设置",
+    command: "srp_apply_valve",
+    desc: "还原 CS2 官方默认按键与准星设置",
+  },
+];
 
 export default function PersonalizePage({ detection, onDirtyChange }: Props) {
   const [document, setDocument] = useState<UserConfigDocument | null>(null);
@@ -43,6 +67,8 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
   const [vcfgSnapshot, setVcfgSnapshot] = useState<VcfgSnapshot | null>(null);
   const [importing, setImporting] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [saveToast, setSaveToast] = useState(false);
+
   const [importCategories, setImportCategories] = useState({
     bindings: true,
     analogBindings: false,
@@ -61,7 +87,7 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : String(reason));
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 250);
     }
   }, []);
 
@@ -71,22 +97,11 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
   }, [detection?.cs2CfgPath, detection?.userCfgPath, load]);
 
   const dirty = content !== savedContent;
-  const lineCount = useMemo(() => (content.length === 0 ? 0 : content.split(/\r?\n/).length), [content]);
 
   useEffect(() => {
     onDirtyChange(dirty);
     return () => onDirtyChange(false);
   }, [dirty, onDirtyChange]);
-
-  useEffect(() => {
-    if (!dirty) return;
-    const preventClose = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", preventClose);
-    return () => window.removeEventListener("beforeunload", preventClose);
-  }, [dirty]);
 
   const save = useCallback(async () => {
     setSaving(true);
@@ -96,6 +111,8 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
       setDocument(next);
       setContent(next.content);
       setSavedContent(next.content);
+      setSaveToast(true);
+      setTimeout(() => setSaveToast(false), 3000);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : String(reason));
     } finally {
@@ -103,429 +120,245 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
     }
   }, [content]);
 
-  const setBasePreset = useCallback((preset: string) => {
-    const command = `srp_apply_${preset}`;
-    const presetLine = /^\s*(?:\/\/\s*)?(srp_apply_(?:default|echo|yszh|visionl))\s*$/i;
-    let selected = false;
-    const lines = content.split(/\r?\n/).map((line) => {
-      const match = line.match(presetLine);
-      if (!match) return line;
-      const current = match[1].toLowerCase();
-      if (current === command && !selected) {
-        selected = true;
-        return command;
+  // 检测当前启用的预设
+  const activePreset = useMemo(() => {
+    for (const p of PRESETS) {
+      if (!p.command) continue;
+      const reg = new RegExp(`^\\s*${p.command}\\b`, "m");
+      if (reg.test(content)) return p.id;
+    }
+    return "none";
+  }, [content]);
+
+  // 切换预设
+  const handleSelectPreset = (presetId: string) => {
+    const targetPreset = PRESETS.find((p) => p.id === presetId);
+    if (!targetPreset) return;
+
+    if (presetId === "none" || !targetPreset.command) {
+      // 注释所有已有的 srp_apply_* 命令
+      const lines = content.split(/\r?\n/).map((line) => {
+        const match = line.match(/^\s*(srp_apply_(?:default|echo|yszh|visionl|valve))\b/i);
+        if (match) {
+          return `// ${line.trim()}`;
+        }
+        return line;
+      });
+      setContent(lines.join("\n"));
+      return;
+    }
+
+    let updated = content;
+    // 注释或替换已有的预设行
+    let found = false;
+    const lines = updated.split(/\r?\n/).map((line) => {
+      const match = line.match(/^\s*(?:\/\/\s*)?(srp_apply_(?:default|echo|yszh|visionl|valve))\b/i);
+      if (match) {
+        if (!found) {
+          found = true;
+          return targetPreset.command;
+        }
+        return `// ${match[1]}`;
       }
-      return `// ${current}`;
+      return line;
     });
 
-    if (!selected) lines.unshift(command, "");
-    setContent(lines.join("\n"));
-  }, [content]);
+    if (found) {
+      setContent(lines.join("\n"));
+    } else {
+      setContent(`${targetPreset.command}\n\n${content}`);
+    }
+  };
 
-  const clearBasePreset = useCallback(() => {
-    const presetLine = /^\s*(?:\/\/\s*)?(srp_apply_(?:default|echo|yszh|visionl))\s*$/i;
-    setContent(content.split(/\r?\n/).map((line) => {
-      const match = line.match(presetLine);
-      return match ? `// ${match[1].toLowerCase()}` : line;
-    }).join("\n"));
-  }, [content]);
-
-  const captureSnapshot = useCallback(async () => {
+  // VCFG 快照提取
+  const handleCaptureSnapshot = async () => {
     setImporting(true);
-    setError("");
     try {
-      const snapshot = await window.api.captureVcfgSnapshot();
-      if (!snapshot) {
-        setError("未检测到用户 CFG 目录，无法读取 VCFG 状态");
-        setVcfgSnapshot(null);
-      } else if (
-        Object.keys(snapshot.bindings).length === 0 &&
-        Object.keys(snapshot.analogBindings).length === 0 &&
-        Object.keys(snapshot.userConvars).length === 0 &&
-        Object.keys(snapshot.machineConvars).length === 0
-      ) {
-        setError("VCFG 文件为空或不存在，请先在游戏中修改设置后重试");
-        setVcfgSnapshot(null);
-      } else {
-        setVcfgSnapshot(snapshot);
-      }
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
-      setVcfgSnapshot(null);
+      const snap = await window.api.captureVcfgSnapshot();
+      setVcfgSnapshot(snap);
+    } catch (err) {
+      setError(`捕获 VCFG 失败: ${err}`);
     } finally {
       setImporting(false);
     }
-  }, []);
+  };
 
-  const insertImportedCfg = useCallback(async () => {
-    if (!vcfgSnapshot) return;
+  // VCFG 生成并注入代码
+  const handleGenerateAndAppend = async () => {
     setGenerating(true);
-    setError("");
     try {
-      const generated = await window.api.generateCfgFromSnapshot(importCategories);
-      if (!generated || !generated.trim()) {
-        setError("所选类别中没有可写入的内容");
-        return;
+      const snippet = await window.api.generateCfgFromSnapshot(importCategories);
+      if (snippet) {
+        const header = `\n\n// ── 从当前 Steam 账号提取的偏好注入 ──\n`;
+        setContent((prev) => `${prev.trimEnd()}${header}${snippet}\n`);
       }
-      const timestamp = new Date().toLocaleString("zh-CN");
-      const vcfgBlock = [
-        `// ─── VCFG Import Layer (${timestamp}) ───`,
-        generated,
-        `// ─── VCFG Import Layer End ───`,
-      ].join("\n");
-
-      // 1. 移除已有的 VCFG 导入块（"VCFG Import Layer" 到 "VCFG Import Layer End"）
-      const lines = content.split(/\r?\n/);
-      const cleaned: string[] = [];
-      let skipping = false;
-      for (const line of lines) {
-        if (!skipping && line.includes("VCFG Import Layer") && !line.includes("End") && line.trimStart().startsWith("//")) {
-          skipping = true;
-          continue;
-        }
-        if (skipping && line.includes("VCFG Import Layer End")) {
-          skipping = false;
-          continue;
-        }
-        if (skipping) continue;
-        cleaned.push(line);
-      }
-
-      // 2. 在 Preset Layer End 和 User Layer 之间插入
-      const presetEndIdx = cleaned.findIndex((l) => l.includes("Preset Layer End"));
-      const userLayerIdx = cleaned.findIndex((l) => l.includes("SrP-CFG User Layer"));
-      if (presetEndIdx >= 0 && userLayerIdx >= 0 && userLayerIdx > presetEndIdx) {
-        cleaned.splice(userLayerIdx, 0, vcfgBlock, "");
-      } else {
-        // 空文件或无标记：从头部插入
-        cleaned.unshift(vcfgBlock, "");
-      }
-
-      setContent(cleaned.join("\n"));
-      setVcfgSnapshot(null);
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+    } catch (err) {
+      setError(`生成注入代码失败: ${err}`);
     } finally {
       setGenerating(false);
     }
-  }, [content, vcfgSnapshot, importCategories]);
+  };
 
-  const undoVcfgImport = useCallback(() => {
-    const lines = content.split(/\r?\n/);
-    const result: string[] = [];
-    let skipping = false;
-    let found = false;
-    for (const line of lines) {
-      if (!skipping && line.includes("VCFG Import Layer") && !line.includes("End") && line.trimStart().startsWith("//")) {
-        skipping = true;
-        found = true;
-        continue;
-      }
-      if (skipping && line.includes("VCFG Import Layer End")) {
-        skipping = false;
-        continue;
-      }
-      if (skipping) continue;
-      result.push(line);
+  const handleOpenFolder = async () => {
+    try {
+      await window.api.openUserConfigFolder();
+    } catch (err) {
+      setError(String(err));
     }
-    if (!found) {
-      setError("没有找到可撤销的 VCFG 导入块");
-      return;
-    }
-    setContent(result.join("\n"));
-  }, [content]);
-
-  const hasActivePreset = /^\s*srp_apply_(?:default|echo|yszh|visionl)\s*$/mi.test(content);
-  const hasVcfgImport = content.includes("VCFG Import Layer") && content.includes("VCFG Import Layer End");
-
-  if (!detection || loading) {
-    return (
-      <div className="min-h-full flex items-center justify-center text-text-muted">
-        <Loader2 size={22} className="animate-spin mr-3 text-accent" />
-        正在定位你的 SrP-CFG 用户层…
-      </div>
-    );
-  }
+  };
 
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-6 flex flex-col h-full">
       <PageHeader
-        eyebrow="USER CONFIGURATION"
-        icon={<UserRoundCog size={14} />}
-        title="我的配置"
-        description="这是你与 Runtime 之间的唯一配置入口。选择一个内置 Preset 起点，再在下面写个人差异；更新、恢复与卸载 Runtime 时都会保留此文件。"
-        actions={(
-          <div className={`rounded-full border px-3 py-1.5 font-mono text-xs ${dirty ? "border-accent/50 bg-accent-bg text-accent" : "border-green/30 bg-green/5 text-green"}`}>
-            {dirty ? "有未保存修改" : "已保存"}
-          </div>
-        )}
+        title="配置注入 (Config Injection)"
+        description="Runtime Core 支持纯 CLI 命令调用；你也可以选择官方推荐方案或在下方 custom.cfg 中编写个人键位与自定义参数。"
       />
 
-      <section className="grid grid-cols-1 items-stretch gap-3 2xl:grid-cols-[1fr_auto_1fr_auto_1fr]">
-        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-4">
-          <div className="flex items-center gap-2 text-teal">
-            <Braces size={17} />
-            <span className="font-display text-sm font-semibold">Runtime</span>
-          </div>
-          <p className="mt-2 font-mono text-xs text-text">功能与 alias</p>
-          <p className="mt-1 text-xs text-text-muted">每次启动先注册，不主动应用偏好</p>
+      {error && (
+        <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-300 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <span>{error}</span>
         </div>
-        <ArrowRight size={18} className="hidden self-center text-text-faint lg:block" />
-        <div className="rounded-[var(--radius)] border border-accent/35 bg-accent-bg p-4 shadow-[inset_3px_0_0_var(--color-accent)]">
-          <div className="flex items-center gap-2 text-accent">
-            <ShieldCheck size={17} />
-            <span className="font-display text-sm font-semibold">User</span>
-          </div>
-          <p className="mt-2 font-mono text-xs text-text">custom.cfg</p>
-          <p className="mt-1 text-xs text-text-muted">Preset 起点 + 个人覆盖，内容归你</p>
-        </div>
-        <ArrowRight size={18} className="hidden self-center text-text-faint lg:block" />
-        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-4">
-          <div className="flex items-center gap-2 text-blue">
-            <Database size={17} />
-            <span className="font-display text-sm font-semibold">CS2 状态</span>
-          </div>
-          <p className="mt-2 font-mono text-xs text-text">VCFG / Steam Cloud</p>
-          <p className="mt-1 text-xs text-text-muted">游戏决定何时保存最终绑定与 ConVar</p>
-        </div>
-      </section>
+      )}
 
-      <div className="ui-body flex gap-3 rounded-[var(--radius)] border border-teal/25 bg-teal/5 px-4 py-3">
-        <ShieldCheck size={18} className="mt-0.5 shrink-0 text-teal" />
-        <div className="space-y-1">
-          <p>
-            Runtime 本身不选择偏好。若在 custom.cfg 中启用 <code className="font-mono text-xs text-text">srp_apply_yszh</code>，每次启动会先应用 YSZH，再继续执行它下面的个人命令。
-          </p>
-          <p className="text-xs text-text-muted">
-            不启用任何 srp_apply_* 时，普通游戏设置可继续由 VCFG / Steam Cloud 管理。
-          </p>
+      {/* 顶部控制区：预设起点单选 + VCFG 提取 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* 预设起点单选 */}
+        <div className="lg:col-span-2 bg-bg-card border border-border rounded-lg p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-text flex items-center gap-2">
+              <UserRoundCog className="w-4 h-4 text-orange-400" />
+              Runtime Core 启动方案
+            </h2>
+            <span className="text-[11px] text-text-muted">
+              当前方案: <span className="text-orange-400 font-mono font-medium">
+                {PRESETS.find((p) => p.id === activePreset)?.name || activePreset}
+              </span>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            {PRESETS.map((p) => {
+              const isActive = activePreset === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => handleSelectPreset(p.id)}
+                  className={`flex flex-col text-left p-2.5 rounded-lg border text-xs transition ${
+                    isActive
+                      ? "bg-orange-500/10 border-orange-500/60 text-orange-300 shadow-sm"
+                      : "bg-bg-raised/40 border-border hover:bg-bg-raised text-text-muted hover:text-text"
+                  }`}
+                >
+                  <div className="font-semibold text-text flex items-center justify-between">
+                    <span>{p.name}</span>
+                    {isActive && <Check className="w-3.5 h-3.5 text-orange-400" />}
+                  </div>
+                  <span className="text-[11px] text-text-faint mt-1 line-clamp-2 leading-tight">
+                    {p.desc}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* VCFG 辅助提取 */}
+        <div className="bg-bg-card border border-border rounded-lg p-4 space-y-3 flex flex-col justify-between">
+          <div>
+            <h2 className="text-sm font-semibold text-text flex items-center gap-2 mb-2">
+              <Wand2 className="w-4 h-4 text-orange-400" />
+              VCFG 偏好一键提取
+            </h2>
+            <p className="text-xs text-text-muted leading-relaxed">
+              从当前 Steam 登录账号的云端与本机 VCFG 中提取准星、持枪视角与按键绑定，自动转换为 CFG 注入到底部。
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
+              <label className="flex items-center gap-1.5 cursor-pointer text-text-secondary">
+                <input
+                  type="checkbox"
+                  checked={importCategories.bindings}
+                  onChange={(e) =>
+                    setImportCategories((prev) => ({ ...prev, bindings: e.target.checked }))
+                  }
+                  className="accent-orange-500"
+                />
+                <span>按键绑定</span>
+              </label>
+              <label className="flex items-center gap-1.5 cursor-pointer text-text-secondary">
+                <input
+                  type="checkbox"
+                  checked={importCategories.userConvars}
+                  onChange={(e) =>
+                    setImportCategories((prev) => ({ ...prev, userConvars: e.target.checked }))
+                  }
+                  className="accent-orange-500"
+                />
+                <span>准星与视角</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 pt-2 border-t border-border">
+            <button
+              type="button"
+              onClick={handleGenerateAndAppend}
+              disabled={generating}
+              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-medium border border-neutral-700 transition disabled:opacity-50"
+            >
+              {generating ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+              )}
+              <span>提取并填入编辑器</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <section className="rounded-[var(--radius)] border border-border bg-bg-card px-4 py-3">
-        <div className="flex flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
-          <div className="min-w-0">
-            <h2 className="ui-panel-title">选择 custom.cfg 的 Preset 起点</h2>
-            <p className="mt-1 text-xs text-text-muted">
-              选择后更新编辑器草稿中的 srp_apply_* 行，不会立即写盘。只保留一个起点，个人差异写在它后面。
-            </p>
-          </div>
-          <select
-            value={
-              hasActivePreset
-                ? content.match(/^\s*srp_apply_(\w+)/mi)?.[1] ?? "vcfg"
-                : "vcfg"
-            }
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === "vcfg") clearBasePreset();
-              else setBasePreset(value);
-            }}
-            className="min-h-8 shrink-0 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-3 py-1.5 font-mono text-xs text-text transition-colors hover:border-border-highlight focus:border-accent/60 focus:outline-none 2xl:w-auto"
-          >
-            <option value="vcfg">VCFG 托管</option>
-            {["default", "echo", "yszh", "visionl"].map((preset) => (
-              <option key={preset} value={preset}>
-                srp_apply_{preset}
-              </option>
-            ))}
-          </select>
-        </div>
-      </section>
-
-      <section className="rounded-[var(--radius)] border border-border bg-bg-card px-4 py-3">
-        <div className="flex flex-col gap-3 2xl:flex-row 2xl:items-start 2xl:justify-between">
-          <div className="min-w-0">
-            <h2 className="ui-panel-title">写入 VCFG 当前配置</h2>
-            <p className="mt-1 text-xs text-text-muted">
-              读取当前 VCFG 中的按键绑定与偏好设置，对比 Valve 默认值后只写入你改过的项。写入到 Preset 起点和个人自定义之间的独立分区，可随时撤销。
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 2xl:justify-end">
-            {hasVcfgImport && (
-              <button
-                type="button"
-                onClick={undoVcfgImport}
-                className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-red/40 bg-red/5 px-2.5 font-mono text-xs text-red transition-colors hover:border-red/60 hover:bg-red/10"
-              >
-                <Undo2 size={13} />
-                撤销 VCFG 写入
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => void captureSnapshot()}
-              disabled={!detection?.userCfgPath || importing}
-              className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-2.5 font-mono text-xs text-text-secondary transition-colors hover:border-accent/50 hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {importing ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} />}
-              {vcfgSnapshot ? "重新读取" : "读取 VCFG"}
-            </button>
-          </div>
-        </div>
-
-        {vcfgSnapshot && (
-          <div className="mt-3 space-y-3 border-t border-border pt-3">
-            <p className="text-xs text-text-muted">
-              勾选要写入的内容，点击"写入 custom.cfg"将命令插入到 Preset 起点和个人自定义之间的分区。重复写入会替换上一次的内容；可点击"撤销 VCFG 写入"一键移除。
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {([
-                { key: "bindings", label: "按键绑定", count: Object.keys(vcfgSnapshot.bindings).length },
-                { key: "analogBindings", label: "模拟轴绑定", count: Object.keys(vcfgSnapshot.analogBindings).length },
-                { key: "userConvars", label: "个人偏好", count: Object.keys(vcfgSnapshot.userConvars).length },
-                { key: "machineConvars", label: "机器设置", count: Object.keys(vcfgSnapshot.machineConvars).length },
-              ] as const).map(({ key, label, count }) => (
-                <button
-                  type="button"
-                  key={key}
-                  onClick={() => setImportCategories((prev) => ({ ...prev, [key]: !prev[key] }))}
-                  className={`flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border px-2.5 font-mono text-xs transition-colors ${
-                    importCategories[key]
-                      ? "border-accent/50 bg-accent-bg text-accent"
-                      : "border-border bg-bg-raised text-text-muted hover:border-accent/45 hover:text-accent"
-                  }`}
-                >
-                  {importCategories[key] ? <Check size={13} /> : <Braces size={13} />}
-                  {label}
-                  <span className="ml-0.5 opacity-60">({count})</span>
-                </button>
-              ))}
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => void insertImportedCfg()}
-                disabled={generating}
-                className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-accent bg-accent px-3 text-xs font-semibold text-bg transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                {generating ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
-                写入 custom.cfg
-              </button>
-            </div>
-          </div>
-        )}
-      </section>
-
-      {!document?.runtimeInstalled && (
-        <div className="flex gap-3 rounded-[var(--radius)] border border-red/30 bg-red/5 px-4 py-3 text-sm text-text-secondary">
-          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-red" />
-          <p>目标目录中尚未检测到 Runtime。你可以预先保存个人配置，但它要在安装 Runtime Core 后才会随 autoexec 自动执行。</p>
-        </div>
-      )}
-
-      <section className="overflow-hidden rounded-[var(--radius)] border border-border bg-[#090b11] shadow-[0_18px_50px_rgba(0,0,0,0.24)]">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-bg-card px-4 py-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_var(--color-accent-glow)]" />
-              <span className="font-mono text-xs text-text">srp-cfg/user/custom.cfg</span>
-              <Badge>{document?.target === "account" ? "账号 CFG 目录" : "游戏 CFG 目录"}</Badge>
-            </div>
-            <p className="ui-micro mt-1 truncate font-mono select-text" title={document?.path ?? undefined}>
-              {document?.path ?? "未找到可用路径"}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => void window.api.openUserConfigFolder().catch((reason) => setError(String(reason)))}
-              disabled={!document?.path}
-              className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-3 text-xs text-text-secondary transition-colors hover:border-border-highlight hover:text-text disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <FolderOpen size={14} /> 打开目录
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (dirty && !window.confirm("重新读取会丢弃尚未保存的修改，继续吗？")) return;
-                void load();
-              }}
-              className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-3 text-xs text-text-secondary transition-colors hover:border-border-highlight hover:text-text"
-            >
-              <RotateCcw size={14} /> 重新读取
-            </button>
-            <button
-              type="button"
-              onClick={() => void save()}
-              disabled={!document?.path || !dirty || saving}
-              className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-accent bg-accent px-3 text-xs font-semibold text-bg transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:border-border disabled:bg-bg-raised disabled:text-text-faint"
-            >
-              {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-              保存
-            </button>
-          </div>
-        </div>
-
-        <textarea
+      {/* 下部编辑器区 */}
+      <div className="flex-1 flex flex-col min-h-[420px]">
+        <CodeEditor
           value={content}
-          onChange={(event) => setContent(event.target.value)}
-          onKeyDown={(event) => {
-            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
-              event.preventDefault();
-              if (dirty && !saving) void save();
-            }
-          }}
-          spellCheck={false}
-          aria-label="个人 CFG 编辑器"
-          className="block min-h-[420px] w-full resize-y bg-transparent px-5 py-4 font-mono text-[13px] leading-6 text-[#d8dee9] outline-none select-text placeholder:text-text-faint"
-          placeholder="// 在这里写入你的灵敏度、准星、声音、HUD、按键或个人 alias"
+          onChange={setContent}
+          onSave={save}
+          title={document?.path ? `srp-cfg/user/custom.cfg (${document.path})` : "srp-cfg/user/custom.cfg"}
+          isSaved={!dirty}
+          actions={
+            <>
+              <button
+                type="button"
+                onClick={load}
+                disabled={loading}
+                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700/70 rounded-md text-xs font-medium transition whitespace-nowrap select-none disabled:opacity-50"
+                title="重新载入磁盘文件"
+              >
+                <RotateCcw className={`w-3.5 h-3.5 text-neutral-400 ${loading ? "animate-spin" : ""}`} />
+                <span>重载</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleOpenFolder}
+                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700/70 rounded-md text-xs font-medium transition whitespace-nowrap select-none"
+                title="在文件资源管理器中打开 CFG 目录"
+              >
+                <FolderOpen className="w-3.5 h-3.5 text-neutral-400" />
+                <span>打开目录</span>
+              </button>
+            </>
+          }
         />
+      </div>
 
-        <div className="ui-micro flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-border bg-bg-card px-4 py-2 font-mono">
-          <span>{lineCount} lines · UTF-8 · {formatModifiedAt(document?.modifiedAt ?? null)}</span>
-          <span>Ctrl + S 保存</span>
-        </div>
-      </section>
-
-      {error && (
-        <div role="alert" className="rounded-[var(--radius-sm)] border border-red/30 bg-red/5 px-4 py-2.5 text-sm text-red">
-          {error}
+      {saveToast && (
+        <div className="fixed bottom-6 right-6 p-3 bg-emerald-600 text-white text-xs font-medium rounded-lg shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3">
+          <Check className="w-4 h-4" />
+          <span>custom.cfg 已成功保存至磁盘！</span>
         </div>
       )}
-
-      <section className="divide-y divide-border rounded-[var(--radius)] border border-border bg-bg-card">
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <p className="font-display text-sm font-semibold">让当前游戏会话立即生效</p>
-            <p className="mt-0.5 text-xs text-text-muted">保存后执行重载；它会重新注册 Runtime，再按 custom.cfg 中的顺序执行 Preset 起点和个人差异。</p>
-          </div>
-          <CopyButton
-            text="srp_reload"
-            defaultLabel="srp_reload"
-            copiedLabel="已复制"
-            className="shrink-0 px-3 font-mono"
-          />
-        </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <p className="font-display text-sm font-semibold">清理 SrP-CFG 管理的 ConVar</p>
-            <p className="mt-0.5 text-xs text-text-muted">
-              复制安全重置命令：只把 SrP-CFG 涉及的偏好恢复到已审计的 Valve 基线。不会直接删除 VCFG、_lastclouded、remotecache.vdf、未知 ConVar 或视频设置。
-            </p>
-          </div>
-          <CopyButton
-            text="srp_reset_valve_settings"
-            defaultLabel="清理 ConVar"
-            copiedLabel="已复制"
-            variant="teal"
-            className="shrink-0 px-3 font-mono"
-          />
-        </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <p className="font-display text-sm font-semibold">临时回到 Valve 测试基线</p>
-            <p className="mt-0.5 text-xs text-text-muted">只重置当前状态，不修改 custom.cfg 或直接写 VCFG；测试结束后用 srp_reload 返回个人配置。</p>
-          </div>
-          <CopyButton
-            text="srp_reset_valve"
-            defaultLabel="srp_reset_valve"
-            copiedLabel="已复制"
-            variant="accent"
-            className="shrink-0 px-3 font-mono"
-          />
-        </div>
-      </section>
     </div>
   );
 }

@@ -365,3 +365,22 @@ pub fn detect_all() -> DetectionResult {
         has_auto_login_user: users_res.has_auto_login_user,
     }
 }
+
+/// 检查 CS2 游戏进程是否正在运行（Windows）。
+pub fn is_cs2_running() -> bool {
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
+        let output = std::process::Command::new("tasklist")
+            .args(["/FI", "IMAGENAME eq cs2.exe", "/NH"])
+            .creation_flags(CREATE_NO_WINDOW)
+            .output();
+        if let Ok(out) = output {
+            let s = String::from_utf8_lossy(&out.stdout).to_lowercase();
+            return s.contains("cs2.exe");
+        }
+    }
+    false
+}
+

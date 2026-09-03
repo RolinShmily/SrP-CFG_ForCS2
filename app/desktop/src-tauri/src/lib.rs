@@ -60,6 +60,7 @@ pub fn run() {
             commands::install_from_upload,
             commands::delete_upload_entry,
             commands::open_uploads_folder,
+            commands::get_staging_status,
             // 追加安装确认
             commands::confirm_append,
             // 已安装数据（install.json）
@@ -97,6 +98,23 @@ pub fn run() {
             commands::updater_history,
             // Shell
             commands::shell_open_external,
+            // 进程检测
+            commands::check_cs2_running,
+            // 物理文件树与浏览
+            commands::fs_scan_installed_roots,
+            commands::fs_read_file,
+            commands::fs_write_file,
+            commands::fs_delete_item,
+            commands::fs_open_in_explorer,
+            // 备份与恢复
+            commands::backup_list,
+            commands::backup_create_snapshot,
+            commands::backup_restore_snapshot,
+            commands::backup_delete,
+            commands::backup_clean_auto,
+            commands::backup_open_folder,
+            // 多组件安装流水线
+            commands::install_components_pipeline,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,7 +1,9 @@
 //! 平台 I/O 壳层：注册表 / 文件系统 → core 纯逻辑。
 //! 每个 services 模块只做 I/O，决策交给 `srp-cfg-core`。
 
+pub mod backup;
 pub mod detection;
+pub mod fs_explorer;
 pub mod installer;
 pub mod migrate;
 pub mod staging;

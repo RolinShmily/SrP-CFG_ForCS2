@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import TitleBar from "./components/TitleBar";
 import Sidebar from "./components/Sidebar";
-import LogPanel from "./components/LogPanel";
 import UpdateModal from "./components/UpdateModal";
 import InstallPage from "./pages/InstallPage";
 import DownloadPage from "./pages/DownloadPage";
@@ -10,7 +9,6 @@ import BackupRestorePage from "./pages/BackupRestorePage";
 import AppliedConfigPage from "./pages/AppliedConfigPage";
 import PersonalizePage from "./pages/PersonalizePage";
 import AboutPage from "./pages/AboutPage";
-import { useLogs } from "./hooks/useLogs";
 import type { DetectionResult } from "./types";
 
 export type Page = "install" | "download" | "quickstart" | "personalize" | "backup" | "applied" | "about";
@@ -18,24 +16,21 @@ export type Page = "install" | "download" | "quickstart" | "personalize" | "back
 export default function App() {
   const [page, setPage] = useState<Page>("quickstart");
   const [personalizeDirty, setPersonalizeDirty] = useState(false);
-  const [logPanelOpen, setLogPanelOpen] = useState(false);
-  const { logs, clearLogs } = useLogs();
   const mainRef = useRef<HTMLElement>(null);
 
   // Detection runs once on startup, shared across pages
   const [detection, setDetection] = useState<DetectionResult | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const detectedRef = useRef(false);
 
-  const detect = useCallback(async (force = false) => {
-    if (detectedRef.current && !force) return;
-    detectedRef.current = true;
+  const detect = useCallback(async () => {
     setRefreshing(true);
     try {
       const result = await window.api.detectAll();
       setDetection(result);
+    } catch (err) {
+      console.error("[App] detectAll failed:", err);
     } finally {
-      setRefreshing(false);
+      setTimeout(() => setRefreshing(false), 300);
     }
   }, []);
 
@@ -88,13 +83,13 @@ export default function App() {
   }, []);
 
   const pages: Record<Page, React.ReactNode> = {
-    quickstart: <QuickStartPage />,
+    quickstart: <QuickStartPage detection={detection} onNavigate={setPage} />,
     download: <DownloadPage onNavigate={setPage} />,
     install: (
       <InstallPage
         detection={detection}
         refreshing={refreshing}
-        onRefresh={() => detect(true)}
+        onRefresh={detect}
         onUserChange={handleUserChange}
       />
     ),
@@ -131,12 +126,6 @@ export default function App() {
         >
           <div key={page} className="page-enter min-h-full">{pages[page]}</div>
         </main>
-        <LogPanel
-          logs={logs}
-          onClear={clearLogs}
-          isOpen={logPanelOpen}
-          onToggle={() => setLogPanelOpen(!logPanelOpen)}
-        />
       </div>
 
       <UpdateModal

@@ -141,7 +141,10 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: SrP-CFG_${{ github.ref_name }}
           body: ${{ env.RELEASE_BODY }}
-          files: SrP-CFG_Runtime_Core.zip
+          files: |
+            SrP-CFG_Runtime_Core.zip
+            SrP-CFG_Map_Guides.zip
+            SrP-CFG_Video_Settings.zip
           fail_on_unmatched_files: true
           prerelease: false
           draft: false

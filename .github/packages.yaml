@@ -3,13 +3,24 @@
 # ============================================
 
 packages:
-  # 唯一发行包：Runtime、用户窗口、内置 Preset 与重置基线。
   runtime_core:
     display_name: "Runtime Core"
     zip_name: "SrP-CFG_Runtime_Core"
-    description: "完整功能 Runtime、用户 custom.cfg、内置 Preset 案例与 Valve 重置基线"
+    description: "完整功能 Runtime、模块化 alias、内置 Preset 案例与 user/custom.cfg 注入"
     files:
       - "config/autoexec.cfg"
-      - "config/video/"
-      - "config/annotations/"
       - "config/srp-cfg/"
+
+  map_guides:
+    display_name: "地图指南 (Annotations)"
+    zip_name: "SrP-CFG_Map_Guides"
+    description: "CS2 竞技地图跑图与投掷物落点指南"
+    files:
+      - "config/annotations/"
+
+  video_settings:
+    display_name: "视频配置 (Video Settings)"
+    zip_name: "SrP-CFG_Video_Settings"
+    description: "高刷优化与职业选手调校推荐画质设置"
+    files:
+      - "config/video/"

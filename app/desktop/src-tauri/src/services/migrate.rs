@@ -4,7 +4,7 @@
 //! 本模块负责扫描目录、执行 Move/Skip、写 `.migrated` 标记。
 
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use srp_cfg_core::{plan_migration, should_migrate, MigrationAction};
 

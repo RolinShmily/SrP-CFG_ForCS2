@@ -5,11 +5,11 @@ import { WEBSITE_URL } from "../lib/downloads";
 
 const items: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: "quickstart", label: "快速开始", icon: <Play size={20} /> },
-  { id: "download", label: "下载", icon: <ArrowDownToLine size={20} /> },
-  { id: "install", label: "安装", icon: <FileText size={20} /> },
-  { id: "personalize", label: "我的配置", icon: <UserRoundCog size={20} /> },
-  { id: "backup", label: "恢复中心", icon: <Clock size={20} /> },
+  { id: "download", label: "组件下载", icon: <ArrowDownToLine size={20} /> },
+  { id: "install", label: "组件安装", icon: <Package size={20} /> },
+  { id: "personalize", label: "配置注入", icon: <UserRoundCog size={20} /> },
   { id: "applied", label: "当前安装", icon: <Layers size={20} /> },
+  { id: "backup", label: "恢复中心", icon: <Clock size={20} /> },
   { id: "about", label: "关于", icon: <Info size={20} /> },
 ];
 

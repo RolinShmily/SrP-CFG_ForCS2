@@ -174,6 +174,74 @@ export interface UpdateCheckResult {
 
 // ── Window API Type Declaration ──────────────────────────────
 
+// ── Multi-Root Physical File Explorer ─────────────────────────
+
+export interface ComponentStagingInfo {
+  componentId: string;
+  fileCount: number;
+  totalSize: number;
+  lastModified?: number | null;
+  isReady: boolean;
+  sampleFiles: string[];
+}
+
+export interface StagingStatus {
+  cfg: ComponentStagingInfo;
+  annotations: ComponentStagingInfo;
+  video: ComponentStagingInfo;
+}
+
+export interface FsTreeNode {
+  name: string;
+  path: string;
+  relativePath: string;
+  isDir: boolean;
+  size: number;
+  modifiedAt: number;
+  children?: FsTreeNode[];
+}
+
+export interface FsTreeRoot {
+  componentId: string;
+  label: string;
+  targetPath: string;
+  exists: boolean;
+  fileCount: number;
+  totalSize: number;
+  tree?: FsTreeNode;
+}
+
+// ── Full Backup Snapshots ────────────────────────────────────
+
+export interface BackupMeta {
+  id: string;
+  timestamp: number;
+  dateStr: string;
+  note: string;
+  isAuto: boolean;
+  components: string[];
+  totalSize: number;
+  filePath: string;
+  paths: Record<string, string>;
+}
+
+// ── Component Pipeline ───────────────────────────────────────
+
+export interface InstallPipelineOptions {
+  components: string[];
+  overridePaths?: Record<string, string>;
+  usePersonalCfg?: boolean;
+}
+
+export interface PipelineResult {
+  success: boolean;
+  cs2Running: boolean;
+  backupId?: string;
+  filesInstalled: number;
+  dirsInstalled: number;
+  message: string;
+}
+
 export interface ElectronAPI {
   // Window controls
   minimize: () => void;
@@ -265,6 +333,28 @@ export interface ElectronAPI {
 
   // Append conflict notification (main → renderer)
   onAppendConflicts: (callback: (conflicts: { category: string; names: string[] }[]) => void) => () => void;
+
+  // Process & Pipeline
+  checkCs2Running: () => Promise<boolean>;
+  installComponentsPipeline: (components: string[], overridePaths?: Record<string, string>, usePersonalCfg?: boolean) => Promise<PipelineResult>;
+
+  // Staging Status
+  getStagingStatus: () => Promise<StagingStatus>;
+
+  // Physical File Explorer
+  fsScanInstalledRoots: () => Promise<FsTreeRoot[]>;
+  fsReadFile: (path: string) => Promise<string>;
+  fsWriteFile: (path: string, content: string) => Promise<void>;
+  fsDeleteItem: (path: string) => Promise<void>;
+  fsOpenInExplorer: (path: string) => Promise<void>;
+
+  // Backup & Restore Center
+  backupList: () => Promise<BackupMeta[]>;
+  backupCreateSnapshot: (components: string[], note?: string, isAuto?: boolean) => Promise<BackupMeta>;
+  backupRestoreSnapshot: (backupId: string) => Promise<void>;
+  backupDelete: (backupId: string) => Promise<void>;
+  backupCleanAuto: (maxKeep?: number) => Promise<number>;
+  backupOpenFolder: () => Promise<void>;
 }
 
 declare global {

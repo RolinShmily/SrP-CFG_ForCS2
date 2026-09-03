@@ -72,11 +72,12 @@ def main():
     with open("packages.json", "r", encoding="utf-8") as file:
         packages = json.load(file)
 
-    if len(packages) != 1 or packages[0].get("name") != "runtime_core":
-        raise ValueError("v3 build input must contain only runtime_core")
+    if not isinstance(packages, list) or len(packages) == 0:
+        raise ValueError("build input packages.json must contain at least one package")
 
-    build_package(packages[0])
-    print("\nBuilt the Runtime Core package")
+    for pkg in packages:
+        build_package(pkg)
+    print(f"\nSuccessfully built {len(packages)} packages")
 
 
 if __name__ == "__main__":

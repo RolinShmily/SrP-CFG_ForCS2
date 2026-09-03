@@ -2,16 +2,20 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type {
   AppendConflictResult,
+  BackupMeta,
   DetectionResult,
   DownloadEntry,
   ElectronAPI,
+  FsTreeRoot,
   GitHubRelease,
   InstallMode,
   InstallResult,
   InstalledData,
   LogEntry,
+  PipelineResult,
   ResData,
   SaveData,
+  StagingStatus,
   UpdateCheckResult,
   UploadEntry,
   UploadedEntry,
@@ -20,6 +24,8 @@ import type {
   VcfgSnapshot,
 } from "../types";
 
+import { createMockApi } from "./mock-api";
+
 /**
  * Tauri IPC 适配层（L2.2）。
  *
@@ -27,13 +33,16 @@ import type {
  * `app/desktop/src/preload/preload.ts` 契约基准），renderer 的 `window.api.*`
  * 调用点零改动。实现内部走 Tauri `invoke()` / `listen()`。
  *
- * 命令名 = Rust 侧 `#[tauri::command]` 函数名（snake_case，见
- * `src-tauri/src/commands/`）；参数 key 按 `rename_all = "camelCase"`
- * 转换（如 accountId / usePersonalCfg / file_name → fileName）。
- * （2026-08 L2 遗留收尾：实测发现旧实现误用 Electron 时代
- *  "installer:detectAll" 式通道名，全部命令名已修正为真实注册名。）
+ * 当在纯浏览器开发预览（pnpm dev）环境中运行时，自动接入 Mock API，确保所有交互与按钮正常响应。
  */
 export function createApi(): ElectronAPI {
+  const isTauriEnv =
+    typeof window !== "undefined" && Boolean((window as any).__TAURI_INTERNALS__);
+
+  if (!isTauriEnv) {
+    return createMockApi();
+  }
+
   return {
     // ── Window controls ──
     minimize: () => invoke("minimize"),
@@ -189,5 +198,38 @@ export function createApi(): ElectronAPI {
         unlistenPromise.then((fn) => fn()).catch(() => {});
       };
     },
+
+    // ── Process & Pipeline ──
+    checkCs2Running: () => invoke<boolean>("check_cs2_running"),
+    installComponentsPipeline: (components, overridePaths, usePersonalCfg) =>
+      invoke<PipelineResult>("install_components_pipeline", {
+        components,
+        overridePaths,
+        usePersonalCfg,
+      }),
+
+    // ── Staging Status ──
+    getStagingStatus: () => invoke<StagingStatus>("get_staging_status"),
+
+    // ── Physical File Explorer ──
+    fsScanInstalledRoots: () => invoke<FsTreeRoot[]>("fs_scan_installed_roots"),
+    fsReadFile: (path) => invoke<string>("fs_read_file", { path }),
+    fsWriteFile: (path, content) => invoke<void>("fs_write_file", { path, content }),
+    fsDeleteItem: (path) => invoke<void>("fs_delete_item", { path }),
+    fsOpenInExplorer: (path) => invoke<void>("fs_open_in_explorer", { path }),
+
+    // ── Backup & Restore Center ──
+    backupList: () => invoke<BackupMeta[]>("backup_list"),
+    backupCreateSnapshot: (components, note, isAuto) =>
+      invoke<BackupMeta>("backup_create_snapshot", {
+        components,
+        note,
+        isAuto,
+      }),
+    backupRestoreSnapshot: (backupId) =>
+      invoke<void>("backup_restore_snapshot", { backupId }),
+    backupDelete: (backupId) => invoke<void>("backup_delete", { backupId }),
+    backupCleanAuto: (maxKeep) => invoke<number>("backup_clean_auto", { maxKeep }),
+    backupOpenFolder: () => invoke<void>("backup_open_folder"),
   };
 }

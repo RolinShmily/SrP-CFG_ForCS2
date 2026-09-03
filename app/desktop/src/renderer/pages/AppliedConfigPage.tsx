@@ -1,283 +1,415 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Boxes,
-  ChevronDown,
-  Database,
-  ExternalLink,
-  FileText,
+  Folder,
   FolderOpen,
-  Loader2,
-  Map,
-  Monitor,
-  PackageX,
-  ShieldCheck,
+  FileText,
+  FileCode,
+  RefreshCw,
   Trash2,
-  UserRoundCog,
+  ExternalLink,
+  ChevronRight,
+  ChevronDown,
+  Layers,
+  AlertTriangle,
+  HardDrive,
+  Check,
+  Package,
 } from "lucide-react";
-import type { CategoryData, InstalledData, UserConfigDocument } from "../types";
-import { Card, PageHeader } from "@srp-cfg/ui";
+import type { FsTreeRoot, FsTreeNode } from "../types";
+import { PageHeader, Modal } from "@srp-cfg/ui";
+import { CodeEditor } from "../components/CodeEditor";
 
-type CategoryKey = "gameCfg" | "userCfg" | "annotations" | "video";
-
-const categoryMeta: Record<CategoryKey, { label: string; description: string; icon: React.ReactNode }> = {
-  gameCfg: {
-    label: "游戏目录 Runtime",
-    description: "game/csgo/cfg 中由安装器追踪的 CFG 文件",
-    icon: <FileText size={18} className="text-teal" />,
-  },
-  userCfg: {
-    label: "账号目录 Runtime（实验性）",
-    description: "userdata 账号 CFG 目录中的受管文件",
-    icon: <FileText size={18} className="text-accent-light" />,
-  },
-  annotations: {
-    label: "地图指南",
-    description: "annotations/local 中由安装器部署的内容",
-    icon: <Map size={18} className="text-accent" />,
-  },
-  video: {
-    label: "视频配置",
-    description: "账号目录中的 cs2_video.txt",
-    icon: <Monitor size={18} className="text-accent" />,
-  },
-};
-
-function itemCount(category: CategoryData): number {
-  return category.files.length + category.dirs.length;
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
 
-function SmallButton({
-  busy,
-  busyKey,
-  label,
-  icon,
-  tone,
-  onClick,
-}: {
-  busy: string | null;
-  busyKey: string;
-  label: string;
-  icon: React.ReactNode;
-  tone: "accent" | "red";
-  onClick: (event: React.MouseEvent) => void;
-}) {
-  const colors = tone === "red"
-    ? "border-red-400/20 text-red-400 hover:bg-red-500/10"
-    : "border-accent/20 text-accent hover:bg-accent/10";
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={busy !== null}
-      className={`flex min-h-7 items-center gap-1 rounded-[var(--radius-sm)] border bg-bg-card px-2 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${colors}`}
-    >
-      {busy === busyKey ? <Loader2 size={12} className="animate-spin" /> : icon}
-      {label}
-    </button>
-  );
+function formatTime(ms: number): string {
+  if (!ms) return "-";
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(ms));
 }
 
-export default function AppliedConfigPage() {
-  const [installed, setInstalled] = useState<InstalledData | null>(null);
-  const [userConfig, setUserConfig] = useState<UserConfigDocument | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [busy, setBusy] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+// 递归文件树节点组件
+const TreeNodeItem: React.FC<{
+  node: FsTreeNode;
+  selectedPath: string | null;
+  onSelectFile: (path: string) => void;
+  onDelete: (path: string) => void;
+}> = ({ node, selectedPath, onSelectFile, onDelete }) => {
+  const [isOpen, setIsOpen] = useState(true);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [nextInstalled, nextUser] = await Promise.all([
-        window.api.getInstalledData(),
-        window.api.getUserConfig(),
-      ]);
-      setInstalled(nextInstalled);
-      setUserConfig(nextUser);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadData();
-  }, [loadData]);
-
-  const categories = useMemo(() => {
-    if (!installed) return [];
-    return (Object.keys(categoryMeta) as CategoryKey[])
-      .map((key) => ({ key, data: installed[key] }))
-      .filter(({ data }) => itemCount(data) > 0);
-  }, [installed]);
-
-  const totalManaged = categories.reduce((sum, category) => sum + itemCount(category.data), 0);
-  const runtimeCategory = categories.find(({ key }) => key === "gameCfg" || key === "userCfg");
-  const runtimeTarget = runtimeCategory?.key === "userCfg" ? "账号 CFG（实验性）" : "游戏 CFG";
-
-  const runAction = async (key: string, action: () => Promise<unknown>) => {
-    if (busy) return;
-    setBusy(key);
-    try {
-      await action();
-      await loadData();
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  if (loading) {
+  if (node.isDir) {
     return (
-      <div className="space-y-5">
-        <PageHeader title="当前安装" description="核对 Runtime、用户配置和安装器受管清单。" />
-        <div className="flex items-center justify-center py-12 text-text-muted">
-          <Loader2 size={20} className="mr-2 animate-spin" />
-          <span className="text-sm">正在核对 Runtime 与用户文件…</span>
+      <div className="text-xs">
+        <div
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-1.5 py-1 px-2 hover:bg-neutral-800/60 rounded cursor-pointer text-neutral-300 font-mono select-none"
+        >
+          {isOpen ? (
+            <ChevronDown className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+          )}
+          {isOpen ? (
+            <FolderOpen className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+          ) : (
+            <Folder className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+          )}
+          <span className="font-medium text-neutral-200">{node.name}</span>
+          {node.children && (
+            <span className="text-[10px] text-neutral-500">({node.children.length})</span>
+          )}
         </div>
+
+        {isOpen && node.children && (
+          <div className="pl-4 border-l border-neutral-800/80 ml-3.5 mt-0.5 space-y-0.5">
+            {node.children.map((child) => (
+              <TreeNodeItem
+                key={child.path}
+                node={child}
+                selectedPath={selectedPath}
+                onSelectFile={onSelectFile}
+                onDelete={onDelete}
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   }
 
+  const isSelected = selectedPath === node.path;
+  const isCfg = node.name.endsWith(".cfg");
+
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="当前安装"
-        description="查看安装器负责的 Runtime 文件；VCFG 与用户 custom.cfg 不会混入受管清单。"
-      />
-
-      <section className="grid grid-cols-1 gap-3 2xl:grid-cols-3">
-        <Card>
-          <div className="flex items-center gap-2 text-teal">
-            <Boxes size={17} />
-            <span className="font-display text-sm font-semibold">Runtime</span>
-          </div>
-          <p className="mt-2 text-sm font-semibold text-text">{userConfig?.runtimeInstalled ? "已检测到" : "未检测到"}</p>
-          <p className="mt-1 text-xs text-text-muted">{runtimeCategory ? `安装目标：${runtimeTarget}` : "没有安装器追踪的 CFG 目录"}</p>
-        </Card>
-
-        <div className="rounded-[var(--radius)] border border-accent/30 bg-accent-bg p-4">
-          <div className="flex items-center gap-2 text-accent">
-            <UserRoundCog size={17} />
-            <span className="font-display text-sm font-semibold">用户配置</span>
-          </div>
-          <p className="mt-2 text-sm font-semibold text-text">{userConfig?.exists ? "已保存并受保护" : "尚未写入"}</p>
-          <p className="ui-micro mt-1 truncate font-mono" title={userConfig?.path ?? undefined}>{userConfig?.path ?? "未检测到路径"}</p>
-        </div>
-
-        <Card>
-          <div className="flex items-center gap-2 text-blue">
-            <Database size={17} />
-            <span className="font-display text-sm font-semibold">安装器清单</span>
-          </div>
-          <p className="mt-2 text-sm font-semibold text-text">{totalManaged} 个顶层受管项</p>
-          <p className="mt-1 text-xs text-text-muted">只记录安装器部署的 CFG、指南与视频文件</p>
-        </Card>
-      </section>
-
-      <div className="ui-body flex gap-3 rounded-[var(--radius)] border border-teal/25 bg-teal/5 px-4 py-3">
-        <ShieldCheck size={18} className="mt-0.5 shrink-0 text-teal" />
-        <p>
-          删除单项或整个类别只处理安装器清单中的 Runtime 资产；
-          <code className="mx-1 font-mono text-xs text-text">srp-cfg/user/custom.cfg</code>
-          会被先保存再原样放回。游戏管理的 VCFG 也不会被删除。
-        </p>
+    <div
+      className={`group flex items-center justify-between py-1 px-2 rounded cursor-pointer text-xs font-mono transition ${
+        isSelected
+          ? "bg-orange-500/20 text-orange-300 border border-orange-500/40"
+          : "hover:bg-neutral-800/50 text-neutral-300"
+      }`}
+      onClick={() => onSelectFile(node.path)}
+    >
+      <div className="flex items-center gap-1.5 truncate">
+        {isCfg ? (
+          <FileCode className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+        ) : (
+          <FileText className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+        )}
+        <span className="truncate">{node.name}</span>
       </div>
 
-      {categories.length === 0 ? (
-        <div className="rounded-[var(--radius)] border border-border bg-bg-card p-8 text-center">
-          <PackageX size={28} className="mx-auto mb-2 text-text-faint" />
-          <p className="text-sm text-text-muted">安装器当前没有追踪到已部署配置</p>
-          {userConfig?.runtimeInstalled && (
-            <p className="mt-1 text-xs text-text-faint">检测到 Runtime 文件，但它可能是手动安装或来自旧清单。</p>
-          )}
+      <div className="flex items-center gap-2 text-[10px] text-neutral-500 shrink-0">
+        <span>{formatBytes(node.size)}</span>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(node.path);
+          }}
+          className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-neutral-500 rounded transition"
+          title="删除此文件"
+        >
+          <Trash2 className="w-3 h-3" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default function AppliedConfigPage() {
+  const [roots, setRoots] = useState<FsTreeRoot[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [collapsedRoots, setCollapsedRoots] = useState<Record<string, boolean>>({});
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [fileContent, setFileContent] = useState("");
+  const [savedContent, setSavedContent] = useState("");
+  const [readingFile, setReadingFile] = useState(false);
+  const [savingFile, setSavingFile] = useState(false);
+  const [deleteTargetPath, setDeleteTargetPath] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const loadRoots = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await window.api.fsScanInstalledRoots();
+      setRoots(data);
+    } catch (err) {
+      console.error("[AppliedConfig] loadRoots failed:", err);
+    } finally {
+      setTimeout(() => setLoading(false), 250);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadRoots();
+  }, [loadRoots]);
+
+  const handleSelectFile = async (path: string) => {
+    if (selectedFile === path) return;
+    setSelectedFile(path);
+    setReadingFile(true);
+    try {
+      const text = await window.api.fsReadFile(path);
+      setFileContent(text);
+      setSavedContent(text);
+    } catch (err) {
+      setFileContent(`// 读取文件失败: ${err}`);
+      setSavedContent(`// 读取文件失败: ${err}`);
+    } finally {
+      setReadingFile(false);
+    }
+  };
+
+  const handleSaveFile = async () => {
+    if (!selectedFile) return;
+    setSavingFile(true);
+    try {
+      await window.api.fsWriteFile(selectedFile, fileContent);
+      setSavedContent(fileContent);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2000);
+      loadRoots();
+    } catch (err) {
+      alert(`保存失败: ${err}`);
+    } finally {
+      setSavingFile(false);
+    }
+  };
+
+  const handleDeleteItem = (path: string) => {
+    setDeleteTargetPath(path);
+  };
+
+  const handleExecuteDelete = async () => {
+    if (!deleteTargetPath) return;
+    const path = deleteTargetPath;
+    setDeleteTargetPath(null);
+    try {
+      await window.api.fsDeleteItem(path);
+      if (selectedFile === path) {
+        setSelectedFile(null);
+        setFileContent("");
+      }
+      loadRoots();
+    } catch (err) {
+      alert(`删除失败: ${err}`);
+    }
+  };
+
+  const handleOpenFolder = async (path: string) => {
+    try {
+      await window.api.fsOpenInExplorer(path);
+    } catch (err) {
+      alert(`无法打开目录: ${err}`);
+    }
+  };
+
+  const totalFiles = roots.reduce((acc, r) => acc + r.fileCount, 0);
+  const totalSize = roots.reduce((acc, r) => acc + r.totalSize, 0);
+
+  const toggleRootCollapse = (componentId: string) => {
+    setCollapsedRoots((prev) => ({
+      ...prev,
+      [componentId]: !prev[componentId],
+    }));
+  };
+
+  return (
+    <div className="space-y-6 flex flex-col h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          title="当前安装 (物理文件浏览)"
+          description="实时物理扫描 CS2 与 Steam 配置目录，支持多组件文件树浏览、定位与内嵌在线编辑。"
+        />
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3 px-3 py-1.5 bg-bg-card border border-border rounded-lg text-xs font-mono">
+            <span className="text-text-muted">
+              总文件: <span className="text-text font-semibold">{totalFiles}</span>
+            </span>
+            <span className="text-border">|</span>
+            <span className="text-text-muted">
+              占用: <span className="text-text font-semibold">{formatBytes(totalSize)}</span>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={loadRoots}
+            disabled={loading}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-card hover:bg-bg-hover text-text border border-border rounded-lg text-xs font-medium transition"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <span>刷新扫描</span>
+          </button>
         </div>
-      ) : (
-        <section className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
-          {categories.map(({ key, data }) => {
-            const meta = categoryMeta[key];
-            const isOpen = expanded[key] ?? false;
-            const items = [
-              ...data.dirs.map((name) => ({ name, isDir: true })),
-              ...data.files.map((name) => ({ name, isDir: false })),
-            ];
+      </div>
+
+      {/* 左右分栏布局：左侧文件树，右侧代码查看/编辑器 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-[500px]">
+        {/* 左侧多根文件树 */}
+        <div className="lg:col-span-5 flex flex-col gap-3 overflow-y-auto max-h-[calc(100vh-230px)] pr-1">
+          {roots.map((root) => {
+            const isCollapsed = Boolean(collapsedRoots[root.componentId]);
             return (
-              <Card key={key} padding="none">
-                <div className="flex flex-wrap items-stretch justify-between gap-y-2 border-b border-transparent">
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    onClick={() => setExpanded((current) => ({ ...current, [key]: !isOpen }))}
-                    className="flex min-w-0 basis-72 flex-1 items-center justify-between px-4 py-3 text-left"
+              <div
+                key={root.componentId}
+                className="bg-bg-card border border-border rounded-lg flex flex-col overflow-hidden transition-all"
+              >
+                {/* 根目录头部（点击折叠/展开） */}
+                <div
+                  onClick={() => toggleRootCollapse(root.componentId)}
+                  className="flex items-center justify-between p-3.5 hover:bg-bg-raised/60 cursor-pointer select-none border-b border-border/60 transition-colors"
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    {isCollapsed ? (
+                      <ChevronRight className="w-4 h-4 text-text-muted shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-orange-400 shrink-0" />
+                    )}
+                    <Package className="w-4 h-4 text-orange-400 shrink-0" />
+                    <span className="font-semibold text-xs text-text truncate">{root.label}</span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-neutral-800 text-neutral-400 font-mono">
+                      {root.fileCount} 文件
+                    </span>
+                    <span className="text-[10px] text-text-faint font-mono hidden sm:inline">
+                      ({formatBytes(root.totalSize)})
+                    </span>
+                  </div>
+                  <div
+                    className="flex items-center gap-1.5 shrink-0"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2.5">
-                        {meta.icon}
-                        <h2 className="ui-panel-title">{meta.label}</h2>
-                        <span className="text-xs text-text-faint">{items.length} 项</span>
-                      </div>
-                      <p className="mt-1 truncate text-xs text-text-faint">{meta.description}</p>
-                    </div>
-                    <ChevronDown size={16} className={`ml-3 shrink-0 text-text-faint transition-transform ${isOpen ? "rotate-180" : ""}`} />
-                  </button>
-                  <div className="ml-auto flex shrink-0 items-center px-4">
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        if (!window.confirm(`移除 ${meta.label} 中的全部受管项？用户 custom.cfg 会被保留。`)) return;
-                        void runAction(`uninstall:${key}`, () => window.api.clearInstallCategory(key));
-                      }}
-                      disabled={busy !== null}
-                      className="flex min-h-8 items-center gap-1.5 rounded-[var(--radius-sm)] border border-red-400/20 px-2.5 text-xs text-red-400 transition-colors hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      {busy === `uninstall:${key}` ? <Loader2 size={13} className="animate-spin" /> : <PackageX size={13} />}
-                      移除本类
-                    </button>
+                    {root.exists && (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenFolder(root.targetPath)}
+                        className="p-1 text-text-muted hover:text-text hover:bg-neutral-800 rounded transition"
+                        title="在文件资源管理器中打开此根目录"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {isOpen && (
-                  <div className="space-y-1 px-4 pb-4">
-                    {items.map(({ name, isDir }) => {
-                      const itemKey = `${key}/${name}`;
-                      return (
-                        <div key={name} className="flex flex-wrap items-center justify-between gap-2 rounded-[var(--radius-sm)] border border-border bg-bg-raised px-2.5 py-1.5 text-xs">
-                          <div className="flex min-w-0 items-center gap-2">
-                            {isDir ? <FolderOpen size={12} className="shrink-0 text-text-faint" /> : <FileText size={12} className="shrink-0 text-text-faint" />}
-                            <span className="truncate font-mono text-text">{name}{isDir ? "/" : ""}</span>
-                          </div>
-                          <div className="ml-auto flex shrink-0 items-center gap-1">
-                            <SmallButton
-                              busy={busy}
-                              busyKey={`delete:${itemKey}`}
-                              label="删除"
-                              icon={<Trash2 size={12} />}
-                              tone="red"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                if (!window.confirm(`删除受管项 ${name}${isDir ? "/" : ""}？`)) return;
-                                void runAction(`delete:${itemKey}`, () => window.api.deleteInstalledItem(key, name));
-                              }}
+                {/* 展开内容区 */}
+                {!isCollapsed && (
+                  <div className="p-3.5 pt-2 space-y-2">
+                    {/* 物理路径提示 */}
+                    <div
+                      className="text-[11px] font-mono text-text-faint truncate"
+                      title={root.targetPath}
+                    >
+                      {root.targetPath || "未检测到对应路径"}
+                    </div>
+
+                    {/* 根目录内部文件树 */}
+                    <div className="pt-1">
+                      {root.exists && root.tree ? (
+                        <div className="space-y-0.5">
+                          {root.tree.children?.map((child) => (
+                            <TreeNodeItem
+                              key={child.path}
+                              node={child}
+                              selectedPath={selectedFile}
+                              onSelectFile={handleSelectFile}
+                              onDelete={handleDeleteItem}
                             />
-                            <SmallButton
-                              busy={busy}
-                              busyKey={`open:${itemKey}`}
-                              label="打开"
-                              icon={<ExternalLink size={12} />}
-                              tone="accent"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                void runAction(`open:${itemKey}`, () => window.api.openItem("install", key, name));
-                              }}
-                            />
-                          </div>
+                          ))}
                         </div>
-                      );
-                    })}
-                    {data.path && <p className="ui-micro border-t border-border pt-2 font-mono break-all">{data.path}</p>}
+                      ) : (
+                        <div className="py-4 text-center text-xs text-text-faint">
+                          {root.exists ? "目录为空" : "目录不存在或未安装"}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })}
-        </section>
+        </div>
+
+        {/* 右侧内嵌 CodeMirror 查看与编辑器 */}
+        <div className="lg:col-span-7 flex flex-col h-full min-h-[480px]">
+          {selectedFile ? (
+            <CodeEditor
+              value={fileContent}
+              onChange={setFileContent}
+              onSave={handleSaveFile}
+              title={selectedFile}
+              isSaved={fileContent === savedContent}
+              actions={
+                <button
+                  type="button"
+                  onClick={() => handleOpenFolder(selectedFile)}
+                  className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 border border-neutral-700/70 rounded-md text-xs font-medium transition whitespace-nowrap select-none"
+                  title="在资源管理器中定位"
+                >
+                  <FolderOpen className="w-3.5 h-3.5 text-neutral-400" />
+                  <span>定位</span>
+                </button>
+              }
+            />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-neutral-800 rounded-lg p-8 text-center text-neutral-500 bg-neutral-900/30">
+              <FileCode className="w-12 h-12 text-neutral-700 mb-3" />
+              <div className="text-sm font-medium text-neutral-400">点击左侧文件树中的任意文件</div>
+              <p className="text-xs text-neutral-600 mt-1">
+                即可在此直接查看语法高亮代码，并支持即时编辑与保存 (Ctrl+S)。
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 删除文件确认模态框 */}
+      {deleteTargetPath && (
+        <Modal
+          open={Boolean(deleteTargetPath)}
+          onClose={() => setDeleteTargetPath(null)}
+          title="删除文件或目录"
+          icon={<Trash2 className="w-5 h-5 text-red-400" />}
+          maxWidth="max-w-md"
+          footer={
+            <div className="flex items-center justify-end gap-2 w-full">
+              <button
+                type="button"
+                onClick={() => setDeleteTargetPath(null)}
+                className="px-3.5 py-1.5 text-xs text-text-muted hover:text-text rounded border border-border bg-bg-raised transition"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={handleExecuteDelete}
+                className="px-4 py-1.5 text-xs font-semibold text-white bg-red-600 hover:bg-red-500 rounded transition shadow-md shadow-red-950/40"
+              >
+                确认删除
+              </button>
+            </div>
+          }
+        >
+          <div className="space-y-3 p-1">
+            <p className="text-xs text-text-secondary leading-relaxed">
+              确定要永久删除以下磁盘文件/目录吗？
+            </p>
+            <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-xs font-mono text-neutral-300 break-all">
+              {deleteTargetPath}
+            </div>
+            <p className="text-[11px] text-red-400/90">
+              * 此操作将直接从物理磁盘中删除目标，无法撤销。
+            </p>
+          </div>
+        </Modal>
       )}
     </div>
   );

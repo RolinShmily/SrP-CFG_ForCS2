@@ -236,6 +236,11 @@ pub fn open_uploads_folder() -> Result<(), String> {
     .map_err(|e| e.to_string())
 }
 
+#[tauri::command(rename_all = "camelCase")]
+pub fn get_staging_status() -> services::staging::StagingStatus {
+    services::staging::get_staging_status()
+}
+
 // ── Append Confirmation ────────────────────────────────────────
 
 #[tauri::command(rename_all = "camelCase")]
@@ -431,7 +436,10 @@ pub fn open_vcfg_snapshots_folder() -> Result<(), String> {
 
 #[tauri::command(rename_all = "camelCase")]
 pub fn download_from_url(url: String, file_name: String) -> Option<DownloadEntry> {
-    services::staging::download_from_url(&url, &file_name).ok()
+    let entry = services::staging::download_from_url(&url, &file_name).ok()?;
+    // 下载完成后自动解压并按组件归类到暂存区，使「组件安装」流水线能够直接就绪并完成部署
+    let _ = services::staging::install_from_download(&entry.folder_name, InstallMode::Append);
+    Some(entry)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -607,3 +615,148 @@ fn capture_persistence_baseline(state: &State<AppStateMutex>) {
         log::info("backup", "VCFG 原始状态快照已存在");
     }
 }
+
+// ── 进程检测 ───────────────────────────────────────────────────
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn check_cs2_running() -> bool {
+    services::detection::is_cs2_running()
+}
+
+// ── 物理文件树与浏览 ───────────────────────────────────────────
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn fs_scan_installed_roots(state: State<AppStateMutex>) -> Vec<services::fs_explorer::FsTreeRoot> {
+    services::fs_explorer::scan_installed_roots(&game_paths(&state))
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn fs_read_file(path: String) -> Result<String, String> {
+    services::fs_explorer::read_file_text(&path)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn fs_write_file(path: String, content: String) -> Result<(), String> {
+    services::fs_explorer::write_file_text(&path, &content)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn fs_delete_item(path: String) -> Result<(), String> {
+    services::fs_explorer::delete_fs_item(&path)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn fs_open_in_explorer(path: String) -> Result<(), String> {
+    services::fs_explorer::open_path_in_explorer(&path)
+}
+
+// ── 备份与恢复服务 ─────────────────────────────────────────────
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn backup_list() -> Vec<services::backup::BackupMeta> {
+    services::backup::list_backups()
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn backup_create_snapshot(
+    state: State<AppStateMutex>,
+    components: Vec<String>,
+    note: Option<String>,
+    is_auto: Option<bool>,
+) -> Result<services::backup::BackupMeta, String> {
+    let gp = game_paths(&state);
+    let note_str = note.unwrap_or_else(|| "手动创建快照".to_string());
+    services::backup::create_snapshot(&components, &note_str, is_auto.unwrap_or(false), &gp)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn backup_restore_snapshot(state: State<AppStateMutex>, backup_id: String) -> Result<(), String> {
+    let gp = game_paths(&state);
+    services::backup::restore_snapshot(&backup_id, &gp)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn backup_delete(backup_id: String) -> Result<(), String> {
+    services::backup::delete_backup(&backup_id)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn backup_clean_auto(max_keep: Option<usize>) -> usize {
+    services::backup::clean_auto_backups(max_keep.unwrap_or(10))
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn backup_open_folder() -> Result<(), String> {
+    services::backup::open_backups_folder()
+}
+
+// ── 多组件安全安装流水线 ────────────────────────────────────────
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PipelineResult {
+    pub success: bool,
+    pub cs2_running: bool,
+    pub backup_id: Option<String>,
+    pub files_installed: usize,
+    pub dirs_installed: usize,
+    pub message: String,
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn install_components_pipeline(
+    state: State<AppStateMutex>,
+    components: Vec<String>,
+    override_paths: Option<std::collections::HashMap<String, String>>,
+    use_personal_cfg: Option<bool>,
+) -> Result<PipelineResult, String> {
+    let cs2_running = services::detection::is_cs2_running();
+    if cs2_running {
+        log::warning("install", "检测到 CS2 正在运行中，部分文件可能被游戏锁定，请留意安装结果");
+    }
+
+    let mut gp = game_paths(&state);
+    if let Some(map) = &override_paths {
+        if let Some(p) = map.get("cfg") {
+            gp.game_cfg_path = Some(p.clone());
+        }
+        if let Some(p) = map.get("annotations") {
+            gp.annotations_path = Some(p.clone());
+        }
+        if let Some(p) = map.get("video") {
+            gp.user_cfg_path = Some(p.clone());
+        }
+    }
+
+    // 1. 创建安装前自动快照
+    let backup_meta = services::backup::create_snapshot(
+        &components,
+        "组件安装前自动快照",
+        true,
+        &gp,
+    ).ok();
+    let backup_id = backup_meta.map(|m| m.id);
+
+    // 2. FIFO 淘汰旧自动备份（默认保留最新 10 份）
+    let _ = services::backup::clean_auto_backups(10);
+
+    // 3. 执行部署
+    let staging = staging_paths();
+    let use_personal = use_personal_cfg.unwrap_or(false);
+    let summary = services::installer::deploy_overlay(&staging, &gp, use_personal);
+
+    log::success(
+        "install",
+        &format!("已成功安装所选组件（{} 个文件，{} 个目录）", summary.files_installed, summary.dirs_installed),
+    );
+
+    Ok(PipelineResult {
+        success: true,
+        cs2_running,
+        backup_id,
+        files_installed: summary.files_installed,
+        dirs_installed: summary.dirs_installed,
+        message: "组件安装完成".to_string(),
+    })
+}
+
