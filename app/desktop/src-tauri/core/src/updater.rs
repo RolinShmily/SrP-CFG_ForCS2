@@ -46,11 +46,14 @@ pub fn has_desktop_assets(asset_names: &[String]) -> bool {
     asset_names.iter().any(|name| name == DESKTOP_UPDATE_MARKER)
 }
 
-/// config 资产 = 存在 `SrP-CFG_Runtime_Core.zip`（大小写不敏感）。
+/// config 资产 = 存在任一 SrP-CFG 组件包（大小写不敏感）。
 pub fn has_config_assets(asset_names: &[String]) -> bool {
-    asset_names
-        .iter()
-        .any(|name| name.to_lowercase() == "srp-cfg_runtime_core.zip")
+    asset_names.iter().any(|name| {
+        let lower = name.to_lowercase();
+        lower == "srp-cfg_runtime_core.zip"
+            || lower == "srp-cfg_map_guides.zip"
+            || lower == "srp-cfg_video_settings.zip"
+    })
 }
 
 // ─────────────────────────────────────────────

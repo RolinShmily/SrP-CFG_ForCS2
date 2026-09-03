@@ -36,7 +36,7 @@ pub fn classify_file(relative_path: &str) -> StagedCategory {
     if lower.ends_with(".vcfg") || lower.ends_with(".vcfg_lastclouded") {
         return StagedCategory::Vcfg;
     }
-    if lower.contains("annotations") {
+    if lower.contains("annotations") || lower.contains("guide") {
         return StagedCategory::Annotations;
     }
     if lower.ends_with(".cfg") {
@@ -50,22 +50,23 @@ pub fn classify_file(relative_path: &str) -> StagedCategory {
 
 /// 目标相对路径（与 TS `processUploadToStaging` 的 dst 推导一致）：
 /// - cfg → 原相对路径（保留子目录）
-/// - annotations → "annotations" 段之后的部分（去掉前导分隔符，空则用 basename）
+/// - annotations → "annotations" 段之后的部分（若无 annotations 则保留原相对路径，空则用 basename）
 /// - video → 固定 `cs2_video.txt`
 /// - vcfg / unsupported → None（被阻止/跳过）
 pub fn staging_destination(relative_path: &str) -> Option<(StagedCategory, String)> {
     match classify_file(relative_path) {
         StagedCategory::Cfg => Some((StagedCategory::Cfg, relative_path.to_string())),
         StagedCategory::Annotations => {
-            let idx = relative_path
-                .to_lowercase()
-                .find("annotations")
-                .unwrap_or(0);
-            let sub = relative_path[idx + "annotations".len()..].trim_start_matches(['/', '\\']);
-            let dest = if sub.is_empty() {
-                basename(relative_path).to_string()
+            let lower = relative_path.to_lowercase();
+            let dest = if let Some(idx) = lower.find("annotations") {
+                let sub = relative_path[idx + "annotations".len()..].trim_start_matches(['/', '\\']);
+                if sub.is_empty() {
+                    basename(relative_path).to_string()
+                } else {
+                    sub.to_string()
+                }
             } else {
-                sub.to_string()
+                relative_path.to_string()
             };
             Some((StagedCategory::Annotations, dest))
         }

@@ -1,4 +1,4 @@
-name: Release Runtime Core
+name: Release Decoupled Config Packages
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
           echo "✅ Tag validated: $TAG"
 
   # ============================================
-  # 构建和发布 v3 配置包
+  # 构建和发布 v3 解耦配置包
   # ============================================
   build-and-release:
     needs: validate-tag
@@ -80,7 +80,7 @@ jobs:
       - name: Parse packages configuration
         id: parse_packages
         run: |
-          echo "📋 Parsing packages configuration..."
+          echo "📦 Parsing packages configuration..."
           python3 .github/scripts/parse_packages.py
           echo "✅ Packages configuration parsed"
 
@@ -121,13 +121,13 @@ jobs:
           echo "✅ Release notes generated"
 
       # ============================================
-      # 打包唯一 Runtime Core
+      # 打包解耦组件包 (Runtime Core / 地图指南 / 视频设置)
       # ============================================
-      - name: Build Runtime Core package
+      - name: Build decoupled component packages
         run: |
-          echo "📦 Building Runtime Core package..."
+          echo "📦 Building decoupled component packages..."
           python3 .github/scripts/build_packages.py
-          echo "✅ Runtime Core package built"
+          echo "✅ All component packages built successfully"
 
       - name: Validate release packages
         run: python3 .github/scripts/validate_cfg.py --packages

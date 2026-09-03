@@ -329,6 +329,8 @@ def validate_source() -> None:
 def validate_zip(zip_path: Path, package_name: str) -> None:
     with ZipFile(zip_path) as archive:
         names = archive.namelist()
+        if not names:
+            raise ValidationError(f"{zip_path.name} is empty")
         if len(names) != len(set(names)):
             raise ValidationError(f"{zip_path.name} contains duplicate archive entries")
 
@@ -342,59 +344,64 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
                     f"{zip_path.name} contains forbidden persistence file: {raw_name}"
                 )
 
-        archive_roots = {
-            PurePosixPath(name).parts[0]
-            for name in names
-            if PurePosixPath(name).parts
-        }
-        unexpected_roots = sorted(archive_roots.difference(V3_ROOT_ENTRIES))
-        missing_roots = sorted(V3_ROOT_ENTRIES.difference(archive_roots))
-        if unexpected_roots or missing_roots:
-            details = []
+        if package_name == "runtime_core":
+            archive_roots = {
+                PurePosixPath(name).parts[0]
+                for name in names
+                if PurePosixPath(name).parts
+            }
+            allowed_roots = {"autoexec.cfg", "srp-cfg"}
+            unexpected_roots = sorted(archive_roots.difference(allowed_roots))
             if unexpected_roots:
-                details.append(f"unexpected: {', '.join(unexpected_roots)}")
-            if missing_roots:
-                details.append(f"missing: {', '.join(missing_roots)}")
-            raise ValidationError(
-                f"{zip_path.name} violates the v3 archive root layout ({'; '.join(details)})"
+                raise ValidationError(
+                    f"{zip_path.name} contains unexpected root entries: {', '.join(unexpected_roots)}"
+                )
+
+            required = {
+                "autoexec.cfg",
+                "srp-cfg/user/custom.cfg",
+                "srp-cfg/runtime/init.cfg",
+            }
+            absent = sorted(required.difference(names))
+            if absent:
+                raise ValidationError(f"{zip_path.name} is missing required runtime files: {', '.join(absent)}")
+
+            cfg_text: dict[str, str] = {}
+            for name in names:
+                if name.lower().endswith(".cfg"):
+                    cfg_text[name] = archive.read(name).decode("utf-8-sig")
+                    validate_cfg_syntax(name, cfg_text[name])
+
+            missing: list[str] = []
+            graph: dict[str, list[str]] = {}
+            for name, content in cfg_text.items():
+                for target in exec_targets(content):
+                    if target not in cfg_text:
+                        missing.append(f"{name} -> {target}")
+                graph[name] = [target for target in exec_targets(content, direct_only=True) if target in cfg_text]
+            if missing:
+                raise ValidationError(
+                    f"{zip_path.name} has missing exec targets:\n  " + "\n  ".join(missing)
+                )
+
+            runtime_init_name = "srp-cfg/runtime/init.cfg"
+            assert_runtime_registration_only(
+                cfg_text, runtime_init_name, f"{zip_path.name} Runtime"
             )
 
-        required = {
-            "autoexec.cfg",
-            "srp-cfg/user/custom.cfg",
-        }
-        absent = sorted(required.difference(names))
-        if absent:
-            raise ValidationError(f"{zip_path.name} is missing: {', '.join(absent)}")
+            assert_runtime_registration_only(cfg_text, "autoexec.cfg", zip_path.name)
+            assert_no_cycles(graph, "autoexec.cfg", zip_path.name)
 
-        cfg_text: dict[str, str] = {}
-        for name in names:
-            if name.lower().endswith(".cfg"):
-                cfg_text[name] = archive.read(name).decode("utf-8-sig")
-                validate_cfg_syntax(name, cfg_text[name])
+        elif package_name == "map_guides":
+            guide_files = [n for n in names if n.endswith(".txt") or "Guide" in n]
+            if not guide_files:
+                raise ValidationError(f"{zip_path.name} does not contain any map guide files")
 
-        missing: list[str] = []
-        graph: dict[str, list[str]] = {}
-        for name, content in cfg_text.items():
-            for target in exec_targets(content):
-                if target not in cfg_text:
-                    missing.append(f"{name} -> {target}")
-            graph[name] = [target for target in exec_targets(content, direct_only=True) if target in cfg_text]
-        if missing:
-            raise ValidationError(
-                f"{zip_path.name} has missing exec targets:\n  " + "\n  ".join(missing)
-            )
+        elif package_name == "video_settings":
+            if "cs2_video.txt" not in names:
+                raise ValidationError(f"{zip_path.name} is missing cs2_video.txt")
 
-
-        runtime_init_name = "srp-cfg/runtime/init.cfg"
-        runtime_files = assert_runtime_registration_only(
-            cfg_text, runtime_init_name, f"{zip_path.name} Runtime"
-        )
-
-        assert_runtime_registration_only(cfg_text, "autoexec.cfg", zip_path.name)
-
-        assert_no_cycles(graph, "autoexec.cfg", zip_path.name)
-        print(f"[OK] {zip_path.name}: {len(names)} entries")
+        print(f"[OK] {zip_path.name} ({package_name}): {len(names)} entries")
 
 
 def validate_packages() -> None:
