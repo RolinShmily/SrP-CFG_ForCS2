@@ -253,93 +253,92 @@ export default function AppliedConfigPage() {
       </div>
 
       {/* 左右分栏布局：左侧文件树，右侧代码查看/编辑器 */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-[500px]">
-        {/* 左侧多根文件树 */}
-        <div className="lg:col-span-5 flex flex-col gap-3 overflow-y-auto max-h-[calc(100vh-230px)] pr-1">
-          {roots.map((root) => {
-            const isCollapsed = Boolean(collapsedRoots[root.componentId]);
-            return (
-              <div
-                key={root.componentId}
-                className="bg-bg-card border border-border rounded-lg flex flex-col overflow-hidden transition-all"
-              >
-                {/* 根目录头部（点击折叠/展开） */}
-                <div
-                  onClick={() => toggleRootCollapse(root.componentId)}
-                  className="flex items-center justify-between p-3.5 hover:bg-bg-raised/60 cursor-pointer select-none border-b border-border/60 transition-colors"
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    {isCollapsed ? (
-                      <ChevronRight className="w-4 h-4 text-text-muted shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-orange-400 shrink-0" />
-                    )}
-                    <Package className="w-4 h-4 text-orange-400 shrink-0" />
-                    <span className="font-semibold text-xs text-text truncate">{root.label}</span>
-                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-neutral-800 text-neutral-400 font-mono">
-                      {root.fileCount} 文件
-                    </span>
-                    <span className="text-[10px] text-text-faint font-mono hidden sm:inline">
-                      ({formatBytes(root.totalSize)})
-                    </span>
-                  </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-[520px]">
+        {/* 左侧统一文件树卡片（三个组件根目录共享一个外层卡片与滚动条） */}
+        <div className="lg:col-span-5 bg-bg-card border border-border rounded-xl flex flex-col h-[calc(100vh-180px)] min-h-[520px] overflow-hidden">
+          <div className="flex-1 overflow-y-auto divide-y divide-border/60">
+            {roots.map((root) => {
+              const isCollapsed = Boolean(collapsedRoots[root.componentId]);
+              return (
+                <div key={root.componentId} className="flex flex-col">
+                  {/* 根目录头部（吸顶粘性 / 点击折叠展开） */}
                   <div
-                    className="flex items-center gap-1.5 shrink-0"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={() => toggleRootCollapse(root.componentId)}
+                    className="sticky top-0 z-10 flex items-center justify-between p-3.5 bg-bg-card/95 backdrop-blur-md hover:bg-bg-raised/80 cursor-pointer select-none border-b border-border/40 transition-colors"
                   >
-                    {root.exists && (
-                      <button
-                        type="button"
-                        onClick={() => handleOpenFolder(root.targetPath)}
-                        className="p-1 text-text-muted hover:text-text hover:bg-neutral-800 rounded transition"
-                        title="在文件资源管理器中打开此根目录"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* 展开内容区 */}
-                {!isCollapsed && (
-                  <div className="p-3.5 pt-2 space-y-2">
-                    {/* 物理路径提示 */}
-                    <div
-                      className="text-[11px] font-mono text-text-faint truncate"
-                      title={root.targetPath}
-                    >
-                      {root.targetPath || "未检测到对应路径"}
-                    </div>
-
-                    {/* 根目录内部文件树 */}
-                    <div className="pt-1">
-                      {root.exists && root.tree ? (
-                        <div className="space-y-0.5">
-                          {root.tree.children?.map((child) => (
-                            <TreeNodeItem
-                              key={child.path}
-                              node={child}
-                              selectedPath={selectedFile}
-                              onSelectFile={handleSelectFile}
-                              onDelete={handleDeleteItem}
-                            />
-                          ))}
-                        </div>
+                    <div className="flex items-center gap-2 truncate">
+                      {isCollapsed ? (
+                        <ChevronRight className="w-4 h-4 text-text-muted shrink-0" />
                       ) : (
-                        <div className="py-4 text-center text-xs text-text-faint">
-                          {root.exists ? "目录为空" : "目录不存在或未安装"}
-                        </div>
+                        <ChevronDown className="w-4 h-4 text-orange-400 shrink-0" />
+                      )}
+                      <Package className="w-4 h-4 text-orange-400 shrink-0" />
+                      <span className="font-semibold text-xs text-text truncate">{root.label}</span>
+                      <span className="px-1.5 py-0.2 rounded text-[10px] bg-neutral-800 text-neutral-400 font-mono">
+                        {root.fileCount} 文件
+                      </span>
+                      <span className="text-[10px] text-text-faint font-mono hidden sm:inline">
+                        ({formatBytes(root.totalSize)})
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center gap-1.5 shrink-0"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {root.exists && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenFolder(root.targetPath)}
+                          className="p-1 text-text-muted hover:text-text hover:bg-neutral-800 rounded transition"
+                          title="在文件资源管理器中打开此根目录"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </button>
                       )}
                     </div>
                   </div>
-                )}
-              </div>
-            );
-          })}
+
+                  {/* 展开内容区 */}
+                  {!isCollapsed && (
+                    <div className="p-3.5 pt-2 space-y-2 bg-bg-card/30">
+                      {/* 物理路径提示 */}
+                      <div
+                        className="text-[11px] font-mono text-text-faint truncate px-2 py-1 rounded bg-neutral-900/60 border border-neutral-800/60"
+                        title={root.targetPath}
+                      >
+                        {root.targetPath || "未检测到对应路径"}
+                      </div>
+
+                      {/* 根目录内部文件树 */}
+                      <div className="pt-1">
+                        {root.exists && root.tree ? (
+                          <div className="space-y-0.5">
+                            {root.tree.children?.map((child) => (
+                              <TreeNodeItem
+                                key={child.path}
+                                node={child}
+                                selectedPath={selectedFile}
+                                onSelectFile={handleSelectFile}
+                                onDelete={handleDeleteItem}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="py-4 text-center text-xs text-text-faint">
+                            {root.exists ? "目录为空" : "目录不存在或未安装"}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* 右侧内嵌 CodeMirror 查看与编辑器 */}
-        <div className="lg:col-span-7 flex flex-col h-full min-h-[480px]">
+        <div className="lg:col-span-7 flex flex-col h-[calc(100vh-180px)] min-h-[520px]">
           {selectedFile ? (
             <CodeEditor
               value={fileContent}
@@ -360,7 +359,7 @@ export default function AppliedConfigPage() {
               }
             />
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-neutral-800 rounded-lg p-8 text-center text-neutral-500 bg-neutral-900/30">
+            <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-neutral-800 rounded-xl p-8 text-center text-neutral-500 bg-neutral-900/30">
               <FileCode className="w-12 h-12 text-neutral-700 mb-3" />
               <div className="text-sm font-medium text-neutral-400">点击左侧文件树中的任意文件</div>
               <p className="text-xs text-neutral-600 mt-1">

@@ -6,12 +6,60 @@ import {
   Loader2,
   RotateCcw,
   Sparkles,
+  Undo2,
+  User,
   UserRoundCog,
   Wand2,
 } from "lucide-react";
 import type { DetectionResult, UserConfigDocument, VcfgSnapshot } from "../types";
 import { PageHeader } from "@srp-cfg/ui";
 import { CodeEditor } from "../components/CodeEditor";
+
+const VCFG_BLOCK_REGEX = /\n*\/\/\s*───\s*VCFG Snapshot Layer[\s\S]*?\/\/\s*───\s*VCFG Snapshot Layer End\s*───\n*/i;
+
+// 检查当前编辑器中是否包含已注入的 VCFG Snapshot 区域
+function hasVcfgSnippet(content: string): boolean {
+  return VCFG_BLOCK_REGEX.test(content);
+}
+
+// 一键撤销/移除已注入的 VCFG Snapshot 区域
+function removeVcfgSnippet(currentContent: string): string {
+  return currentContent
+    .replace(VCFG_BLOCK_REGEX, "\n\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd() + "\n";
+}
+
+// 将提取的 VCFG 配置严格插入在 // ─── Preset Layer End ─── 与 // ─── SrP-CFG User Layer ─── 之间
+function insertVcfgSnippet(currentContent: string, snippet: string, accountInfo?: string): string {
+  const markerPresetEnd = "// ─── Preset Layer End ───";
+  const markerUserStart = "// ─── SrP-CFG User Layer ───";
+
+  const blockHeader = `// ─── VCFG Snapshot Layer (${accountInfo || "Steam 账号偏好提取"}) ───\n`;
+  const blockFooter = `// ─── VCFG Snapshot Layer End ───`;
+  const insertionBlock = `${blockHeader}${snippet.trim()}\n${blockFooter}`;
+
+  // 1. 如果已有旧的 VCFG Snapshot Layer，则直接替换该区域
+  if (hasVcfgSnippet(currentContent)) {
+    return currentContent.replace(VCFG_BLOCK_REGEX, `\n\n${insertionBlock}\n\n`);
+  }
+
+  // 2. 如果存在 // ─── Preset Layer End ───，插入在其后
+  const presetEndIdx = currentContent.indexOf(markerPresetEnd);
+  if (presetEndIdx !== -1) {
+    const insertPos = presetEndIdx + markerPresetEnd.length;
+    return `${currentContent.slice(0, insertPos)}\n\n${insertionBlock}\n\n${currentContent.slice(insertPos).trimStart()}`;
+  }
+
+  // 3. 如果存在 // ─── SrP-CFG User Layer ───，插入在其前
+  const userStartIdx = currentContent.indexOf(markerUserStart);
+  if (userStartIdx !== -1) {
+    return `${currentContent.slice(0, userStartIdx).trimEnd()}\n\n${insertionBlock}\n\n${currentContent.slice(userStartIdx)}`;
+  }
+
+  // 4. 回退：追加在内容顶部或末尾
+  return `${insertionBlock}\n\n${currentContent}`;
+}
 
 interface Props {
   detection: DetectionResult | null;
@@ -27,9 +75,9 @@ const PRESETS = [
   },
   {
     id: "default",
-    name: "SrP 推荐模版 (Default)",
+    name: "RoL1n 自用模版 (Default)",
     command: "srp_apply_default",
-    desc: "SrP-CFG 推荐的开箱即用综合模版，包含全套常用快捷键与功能绑定",
+    desc: "RoL1n 长期实战调校的开箱即用自用模版，包含全套常用快捷键与功能绑定",
   },
   {
     id: "echo",
@@ -189,14 +237,24 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
     try {
       const snippet = await window.api.generateCfgFromSnapshot(importCategories);
       if (snippet) {
-        const header = `\n\n// ── 从当前 Steam 账号提取的偏好注入 ──\n`;
-        setContent((prev) => `${prev.trimEnd()}${header}${snippet}\n`);
+        const accountInfo = detection?.currentUser?.personaName
+          ? `${detection.currentUser.personaName} (${detection.currentUser.accountId})`
+          : detection?.currentUser?.accountId || "Steam 账号";
+        setContent((prev) => insertVcfgSnippet(prev, snippet, accountInfo));
       }
     } catch (err) {
       setError(`生成注入代码失败: ${err}`);
     } finally {
       setGenerating(false);
     }
+  };
+
+  // 检查是否包含已注入的 VCFG
+  const hasInjectedVcfg = useMemo(() => hasVcfgSnippet(content), [content]);
+
+  // 一键撤销 VCFG 写入
+  const handleUndoVcfg = () => {
+    setContent((prev) => removeVcfgSnippet(prev));
   };
 
   const handleOpenFolder = async () => {
@@ -266,16 +324,30 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
 
         {/* VCFG 辅助提取 */}
         <div className="bg-bg-card border border-border rounded-lg p-4 space-y-3 flex flex-col justify-between">
-          <div>
-            <h2 className="text-sm font-semibold text-text flex items-center gap-2 mb-2">
+          <div className="space-y-2">
+            <h2 className="text-sm font-semibold text-text flex items-center gap-2">
               <Wand2 className="w-4 h-4 text-orange-400" />
               VCFG 偏好一键提取
             </h2>
+
+            {/* 当前绑定的 Steam 账号状态提示 */}
+            <div className="flex items-center gap-2 p-2 rounded bg-neutral-900/80 border border-border/60 text-xs">
+              <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <span className="text-text-muted text-[11px]">提取来源: </span>
+                <span className="font-medium text-text text-[11px] truncate">
+                  {detection?.currentUser?.personaName
+                    ? `${detection.currentUser.personaName} (${detection.currentUser.accountId})`
+                    : detection?.currentUser?.accountId || "未检测到 Steam 账号"}
+                </span>
+              </div>
+            </div>
+
             <p className="text-xs text-text-muted leading-relaxed">
-              从当前 Steam 登录账号的云端与本机 VCFG 中提取准星、持枪视角与按键绑定，自动转换为 CFG 注入到底部。
+              从上述 Steam 账号的 VCFG 中提取准星、持枪视角与按键绑定，严格注入到 Preset 与 User 层之间。
             </p>
 
-            <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
+            <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
               <label className="flex items-center gap-1.5 cursor-pointer text-text-secondary">
                 <input
                   type="checkbox"
@@ -283,7 +355,7 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
                   onChange={(e) =>
                     setImportCategories((prev) => ({ ...prev, bindings: e.target.checked }))
                   }
-                  className="accent-orange-500"
+                  className="accent-orange-500 rounded"
                 />
                 <span>按键绑定</span>
               </label>
@@ -294,7 +366,7 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
                   onChange={(e) =>
                     setImportCategories((prev) => ({ ...prev, userConvars: e.target.checked }))
                   }
-                  className="accent-orange-500"
+                  className="accent-orange-500 rounded"
                 />
                 <span>准星与视角</span>
               </label>
@@ -306,7 +378,7 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
               type="button"
               onClick={handleGenerateAndAppend}
               disabled={generating}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-medium border border-neutral-700 transition disabled:opacity-50"
+              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-medium border border-neutral-700 transition disabled:opacity-50 cursor-pointer"
             >
               {generating ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -315,6 +387,17 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
               )}
               <span>提取并填入编辑器</span>
             </button>
+            {hasInjectedVcfg && (
+              <button
+                type="button"
+                onClick={handleUndoVcfg}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-medium transition cursor-pointer shrink-0"
+                title="一键撤销并移除注入的 VCFG 偏好层"
+              >
+                <Undo2 className="w-3.5 h-3.5 text-red-400" />
+                <span>撤销写入</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -325,7 +408,7 @@ export default function PersonalizePage({ detection, onDirtyChange }: Props) {
           value={content}
           onChange={setContent}
           onSave={save}
-          title={document?.path ? `srp-cfg/user/custom.cfg (${document.path})` : "srp-cfg/user/custom.cfg"}
+          title={document?.path || "srp-cfg/user/custom.cfg"}
           isSaved={!dirty}
           actions={
             <>

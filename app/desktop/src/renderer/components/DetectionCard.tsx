@@ -1,37 +1,22 @@
-import { Cloud, Database, Folder, RefreshCw, User } from "lucide-react";
+import { Cloud, Database, Folder, User } from "lucide-react";
 import { LabeledValue } from "@srp-cfg/ui";
 import type { DetectionResult } from "../types";
 
 interface Props {
   detection: DetectionResult | null;
-  refreshing: boolean;
-  onRefresh: () => void;
+  refreshing?: boolean;
+  onRefresh?: () => void;
   onUserChange: (accountId: string) => void;
 }
 
 export default function DetectionCard({
   detection,
-  refreshing,
-  onRefresh,
   onUserChange,
 }: Props) {
   return (
     <div className="bg-bg-card border border-border rounded-[var(--radius)] p-4 space-y-2">
       <div className="flex items-center justify-between mb-3">
         <h2 className="ui-panel-title">路径检测</h2>
-        <button
-          type="button"
-          aria-label="刷新路径检测"
-          onClick={onRefresh}
-          disabled={refreshing}
-          className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border-none bg-transparent text-text-muted transition-colors hover:bg-accent-bg hover:text-accent disabled:opacity-50"
-          title="刷新路径检测"
-        >
-          <RefreshCw
-            size={14}
-            className={refreshing ? "animate-spin" : ""}
-          />
-        </button>
       </div>
 
       {detection ? (

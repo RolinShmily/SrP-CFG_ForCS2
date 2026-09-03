@@ -87,7 +87,7 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* Left column */}
         <div className="space-y-5">
           {/* Project intro */}
@@ -120,7 +120,7 @@ export default function AboutPage() {
           {/* Tech stack */}
           <Card padding="lg" className="space-y-3.5">
             <h2 className="ui-section-title flex items-center gap-2">
-              <Boxes className="w-4 h-4 text-teal" />
+              <Boxes className="w-4 h-4 text-orange-400" />
               <span>技术栈 (Tech Stack)</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -145,38 +145,6 @@ export default function AboutPage() {
 
         {/* Right column */}
         <div className="space-y-5">
-          {/* Quick links */}
-          <Card padding="lg" className="space-y-3.5">
-            <h2 className="ui-section-title flex items-center gap-2">
-              <Globe className="w-4 h-4 text-orange-400" />
-              <span>快速链接</span>
-            </h2>
-            <div className="space-y-2">
-              {links.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <button
-                    type="button"
-                    key={link.label}
-                    onClick={() => window.api.openExternal(link.url)}
-                    className="group w-full flex items-center gap-3 p-3 bg-bg-raised border border-border rounded-lg transition-all cursor-pointer hover:border-orange-500/40 hover:bg-bg-hover text-left"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0 text-orange-400 group-hover:scale-105 transition-transform">
-                      <Icon size={16} />
-                    </div>
-                    <span className="text-xs font-medium text-text-secondary group-hover:text-text transition-colors flex-1 truncate">
-                      {link.label}
-                    </span>
-                    <ExternalLink
-                      size={12}
-                      className="ml-auto text-text-faint group-hover:text-orange-400 shrink-0"
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-
           {/* Contributors */}
           <Card padding="lg" className="space-y-3.5">
             <h2 className="ui-section-title flex items-center gap-2">
@@ -229,6 +197,38 @@ export default function AboutPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </Card>
+
+          {/* Quick links */}
+          <Card padding="lg" className="space-y-3.5">
+            <h2 className="ui-section-title flex items-center gap-2">
+              <Globe className="w-4 h-4 text-orange-400" />
+              <span>快速链接</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {links.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <button
+                    type="button"
+                    key={link.label}
+                    onClick={() => window.api.openExternal(link.url)}
+                    className="group w-full flex items-center gap-2.5 p-2.5 bg-bg-raised border border-border rounded-lg transition-all cursor-pointer hover:border-orange-500/40 hover:bg-bg-hover text-left"
+                  >
+                    <div className="w-7 h-7 rounded-md bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0 text-orange-400 group-hover:scale-105 transition-transform">
+                      <Icon size={14} />
+                    </div>
+                    <span className="text-xs font-medium text-text-secondary group-hover:text-text transition-colors flex-1 truncate">
+                      {link.label}
+                    </span>
+                    <ExternalLink
+                      size={12}
+                      className="text-text-faint group-hover:text-orange-400 shrink-0"
+                    />
+                  </button>
+                );
+              })}
             </div>
           </Card>
 

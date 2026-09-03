@@ -13,8 +13,9 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 
 use srp_cfg_core::{
-    classify_file, folders_to_remove, inspect_cfg_files, is_timestamp_folder,
-    next_timestamp_folder, staging_destination, upload_file_type, StagedCategory, UploadFileType,
+    classify_file_with_content, folders_to_remove, inspect_cfg_files, is_timestamp_folder,
+    next_timestamp_folder, staging_destination_with_content, upload_file_type, StagedCategory,
+    UploadFileType,
 };
 
 use crate::ctx;
@@ -26,10 +27,6 @@ const MAX_DOWNLOADS: usize = 5;
 
 fn base() -> PathBuf {
     ctx::base_dir()
-}
-
-pub fn dir_path(name: &str) -> PathBuf {
-    base().join(name)
 }
 
 /// 安装暂存区（部署到游戏前的中间沙盒）：staging/cfg|annotations|video
@@ -420,8 +417,13 @@ pub fn process_upload_to_staging(upload_folder: &Path, mode: InstallMode) -> Sta
             .strip_prefix(upload_folder)
             .map(|p| p.to_string_lossy().to_string())
             .unwrap_or_default();
-        let Some((category, dest)) = staging_destination(&rel) else {
-            match classify_file(&rel) {
+        let content_sample = if rel.to_lowercase().ends_with(".txt") {
+            fs::read_to_string(&file).ok()
+        } else {
+            None
+        };
+        let Some((category, dest)) = staging_destination_with_content(&rel, content_sample.as_deref()) else {
+            match classify_file_with_content(&rel, content_sample.as_deref()) {
                 StagedCategory::Vcfg => counts.blocked_vcfg += 1,
                 _ => counts.unsupported += 1,
             }
@@ -527,6 +529,13 @@ pub fn inspect_staged_config() -> (String, usize) {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct StagedFileInfo {
+    pub relative_path: String,
+    pub size: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ComponentStagingInfo {
     pub component_id: String,
     pub file_count: usize,
@@ -534,6 +543,7 @@ pub struct ComponentStagingInfo {
     pub last_modified: Option<u64>,
     pub is_ready: bool,
     pub sample_files: Vec<String>,
+    pub files: Vec<StagedFileInfo>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -550,13 +560,16 @@ pub fn scan_component_staging(category: &str) -> ComponentStagingInfo {
     let mut total_size = 0u64;
     let mut last_modified: Option<u64> = None;
     let mut sample_files = Vec::new();
+    let mut files = Vec::new();
 
     if dir.exists() {
         for f in walk_sync_abs(&dir) {
             if f.is_file() {
                 file_count += 1;
+                let mut size = 0u64;
                 if let Ok(meta) = f.metadata() {
-                    total_size += meta.len();
+                    size = meta.len();
+                    total_size += size;
                     if let Ok(mtime) = meta.modified() {
                         if let Ok(dur) = mtime.duration_since(std::time::UNIX_EPOCH) {
                             let ms = dur.as_millis() as u64;
@@ -564,14 +577,22 @@ pub fn scan_component_staging(category: &str) -> ComponentStagingInfo {
                         }
                     }
                 }
-                if sample_files.len() < 5 {
-                    if let Ok(rel) = f.strip_prefix(&dir) {
-                        sample_files.push(rel.to_string_lossy().to_string());
+                if let Ok(rel) = f.strip_prefix(&dir) {
+                    let rel_str = rel.to_string_lossy().replace('\\', "/");
+                    if sample_files.len() < 5 {
+                        sample_files.push(rel_str.clone());
                     }
+                    files.push(StagedFileInfo {
+                        relative_path: rel_str,
+                        size,
+                    });
                 }
             }
         }
     }
+
+    // 按照相对路径升序排序，方便前端稳定展示
+    files.sort_by(|a, b| a.relative_path.cmp(&b.relative_path));
 
     ComponentStagingInfo {
         component_id: category.to_string(),
@@ -580,6 +601,7 @@ pub fn scan_component_staging(category: &str) -> ComponentStagingInfo {
         last_modified,
         is_ready: file_count > 0,
         sample_files,
+        files,
     }
 }
 

@@ -93,6 +93,19 @@ export interface UploadFileInfo {
 
 export type InstallMode = "overlay" | "append";
 
+// ── Pre-install Staging Item ─────────────────────────────────
+
+export interface PreInstallItem {
+  id: string;
+  name: string;
+  sourceType: "download" | "upload";
+  size: number;
+  timestamp: number;
+  folderName?: string;
+  fileCount?: number;
+  componentType: "cfg" | "annotations" | "video" | "mixed";
+}
+
 // ── Downloads ────────────────────────────────────────────────
 
 export interface DownloadEntry {
@@ -176,6 +189,11 @@ export interface UpdateCheckResult {
 
 // ── Multi-Root Physical File Explorer ─────────────────────────
 
+export interface StagedFileInfo {
+  relativePath: string;
+  size: number;
+}
+
 export interface ComponentStagingInfo {
   componentId: string;
   fileCount: number;
@@ -183,6 +201,7 @@ export interface ComponentStagingInfo {
   lastModified?: number | null;
   isReady: boolean;
   sampleFiles: string[];
+  files?: StagedFileInfo[];
 }
 
 export interface StagingStatus {

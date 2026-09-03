@@ -9,7 +9,7 @@ import BackupRestorePage from "./pages/BackupRestorePage";
 import AppliedConfigPage from "./pages/AppliedConfigPage";
 import PersonalizePage from "./pages/PersonalizePage";
 import AboutPage from "./pages/AboutPage";
-import type { DetectionResult } from "./types";
+import type { DetectionResult, PreInstallItem } from "./types";
 
 export type Page = "install" | "download" | "quickstart" | "personalize" | "backup" | "applied" | "about";
 
@@ -17,6 +17,47 @@ export default function App() {
   const [page, setPage] = useState<Page>("quickstart");
   const [personalizeDirty, setPersonalizeDirty] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
+
+  // ── 预安装清单（跨标签页状态保持 + 本地持久化缓存）──
+  const [preInstallList, setPreInstallList] = useState<PreInstallItem[]>(() => {
+    try {
+      const saved = localStorage.getItem("srp_pre_install_queue");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("srp_pre_install_queue", JSON.stringify(preInstallList));
+    } catch {}
+  }, [preInstallList]);
+
+  const handleTogglePreInstall = useCallback((item: PreInstallItem) => {
+    setPreInstallList((prev) => {
+      const exists = prev.some((p) => p.id === item.id);
+      if (exists) {
+        return prev.filter((p) => p.id !== item.id);
+      }
+      return [...prev, item];
+    });
+  }, []);
+
+  const handleAddPreInstall = useCallback((item: PreInstallItem) => {
+    setPreInstallList((prev) => {
+      if (prev.some((p) => p.id === item.id)) return prev;
+      return [...prev, item];
+    });
+  }, []);
+
+  const handleRemovePreInstall = useCallback((id: string) => {
+    setPreInstallList((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const handleClearPreInstall = useCallback(() => {
+    setPreInstallList([]);
+  }, []);
 
   // Detection runs once on startup, shared across pages
   const [detection, setDetection] = useState<DetectionResult | null>(null);
@@ -84,13 +125,25 @@ export default function App() {
 
   const pages: Record<Page, React.ReactNode> = {
     quickstart: <QuickStartPage detection={detection} onNavigate={setPage} />,
-    download: <DownloadPage onNavigate={setPage} />,
+    download: (
+      <DownloadPage
+        onNavigate={setPage}
+        preInstallList={preInstallList}
+        onTogglePreInstall={handleTogglePreInstall}
+        onAddPreInstall={handleAddPreInstall}
+        onRemovePreInstall={handleRemovePreInstall}
+        onClearPreInstall={handleClearPreInstall}
+      />
+    ),
     install: (
       <InstallPage
         detection={detection}
         refreshing={refreshing}
         onRefresh={detect}
         onUserChange={handleUserChange}
+        preInstallList={preInstallList}
+        onClearPreInstall={handleClearPreInstall}
+        onNavigate={setPage}
       />
     ),
     personalize: <PersonalizePage detection={detection} onDirtyChange={setPersonalizeDirty} />,

@@ -291,11 +291,17 @@ export function createMockApi(): ElectronAPI {
     getStagingStatus: async (): Promise<StagingStatus> => ({
       cfg: {
         componentId: "cfg",
-        fileCount: 28,
+        fileCount: 4,
         totalSize: 116802,
         lastModified: Date.now() - 3600000,
         isReady: true,
-        sampleFiles: ["autoexec.cfg", "aliases.cfg", "jumpthrow.cfg", "crosshair.cfg"],
+        sampleFiles: ["autoexec.cfg", "srp-cfg/runtime/init.cfg", "srp-cfg/user/custom.cfg", "srp-cfg/features/autoview/runtime.cfg"],
+        files: [
+          { relativePath: "autoexec.cfg", size: 540 },
+          { relativePath: "srp-cfg/runtime/init.cfg", size: 1200 },
+          { relativePath: "srp-cfg/user/custom.cfg", size: 680 },
+          { relativePath: "srp-cfg/features/autoview/runtime.cfg", size: 1450 },
+        ],
       },
       annotations: {
         componentId: "annotations",
@@ -304,6 +310,7 @@ export function createMockApi(): ElectronAPI {
         lastModified: null,
         isReady: false,
         sampleFiles: [],
+        files: [],
       },
       video: {
         componentId: "video",
@@ -312,6 +319,7 @@ export function createMockApi(): ElectronAPI {
         lastModified: null,
         isReady: false,
         sampleFiles: [],
+        files: [],
       },
     }),
 

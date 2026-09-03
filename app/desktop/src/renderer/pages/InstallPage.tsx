@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Folder,
   RefreshCw,
@@ -14,22 +14,25 @@ import {
   ShieldCheck,
   ChevronDown,
   ChevronRight,
-  ArrowDownToLine,
-  ExternalLink,
-  Sparkles,
+  Shield,
+  FileText,
+  ArrowRight,
+  Layers,
+  RotateCcw,
 } from "lucide-react";
-import SteamStatusBanner from "../components/SteamStatusBanner";
-import UploadZone from "../components/UploadZone";
-import UploadedList from "../components/UploadedList";
+import DetectionCard from "../components/DetectionCard";
 import { PageHeader, Modal } from "@srp-cfg/ui";
-import type { DetectionResult, StagingStatus } from "../types";
-import { dl } from "../lib/downloads";
+import type { DetectionResult, StagingStatus, FsTreeNode, FsTreeRoot, PreInstallItem } from "../types";
+import type { Page } from "../App";
 
 interface Props {
   detection: DetectionResult | null;
   refreshing: boolean;
   onRefresh: () => void;
   onUserChange: (accountId: string) => void;
+  preInstallList: PreInstallItem[];
+  onClearPreInstall: () => void;
+  onNavigate?: (page: Page) => void;
 }
 
 interface PathModalState {
@@ -49,773 +52,903 @@ function formatBytes(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
 
+// 待安装文件紧凑列表子组件（带色彩状态胶囊）
+const PreInstallFileList: React.FC<{
+  files: Array<{ relativePath: string; size: number }>;
+  compKey: "cfg" | "annotations" | "video";
+  getFileStatus: (relPath: string, compKey: "cfg" | "annotations" | "video") => "new" | "overwrite" | "protected";
+}> = ({ files, compKey, getFileStatus }) => {
+  const overwriteCount = files.filter((f) => getFileStatus(f.relativePath, compKey) === "overwrite").length;
+  const newCount = files.filter((f) => getFileStatus(f.relativePath, compKey) === "new").length;
+  const protectedCount = files.filter((f) => getFileStatus(f.relativePath, compKey) === "protected").length;
+
+  return (
+    <div className="mt-2.5 rounded-lg border border-border/80 bg-neutral-950/70 overflow-hidden text-xs">
+      <div className="flex flex-wrap items-center justify-between px-3 py-2 bg-neutral-900/90 border-b border-border/60 gap-2">
+        <span className="text-[11px] font-mono text-text-muted">
+          待安装文件明细 ({files.length} 项)
+        </span>
+        <div className="flex items-center gap-2 text-[10px] font-sans">
+          {newCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+              {newCount} 新增
+            </span>
+          )}
+          {overwriteCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/25 font-medium">
+              {overwriteCount} 覆盖
+            </span>
+          )}
+          {protectedCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/25 font-medium">
+              {protectedCount} 保持保护
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="max-h-48 overflow-y-auto divide-y divide-border/30 font-mono p-1">
+        {files.map((file) => {
+          const status = getFileStatus(file.relativePath, compKey);
+          return (
+            <div
+              key={file.relativePath}
+              className="flex items-center justify-between px-2.5 py-1.5 hover:bg-neutral-800/40 rounded transition gap-2"
+            >
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <FileText className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+                <span className="truncate text-neutral-300 text-[11px]" title={file.relativePath}>
+                  {file.relativePath}
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 shrink-0 text-[11px]">
+                <span className="text-neutral-500 text-[10px]">{formatBytes(file.size)}</span>
+                {status === "new" && (
+                  <span className="px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-sans font-medium flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>新增</span>
+                  </span>
+                )}
+                {status === "overwrite" && (
+                  <span className="px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-sans font-medium flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    <span>覆盖</span>
+                  </span>
+                )}
+                {status === "protected" && (
+                  <span className="px-1.5 py-0.2 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 text-[10px] font-sans font-medium flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    <span>保持保护</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 export default function InstallPage({
   detection,
   refreshing,
   onRefresh,
   onUserChange,
+  preInstallList,
+  onClearPreInstall,
+  onNavigate,
 }: Props) {
-  // Component installation toggles
-  const [installCfg, setInstallCfg] = useState(true);
-  const [installAnnotations, setInstallAnnotations] = useState(true);
-  const [installVideo, setInstallVideo] = useState(false);
+  // 组件选择勾选状态
+  const [selectedComponents, setSelectedComponents] = useState({
+    cfg: true,
+    annotations: true,
+    video: false,
+  });
 
-  // Staging status (local downloaded/ready files)
+  // 路径自定义覆盖
+  const [customPaths, setCustomPaths] = useState({
+    cfg: "",
+    annotations: "",
+    video: "",
+  });
+
+  // 路径编辑 Modal 状态
+  const [pathModal, setPathModal] = useState<PathModalState>({
+    open: false,
+    componentKey: "cfg",
+    title: "",
+    description: "",
+    currentValue: "",
+    defaultValue: "",
+  });
+  const [pathInputVal, setPathInputVal] = useState("");
+
+  // 暂存区扫描状态
   const [stagingStatus, setStagingStatus] = useState<StagingStatus | null>(null);
-  const [inCardDownloading, setInCardDownloading] = useState<string | null>(null);
+  const [loadingStaging, setLoadingStaging] = useState(false);
 
-  // Collapsible cards state
-  const [collapsedComps, setCollapsedComps] = useState<Record<string, boolean>>({});
+  // 待安装文件清单折叠状态
+  const [fileListExpanded, setFileListExpanded] = useState({
+    cfg: false,
+    annotations: false,
+    video: false,
+  });
 
-  const toggleCompCollapse = (key: string) => {
-    setCollapsedComps((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
+  // 保护现有 custom.cfg 勾选状态（默认开启）
+  const [protectCustomCfg, setProtectCustomCfg] = useState(true);
 
-  // Custom path overrides
-  const [customCfgPath, setCustomCfgPath] = useState<string>("");
-  const [customAnnotationsPath, setCustomAnnotationsPath] = useState<string>("");
-  const [customVideoPath, setCustomVideoPath] = useState<string>("");
+  // 已安装的现有物理文件路径缓存
+  const [installedPathSets, setInstalledPathSets] = useState<{
+    cfg: Set<string>;
+    annotations: Set<string>;
+    video: Set<string>;
+  }>({
+    cfg: new Set(),
+    annotations: new Set(),
+    video: new Set(),
+  });
 
-  // Path Edit Modal state
-  const [pathModal, setPathModal] = useState<PathModalState | null>(null);
-
-  // Process status
-  const [cs2Running, setCs2Running] = useState(false);
+  // 安装过程状态
   const [installing, setInstalling] = useState(false);
-  const [installSuccessMessage, setInstallSuccessMessage] = useState<string | null>(null);
+  const [installResult, setInstallResult] = useState<{
+    success: boolean;
+    message: string;
+    filesInstalled: number;
+    backupId?: string;
+  } | null>(null);
 
-  const [selectedUpload, setSelectedUpload] = useState<string | null>(null);
-  const uploadedListRef = useRef<{ reload: () => void } | null>(null);
-
-  // Load staging area status
+  // 扫描暂存区
   const loadStagingStatus = useCallback(async () => {
+    setLoadingStaging(true);
     try {
       const status = await window.api.getStagingStatus();
       setStagingStatus(status);
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  useEffect(() => {
-    loadStagingStatus();
-  }, [loadStagingStatus]);
-
-  // Check if CS2 is running
-  const checkProcess = useCallback(async () => {
-    try {
-      const running = await window.api.checkCs2Running();
-      setCs2Running(running);
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  useEffect(() => {
-    checkProcess();
-    const interval = setInterval(checkProcess, 5000);
-    return () => clearInterval(interval);
-  }, [checkProcess]);
-
-  const effectiveCfgPath = customCfgPath || detection?.cs2CfgPath || "";
-  const effectiveAnnotationsPath = customAnnotationsPath || detection?.annotationsPath || "";
-  const effectiveVideoPath = customVideoPath || detection?.userCfgPath || "";
-
-  // 卡片内一键极速下载组件包
-  const handleInCardDownload = async (componentKey: "cfg" | "annotations" | "video") => {
-    const compMeta = {
-      cfg: { file: "SrP-CFG_Runtime_Core.zip", url: dl("SrP-CFG_Runtime_Core.zip") },
-      annotations: { file: "SrP-CFG_Map_Guides.zip", url: dl("SrP-CFG_Map_Guides.zip") },
-      video: { file: "SrP-CFG_Video_Settings.zip", url: dl("SrP-CFG_Video_Settings.zip") },
-    }[componentKey];
-
-    setInCardDownloading(componentKey);
-    try {
-      const isWebPreview =
-        typeof window === "undefined" || !(window as any).__TAURI_INTERNALS__;
-      if (isWebPreview) {
-        await new Promise((r) => setTimeout(r, 600));
-      } else {
-        await window.api.downloadFromUrl(compMeta.url, compMeta.file);
-      }
-      await loadStagingStatus();
-    } catch (err) {
-      alert(`下载失败: ${err}`);
+    } catch (e) {
+      console.error("加载暂存区状态失败:", e);
     } finally {
-      setInCardDownloading(null);
+      setLoadingStaging(false);
     }
-  };
+  }, []);
 
-  const openEditPath = (componentKey: "cfg" | "annotations" | "video") => {
-    if (componentKey === "cfg") {
-      setPathModal({
-        open: true,
-        componentKey: "cfg",
-        title: "自定义 CS2 CFG 运行时路径",
-        description: "通常位于 Counter-Strike 2 安装目录下的 game/csgo/cfg 文件夹。",
-        currentValue: effectiveCfgPath,
-        defaultValue: detection?.cs2CfgPath || "",
-      });
-    } else if (componentKey === "annotations") {
-      setPathModal({
-        open: true,
-        componentKey: "annotations",
-        title: "自定义地图跑图与指南路径",
-        description: "通常位于 Counter-Strike 2 安装目录下的 game/csgo/annotations 文件夹。",
-        currentValue: effectiveAnnotationsPath,
-        defaultValue: detection?.annotationsPath || "",
-      });
+  // 递归收集目录树中的所有相对路径
+  const collectTreeRelPaths = (node?: FsTreeNode, prefix = ""): string[] => {
+    if (!node) return [];
+    let result: string[] = [];
+    const currentRel = prefix ? `${prefix}/${node.name}` : node.name;
+    if (node.isDir) {
+      if (node.children && node.children.length > 0) {
+        for (const child of node.children) {
+          result = result.concat(collectTreeRelPaths(child, currentRel));
+        }
+      }
     } else {
-      setPathModal({
-        open: true,
-        componentKey: "video",
-        title: "自定义视频/用户配置路径",
-        description: "位于 Steam 用户数据目录 userdata/<账号ID>/730/local/cfg。",
-        currentValue: effectiveVideoPath,
-        defaultValue: detection?.userCfgPath || "",
-      });
+      result.push(currentRel.toLowerCase());
     }
+    return result;
   };
 
-  const handleSavePathModal = () => {
-    if (!pathModal) return;
-    const trimmed = pathModal.currentValue.trim();
-    if (pathModal.componentKey === "cfg") {
-      setCustomCfgPath(trimmed);
-    } else if (pathModal.componentKey === "annotations") {
-      setCustomAnnotationsPath(trimmed);
-    } else if (pathModal.componentKey === "video") {
-      setCustomVideoPath(trimmed);
+  // 扫描物理已安装目录
+  const loadInstalledFiles = useCallback(async () => {
+    if (!detection) return;
+    try {
+      const roots: FsTreeRoot[] = await window.api.fsScanInstalledRoots();
+      const newSets = {
+        cfg: new Set<string>(),
+        annotations: new Set<string>(),
+        video: new Set<string>(),
+      };
+
+      for (const r of roots) {
+        if (r.componentId === "game-cfg") {
+          for (const p of collectTreeRelPaths(r.tree)) newSets.cfg.add(p);
+        } else if (r.componentId === "annotations") {
+          for (const p of collectTreeRelPaths(r.tree)) newSets.annotations.add(p);
+        } else if (r.componentId === "video") {
+          for (const p of collectTreeRelPaths(r.tree)) newSets.video.add(p);
+        }
+      }
+      setInstalledPathSets(newSets);
+    } catch (e) {
+      console.error("扫描物理已安装目录失败:", e);
     }
-    setPathModal(null);
+  }, [detection]);
+
+  useEffect(() => {
+    void loadStagingStatus();
+    void loadInstalledFiles();
+  }, [loadStagingStatus, loadInstalledFiles]);
+
+  // 严格队列驱动与物理就绪判定：
+  // 1. 若队列为空（未选定任何包） -> 全面禁用
+  // 2. 若队列非空 -> 根据暂存区实际解压归类的就绪文件数动态激活对应卡片
+  const isQueueActive = preInstallList.length > 0;
+
+  const hasCfgInQueue = isQueueActive && (stagingStatus?.cfg.fileCount ?? 0) > 0;
+  const hasAnnotationsInQueue = isQueueActive && (stagingStatus?.annotations.fileCount ?? 0) > 0;
+  const hasVideoInQueue = isQueueActive && (stagingStatus?.video.fileCount ?? 0) > 0;
+
+  // 当预安装清单变化时，智能同步勾选状态
+  useEffect(() => {
+    setSelectedComponents({
+      cfg: !!hasCfgInQueue,
+      annotations: !!hasAnnotationsInQueue,
+      video: !!hasVideoInQueue,
+    });
+  }, [hasCfgInQueue, hasAnnotationsInQueue, hasVideoInQueue]);
+
+  // 预检文件状态判断
+  const getFileStatus = useCallback(
+    (relPath: string, compKey: "cfg" | "annotations" | "video"): "new" | "overwrite" | "protected" => {
+      const normalized = relPath.replace(/\\/g, "/").toLowerCase();
+      if (
+        compKey === "cfg" &&
+        protectCustomCfg &&
+        (normalized === "srp-cfg/user/custom.cfg" || normalized.endsWith("/custom.cfg")) &&
+        installedPathSets.cfg.has(normalized)
+      ) {
+        return "protected";
+      }
+      const set = installedPathSets[compKey];
+      if (set && set.has(normalized)) {
+        return "overwrite";
+      }
+      return "new";
+    },
+    [installedPathSets, protectCustomCfg]
+  );
+
+  // 物理默认路径
+  const defaultCfgPath = detection?.cs2CfgPath || "";
+  const defaultAnnotationsPath = detection?.annotationsPath || "";
+  const defaultVideoPath = detection?.userCfgPath
+    ? detection.userCfgPath.replace(/cs2_user_keys.*\.vcfg$/i, "cs2_video.txt")
+    : "";
+
+  // 目标生效路径
+  const effectiveCfgPath = customPaths.cfg || defaultCfgPath;
+  const effectiveAnnotationsPath = customPaths.annotations || defaultAnnotationsPath;
+  const effectiveVideoPath = customPaths.video || defaultVideoPath;
+
+  const handleOpenPathModal = (key: "cfg" | "annotations" | "video") => {
+    let title = "";
+    let description = "";
+    let defaultValue = "";
+    let currentValue = "";
+
+    if (key === "cfg") {
+      title = "配置 Runtime Core 目标路径";
+      description = "指定 CS2 的 CFG 运行目录（通常位于 game/csgo/cfg/）";
+      defaultValue = defaultCfgPath;
+      currentValue = effectiveCfgPath;
+    } else if (key === "annotations") {
+      title = "配置地图指南 (Annotations) 目标路径";
+      description = "指定 CS2 跑图与投掷物标注文件的部署目录（通常位于 game/csgo/annotations/）";
+      defaultValue = defaultAnnotationsPath;
+      currentValue = effectiveAnnotationsPath;
+    } else {
+      title = "配置视频设置 (Video Config) 目标路径";
+      description = "指定 CS2 本地视频预设配置文件的写入路径（通常位于 Steam userdata 730/local/cfg/cs2_video.txt）";
+      defaultValue = defaultVideoPath;
+      currentValue = effectiveVideoPath;
+    }
+
+    setPathModal({
+      open: true,
+      componentKey: key,
+      title,
+      description,
+      currentValue,
+      defaultValue,
+    });
+    setPathInputVal(currentValue);
   };
 
-  const handleResetToDefaultPath = () => {
-    if (!pathModal) return;
-    if (pathModal.componentKey === "cfg") {
-      setCustomCfgPath("");
-    } else if (pathModal.componentKey === "annotations") {
-      setCustomAnnotationsPath("");
-    } else if (pathModal.componentKey === "video") {
-      setCustomVideoPath("");
-    }
-    setPathModal(null);
+  const handleSaveCustomPath = () => {
+    const val = pathInputVal.trim();
+    setCustomPaths((prev) => ({
+      ...prev,
+      [pathModal.componentKey]: val === pathModal.defaultValue ? "" : val,
+    }));
+    setPathModal((prev) => ({ ...prev, open: false }));
   };
 
-  const handleExecuteInstall = async () => {
-    const selectedComponents: string[] = [];
-    if (installCfg) selectedComponents.push("cfg");
-    if (installAnnotations) selectedComponents.push("annotations");
-    if (installVideo) selectedComponents.push("video");
+  const handleResetCustomPath = (key: "cfg" | "annotations" | "video") => {
+    setCustomPaths((prev) => ({ ...prev, [key]: "" }));
+  };
 
-    if (selectedComponents.length === 0) {
-      alert("请至少勾选一个需要安装的组件！");
-      return;
-    }
-
-    // 检查所选组件是否有来源文件
-    const missingSources: string[] = [];
-    if (installCfg && (!stagingStatus?.cfg.isReady || stagingStatus.cfg.fileCount === 0)) {
-      missingSources.push("Runtime Core (CFG 核心运行时)");
-    }
-    if (installAnnotations && (!stagingStatus?.annotations.isReady || stagingStatus.annotations.fileCount === 0)) {
-      missingSources.push("地图跑图与投掷物指南");
-    }
-    if (installVideo && (!stagingStatus?.video.isReady || stagingStatus.video.fileCount === 0)) {
-      missingSources.push("推荐画面与视频设置");
-    }
-
-    if (missingSources.length > 0 && selectedComponents.length === missingSources.length) {
-      alert(
-        `以下勾选的组件在本地暂存区暂无安装包：\n${missingSources.join("\n")}\n\n请先在卡片内点击「一键下载此组件」或在「组件下载」页下载后再部署。`
-      );
-      return;
-    }
-
+  // 执行一键部署流水线
+  const handleDeploy = async () => {
+    if (installing) return;
     setInstalling(true);
-    setInstallSuccessMessage(null);
+    setInstallResult(null);
+
+    const components: string[] = [];
+    if (selectedComponents.cfg && hasCfgInQueue) components.push("game-cfg");
+    if (selectedComponents.annotations && hasAnnotationsInQueue) components.push("annotations");
+    if (selectedComponents.video && hasVideoInQueue) components.push("video");
 
     const overridePaths: Record<string, string> = {};
-    if (customCfgPath) overridePaths.cfg = customCfgPath;
-    if (customAnnotationsPath) overridePaths.annotations = customAnnotationsPath;
-    if (customVideoPath) overridePaths.video = customVideoPath;
+    if (customPaths.cfg) overridePaths["game-cfg"] = customPaths.cfg;
+    if (customPaths.annotations) overridePaths["annotations"] = customPaths.annotations;
+    if (customPaths.video) overridePaths["video"] = customPaths.video;
 
     try {
       const res = await window.api.installComponentsPipeline(
-        selectedComponents,
+        components,
         overridePaths,
-        false
+        protectCustomCfg
       );
 
       if (res.success) {
-        setInstallSuccessMessage(
-          `部署成功！已将所选组件（${res.filesInstalled} 个文件，${res.dirsInstalled} 个目录）安装就绪。${
-            res.backupId ? `自动创建备份快照 [${res.backupId}]。` : ""
-          }`
-        );
+        setInstallResult({
+          success: true,
+          message: res.message || `部署成功！已安装 ${res.filesInstalled} 个文件到 CS2 对应目录。`,
+          filesInstalled: res.filesInstalled,
+          backupId: res.backupId,
+        });
+        // 安装完成后自动清空预安装队列，释放回候选库
+        onClearPreInstall();
+        await loadStagingStatus();
+        await loadInstalledFiles();
       } else {
-        alert(`安装失败：${res.message}`);
+        setInstallResult({
+          success: false,
+          message: res.message || "安装未完全成功，请检查权限与目录。",
+          filesInstalled: res.filesInstalled,
+        });
       }
-    } catch (err) {
-      alert(`安装过程异常: ${err}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setInstallResult({
+        success: false,
+        message: `安装异常失败: ${msg}`,
+        filesInstalled: 0,
+      });
     } finally {
       setInstalling(false);
-      onRefresh();
-      loadStagingStatus();
     }
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-6">
-      <PageHeader
-        title="组件安装"
-        description="可视化检测本地暂存区与 CS2 目标路径。按需勾选部署，安装前自动生成快照备份。"
-      />
-
-      {/* CS2 游戏运行软提示 */}
-      {cs2Running && (
-        <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-200 text-xs">
-          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-          <div className="flex-1">
-            <span className="font-semibold text-amber-300">检测到 CS2 正在运行中：</span>{" "}
-            安装仍可正常执行，但为保证新配置文件即刻生效并避免 Windows 文件句柄占用，建议在游戏未运行时安装。
-          </div>
-        </div>
-      )}
-
-      {/* 安装成功提示 */}
-      {installSuccessMessage && (
-        <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-300 text-xs">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-          <div className="flex-1 font-medium">{installSuccessMessage}</div>
-        </div>
-      )}
-
-      {/* Steam / CS2 检测卡片 */}
-      {detection && <SteamStatusBanner detection={detection} />}
-
-      {/* Steam 账号切换 */}
-      {detection && detection.steamUsers.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-bg-card border border-border rounded-lg">
-          <div className="flex items-center gap-2">
-            <User size={16} className="text-orange-400" />
-            <span className="text-sm font-medium text-text">当前登录 Steam 账号</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <select
-              value={detection.currentUser?.accountId ?? ""}
-              onChange={(e) => onUserChange(e.target.value)}
-              className="rounded-md border border-border bg-bg-raised px-3 py-1.5 font-mono text-sm text-text focus:border-accent outline-none"
-            >
-              {detection.steamUsers.map((u) => (
-                <option key={u.accountId} value={u.accountId}>
-                  {u.personaName ? `${u.personaName} (${u.accountId})` : u.accountId}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={() => {
-                onRefresh();
-                loadStagingStatus();
-              }}
-              disabled={refreshing}
-              className="p-1.5 text-text-muted hover:text-text rounded hover:bg-bg-hover transition"
-              title="重新检测"
-            >
-              <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* 模块化组件与双轨状态卡片 (来源 ➔ 目标) */}
-      <section className="bg-bg-card border border-border rounded-xl p-5 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-text flex items-center gap-2">
-            <Package className="w-4 h-4 text-orange-400" />
-            <span>选择要安装的组件与路径检测</span>
-          </h2>
-          <span className="text-xs text-text-muted">双轨状态检测：安装来源（暂存区） ➔ 目标路径（CS2 目录）</span>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3.5">
-          {/* 组件 1: Runtime Core */}
-          <div
-            className={`flex flex-col rounded-xl border transition-all overflow-hidden ${
-              installCfg
-                ? "bg-bg-raised/60 border-orange-500/40 shadow-sm"
-                : "bg-bg-raised/20 border-border opacity-70"
-            }`}
-          >
-            {/* 卡片头部 */}
-            <div
-              onClick={() => toggleCompCollapse("cfg")}
-              className="flex items-center justify-between p-3.5 cursor-pointer select-none hover:bg-bg-raised/80 transition-colors gap-3"
-            >
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <input
-                  type="checkbox"
-                  id="comp-cfg"
-                  checked={installCfg}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => setInstallCfg(e.target.checked)}
-                  className="w-4 h-4 accent-orange-500 rounded cursor-pointer shrink-0"
-                />
-                <label
-                  htmlFor="comp-cfg"
-                  onClick={(e) => e.stopPropagation()}
-                  className="font-medium text-sm text-text cursor-pointer flex items-center gap-2 truncate"
-                >
-                  <span className="truncate">Runtime Core (CFG 核心运行时)</span>
-                  <span className="px-1.5 py-0.5 text-[10px] rounded bg-orange-500/20 text-orange-400 font-medium shrink-0">
-                    核心推荐
-                  </span>
-                </label>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                {stagingStatus?.cfg.isReady ? (
-                  <span className="flex items-center gap-1 text-xs text-emerald-400 font-medium whitespace-nowrap">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> 已就绪 ({stagingStatus.cfg.fileCount} 文件)
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-xs text-amber-400 font-medium whitespace-nowrap">
-                    <AlertTriangle className="w-3.5 h-3.5" /> 暂存区无文件
-                  </span>
-                )}
-                {collapsedComps["cfg"] ? (
-                  <ChevronRight className="w-4 h-4 text-text-muted shrink-0" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-orange-400 shrink-0" />
-                )}
-              </div>
-            </div>
-
-            {/* 卡片折叠展开内容 */}
-            {!collapsedComps["cfg"] && (
-              <div className="px-4 pb-4 pt-2 border-t border-border/50 space-y-2.5">
-                {/* 来源端 */}
-                <div className="p-2.5 bg-bg-card border border-border/80 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-text-muted font-medium shrink-0">安装来源:</span>
-                    {stagingStatus?.cfg.isReady ? (
-                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                        <span>已下载就绪（包含 {stagingStatus.cfg.fileCount} 个 CFG 文件 · {formatBytes(stagingStatus.cfg.totalSize)}）</span>
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                        <span>本地暂存区暂无此组件包</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleInCardDownload("cfg")}
-                    disabled={inCardDownloading !== null}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 border border-orange-500/30 text-[11px] font-medium transition self-start sm:self-auto"
-                  >
-                    {inCardDownloading === "cfg" ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <ArrowDownToLine className="w-3 h-3" />
-                    )}
-                    <span>{stagingStatus?.cfg.isReady ? "重新拉取最新包" : "一键下载此组件"}</span>
-                  </button>
-                </div>
-
-                {/* 目标端 */}
-                <div className="p-2.5 bg-bg-card border border-border/80 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <span className="text-text-muted font-medium shrink-0">目标路径:</span>
-                    <div className="text-text font-mono truncate flex items-center gap-1.5 flex-1" title={effectiveCfgPath}>
-                      <Folder className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                      <span className="truncate">{effectiveCfgPath || "未检测到 CS2 CFG 路径"}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => openEditPath("cfg")}
-                      className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 transition"
-                    >
-                      <FolderEdit className="w-3 h-3 text-orange-400" />
-                      <span>自定义路径</span>
-                    </button>
-                    {effectiveCfgPath ? (
-                      <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-medium whitespace-nowrap">
-                        <CheckCircle2 className="w-3 h-3" /> 目标有效
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-[11px] text-amber-400 font-medium whitespace-nowrap">
-                        <AlertTriangle className="w-3 h-3" /> 路径缺失
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 组件 2: 地图指南 */}
-          <div
-            className={`flex flex-col rounded-xl border transition-all overflow-hidden ${
-              installAnnotations
-                ? "bg-bg-raised/60 border-orange-500/40 shadow-sm"
-                : "bg-bg-raised/20 border-border opacity-70"
-            }`}
-          >
-            {/* 卡片头部 */}
-            <div
-              onClick={() => toggleCompCollapse("annotations")}
-              className="flex items-center justify-between p-3.5 cursor-pointer select-none hover:bg-bg-raised/80 transition-colors gap-3"
-            >
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <input
-                  type="checkbox"
-                  id="comp-ann"
-                  checked={installAnnotations}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => setInstallAnnotations(e.target.checked)}
-                  className="w-4 h-4 accent-orange-500 rounded cursor-pointer shrink-0"
-                />
-                <label
-                  htmlFor="comp-ann"
-                  onClick={(e) => e.stopPropagation()}
-                  className="font-medium text-sm text-text cursor-pointer flex items-center gap-2 truncate"
-                >
-                  <span className="truncate">地图跑图与投掷物指南 (Annotations)</span>
-                </label>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                {stagingStatus?.annotations.isReady ? (
-                  <span className="flex items-center gap-1 text-xs text-emerald-400 font-medium whitespace-nowrap">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> 已就绪 ({stagingStatus.annotations.fileCount} 文件)
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-xs text-amber-400 font-medium whitespace-nowrap">
-                    <AlertTriangle className="w-3.5 h-3.5" /> 暂存区无文件
-                  </span>
-                )}
-                {collapsedComps["annotations"] ? (
-                  <ChevronRight className="w-4 h-4 text-text-muted shrink-0" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-orange-400 shrink-0" />
-                )}
-              </div>
-            </div>
-
-            {/* 卡片折叠展开内容 */}
-            {!collapsedComps["annotations"] && (
-              <div className="px-4 pb-4 pt-2 border-t border-border/50 space-y-2.5">
-                {/* 来源端 */}
-                <div className="p-2.5 bg-bg-card border border-border/80 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-text-muted font-medium shrink-0">安装来源:</span>
-                    {stagingStatus?.annotations.isReady ? (
-                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                        <span>已下载就绪（包含 {stagingStatus.annotations.fileCount} 个指南文件 · {formatBytes(stagingStatus.annotations.totalSize)}）</span>
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                        <span>本地暂存区暂无此组件包</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleInCardDownload("annotations")}
-                    disabled={inCardDownloading !== null}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 border border-orange-500/30 text-[11px] font-medium transition self-start sm:self-auto"
-                  >
-                    {inCardDownloading === "annotations" ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <ArrowDownToLine className="w-3 h-3" />
-                    )}
-                    <span>{stagingStatus?.annotations.isReady ? "重新拉取最新包" : "一键下载此组件"}</span>
-                  </button>
-                </div>
-
-                {/* 目标端 */}
-                <div className="p-2.5 bg-bg-card border border-border/80 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <span className="text-text-muted font-medium shrink-0">目标路径:</span>
-                    <div className="text-text font-mono truncate flex items-center gap-1.5 flex-1" title={effectiveAnnotationsPath}>
-                      <MapPin className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                      <span className="truncate">{effectiveAnnotationsPath || "未检测到 Annotations 路径"}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => openEditPath("annotations")}
-                      className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 transition"
-                    >
-                      <FolderEdit className="w-3 h-3 text-orange-400" />
-                      <span>自定义路径</span>
-                    </button>
-                    {effectiveAnnotationsPath ? (
-                      <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-medium whitespace-nowrap">
-                        <CheckCircle2 className="w-3 h-3" /> 目标有效
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-[11px] text-amber-400 font-medium whitespace-nowrap">
-                        <AlertTriangle className="w-3 h-3" /> 路径缺失
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 组件 3: 视频设置 */}
-          <div
-            className={`flex flex-col rounded-xl border transition-all overflow-hidden ${
-              installVideo
-                ? "bg-bg-raised/60 border-orange-500/40 shadow-sm"
-                : "bg-bg-raised/20 border-border opacity-70"
-            }`}
-          >
-            {/* 卡片头部 */}
-            <div
-              onClick={() => toggleCompCollapse("video")}
-              className="flex items-center justify-between p-3.5 cursor-pointer select-none hover:bg-bg-raised/80 transition-colors gap-3"
-            >
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <input
-                  type="checkbox"
-                  id="comp-vid"
-                  checked={installVideo}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => setInstallVideo(e.target.checked)}
-                  className="w-4 h-4 accent-orange-500 rounded cursor-pointer shrink-0"
-                />
-                <label
-                  htmlFor="comp-vid"
-                  onClick={(e) => e.stopPropagation()}
-                  className="font-medium text-sm text-text cursor-pointer flex items-center gap-2 truncate"
-                >
-                  <span className="truncate">推荐画面与视频设置 (Video Config)</span>
-                  <span className="px-1.5 py-0.5 text-[10px] rounded bg-neutral-800 text-neutral-400 shrink-0">
-                    可选覆盖
-                  </span>
-                </label>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                {stagingStatus?.video.isReady ? (
-                  <span className="flex items-center gap-1 text-xs text-emerald-400 font-medium whitespace-nowrap">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> 已就绪 ({stagingStatus.video.fileCount} 文件)
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-xs text-amber-400 font-medium whitespace-nowrap">
-                    <AlertTriangle className="w-3.5 h-3.5" /> 暂存区无文件
-                  </span>
-                )}
-                {collapsedComps["video"] ? (
-                  <ChevronRight className="w-4 h-4 text-text-muted shrink-0" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-orange-400 shrink-0" />
-                )}
-              </div>
-            </div>
-
-            {/* 卡片折叠展开内容 */}
-            {!collapsedComps["video"] && (
-              <div className="px-4 pb-4 pt-2 border-t border-border/50 space-y-2.5">
-                {/* 来源端 */}
-                <div className="p-2.5 bg-bg-card border border-border/80 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-text-muted font-medium shrink-0">安装来源:</span>
-                    {stagingStatus?.video.isReady ? (
-                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                        <span>已下载就绪（包含 {stagingStatus.video.fileCount} 个视频配置文件 · {formatBytes(stagingStatus.video.totalSize)}）</span>
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                        <span>本地暂存区暂无此组件包</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleInCardDownload("video")}
-                    disabled={inCardDownloading !== null}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 border border-orange-500/30 text-[11px] font-medium transition self-start sm:self-auto"
-                  >
-                    {inCardDownloading === "video" ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <ArrowDownToLine className="w-3 h-3" />
-                    )}
-                    <span>{stagingStatus?.video.isReady ? "重新拉取最新包" : "一键下载此组件"}</span>
-                  </button>
-                </div>
-
-                {/* 目标端 */}
-                <div className="p-2.5 bg-bg-card border border-border/80 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <span className="text-text-muted font-medium shrink-0">目标路径:</span>
-                    <div className="text-text font-mono truncate flex items-center gap-1.5 flex-1" title={effectiveVideoPath}>
-                      <Tv className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                      <span className="truncate">{effectiveVideoPath || "未检测到 Steam 账号视频配置路径"}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => openEditPath("video")}
-                      className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 transition"
-                    >
-                      <FolderEdit className="w-3 h-3 text-orange-400" />
-                      <span>自定义路径</span>
-                    </button>
-                    {effectiveVideoPath ? (
-                      <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-medium whitespace-nowrap">
-                        <CheckCircle2 className="w-3 h-3" /> 目标有效
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-[11px] text-amber-400 font-medium whitespace-nowrap">
-                        <AlertTriangle className="w-3 h-3" /> 路径缺失
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 部署操作区 */}
-        <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>安装前将自动对涉及目标创建全量快照备份（FIFO 溢出保留上限默认为 10 份，可在恢复中心自定义）</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleExecuteInstall}
-            disabled={installing || (!installCfg && !installAnnotations && !installVideo)}
-            className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-semibold text-xs sm:text-sm transition shadow-lg shadow-orange-950/40 disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
-          >
-            {installing ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>正在执行部署流水线...</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 fill-current" />
-                <span>开始一键部署所选组件</span>
-              </>
-            )}
-          </button>
-        </div>
-      </section>
-
-      {/* 自定义压缩包与文件导入区 */}
-      <div className="space-y-4 pt-2">
-        <h3 className="text-sm font-semibold text-text">从压缩包更新或自定义导入</h3>
-        <UploadZone
-          onUploadComplete={() => {
-            uploadedListRef.current?.reload();
-            loadStagingStatus();
+    <div className="space-y-6 max-w-6xl mx-auto pb-10">
+      {/* 顶部标题 */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          title="组件安装 (Component Installation)"
+          description="检测 CS2 环境并组织部署流水线；组件卡片与目标物理地址已深度整合，确认后一键安全注入。"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            onRefresh();
+            void loadStagingStatus();
+            void loadInstalledFiles();
           }}
-        />
-        <UploadedList
-          ref={uploadedListRef}
-          selectedFolder={selectedUpload}
-          onSelect={(folder) => setSelectedUpload(folder)}
-        />
+          disabled={refreshing || loadingStaging}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bg-card border border-border text-xs text-text-muted hover:text-text hover:border-neutral-600 transition shadow-sm cursor-pointer shrink-0"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${refreshing || loadingStaging ? "animate-spin text-orange-400" : ""}`} />
+          <span>重新检测</span>
+        </button>
       </div>
 
-      {/* 自定义路径配置模态框 */}
-      {pathModal && (
-        <Modal
-          open={pathModal.open}
-          onClose={() => setPathModal(null)}
-          title={pathModal.title}
-          icon={<FolderEdit className="w-5 h-5 text-orange-400" />}
-          maxWidth="max-w-lg"
-          footer={
-            <div className="flex items-center justify-between w-full">
-              <button
-                type="button"
-                onClick={handleResetToDefaultPath}
-                className="text-xs text-orange-400 hover:text-orange-300 font-medium transition"
+      {/* 1. 环境检测卡片 */}
+      <DetectionCard
+        detection={detection}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        onUserChange={onUserChange}
+      />
+
+      {/* 2. 预安装队列摘要横幅 */}
+      <div
+        className={`border rounded-lg p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm ${
+          preInstallList.length === 0
+            ? "bg-amber-500/10 border-amber-500/30"
+            : "bg-bg-card border-border"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+              preInstallList.length === 0
+                ? "bg-amber-500/20 border border-amber-500/30 text-amber-400"
+                : "bg-orange-500/10 border border-orange-500/20 text-orange-400"
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+          </div>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-semibold text-text">当前预安装队列</span>
+              <span
+                className={`px-2 py-0.2 rounded-full text-[10px] font-mono font-medium ${
+                  preInstallList.length === 0
+                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                    : "bg-orange-500/20 text-orange-400"
+                }`}
               >
-                恢复默认检测路径
-              </button>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPathModal(null)}
-                  className="px-3.5 py-1.5 text-xs text-text-muted hover:text-text rounded border border-border bg-bg-raised transition"
-                >
-                  取消
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSavePathModal}
-                  className="px-4 py-1.5 text-xs font-semibold text-white bg-orange-600 hover:bg-orange-500 rounded transition shadow-md shadow-orange-950/40"
-                >
-                  应用路径
-                </button>
-              </div>
+                {preInstallList.length > 0 ? `${preInstallList.length} 个选定配置包` : "队列为空 (未选定任何包)"}
+              </span>
             </div>
-          }
+            <div className="text-[11px] text-text-muted flex items-center gap-1.5 flex-wrap">
+              {preInstallList.length > 0 ? (
+                preInstallList.map((item) => (
+                  <span key={item.id} className="text-text font-mono bg-bg-raised px-1.5 py-0.2 rounded border border-border text-[10px]">
+                    {item.name}
+                  </span>
+                ))
+              ) : (
+                <span className="text-amber-300">
+                  当前预安装清单为空。请先前往「组件下载」添加需要部署到游戏的配置包。
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {onNavigate && (
+          <button
+            type="button"
+            onClick={() => onNavigate("download")}
+            className="text-xs text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition cursor-pointer self-end sm:self-auto shrink-0"
+          >
+            <span>{preInstallList.length > 0 ? "调整预安装清单" : "前往下载与挑选配置包"}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+
+      {/* 安装结果提示 */}
+      {installResult && (
+        <div
+          className={`p-4 rounded-lg border text-xs flex items-start gap-3 ${
+            installResult.success
+              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+              : "bg-red-500/10 border-red-500/30 text-red-300"
+          }`}
         >
-          <div className="space-y-3 p-1">
-            <p className="text-xs text-text-secondary leading-relaxed">
-              {pathModal.description}
-            </p>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-text">目标文件夹路径：</label>
-              <input
-                type="text"
-                value={pathModal.currentValue}
-                onChange={(e) =>
-                  setPathModal({
-                    ...pathModal,
-                    currentValue: e.target.value,
-                  })
-                }
-                placeholder="例如：D:\Steam\steamapps\common\Counter-Strike 2\game\csgo\cfg"
-                className="w-full px-3 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-xs font-mono text-text placeholder-neutral-500 focus:border-orange-500 focus:outline-none"
-                autoFocus
-              />
-            </div>
-
-            {pathModal.defaultValue && (
-              <div className="p-2.5 bg-neutral-900/60 border border-neutral-800 rounded text-[11px] text-text-muted space-y-1">
-                <span className="text-text-faint font-medium">默认检测路径：</span>
-                <div className="font-mono text-text-secondary break-all select-all">
-                  {pathModal.defaultValue}
-                </div>
+          {installResult.success ? (
+            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+          ) : (
+            <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+          )}
+          <div className="space-y-1.5 flex-1">
+            <div className="font-semibold text-sm">{installResult.message}</div>
+            {installResult.backupId && (
+              <div className="text-[11px] text-emerald-400/80">
+                已自动创建灾备快照: <code className="font-mono">{installResult.backupId}</code>
               </div>
             )}
           </div>
-        </Modal>
+        </div>
       )}
+
+      {/* 3. 整合型组件卡片列表（组件与目标物理地址融为一体） */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider flex items-center gap-1.5">
+          <Package className="w-3.5 h-3.5 text-orange-400" />
+          <span>待部署组件与目标地址配置 (Target Components & Paths)</span>
+        </h2>
+
+        {/* ── 组件 1: Runtime Core ── */}
+        <div
+          className={`bg-bg-card border rounded-lg p-5 transition-all space-y-3.5 ${
+            selectedComponents.cfg && hasCfgInQueue
+              ? "border-orange-500/40 shadow-sm bg-gradient-to-b from-orange-500/5 to-transparent"
+              : "border-border opacity-85"
+          }`}
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-start gap-3.5">
+              <label className="flex items-center gap-3 cursor-pointer select-none mt-1">
+                <input
+                  type="checkbox"
+                  disabled={!hasCfgInQueue}
+                  checked={selectedComponents.cfg && hasCfgInQueue}
+                  onChange={(e) =>
+                    setSelectedComponents((prev) => ({ ...prev, cfg: e.target.checked }))
+                  }
+                  className="w-4 h-4 accent-orange-500 rounded cursor-pointer disabled:opacity-40"
+                />
+              </label>
+
+              <div className="w-9 h-9 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center shrink-0">
+                <Package className="w-4 h-4" />
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm font-semibold text-text">Runtime Core (CFG 核心运行时)</h3>
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-semibold bg-orange-500/20 text-orange-400">
+                    CORE RUNTIME
+                  </span>
+                  {hasCfgInQueue ? (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      已入队 ({stagingStatus?.cfg.fileCount || 0} 个文件)
+                    </span>
+                  ) : (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-neutral-800 text-neutral-400 border border-neutral-700">
+                      {isQueueActive ? "包内未包含此类文件 (0 个文件)" : "未加入队列 (0 个文件)"}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  包含 <code className="font-mono text-orange-400">autoexec.cfg</code>、<code className="font-mono text-orange-400">srp-cfg/</code> 模块库与个人覆盖模板。
+                </p>
+              </div>
+            </div>
+
+            {/* 文件明细折叠开关 */}
+            {hasCfgInQueue && stagingStatus?.cfg.files && stagingStatus.cfg.files.length > 0 && (
+              <button
+                type="button"
+                onClick={() =>
+                  setFileListExpanded((prev) => ({ ...prev, cfg: !prev.cfg }))
+                }
+                className="self-end md:self-auto flex items-center gap-1 text-[11px] text-text-muted hover:text-text px-2.5 py-1 rounded bg-bg-raised border border-border transition cursor-pointer"
+              >
+                <span>{fileListExpanded.cfg ? "收起待安装文件" : `查看待安装文件 (${stagingStatus.cfg.files.length})`}</span>
+                {fileListExpanded.cfg ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              </button>
+            )}
+          </div>
+
+          {/* 目标物理路径 */}
+          <div className="bg-bg-raised/70 border border-border/80 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
+                <MapPin className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                <span>目标部署物理路径:</span>
+                {customPaths.cfg && (
+                  <span className="text-amber-400 font-medium">(自定义覆盖中)</span>
+                )}
+              </div>
+              <div className="font-mono text-[11px] text-text truncate" title={effectiveCfgPath}>
+                {effectiveCfgPath || "未检测到 CS2 路径，请手动指定"}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {customPaths.cfg && (
+                <button
+                  type="button"
+                  onClick={() => handleResetCustomPath("cfg")}
+                  className="px-2 py-1 rounded bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 text-[11px] transition cursor-pointer"
+                >
+                  还原默认
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handleOpenPathModal("cfg")}
+                className="flex items-center gap-1 px-2.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 text-[11px] font-medium transition cursor-pointer"
+              >
+                <FolderEdit className="w-3 h-3 text-neutral-400" />
+                <span>自定义路径</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 展开的待安装文件清单 */}
+          {fileListExpanded.cfg && stagingStatus?.cfg.files && (
+            <PreInstallFileList
+              files={stagingStatus.cfg.files}
+              compKey="cfg"
+              getFileStatus={getFileStatus}
+            />
+          )}
+        </div>
+
+        {/* ── 组件 2: 地图跑图与投掷物指南 ── */}
+        <div
+          className={`bg-bg-card border rounded-lg p-5 transition-all space-y-3.5 ${
+            selectedComponents.annotations && hasAnnotationsInQueue
+              ? "border-sky-500/40 shadow-sm bg-gradient-to-b from-sky-500/5 to-transparent"
+              : "border-border opacity-85"
+          }`}
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-start gap-3.5">
+              <label className="flex items-center gap-3 cursor-pointer select-none mt-1">
+                <input
+                  type="checkbox"
+                  disabled={!hasAnnotationsInQueue}
+                  checked={selectedComponents.annotations && hasAnnotationsInQueue}
+                  onChange={(e) =>
+                    setSelectedComponents((prev) => ({ ...prev, annotations: e.target.checked }))
+                  }
+                  className="w-4 h-4 accent-sky-500 rounded cursor-pointer disabled:opacity-40"
+                />
+              </label>
+
+              <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4" />
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm font-semibold text-text">地图跑图与投掷物指南 (Annotations)</h3>
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-semibold bg-sky-500/20 text-sky-400">
+                    ANNOTATIONS
+                  </span>
+                  {hasAnnotationsInQueue ? (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      已入队 ({stagingStatus?.annotations.fileCount || 0} 个文件)
+                    </span>
+                  ) : (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-neutral-800 text-neutral-400 border border-neutral-700">
+                      {isQueueActive ? "包内未包含此类文件 (0 个文件)" : "未加入队列 (0 个文件)"}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  提供 Dust2, Mirage, Inferno, Ancient 等官方竞技地图跑图道具落点标注。
+                </p>
+              </div>
+            </div>
+
+            {/* 文件明细折叠开关 */}
+            {hasAnnotationsInQueue && stagingStatus?.annotations.files && stagingStatus.annotations.files.length > 0 && (
+              <button
+                type="button"
+                onClick={() =>
+                  setFileListExpanded((prev) => ({ ...prev, annotations: !prev.annotations }))
+                }
+                className="self-end md:self-auto flex items-center gap-1 text-[11px] text-text-muted hover:text-text px-2.5 py-1 rounded bg-bg-raised border border-border transition cursor-pointer"
+              >
+                <span>{fileListExpanded.annotations ? "收起待安装文件" : `查看待安装文件 (${stagingStatus.annotations.files.length})`}</span>
+                {fileListExpanded.annotations ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              </button>
+            )}
+          </div>
+
+          {/* 目标物理路径 */}
+          <div className="bg-bg-raised/70 border border-border/80 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
+                <MapPin className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                <span>目标部署物理路径:</span>
+                {customPaths.annotations && (
+                  <span className="text-amber-400 font-medium">(自定义覆盖中)</span>
+                )}
+              </div>
+              <div className="font-mono text-[11px] text-text truncate" title={effectiveAnnotationsPath}>
+                {effectiveAnnotationsPath || "未检测到 Annotations 路径，请手动指定"}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {customPaths.annotations && (
+                <button
+                  type="button"
+                  onClick={() => handleResetCustomPath("annotations")}
+                  className="px-2 py-1 rounded bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 text-[11px] transition cursor-pointer"
+                >
+                  还原默认
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handleOpenPathModal("annotations")}
+                className="flex items-center gap-1 px-2.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 text-[11px] font-medium transition cursor-pointer"
+              >
+                <FolderEdit className="w-3 h-3 text-neutral-400" />
+                <span>自定义路径</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 展开的待安装文件清单 */}
+          {fileListExpanded.annotations && stagingStatus?.annotations.files && (
+            <PreInstallFileList
+              files={stagingStatus.annotations.files}
+              compKey="annotations"
+              getFileStatus={getFileStatus}
+            />
+          )}
+        </div>
+
+        {/* ── 组件 3: 推荐画面与视频设置 ── */}
+        <div
+          className={`bg-bg-card border rounded-lg p-5 transition-all space-y-3.5 ${
+            selectedComponents.video && hasVideoInQueue
+              ? "border-teal-500/40 shadow-sm bg-gradient-to-b from-teal-500/5 to-transparent"
+              : "border-border opacity-85"
+          }`}
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-start gap-3.5">
+              <label className="flex items-center gap-3 cursor-pointer select-none mt-1">
+                <input
+                  type="checkbox"
+                  disabled={!hasVideoInQueue}
+                  checked={selectedComponents.video && hasVideoInQueue}
+                  onChange={(e) =>
+                    setSelectedComponents((prev) => ({ ...prev, video: e.target.checked }))
+                  }
+                  className="w-4 h-4 accent-teal-500 rounded cursor-pointer disabled:opacity-40"
+                />
+              </label>
+
+              <div className="w-9 h-9 rounded-lg bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
+                <Tv className="w-4 h-4" />
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm font-semibold text-text">推荐画面与视频设置 (Video Config)</h3>
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-semibold bg-teal-500/20 text-teal-400">
+                    VIDEO SETTINGS
+                  </span>
+                  {hasVideoInQueue ? (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      已入队 ({stagingStatus?.video.fileCount || 0} 个文件)
+                    </span>
+                  ) : (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-neutral-800 text-neutral-400 border border-neutral-700">
+                      {isQueueActive ? "包内未包含此类文件 (0 个文件)" : "未加入队列 (0 个文件)"}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  提供兼顾极低输入延迟与清晰度的 <code className="font-mono text-teal-400">cs2_video.txt</code> 画面预设。
+                </p>
+              </div>
+            </div>
+
+            {/* 文件明细折叠开关 */}
+            {hasVideoInQueue && stagingStatus?.video.files && stagingStatus.video.files.length > 0 && (
+              <button
+                type="button"
+                onClick={() =>
+                  setFileListExpanded((prev) => ({ ...prev, video: !prev.video }))
+                }
+                className="self-end md:self-auto flex items-center gap-1 text-[11px] text-text-muted hover:text-text px-2.5 py-1 rounded bg-bg-raised border border-border transition cursor-pointer"
+              >
+                <span>{fileListExpanded.video ? "收起待安装文件" : `查看待安装文件 (${stagingStatus.video.files.length})`}</span>
+                {fileListExpanded.video ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              </button>
+            )}
+          </div>
+
+          {/* 目标物理路径 */}
+          <div className="bg-bg-raised/70 border border-border/80 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
+                <MapPin className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                <span>目标部署物理路径:</span>
+                {customPaths.video && (
+                  <span className="text-amber-400 font-medium">(自定义覆盖中)</span>
+                )}
+              </div>
+              <div className="font-mono text-[11px] text-text truncate" title={effectiveVideoPath}>
+                {effectiveVideoPath || "未检测到 Steam 视频设置路径，请手动指定"}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {customPaths.video && (
+                <button
+                  type="button"
+                  onClick={() => handleResetCustomPath("video")}
+                  className="px-2 py-1 rounded bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 text-[11px] transition cursor-pointer"
+                >
+                  还原默认
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handleOpenPathModal("video")}
+                className="flex items-center gap-1 px-2.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 text-[11px] font-medium transition cursor-pointer"
+              >
+                <FolderEdit className="w-3 h-3 text-neutral-400" />
+                <span>自定义路径</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 展开的待安装文件清单 */}
+          {fileListExpanded.video && stagingStatus?.video.files && (
+            <PreInstallFileList
+              files={stagingStatus.video.files}
+              compKey="video"
+              getFileStatus={getFileStatus}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* 4. 底部部署操作控制台 */}
+      <div className="bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-950 border border-border rounded-lg p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+        <div className="space-y-1 text-center sm:text-left">
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-semibold text-text">安全部署流水线保障</span>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-text-muted">
+            <label className="flex items-center gap-1.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={protectCustomCfg}
+                onChange={(e) => setProtectCustomCfg(e.target.checked)}
+                className="w-3.5 h-3.5 accent-orange-500 rounded cursor-pointer"
+              />
+              <span className="text-text font-medium">保护现有 custom.cfg 用户文件</span>
+            </label>
+            <span className="text-text-faint">•</span>
+            <span>部署前将自动创建灾备快照</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleDeploy}
+          disabled={installing || preInstallList.length === 0 || (!selectedComponents.cfg && !selectedComponents.annotations && !selectedComponents.video)}
+          className="flex items-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-sm font-bold transition shadow-lg shadow-orange-950/60 shrink-0 disabled:opacity-40 cursor-pointer"
+          title={preInstallList.length === 0 ? "请先在组件下载页添加待安装配置包" : undefined}
+        >
+          {installing ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Play className="w-4 h-4 fill-current" />
+          )}
+          <span>{installing ? "正在安全部署..." : "开始一键部署到 CS2 目录"}</span>
+        </button>
+      </div>
+
+      {/* 路径自定义 Modal */}
+      <Modal
+        open={pathModal.open}
+        onClose={() => setPathModal((prev) => ({ ...prev, open: false }))}
+        title={pathModal.title}
+      >
+        <div className="space-y-4 text-xs">
+          <p className="text-text-muted leading-relaxed">
+            {pathModal.description}
+          </p>
+
+          <div className="space-y-1.5">
+            <label className="text-text-secondary font-medium block">
+              物理安装目录绝对路径:
+            </label>
+            <input
+              type="text"
+              value={pathInputVal}
+              onChange={(e) => setPathInputVal(e.target.value)}
+              placeholder={pathModal.defaultValue || "例如: D:/Steam/steamapps/common/..."}
+              className="w-full px-3 py-2 bg-neutral-900 border border-border rounded-lg text-xs font-mono text-text focus:outline-none focus:border-orange-500"
+            />
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-border">
+            <button
+              type="button"
+              onClick={() => setPathInputVal(pathModal.defaultValue)}
+              className="text-text-muted hover:text-text transition text-xs cursor-pointer"
+            >
+              填入默认路径
+            </button>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPathModal((prev) => ({ ...prev, open: false }))}
+                className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition text-xs cursor-pointer"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveCustomPath}
+                className="px-4 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-medium transition text-xs cursor-pointer"
+              >
+                确定保存
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

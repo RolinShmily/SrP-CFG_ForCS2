@@ -28,51 +28,123 @@ fn basename(p: &str) -> &str {
     trimmed.rsplit(['/', '\\']).next().unwrap_or(trimmed)
 }
 
-/// 与 TS `classifyFile` 判定顺序一致：
-/// vcfg（.vcfg / .vcfg_lastclouded）→ annotations（路径含 "annotations"）→ cfg（.cfg）→
-/// video（basename == cs2_video.txt）→ unsupported。
-pub fn classify_file(relative_path: &str) -> StagedCategory {
+/// 与 TS / 用户定制判定规则一致：
+/// 1. vcfg（.vcfg / .vcfg_lastclouded）→ 安全隔离拦截
+/// 2. cfg（.cfg）→ 100% 归为 Runtime Core（保留相对路径结构）
+/// 3. video（文件名含 cs2_video 或 首行/内容包含 "video.cfg"）→ Video Config
+/// 4. annotations（内容包含 "MapAnnotationNode"，或无内容样本时路径含 annotations/guide）→ Annotations
+/// 5. 其他无签名 .txt（如 README.txt）或未知后缀 → Unsupported（自动跳过）
+pub fn classify_file_with_content(relative_path: &str, content_sample: Option<&str>) -> StagedCategory {
     let lower = relative_path.to_lowercase();
     if lower.ends_with(".vcfg") || lower.ends_with(".vcfg_lastclouded") {
         return StagedCategory::Vcfg;
     }
-    if lower.contains("annotations") || lower.contains("guide") {
-        return StagedCategory::Annotations;
-    }
     if lower.ends_with(".cfg") {
         return StagedCategory::Cfg;
     }
-    if basename(&lower) == "cs2_video.txt" {
+
+    let bname = basename(&lower);
+
+    // 画面设置：文件名包含 cs2_video，或内容/头部包含 video.cfg
+    if bname.contains("cs2_video") {
         return StagedCategory::Video;
     }
+    if let Some(content) = content_sample {
+        let trimmed = content.trim_start();
+        if trimmed.starts_with("\"video.cfg\"")
+            || trimmed.starts_with("video.cfg")
+            || trimmed.starts_with("\"Video.cfg\"")
+            || content.contains("\"video.cfg\"")
+            || content.contains("video.cfg")
+        {
+            return StagedCategory::Video;
+        }
+
+        // 地图指南：内容必须包含 MapAnnotationNode 节点签名
+        if content.contains("MapAnnotationNode") {
+            return StagedCategory::Annotations;
+        }
+
+        // 提供了内容样本但未命中 MapAnnotationNode / video.cfg，则归为不支持（跳过如 README.txt）
+        return StagedCategory::Unsupported;
+    }
+
+    // 无内容样本时的纯路径回退
+    if lower.contains("annotations") || lower.contains("guide") {
+        return StagedCategory::Annotations;
+    }
+
     StagedCategory::Unsupported
 }
 
-/// 目标相对路径（与 TS `processUploadToStaging` 的 dst 推导一致）：
-/// - cfg → 原相对路径（保留子目录）
-/// - annotations → "annotations" 段之后的部分（若无 annotations 则保留原相对路径，空则用 basename）
+/// 纯路径分类兼容接口
+pub fn classify_file(relative_path: &str) -> StagedCategory {
+    classify_file_with_content(relative_path, None)
+}
+
+/// 地图指南目标相对路径推导：
+/// 必须且仅有一级父目录文件夹（例如 `SrP-Dust2-Guide/SrP-Dust2-Guide.txt`）。
+/// - 若路径已有父目录，保留最后一级父目录；
+/// - 若为裸文件，以文件名（去扩展名）自动作为一级父目录。
+fn derive_annotations_destination(relative_path: &str) -> String {
+    let normalized = relative_path.replace('\\', "/");
+    let trimmed = normalized.trim_matches('/');
+
+    // 剔除前置 annotations/local/ 或 annotations/ 前缀
+    let clean_path = if let Some(idx) = trimmed.to_lowercase().find("annotations/local/") {
+        &trimmed[idx + "annotations/local/".len()..]
+    } else if let Some(idx) = trimmed.to_lowercase().find("annotations/") {
+        &trimmed[idx + "annotations/".len()..]
+    } else {
+        trimmed
+    };
+
+    let segments: Vec<&str> = clean_path.split('/').filter(|s| !s.is_empty()).collect();
+
+    match segments.len() {
+        0 => "unnamed_guide/guide.txt".to_string(),
+        1 => {
+            // 单个裸文件：以去除扩展名后的主名作为父文件夹
+            let filename = segments[0];
+            let stem = filename.rsplit_once('.').map(|(s, _)| s).unwrap_or(filename);
+            let folder_name = if stem.is_empty() { "custom_guide" } else { stem };
+            format!("{folder_name}/{filename}")
+        }
+        2 => {
+            // 正好有一级父文件夹与文件名：保持 FolderName/FileName
+            format!("{}/{}", segments[0], segments[1])
+        }
+        _ => {
+            // 多层嵌套：取倒数第二段（直接父目录）与文件名，保证只有一级父目录
+            let len = segments.len();
+            format!("{}/{}", segments[len - 2], segments[len - 1])
+        }
+    }
+}
+
+/// 目标相对路径推导（带内容样本检查）：
+/// - cfg → 原相对路径（完整保留子目录）
+/// - annotations → 确保保留一级父目录文件夹（`FolderName/FileName.txt`）
 /// - video → 固定 `cs2_video.txt`
 /// - vcfg / unsupported → None（被阻止/跳过）
-pub fn staging_destination(relative_path: &str) -> Option<(StagedCategory, String)> {
-    match classify_file(relative_path) {
+pub fn staging_destination_with_content(
+    relative_path: &str,
+    content_sample: Option<&str>,
+) -> Option<(StagedCategory, String)> {
+    match classify_file_with_content(relative_path, content_sample) {
         StagedCategory::Cfg => Some((StagedCategory::Cfg, relative_path.to_string())),
         StagedCategory::Annotations => {
-            let lower = relative_path.to_lowercase();
-            let dest = if let Some(idx) = lower.find("annotations") {
-                let sub = relative_path[idx + "annotations".len()..].trim_start_matches(['/', '\\']);
-                if sub.is_empty() {
-                    basename(relative_path).to_string()
-                } else {
-                    sub.to_string()
-                }
-            } else {
-                relative_path.to_string()
-            };
+            let dest = derive_annotations_destination(relative_path);
             Some((StagedCategory::Annotations, dest))
         }
         StagedCategory::Video => Some((StagedCategory::Video, "cs2_video.txt".to_string())),
         StagedCategory::Vcfg | StagedCategory::Unsupported => None,
     }
+}
+
+/// 纯路径目标相对路径推导
+pub fn staging_destination(relative_path: &str) -> Option<(StagedCategory, String)> {
+    staging_destination_with_content(relative_path, None)
 }
 
 /// 上传文件类型（对应 TS `getFileInfo`：扩展名 .cfg → cfg、.txt → txt，其余 unsupported）。
@@ -346,9 +418,29 @@ mod tests {
     }
 
     #[test]
-    fn annotations_wins_over_cfg() {
-        // 路径含 annotations 优先归为地图指南（即使 .cfg）
-        assert_eq!(classify_file("annotations/guide.cfg"), StagedCategory::Annotations);
+    fn cfg_always_classified_as_cfg() {
+        assert_eq!(classify_file("autoexec.cfg"), StagedCategory::Cfg);
+        assert_eq!(classify_file("annotations/guide.cfg"), StagedCategory::Cfg);
+        assert_eq!(classify_file("srp-cfg/features/jumpthrow.cfg"), StagedCategory::Cfg);
+    }
+
+    #[test]
+    fn text_content_smart_detection() {
+        // 画面设置签名
+        assert_eq!(
+            classify_file_with_content("custom_video.txt", Some("\"video.cfg\"\n{\n  \"setting.cpu_level\" \"2\"\n}")),
+            StagedCategory::Video
+        );
+        // 地图指南签名
+        assert_eq!(
+            classify_file_with_content("dust2.txt", Some("\"map_annotation_list\"\n{\n  \"0\"\n  {\n    \"MapAnnotationNode\"\n    {\n    }\n  }\n}")),
+            StagedCategory::Annotations
+        );
+        // 无关说明文本自动跳过
+        assert_eq!(
+            classify_file_with_content("README.txt", Some("This is a user manual for SrP-CFG")),
+            StagedCategory::Unsupported
+        );
     }
 
     // ── staging_destination ─────────────────
@@ -361,29 +453,26 @@ mod tests {
     }
 
     #[test]
-    fn annotations_strips_prefix() {
+    fn annotations_ensures_single_level_parent_folder() {
+        // 已有完整父文件夹结构：SrP-Dust2-Guide/SrP-Dust2-Guide.txt
         assert_eq!(
-            staging_destination("settings/annotations/local/dust2.txt"),
-            Some((StagedCategory::Annotations, "local/dust2.txt".to_string()))
+            staging_destination("SrP-Dust2-Guide/SrP-Dust2-Guide.txt"),
+            Some((StagedCategory::Annotations, "SrP-Dust2-Guide/SrP-Dust2-Guide.txt".to_string()))
         );
-        // 反斜杠路径：只去掉前导分隔符，内部分隔符保留（TS 原样，由壳层 path::join 归一化）
+        // 带前缀 annotations/local/ 剥离后保留一级父目录
         assert_eq!(
-            staging_destination("annotations\\local\\a.txt"),
-            Some((StagedCategory::Annotations, "local\\a.txt".to_string()))
+            staging_destination("annotations/local/SrP-Mirage-Guide/SrP-Mirage-Guide.txt"),
+            Some((StagedCategory::Annotations, "SrP-Mirage-Guide/SrP-Mirage-Guide.txt".to_string()))
         );
-    }
-
-    #[test]
-    fn annotations_falls_back_to_basename() {
-        // 子路径非空时原样保留（TS `subPath || basename` 的 truthy 语义）
+        // 嵌套多层路径：取最靠近文件的父目录
         assert_eq!(
-            staging_destination("annotations.txt"),
-            Some((StagedCategory::Annotations, ".txt".to_string()))
+            staging_destination("config/annotations/SrP-Ancient-Guide/SrP-Ancient-Guide.txt"),
+            Some((StagedCategory::Annotations, "SrP-Ancient-Guide/SrP-Ancient-Guide.txt".to_string()))
         );
-        // 子路径为空（目录形式）→ 回退 basename
+        // 单个裸文件（无父目录）：自动以主名包装为一级父目录
         assert_eq!(
-            staging_destination("dir/annotations/"),
-            Some((StagedCategory::Annotations, "annotations".to_string()))
+            staging_destination("SrP-Inferno-Guide.txt"),
+            Some((StagedCategory::Annotations, "SrP-Inferno-Guide/SrP-Inferno-Guide.txt".to_string()))
         );
     }
 
