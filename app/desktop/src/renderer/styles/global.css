@@ -31,7 +31,7 @@
 
   --font-display: "Chakra Petch", "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
   --font-body: "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
-  --font-mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  --font-mono: "Maple Mono NF CN", "Maple Mono CN", "Maple Mono NF", "Maple Mono", "JetBrains Mono", "Cascadia Code", "Cascadia Mono", Consolas, monospace;
 
   --radius: 8px;
   --radius-sm: 5px;
@@ -71,6 +71,72 @@ textarea {
 .font-body,
 .font-mono {
   letter-spacing: 0;
+}
+
+/* Maple Mono NF CN 本地字体与回退声明 */
+@font-face {
+  font-family: "Maple Mono NF CN";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("Maple Mono NF CN"),
+    local("Maple Mono NF CN Regular"),
+    local("MapleMono-NF-CN"),
+    local("MapleMono-NF-CN-Regular"),
+    local("Maple Mono CN"),
+    local("Maple Mono CN Regular"),
+    local("MapleMono-CN"),
+    local("Maple Mono NF"),
+    local("Maple Mono"),
+    local("MapleMono");
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src:
+    local("Maple Mono NF CN Bold"),
+    local("MapleMono-NF-CN-Bold"),
+    local("Maple Mono CN Bold"),
+    local("MapleMono-CN-Bold"),
+    local("Maple Mono NF Bold"),
+    local("Maple Mono Bold"),
+    local("MapleMono-Bold");
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("Maple Mono NF CN Italic"),
+    local("MapleMono-NF-CN-Italic"),
+    local("Maple Mono CN Italic"),
+    local("MapleMono-CN-Italic"),
+    local("Maple Mono NF Italic"),
+    local("Maple Mono Italic"),
+    local("MapleMono-Italic");
+}
+
+/* CodeMirror 字体与连字渲染优化 */
+.cm-editor {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-ligatures: normal;
+}
+.cm-editor .cm-scroller {
+  font-family: var(--font-mono) !important;
+}
+.cm-editor .cm-content,
+.cm-editor .cm-line,
+.cm-editor .cm-gutters {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-ligatures: normal;
 }
 
 /* Desktop typography roles: 24 / 16 / 14 / 12 / 11. */

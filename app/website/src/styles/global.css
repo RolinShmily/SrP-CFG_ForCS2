@@ -25,7 +25,7 @@
   --font-display: "Chakra Petch", "Microsoft YaHei UI", "PingFang SC", sans-serif;
   --font-body: "Noto Sans SC", "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
   --font-serif: "Noto Serif SC", "Songti SC", serif;
-  --font-mono: "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --font-mono: "Maple Mono NF CN", "Maple Mono CN", "Maple Mono NF", "Maple Mono", "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
 
   --radius: 12px;
   --radius-sm: 8px;

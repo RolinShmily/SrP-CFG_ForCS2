@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   ArrowDownToLine,
   BookOpen,
@@ -105,6 +106,17 @@ export default function QuickStartPage({ detection, onNavigate }: Props) {
     },
   ];
 
+  const [version, setVersion] = useState<string>("3.2.4");
+
+  useEffect(() => {
+    window.api
+      ?.getVersion?.()
+      .then((v) => {
+        if (v) setVersion(v);
+      })
+      .catch(() => {});
+  }, []);
+
   const hasSteam = Boolean(detection?.steamPath);
   const hasCs2 = Boolean(detection?.cs2CfgPath);
   const currentUser = detection?.currentUser;
@@ -115,8 +127,8 @@ export default function QuickStartPage({ detection, onNavigate }: Props) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-border/60">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 text-[11px] font-semibold tracking-wide flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> SrP-CFG Desktop v3.2.4
+            <span className="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 text-[11px] font-semibold tracking-wide flex items-center gap-1 font-mono">
+              <Sparkles className="w-3 h-3" /> SrP-CFG Desktop v{version}
             </span>
           </div>
           <PageHeader

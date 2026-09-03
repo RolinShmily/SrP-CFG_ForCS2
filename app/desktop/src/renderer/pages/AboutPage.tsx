@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Github,
   ExternalLink,
@@ -67,6 +68,17 @@ const contributors = [
 ];
 
 export default function AboutPage() {
+  const [version, setVersion] = useState<string>("3.2.4");
+
+  useEffect(() => {
+    window.api
+      ?.getVersion?.()
+      .then((v) => {
+        if (v) setVersion(v);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-6">
       {/* Header with logo */}
@@ -79,7 +91,7 @@ export default function AboutPage() {
         <h1 className="text-2xl font-bold text-text tracking-tight flex items-center gap-2">
           <span>关于 SrP-CFG</span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 font-mono font-medium border border-orange-500/30">
-            v3.2.4
+            v{version}
           </span>
         </h1>
         <p className="text-xs sm:text-sm text-text-muted mt-1.5 max-w-xl">
