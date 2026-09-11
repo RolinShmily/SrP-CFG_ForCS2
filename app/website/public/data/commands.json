@@ -4359,6 +4359,28 @@
     "c": "practice"
   },
   {
+    "n": "cl_decryptdata_key",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Key to decrypt encrypted GOTV messages",
+    "t": "var",
+    "cn": "解密GOTV消息的密钥",
+    "c": "practice"
+  },
+  {
+    "n": "cl_decryptdata_key_pub",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Key to decrypt public encrypted GOTV messages",
+    "t": "var",
+    "cn": "解密公用GOTV消息的密钥",
+    "c": "practice"
+  },
+  {
     "n": "cl_demo_predict",
     "d": "1",
     "f": [
@@ -37919,6 +37941,28 @@
     "c": "system"
   },
   {
+    "n": "tv_encryptdata_key",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "When set to a valid key communication messages will be encrypted for GOTV",
+    "t": "var",
+    "cn": "设置为有效密钥时，会对GOTV通信消息进行加密",
+    "c": "system"
+  },
+  {
+    "n": "tv_encryptdata_key_pub",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "When set to a valid key public communication messages will be encrypted for GOTV",
+    "t": "var",
+    "cn": "设置为有效密钥时，会对公用GOTV通信消息进行加密",
+    "c": "system"
+  },
+  {
     "n": "tv_include_usercommands",
     "d": "true",
     "f": [
@@ -38314,6 +38358,35 @@
     "c": "audio"
   },
   {
+    "n": "tv_relaytextchat",
+    "d": "1",
+    "f": [
+      "gamedll",
+      "release"
+    ],
+    "en": "Relay text chat data to GOTV: 0=off, 1=say, 2=say+say_team",
+    "t": "var",
+    "cn": "将文字聊天数据传输到GOTV：0=关闭，1=普通语音，2=普通语音+团队语音",
+    "c": "network",
+    "value": {
+      "options": [
+        {
+          "value": "0",
+          "label": "关闭"
+        },
+        {
+          "value": "1",
+          "label": "普通语音"
+        },
+        {
+          "value": "2",
+          "label": "普通语音+团队语音"
+        }
+      ],
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
+    }
+  },
+  {
     "n": "tv_relayvoice",
     "d": "true",
     "f": [
@@ -38345,18 +38418,6 @@
     "t": "var",
     "cn": "绕过 TV 端口的安全挑战验证（Secure Challenge）",
     "c": "network"
-  },
-  {
-    "n": "tv_show_allchat",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "release"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "在 CSTV 中显示全局聊天（所有人聊天聊天信息）",
-    "c": "system"
   },
   {
     "n": "tv_spectator_port_offset",

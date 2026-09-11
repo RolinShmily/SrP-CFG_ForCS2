@@ -2656,7 +2656,6 @@
   "tv_relayvoice": "30dd55e17891da792526f6fb39c93918",
   "tv_retry": "244f5aebb5cb9d367ead0c5090037cf0",
   "tv_secure_bypass": "1f8ad034893ea65227c052090ea5ee18",
-  "tv_show_allchat": "20132d5549265a1bcf36f27bc9480a99",
   "tv_spectator_port_offset": "75ef07fd7a4bb1d143631c12c2b39522",
   "tv_status": "7bc7f69929d5aa0c97fc0701afc1bc2d",
   "tv_stop": "49cfd1a508f7d7de9b772434c3dbef46",
@@ -2783,5 +2782,10 @@
   "workshop_item_submit": "c854afa7e009a0b00155067fcff9bbb4",
   "workshop_tournament_item_submit": "83a029a3659058e6372a9598737f3176",
   "writekeybindings": "51bdcb17e9ad992c4daf78f7188ad8ac",
-  "zoom_sensitivity_ratio": "0953fd8ca1b7e028b9b43f4296660a22"
+  "zoom_sensitivity_ratio": "0953fd8ca1b7e028b9b43f4296660a22",
+  "cl_decryptdata_key": "1445f6b2cb4bfd96ba859179028ccb1d",
+  "cl_decryptdata_key_pub": "aad7172966a19b208a8dcc1883191c7c",
+  "tv_encryptdata_key": "fd7f6adf88d8fe136abc9e6cb7d19447",
+  "tv_encryptdata_key_pub": "3e7e05b71cf66ff3799893c02ef93799",
+  "tv_relaytextchat": "5c86126e56263dfc6eb5c3bba527a4d4"
 }
