@@ -53,7 +53,7 @@ const steps = [
     details: [
       "主流职业/社区 Preset 模版自由切换",
       "只读提取 Valve VCFG 键位与灵敏度",
-      "Maple Mono + CS2 语法高亮实时编辑",
+      "JetBrains Mono + CS2 语法高亮实时编辑",
     ],
   },
   {

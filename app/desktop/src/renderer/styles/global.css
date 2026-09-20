@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* 构建期自托管 Web Fonts（SIL OFL 1.1，woff2 入库于 app/shared/fonts，vite 打包进产物）
+ * Inter — 英文正文；JetBrains Mono — 英文/数字 UI 与代码块；Noto Sans SC（思源黑体）— 全部中文。 */
+@import "./fonts/inter.css";
+@import "./fonts/jetbrains-mono.css";
+@import "./fonts/noto-sans-sc.css";
+
 /* 扫描共享组件库（@srp-cfg/ui，workspace 包在 app/shared/ui，不在 Vite 根内）
  * @tailwindcss/postcss 的文件扫描以 CSS 文件所在目录为基准，不会自动跨到兄弟目录。 */
 @source "../../../../shared/ui/src";
@@ -29,9 +35,9 @@
   --color-text-muted: #949db4;
   --color-text-faint: #828ca6;
 
-  --font-display: "Chakra Petch", "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
-  --font-body: "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
-  --font-mono: "Maple Mono NF CN", "Maple Mono CN", "Maple Mono NF", "Maple Mono", "JetBrains Mono", "Cascadia Code", "Cascadia Mono", Consolas, monospace;
+  --font-display: "Inter Variable", "Noto Sans SC Variable", "Microsoft YaHei UI", sans-serif;
+  --font-body: "Inter Variable", "Noto Sans SC Variable", "Microsoft YaHei UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", "Noto Sans SC Variable", Consolas, "Cascadia Mono", monospace;
 
   --radius: 8px;
   --radius-sm: 5px;
@@ -71,55 +77,6 @@ textarea {
 .font-body,
 .font-mono {
   letter-spacing: 0;
-}
-
-/* Maple Mono NF CN 本地字体与回退声明 */
-@font-face {
-  font-family: "Maple Mono NF CN";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src:
-    local("Maple Mono NF CN"),
-    local("Maple Mono NF CN Regular"),
-    local("MapleMono-NF-CN"),
-    local("MapleMono-NF-CN-Regular"),
-    local("Maple Mono CN"),
-    local("Maple Mono CN Regular"),
-    local("MapleMono-CN"),
-    local("Maple Mono NF"),
-    local("Maple Mono"),
-    local("MapleMono");
-}
-
-@font-face {
-  font-family: "Maple Mono NF CN";
-  font-style: normal;
-  font-weight: 600 700;
-  font-display: swap;
-  src:
-    local("Maple Mono NF CN Bold"),
-    local("MapleMono-NF-CN-Bold"),
-    local("Maple Mono CN Bold"),
-    local("MapleMono-CN-Bold"),
-    local("Maple Mono NF Bold"),
-    local("Maple Mono Bold"),
-    local("MapleMono-Bold");
-}
-
-@font-face {
-  font-family: "Maple Mono NF CN";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src:
-    local("Maple Mono NF CN Italic"),
-    local("MapleMono-NF-CN-Italic"),
-    local("Maple Mono CN Italic"),
-    local("MapleMono-CN-Italic"),
-    local("Maple Mono NF Italic"),
-    local("Maple Mono Italic"),
-    local("MapleMono-Italic");
 }
 
 /* CodeMirror 字体与连字渲染优化 */

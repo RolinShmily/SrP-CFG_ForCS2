@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* 构建期自托管 Web Fonts（SIL OFL 1.1，woff2 入库于 app/shared/fonts，vite 打包进产物）
+ * Inter — 英文正文；JetBrains Mono — 英文/数字 UI 与代码块；Noto Sans SC（思源黑体）— 全部中文。 */
+@import "./fonts/inter.css";
+@import "./fonts/jetbrains-mono.css";
+@import "./fonts/noto-sans-sc.css";
+
 @theme {
   --color-bg: #090b10;
   --color-bg-card: #0f131b;
@@ -22,10 +28,10 @@
   --color-text-muted: #909bb0;
   --color-text-faint: #7b879e;
 
-  --font-display: "Chakra Petch", "Microsoft YaHei UI", "PingFang SC", sans-serif;
-  --font-body: "Noto Sans SC", "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
+  --font-display: "Inter Variable", "Noto Sans SC Variable", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  --font-body: "Inter Variable", "Noto Sans SC Variable", "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
   --font-serif: "Noto Serif SC", "Songti SC", serif;
-  --font-mono: "Maple Mono NF CN", "Maple Mono CN", "Maple Mono NF", "Maple Mono", "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --font-mono: "JetBrains Mono Variable", "Noto Sans SC Variable", Consolas, "SFMono-Regular", monospace;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -59,55 +65,6 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-/* Maple Mono NF CN 本地字体与回退声明 */
-@font-face {
-  font-family: "Maple Mono NF CN";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src:
-    local("Maple Mono NF CN"),
-    local("Maple Mono NF CN Regular"),
-    local("MapleMono-NF-CN"),
-    local("MapleMono-NF-CN-Regular"),
-    local("Maple Mono CN"),
-    local("Maple Mono CN Regular"),
-    local("MapleMono-CN"),
-    local("Maple Mono NF"),
-    local("Maple Mono"),
-    local("MapleMono");
-}
-
-@font-face {
-  font-family: "Maple Mono NF CN";
-  font-style: normal;
-  font-weight: 600 700;
-  font-display: swap;
-  src:
-    local("Maple Mono NF CN Bold"),
-    local("MapleMono-NF-CN-Bold"),
-    local("Maple Mono CN Bold"),
-    local("MapleMono-CN-Bold"),
-    local("Maple Mono NF Bold"),
-    local("Maple Mono Bold"),
-    local("MapleMono-Bold");
-}
-
-@font-face {
-  font-family: "Maple Mono NF CN";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src:
-    local("Maple Mono NF CN Italic"),
-    local("MapleMono-NF-CN-Italic"),
-    local("Maple Mono CN Italic"),
-    local("MapleMono-CN-Italic"),
-    local("Maple Mono NF Italic"),
-    local("Maple Mono Italic"),
-    local("MapleMono-Italic");
 }
 
 code,

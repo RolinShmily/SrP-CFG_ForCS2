@@ -265,19 +265,19 @@ export default function AboutPage() {
                 <span>鸣谢 (Acknowledgements)</span>
               </h2>
               <p className="text-xs text-text-muted leading-relaxed">
-                感谢 <strong className="text-text">Maple Mono</strong> 开源等宽字体项目（by subframe7536，基于 <strong className="text-text">SIL Open Font License 1.1</strong> 开源）。本项目桌面套件代码编辑器与官方文档站均采用其作为代码排版字体。
+                感谢 <strong className="text-text">Inter</strong>、<strong className="text-text">JetBrains Mono</strong> 与 <strong className="text-text">Noto Sans SC</strong>（思源黑体）开源字体项目（Google Fonts，基于 <strong className="text-text">SIL Open Font License 1.1</strong> 开源）。本项目正文、代码编辑器与中文界面均采用上述字体，构建期自托管、离线可用；若本机已安装同名字体则优先使用本地版本。
               </p>
               <div className="pt-0.5 flex items-center justify-between">
                 <span className="font-mono text-[11px] text-accent bg-accent/10 border border-accent/20 px-2.5 py-1 rounded-md">
                   SIL Open Font License 1.1
                 </span>
                 <a
-                  href="https://github.com/subframe7536/maple-font"
+                  href="https://github.com/google/fonts"
                   target="_blank"
                   rel="noopener"
                   className="text-xs text-text-muted hover:text-accent flex items-center gap-1 transition-colors no-underline"
                 >
-                  <span>访问 Maple Mono 仓库</span>
+                  <span>访问 Google Fonts 仓库</span>
                   <ExternalLink size={12} />
                 </a>
               </div>

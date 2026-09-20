@@ -263,7 +263,7 @@ export function createMockApi(): ElectronAPI {
       {
         tagName: "3.3.0",
         name: "SrP-CFG v3.3.0",
-        body: "### 更新亮点\n- 三大独立解耦套件体系（Runtime Core / Map Guides / Video Settings）\n- 5 阶段可视化工作流管线（快速开始、组件下载、组件安装、配置注入、恢复中心）\n- CS2 专业代码编辑器与 Maple Mono NF CN 连字字体集成\n- 部署前全量文件差异审计与 10 级 ZIP 历史快照灾备系统",
+        body: "### 更新亮点\n- 三大独立解耦套件体系（Runtime Core / Map Guides / Video Settings）\n- 5 阶段可视化工作流管线（快速开始、组件下载、组件安装、配置注入、恢复中心）\n- CS2 专业代码编辑器与 Inter / JetBrains Mono / Noto Sans SC 开源字体集成（构建期自托管）\n- 部署前全量文件差异审计与 10 级 ZIP 历史快照灾备系统",
         htmlUrl: "https://github.com/rol1n/SrP-CFG_ForCS2/releases/tag/v3.3.0",
         publishedAt: new Date().toISOString(),
         hasDesktopAssets: true,

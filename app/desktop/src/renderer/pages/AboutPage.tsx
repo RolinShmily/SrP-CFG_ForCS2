@@ -256,19 +256,19 @@ export default function AboutPage() {
                   </span>
                 </div>
                 <p className="text-[11px] text-text-muted leading-relaxed">
-                  感谢 <strong className="text-text">Maple Mono</strong> 开源等宽字体项目（by subframe7536，基于 SIL Open Font License 1.1 开源）。本项目桌面套件代码编辑器与文档中心均采用其作为核心等宽字体。
+                  感谢 <strong className="text-text">Inter</strong>、<strong className="text-text">JetBrains Mono</strong> 与 <strong className="text-text">Noto Sans SC</strong>（思源黑体）开源字体项目（Google Fonts，基于 SIL Open Font License 1.1 开源）。本项目桌面套件英文正文、代码编辑器与中文界面均采用上述字体，构建期自托管、离线可用；若本机已安装同名字体则优先使用本地版本。
                 </p>
                 <div className="pt-0.5">
                   <button
                     type="button"
                     onClick={() =>
                       window.api.openExternal(
-                        "https://github.com/subframe7536/maple-font"
+                        "https://github.com/google/fonts"
                       )
                     }
                     className="text-[11px] text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition cursor-pointer"
                   >
-                    <span>访问 Maple Mono 仓库</span>
+                    <span>访问 Google Fonts 仓库</span>
                     <ExternalLink className="w-3 h-3" />
                   </button>
                 </div>
