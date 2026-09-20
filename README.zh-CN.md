@@ -118,7 +118,7 @@ Desktop 基于 **Tauri v2 + Rust Core + React 19** 构建（安装包体积 ≤ 
 2. **解耦组件与沙盒暂存**：支持官方组件一键双通道下载（直连 / 镜像），或自由拖入第三方 ZIP / CFG 进行内容识别与自动分流。
 3. **部署前差异审计**：安装前扫描目标物理路径，直观展示文件差异清单（`[新增]` / `[覆盖]` / `[受保护]`），支持自定义目标路径与 CS2 运行软提醒。
 4. **配置注入与 VCFG 提取**：可视化切换模版预设；支持从 Steam Cloud `cs2_user_keys.vcfg` 只读提取键位与灵敏度并注入 `custom.cfg`（附带一键撤销支持）。
-5. **CS2 专业代码编辑器**：内置 CodeMirror 6 + 独家 CS2 ConVar / Action 语法高亮引擎，搭配 Maple Mono NF CN 连字等宽字体，支持 `Ctrl+S` 即时保存。
+5. **CS2 专业代码编辑器**：内置 CodeMirror 6 + 独家 CS2 ConVar / Action 语法高亮引擎，搭配 JetBrains Mono 连字等宽字体，支持 `Ctrl+S` 即时保存。
 6. **物理文件树与快照灾备**：多根目录（CFG / Annotations / Video）物理文件树实时浏览与编辑；每次部署自动生成完整时间戳 ZIP 灾备快照，支持配置保留上限（默认 10 份）与一键还原。
 
 ---
@@ -209,7 +209,7 @@ uv run --with pyyaml python3 .github/scripts/validate_cfg.py --packages
 
 ## 🙏 鸣谢
 
-- [Maple Mono](https://github.com/subframe7536/maple-font) by [@subframe7536](https://github.com/subframe7536) —— 极具美感的开源圆角等宽连字字体（基于 [SIL Open Font License 1.1](https://github.com/subframe7536/maple-font/blob/main/LICENSE) 开源）。本项目桌面套件内置 CS2 代码编辑器与官方文档站均采用 Maple Mono NF CN 作为等宽代码字体支持。
+- [Inter](https://github.com/rsms/inter)、[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) 与 [Noto Sans SC](https://github.com/notofonts/noto-cjk) —— 基于 [SIL Open Font License 1.1](https://openfontlicense.org) 开源。本项目桌面端与文档站的正文、代码/界面等宽与中文排版均由构建期自托管的上述字体渲染。
 
 ---
 

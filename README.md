@@ -118,7 +118,7 @@ Built on **Tauri v2 + Rust Core + React 19** (installer bundle ≤ 20MB, runtime
 2. **Decoupled Packages & Sandbox Staging**: Dual-channel downloads (direct / mirror) and custom package ingestion with automatic classification into a sandboxed staging area.
 3. **Pre-deployment File Diff Audit**: Audits physical file changes before installation (`[New]`, `[Overwrite]`, `[Protected]`), with custom path overrides and soft CS2 running prompts.
 4. **Config Injection & VCFG Extraction**: Switch presets with live previews; extract keybindings and sensitivity from Steam Cloud `cs2_user_keys.vcfg` into `custom.cfg` with one-click undo support.
-5. **CS2 Specialized Code Editor**: Built-in CodeMirror 6 with custom CS2 ConVar / Action syntax highlighting and Maple Mono NF CN ligatures, supporting instant `Ctrl+S` saving.
+5. **CS2 Specialized Code Editor**: Built-in CodeMirror 6 with custom CS2 ConVar / Action syntax highlighting and JetBrains Mono ligatures, supporting instant `Ctrl+S` saving.
 6. **Multi-Root Explorer & Snapshot Archiving**: Real-time physical tree browser across CFG, Annotations, and Video roots; auto-generates timestamped ZIP snapshots before every installation with configurable retention limits (default 10) and one-click rollback.
 
 ---
@@ -209,7 +209,7 @@ uv run --with pyyaml python3 .github/scripts/validate_cfg.py --packages
 
 ## 🙏 Acknowledgements
 
-- [Maple Mono](https://github.com/subframe7536/maple-font) by [@subframe7536](https://github.com/subframe7536) — A delightful open-source rounded monospace font with ligatures (licensed under the [SIL Open Font License 1.1](https://github.com/subframe7536/maple-font/blob/main/LICENSE)). The built-in CS2 code editor and documentation site use Maple Mono NF CN for monospace typography.
+- [Inter](https://github.com/rsms/inter), [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) and [Noto Sans SC](https://github.com/notofonts/noto-cjk) — Open-source fonts licensed under the [SIL Open Font License 1.1](https://openfontlicense.org), self-hosted at build time and used for the desktop app and documentation site (Latin text, code/UI monospace, and Chinese typography respectively).
 
 ---
 

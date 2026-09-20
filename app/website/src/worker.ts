@@ -1,5 +1,3 @@
-import configKnowledgeManifest from "./data/config-knowledge/manifest.json" with { type: "json" };
-
 interface VectorizeMatch {
   id?: string;
   score?: number;
@@ -132,7 +130,11 @@ function isKnowledgeMetadata(value: unknown): value is KnowledgeMetadata {
   return isRecord(value);
 }
 
-const PRODUCTION_CONFIG_STATUSES = new Set(configKnowledgeManifest.productionStatuses);
+// 知识库 schema 契约：仅收录生产状态（generated / reviewed）的实体。
+// 权威定义见 .github/data/config-knowledge/manifest.json 的 productionStatuses
+//（由 .github/scripts/sync_config_vectorize.mjs 校验）。Worker 部署产物不依赖
+// 构建期数据文件，故在此内联。
+const PRODUCTION_CONFIG_STATUSES = new Set(["generated", "reviewed"]);
 const SOURCE_REF_PATTERN = /config\/[A-Za-z0-9_./-]+\.cfg:\d+/g;
 const IDENTIFIER_PATTERN = /[A-Za-z_+][A-Za-z0-9_+.-]*/g;
 const QUERY_STOP_WORDS: Record<string, true> = {
