@@ -32,7 +32,7 @@ const heroFeatures = [
 ];
 
 export function Hero() {
-  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.4.0";
+  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.3.1";
   const [activeHeroTab, setActiveHeroTab] = useState<"desktop" | "trace">("desktop");
   const [activeSlide, setActiveSlide] = useState(0);
 

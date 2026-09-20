@@ -81,7 +81,7 @@ const contributors = [
 ];
 
 export default function AboutPage() {
-  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.4.0";
+  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.3.1";
 
   return (
     <section className="pb-16 pt-28 sm:pb-20 sm:pt-32">

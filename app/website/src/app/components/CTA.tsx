@@ -11,7 +11,7 @@ import { LATEST_VERSION } from "../../data/version";
 import { REPO_URL } from "../../data/navigation";
 
 export function CTA() {
-  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.4.0";
+  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.3.1";
 
   return (
     <section className="relative overflow-hidden py-20 md:py-28 lg:py-32">
