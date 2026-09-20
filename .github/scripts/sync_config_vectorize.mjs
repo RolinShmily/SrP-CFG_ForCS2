@@ -7,7 +7,7 @@ import { isDeepStrictEqual } from "node:util";
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
 const DEFAULT_INDEX_NAME = "srp-config-index";
 const CONFIG_ROOT = "config";
-const KNOWLEDGE_ROOT = "app/website/src/data/config-knowledge";
+const KNOWLEDGE_ROOT = ".github/data/config-knowledge";
 const EMBEDDING_BATCH_SIZE = 50;
 const DELETE_BATCH_SIZE = 100;
 const VECTOR_SCHEMA = "srp-config-v3";

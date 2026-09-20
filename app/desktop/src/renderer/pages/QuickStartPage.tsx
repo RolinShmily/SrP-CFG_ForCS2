@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   ArrowDownToLine,
   BookOpen,
@@ -20,6 +20,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import { WEBSITE_URL, REPO_URL, DOCS_URL } from "../lib/downloads";
+import { useAppVersion } from "../lib/version";
 import { PageHeader } from "@srp-cfg/ui";
 import type { DetectionResult } from "../types";
 import type { Page } from "../App";
@@ -106,16 +107,7 @@ export default function QuickStartPage({ detection, onNavigate }: Props) {
     },
   ];
 
-  const [version, setVersion] = useState<string>("3.3.1");
-
-  useEffect(() => {
-    window.api
-      ?.getVersion?.()
-      .then((v) => {
-        if (v) setVersion(v);
-      })
-      .catch(() => {});
-  }, []);
+  const version = useAppVersion();
 
   const hasSteam = Boolean(detection?.steamPath);
   const hasCs2 = Boolean(detection?.cs2CfgPath);

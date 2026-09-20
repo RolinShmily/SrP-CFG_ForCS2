@@ -15,6 +15,7 @@ import {
   Workflow,
   Sparkles,
 } from "lucide-react";
+import { CONFIG_PACKAGE_FILE } from "@srp-cfg/ui";
 
 const steps = [
   {
@@ -22,7 +23,7 @@ const steps = [
     icon: Download,
     title: "获取与导入",
     tag: "STAGE 01 · INGEST",
-    command: "SrP-CFG_Runtime_Core.zip",
+    command: CONFIG_PACKAGE_FILE,
     desc: "在 Desktop 应用内通过双通道高速获取解耦组件，或直接拖入任意自定义 ZIP / CFG 配置包。",
     details: [
       "官方直连 / 国内高速镜像极速下载",

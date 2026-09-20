@@ -23,6 +23,12 @@ app/website/.astro/
 app/desktop/src/renderer/.vite/
 app/desktop/src/renderer/dist/
 
+# 生成物：自托管字体副本（真源 app/shared/fonts，由 scripts/sync-fonts.mjs 生成）
+app/desktop/src/renderer/public/fonts/
+app/desktop/src/renderer/styles/fonts/
+app/website/public/fonts/
+app/website/src/styles/fonts/
+
 # Python
 __pycache__/
 *.py[cod]

@@ -3,7 +3,7 @@ import type {
   CategoryData,
   DetectionResult,
   DownloadEntry,
-  ElectronAPI,
+  AppApi,
   FsTreeRoot,
   GitHubRelease,
   InstallResult,
@@ -19,6 +19,8 @@ import type {
   UserConfigSelection,
   VcfgSnapshot,
 } from "../types";
+
+import { APP_VERSION } from "./version";
 
 let mockUserConfig = `// [SrP-CFG] 用户自定义配置 (Web Dev 预览模式)
 // 在此编写你的个人按键绑定与参数覆盖
@@ -82,7 +84,7 @@ const emptyCategory: CategoryData = {
   path: "",
 };
 
-export function createMockApi(): ElectronAPI {
+export function createMockApi(): AppApi {
   console.info("[SrP-CFG] 正在运行 Web Dev 预览模式（已启用完整的 Mock API 适配层）。");
 
   return {
@@ -249,22 +251,22 @@ export function createMockApi(): ElectronAPI {
     }),
     openDownloadsFolder: async () => alert("[Mock] 打开下载目录"),
 
-    getVersion: async () => "3.3.1",
-    getLatestVersion: async () => "3.3.1",
+    getVersion: async () => APP_VERSION,
+    getLatestVersion: async () => APP_VERSION,
     checkForUpdate: async (): Promise<UpdateCheckResult> => ({
       hasUpdate: false,
       hasDesktopUpdate: false,
       hasConfigUpdate: false,
-      currentVersion: "3.3.1",
+      currentVersion: APP_VERSION,
       releases: [],
     }),
     dismissUpdate: async () => {},
     getUpdateHistory: async (): Promise<GitHubRelease[]> => [
       {
-        tagName: "3.3.1",
-        name: "SrP-CFG v3.3.1",
+        tagName: APP_VERSION,
+        name: `SrP-CFG v${APP_VERSION}`,
         body: "### 更新亮点\n- 三大独立解耦套件体系（Runtime Core / Map Guides / Video Settings）\n- 5 阶段可视化工作流管线（快速开始、组件下载、组件安装、配置注入、恢复中心）\n- CS2 专业代码编辑器与 Inter / JetBrains Mono / Noto Sans SC 开源字体集成（构建期自托管）\n- 部署前全量文件差异审计与 10 级 ZIP 历史快照灾备系统",
-        htmlUrl: "https://github.com/rol1n/SrP-CFG_ForCS2/releases/tag/v3.3.1",
+        htmlUrl: `https://github.com/rol1n/SrP-CFG_ForCS2/releases/tag/v${APP_VERSION}`,
         publishedAt: new Date().toISOString(),
         hasDesktopAssets: true,
         hasConfigAssets: true,

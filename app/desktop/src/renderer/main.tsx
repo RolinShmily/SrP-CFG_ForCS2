@@ -4,8 +4,7 @@ import App from "./App";
 import { createApi } from "./lib/api";
 import "./styles/global.css";
 
-// Tauri 无 preload：由本适配层以相同的 ElectronAPI 签名注入 window.api
-// （renderer 各组件调用点零改动，Rust command 见 src-tauri/src/commands/）
+// 由适配层注入 window.api（renderer 各组件调用点零改动，Rust command 见 src-tauri/src/commands/）
 window.api = createApi();
 
 // 桌面端是套壳 WebView：禁止默认右键菜单（浏览器菜单的前进/后退/刷新/

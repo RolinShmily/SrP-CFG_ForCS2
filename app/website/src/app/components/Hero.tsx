@@ -19,7 +19,7 @@ import {
   Search,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import { LATEST_VERSION } from "../../data/version";
+import { VERSION_DISPLAY } from "../../data/version";
 import desktopQuickStart from "../../../../shared/images/desktop-1.png";
 import desktopInstall from "../../../../shared/images/desktop-3.png";
 import desktopPersonalize from "../../../../shared/images/desktop-4.png";
@@ -32,7 +32,6 @@ const heroFeatures = [
 ];
 
 export function Hero() {
-  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.3.1";
   const [activeHeroTab, setActiveHeroTab] = useState<"desktop" | "trace">("desktop");
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -84,7 +83,7 @@ export function Hero() {
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/80 px-3.5 py-1.5 text-xs font-medium text-slate-300">
               <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-              SrP-CFG {versionDisplay}
+              SrP-CFG {VERSION_DISPLAY}
             </span>
 
             <span className="hidden items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/60 px-3.5 py-1.5 text-xs text-slate-400 sm:inline-flex">
@@ -118,7 +117,7 @@ export function Hero() {
               className="inline-flex items-center justify-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-white/5 transition-all duration-200 hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Download className="h-5 w-5 text-slate-950" />
-              <span>下载 Desktop 客户端 ({versionDisplay})</span>
+              <span>下载 Desktop 客户端 ({VERSION_DISPLAY})</span>
             </Link>
 
             {/* Secondary Outlined Pill Button (深色描边药丸) */}

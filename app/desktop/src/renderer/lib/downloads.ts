@@ -1,32 +1,15 @@
-// 仓库与下载链接配置（与 website 保持一致）
-
-export const REPO_URL = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
-// 项目官网前缀（cfg.srprolin.top 为 SrP-CFG 官网根域；文档/下载等路由均基于此前缀拼接）
-export const WEBSITE_URL = "https://cfg.srprolin.top";
-// 官方文档中心（基于官网前缀的固定路由）
-export const DOCS_URL = `${WEBSITE_URL}/docs`;
-
-// 下载镜像前缀：纯字符串拼接到 GitHub Release 链接最前面。
-// - 留空字符串 ""        → 直连 GitHub
-// - 填镜像站 URL 且必须以 "/" 结尾 → 全部走镜像
-// ⚠️ 必须与 ureq 3.3 下载栈兼容。历史坑：gh.269601.xyz 曾对 302 重定向响应返回
-//   chunked 编码，ureq 报 "protocol: chunk expected crlf" 导致下载静默失败；
-//   2026-08-12 已用 ureq 3.3.0 实测 gh.269601.xyz 完整下载 116802B 通过。
-export const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
-
-// GitHub Release 稳定下载基底（始终指向 latest，要求 asset 文件名固定无版本号）
-export const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;
-
-// v3 唯一配置包文件名（与 CI 产物名一致）
-export const CONFIG_PACKAGE_FILE = "SrP-CFG_Runtime_Core.zip";
-
-// MSI 安装包文件名
-export const INSTALLER_MSI = "SrP-CFG_Installer.msi";
-
-// 拼接：镜像前缀(可空) + GitHub Release latest/download 基底 + 文件名
-// 国内加速下载（带镜像前缀）
-export const dl = (file: string): string =>
-  `${DL_MIRROR_PREFIX}${RELEASE_DOWNLOAD_BASE}/${file}`;
-
-// GitHub 直连下载（无镜像前缀）
-export const dlGithub = (file: string): string => `${RELEASE_DOWNLOAD_BASE}/${file}`;
+// 仓库与下载链接配置：共享常量来自 @srp-cfg/ui（见 app/shared/ui/src/links.ts）。
+// 保持本模块的导出名（dl / dlGithub 等），调用点无需改动。
+export {
+  REPO_URL,
+  WEBSITE_URL,
+  DOCS_URL,
+  DL_MIRROR_PREFIX,
+  RELEASE_DOWNLOAD_BASE,
+  CONFIG_PACKAGE_FILE,
+  INSTALLER_MSI,
+  MAP_GUIDES_FILE,
+  VIDEO_SETTINGS_FILE,
+  dlMirror as dl,
+  dlDirect as dlGithub,
+} from "@srp-cfg/ui";

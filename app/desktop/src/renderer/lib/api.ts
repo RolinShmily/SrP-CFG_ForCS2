@@ -5,7 +5,7 @@ import type {
   BackupMeta,
   DetectionResult,
   DownloadEntry,
-  ElectronAPI,
+  AppApi,
   FsTreeRoot,
   GitHubRelease,
   InstallMode,
@@ -27,15 +27,14 @@ import type {
 import { createMockApi } from "./mock-api";
 
 /**
- * Tauri IPC 适配层（L2.2）。
+ * Tauri IPC 适配层。
  *
- * 保持 `ElectronAPI` 签名与 Electron 版 preload 完全一致（见
- * `app/desktop/src/preload/preload.ts` 契约基准），renderer 的 `window.api.*`
- * 调用点零改动。实现内部走 Tauri `invoke()` / `listen()`。
+ * `AppApi` 定义了 renderer 侧 `window.api.*` 的调用契约，实现内部走 Tauri
+ * `invoke()` / `listen()`（Rust command 见 `src-tauri/src/commands/`）。
  *
  * 当在纯浏览器开发预览（pnpm dev）环境中运行时，自动接入 Mock API，确保所有交互与按钮正常响应。
  */
-export function createApi(): ElectronAPI {
+export function createApi(): AppApi {
   const isTauriEnv =
     typeof window !== "undefined" && Boolean((window as any).__TAURI_INTERNALS__);
 
@@ -159,7 +158,7 @@ export function createApi(): ElectronAPI {
 
     // ── Utils ──
     getFilePaths: (files) => {
-      // L2.2 遗留收尾（换实现不改签名）：Tauri v2 无 Electron webUtils.getPathForFile
+      // Tauri v2 无 Electron webUtils.getPathForFile
       // 等价物——拖拽路径经 tauri://drag-drop（onDragDropEvent）事件获取、对话框路径由
       // @tauri-apps/plugin-dialog 的 open() 直接返回字符串数组。本方法对传入的路径字符串
       // 做归一化/去重；File 对象无法取真实路径（Tauri 限制）时返回 []。

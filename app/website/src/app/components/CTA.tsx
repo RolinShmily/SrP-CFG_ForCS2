@@ -7,11 +7,10 @@
  */
 import { Download, Sparkles, BookOpen, ShieldCheck, Github } from "lucide-react";
 import { Link } from "react-router";
-import { LATEST_VERSION } from "../../data/version";
+import { VERSION_DISPLAY } from "../../data/version";
 import { REPO_URL } from "../../data/navigation";
 
 export function CTA() {
-  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.3.1";
 
   return (
     <section className="relative overflow-hidden py-20 md:py-28 lg:py-32">
@@ -61,7 +60,7 @@ export function CTA() {
                 className="inline-flex items-center justify-center gap-2.5 rounded-full bg-white px-8 py-4 text-sm font-bold text-slate-950 shadow-lg shadow-white/5 transition-all hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Download className="h-4 w-4 text-slate-950" />
-                <span>下载 Desktop ({versionDisplay})</span>
+                <span>下载 Desktop ({VERSION_DISPLAY})</span>
               </Link>
 
               <Link

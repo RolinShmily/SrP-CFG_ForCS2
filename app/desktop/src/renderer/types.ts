@@ -261,7 +261,7 @@ export interface PipelineResult {
   message: string;
 }
 
-export interface ElectronAPI {
+export interface AppApi {
   // Window controls
   minimize: () => void;
   maximize: () => void;
@@ -378,6 +378,6 @@ export interface ElectronAPI {
 
 declare global {
   interface Window {
-    api: ElectronAPI;
+    api: AppApi;
   }
 }

@@ -10,6 +10,7 @@ import { Showcase } from "../components/Showcase";
 import { Steps } from "../components/Steps";
 import { CTA } from "../components/CTA";
 import { LATEST_VERSION } from "../../data/version";
+import { INSTALLER_MSI, REPO_URL, dlDirect } from "@srp-cfg/ui";
 
 export const meta: MetaFunction = () => [
   { title: "SrP-CFG v3 — CS2 模块化 CFG Runtime" },
@@ -32,9 +33,8 @@ const softwareJsonLd = {
     "SrP-CFG v3：把 Runtime 功能、Preset 案例、用户配置与 CS2 VCFG 状态分层管理的模块化 CFG 运行时。",
   url: "https://srprolin.top",
   softwareVersion: LATEST_VERSION,
-  downloadUrl:
-    "https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/latest/download/SrP-CFG_Installer.msi",
-  license: "https://github.com/RolinShmily/SrP-CFG_ForCS2/blob/main/LICENSE",
+  downloadUrl: dlDirect(INSTALLER_MSI),
+  license: `${REPO_URL}/blob/main/LICENSE`,
 };
 
 export default function HomePage() {

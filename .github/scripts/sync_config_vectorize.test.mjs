@@ -19,7 +19,7 @@ import {
 } from "./sync_config_vectorize.mjs";
 
 const CONFIG_ROOT = path.resolve("config");
-const KNOWLEDGE_ROOT = path.resolve("app/website/src/data/config-knowledge");
+const KNOWLEDGE_ROOT = path.resolve(".github/data/config-knowledge");
 
 function writeJson(filePath, value) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });

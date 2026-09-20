@@ -12,15 +12,13 @@
     "dev:desktop": "pnpm --filter @srp-cfg/desktop start",
     "build:desktop": "pnpm --filter @srp-cfg/desktop build",
     "package:desktop": "pnpm --filter @srp-cfg/desktop package",
-    "sync:version": "node app/desktop/scripts/sync-tauri-version.mjs"
+    "sync:version": "node app/desktop/scripts/sync-tauri-version.mjs",
+    "sync:fonts": "node scripts/sync-fonts.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp"
     ]
-  },
-  "dependencies": {
-    "rehype-slug": "^6.0.0"
   }
 }

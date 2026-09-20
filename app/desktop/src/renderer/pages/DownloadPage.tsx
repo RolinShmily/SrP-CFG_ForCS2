@@ -21,7 +21,7 @@ import {
   X,
   FileCode,
 } from "lucide-react";
-import { dl, dlGithub } from "../lib/downloads";
+import { CONFIG_PACKAGE_FILE, MAP_GUIDES_FILE, VIDEO_SETTINGS_FILE, dl, dlGithub } from "../lib/downloads";
 import { PageHeader } from "@srp-cfg/ui";
 import UploadZone from "../components/UploadZone";
 import type { Page } from "../App";
@@ -32,9 +32,9 @@ const OFFICIAL_COMPONENTS = [
     id: "runtime-core",
     name: "Runtime Core (CFG 核心运行时)",
     desc: "核心架构：模块化 alias、跳投/大跳/准星切换等全套脚本功能、预设起点库与 custom.cfg 注入入口。",
-    file: "SrP-CFG_Runtime_Core.zip",
-    mirrorUrl: dl("SrP-CFG_Runtime_Core.zip"),
-    githubUrl: dlGithub("SrP-CFG_Runtime_Core.zip"),
+    file: CONFIG_PACKAGE_FILE,
+    mirrorUrl: dl(CONFIG_PACKAGE_FILE),
+    githubUrl: dlGithub(CONFIG_PACKAGE_FILE),
     badge: "CORE RUNTIME",
     icon: Package,
     featured: true,
@@ -43,9 +43,9 @@ const OFFICIAL_COMPONENTS = [
     id: "map-guides",
     name: "地图跑图与投掷物指南 (Annotations)",
     desc: "包含 Dust2, Mirage, Inferno, Ancient 等官方竞技地图的实用跑图、烟闪道具落点及标注指南。",
-    file: "SrP-CFG_Map_Guides.zip",
-    mirrorUrl: dl("SrP-CFG_Map_Guides.zip"),
-    githubUrl: dlGithub("SrP-CFG_Map_Guides.zip"),
+    file: MAP_GUIDES_FILE,
+    mirrorUrl: dl(MAP_GUIDES_FILE),
+    githubUrl: dlGithub(MAP_GUIDES_FILE),
     badge: "ANNOTATIONS",
     icon: Map,
     featured: false,
@@ -54,9 +54,9 @@ const OFFICIAL_COMPONENTS = [
     id: "video-config",
     name: "推荐画面与视频设置 (Video Config)",
     desc: "经过高刷优化与职业选手参数调校的 cs2_video.txt 画面预设，兼顾极低延迟与画面清晰度。",
-    file: "SrP-CFG_Video_Settings.zip",
-    mirrorUrl: dl("SrP-CFG_Video_Settings.zip"),
-    githubUrl: dlGithub("SrP-CFG_Video_Settings.zip"),
+    file: VIDEO_SETTINGS_FILE,
+    mirrorUrl: dl(VIDEO_SETTINGS_FILE),
+    githubUrl: dlGithub(VIDEO_SETTINGS_FILE),
     badge: "VIDEO SETTINGS",
     icon: Tv,
     featured: false,

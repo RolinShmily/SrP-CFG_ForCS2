@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Github,
   ExternalLink,
@@ -18,6 +18,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Card } from "@srp-cfg/ui";
+import { REPO_URL, WEBSITE_URL } from "../lib/downloads";
+import { useAppVersion } from "../lib/version";
 import blogSvg from "../assets/svg/blog-solid-full.svg?raw";
 import bilibiliSvg from "../assets/svg/bilibili.svg?raw";
 import githubSvg from "../assets/svg/github-brands-solid-full.svg?raw";
@@ -37,12 +39,12 @@ const techStack = [
 const links = [
   {
     label: "GitHub 开源仓库",
-    url: "https://github.com/RolinShmily/SrP-CFG_ForCS2",
+    url: REPO_URL,
     icon: Github,
   },
   {
     label: "SrP-CFG 在线知识库 / 指令中心",
-    url: "https://cfg.srprolin.top",
+    url: WEBSITE_URL,
     icon: Globe,
   },
   {
@@ -68,16 +70,7 @@ const contributors = [
 ];
 
 export default function AboutPage() {
-  const [version, setVersion] = useState<string>("3.3.1");
-
-  useEffect(() => {
-    window.api
-      ?.getVersion?.()
-      .then((v) => {
-        if (v) setVersion(v);
-      })
-      .catch(() => {});
-  }, []);
+  const version = useAppVersion();
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-6">
@@ -295,7 +288,7 @@ export default function AboutPage() {
                     type="button"
                     onClick={() =>
                       window.api.openExternal(
-                        "https://github.com/RolinShmily/SrP-CFG_ForCS2/blob/main/LICENSE"
+                        `${REPO_URL}/blob/main/LICENSE`
                       )
                     }
                     className="text-[11px] text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition"

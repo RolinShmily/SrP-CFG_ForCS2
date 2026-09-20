@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'config/**'
-      - 'app/website/src/data/config-knowledge/*.json'
+      - '.github/data/config-knowledge/*.json'
       - '.github/scripts/sync_config_vectorize.mjs'
       - '.github/scripts/sync_config_vectorize.test.mjs'
       - '.github/workflows/sync-config-index.yml'
@@ -41,7 +41,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add app/website/src/data/config-knowledge/*.json
+          git add .github/data/config-knowledge/*.json
           if ! git diff --cached --quiet; then
             git commit -m "chore(auto): update curated Config knowledge from source changes"
             git push

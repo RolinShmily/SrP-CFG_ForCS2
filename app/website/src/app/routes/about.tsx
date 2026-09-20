@@ -21,8 +21,8 @@ import {
   User,
 } from "lucide-react";
 import { Card } from "@srp-cfg/ui";
-import { LATEST_VERSION } from "../../data/version";
-import { REPO_URL, RELEASES_URL } from "../../data/navigation";
+import { VERSION_DISPLAY } from "../../data/version";
+import { REPO_URL, RELEASES_URL, WEBSITE_URL } from "../../data/navigation";
 import blogSvg from "../../assets/svg/blog-solid-full.svg?raw";
 import bilibiliSvg from "../../assets/svg/bilibili.svg?raw";
 import githubSvg from "../../assets/svg/github-brands-solid-full.svg?raw";
@@ -55,7 +55,7 @@ const links = [
   },
   {
     label: "SrP-CFG 在线知识库 / 指令中心",
-    url: "https://cfg.srprolin.top",
+    url: WEBSITE_URL,
     icon: Globe,
   },
   {
@@ -81,7 +81,6 @@ const contributors = [
 ];
 
 export default function AboutPage() {
-  const versionDisplay = LATEST_VERSION !== "0.0.0" ? `v${LATEST_VERSION}` : "v3.3.1";
 
   return (
     <section className="pb-16 pt-28 sm:pb-20 sm:pt-32">
@@ -98,7 +97,7 @@ export default function AboutPage() {
           <h1 className="text-3xl sm:text-4xl font-bold font-display text-text tracking-tight flex items-center gap-2.5">
             <span>关于 SrP-CFG</span>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-accent/20 text-accent font-mono font-medium border border-accent/30">
-              {versionDisplay}
+              {VERSION_DISPLAY}
             </span>
           </h1>
           <p className="text-sm sm:text-base text-text-muted mt-2 max-w-xl">

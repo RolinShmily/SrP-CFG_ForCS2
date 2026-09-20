@@ -1,19 +1,16 @@
-export const REPO_URL = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
-export const RELEASES_URL = `${REPO_URL}/releases`;
-
-// 下载镜像前缀：纯字符串拼接到 GitHub Release 链接最前面。
-// - 留空字符串 ""        → 直连 GitHub（默认）
-// - 填镜像站 URL 且必须以 "/" 结尾 → 全部走镜像
-// 例：""                          → 直连 GitHub
-//     "https://gh.269601.xyz/"    → 走镜像站（原 GitHub 链接前置该前缀）
-// ⚠️ 换镜像前必须用 ureq 3.3（desktop 下载栈）实测兼容。历史坑：gh.269601.xyz 曾对
-//   302 重定向响应返回 chunked 编码，旧 ureq 3.3 解析报 "protocol: chunk expected
-//   crlf" 导致下载静默失败；2026-08-12 已用 ureq 3.3.0 实测 gh.269601.xyz 完整下载
-//   116802B 通过（最终 200 带 Content-Length）。若再换镜像需重新实测。
-export const DL_MIRROR_PREFIX = "https://gh.269601.xyz/";
-
-// GitHub Release 稳定下载基底（始终指向 latest，要求 asset 文件名固定无版本号）
-export const RELEASE_DOWNLOAD_BASE = `${REPO_URL}/releases/latest/download`;
+/**
+ * 站点导航与共享链接常量。
+ *
+ * REPO_URL / RELEASES_URL / DL_MIRROR_PREFIX / RELEASE_DOWNLOAD_BASE 单点定义在
+ * @srp-cfg/ui（app/shared/ui/src/links.ts），此处仅做再导出，保持既有引用路径不变。
+ */
+export {
+  REPO_URL,
+  RELEASES_URL,
+  WEBSITE_URL,
+  DL_MIRROR_PREFIX,
+  RELEASE_DOWNLOAD_BASE,
+} from "@srp-cfg/ui";
 
 export const navLinks = [
   { href: "/", label: "首页" },
