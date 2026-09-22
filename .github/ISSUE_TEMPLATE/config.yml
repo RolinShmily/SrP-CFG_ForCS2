@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 📖 Documentation & Architecture
+    url: https://cfg.srprolin.top/docs
+    about: User guides, the four-layer architecture model, modes and features reference.
+
+  - name: 🎮 CS2 Command & ConVar Reference
+    url: https://cfg.srprolin.top/commands
+    about: 2,700+ official CS2 commands and ConVars with defaults, flags and constraints.
+
+  - name: 🔒 Report a Security Vulnerability
+    url: https://github.com/RolinShmily/SrP-CFG_ForCS2/security/advisories/new
+    about: Please report security issues privately — never as a public issue.

@@ -1,0 +1,27 @@
+# https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.py]
+indent_size = 4
+
+[*.cfg]
+# CS2 控制台脚本按行解析，禁止自动缩进
+indent_size = 0
+
+[*.md]
+# Markdown 允许行尾双空格换行
+trim_trailing_whitespace = false
+
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
+[*.{ico,woff2,jpg,png}]
+insert_final_newline = false

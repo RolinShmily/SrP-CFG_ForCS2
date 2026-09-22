@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate config & unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: .github/scripts/requirements-packages.txt
+
+      - name: Install packaging dependencies
+        run: python3 -m pip install -r .github/scripts/requirements-packages.txt
+
+      - name: Validate CFG architecture
+        run: python3 .github/scripts/validate_cfg.py
+
+      - name: Run config knowledge tests
+        run: |
+          node --test .github/scripts/sync_config_vectorize.test.mjs
+          node .github/scripts/sync_config_vectorize.mjs --dry-run
+
+      - name: Run website unit tests
+        run: node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
+
+  licenses:
+    name: Third-party license inventory
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      # --ignore-scripts：本任务只解析依赖图与许可声明，无需执行任何生命周期脚本。
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Verify THIRD_PARTY_LICENSES.md matches the dependency graph
+        run: pnpm check:licenses

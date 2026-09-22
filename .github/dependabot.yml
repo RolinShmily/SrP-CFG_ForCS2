@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # 官网 / 桌面端 / 共享 UI —— pnpm workspace 统一从仓库根目录解析
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      npm-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  # 桌面端 Rust 依赖（Tauri 壳层 + src-tauri/core）
+  - package-ecosystem: cargo
+    directory: /app/desktop/src-tauri
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      cargo-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  # GitHub Actions（工作流中引用的 action 版本）
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      actions:
+        patterns:
+          - "*"

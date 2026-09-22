@@ -1,0 +1,75 @@
+name: Feature Request
+description: Suggest a new capability or an improvement. / 提出新功能或改进建议。
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. English and 中文 are both welcome.
+
+        Please keep the project's core boundary in mind:
+        **functionality belongs to the runtime, personal preferences belong to the user.**
+        If your request is really a personal keybind or convar value, it likely belongs
+        in `config/srp-cfg/user/custom.cfg` on your own machine rather than in this repo.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What are you unable to do today, and why does it matter?
+      placeholder: |
+        I always ... , but currently I have to ... every time.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like it to work? Include the command / UI shape you imagine.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer does this belong to?
+      description: Pick the closest one — "Not sure" is a perfectly good answer.
+      options:
+        - Layer A · Runtime Core (aliases, resident features)
+        - Layer B · Presets (template starting points)
+        - Layer C · User layer (personal overrides)
+        - Modes (practice, preview, demo-hlae, ...)
+        - Desktop suite (installer, VCFG extraction, editor)
+        - Website / docs / command center
+        - Not sure — please advise
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing workarounds, other tools, or simpler options you already rejected.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, reference configs, related issues or discussion links.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and found no duplicate.
+          required: true
+        - label: I am willing to open a pull request for this if the design is agreed on.
+          required: false
