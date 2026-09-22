@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 
 use chrono::Local;
 use serde::{Deserialize, Serialize};
+use srp_cfg_core::safe_archive_path;
 use zip::write::SimpleFileOptions;
 use zip::{ZipArchive, ZipWriter};
 
@@ -32,6 +33,27 @@ fn backups_dir() -> PathBuf {
     let dir = ctx::base_dir().join("backups");
     let _ = fs::create_dir_all(&dir);
     dir
+}
+
+/// 将快照 id 收敛为 `backups/` 内的具体文件路径。
+///
+/// `backup_id` 来自渲染层，属于不可信输入：若直接 `backups_dir().join(format!("{id}.zip"))`，
+/// 传入 `../../../evil` 即可让应用去解压（或删除）磁盘上任意位置的 ZIP。
+///
+/// 快照 id 由本服务生成（`snapshot_YYYYmmdd_HHMMSS_auto|manual`），从不含分隔符，
+/// 因此这里要求收敛后仍是**单一文件名**，从而保证结果恒为 `backups/` 的直接子项。
+fn snapshot_zip_path(backup_id: &str) -> Result<PathBuf, String> {
+    let name = if backup_id.to_lowercase().ends_with(".zip") {
+        backup_id.to_string()
+    } else {
+        format!("{backup_id}.zip")
+    };
+    let safe = safe_archive_path(&name)
+        .ok_or_else(|| format!("非法的快照标识: {backup_id}"))?;
+    if safe.contains('/') {
+        return Err(format!("非法的快照标识: {backup_id}"));
+    }
+    Ok(backups_dir().join(safe))
 }
 
 /// 列出所有备份快照（按时间降序）。
@@ -259,12 +281,7 @@ pub fn clean_auto_backups(max_keep: usize) -> usize {
 
 /// 恢复指定快照。
 pub fn restore_snapshot(backup_id: &str, current_game_paths: &GamePaths) -> Result<(), String> {
-    let zip_filename = if backup_id.ends_with(".zip") {
-        backup_id.to_string()
-    } else {
-        format!("{backup_id}.zip")
-    };
-    let zip_path = backups_dir().join(&zip_filename);
+    let zip_path = snapshot_zip_path(backup_id)?;
     if !zip_path.exists() {
         return Err(format!("快照文件不存在: {}", zip_path.display()));
     }
@@ -282,44 +299,45 @@ pub fn restore_snapshot(backup_id: &str, current_game_paths: &GamePaths) -> Resu
     let file = File::open(&zip_path).map_err(|e| format!("打开快照文件失败: {e}"))?;
     let mut archive = ZipArchive::new(file).map_err(|e| format!("解压快照失败: {e}"))?;
 
+    // 防止「安全地什么都不做」被当成成功：把无法落地的组件记下来，末尾显式报错。
+    let mut restored = 0usize;
+    let mut undetected: Vec<String> = Vec::new();
+
     for i in 0..archive.len() {
         let mut entry = archive
             .by_index(i)
             .map_err(|e| format!("读取压缩项失败: {e}"))?;
-        let name = entry.name().to_string();
-        if name == "meta.json" {
+
+        // 条目名由归档作者控制（`entry.name()` 是原始名，不做任何消毒），
+        // 先收敛为 root 内的相对路径再拆分，否则 `cfg/../../x` 会写穿到游戏目录之外。
+        let safe_name = safe_archive_path(entry.name())
+            .ok_or_else(|| format!("快照包含不安全路径，已中止恢复: {}", entry.name()))?;
+        if safe_name == "meta.json" {
             continue;
         }
 
         // 分割 prefix/relative_path
-        let parts: Vec<&str> = name.splitn(2, '/').collect();
-        if parts.len() < 2 {
+        let Some((comp, subpath)) = safe_name.split_once('/') else {
             continue;
-        }
-        let comp = parts[0];
-        let subpath = parts[1];
+        };
         if subpath.is_empty() {
             continue;
         }
 
-        // 确定恢复目标根目录：优先使用当前探测到的路径，其次使用 meta.json 中记录的历史路径
+        // 恢复目标根目录**只**取自本机实时探测结果。
+        // 不得回退到 meta.json 中记录的路径：那是归档自述内容，等同攻击者指定写入根目录
+        // （例如 csgo 未探测到时写入 C:\Windows），且对未知前缀更是完全可控的任意路径。
         let target_base_opt = match comp {
-            "cfg" => current_game_paths
-                .game_cfg_path
-                .as_ref()
-                .or_else(|| meta.paths.get("cfg")),
-            "annotations" => current_game_paths
-                .annotations_path
-                .as_ref()
-                .or_else(|| meta.paths.get("annotations")),
-            "video" => current_game_paths
-                .user_cfg_path
-                .as_ref()
-                .or_else(|| meta.paths.get("video")),
-            _ => meta.paths.get(comp),
+            "cfg" => current_game_paths.game_cfg_path.as_ref(),
+            "annotations" => current_game_paths.annotations_path.as_ref(),
+            "video" => current_game_paths.user_cfg_path.as_ref(),
+            _ => None,
         };
 
         let Some(target_base_str) = target_base_opt else {
+            if !undetected.iter().any(|c| c == comp) {
+                undetected.push(comp.to_string());
+            }
             continue;
         };
 
@@ -340,12 +358,26 @@ pub fn restore_snapshot(backup_id: &str, current_game_paths: &GamePaths) -> Resu
                 .map_err(|e| format!("无法写入恢复文件 {}: {e}", out_path.display()))?;
             std::io::copy(&mut entry, &mut outfile)
                 .map_err(|e| format!("恢复文件数据失败 {}: {e}", out_path.display()))?;
+            restored += 1;
         }
+    }
+
+    if restored == 0 {
+        return Err(if undetected.is_empty() {
+            format!("快照 [{backup_id}] 中没有可恢复的文件")
+        } else {
+            format!(
+                "未能恢复任何文件：未探测到组件 {:?} 对应的 CS2 目录。\
+                 恢复只写入本机实时探测到的路径，不采用快照内记录的旧路径；\
+                 请先在「组件安装」页完成环境自检。",
+                undetected
+            )
+        });
     }
 
     log::success(
         "backup",
-        &format!("已成功恢复快照 [{backup_id}] (还原组件: {:?})", meta.components),
+        &format!("已成功恢复快照 [{backup_id}] (还原 {} 个文件, 组件: {:?})", restored, meta.components),
     );
 
     Ok(())
@@ -353,12 +385,7 @@ pub fn restore_snapshot(backup_id: &str, current_game_paths: &GamePaths) -> Resu
 
 /// 删除指定快照。
 pub fn delete_backup(backup_id: &str) -> Result<(), String> {
-    let zip_filename = if backup_id.ends_with(".zip") {
-        backup_id.to_string()
-    } else {
-        format!("{backup_id}.zip")
-    };
-    let zip_path = backups_dir().join(&zip_filename);
+    let zip_path = snapshot_zip_path(backup_id)?;
     if zip_path.exists() {
         fs::remove_file(&zip_path).map_err(|e| format!("删除快照文件失败: {e}"))?;
         log::info("backup", &format!("已删除快照 [{backup_id}]"));
@@ -371,4 +398,60 @@ pub fn open_backups_folder() -> Result<(), String> {
     let dir = backups_dir();
     tauri_plugin_opener::open_path(dir.to_string_lossy().as_ref(), None::<&str>)
         .map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// 快照 id 必须恒定落在 backups/ 之内。
+    /// 回归自：`backups_dir().join(format!("{id}.zip"))` 曾让 `../../../evil` 逃出备份目录，
+    /// 使应用去解压（或删除）磁盘上任意位置的 ZIP。
+    #[test]
+    fn snapshot_id_cannot_escape_the_backups_directory() {
+        let backups = backups_dir();
+
+        for evil in [
+            "../../../evil",
+            "..\\..\\evil",
+            "a/../../evil",
+            "/etc/passwd",
+            "C:/Windows/evil",
+            "sub/dir/snapshot",
+            "",
+            ".",
+            "..",
+        ] {
+            let result = snapshot_zip_path(evil);
+            // 要么直接拒绝，要么（对纯文件名）仍落在 backups/ 之内。
+            if let Ok(path) = result {
+                assert!(
+                    path.parent() == Some(backups.as_path()),
+                    "{evil:?} 逃出了备份目录: {}",
+                    path.display()
+                );
+            }
+        }
+
+        assert!(snapshot_zip_path("../../../evil").is_err());
+        assert!(snapshot_zip_path("..\\..\\evil").is_err());
+        assert!(snapshot_zip_path("sub/dir/snapshot").is_err());
+        assert!(snapshot_zip_path("/etc/passwd").is_err());
+        assert!(snapshot_zip_path("C:/Windows/evil").is_err());
+    }
+
+    /// 正常 id（含省略 .zip 后缀的两种写法）仍必须解析到同一个文件。
+    #[test]
+    fn normal_snapshot_id_resolves_inside_backups() {
+        let id = "snapshot_20260922_120000_auto";
+        let from_bare = snapshot_zip_path(id).expect("bare id");
+        let from_zip = snapshot_zip_path(&format!("{id}.zip")).expect("id with .zip");
+
+        assert_eq!(from_bare, from_zip, "带与不带 .zip 后缀应指向同一快照");
+        assert_eq!(from_bare.parent(), Some(backups_dir().as_path()));
+        assert_eq!(
+            from_bare.file_name().and_then(|n| n.to_str()),
+            Some("snapshot_20260922_120000_auto.zip")
+        );
+    }
 }

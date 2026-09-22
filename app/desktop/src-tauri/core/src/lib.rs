@@ -32,8 +32,8 @@ pub use migrate::{plan_migration, should_migrate, MigrationAction};
 pub use staging::{
     classify_file, classify_file_with_content, executable_line, exec_target, folders_to_remove,
     inspect_cfg_files, is_runtime_registration_only, is_timestamp_folder, next_timestamp_folder,
-    plan_staging, staging_destination, staging_destination_with_content, ConfigImpact,
-    StagedCategory, StagedConfigKind, StagingPlan, UploadFileType, upload_file_type,
+    plan_staging, safe_archive_path, staging_destination, staging_destination_with_content,
+    ConfigImpact, StagedCategory, StagedConfigKind, StagingPlan, UploadFileType, upload_file_type,
 };
 pub use updater::{
     build_result, filter_at_least, filter_newer, has_config_assets, has_desktop_assets, is_cache_fresh,

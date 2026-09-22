@@ -14,8 +14,8 @@ use serde::{Deserialize, Serialize};
 
 use srp_cfg_core::{
     classify_file_with_content, folders_to_remove, inspect_cfg_files, is_timestamp_folder,
-    next_timestamp_folder, staging_destination_with_content, upload_file_type, StagedCategory,
-    UploadFileType,
+    next_timestamp_folder, safe_archive_path, staging_destination_with_content, upload_file_type,
+    StagedCategory, UploadFileType,
 };
 
 use crate::ctx;
@@ -151,14 +151,19 @@ fn get_file_info(file_path: &Path, base_dir: &Path) -> UploadFileInfo {
     }
 }
 
-// ── zip 解压（zip crate，mangled_name 自带路径穿越防护）──────
+// ── zip 解压 ──────────────────────────────────────────────
+// 条目名完全由归档作者控制，一律经 core `safe_archive_path` 收敛到 dest_dir 之内，
+// 不安全条目直接报错中止（失败关闭），不静默改名。
 
 fn extract_zip(zip_path: &Path, dest_dir: &Path) -> Result<(), String> {
     let file = fs::File::open(zip_path).map_err(|e| e.to_string())?;
     let mut archive = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
     for i in 0..archive.len() {
         let mut entry = archive.by_index(i).map_err(|e| e.to_string())?;
-        let outpath = dest_dir.join(entry.mangled_name());
+        let safety = safe_archive_path(entry.name()).ok_or_else(|| {
+            format!("压缩包包含不安全路径，已中止解压: {}", entry.name())
+        })?;
+        let outpath = dest_dir.join(safety);
         if entry.is_dir() {
             let _ = fs::create_dir_all(&outpath);
             continue;

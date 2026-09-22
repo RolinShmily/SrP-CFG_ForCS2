@@ -391,6 +391,55 @@ pub fn inspect_cfg_files(files: &HashMap<String, String>) -> ConfigImpact {
     ConfigImpact { kind, cfg_count }
 }
 
+/// 把 ZIP 条目名解析为可安全拼接到目标根目录下的相对路径。
+///
+/// ZIP 条目名完全由归档作者控制：`a/../../b`、`/etc/x`、`C:\x`、`..\..\x`
+/// 都是合法的 ZIP 条目名。直接 `root.join(名字)` 会把文件写到根目录之外，因此所有解压
+/// 路径必须先经本函数收敛。
+///
+/// 拒绝（返回 `None`）：
+/// - 空名、含 NUL
+/// - 绝对路径（前导 `/` 或 `\`，含 UNC）
+/// - Windows 驱动器前缀（`C:…`）以及任何组件含 `:`（NTFS 备用数据流写法）
+/// - 任何会逃出根目录的 `..`（`a/../b` 允许，`a/../../b` 拒绝）
+/// - 化简后为空（`.`、`foo/..`），避免调用方拿到空路径而退化为根目录本身
+///
+/// 成功时返回以 `/` 分隔的已化简相对路径；`\` 与 `/` 均按分隔符处理，
+/// 因为 Windows 上的 `Path::join` 会把 `\` 当分隔符。
+pub fn safe_archive_path(entry_name: &str) -> Option<String> {
+    if entry_name.is_empty() || entry_name.contains('\0') {
+        return None;
+    }
+
+    let bytes = entry_name.as_bytes();
+    if bytes.len() >= 2 && bytes[1] == b':' && bytes[0].is_ascii_alphabetic() {
+        return None;
+    }
+    if entry_name.starts_with('/') || entry_name.starts_with('\\') {
+        return None;
+    }
+
+    let mut parts: Vec<&str> = Vec::new();
+    for part in entry_name.split(['/', '\\']) {
+        match part {
+            "" | "." => continue,
+            ".." => {
+                // 弹到根目录之外即拒绝（失败关闭），而不是静默改名。
+                if parts.pop().is_none() {
+                    return None;
+                }
+            }
+            other if other.contains(':') => return None,
+            other => parts.push(other),
+        }
+    }
+
+    if parts.is_empty() {
+        return None;
+    }
+    Some(parts.join("/"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -641,5 +690,63 @@ mod tests {
             inspect_cfg_files(&runtime),
             ConfigImpact { kind: StagedConfigKind::RuntimeCore, cfg_count: 2 }
         );
+    }
+
+    // ── safe_archive_path（路径穿越防线）─────
+    #[test]
+    fn rejects_archive_entries_that_escape_the_root() {
+        // 逃出根目录的 ..
+        assert_eq!(safe_archive_path("../evil.cfg"), None);
+        assert_eq!(safe_archive_path("a/../../evil.cfg"), None);
+        assert_eq!(safe_archive_path("..\\..\\evil.cfg"), None);
+        assert_eq!(safe_archive_path("cfg/../../evil.cfg"), None);
+        // 绝对路径
+        assert_eq!(safe_archive_path("/etc/passwd"), None);
+        assert_eq!(safe_archive_path("\\\\server\\share\\evil.cfg"), None);
+        assert_eq!(safe_archive_path("C:/Windows/evil.dll"), None);
+        assert_eq!(safe_archive_path("C:\\Windows\\evil.dll"), None);
+        // NTFS 备用数据流：任意组件含 ':'
+        assert_eq!(safe_archive_path("autoexec.cfg:evil"), None);
+        // NUL 注入
+        assert_eq!(safe_archive_path("evil\0.cfg"), None);
+        // 化简后为空
+        assert_eq!(safe_archive_path(""), None);
+        assert_eq!(safe_archive_path("."), None);
+        assert_eq!(safe_archive_path("./"), None);
+        assert_eq!(safe_archive_path("cfg/.."), None);
+        assert_eq!(safe_archive_path("/"), None);
+    }
+
+    #[test]
+    fn accepts_and_normalizes_contained_archive_entries() {
+        assert_eq!(safe_archive_path("autoexec.cfg").as_deref(), Some("autoexec.cfg"));
+        assert_eq!(
+            safe_archive_path("srp-cfg/user/custom.cfg").as_deref(),
+            Some("srp-cfg/user/custom.cfg")
+        );
+        assert_eq!(
+            safe_archive_path("annotations\\mirage\\mirage.txt").as_deref(),
+            Some("annotations/mirage/mirage.txt")
+        );
+        // 仍在根目录内的 .. 可以化简
+        assert_eq!(safe_archive_path("a/../b.cfg").as_deref(), Some("b.cfg"));
+        assert_eq!(safe_archive_path("a/b/../c.cfg").as_deref(), Some("a/c.cfg"));
+        // 冗余分隔符与当前目录
+        assert_eq!(safe_archive_path("./a//b").as_deref(), Some("a/b"));
+        assert_eq!(safe_archive_path("cfg/").as_deref(), Some("cfg"));
+    }
+
+    #[test]
+    fn safe_archive_path_never_yields_a_parent_component() {
+        // 不变式：成功返回的路径不得以 .. 开头，也不得再含 .. 组件。
+        for name in ["a/../b", "a/b/../../c", "./x", "x/y", "..\\a\\b"] {
+            if let Some(safe) = safe_archive_path(name) {
+                assert!(!safe.starts_with(".."), "{name} -> {safe}");
+                assert!(
+                    !safe.split('/').any(|p| p == ".."),
+                    "{name} -> {safe} 仍含 .. 组件"
+                );
+            }
+        }
     }
 }
