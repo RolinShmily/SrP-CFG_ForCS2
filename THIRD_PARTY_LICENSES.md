@@ -20,7 +20,9 @@ attribution and compliance notes (fonts, data sources, copyleft review).
 | `SrP-CFG_Runtime_Core.zip` · `_Map_Guides.zip` · `_Video_Settings.zip` | None — project-authored configuration only |
 
 Build-time-only tooling (bundlers, CSS transformers, type checkers, content pipeline) is
-excluded: it is never linked into or shipped with a release artifact.
+excluded: it is never linked into or shipped with a release artifact. Only
+platform-agnostic packages are listed, so the inventory is identical on any machine and can
+be verified on any CI runner.
 
 ## Contents
 
@@ -345,6 +347,10 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 ## 2. Frontend & website — npm packages
 
 Production dependency closure of `@srp-cfg/desktop`, `@srp-cfg/website` and `@srp-cfg/ui`.
+Packages that declare a platform restriction (the npm `os`/`cpu` fields — for example the
+native compiler binaries shipped by TypeScript 7) are excluded: they are build tooling that
+never reaches a release artifact, and including them would make this file depend on the
+machine that generated it.
 
 | License | Components |
 | :--- | ---: |
@@ -391,7 +397,7 @@ Production dependency closure of `@srp-cfg/desktop`, `@srp-cfg/website` and `@sr
 | `scheduler` | 0.28.0 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
 | `set-cookie-parser` | 2.7.2 | [`MIT`](#mit) | Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/) |
 | `style-mod` | 4.1.3 | [`MIT`](#mit) | Copyright (C) 2018 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
-| `typescript` | 5.8.3 | [`Apache-2.0`](#apache-2.0) | Microsoft Corp. |
+| `typescript` | 7.0.2 | [`Apache-2.0`](#apache-2.0) | Copyright (c) 1991-2017 Unicode, Inc. All rights reserved.; Copyright (c) 2018 The Khronos Group Inc. |
 | `w3c-keyname` | 2.2.8 | [`MIT`](#mit) | Copyright (C) 2016 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 
 </details>
