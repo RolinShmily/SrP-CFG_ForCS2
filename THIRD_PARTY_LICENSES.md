@@ -24,7 +24,7 @@ excluded: it is never linked into or shipped with a release artifact.
 
 ## Contents
 
-- [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (278)
+- [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (280)
 - [2. Frontend & website — npm packages](#2-frontend--website--npm-packages) (34)
 - [3. Self-hosted fonts](#3-self-hosted-fonts) (3)
 - [Appendix — license texts](#appendix--license-texts) (13)
@@ -37,12 +37,12 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 
 | License | Components |
 | :--- | ---: |
-| [`MIT`](#mit) | 248 |
-| [`Apache-2.0`](#apache-2.0) | 194 |
+| [`MIT`](#mit) | 249 |
+| [`Apache-2.0`](#apache-2.0) | 195 |
 | [`Unicode-3.0`](#unicode-3.0) | 19 |
 | [`Unlicense`](#unlicense) | 6 |
+| [`Zlib`](#zlib) | 6 |
 | [`MPL-2.0`](#mpl-2.0) | 5 |
-| [`Zlib`](#zlib) | 5 |
 | [`BSD-3-Clause`](#bsd-3-clause) | 4 |
 | [`0BSD`](#0bsd) | 1 |
 | `CC0-1.0` | 1 |
@@ -272,6 +272,7 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `tracing-attributes` | 0.1.31 | [`MIT`](#mit) | Copyright (c) 2019 Tokio Contributors |
 | `tracing-core` | 0.1.36 | [`MIT`](#mit) | Copyright (c) 2019 Tokio Contributors |
 | `tray-icon` | 0.24.2 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2022-2022 Tauri Programme within The Commons Conservancy |
+| `typed-path` | 0.12.3 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Chip Senkbeil <chip@senkbeil.org> |
 | `typeid` | 1.0.3 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | David Tolnay <dtolnay@gmail.com> |
 | `typenum` | 1.20.1 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright 2014 Paho Lurie-Gregg; Copyright (c) 2014 Paho Lurie-Gregg |
 | `unic-char-property` | 0.9.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | The UNIC Project Developers |
@@ -332,7 +333,8 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `zerotrie` | 0.2.4 | [`Unicode-3.0`](#unicode-3.0) | Copyright © 2020-2024 Unicode, Inc. |
 | `zerovec` | 0.11.6 | [`Unicode-3.0`](#unicode-3.0) | Copyright © 2020-2024 Unicode, Inc. |
 | `zerovec-derive` | 0.11.3 | [`Unicode-3.0`](#unicode-3.0) | Copyright © 2020-2024 Unicode, Inc. |
-| `zip` | 2.4.2 | [`MIT`](#mit) | Copyright (c) 2014 Mathijs van de Nes |
+| `zip` | 8.6.0 | [`MIT`](#mit) | Copyright (c) 2014 Mathijs van de Nes |
+| `zlib-rs` | 0.6.8 | [`Zlib`](#zlib) | (not declared upstream) |
 | `zmij` | 1.0.23 | [`MIT`](#mit) | David Tolnay <dtolnay@gmail.com> |
 | `zopfli` | 0.8.3 | [`Apache-2.0`](#apache-2.0) | Copyright 2011 Google Inc. |
 
@@ -1580,12 +1582,10 @@ For more information, please refer to <http://unlicense.org/>
 Reproduced for components licensed as `Zlib`.
 
 ```text
-zlib License
-
-(C) 2020 Tomasz "Soveu" Marx
+(C) 2024 Trifecta Tech Foundation
 
 This software is provided 'as-is', without any express or implied
-warranty.  In no event will the authors be held liable for any damages
+warranty. In no event will the authors be held liable for any damages
 arising from the use of this software.
 
 Permission is granted to anyone to use this software for any purpose,
@@ -1596,8 +1596,10 @@ freely, subject to the following restrictions:
    claim that you wrote the original software. If you use this software
    in a product, an acknowledgment in the product documentation would be
    appreciated but is not required.
+
 2. Altered source versions must be plainly marked as such, and must not be
    misrepresented as being the original software.
+
 3. This notice may not be removed or altered from any source distribution.
 ```
 
