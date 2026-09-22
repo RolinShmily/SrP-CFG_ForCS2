@@ -2,13 +2,14 @@
  * 页脚（对应原 Footer.astro，React 化）。
  */
 import { Link } from "react-router";
-import { BookOpen, Download, Github } from "lucide-react";
+import { BookOpen, Download } from "lucide-react";
+import { GithubIcon } from "./GithubIcon";
 import { REPO_URL } from "../../data/navigation";
 
 const footerLinks = [
   { to: "/docs", label: "项目文档", icon: BookOpen, external: false },
   { to: "/download", label: "前往下载", icon: Download, external: false },
-  { to: REPO_URL, label: "GitHub", icon: Github, external: true },
+  { to: REPO_URL, label: "GitHub", icon: GithubIcon, external: true },
 ];
 
 export function Footer() {

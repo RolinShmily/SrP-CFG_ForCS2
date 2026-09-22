@@ -6,7 +6,6 @@ import type { MetaFunction } from "react-router";
 import {
   Boxes,
   ExternalLink,
-  Github,
   Globe,
   Layers,
   Monitor,
@@ -21,6 +20,7 @@ import {
   User,
 } from "lucide-react";
 import { Card } from "@srp-cfg/ui";
+import { GithubIcon } from "../components/GithubIcon";
 import { VERSION_DISPLAY } from "../../data/version";
 import { REPO_URL, RELEASES_URL, WEBSITE_URL } from "../../data/navigation";
 import blogSvg from "../../assets/svg/blog-solid-full.svg?raw";
@@ -51,7 +51,7 @@ const links = [
   {
     label: "GitHub 开源仓库",
     url: REPO_URL,
-    icon: Github,
+    icon: GithubIcon,
   },
   {
     label: "SrP-CFG 在线知识库 / 指令中心",

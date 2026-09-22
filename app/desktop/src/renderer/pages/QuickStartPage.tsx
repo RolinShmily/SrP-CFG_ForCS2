@@ -8,7 +8,6 @@ import {
   Cpu,
   ExternalLink,
   FolderCheck,
-  Github,
   Globe,
   History,
   Layers,
@@ -19,6 +18,7 @@ import {
   User,
   UserRoundCog,
 } from "lucide-react";
+import { GithubIcon } from "../components/GithubIcon";
 import { WEBSITE_URL, REPO_URL, DOCS_URL } from "../lib/downloads";
 import { useAppVersion } from "../lib/version";
 import { PageHeader } from "@srp-cfg/ui";
@@ -154,7 +154,7 @@ export default function QuickStartPage({ detection, onNavigate }: Props) {
             className="p-1.5 text-text-muted hover:text-text rounded-lg hover:bg-bg-hover border border-border bg-bg-card transition cursor-pointer"
             title="GitHub 仓库"
           >
-            <Github className="w-4 h-4" />
+            <GithubIcon className="w-4 h-4" />
           </button>
         </div>
       </div>

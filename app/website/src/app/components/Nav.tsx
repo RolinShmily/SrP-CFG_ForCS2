@@ -4,7 +4,8 @@
  */
 import { useState } from "react";
 import { NavLink } from "react-router";
-import { Github, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { GithubIcon } from "./GithubIcon";
 import { navLinks, REPO_URL } from "../../data/navigation";
 
 export function Nav() {
@@ -53,7 +54,7 @@ export function Nav() {
             rel="noopener"
             className="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 font-display text-sm font-semibold text-text-muted no-underline transition-colors duration-200 hover:bg-bg-hover hover:text-text"
           >
-            <Github className="h-4 w-4" />
+            <GithubIcon className="h-4 w-4" />
             GitHub
           </a>
         </div>
