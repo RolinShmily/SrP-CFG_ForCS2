@@ -24,7 +24,7 @@ excluded: it is never linked into or shipped with a release artifact.
 
 ## Contents
 
-- [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (282)
+- [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (278)
 - [2. Frontend & website — npm packages](#2-frontend--website--npm-packages) (34)
 - [3. Self-hosted fonts](#3-self-hosted-fonts) (3)
 - [Appendix — license texts](#appendix--license-texts) (13)
@@ -37,8 +37,8 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 
 | License | Components |
 | :--- | ---: |
-| [`MIT`](#mit) | 252 |
-| [`Apache-2.0`](#apache-2.0) | 197 |
+| [`MIT`](#mit) | 248 |
+| [`Apache-2.0`](#apache-2.0) | 194 |
 | [`Unicode-3.0`](#unicode-3.0) | 19 |
 | [`Unlicense`](#unlicense) | 6 |
 | [`MPL-2.0`](#mpl-2.0) | 5 |
@@ -300,7 +300,6 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `winapi-util` | 0.1.11 | [`Unlicense`](#unlicense) / [`MIT`](#mit) | Copyright (c) 2017 Andrew Gallant |
 | `window-vibrancy` | 0.6.0 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2020-2022 Tauri Programme within The Commons Conservancy |
 | `windows` | 0.61.3 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
-| `windows_x86_64_msvc` | 0.48.5 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows_x86_64_msvc` | 0.52.6 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows_x86_64_msvc` | 0.53.1 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-collections` | 0.2.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
@@ -313,18 +312,15 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `windows-numerics` | 0.2.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-result` | 0.3.4 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-strings` | 0.4.2 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
-| `windows-sys` | 0.48.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-sys` | 0.59.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-sys` | 0.60.2 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-sys` | 0.61.2 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
-| `windows-targets` | 0.48.5 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-targets` | 0.52.6 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-targets` | 0.53.5 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-threading` | 0.1.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `windows-version` | 0.1.7 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) Microsoft Corporation. |
 | `winnow` | 0.7.15 | [`MIT`](#mit) | (not declared upstream) |
 | `winnow` | 1.0.4 | [`MIT`](#mit) | (not declared upstream) |
-| `winreg` | 0.52.0 | [`MIT`](#mit) | Copyright (c) 2015 Igor Shaula |
 | `winreg` | 0.55.0 | [`MIT`](#mit) | Copyright (c) 2015 Igor Shaula |
 | `writeable` | 0.6.3 | [`Unicode-3.0`](#unicode-3.0) | Copyright © 2020-2024 Unicode, Inc. |
 | `wry` | 0.55.1 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2020-2023 Ngo Iok Ui & Tauri Programme within The Commons Conservancy |
