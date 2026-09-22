@@ -2,6 +2,13 @@
   "name": "@srp-cfg/desktop",
   "version": "3.3.1",
   "private": true,
+  "license": "MIT",
+  "author": "RoL1n_SrP",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RolinShmily/SrP-CFG_ForCS2.git",
+    "directory": "app/desktop"
+  },
   "description": "SrP-CFG Installer — CS2 配置预设管理器",
   "scripts": {
     "dev:renderer": "node ../../scripts/sync-fonts.mjs && vite",

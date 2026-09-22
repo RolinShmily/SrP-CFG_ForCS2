@@ -264,19 +264,19 @@ export default function AboutPage() {
                 <span>鸣谢 (Acknowledgements)</span>
               </h2>
               <p className="text-xs text-text-muted leading-relaxed">
-                感谢 <strong className="text-text">Inter</strong>、<strong className="text-text">JetBrains Mono</strong> 与 <strong className="text-text">Noto Sans SC</strong>（思源黑体）开源字体项目（Google Fonts，基于 <strong className="text-text">SIL Open Font License 1.1</strong> 开源）。本项目正文、代码编辑器与中文界面均采用上述字体，构建期自托管、离线可用；若本机已安装同名字体则优先使用本地版本。
+                感谢 <strong className="text-text">Inter</strong>、<strong className="text-text">JetBrains Mono</strong> 与 <strong className="text-text">Noto Sans SC</strong> 三款开源字体，分别由 Inter Project Authors、JetBrains 与 Adobe 以 <strong className="text-text">SIL Open Font License 1.1</strong> 授权。本项目正文、代码编辑器与中文界面均采用上述字体，构建期自托管、离线可用；若本机已安装同名字体则优先使用本地版本。各字体的版权声明与 OFL 全文随字体一并分发。
               </p>
               <div className="pt-0.5 flex items-center justify-between">
                 <span className="font-mono text-[11px] text-accent bg-accent/10 border border-accent/20 px-2.5 py-1 rounded-md">
                   SIL Open Font License 1.1
                 </span>
                 <a
-                  href="https://github.com/google/fonts"
+                  href={`${REPO_URL}/blob/main/THIRD_PARTY_NOTICES.zh-CN.md`}
                   target="_blank"
                   rel="noopener"
                   className="text-xs text-text-muted hover:text-accent flex items-center gap-1 transition-colors no-underline"
                 >
-                  <span>访问 Google Fonts 仓库</span>
+                  <span>查看第三方声明</span>
                   <ExternalLink size={12} />
                 </a>
               </div>
@@ -289,21 +289,32 @@ export default function AboutPage() {
                 <span>开源许可证 (Open Source License)</span>
               </h2>
               <p className="text-xs text-text-muted leading-relaxed">
-                SrP-CFG 采用 <strong className="text-text">MIT 许可证</strong> 开源。你可以自由使用、修改、分发与商业化，请保留原版权声明与许可文件。
+                SrP-CFG 采用 <strong className="text-text">MIT 许可证</strong> 开源。你可以自由使用、修改、分发与商业化，请保留原版权声明与许可文件。随产物分发的第三方组件（字体、游戏数据来源、Rust 与 npm 依赖）逐项列在第三方声明与许可清单中。
               </p>
-              <div className="pt-1 flex items-center justify-between">
+              <div className="pt-1 flex flex-wrap items-center justify-between gap-3">
                 <span className="font-mono text-[11px] text-accent bg-accent/10 border border-accent/20 px-2.5 py-1 rounded-md">
-                  MIT License © 2024-2026 RoL1n
+                  MIT License © 2025-2026 RoL1n_SrP
                 </span>
-                <a
-                  href={`${REPO_URL}/blob/main/LICENSE`}
-                  target="_blank"
-                  rel="noopener"
-                  className="text-xs text-text-muted hover:text-accent flex items-center gap-1 transition-colors no-underline"
-                >
-                  <span>查看完整协议</span>
-                  <ExternalLink size={12} />
-                </a>
+                <div className="flex items-center gap-4">
+                  <a
+                    href={`${REPO_URL}/blob/main/LICENSE`}
+                    target="_blank"
+                    rel="noopener"
+                    className="text-xs text-text-muted hover:text-accent flex items-center gap-1 transition-colors no-underline"
+                  >
+                    <span>查看完整协议</span>
+                    <ExternalLink size={12} />
+                  </a>
+                  <a
+                    href={`${REPO_URL}/blob/main/THIRD_PARTY_LICENSES.md`}
+                    target="_blank"
+                    rel="noopener"
+                    className="text-xs text-text-muted hover:text-accent flex items-center gap-1 transition-colors no-underline"
+                  >
+                    <span>依赖许可清单</span>
+                    <ExternalLink size={12} />
+                  </a>
+                </div>
               </div>
             </Card>
           </div>

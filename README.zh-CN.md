@@ -207,13 +207,35 @@ uv run --with pyyaml python3 .github/scripts/validate_cfg.py --packages
 
 ---
 
+## 🤝 参与贡献
+
+欢迎任何规模的贡献 —— CFG 调校、模式、文档、界面与翻译皆可。
+环境搭建、`config/` 贡献铁律，以及提交 PR 前需要执行的检查项，请先阅读
+[CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)（[English](CONTRIBUTING.md)）。
+
+| | |
+| :--- | :--- |
+| 贡献指南 | [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md) · [English](CONTRIBUTING.md) |
+| 行为准则 | [CODE_OF_CONDUCT.zh-CN.md](CODE_OF_CONDUCT.zh-CN.md) · [English](CODE_OF_CONDUCT.md) |
+| 安全政策 | [SECURITY.zh-CN.md](SECURITY.zh-CN.md) · [English](SECURITY.md) |
+| 新手任务 | [good first issue](https://github.com/RolinShmily/SrP-CFG_ForCS2/labels/good%20first%20issue) |
+
+发现安全漏洞？请通过[私密渠道](https://github.com/RolinShmily/SrP-CFG_ForCS2/security/advisories/new)报告，不要在公开 Issue 中披露。
+
+---
+
 ## 🙏 鸣谢
 
-- [Inter](https://github.com/rsms/inter)、[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) 与 [Noto Sans SC](https://github.com/notofonts/noto-cjk) —— 基于 [SIL Open Font License 1.1](https://openfontlicense.org) 开源。本项目桌面端与文档站的正文、代码/界面等宽与中文排版均由构建期自托管的上述字体渲染。
+- [Inter](https://github.com/rsms/inter)、[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) 与 [Noto Sans SC](https://github.com/notofonts/noto-cjk) —— 本项目桌面端与文档站的正文、代码/界面等宽与中文排版均由构建期自托管的上述字体渲染。三款字体以 [SIL Open Font License 1.1](https://openfontlicense.org) 授权，每份副本均随附各自的版权声明与许可正文。
+- [SteamTracking/GameTracking-CS2](https://github.com/SteamTracking/GameTracking-CS2) —— [指令中心](https://cfg.srprolin.top/commands)背后 CS2 指令与 ConVar 元数据的来源。
+- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 记录完整署名与许可审查结论；[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) 是自动生成的逐组件依赖清单。
 
 ---
 
 ## 📄 开源许可证
 
-本项目基于 [MIT License](LICENSE) 协议开源。
-Counter-Strike 2 是 Valve Corporation 的注册商标。本项目为独立开源工具，与 Valve 官方无关。
+本项目基于 [MIT License](LICENSE) 协议开源，Copyright © 2025-2026 RoL1n_SrP。该授权覆盖本仓库全部内容 —— 桌面套件、官网与文档，以及以发布 ZIP 形式分发的配置包。每个发布 ZIP 内含各自的一份许可证。贡献同样以此协议授权。
+
+第三方组件均按其自身许可使用，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+Counter-Strike 2、CS2、Steam 与 Valve 是 Valve Corporation 的商标。本项目为独立开源工具，与 Valve Corporation 无隶属、认可或赞助关系。

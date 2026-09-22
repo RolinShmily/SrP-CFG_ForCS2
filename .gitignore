@@ -1,54 +1,46 @@
-CLAUDE.md
-AGENTS.md
-.claude
-.agents/
-.spec-workflow/
-.memory/
-
-# Local env files (secrets)
+# ─── 本地环境与机密 ───────────────────────────────────────────
 .env
 .env.*
 !.env.example
 
-# Node
+# ─── 依赖 ────────────────────────────────────────────────────
 node_modules/
-app/website/dist/
+
+# ─── 构建产物 ────────────────────────────────────────────────
 app/website/build/
+app/website/dist/
 app/website/.wrangler/
-app/desktop/out/
 app/desktop/dist/
-app/desktop/.vite/
-app/website/.astro/
+app/desktop/src-tauri/target/
+app/desktop/src-tauri/gen/schemas/
+.vite/
+*.tsbuildinfo
+.pnpm-store/
 
-app/desktop/src/renderer/.vite/
-app/desktop/src/renderer/dist/
+# ─── 发布打包产物（由 CI 生成，不入库）───────────────────────
+/packages.json
+/SrP-CFG_*.zip
 
-# 生成物：自托管字体副本（真源 app/shared/fonts，由 scripts/sync-fonts.mjs 生成）
-app/desktop/src/renderer/public/fonts/
-app/desktop/src/renderer/styles/fonts/
+# ─── 生成物：自托管字体副本 ──────────────────────────────────
+# 真源为 app/shared/fonts，由 scripts/sync-fonts.mjs 在构建期生成
 app/website/public/fonts/
 app/website/src/styles/fonts/
+app/desktop/src/renderer/public/fonts/
+app/desktop/src/renderer/styles/fonts/
 
-# Python
+# ─── Python ─────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
+.venv/
 
-# Temp files
+# ─── 临时文件 ────────────────────────────────────────────────
 tmp/
 
-msi/obj/
-msi/bin/
-msi/ElectronAppFiles.wxs
-
-# Rust (cargo build artifacts)
-app/desktop/src-tauri/target/
-
-# L0.6 golden samples: sandbox + esbuild bundle artifact
-tasks/layer-0-baseline/.sandbox/
-tasks/layer-0-baseline/scripts/golden-node.cjs
-
-# Tauri generated schemas
-app/desktop/src-tauri/gen/schemas/
-
-# TypeScript incremental build cache
-*.tsbuildinfo
+# ─── 本地 AI 智能体配置（仅开发者本机使用，不入库）───────────
+AGENTS.md
+CLAUDE.md
+.agents/
+.claude/
+.memory/
+.pi/
+.spec-workflow/

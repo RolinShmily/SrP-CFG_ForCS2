@@ -13,7 +13,9 @@
     "build:desktop": "pnpm --filter @srp-cfg/desktop build",
     "package:desktop": "pnpm --filter @srp-cfg/desktop package",
     "sync:version": "node app/desktop/scripts/sync-tauri-version.mjs",
-    "sync:fonts": "node scripts/sync-fonts.mjs"
+    "sync:fonts": "node scripts/sync-fonts.mjs",
+    "gen:licenses": "node scripts/generate-third-party-licenses.mjs",
+    "check:licenses": "node scripts/generate-third-party-licenses.mjs --check"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

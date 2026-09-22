@@ -207,13 +207,34 @@ uv run --with pyyaml python3 .github/scripts/validate_cfg.py --packages
 
 ---
 
+## 🤝 Contributing
+
+Contributions of every size are welcome — CFG tuning, modes, docs, UI, and translations.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) ([简体中文](CONTRIBUTING.zh-CN.md)) for the dev setup, the `config/` ground rules, and the checks to run before opening a pull request.
+
+| | |
+| :--- | :--- |
+| Contributing guide | [CONTRIBUTING.md](CONTRIBUTING.md) · [简体中文](CONTRIBUTING.zh-CN.md) |
+| Code of Conduct | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [简体中文](CODE_OF_CONDUCT.zh-CN.md) |
+| Security policy | [SECURITY.md](SECURITY.md) · [简体中文](SECURITY.zh-CN.md) |
+| Good first issues | [good first issue](https://github.com/RolinShmily/SrP-CFG_ForCS2/labels/good%20first%20issue) |
+
+Found a vulnerability? Please report it [privately](https://github.com/RolinShmily/SrP-CFG_ForCS2/security/advisories/new) rather than in a public issue.
+
+---
+
 ## 🙏 Acknowledgements
 
-- [Inter](https://github.com/rsms/inter), [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) and [Noto Sans SC](https://github.com/notofonts/noto-cjk) — Open-source fonts licensed under the [SIL Open Font License 1.1](https://openfontlicense.org), self-hosted at build time and used for the desktop app and documentation site (Latin text, code/UI monospace, and Chinese typography respectively).
+- [Inter](https://github.com/rsms/inter), [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) and [Noto Sans SC](https://github.com/notofonts/noto-cjk) — self-hosted at build time for the desktop app and documentation site (Latin text, code/UI monospace, and Chinese typography). Licensed under the [SIL Open Font License 1.1](https://openfontlicense.org); each font ships its copyright notice and license text with every copy.
+- [SteamTracking/GameTracking-CS2](https://github.com/SteamTracking/GameTracking-CS2) — source of the CS2 command and ConVar metadata behind the [Command Center](https://cfg.srprolin.top/commands).
+- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) records the full attribution and the license review; [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) is the generated inventory of every bundled component.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
-Counter-Strike 2 is a registered trademark of Valve Corporation. This project is an independent open-source tool and is not affiliated with Valve Corporation.
+SrP-CFG is released under the [MIT License](LICENSE) © 2025-2026 RoL1n_SrP. The grant covers everything in this repository — the desktop suite, the website and documentation, and the configuration packages published as release ZIPs. Each release ZIP carries its own copy of the license. Contributions are accepted under the same terms.
+
+Third-party components are used under their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Counter-Strike 2, CS2, Steam and Valve are trademarks of Valve Corporation. This project is an independent open-source tool, not affiliated with, endorsed by, or sponsored by Valve Corporation.

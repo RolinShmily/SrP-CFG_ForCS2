@@ -249,19 +249,19 @@ export default function AboutPage() {
                   </span>
                 </div>
                 <p className="text-[11px] text-text-muted leading-relaxed">
-                  感谢 <strong className="text-text">Inter</strong>、<strong className="text-text">JetBrains Mono</strong> 与 <strong className="text-text">Noto Sans SC</strong>（思源黑体）开源字体项目（Google Fonts，基于 SIL Open Font License 1.1 开源）。本项目桌面套件英文正文、代码编辑器与中文界面均采用上述字体，构建期自托管、离线可用；若本机已安装同名字体则优先使用本地版本。
+                  感谢 <strong className="text-text">Inter</strong>、<strong className="text-text">JetBrains Mono</strong> 与 <strong className="text-text">Noto Sans SC</strong> 三款开源字体，分别由 Inter Project Authors、JetBrains 与 Adobe 以 SIL Open Font License 1.1 授权。本项目桌面套件英文正文、代码编辑器与中文界面均采用上述字体，构建期自托管、离线可用；若本机已安装同名字体则优先使用本地版本。各字体的版权声明与 OFL 全文随字体一并分发。
                 </p>
                 <div className="pt-0.5">
                   <button
                     type="button"
                     onClick={() =>
                       window.api.openExternal(
-                        "https://github.com/google/fonts"
+                        `${REPO_URL}/blob/main/THIRD_PARTY_NOTICES.zh-CN.md`
                       )
                     }
                     className="text-[11px] text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition cursor-pointer"
                   >
-                    <span>访问 Google Fonts 仓库</span>
+                    <span>查看第三方声明（字体 / 数据来源 / 依赖）</span>
                     <ExternalLink className="w-3 h-3" />
                   </button>
                 </div>
@@ -283,7 +283,7 @@ export default function AboutPage() {
                 <p className="text-[11px] text-text-muted leading-relaxed">
                   SrP-CFG 采用宽松自由的 MIT 开源协议（Copyright © 2025-2026 RoL1n_SrP）。允许免费商用、修改与分发，须保留原著作权与许可声明。
                 </p>
-                <div className="pt-1">
+                <div className="pt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
                   <button
                     type="button"
                     onClick={() =>
@@ -294,6 +294,18 @@ export default function AboutPage() {
                     className="text-[11px] text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition"
                   >
                     <span>查看完整 LICENSE 许可证</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.api.openExternal(
+                        `${REPO_URL}/blob/main/THIRD_PARTY_LICENSES.md`
+                      )
+                    }
+                    className="text-[11px] text-orange-400 hover:text-orange-300 font-medium inline-flex items-center gap-1 transition"
+                  >
+                    <span>第三方依赖许可清单</span>
                     <ExternalLink className="w-3 h-3" />
                   </button>
                 </div>

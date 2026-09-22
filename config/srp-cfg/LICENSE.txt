@@ -1,3 +1,19 @@
+SrP-CFG Runtime Core
+https://github.com/RolinShmily/SrP-CFG_ForCS2
+
+This configuration package (Runtime Core) is part of SrP-CFG.
+It is distributed under the MIT License reproduced below.
+Counter-Strike 2 is a trademark of Valve Corporation; this project is an
+independent open-source tool and is not affiliated with Valve Corporation.
+
+Runtime Core 由 CS2 通过 autoexec.cfg 加载；你可以自由复制、修改与再分发本包内的配置。
+
+Third-party attributions for the desktop suite and website (fonts, game data
+sources, dependencies) are documented at:
+https://github.com/RolinShmily/SrP-CFG_ForCS2/blob/main/THIRD_PARTY_NOTICES.md
+
+--------------------------------------------------------------------------------
+
 MIT License
 
 Copyright (c) 2025-2026 RoL1n_SrP

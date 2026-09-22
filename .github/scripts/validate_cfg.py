@@ -17,6 +17,9 @@ PACKAGES_FILE = ROOT / ".github" / "packages.yaml"
 V3_ROOT_ENTRIES = {"autoexec.cfg", "annotations", "video", "srp-cfg"}
 V3_ROOT_DIRECTORIES = {"annotations", "video", "srp-cfg"}
 FORBIDDEN_PERSISTENCE_SUFFIXES = (".vcfg", ".vcfg_lastclouded")
+# MIT 要求副本随附版权与许可声明，三个发布包都必须内含该文件。
+LICENSE_ENTRY_NAMES = {"license", "license.txt"}
+MIT_LICENSE_MARKERS = ("MIT License", "Permission is hereby granted")
 EXEC_RE = re.compile(r"\bexec(?:ifexists)?\s+[\"']?([A-Za-z0-9_./\\-]+)", re.IGNORECASE)
 DIRECT_EXEC_RE = re.compile(
     r"^\s*exec(?:ifexists)?\s+[\"']?([A-Za-z0-9_./\\-]+)",
@@ -344,6 +347,25 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
                     f"{zip_path.name} contains forbidden persistence file: {raw_name}"
                 )
 
+        # MIT 要求每一份副本都随附版权与许可声明，因此三个发布包都必须内含 LICENSE.txt。
+        license_entries = [
+            name for name in names if PurePosixPath(name).name.lower() in LICENSE_ENTRY_NAMES
+        ]
+        if not license_entries:
+            raise ValidationError(
+                f"{zip_path.name} is missing the bundled LICENSE.txt; MIT requires the "
+                "copyright and permission notice to accompany every copy"
+            )
+        license_text = archive.read(license_entries[0]).decode("utf-8-sig")
+        missing_license_markers = [
+            marker for marker in MIT_LICENSE_MARKERS if marker not in license_text
+        ]
+        if missing_license_markers:
+            raise ValidationError(
+                f"{zip_path.name} LICENSE.txt is not the MIT license text "
+                f"(missing: {', '.join(missing_license_markers)})"
+            )
+
         if package_name == "runtime_core":
             archive_roots = {
                 PurePosixPath(name).parts[0]
@@ -359,6 +381,7 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
 
             required = {
                 "autoexec.cfg",
+                "srp-cfg/LICENSE.txt",
                 "srp-cfg/user/custom.cfg",
                 "srp-cfg/runtime/init.cfg",
             }
@@ -393,7 +416,12 @@ def validate_zip(zip_path: Path, package_name: str) -> None:
             assert_no_cycles(graph, "autoexec.cfg", zip_path.name)
 
         elif package_name == "map_guides":
-            guide_files = [n for n in names if n.endswith(".txt") or "Guide" in n]
+            guide_files = [
+                name
+                for name in names
+                if (name.endswith(".txt") or "Guide" in name)
+                and PurePosixPath(name).name.lower() not in LICENSE_ENTRY_NAMES
+            ]
             if not guide_files:
                 raise ValidationError(f"{zip_path.name} does not contain any map guide files")
 

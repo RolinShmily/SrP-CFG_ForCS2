@@ -7,9 +7,12 @@
  * 对应 CSS 也需生成副本并把 url(...) 统一改写为 /fonts/... 绝对路径。
  * 本脚本保证「真源单点维护、两端副本可重复生成」，仓库无需提交副本。
  *
+ * 同时复制每个字体包的 LICENSE.txt（OFL-1.1 要求随字体副本一并分发版权声明与许可正文），
+ * 落到各 app 的 publicDir/fonts/licenses/ 下，确保官网与桌面端产物都带许可文件。
+ *
  * 用法：node scripts/sync-fonts.mjs   （desktop/website 的 dev/build 脚本已自动调用）
  */
-import { cpSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -45,14 +48,24 @@ for (const target of TARGETS) {
   rmSync(target.cssDir, { recursive: true, force: true });
   mkdirSync(join(target.filesDir), { recursive: true });
   mkdirSync(join(target.cssDir), { recursive: true });
+  mkdirSync(join(target.filesDir, "licenses"), { recursive: true });
 
   for (const pkg of packages) {
     const srcFiles = join(FONTS_SRC, pkg, "files");
     const srcCss = join(FONTS_SRC, pkg, "index.css");
+    const srcLicense = join(FONTS_SRC, pkg, "LICENSE.txt");
+
+    // OFL-1.1 第 2 条：字体副本必须随附版权声明与许可正文，缺失即中止构建。
+    if (!existsSync(srcLicense)) {
+      console.error(`✗ 字体包 ${pkg} 缺少 LICENSE.txt，无法满足 OFL-1.1 分发要求`);
+      process.exit(1);
+    }
 
     for (const f of readdirSync(srcFiles)) {
       if (f.endsWith(".woff2")) cpSync(join(srcFiles, f), join(target.filesDir, f));
     }
+
+    cpSync(srcLicense, join(target.filesDir, "licenses", `${pkg}.txt`));
 
     const css = readFileSync(srcCss, "utf8").replace(/url\(\.\/files\//g, "url(/fonts/");
     writeFileSync(join(target.cssDir, `${pkg}.css`), css, "utf8");
@@ -60,4 +73,4 @@ for (const target of TARGETS) {
   console.log(`✓ ${target.name}: fonts → ${target.filesDir.replace(ROOT, ".")}`);
 }
 
-console.log(`✓ 字体副本已同步（${packages.length} 个字体包 × ${TARGETS.length} 个 app）`);
+console.log(`✓ 字体副本与 OFL 许可已同步（${packages.length} 个字体包 × ${TARGETS.length} 个 app）`);
