@@ -25,7 +25,7 @@ excluded: it is never linked into or shipped with a release artifact.
 ## Contents
 
 - [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (280)
-- [2. Frontend & website — npm packages](#2-frontend--website--npm-packages) (34)
+- [2. Frontend & website — npm packages](#2-frontend--website--npm-packages) (35)
 - [3. Self-hosted fonts](#3-self-hosted-fonts) (3)
 - [Appendix — license texts](#appendix--license-texts) (13)
 
@@ -348,7 +348,7 @@ Production dependency closure of `@srp-cfg/desktop`, `@srp-cfg/website` and `@sr
 
 | License | Components |
 | :--- | ---: |
-| [`MIT`](#mit) | 31 |
+| [`MIT`](#mit) | 32 |
 | [`Apache-2.0`](#apache-2.0) | 3 |
 | [`ISC`](#isc) | 1 |
 | [`Unlicense`](#unlicense) | 1 |
@@ -361,6 +361,7 @@ Production dependency closure of `@srp-cfg/desktop`, `@srp-cfg/website` and `@sr
 | `@babel/runtime` | 8.0.0 | [`MIT`](#mit) | Copyright (c) 2014-present Sebastian McKenzie and other contributors |
 | `@codemirror/autocomplete` | 6.20.3 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `@codemirror/commands` | 6.11.0 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
+| `@codemirror/commands` | 6.11.1 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `@codemirror/language` | 6.12.4 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `@codemirror/lint` | 6.9.7 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `@codemirror/search` | 6.7.2 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
@@ -372,22 +373,22 @@ Production dependency closure of `@srp-cfg/desktop`, `@srp-cfg/website` and `@sr
 | `@lezer/lr` | 1.4.10 | [`MIT`](#mit) | Copyright (C) 2018 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `@marijn/find-cluster-break` | 1.0.4 | [`MIT`](#mit) | Copyright (C) 2024 by Marijn Haverbeke <marijn@haverbeke.berlin> |
 | `@mjackson/node-fetch-server` | 0.2.0 | [`MIT`](#mit) | Copyright (c) 2024 Michael Jackson |
-| `@react-router/node` | 7.18.2 | [`MIT`](#mit) | Copyright (c) React Training LLC 2015-2019; Copyright (c) Remix Software Inc. 2020-2021 |
+| `@react-router/node` | 7.18.4 | [`MIT`](#mit) | Copyright (c) React Training LLC 2015-2019; Copyright (c) Remix Software Inc. 2020-2021 |
 | `@tauri-apps/api` | 2.11.1 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
-| `@tauri-apps/plugin-dialog` | 2.7.2 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | (not declared upstream) |
+| `@tauri-apps/plugin-dialog` | 2.7.3 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | (not declared upstream) |
 | `@uiw/codemirror-extensions-basic-setup` | 4.25.11 | [`MIT`](#mit) | kenny wong |
 | `@uiw/react-codemirror` | 4.25.11 | [`MIT`](#mit) | kenny wong |
 | `clsx` | 2.1.1 | [`MIT`](#mit) | Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com) |
 | `codemirror` | 6.0.2 | [`MIT`](#mit) | Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `cookie` | 1.1.1 | [`MIT`](#mit) | Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>; Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com> |
 | `crelt` | 1.0.7 | [`MIT`](#mit) | Copyright (C) 2020 by Marijn Haverbeke <marijn@haverbeke.berlin> |
-| `isbot` | 5.2.1 | [`Unlicense`](#unlicense) | (not declared upstream) |
+| `isbot` | 5.2.2 | [`Unlicense`](#unlicense) | (not declared upstream) |
 | `lucide-react` | 0.511.0 | [`ISC`](#isc) | Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT). All other copyright (c) for Lucide are held by Lucide Contributors 2022. |
-| `marked` | 18.0.4 | [`MIT`](#mit) | Copyright (c) 2018+, MarkedJS (https://github.com/markedjs/); Copyright (c) 2011-2018, Christopher Jeffrey (https://github.com/chjj/) |
-| `react` | 19.2.6 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
-| `react-dom` | 19.2.6 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
-| `react-router` | 7.18.2 | [`MIT`](#mit) | Copyright (c) React Training LLC 2015-2019; Copyright (c) Remix Software Inc. 2020-2021 |
-| `scheduler` | 0.27.0 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
+| `marked` | 18.0.14 | [`MIT`](#mit) | Copyright (c) 2018+, MarkedJS (https://github.com/markedjs/); Copyright (c) 2011-2018, Christopher Jeffrey (https://github.com/chjj/) |
+| `react` | 19.3.0 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
+| `react-dom` | 19.3.0 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
+| `react-router` | 7.18.4 | [`MIT`](#mit) | Copyright (c) React Training LLC 2015-2019; Copyright (c) Remix Software Inc. 2020-2021 |
+| `scheduler` | 0.28.0 | [`MIT`](#mit) | Copyright (c) Meta Platforms, Inc. and affiliates. |
 | `set-cookie-parser` | 2.7.2 | [`MIT`](#mit) | Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/) |
 | `style-mod` | 4.1.3 | [`MIT`](#mit) | Copyright (C) 2018 by Marijn Haverbeke <marijn@haverbeke.berlin> and others |
 | `typescript` | 5.8.3 | [`Apache-2.0`](#apache-2.0) | Microsoft Corp. |
