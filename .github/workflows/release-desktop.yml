@@ -40,7 +40,7 @@ jobs:
       has_desktop_changes: ${{ steps.check.outputs.has_desktop_changes }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -74,15 +74,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Configure git to use HTTPS
         run: git config --global url."https://github.com/".insteadOf "git@github.com:"
@@ -135,7 +135,7 @@ jobs:
           ls -lh "SrP-CFG_Installer.msi"
 
       - name: Upload MSI artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: msi-installer
           path: SrP-CFG_Installer.msi
@@ -149,7 +149,7 @@ jobs:
           ls -lh "SrP-CFG_Setup_x64.exe"
 
       - name: Upload NSIS artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nsis-installer
           path: SrP-CFG_Setup_x64.exe
@@ -164,16 +164,16 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download MSI artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: msi-installer
           path: .
 
       - name: Download NSIS artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: nsis-installer
           path: .
@@ -189,7 +189,7 @@ jobs:
         run: echo "1" > DESKTOP_UPDATE_MARKER
 
       - name: Upload MSI and NSIS to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           files: |
@@ -201,7 +201,7 @@ jobs:
 
       - name: Upload desktop update marker to Release
         if: needs.detect-changes.outputs.has_desktop_changes == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           files: DESKTOP_UPDATE_MARKER
