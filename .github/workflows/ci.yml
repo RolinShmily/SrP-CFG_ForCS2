@@ -48,8 +48,8 @@ jobs:
       - name: Run website unit tests
         run: node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
 
-  licenses:
-    name: Third-party license inventory
+  rust-and-licenses:
+    name: Rust core tests & license inventory
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -65,6 +65,16 @@ jobs:
 
       - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry and build target
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/desktop/src-tauri
+
+      # 纯逻辑核心的测试（含归档路径穿越防线）必须在 PR 阶段就跑，
+      # 不能只在发版的 release-desktop 里执行。
+      - name: Run Rust core unit tests
+        run: cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
 
       # --ignore-scripts：本任务只解析依赖图与许可声明，无需执行任何生命周期脚本。
       - name: Install dependencies
