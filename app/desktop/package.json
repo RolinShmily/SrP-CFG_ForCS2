@@ -27,7 +27,7 @@
     "@tauri-apps/api": "^2.11.1",
     "@tauri-apps/plugin-dialog": "^2.4.0",
     "@uiw/react-codemirror": "^4.25.11",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^1.47.0",
     "marked": "^18.0.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
