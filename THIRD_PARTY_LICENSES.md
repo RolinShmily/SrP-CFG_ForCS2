@@ -24,7 +24,7 @@ excluded: it is never linked into or shipped with a release artifact.
 
 ## Contents
 
-- [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (281)
+- [1. Desktop suite — Rust crates](#1-desktop-suite--rust-crates) (282)
 - [2. Frontend & website — npm packages](#2-frontend--website--npm-packages) (34)
 - [3. Self-hosted fonts](#3-self-hosted-fonts) (3)
 - [Appendix — license texts](#appendix--license-texts) (13)
@@ -37,8 +37,8 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 
 | License | Components |
 | :--- | ---: |
-| [`MIT`](#mit) | 251 |
-| [`Apache-2.0`](#apache-2.0) | 196 |
+| [`MIT`](#mit) | 252 |
+| [`Apache-2.0`](#apache-2.0) | 197 |
 | [`Unicode-3.0`](#unicode-3.0) | 19 |
 | [`Unlicense`](#unlicense) | 6 |
 | [`MPL-2.0`](#mpl-2.0) | 5 |
@@ -64,6 +64,7 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `anyhow` | 1.0.104 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | David Tolnay <dtolnay@gmail.com> |
 | `autocfg` | 1.5.1 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2018 Josh Stone |
 | `base64` | 0.22.1 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2015 Alice Maz |
+| `base64` | 0.23.1 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2025 Alice Maz, Marshall Pierce |
 | `base64ct` | 1.8.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com); Copyright (c) 2021-2025 The RustCrypto Project Developers |
 | `bit-set` | 0.8.0 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2023 The Rust Project Developers |
 | `bit-vec` | 0.8.0 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2023 The Rust Project Developers |
@@ -242,9 +243,9 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `tauri-codegen` | 2.6.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
 | `tauri-macros` | 2.6.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
 | `tauri-plugin` | 2.6.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Tauri Programme within The Commons Conservancy |
-| `tauri-plugin-dialog` | 2.7.2 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
-| `tauri-plugin-fs` | 2.5.1 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
-| `tauri-plugin-opener` | 2.5.4 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
+| `tauri-plugin-dialog` | 2.7.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
+| `tauri-plugin-fs` | 2.5.2 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
+| `tauri-plugin-opener` | 2.5.5 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
 | `tauri-runtime` | 2.11.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
 | `tauri-runtime-wry` | 2.11.4 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
 | `tauri-utils` | 2.9.3 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright (c) 2017 - Present Tauri Apps Contributors |
@@ -280,8 +281,8 @@ Resolved for the `x86_64-pc-windows-msvc` target, excluding SrP-CFG workspace me
 | `unic-ucd-version` | 0.9.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | The UNIC Project Developers |
 | `unicode-ident` | 1.0.24 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) / [`Unicode-3.0`](#unicode-3.0) | Copyright © 1991-2023 Unicode, Inc. |
 | `unicode-segmentation` | 1.13.3 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2015 The Rust Project Developers |
-| `ureq` | 3.3.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2019 Martin Algesten |
-| `ureq-proto` | 0.6.0 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright 2022 Martin Algesten |
+| `ureq` | 3.4.2 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2019 Martin Algesten |
+| `ureq-proto` | 0.6.4 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright 2022 Martin Algesten |
 | `url` | 2.5.8 | [`MIT`](#mit) / [`Apache-2.0`](#apache-2.0) | Copyright (c) 2013-2025 The rust-url developers |
 | `urlpattern` | 0.3.0 | [`MIT`](#mit) | Copyright (c) 2021 the Deno authors |
 | `utf8_iter` | 1.0.4 | [`Apache-2.0`](#apache-2.0) / [`MIT`](#mit) | Copyright Mozilla Foundation |
