@@ -88,9 +88,24 @@ node .github/scripts/sync_config_vectorize.mjs --dry-run
 # 3. Website AI stream / worker unit tests
 node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
 
-# 4. Desktop Rust core (only if you touched app/desktop)
+# 4. TypeScript type-check for both apps (needs `pnpm install` first)
+pnpm check:types
+
+# 5. Pure-logic Rust core — runs on any platform
 cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
 ```
+
+If you touched `app/desktop`, also compile and test the Tauri shell. It depends on
+`tauri`, which needs `webkit2gtk-4.1` on Linux, so **run these on Windows**:
+
+```bash
+cargo check --workspace --manifest-path app/desktop/src-tauri/Cargo.toml
+cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
+```
+
+Two more checks need network access, so they live in CI rather than this list:
+`pnpm check:licenses` (dependency inventory, see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)) and the CFG package build.
 
 ## Commit Messages
 

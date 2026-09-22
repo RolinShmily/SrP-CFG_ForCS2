@@ -14,6 +14,7 @@
     "dev": "node ../../scripts/sync-fonts.mjs && vite dev",
     "build": "node ../../scripts/sync-fonts.mjs && velite --clean && react-router build",
     "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "deploy": "pnpm build && npx wrangler deploy",
     "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts src/worker.test.ts"
   },

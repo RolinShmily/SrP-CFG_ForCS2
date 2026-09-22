@@ -13,6 +13,7 @@
   "scripts": {
     "dev:renderer": "node ../../scripts/sync-fonts.mjs && vite",
     "build:renderer": "node ../../scripts/sync-fonts.mjs && vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "tauri": "tauri",
     "dev": "tauri dev",
     "build": "tauri build",

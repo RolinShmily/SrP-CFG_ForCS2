@@ -39,7 +39,12 @@ CONTRIBUTING.md that cover what you changed.
 python3 .github/scripts/validate_cfg.py
 node --test .github/scripts/sync_config_vectorize.test.mjs
 node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
+pnpm check:types
 cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
+
+# app/desktop 改动时（Windows）：
+cargo check --workspace --manifest-path app/desktop/src-tauri/Cargo.toml
+cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
 ```
 
 ## Screenshots
@@ -49,6 +54,7 @@ cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
 ## Checklist
 
 - [ ] Commits follow [Conventional Commits](https://www.conventionalcommits.org/) and are scoped to one logical change each.
+- [ ] `pnpm check:licenses` passes if dependencies changed (regenerate with `pnpm gen:licenses`).
 - [ ] No generated artifacts are included (`.github/data/config-knowledge/*.json`, `public/data/commands.json`, synced fonts, `build/`, `dist/`, `target/`).
 - [ ] No secrets, tokens or personal account paths are included.
 - [ ] `config/` changes honor the four-layer boundary: no absolute `exec` paths, no writes to `user/custom.cfg`, comments use leading `//` and commands stay on one line.

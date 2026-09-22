@@ -48,6 +48,56 @@ jobs:
       - name: Run website unit tests
         run: node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
 
+  typescript:
+    name: TypeScript type-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      # --ignore-scripts：类型检查只需依赖的 .d.ts 与 tsconfig，无需任何生命周期脚本
+      # （TypeScript 7 本身也不带脚本，只以平台专属原生二进制包分发编译器）。
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Type-check website and desktop
+        run: pnpm check:types
+
+  desktop-shell:
+    name: Desktop shell (Tauri, Windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo registry and build target
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/desktop/src-tauri
+
+      # 壳层（src/**）依赖 tauri，在 Linux 上需要 webkit2gtk 才能编译，因此只能在此平台把关。
+      # 此前壳层不被任何 PR 检查编译：zip / winreg 这类壳层依赖的破坏性升级
+      # 只会在打 tag 发版时才暴露。
+      - name: Type-check the Tauri shell
+        run: cargo check --workspace --manifest-path app/desktop/src-tauri/Cargo.toml
+
+      # 壳层自身的单元测试（含快照 id 路径穿越防线）也必须跑起来。
+      - name: Run desktop shell unit tests
+        run: cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
+
   rust-and-licenses:
     name: Rust core tests & license inventory
     runs-on: ubuntu-latest

@@ -82,9 +82,23 @@ node .github/scripts/sync_config_vectorize.mjs --dry-run
 # 3. 官网 AI 流式接口 / Worker 单元测试
 node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
 
-# 4. 桌面端 Rust Core（仅在改动 app/desktop 时需要）
+# 4. 两端 TypeScript 类型检查（需先 pnpm install）
+pnpm check:types
+
+# 5. 纯逻辑 Rust Core —— 任意平台均可运行
 cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
 ```
+
+若改动了 `app/desktop`，还需编译并测试 Tauri 壳层。壳层依赖 `tauri`，
+在 Linux 上需要 `webkit2gtk-4.1` 才能编译，因此**请在 Windows 上执行**：
+
+```bash
+cargo check --workspace --manifest-path app/desktop/src-tauri/Cargo.toml
+cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
+```
+
+另有两项需要联网，因此只在 CI 中执行，不列在本清单里：`pnpm check:licenses`
+（依赖清单，见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)）与 CFG 打包构建。
 
 ## 提交信息规范
 
