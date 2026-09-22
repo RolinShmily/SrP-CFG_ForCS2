@@ -170,6 +170,25 @@ function resolvePackageDir(name, reportedPaths, version) {
   );
 }
 
+/**
+ * 读包目录下 `package.json` 里声明的 npm 平台限制（`os` / `cpu`）。
+ *
+ * 凡声明了该限制的包都是“原生/平台专属”产物（例如 TypeScript 7 自带的
+ * `@typescript/typescript-win32-x64` 原生编译器）。它们既不随任何发布产物分发
+ * （两端前端产物均为纯 JS，Rust 侧由按目标平台枚举的 Rust 小节单独覆盖），
+ * 又会让清单随“生成机器”变化 —— Windows 上出现 -win32-x64、Linux 上出现 -linux-x64 ——
+ * 从而让 CI 的 `check:licenses` 在本地通过、在 CI 失败。因此一律排除。
+ */
+function platformRestricted(dir) {
+  if (!dir) return false;
+  try {
+    const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
+    return Boolean(pkg.os || pkg.cpu);
+  } catch {
+    return false;
+  }
+}
+
 function collectNpm() {
   const raw = run("pnpm", ["licenses", "list", "--prod", "--json"], ROOT);
   // pnpm 会在 stdout 混入 DeprecationWarning 等噪声，取第一个 JSON 对象。
@@ -180,24 +199,22 @@ function collectNpm() {
     for (const entry of entries) {
       const versions = entry.versions ?? [];
       const paths = entry.paths ?? [];
+      const build = (version, dir) => ({
+        name: entry.name,
+        version,
+        license,
+        attribution: entry.author ?? "",
+        dir,
+      });
+
       if (versions.length === 0) {
-        components.push({
-          name: entry.name,
-          version: "?",
-          license,
-          attribution: entry.author ?? "",
-          dir: resolvePackageDir(entry.name, paths, null),
-        });
+        const dir = resolvePackageDir(entry.name, paths, null);
+        if (!platformRestricted(dir)) components.push(build("?", dir));
         continue;
       }
       versions.forEach((version, index) => {
-        components.push({
-          name: entry.name,
-          version,
-          license,
-          attribution: entry.author ?? "",
-          dir: resolvePackageDir(entry.name, [paths[index] ?? paths[0]], version),
-        });
+        const dir = resolvePackageDir(entry.name, [paths[index] ?? paths[0]], version);
+        if (!platformRestricted(dir)) components.push(build(version, dir));
       });
     }
   }
@@ -435,7 +452,9 @@ attribution and compliance notes (fonts, data sources, copyleft review).
 | \`SrP-CFG_Runtime_Core.zip\` · \`_Map_Guides.zip\` · \`_Video_Settings.zip\` | None — project-authored configuration only |
 
 Build-time-only tooling (bundlers, CSS transformers, type checkers, content pipeline) is
-excluded: it is never linked into or shipped with a release artifact.
+excluded: it is never linked into or shipped with a release artifact. Only
+platform-agnostic packages are listed, so the inventory is identical on any machine and can
+be verified on any CI runner.
 
 ## Contents
 
@@ -467,6 +486,10 @@ ${renderComponents(rust, covered)}
 ## 2. Frontend & website — npm packages
 
 Production dependency closure of \`@srp-cfg/desktop\`, \`@srp-cfg/website\` and \`@srp-cfg/ui\`.
+Packages that declare a platform restriction (the npm \`os\`/\`cpu\` fields — for example the
+native compiler binaries shipped by TypeScript 7) are excluded: they are build tooling that
+never reaches a release artifact, and including them would make this file depend on the
+machine that generated it.
 
 ${renderSummary(npm, covered)}
 

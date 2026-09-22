@@ -14,9 +14,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    // TypeScript 7 已移除 baseUrl（TS5102），且要求 paths 目标为相对路径（TS5090），
+    // 因此这里不再声明 baseUrl，paths 一律以 ./ 或 ../ 开头。
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@shared/*": ["../shared/*"]
     }
   },
