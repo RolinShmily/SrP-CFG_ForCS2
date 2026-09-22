@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Github,
   ExternalLink,
   Boxes,
   Shield,
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 import { Card } from "@srp-cfg/ui";
 import { REPO_URL, WEBSITE_URL } from "../lib/downloads";
+import { GithubIcon } from "../components/GithubIcon";
 import { useAppVersion } from "../lib/version";
 import blogSvg from "../assets/svg/blog-solid-full.svg?raw";
 import bilibiliSvg from "../assets/svg/bilibili.svg?raw";
@@ -40,7 +40,7 @@ const links = [
   {
     label: "GitHub 开源仓库",
     url: REPO_URL,
-    icon: Github,
+    icon: GithubIcon,
   },
   {
     label: "SrP-CFG 在线知识库 / 指令中心",

@@ -5,9 +5,10 @@
  * - LATEST_VERSION 构建期注入见 data/version.ts（此页不展示版本号，保留给首页）
  */
 import type { MetaFunction } from "react-router";
-import { Download, Github, Info, Package } from "lucide-react";
+import { Download, Info, Package } from "lucide-react";
 import { Badge, Card, SectionHeader } from "@srp-cfg/ui";
 import { installers, packages } from "../../data/downloads";
+import { GithubIcon } from "../components/GithubIcon";
 import { RELEASES_URL } from "../../data/navigation";
 
 export const meta: MetaFunction = () => [
@@ -78,7 +79,7 @@ export default function DownloadPage() {
                     国内加速下载
                   </a>
                   <a href={item.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
-                    <Github className="h-4 w-4" />
+                    <GithubIcon className="h-4 w-4" />
                     GitHub 源下载
                   </a>
                 </div>
@@ -146,7 +147,7 @@ export default function DownloadPage() {
                         国内加速下载
                       </a>
                       <a href={pkg.githubUrl} target="_blank" rel="noopener" className={`${downloadSecondary} justify-center`}>
-                        <Github className="h-4 w-4" />
+                        <GithubIcon className="h-4 w-4" />
                         GitHub 源下载
                       </a>
                     </div>

@@ -21,7 +21,7 @@
     "@react-router/node": "^7.18.2",
     "@srp-cfg/ui": "workspace:*",
     "isbot": "^5",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^1.47.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router": "^7.18.2"
