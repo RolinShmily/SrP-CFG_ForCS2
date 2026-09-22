@@ -21,12 +21,12 @@ jobs:
           TAG="${{ github.ref_name }}"
           VERSION="${TAG#v}"
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "is_valid=false" >> "$GITHUB_OUTPUT"
             echo "::error::Tag format must be v*.*.* (e.g., v3.0.0, v3.1.0-beta)"
             exit 1
           fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "is_valid=true" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "is_valid=true" >> "$GITHUB_OUTPUT"
           echo "✅ Tag validated: $TAG"
 
   # ============================================
@@ -51,7 +51,7 @@ jobs:
 
           if [ -z "$PREV_TAG" ]; then
             echo "ℹ️  No previous tag found (first release), will build desktop"
-            echo "has_desktop_changes=true" >> $GITHUB_OUTPUT
+            echo "has_desktop_changes=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -60,10 +60,10 @@ jobs:
 
           if echo "$CHANGED" | grep -qE '^app/(desktop|shared)/'; then
             echo "✅ Desktop files changed, will build and mark desktop update"
-            echo "has_desktop_changes=true" >> $GITHUB_OUTPUT
+            echo "has_desktop_changes=true" >> "$GITHUB_OUTPUT"
           else
             echo "ℹ️  No desktop files changed (config-only change)"
-            echo "has_desktop_changes=false" >> $GITHUB_OUTPUT
+            echo "has_desktop_changes=false" >> "$GITHUB_OUTPUT"
           fi
 
   # ============================================
@@ -129,8 +129,15 @@ jobs:
       - name: Stage MSI
         shell: bash
         run: |
-          MSI=$(ls app/desktop/src-tauri/target/release/bundle/msi/*.msi | head -1)
-          cp "$MSI" "SrP-CFG_Installer.msi"
+          # 用 glob 而非解析 `ls` 输出（shellcheck SC2012）；产物不唯一时直接失败，
+          # 避免静默把“第一个”装包当成正式产物发出去。
+          shopt -s nullglob
+          msi_files=(app/desktop/src-tauri/target/release/bundle/msi/*.msi)
+          if [ "${#msi_files[@]}" -ne 1 ]; then
+            echo "::error::期望恰好 1 个 MSI，实际找到 ${#msi_files[@]} 个"
+            exit 1
+          fi
+          cp "${msi_files[0]}" "SrP-CFG_Installer.msi"
           echo "✅ MSI: SrP-CFG_Installer.msi"
           ls -lh "SrP-CFG_Installer.msi"
 
@@ -143,8 +150,13 @@ jobs:
       - name: Stage NSIS setup
         shell: bash
         run: |
-          NSIS=$(ls app/desktop/src-tauri/target/release/bundle/nsis/*.exe | head -1)
-          cp "$NSIS" "SrP-CFG_Setup_x64.exe"
+          shopt -s nullglob
+          nsis_files=(app/desktop/src-tauri/target/release/bundle/nsis/*.exe)
+          if [ "${#nsis_files[@]}" -ne 1 ]; then
+            echo "::error::期望恰好 1 个 NSIS 安装包，实际找到 ${#nsis_files[@]} 个"
+            exit 1
+          fi
+          cp "${nsis_files[0]}" "SrP-CFG_Setup_x64.exe"
           echo "✅ NSIS: SrP-CFG_Setup_x64.exe"
           ls -lh "SrP-CFG_Setup_x64.exe"
 

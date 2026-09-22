@@ -21,12 +21,12 @@ jobs:
           TAG="${{ github.ref_name }}"
           VERSION="${TAG#v}"
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "is_valid=false" >> "$GITHUB_OUTPUT"
             echo "::error::Tag format must be v*.*.* (e.g., v3.0.0, v3.1.0-beta)"
             exit 1
           fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "is_valid=true" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "is_valid=true" >> "$GITHUB_OUTPUT"
           echo "✅ Tag validated: $TAG"
 
   # ============================================
@@ -96,13 +96,13 @@ jobs:
           echo "📝 Generating release notes..."
 
           CURRENT_TAG="${{ github.ref_name }}"
-          REPO_OWNER="${{ github.repository_owner }}"
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
 
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
 
           if [ -n "$PREV_TAG" ]; then
-            CHANGELOG_CONTENT=$(export PREV_TAG="$PREV_TAG" && export CURRENT_TAG="$CURRENT_TAG" && python3 .github/scripts/generate_changelog.py)
+            # 用 `env` 传变量，而不是 `$(export VAR=… && …)`：后者在子 shell 中赋值，
+            # 静态检查会报 SC2030/SC2031（“改动可能丢失”），语义也容易被误读。
+            CHANGELOG_CONTENT=$(env PREV_TAG="$PREV_TAG" CURRENT_TAG="$CURRENT_TAG" python3 .github/scripts/generate_changelog.py)
           else
             CHANGELOG_CONTENT="这是项目的首次发布。"
           fi
@@ -115,7 +115,7 @@ jobs:
             echo 'RELEASE_BODY<<EOF'
             echo "$RELEASE_BODY"
             echo 'EOF'
-          } >> $GITHUB_ENV
+          } >> "$GITHUB_ENV"
 
           echo "$RELEASE_BODY" > "版本更新说明.md"
           echo "✅ Release notes generated"
