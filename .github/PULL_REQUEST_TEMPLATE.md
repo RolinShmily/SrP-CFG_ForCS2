@@ -45,6 +45,9 @@ cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
 # app/desktop 改动时（Windows）：
 cargo check --workspace --manifest-path app/desktop/src-tauri/Cargo.toml
 cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
+
+# .github/workflows/ 改动时：
+actionlint -color
 ```
 
 ## Screenshots

@@ -107,6 +107,15 @@ Two more checks need network access, so they live in CI rather than this list:
 `pnpm check:licenses` (dependency inventory, see
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)) and the CFG package build.
 
+If you edit anything under `.github/workflows/`, run [actionlint](https://github.com/rhysd/actionlint)
+over it. It is a single binary (no package manager needed) and it also runs `shellcheck` on
+every `run:` block, which catches quoting and unquoted-variable mistakes that only surface
+at release time otherwise:
+
+```bash
+actionlint -color            # 默认检查 .github/workflows/**
+```
+
 ## Commit Messages
 
 The history follows [Conventional Commits](https://www.conventionalcommits.org/):

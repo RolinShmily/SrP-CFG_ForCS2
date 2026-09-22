@@ -132,3 +132,35 @@ jobs:
 
       - name: Verify THIRD_PARTY_LICENSES.md matches the dependency graph
         run: pnpm check:licenses
+
+  workflows:
+    name: Lint GitHub Actions workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      # actionlint 是一枚 Go 单文件二进制，上游提供官方 checksums 文件，因此这里按版本
+      # + SHA256 固定，而不执行任何远程安装脚本（`curl … | bash` 这类写法等于把
+      # CI 的执行权交给一个可变的远程脚本）。
+      #
+      # 升级步骤：改 ACTIONLINT_VERSION，并从同一 release 的
+      # actionlint_<ver>_checksums.txt 里取 linux_amd64 的新哈希。
+      - name: Install actionlint (pinned, checksum verified)
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          set -euo pipefail
+          archive="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          curl -fsSL -o "$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/${archive}"
+          echo "${ACTIONLINT_SHA256}  ${archive}" | sha256sum -c -
+          tar -xzf "$archive" actionlint
+          sudo install -m 0755 actionlint /usr/local/bin/actionlint
+          actionlint --version
+
+      # 会连带对 `run:` 块跑 shellcheck（ubuntu-latest 已预装），
+      # 因此内嵌 shell 的引用/引用不当也会被拦下。
+      - name: Lint workflows
+        run: actionlint -color

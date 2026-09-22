@@ -100,6 +100,14 @@ cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
 另有两项需要联网，因此只在 CI 中执行，不列在本清单里：`pnpm check:licenses`
 （依赖清单，见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)）与 CFG 打包构建。
 
+若改动了 `.github/workflows/` 下的任何文件，请用 [actionlint](https://github.com/rhysd/actionlint)
+跑一遍。它是单文件二进制（无需包管理器），并会对每个 `run:` 块运行 `shellcheck`，
+能拦下那些平时只会在发版时才暴露的引号与变量引用问题：
+
+```bash
+actionlint -color            # 默认检查 .github/workflows/**
+```
+
 ## 提交信息规范
 
 仓库历史遵循 [Conventional Commits](https://www.conventionalcommits.org/)：
