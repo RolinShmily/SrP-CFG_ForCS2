@@ -5,10 +5,19 @@
  * - LATEST_VERSION 构建期注入见 data/version.ts（此页不展示版本号，保留给首页）
  */
 import type { MetaFunction } from "react-router";
+import { useState } from "react";
 import { Download, Info, Package } from "lucide-react";
-import { Badge, Card, SectionHeader } from "@srp-cfg/ui";
+import {
+  Badge,
+  Card,
+  SectionHeader,
+  DEFAULT_DOWNLOAD_SOURCE,
+  DOWNLOAD_SOURCE_OPTIONS,
+  dlBySource,
+  isDownloadSource,
+  type DownloadSource,
+} from "@srp-cfg/ui";
 import { installers, packages } from "../../data/downloads";
-import { GithubIcon } from "../components/GithubIcon";
 import { RELEASES_URL } from "../../data/navigation";
 
 export const meta: MetaFunction = () => [
@@ -20,11 +29,12 @@ export const meta: MetaFunction = () => [
 const cardHover =
   "transition-colors duration-200 hover:border-border-highlight hover:bg-bg-hover";
 
-// 两个下载按钮：国内加速（accent，推荐） / GitHub 源（中性描边）
+// 下载按钮：文案随当前下载源变化，URL 由 dlBySource 解析
 const downloadPrimary =
   "inline-flex min-h-10 items-center gap-2 rounded-[6px] bg-accent px-4 font-display text-sm font-semibold text-bg transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-accent-glow";
-const downloadSecondary =
-  "inline-flex min-h-10 items-center gap-2 rounded-[6px] border border-border bg-transparent px-4 font-display text-sm font-semibold text-text-secondary transition-colors hover:border-text-muted hover:text-text";
+
+const downloadSourceLabel = (source: DownloadSource) =>
+  source === "github" ? "GitHub 直连下载" : "大陆加速下载";
 
 // featured 卡需 border-accent/20，但 Tailwind 排序中 border-accent/* 恒在 border-border 之前，
 // 无法经 Card className 覆盖（Card 基础类带 border-border），故两种形态都用原生 div 精确还原：
@@ -36,6 +46,9 @@ const plainCard =
   "rounded-[var(--radius)] border border-border bg-bg-card p-6 " + cardHover;
 
 export default function DownloadPage() {
+  // 下载源：默认大陆加速，可切换 GitHub 直连（全局生效）
+  const [downloadSource, setDownloadSource] = useState<DownloadSource>(DEFAULT_DOWNLOAD_SOURCE);
+
   return (
     <section className="pb-16 pt-28 sm:pb-20 sm:pt-32">
       <div className="mx-auto max-w-[1200px] px-5 sm:px-7">
@@ -45,6 +58,29 @@ export default function DownloadPage() {
           title="下载中心"
           description="获取 Desktop 桌面安装器与解耦配置组件。所有功能、Preset 模版案例与用户入口清晰独立，按需安装。"
         />
+
+        {/* 下载源：全局生效，安装器与配置包共用 */}
+        <div className="mb-12 flex flex-wrap items-center gap-3 rounded-[8px] border border-border bg-bg-card px-4 py-3">
+          <span className="font-display text-sm font-semibold text-text">下载源</span>
+          <select
+            value={downloadSource}
+            onChange={(e) => {
+              const next = e.target.value;
+              if (isDownloadSource(next)) setDownloadSource(next);
+            }}
+            aria-label="选择下载源"
+            className="cursor-pointer rounded-[6px] border border-border bg-bg-raised px-3 py-1.5 font-display text-sm text-text outline-none transition-colors hover:border-border-highlight focus:border-accent"
+          >
+            {DOWNLOAD_SOURCE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value} title={o.hint}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs text-text-muted">
+            {DOWNLOAD_SOURCE_OPTIONS.find((o) => o.value === downloadSource)?.hint}
+          </span>
+        </div>
 
         <div className="mb-20">
           <h2 className="mb-8 flex items-center gap-3 font-display text-2xl font-semibold">
@@ -74,13 +110,14 @@ export default function DownloadPage() {
                 </div>
                 <p className="mb-6 text-sm leading-7 text-text-secondary">{item.desc}</p>
                 <div className="flex flex-wrap items-center gap-3">
-                  <a href={item.mirrorUrl} target="_blank" rel="noopener" className={downloadPrimary}>
+                  <a
+                    href={dlBySource(item.file, downloadSource)}
+                    target="_blank"
+                    rel="noopener"
+                    className={downloadPrimary}
+                  >
                     <Download className="h-4 w-4" />
-                    国内加速下载
-                  </a>
-                  <a href={item.githubUrl} target="_blank" rel="noopener" className={downloadSecondary}>
-                    <GithubIcon className="h-4 w-4" />
-                    GitHub 源下载
+                    {downloadSourceLabel(downloadSource)}
                   </a>
                 </div>
               </Card>
@@ -142,13 +179,14 @@ export default function DownloadPage() {
                       <span className="font-mono text-xs text-text-faint">{pkg.file}</span>
                     </div>
                     <div className="flex flex-col gap-2.5">
-                      <a href={pkg.mirrorUrl} target="_blank" rel="noopener" className={`${downloadPrimary} justify-center`}>
+                      <a
+                        href={dlBySource(pkg.file, downloadSource)}
+                        target="_blank"
+                        rel="noopener"
+                        className={`${downloadPrimary} justify-center`}
+                      >
                         <Download className="h-4 w-4" />
-                        国内加速下载
-                      </a>
-                      <a href={pkg.githubUrl} target="_blank" rel="noopener" className={`${downloadSecondary} justify-center`}>
-                        <GithubIcon className="h-4 w-4" />
-                        GitHub 源下载
+                        {downloadSourceLabel(downloadSource)}
                       </a>
                     </div>
                   </div>
@@ -165,7 +203,7 @@ export default function DownloadPage() {
           <div>
             <h2 className="mb-1 font-display text-base font-semibold">安装与使用说明</h2>
             <p className="text-sm leading-7 text-text-secondary">
-              下载桌面安装器（推荐 MSI 安装向导）运行后，可直接在应用内通过国内加速通道下载组件，或手动拖入本地 ZIP/CFG 配置包。安装器内置自动路径探测、冲突检视、VCFG 偏好一键提取以及灾备全量快照自动归档机制；每个下载项均直连 GitHub Release 官方发布源，亦可在{" "}
+              下载桌面安装器（推荐 MSI 安装向导）运行后，可直接在应用内下载组件，或手动拖入本地 ZIP/CFG 配置包。安装器内置自动路径探测、冲突检视、VCFG 偏好一键提取以及灾备全量快照自动归档机制；每个下载项均从 GitHub Release 官方发布源获取，默认走大陆加速镜像，可在页面顶部切换为 GitHub 直连，亦可在{" "}
               <a
                 href={RELEASES_URL}
                 target="_blank"

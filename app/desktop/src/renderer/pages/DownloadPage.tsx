@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   ArrowDownToLine,
-  ExternalLink,
   Package,
   Loader2,
   CheckCircle2,
@@ -21,7 +20,16 @@ import {
   X,
   FileCode,
 } from "lucide-react";
-import { CONFIG_PACKAGE_FILE, MAP_GUIDES_FILE, VIDEO_SETTINGS_FILE, dl, dlGithub } from "../lib/downloads";
+import {
+  CONFIG_PACKAGE_FILE,
+  MAP_GUIDES_FILE,
+  VIDEO_SETTINGS_FILE,
+  DEFAULT_DOWNLOAD_SOURCE,
+  DOWNLOAD_SOURCE_OPTIONS,
+  isDownloadSource,
+  dlBySource,
+  type DownloadSource,
+} from "../lib/downloads";
 import { PageHeader } from "@srp-cfg/ui";
 import UploadZone from "../components/UploadZone";
 import type { Page } from "../App";
@@ -33,8 +41,6 @@ const OFFICIAL_COMPONENTS = [
     name: "Runtime Core (CFG 核心运行时)",
     desc: "核心架构：模块化 alias、跳投/大跳/准星切换等全套脚本功能、预设起点库与 custom.cfg 注入入口。",
     file: CONFIG_PACKAGE_FILE,
-    mirrorUrl: dl(CONFIG_PACKAGE_FILE),
-    githubUrl: dlGithub(CONFIG_PACKAGE_FILE),
     badge: "CORE RUNTIME",
     icon: Package,
     featured: true,
@@ -44,8 +50,6 @@ const OFFICIAL_COMPONENTS = [
     name: "地图跑图与投掷物指南 (Annotations)",
     desc: "包含 Dust2, Mirage, Inferno, Ancient 等官方竞技地图的实用跑图、烟闪道具落点及标注指南。",
     file: MAP_GUIDES_FILE,
-    mirrorUrl: dl(MAP_GUIDES_FILE),
-    githubUrl: dlGithub(MAP_GUIDES_FILE),
     badge: "ANNOTATIONS",
     icon: Map,
     featured: false,
@@ -55,8 +59,6 @@ const OFFICIAL_COMPONENTS = [
     name: "推荐画面与视频设置 (Video Config)",
     desc: "经过高刷优化与职业选手参数调校的 cs2_video.txt 画面预设，兼顾极低延迟与画面清晰度。",
     file: VIDEO_SETTINGS_FILE,
-    mirrorUrl: dl(VIDEO_SETTINGS_FILE),
-    githubUrl: dlGithub(VIDEO_SETTINGS_FILE),
     badge: "VIDEO SETTINGS",
     icon: Tv,
     featured: false,
@@ -96,10 +98,28 @@ export default function DownloadPage({
   onRemovePreInstall,
   onClearPreInstall,
 }: Props) {
-  const [downloadingUrl, setDownloadingUrl] = useState<string | null>(null);
+  const [downloadingFile, setDownloadingFile] = useState<string | null>(null);
+
+  // 下载源：默认大陆加速，可切换 GitHub 直连；选择持久化到本地
+  const [downloadSource, setDownloadSource] = useState<DownloadSource>(() => {
+    try {
+      const saved = localStorage.getItem("srp_download_source");
+      return isDownloadSource(saved) ? saved : DEFAULT_DOWNLOAD_SOURCE;
+    } catch {
+      return DEFAULT_DOWNLOAD_SOURCE;
+    }
+  });
+
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [batchDownloading, setBatchDownloading] = useState(false);
+
+  // 下载源选择持久化
+  useEffect(() => {
+    try {
+      localStorage.setItem("srp_download_source", downloadSource);
+    } catch {}
+  }, [downloadSource]);
 
   // 本地库数据
   const [downloadEntries, setDownloadEntries] = useState<DownloadEntry[]>([]);
@@ -127,8 +147,8 @@ export default function DownloadPage({
 
   // 单包下载到应用内
   const handleDownloadInApp = async (url: string, fileName: string) => {
-    if (downloadingUrl) return;
-    setDownloadingUrl(url);
+    if (downloadingFile) return;
+    setDownloadingFile(fileName);
     setDownloadError(null);
     setDownloadSuccess(null);
     try {
@@ -172,13 +192,13 @@ export default function DownloadPage({
       const message = e instanceof Error ? e.message : String(e);
       setDownloadError(`下载失败：${message}。可尝试切换下载源重试。`);
     } finally {
-      setDownloadingUrl(null);
+      setDownloadingFile(null);
     }
   };
 
   // 一键下载全部推荐组件
   const handleDownloadAll = async () => {
-    if (batchDownloading || downloadingUrl) return;
+    if (batchDownloading || downloadingFile) return;
     setBatchDownloading(true);
     setDownloadError(null);
     setDownloadSuccess(null);
@@ -189,7 +209,7 @@ export default function DownloadPage({
         if (isWebPreview) {
           await new Promise((resolve) => setTimeout(resolve, 300));
         } else {
-          const res = await window.api.downloadFromUrl(comp.mirrorUrl, comp.file);
+          const res = await window.api.downloadFromUrl(dlBySource(comp.file, downloadSource), comp.file);
           if (res) {
             onAddPreInstall({
               id: `download:${res.folderName}`,
@@ -289,7 +309,7 @@ export default function DownloadPage({
         <button
           type="button"
           onClick={handleDownloadAll}
-          disabled={batchDownloading || downloadingUrl !== null}
+          disabled={batchDownloading || downloadingFile !== null}
           className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold transition shadow-md shadow-orange-950/40 shrink-0 disabled:opacity-50 cursor-pointer"
         >
           {batchDownloading ? (
@@ -333,13 +353,33 @@ export default function DownloadPage({
             <Package className="w-3.5 h-3.5 text-orange-400" />
             <span>官方组件模版 (Official Components)</span>
           </h2>
+
+          {/* 下载源：全局生效（卡片下载 + 一键下载全部） */}
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-text-muted">下载源</span>
+            <select
+              value={downloadSource}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (isDownloadSource(next)) setDownloadSource(next);
+              }}
+              disabled={batchDownloading || downloadingFile !== null}
+              className="px-2 py-1 rounded bg-bg-raised border border-border text-[11px] text-text outline-none focus:border-orange-500/60 disabled:opacity-40 cursor-pointer"
+              title="选择组件下载使用的源：大陆加速（镜像）或 GitHub 直连"
+            >
+              {DOWNLOAD_SOURCE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value} title={o.hint}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {OFFICIAL_COMPONENTS.map((pkg) => {
             const IconComp = pkg.icon;
-            const isDownloadingMirror = downloadingUrl === pkg.mirrorUrl;
-            const isDownloadingGithub = downloadingUrl === pkg.githubUrl;
+            const isThisDownloading = downloadingFile === pkg.file;
             const isAlreadyDownloaded = downloadEntries.some((d) => d.fileName === pkg.file);
 
             return (
@@ -394,30 +434,17 @@ export default function DownloadPage({
                   <div className="flex items-center gap-1.5">
                     <button
                       type="button"
-                      onClick={() => handleDownloadInApp(pkg.mirrorUrl, pkg.file)}
-                      disabled={downloadingUrl !== null || batchDownloading}
+                      onClick={() => handleDownloadInApp(dlBySource(pkg.file, downloadSource), pkg.file)}
+                      disabled={downloadingFile !== null || batchDownloading}
                       className="flex items-center gap-1 px-2.5 py-1 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium transition shadow-sm disabled:opacity-40 cursor-pointer"
-                      title="国内镜像极速下载"
+                      title={downloadSource === "github" ? "从 GitHub 直连下载" : "从大陆加速镜像下载"}
                     >
-                      {isDownloadingMirror ? (
+                      {isThisDownloading ? (
                         <Loader2 className="w-3 h-3 animate-spin" />
                       ) : (
                         <ArrowDownToLine className="w-3 h-3" />
                       )}
                       <span>下载</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDownloadInApp(pkg.githubUrl, pkg.file)}
-                      disabled={downloadingUrl !== null || batchDownloading}
-                      className="p-1 rounded bg-bg-raised hover:bg-neutral-700 text-text-muted border border-border text-xs transition disabled:opacity-40 cursor-pointer"
-                      title="GitHub 直连源"
-                    >
-                      {isDownloadingGithub ? (
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                      ) : (
-                        <ExternalLink className="w-3 h-3" />
-                      )}
                     </button>
                   </div>
                 </div>

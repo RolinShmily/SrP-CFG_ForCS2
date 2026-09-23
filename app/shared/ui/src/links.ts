@@ -33,6 +33,28 @@ export const dlMirror = (file: string): string =>
 /** GitHub 直连下载 URL。 */
 export const dlDirect = (file: string): string => `${RELEASE_DOWNLOAD_BASE}/${file}`;
 
+// ── 下载源（desktop 与 website 共用）───────────────────────────
+/**
+ * `mirror` = 大陆加速镜像；`github` = GitHub 官方直连。
+ * 默认大陆加速；镜像不可用或需要校验官方源时可切换为 GitHub。
+ */
+export type DownloadSource = "mirror" | "github";
+
+export const DEFAULT_DOWNLOAD_SOURCE: DownloadSource = "mirror";
+
+/** 供 <select> 渲染的选项（label 为展示名，hint 为说明）。 */
+export const DOWNLOAD_SOURCE_OPTIONS: { value: DownloadSource; label: string; hint: string }[] = [
+  { value: "mirror", label: "大陆加速", hint: "国内镜像站转发，速度更快" },
+  { value: "github", label: "GitHub 直连", hint: "官方发布源，不经过第三方镜像" },
+];
+
+export const isDownloadSource = (value: unknown): value is DownloadSource =>
+  value === "mirror" || value === "github";
+
+/** 按下载源解析某个发布产物的下载 URL。 */
+export const dlBySource = (file: string, source: DownloadSource): string =>
+  source === "github" ? dlDirect(file) : dlMirror(file);
+
 // ── 发布产物文件名（与 CI 打包产物名保持一致）─────────────────
 export const INSTALLER_MSI = "SrP-CFG_Installer.msi";
 export const INSTALLER_NSIS = "SrP-CFG_Setup_x64.exe";

@@ -12,4 +12,11 @@ export {
   VIDEO_SETTINGS_FILE,
   dlMirror as dl,
   dlDirect as dlGithub,
+  // 下载源（大陆加速 / GitHub 直连）
+  DEFAULT_DOWNLOAD_SOURCE,
+  DOWNLOAD_SOURCE_OPTIONS,
+  isDownloadSource,
+  dlBySource,
 } from "@srp-cfg/ui";
+
+export type { DownloadSource } from "@srp-cfg/ui";
