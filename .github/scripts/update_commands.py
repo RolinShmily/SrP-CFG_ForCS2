@@ -3,6 +3,7 @@ import re
 import json
 import os
 import sys
+import time
 
 from command_values import enrich_dataset, parse_convar_metadata
 
@@ -121,76 +122,181 @@ def guess_category(name, flags):
         
     return "system"
 
+# Cloudflare Workers AI 的 max_tokens 默认只有 256，40 条命令的 JSON 响应必然在中途被
+# 硬截断（表现为 json 解析报 "Unterminated string starting at ..."）。因此显式给出输出
+# 预算，并把首批批量压到模型能稳定一次写完的规模。
+#
+# 模型选择：原先用的 llama-3.1-8b-instruct-fp8 中文能力不足（实测把 "hello" 译成拼音
+# "nǐ hǎo" 而非「你好」）。换成 70B 版本后中文质量显著提升，且输出结构与前者一致
+# （result["response"]），属于可平滑替换。
+CF_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+TRANSLATION_MAX_TOKENS = 4096
+TRANSLATION_TIMEOUT_SECONDS = 60
+TRANSLATION_ATTEMPTS = 3
+INITIAL_BATCH_SIZE = 15
+# 单次请求超时可长达 TRANSLATION_TIMEOUT_SECONDS，拆批重试会成倍放大总耗时。
+# 用全局失败预算兜底：预算耗尽就整体放弃（保留已译部分、不推进 SHA、下次重试），
+# 避免上游完全不可用时把任务拖成小时级空转。
+MAX_TOTAL_FAILURES = 20
+
+SYSTEM_PROMPT = (
+    "You are a CS2 config reference editor. Translate Source 2 command descriptions into precise "
+    "Chinese player terminology. Preserve numeric values, comparison signs, units, bitmasks, sentinel "
+    "values, and enum meanings exactly; distinguish engine Min/Max constraints from prose examples, and "
+    "state when no unit or bound is provided. Keep every desc_cn under 60 Chinese characters. Return "
+    "only JSON in the requested schema, without Markdown fences."
+)
+
+
+def _extract_response_text(result):
+    """从 Workers AI 响应里取出模型生成的文本。
+
+    不同模型族的返回结构不一致：Llama 系列给 result["response"]，而 Qwen/GLM 等走
+    chat-completions 结构给 result["choices"][0]["message"]["content"]。两种都兼容，
+    这样以后换模型时不必再改解析逻辑。
+    """
+    if not isinstance(result, dict):
+        raise RuntimeError(f"Unexpected Workers AI result payload: {result!r}")
+
+    if isinstance(result.get("response"), str):
+        return result["response"]
+
+    choices = result.get("choices")
+    if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+        message = choices[0].get("message")
+        if isinstance(message, dict) and isinstance(message.get("content"), str):
+            return message["content"]
+        if isinstance(choices[0].get("text"), str):
+            return choices[0]["text"]
+
+    raise RuntimeError(
+        f"Could not locate generated text in Workers AI result: {json.dumps(result)[:500]}"
+    )
+
+
+# 拼接构造闭合标签，避免源码里出现会被上游工具改写的特殊标记。
+_THINK_BLOCK_RE = re.compile(r"<think\b[^>]*>.*?</" + "think>", re.DOTALL)
+
+
+def _strip_reasoning(text):
+    """去掉推理模型可能吐出的思考段落，只保留最终答案。"""
+    return _THINK_BLOCK_RE.sub("", text).strip()
+
+
+def _translate_chunk(batch, cf_token, cf_account):
+    """单次 Workers AI 请求，翻译一个命令块。
+
+    任何传输层或 JSON 解码失败都向上抛出，交由调用方重试或拆批处理。
+    """
+    batch_data = [
+        {
+            "n": item["n"],
+            "default": item["d"],
+            "en": item["en"],
+            "constraint": item.get("value", {}).get("constraint", {}),
+        }
+        for item in batch
+    ]
+    prompt = (
+        "Translate these CS2 commands/variables and categorize them. Preserve every documented "
+        "number exactly. For numeric variables, explain units, special values, discrete modes, and "
+        "Min/Max constraints when the input provides them; never invent a missing unit or boundary. "
+        "If the English description is empty, write a brief Chinese description. Return JSON matching "
+        "this format: {\"translations\": [{\"name\": \"cmd_name\", \"desc_cn\": \"中文释义\", "
+        "\"category\": \"network/graphics/audio/mouse/gameplay/cheats/practice/system\"}]}:\n"
+        f"{json.dumps(batch_data)}"
+    )
+    payload = {
+        # 不传 max_tokens 会退回默认的 256，响应必然在 JSON 中途被截断。
+        "max_tokens": TRANSLATION_MAX_TOKENS,
+        "temperature": 0.2,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ],
+    }
+    url = f"https://api.cloudflare.com/client/v4/accounts/{cf_account}/ai/run/{CF_MODEL}"
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {cf_token}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    with urllib.request.urlopen(req, timeout=TRANSLATION_TIMEOUT_SECONDS) as resp:
+        res_data = json.loads(resp.read().decode("utf-8"))
+
+    if not res_data.get("success", False):
+        raise RuntimeError(f"Workers AI request failed: {json.dumps(res_data.get('errors'))}")
+
+    content_str = _strip_reasoning(_extract_response_text(res_data.get("result")))
+
+    # Strip markdown blocks if present (e.g. ```json ... ```)
+    if content_str.startswith("```"):
+        lines = content_str.split("\n")
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].startswith("```"):
+            lines = lines[:-1]
+        content_str = "\n".join(lines).strip()
+
+    content = json.loads(content_str)
+    return {
+        trans["name"]: trans
+        for trans in content.get("translations", [])
+        if trans.get("name")
+    }
+
+
+def _translate_batch(batch, cf_token, cf_account, state, depth=0):
+    """翻译一个批次；重试仍失败则对半拆批。
+
+    截断/超时几乎总是因为块内条目过多、超出模型的输出预算。原样重发同一个请求只会
+    得到同样的失败，真正能推进的是缩小请求体积。
+    """
+    indent = "  " * depth
+    last_error = None
+
+    for attempt in range(TRANSLATION_ATTEMPTS):
+        if state["failures"] >= MAX_TOTAL_FAILURES:
+            print(
+                f"{indent}Failure budget of {MAX_TOTAL_FAILURES} exhausted; "
+                f"abandoning the remaining {len(batch)} command(s) for this run."
+            )
+            return {}
+        try:
+            return _translate_chunk(batch, cf_token, cf_account)
+        except Exception as e:
+            state["failures"] += 1
+            last_error = e
+            print(
+                f"{indent}Error translating chunk of {len(batch)} "
+                f"(attempt {attempt + 1}/{TRANSLATION_ATTEMPTS}): {e}"
+            )
+            if attempt + 1 < TRANSLATION_ATTEMPTS:
+                time.sleep(2 ** attempt * 2)
+
+    if len(batch) == 1:
+        print(f"{indent}Giving up on {batch[0]['n']}: {last_error}")
+        return {}
+
+    mid = len(batch) // 2
+    print(f"{indent}Splitting failing chunk of {len(batch)} into {mid} + {len(batch) - mid} and retrying.")
+    merged = _translate_batch(batch[:mid], cf_token, cf_account, state, depth + 1)
+    merged.update(_translate_batch(batch[mid:], cf_token, cf_account, state, depth + 1))
+    return merged
+
+
 def translate_new_commands(new_items, cf_token, cf_account):
     """Translates new commands via Cloudflare Workers AI."""
-    import time
-    
     translated = {}
-    batch_size = 40
-    
-    for i in range(0, len(new_items), batch_size):
-        batch = new_items[i:i+batch_size]
-        batch_data = [
-            {
-                "n": item["n"],
-                "default": item["d"],
-                "en": item["en"],
-                "constraint": item.get("value", {}).get("constraint", {}),
-            }
-            for item in batch
-        ]
-        prompt = (
-            "Translate these CS2 commands/variables and categorize them. Preserve every documented "
-            "number exactly. For numeric variables, explain units, special values, discrete modes, and "
-            "Min/Max constraints when the input provides them; never invent a missing unit or boundary. "
-            "If the English description is empty, write a brief Chinese description. Return JSON matching "
-            "this format: {\"translations\": [{\"name\": \"cmd_name\", \"desc_cn\": \"中文释义\", "
-            "\"category\": \"network/graphics/audio/mouse/gameplay/cheats/practice/system\"}]}:\n"
-            f"{json.dumps(batch_data)}"
-        )
-        
-        # Simple retry loop
-        for attempt in range(3):
-            try:
-                headers = {
-                    "Authorization": f"Bearer {cf_token}",
-                    "Content-Type": "application/json"
-                }
-                payload = {
-                    "messages": [
-                        {"role": "system", "content": "You are a CS2 config reference editor. Translate Source 2 command descriptions into precise Chinese player terminology. Preserve numeric values, comparison signs, units, bitmasks, sentinel values, and enum meanings exactly; distinguish engine Min/Max constraints from prose examples, and state when no unit or bound is provided. Return only JSON in the requested schema, without Markdown fences."},
-                        {"role": "user", "content": prompt}
-                    ]
-                }
-                model = "@cf/meta/llama-3.1-8b-instruct-fp8"
-                url = f"https://api.cloudflare.com/client/v4/accounts/{cf_account}/ai/run/{model}"
-                req = urllib.request.Request(url, 
-                                             data=json.dumps(payload).encode('utf-8'),
-                                             headers=headers, 
-                                             method="POST")
-                
-                with urllib.request.urlopen(req, timeout=15) as resp:
-                    res_data = json.loads(resp.read().decode('utf-8'))
-                    result = res_data.get("result", {})
-                    content_str = result.get("response", "").strip()
-                    
-                    # Strip markdown blocks if present (e.g. ```json ... ```)
-                    if content_str.startswith("```"):
-                        lines = content_str.split("\n")
-                        if lines[0].startswith("```"):
-                            lines = lines[1:]
-                        if lines[-1].startswith("```"):
-                            lines = lines[:-1]
-                        content_str = "\n".join(lines).strip()
-                        
-                    content = json.loads(content_str)
-                    for trans in content.get("translations", []):
-                        translated[trans["name"]] = trans
-                    break
-            except Exception as e:
-                print(f"Error translating batch (attempt {attempt+1}): {e}")
-                time.sleep(1)
-                
+    state = {"failures": 0}
+    for i in range(0, len(new_items), INITIAL_BATCH_SIZE):
+        batch = new_items[i:i + INITIAL_BATCH_SIZE]
+        translated.update(_translate_batch(batch, cf_token, cf_account, state))
     return translated
 
 def get_upstream_latest_commit_sha():
@@ -267,6 +373,7 @@ def main():
 
     # 3. Separate existing and brand-new commands
     new_commands = []
+    untranslated = []
     final_dataset = []
     
     for item in filtered_items:
@@ -305,12 +412,16 @@ def main():
         for item in new_commands:
             name = item["n"]
             t_info = translated_new.get(name, {})
-            
+
             desc_cn = str(t_info.get("desc_cn", "")).strip()
             if not desc_cn:
-                raise RuntimeError(f"Workers AI did not return a Chinese description for new command {name}")
+                # 单条命令翻译失败不应拖垮整个每日更新：跳过它，且不推进 last_sha.txt，
+                # 下次运行会重新尝试（避免把英文原文当成中文释义永久写进缓存）。
+                untranslated.append(name)
+                continue
+
             category = normalize_category(t_info.get("category"), name, item["f"])
-            
+
             final_dataset.append({
                 "n": name,
                 "d": item["d"],
@@ -321,6 +432,12 @@ def main():
                 "c": category,
                 "value": item.get("value", {}),
             })
+
+        if untranslated:
+            print(
+                f"::warning::Skipped {len(untranslated)} new command(s) with no Chinese description: "
+                f"{', '.join(untranslated)}"
+            )
 
     validate_dataset(enrich_dataset(final_dataset))
 
@@ -336,13 +453,19 @@ def main():
 
     # 6. Save the new SHA
     if upstream_sha:
-        try:
-            os.makedirs(os.path.dirname(sha_file), exist_ok=True)
-            with open(sha_file, "w", encoding="utf-8") as f:
-                f.write(upstream_sha)
-            print(f"Saved new upstream SHA ({upstream_sha}) to {sha_file}")
-        except Exception as e:
-            print(f"Warning: Could not save new SHA: {e}")
+        if untranslated:
+            print(
+                f"::warning::Not advancing {sha_file}; {len(untranslated)} command(s) still lack a "
+                "Chinese description and will be retried on the next run."
+            )
+        else:
+            try:
+                os.makedirs(os.path.dirname(sha_file), exist_ok=True)
+                with open(sha_file, "w", encoding="utf-8") as f:
+                    f.write(upstream_sha)
+                print(f"Saved new upstream SHA ({upstream_sha}) to {sha_file}")
+            except Exception as e:
+                print(f"Warning: Could not save new SHA: {e}")
 
 if __name__ == "__main__":
     main()

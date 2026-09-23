@@ -23,15 +23,30 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Test Cloudflare Workers AI availability
+      # 先跑零成本单元测试，再做真实 API 预检，最后才消耗批量配额。
+      - name: Run command update unit tests
+        run: |
+          python .github/scripts/test_command_values.py
+          python .github/scripts/test_update_commands.py
+          python .github/scripts/test_ai_preflights.py
+
+      # 用与正式流程相同的模型/参数/解析逻辑做一次真实调用，提前暴露凭据失效、
+      # 模型下线、返回结构变化或中文质量退化（如把「你好」译成拼音）。
+      - name: Pre-flight translation model
         env:
           CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           python .github/scripts/test_cf_ai.py
 
-      - name: Test command value model
-        run: python .github/scripts/test_command_values.py
+      # 网站问答模型的守门检查：模型名直接从 worker.ts 解析（避免预检与线上不一致），
+      # 并实测上下文窗口是否够 32K、流式解析是否正常、思考内容是否泄漏到正文。
+      - name: Pre-flight website chat model
+        env:
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python .github/scripts/test_worker_llm.py
 
       - name: Run update script
         env:

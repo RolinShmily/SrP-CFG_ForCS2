@@ -28,7 +28,16 @@ export interface Env {
 }
 
 const EMBEDDING_MODEL = "@cf/baai/bge-m3";
-const LLM_MODEL = "@cf/meta/llama-3.1-8b-instruct-fp8";
+// 模型选型说明：原用的 llama-3.1-8b-instruct-fp8 中文能力不足（实测会把 "hello" 译成拼音
+// "nǐ hǎo" 而非「你好」）。换成 Qwen3-30B：中文母语级质量，且上下文窗口 32,768 tokens
+// 与旧模型持平 —— 这一点很关键，因为下面的历史对话预算（MAX_HISTORY_ITEMS ×
+// MAX_HISTORY_CONTENT_LENGTH）是按 32K 窗口标定的，最坏输入约 31,300 字符，换成 24K 窗口的
+// 模型（如 llama-3.3-70b）会直接溢出。ai-stream.ts 的 extractText 已兼容本模型的流式结构。
+//
+// Qwen3 是推理模型，思考内容会计入 max_tokens 并可能挤掉正文，因此下面两个 system prompt
+// 末尾都带上 /no_think 软开关；.github/scripts/test_worker_llm.py 会在预检里实测是否真的
+// 没有思考内容泄漏。
+const LLM_MODEL = "@cf/qwen/qwen3-30b-a3b-fp8";
 const COMMAND_TOP_K = 8;
 const CONFIG_TOP_K = 50;
 const CONFIG_CONTEXT_LIMIT = 12;
@@ -504,7 +513,8 @@ ${referenceContext}
 3. 每个关于按键、命令、默认值、加载文件或作用范围的事实，必须在同一句中引用资料给出的 \`config/路径.cfg:行号\`。没有可引用证据时只回答“当前检索证据不足”，不得补全可能答案。
 4. “源码”和证据引用优先于 curated 摘要；标题、摘要、标签和关键词只用于定位与解释，不能覆盖源码。用户指出错误时必须重新核对同一实体的证据。
 5. 必须区分 Runtime 注册、settings 状态、keymap 物理键位、with-keymap 组合入口、Preset 应用和 user/custom.cfg 最终覆盖层。
-6. 只解答 SrP-CFG 及其使用到的 CS2 指令。回答简练、使用中文，并以完整句子结束。`;
+6. 只解答 SrP-CFG 及其使用到的 CS2 指令。回答简练、使用中文，并以完整句子结束。
+/no_think`;
     } else {
       systemPrompt = `你是 CS2 官方控制台指令与变量助手。下方参考资料来自独立的官方指令向量库。
 
@@ -516,7 +526,8 @@ ${referenceContext}
 2. 涉及指令或变量时，使用反引号包裹名称，并说明作用、默认值、引擎 Min/Max 约束、描述范围和离散取值（资料提供时）；不得把“说明范围”说成引擎强制限制。
 3. 如果字典中没有直接匹配的指令或未提供具体范围，请如实告知，不要编造不存在的指令、默认值、单位或边界。
 4. 回答必须以完整句子结束。资料过多时应压缩每项文字或明确分批回答，不得在默认值、范围、离散取值或命令名称中途停止。
-5. 保持简练、专业、有条理，使用中文回答。`;
+5. 保持简练、专业、有条理，使用中文回答。
+/no_think`;
     }
 
     const messages = [

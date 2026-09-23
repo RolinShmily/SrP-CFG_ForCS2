@@ -40,6 +40,14 @@ jobs:
       - name: Validate CFG architecture
         run: python3 .github/scripts/validate_cfg.py
 
+      # 纯单元测试，无网络无凭据；放在 PR 关口上，避免 update_commands.py 的回归
+      # 只能等到每日定时任务才暴露。
+      - name: Run command update unit tests
+        run: |
+          python3 .github/scripts/test_command_values.py
+          python3 .github/scripts/test_update_commands.py
+          python3 .github/scripts/test_ai_preflights.py
+
       - name: Run config knowledge tests
         run: |
           node --test .github/scripts/sync_config_vectorize.test.mjs
