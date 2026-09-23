@@ -1004,17 +1004,6 @@
     "c": "practice"
   },
   {
-    "n": "battery_saver",
-    "d": "false",
-    "f": [
-      "archive"
-    ],
-    "en": "OBSOLETE replaced by mobile_fps_* - Battery saver mode. 0=off, 1=on",
-    "t": "var",
-    "cn": "【已废弃，由 mobile_fps_* 代替】省电模式。0=关闭，1=开启。",
-    "c": "graphics"
-  },
-  {
     "n": "benchframe",
     "d": "",
     "f": [
@@ -1708,6 +1697,18 @@
     "t": "cmd",
     "cn": "命令特定的 Bot 模仿/跟随人类玩家的移动路径。",
     "c": "practice"
+  },
+  {
+    "n": "bot_path_require_reachable_goal",
+    "d": "true",
+    "f": [
+      "gamedll",
+      "release"
+    ],
+    "en": "If nonzero, bots refuse to path to a nav area that the nav build did not reach from a player spawn.",
+    "t": "var",
+    "cn": "机器人路径可达目标",
+    "c": "gameplay"
   },
   {
     "n": "bot_pistols_only",
@@ -3619,23 +3620,6 @@
     "c": "system"
   },
   {
-    "n": "cl_clanid",
-    "d": "0",
-    "f": [
-      "clientdll",
-      "hidden",
-      "archive",
-      "userinfo"
-    ],
-    "en": "Current clan ID for name decoration",
-    "t": "var",
-    "cn": "当前用于名字前缀装饰的Steam组/战队ID",
-    "c": "system",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "cl_clock_correction",
     "d": "true",
     "f": [
@@ -3746,7 +3730,7 @@
       "archive",
       "per_user"
     ],
-    "en": "Draws a black outline around the crosshair for better visibility",
+    "en": "Draw a black outline around the crosshair for better visibility",
     "t": "var",
     "cn": "准星边缘绘制黑色轮廓以提高可见度（准星描边）",
     "c": "graphics"
@@ -3759,7 +3743,7 @@
       "archive",
       "per_user"
     ],
-    "en": "If using cl_crosshairstyle 2, this is the ratio used to determine how long the inner and outer xhair pips will be. [inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio]  [0 - 1]",
+    "en": "Style 2 only: how the bar length is divided between inner and outer bars once split. inner = cl_crosshairsize * (1 - ratio), outer = cl_crosshairsize * ratio. [0 - 1]",
     "t": "var",
     "cn": "在使用准星样式2时，确定内外准星线段长度的分割比例 [0 - 1]",
     "c": "graphics",
@@ -3779,7 +3763,7 @@
       "archive",
       "per_user"
     ],
-    "en": "If using cl_crosshairstyle 2, this is the alpha modification that will be used for the INNER crosshair pips once they've split. [0 - 1]",
+    "en": "Style 2 only: alpha multiplier for the INNER crosshair bars once they have split. [0 - 1]",
     "t": "var",
     "cn": "在使用准星样式2时，准星分裂后内侧线段的不透明度（Alpha值）修正 [0 - 1]",
     "c": "graphics",
@@ -3799,7 +3783,7 @@
       "archive",
       "per_user"
     ],
-    "en": "If using cl_crosshairstyle 2, this is the alpha modification that will be used for the OUTER crosshair pips once they've split. [0.3 - 1]",
+    "en": "Style 2 only: alpha multiplier for the OUTER crosshair bars once they have split. [0.3 - 1]",
     "t": "var",
     "cn": "当使用准星样式2（cl_crosshairstyle 2）时，准星分裂后外侧准星线条/点的透明度修改系数。[范围：0.3 - 1]",
     "c": "graphics",
@@ -3819,12 +3803,36 @@
       "archive",
       "per_user"
     ],
-    "en": "If using cl_crosshairstyle 2, this is the distance that the crosshair pips will split into 2. (default is 7)",
+    "en": "Style 2: distance at which the crosshair bars split in two.",
     "t": "var",
     "cn": "在使用准星样式2时，准星分裂为两部分的起步距离（默认值为7）",
     "c": "graphics",
     "value": {
-      "description": "默认值为 3。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+      "constraint": {
+        "min": "0",
+        "max": "127"
+      },
+      "description": "默认值为 3。引擎元数据限制为 0–127。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "cl_crosshair_dynamic_spread_limit",
+    "d": "255",
+    "f": [
+      "clientdll",
+      "archive",
+      "per_user"
+    ],
+    "en": "The additional distance the dynamic elements are allowed to spread out to from the baseline of 128 pixels.",
+    "t": "var",
+    "cn": "十字准星动态扩散",
+    "c": "graphics",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "255"
+      },
+      "description": "默认值为 255。引擎元数据限制为 0–255。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -3858,23 +3866,43 @@
     }
   },
   {
-    "n": "cl_crosshair_outlinethickness",
-    "d": "1",
+    "n": "cl_crosshair_gap",
+    "d": "4",
     "f": [
       "clientdll",
       "archive",
       "per_user"
     ],
-    "en": "Set how thick you want your crosshair outline to draw (0-3)",
+    "en": "Offset added to the gap between the crosshair center and the bars.",
     "t": "var",
-    "cn": "设置准星描边轮廓的粗细度（0-3）",
+    "cn": "十字准星间隙",
     "c": "graphics",
     "value": {
       "constraint": {
         "min": "0",
-        "max": "3"
+        "max": "128"
       },
-      "description": "默认值为 1。引擎元数据限制为 0–3。具体控制对象与作用见上方释义。"
+      "description": "默认值为 4。引擎元数据限制为 0–128。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "cl_crosshair_length",
+    "d": "8",
+    "f": [
+      "clientdll",
+      "archive",
+      "per_user"
+    ],
+    "en": "Length of each crosshair bar, scaled with screen resolution",
+    "t": "var",
+    "cn": "十字准星长度",
+    "c": "graphics",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "255"
+      },
+      "description": "默认值为 8。引擎元数据限制为 0–255。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -3885,10 +3913,30 @@
       "archive",
       "per_user"
     ],
-    "en": "",
+    "en": "Crosshair follows the weapon's predicted recoil (aim punch)",
     "t": "var",
     "cn": "准星跟随弹道后坐力（跟枪/准星随弹道上扬，非0开启，0关闭）",
     "c": "graphics"
+  },
+  {
+    "n": "cl_crosshair_screen_height",
+    "d": "1080",
+    "f": [
+      "clientdll",
+      "hidden",
+      "archive",
+      "per_user"
+    ],
+    "en": "The res at which the user authored their size settings at - changes whenever a size setting is updated",
+    "t": "var",
+    "cn": "十字准星屏幕高度",
+    "c": "graphics",
+    "value": {
+      "constraint": {
+        "min": "240"
+      },
+      "description": "默认值为 1080。引擎元数据仅公开下限 240，未公开固定上限。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "cl_crosshair_sniper_width",
@@ -3920,16 +3968,37 @@
       "archive",
       "per_user"
     ],
-    "en": "T style crosshair",
+    "en": "T-style crosshair: hide the top bar",
     "t": "var",
     "cn": "T字形准星（去除准星顶部的线段）",
     "c": "graphics"
+  },
+  {
+    "n": "cl_crosshair_thickness",
+    "d": "2",
+    "f": [
+      "clientdll",
+      "archive",
+      "per_user"
+    ],
+    "en": "Thickness of the crosshair bars and circle, scaled with screen resolution (minimum 1 pixel)",
+    "t": "var",
+    "cn": "十字准星厚度",
+    "c": "graphics",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "31"
+      },
+      "description": "默认值为 2。引擎元数据限制为 0–31。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "cl_crosshairalpha",
     "d": "200",
     "f": [
       "clientdll",
+      "hidden",
       "archive",
       "per_user"
     ],
@@ -3946,25 +4015,23 @@
     }
   },
   {
-    "n": "cl_crosshaircolor",
-    "d": "5",
+    "n": "cl_crosshaircolor_a",
+    "d": "255",
     "f": [
       "clientdll",
       "archive",
       "per_user"
     ],
-    "en": "Set crosshair color as defined in game_options.consoles.txt",
+    "en": "Crosshair opacity. 0 = fully transparent, 255 = fully opaque",
     "t": "var",
-    "cn": "设置准星的预设颜色（0-4，5为自定义颜色）",
+    "cn": "十字准星不透明度",
     "c": "graphics",
     "value": {
-      "options": [
-        {
-          "value": "5",
-          "label": "自定义颜色"
-        }
-      ],
-      "description": "默认值为 5。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
+      "constraint": {
+        "min": "0",
+        "max": "255"
+      },
+      "description": "默认值为 255。引擎元数据限制为 0–255。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -3975,7 +4042,7 @@
       "archive",
       "per_user"
     ],
-    "en": "",
+    "en": "Crosshair color, blue component",
     "t": "var",
     "cn": "自定义准星颜色的蓝色（B）通道值（0-255）",
     "c": "graphics",
@@ -3995,7 +4062,7 @@
       "archive",
       "per_user"
     ],
-    "en": "",
+    "en": "Crosshair color, green component",
     "t": "var",
     "cn": "自定义准星颜色的绿色（G）通道值（0-255）",
     "c": "graphics",
@@ -4015,7 +4082,7 @@
       "archive",
       "per_user"
     ],
-    "en": "",
+    "en": "Crosshair color, red component",
     "t": "var",
     "cn": "自定义准星颜色的红色（R）通道值（0-255）",
     "c": "graphics",
@@ -4035,38 +4102,9 @@
       "archive",
       "per_user"
     ],
-    "en": "",
+    "en": "Draw a dot at the center of the crosshair",
     "t": "var",
     "cn": "准星中心点（0关闭，1开启）",
-    "c": "graphics"
-  },
-  {
-    "n": "cl_crosshairgap",
-    "d": "-2.2",
-    "f": [
-      "clientdll",
-      "archive",
-      "per_user"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "准星线段之间的间距大小（准星中心空隙）",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 -2.2。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "cl_crosshairgap_useweaponvalue",
-    "d": "true",
-    "f": [
-      "clientdll",
-      "archive",
-      "per_user"
-    ],
-    "en": "If set to 1, the gap will update dynamically based on which weapon is currently equipped",
-    "t": "var",
-    "cn": "如果设为1，准星间距会根据当前装备的武器动态更新",
     "c": "graphics"
   },
   {
@@ -4074,6 +4112,7 @@
     "d": "3.9",
     "f": [
       "clientdll",
+      "hidden",
       "archive",
       "per_user"
     ],
@@ -4087,17 +4126,21 @@
   },
   {
     "n": "cl_crosshairstyle",
-    "d": "2",
+    "d": "7",
     "f": [
       "clientdll",
       "archive",
       "per_user"
     ],
-    "en": "0 = DEFAULT (DISABLED), 1 = DEFAULT STATIC (DISABLED), 2 = DEFAULT (accurate recoil/spread feedback with a fixed inner part), 3 = ACCURATE DYNAMIC (DISABLED) (accurate recoil/spread feedback), 4 = DEFAULT STATIC, 5 = LEGACY (fake recoil - inaccurate feedback)",
+    "en": "Crosshair style. 0 = Dynamic Cross, 1 = Dynamic Circle, 2 = Dynamic Cross (Legacy), 3 = Static Circle, 4 = Static Cross, 5 = Static Cross (Shot Feedback), 6 = Dot Only, 7 = Dynamic Quad. Styles 0, 1 and 7 track the weapon's actual inaccuracy.",
     "t": "var",
     "cn": "准星款式：0=默认（禁用），1=默认静态（禁用），2=默认经典（带固定内圈的精准后坐力/扩散反馈），3=精准动态（禁用），4=经典静态，5=传统准星（模拟后坐力 - 非精确反馈）",
     "c": "graphics",
     "value": {
+      "constraint": {
+        "min": "0",
+        "max": "7"
+      },
       "options": [
         {
           "value": "0",
@@ -4124,7 +4167,7 @@
           "label": "传统准星"
         }
       ],
-      "description": "默认值为 2。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
+      "description": "默认值为 7。引擎元数据限制为 0–7。已识别的离散取值含义见下方。"
     }
   },
   {
@@ -4132,6 +4175,7 @@
     "d": "0.6",
     "f": [
       "clientdll",
+      "hidden",
       "archive",
       "per_user"
     ],
@@ -4142,19 +4186,6 @@
     "value": {
       "description": "默认值为 0.6。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
-  },
-  {
-    "n": "cl_crosshairusealpha",
-    "d": "true",
-    "f": [
-      "clientdll",
-      "archive",
-      "per_user"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "是否启用准星透明度（配合 cl_crosshairalpha 使用）",
-    "c": "graphics"
   },
   {
     "n": "cl_deathcam_audio_mix_phase1_fade_amount",
@@ -5406,22 +5437,6 @@
     }
   },
   {
-    "n": "cl_fixedcrosshairgap",
-    "d": "3",
-    "f": [
-      "clientdll",
-      "archive",
-      "per_user"
-    ],
-    "en": "For crosshair style 1: How big to make the gap between the pips in the fixed crosshair",
-    "t": "var",
-    "cn": "针对准星样式 1：固定准星各分支之间的间距大小",
-    "c": "gameplay",
-    "value": {
-      "description": "默认值为 3。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "cl_flushentitypacket",
     "d": "0",
     "f": [
@@ -5603,7 +5618,7 @@
       "archive",
       "per_user"
     ],
-    "en": "Keep the user's crosshair when the grenade crosshair is enabled",
+    "en": "Keep drawing the user's crosshair while the grenade throw crosshair is shown",
     "t": "var",
     "cn": "当投掷物辅助准星激活时，保留玩家原本使用的普通准星形状/样式",
     "c": "gameplay"
@@ -6683,7 +6698,7 @@
       "archive",
       "release"
     ],
-    "en": "Control the crosshair shown when observing a bot. 0: Show player crosshair. 1: Show player crosshair only when bot can be taken over, otherwise show default.. 2: Always show default crosshair for bots.",
+    "en": "Crosshair shown when observing a bot. 0 = show your crosshair, 1 = show your crosshair only when the bot can be taken over (otherwise default), 2 = always show the default crosshair",
     "t": "var",
     "cn": "设置观战Bot（机器人）时显示的准星。0: 显示玩家自己的准星; 1: 仅在Bot可被控制接管时显示玩家准星，否则显示默认; 2: 对Bot始终显示默认准星",
     "c": "gameplay",
@@ -8267,7 +8282,7 @@
       "archive",
       "release"
     ],
-    "en": "Show the crosshair of the player being observed. 0: off 1: friends and party 2: everyone",
+    "en": "Show the crosshair of the player being observed. 0 = off, 1 = friends and party only, 2 = everyone",
     "t": "var",
     "cn": "观战时显示被观察玩家的准星（0: 关闭；1: 仅好友和队友；2: 所有人）。",
     "c": "gameplay",
@@ -8736,6 +8751,18 @@
     "c": "system"
   },
   {
+    "n": "cl_spectator_predict",
+    "d": "false",
+    "f": [
+      "clientdll",
+      "release"
+    ],
+    "en": "Enable 'TrueView' when spectating another player, which attempts to recreate the client's experience more accurately.  The server may not allow this at certain times.",
+    "t": "var",
+    "cn": "观战预测",
+    "c": "gameplay"
+  },
+  {
     "n": "cl_spewserializers",
     "d": "",
     "f": [
@@ -9096,6 +9123,21 @@
     "c": "gameplay"
   },
   {
+    "n": "cl_use_prompt_smoke_density",
+    "d": "0.03",
+    "f": [
+      "clientdll",
+      "cheat"
+    ],
+    "en": "Smoke density at the eye position above which a button's use prompt is suppressed.",
+    "t": "var",
+    "cn": "烟雾密度",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 0.03。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "cl_usercmd_max_per_movemsg",
     "d": "4",
     "f": [
@@ -9328,7 +9370,8 @@
     "f": [
       "clientdll",
       "archive",
-      "userinfo"
+      "userinfo",
+      "per_user"
     ],
     "en": "Enable close captioning.",
     "t": "var",
@@ -9948,6 +9991,18 @@
     "c": "system"
   },
   {
+    "n": "create_explosion_damage",
+    "d": "",
+    "f": [
+      "gamedll",
+      "cheat"
+    ],
+    "en": "Explosion where you're looking, or at x y z, with a real explosion's physics force (unlike create_radius_damage).",
+    "t": "cmd",
+    "cn": "创建爆炸",
+    "c": "gameplay"
+  },
+  {
     "n": "create_radius_damage",
     "d": "",
     "f": [
@@ -10419,6 +10474,21 @@
     }
   },
   {
+    "n": "csm_sst_shadow_focus_region_caster_headroom",
+    "d": "256",
+    "f": [
+      "clientdll",
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "阴影聚焦区域",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 256。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "csm_sst_shadow_focus_region_maxz",
     "d": "2000",
     "f": [
@@ -10449,19 +10519,16 @@
     }
   },
   {
-    "n": "csm_sst_shadow_focus_region_thin_compensation",
-    "d": "1500",
+    "n": "csm_sst_vertical_depth_shear_enable",
+    "d": "true",
     "f": [
       "clientdll",
       "cheat"
     ],
     "en": "",
     "t": "var",
-    "cn": "屏幕空间阴影贴图（SST）薄物体阴影聚焦区域的补偿值",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 1500。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
+    "cn": "垂直深度剪切",
+    "c": "graphics"
   },
   {
     "n": "csm_viewdir_shadow_bias",
@@ -11718,6 +11785,19 @@
     "c": "cheats"
   },
   {
+    "n": "ent_fire_delay",
+    "d": "",
+    "f": [
+      "gamedll",
+      "cheat",
+      "vconsole_fuzzy_matching"
+    ],
+    "en": "Usage:",
+    "t": "cmd",
+    "cn": "实体触发延迟",
+    "c": "gameplay"
+  },
+  {
     "n": "ent_fire_output",
     "d": "",
     "f": [
@@ -11729,6 +11809,19 @@
     "t": "cmd",
     "cn": "向指定实体触发特定输出（用法：ent_fire_output <target> <output>）。",
     "c": "cheats"
+  },
+  {
+    "n": "ent_fire_output_delay",
+    "d": "",
+    "f": [
+      "gamedll",
+      "cheat",
+      "vconsole_fuzzy_matching"
+    ],
+    "en": "Usage:",
+    "t": "cmd",
+    "cn": "实体输出延迟",
+    "c": "gameplay"
   },
   {
     "n": "ent_gib",
@@ -13179,6 +13272,18 @@
     "t": "cmd",
     "cn": "启用所有移动平台实体（func_mover）的调试信息显示",
     "c": "cheats"
+  },
+  {
+    "n": "func_mover_step_movement",
+    "d": "",
+    "f": [
+      "gamedll",
+      "cheat"
+    ],
+    "en": "",
+    "t": "cmd",
+    "cn": "移动步骤",
+    "c": "gameplay"
   },
   {
     "n": "g_debug_angularsensor",
@@ -15411,34 +15516,6 @@
     "c": "graphics"
   },
   {
-    "n": "lightquery_debug_direct_lighting",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "clientdll",
-      "replicated",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "调试光照查询（Light Query）直接光照信息。",
-    "c": "graphics"
-  },
-  {
-    "n": "lightquery_debug_indirect_lighting",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "clientdll",
-      "replicated",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "调试间接光照查询",
-    "c": "graphics"
-  },
-  {
     "n": "listdemo",
     "d": "",
     "f": [
@@ -16474,42 +16551,6 @@
     "c": "network"
   },
   {
-    "n": "mobile_fps_increase_during_charging",
-    "d": "false",
-    "f": [
-      "archive"
-    ],
-    "en": "MOBILE_FPS_CONTROL: If true we increase framerate limit while charging",
-    "t": "var",
-    "cn": "移动端帧率控制：充电时是否提高帧率上限限制",
-    "c": "system"
-  },
-  {
-    "n": "mobile_fps_increase_during_touch",
-    "d": "true",
-    "f": [
-      "archive"
-    ],
-    "en": "MOBILE_FPS_CONTROL: If true we increase framerate limit during touch",
-    "t": "var",
-    "cn": "移动端帧率控制：触摸屏幕时是否提高帧率上限限制",
-    "c": "system"
-  },
-  {
-    "n": "mobile_fps_limit",
-    "d": "30",
-    "f": [
-      "archive"
-    ],
-    "en": "MOBILE_FPS_CONTROL: Mobile FPS limit - 15, 30, 60",
-    "t": "var",
-    "cn": "移动端帧率控制：限制移动端最高帧率（15, 30, 60）",
-    "c": "system",
-    "value": {
-      "description": "默认值为 30。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "model_default_preview_sequence_name",
     "d": "",
     "f": [
@@ -17312,14 +17353,14 @@
       "release",
       "commandline_enforced"
     ],
-    "en": "Which gun to drop on player death: 0=none, 1=best, 2=current or best",
+    "en": "Which gun to drop on player death: 0=none, 1=best, 2=current or best, 3=both",
     "t": "var",
     "cn": "玩家死亡后掉落哪种枪械：0=不掉落，1=最贵的，2=当前装备或最贵的",
     "c": "gameplay",
     "value": {
       "constraint": {
         "min": "0",
-        "max": "2"
+        "max": "3"
       },
       "options": [
         {
@@ -17335,7 +17376,7 @@
           "label": "当前装备或最贵的"
         }
       ],
-      "description": "默认值为 1。引擎元数据限制为 0–2。已识别的离散取值含义见下方。"
+      "description": "默认值为 1。引擎元数据限制为 0–3。已识别的离散取值含义见下方。"
     }
   },
   {
@@ -18938,7 +18979,7 @@
   },
   {
     "n": "mp_promoted_item_enabled",
-    "d": "false",
+    "d": "true",
     "f": [
       "gamedll",
       "clientdll",
@@ -19871,6 +19912,21 @@
       },
       "description": "默认值为 6.5。引擎元数据仅公开下限 0，未公开固定上限。具体控制对象与作用见上方释义。"
     }
+  },
+  {
+    "n": "mp_team_intro_type",
+    "d": "auto",
+    "f": [
+      "gamedll",
+      "clientdll",
+      "replicated",
+      "release",
+      "commandline_enforced"
+    ],
+    "en": "none, normal, wingman, rush, or auto (implies normal if mp_halftime is set, none otherwise)",
+    "t": "var",
+    "cn": "队伍介绍类型",
+    "c": "gameplay"
   },
   {
     "n": "mp_team_timeout_max",
@@ -21213,6 +21269,18 @@
     "c": "practice"
   },
   {
+    "n": "nav_draw_area_color_by_game_attribute",
+    "d": "false",
+    "f": [
+      "gamedll",
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "导航区域颜色",
+    "c": "graphics"
+  },
+  {
     "n": "nav_draw_area_connections",
     "d": "false",
     "f": [
@@ -21435,18 +21503,6 @@
     "c": "practice"
   },
   {
-    "n": "nav_draw_flow_map",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "绘制人流/物流走向图（Flow Map）",
-    "c": "practice"
-  },
-  {
     "n": "nav_draw_hidingspots",
     "d": "false",
     "f": [
@@ -21459,18 +21515,6 @@
     "c": "practice"
   },
   {
-    "n": "nav_draw_indirect_connections",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "绘制导航网格的间接连接关系",
-    "c": "practice"
-  },
-  {
     "n": "nav_draw_jump_links",
     "d": "false",
     "f": [
@@ -21480,45 +21524,6 @@
     "en": "",
     "t": "var",
     "cn": "绘制Bot的跳跃连接线",
-    "c": "practice"
-  },
-  {
-    "n": "nav_draw_limit",
-    "d": "300",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "The maximum number of areas to draw in edit mode",
-    "t": "var",
-    "cn": "编辑模式下绘制导航网格区域的最大数量上限",
-    "c": "practice",
-    "value": {
-      "description": "默认值为 300。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "nav_draw_link_alignment",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "绘制导航网格连接线的对齐方式",
-    "c": "practice"
-  },
-  {
-    "n": "nav_draw_links",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "绘制所有导航网格连接线",
     "c": "practice"
   },
   {
@@ -22839,63 +22844,6 @@
     "c": "practice"
   },
   {
-    "n": "nav_select_allow_blocked",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "When selecting an area under nav_edit, allow area marked as blocked.",
-    "t": "var",
-    "cn": "在 nav_edit 模式下选择区域时，允许选择被标记为阻塞的区域。",
-    "c": "practice"
-  },
-  {
-    "n": "nav_select_area_id",
-    "d": "-1",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Select nav area with matching ID.",
-    "t": "var",
-    "cn": "选择匹配特定 ID 的导航区域。",
-    "c": "practice",
-    "value": {
-      "description": "默认值为 -1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "nav_select_block_id",
-    "d": "-1",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Select nav space block with matching ID.",
-    "t": "var",
-    "cn": "选择匹配特定 ID 的导航空间阻塞块。",
-    "c": "practice",
-    "value": {
-      "description": "默认值为 -1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "nav_select_hull",
-    "d": "0",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Restrict area selection to areas that can support a hull of the given category",
-    "t": "var",
-    "cn": "限制只能选择支持指定类别碰撞体（Hull）的区域。",
-    "c": "practice",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "nav_select_radius",
     "d": "",
     "f": [
@@ -22932,94 +22880,55 @@
     "c": "practice"
   },
   {
-    "n": "nav_show_area_connections",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Show connections to selected area when true",
-    "t": "var",
-    "cn": "为 true 时显示与所选区域相连的连接线。",
-    "c": "practice"
-  },
-  {
-    "n": "nav_show_area_verts",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Show area vertex positions",
-    "t": "var",
-    "cn": "显示导航区域的顶点位置。",
-    "c": "practice"
-  },
-  {
-    "n": "nav_show_area_water_info",
-    "d": "true",
+    "n": "nav_smooth_arrival_enable",
+    "d": "false",
     "f": [
       "gamedll",
       "cheat"
     ],
     "en": "",
     "t": "var",
-    "cn": "显示导航区域的水体信息",
-    "c": "practice"
+    "cn": "平滑到达启用",
+    "c": "gameplay"
   },
   {
-    "n": "nav_show_elem_info",
-    "d": "true",
+    "n": "nav_smooth_arrival_handle_scale",
+    "d": "3",
     "f": [
       "gamedll",
       "cheat"
     ],
     "en": "",
     "t": "var",
-    "cn": "显示导航元素信息",
-    "c": "practice"
-  },
-  {
-    "n": "nav_show_elem_info_font",
-    "d": "Consolas",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "显示导航元素信息的字体",
-    "c": "practice"
-  },
-  {
-    "n": "nav_show_elem_info_font_size",
-    "d": "-1",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "显示导航元素信息的字体大小",
-    "c": "practice",
+    "cn": "平滑到达手柄尺度",
+    "c": "gameplay",
     "value": {
-      "description": "默认值为 -1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+      "description": "默认值为 3。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
-    "n": "nav_show_elem_info_font_voffset",
-    "d": "-11",
+    "n": "nav_smooth_arrival_spline",
+    "d": "true",
     "f": [
       "gamedll",
       "cheat"
     ],
     "en": "",
     "t": "var",
-    "cn": "显示导航元素信息的字体垂直偏移量",
-    "c": "practice",
-    "value": {
-      "description": "默认值为 -11。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
+    "cn": "平滑到达样条曲线",
+    "c": "gameplay"
+  },
+  {
+    "n": "nav_smooth_arrival_spring",
+    "d": "false",
+    "f": [
+      "gamedll",
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "平滑到达弹簧",
+    "c": "gameplay"
   },
   {
     "n": "nav_smooth_constrain_spline",
@@ -23077,6 +22986,18 @@
     "value": {
       "description": "默认值为 0.01。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
+  },
+  {
+    "n": "nav_smooth_draw_arrival_calc",
+    "d": "false",
+    "f": [
+      "gamedll",
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "平滑到达计算",
+    "c": "graphics"
   },
   {
     "n": "nav_smooth_draw_boundary",
@@ -23745,18 +23666,6 @@
     }
   },
   {
-    "n": "nav_test_detour",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "绕行/分流（Detour）算法测试",
-    "c": "system"
-  },
-  {
     "n": "nav_test_find_nearest",
     "d": "false",
     "f": [
@@ -24015,139 +23924,6 @@
     "en": "",
     "t": "var",
     "cn": "显示测试 NPC 碰撞的几何结构形状",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Calculate and draw a path from player/camera position to the test position.",
-    "t": "var",
-    "cn": "计算并绘制一条从玩家/摄像机当前位置到测试目标点的路径",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_lock_goal",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Lock the pathfinding goal to the current intersection point.",
-    "t": "var",
-    "cn": "将寻路终点锁定在当前的交叉点（相交位置）",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_lock_start",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Lock the pathfinding start to the current intersection point.",
-    "t": "var",
-    "cn": "将寻路起点锁定在当前的交叉点（相交位置）",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_move",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "测试路径的移动情况",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_opt",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Enable path optimization for nav_edit_path paths.",
-    "t": "var",
-    "cn": "为通过 nav_edit_path 命令生成的路径启用路径优化算法",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_opt_transitions",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "优化路径转换/过渡时的路径寻路性能",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_return",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Calculate a return path from cursor position to the path calculated by nav_test_path.",
-    "t": "var",
-    "cn": "计算一条从光标位置返回到 nav_test_path 所算得路径的返回路线",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_space",
-    "d": "0",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Should nav_test_path test 3d navigation?  1 = space to space, 2 = multi-modal space/ground",
-    "t": "var",
-    "cn": "设置 nav_test_path 是否测试3D空间导航（1 = 空间到空间，2 = 多模态空间/地面）",
-    "c": "practice",
-    "value": {
-      "options": [
-        {
-          "value": "1",
-          "label": "空间到空间"
-        },
-        {
-          "value": "2",
-          "label": "多模态空间/地面"
-        }
-      ],
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
-    }
-  },
-  {
-    "n": "nav_test_path_space_fly",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Test flight paths",
-    "t": "var",
-    "cn": "测试空中飞行路径的寻路情况",
-    "c": "practice"
-  },
-  {
-    "n": "nav_test_path_space_swim",
-    "d": "true",
-    "f": [
-      "gamedll",
-      "cheat"
-    ],
-    "en": "Test swim paths",
-    "t": "var",
-    "cn": "测试水中游泳路径的寻路情况",
     "c": "practice"
   },
   {
@@ -24509,6 +24285,18 @@
     "t": "var",
     "cn": "在导航空间生成中，创建水域的平滑连接关系",
     "c": "practice"
+  },
+  {
+    "n": "navspace_create_water_surface_connections",
+    "d": "true",
+    "f": [
+      "gamedll",
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "创建水面连接",
+    "c": "gameplay"
   },
   {
     "n": "navspace_create_water_transition_connections",
@@ -24925,7 +24713,7 @@
       "gamedll",
       "cheat"
     ],
-    "en": "Creates the named particle system where the player is looking.",
+    "en": "Creates the named particle system where the player is looking.  Can be used on an entity if pointed at the entity.  Optionally takes a particle config name.",
     "t": "cmd",
     "cn": "在玩家准星所指的位置创建指定的粒子系统效果。",
     "c": "graphics"
@@ -25713,6 +25501,28 @@
     }
   },
   {
+    "n": "r_animatable_mesh_shaders",
+    "d": "false",
+    "f": [
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "可动画网格着色器",
+    "c": "graphics"
+  },
+  {
+    "n": "r_animatable_mesh_shaders_visualize_bounds",
+    "d": "false",
+    "f": [
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "可视化网格边界",
+    "c": "graphics"
+  },
+  {
     "n": "r_aoproxy_debug",
     "d": "false",
     "f": [
@@ -26466,6 +26276,57 @@
     "t": "var",
     "cn": "显示降雨/降雪天气效果区域（天气调试）",
     "c": "graphics"
+  },
+  {
+    "n": "r_decals_distance_scale",
+    "d": "1.35",
+    "f": [
+      "gamedll",
+      "clientdll",
+      "replicated",
+      "cheat"
+    ],
+    "en": "Size multiplier applied to decals placed at r_decals_distance_scale_end or further from the local player. 1.0 disables distance scaling.",
+    "t": "var",
+    "cn": "贴花距离缩放",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 1.35。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "r_decals_distance_scale_end",
+    "d": "1536",
+    "f": [
+      "gamedll",
+      "clientdll",
+      "replicated",
+      "cheat"
+    ],
+    "en": "Distance from the local player at which decals reach r_decals_distance_scale.",
+    "t": "var",
+    "cn": "贴花距离缩放结束",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 1536。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "r_decals_distance_scale_start",
+    "d": "256",
+    "f": [
+      "gamedll",
+      "clientdll",
+      "replicated",
+      "cheat"
+    ],
+    "en": "Distance from the local player at which decals start scaling toward r_decals_distance_scale.",
+    "t": "var",
+    "cn": "贴花距离缩放开始",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 256。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "r_directlighting",
@@ -27472,14 +27333,15 @@
     }
   },
   {
-    "n": "r_render_world_node_bounds",
+    "n": "r_render_to_cubemap_debug",
     "d": "false",
     "f": [
+      "clientdll",
       "cheat"
     ],
-    "en": "Render world node bounds",
+    "en": "",
     "t": "var",
-    "cn": "渲染世界节点包围盒",
+    "cn": "渲染到立方体地图调试",
     "c": "graphics"
   },
   {
@@ -28554,6 +28416,17 @@
     "c": "gameplay"
   },
   {
+    "n": "sc_aggregate_fragment_culling_boxes",
+    "d": "true",
+    "f": [
+      "cheat"
+    ],
+    "en": "Test aggregate fragments against culling boxes individually instead of per aggregate.",
+    "t": "var",
+    "cn": "聚合碎片剔除盒",
+    "c": "graphics"
+  },
+  {
     "n": "sc_aggregate_indirect_draw_compaction",
     "d": "true",
     "f": [
@@ -28706,6 +28579,17 @@
     }
   },
   {
+    "n": "sc_fog_cull",
+    "d": "true",
+    "f": [
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "雾化剔除",
+    "c": "graphics"
+  },
+  {
     "n": "sc_force_lod_level",
     "d": "-1",
     "f": [
@@ -28739,6 +28623,17 @@
     "en": "If enabled, the camera's translation will be included in the projection matrix.",
     "t": "var",
     "cn": "如果启用，摄像机的位移将被包含在投影矩阵中。",
+    "c": "graphics"
+  },
+  {
+    "n": "sc_instanced_mesh_gpu_culling_boxes",
+    "d": "true",
+    "f": [
+      "cheat"
+    ],
+    "en": "Test instanced mesh instances against info_visibility_box culling boxes.",
+    "t": "var",
+    "cn": "实例网格GPU剔除",
     "c": "graphics"
   },
   {
@@ -29651,6 +29546,18 @@
     }
   },
   {
+    "n": "sky_camera_volume_debug",
+    "d": "false",
+    "f": [
+      "clientdll",
+      "cheat"
+    ],
+    "en": "Draw sky_camera_volume bounds and their target links.",
+    "t": "var",
+    "cn": "天空相机体积调试",
+    "c": "graphics"
+  },
+  {
     "n": "slot0",
     "d": "",
     "f": [
@@ -29987,6 +29894,86 @@
     "en": "Volume of Deathcam Timers",
     "t": "var",
     "cn": "死亡视角（死亡特写计时器）的音量。",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_deathcamera_volume_armsrace",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Deathcam Timers",
+    "t": "var",
+    "cn": "Arms Race 死亡相机音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_deathcamera_volume_casual",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Deathcam Timers",
+    "t": "var",
+    "cn": "休闲模式死亡相机音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_deathcamera_volume_deathmatch",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Deathcam Timers",
+    "t": "var",
+    "cn": "死亡竞赛模式死亡相机音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_deathcamera_volume_rush",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Deathcam Timers",
+    "t": "var",
+    "cn": "冲锋模式死亡相机音量",
     "c": "audio",
     "value": {
       "constraint": {
@@ -30377,6 +30364,86 @@
     }
   },
   {
+    "n": "snd_mapobjective_volume_armsrace",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Map Objective Music",
+    "t": "var",
+    "cn": "Arms Race 地图目标音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mapobjective_volume_casual",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Map Objective Music",
+    "t": "var",
+    "cn": "休闲模式地图目标音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mapobjective_volume_deathmatch",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Map Objective Music",
+    "t": "var",
+    "cn": "死亡竞赛模式地图目标音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mapobjective_volume_rush",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Map Objective Music",
+    "t": "var",
+    "cn": "冲锋模式地图目标音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "snd_menumap_volume",
     "d": "1",
     "f": [
@@ -30407,6 +30474,86 @@
     "en": "Volume of Menu / Non-gameplay music",
     "t": "var",
     "cn": "主界面/非游戏状态下的音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.04。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_menumusic_volume_armsrace",
+    "d": "0.04",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Menu / Non-gameplay music",
+    "t": "var",
+    "cn": "Arms Race 菜单音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.04。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_menumusic_volume_casual",
+    "d": "0.04",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Menu / Non-gameplay music",
+    "t": "var",
+    "cn": "休闲模式菜单音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.04。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_menumusic_volume_deathmatch",
+    "d": "0.04",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Menu / Non-gameplay music",
+    "t": "var",
+    "cn": "死亡竞赛模式菜单音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.04。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_menumusic_volume_rush",
+    "d": "0.04",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Menu / Non-gameplay music",
+    "t": "var",
+    "cn": "冲锋模式菜单音乐音量",
     "c": "audio",
     "value": {
       "constraint": {
@@ -30457,6 +30604,37 @@
     "c": "audio",
     "value": {
       "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_music_mode",
+    "d": "1",
+    "f": [
+      "clientdll",
+      "release"
+    ],
+    "en": "Selects which per-game-mode set of music volume convars is live",
+    "t": "var",
+    "cn": "音乐模式",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_music_settings_mode",
+    "d": "0",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Which game mode's music volumes the audio settings screen is editing",
+    "t": "var",
+    "cn": "音乐设置模式",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -30514,6 +30692,86 @@
     "en": "Volume of MVP Music",
     "t": "var",
     "cn": "回合MVP音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mvp_volume_armsrace",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of MVP Music",
+    "t": "var",
+    "cn": "MVP音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mvp_volume_casual",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of MVP Music",
+    "t": "var",
+    "cn": "MVP音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mvp_volume_deathmatch",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of MVP Music",
+    "t": "var",
+    "cn": "MVP音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_mvp_volume_rush",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of MVP Music",
+    "t": "var",
+    "cn": "MVP音乐音量",
     "c": "audio",
     "value": {
       "constraint": {
@@ -30731,6 +30989,86 @@
     }
   },
   {
+    "n": "snd_roundaction_volume_armsrace",
+    "d": "0",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Move Action Music",
+    "t": "var",
+    "cn": "回合动作音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundaction_volume_casual",
+    "d": "0",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Move Action Music",
+    "t": "var",
+    "cn": "回合动作音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundaction_volume_deathmatch",
+    "d": "0",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Move Action Music",
+    "t": "var",
+    "cn": "回合动作音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundaction_volume_rush",
+    "d": "0.0064",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Move Action Music",
+    "t": "var",
+    "cn": "回合动作音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.0064。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "snd_roundend_volume",
     "d": "0.16",
     "f": [
@@ -30741,6 +31079,86 @@
     "en": "Volume of Won/Lost Music",
     "t": "var",
     "cn": "回合结束音乐音量（输掉或赢得回合时的音乐）",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundend_volume_armsrace",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Won/Lost Music",
+    "t": "var",
+    "cn": "回合结束音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundend_volume_casual",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Won/Lost Music",
+    "t": "var",
+    "cn": "回合结束音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundend_volume_deathmatch",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Won/Lost Music",
+    "t": "var",
+    "cn": "回合结束音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.16。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundend_volume_rush",
+    "d": "0.16",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Won/Lost Music",
+    "t": "var",
+    "cn": "回合结束音乐音量",
     "c": "audio",
     "value": {
       "constraint": {
@@ -30768,6 +31186,86 @@
         "max": "1"
       },
       "description": "默认值为 0。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundstart_volume_armsrace",
+    "d": "0.0225",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Round Start Music",
+    "t": "var",
+    "cn": "回合开始音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.0225。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundstart_volume_casual",
+    "d": "0.0225",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Round Start Music",
+    "t": "var",
+    "cn": "休闲模式回合开始音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.0225。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundstart_volume_deathmatch",
+    "d": "0.0225",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Round Start Music",
+    "t": "var",
+    "cn": "死亡竞赛回合开始音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.0225。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_roundstart_volume_rush",
+    "d": "0.0225",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Round Start Music",
+    "t": "var",
+    "cn": "冲锋模式回合开始音乐音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.0225。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -31636,6 +32134,86 @@
     }
   },
   {
+    "n": "snd_tensecondwarning_volume_armsrace",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Arms Race volume of Ten Second Warnings",
+    "t": "var",
+    "cn": "枪战模式10秒警告音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_tensecondwarning_volume_casual",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Casual volume of Ten Second Warnings",
+    "t": "var",
+    "cn": "休闲模式10秒警告音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_tensecondwarning_volume_deathmatch",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Deathmatch volume of Ten Second Warnings",
+    "t": "var",
+    "cn": "死亡竞赛10秒警告音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_tensecondwarning_volume_rush",
+    "d": "0.01",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "Rush volume of Ten Second Warnings",
+    "t": "var",
+    "cn": "冲锋模式10秒警告音量",
+    "c": "audio",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "1"
+      },
+      "description": "默认值为 0.01。引擎元数据限制为 0–1。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "snd_toolvolume",
     "d": "1",
     "f": [
@@ -32379,40 +32957,6 @@
     "c": "cheats"
   },
   {
-    "n": "surf_speed_fast",
-    "d": "3000",
-    "f": [
-      "gamedll",
-      "clientdll",
-      "replicated",
-      "release"
-    ],
-    "en": "Speed above which a player is considered to be going fast.",
-    "t": "var",
-    "cn": "在滑铲/冲浪模式下，判断玩家是否处于“高速”移动状态的速度阈值。",
-    "c": "gameplay",
-    "value": {
-      "description": "默认值为 3000。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "surf_speed_med",
-    "d": "2000",
-    "f": [
-      "gamedll",
-      "clientdll",
-      "replicated",
-      "release"
-    ],
-    "en": "Speed above which a player is considered to be going medium.",
-    "t": "var",
-    "cn": "冲浪模式：判定玩家处于“中速”运动状态的最低速度临界值。",
-    "c": "gameplay",
-    "value": {
-      "description": "默认值为 2000。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "surf_speed_slow",
     "d": "50",
     "f": [
@@ -32421,7 +32965,7 @@
       "replicated",
       "release"
     ],
-    "en": "Speed above which a player is considered to be going slow.",
+    "en": "Speed above which surf sounds are played.",
     "t": "var",
     "cn": "冲浪模式：判定玩家处于“慢速”运动状态的最低速度临界值。",
     "c": "gameplay",
@@ -32627,6 +33171,21 @@
       ],
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
     }
+  },
+  {
+    "n": "sv_allow_approximate_spawns",
+    "d": "false",
+    "f": [
+      "gamedll",
+      "clientdll",
+      "replicated",
+      "release",
+      "commandline_enforced"
+    ],
+    "en": "Test spawn points for occupancy. Fall back to placing players in the nearest empty space instead of overlapping.",
+    "t": "var",
+    "cn": "允许近似出生点",
+    "c": "gameplay"
   },
   {
     "n": "sv_allow_votes",
@@ -34639,7 +35198,7 @@
   },
   {
     "n": "sv_mapvetopickvote_phase_duration",
-    "d": "[1:5][2:15][3:20][4:10][5:10][6:5]",
+    "d": "[1:5][2:15][3:15][4:10][5:5][6:5][7:5]",
     "f": [
       "gamedll",
       "release"
@@ -34647,18 +35206,6 @@
     "en": "How many seconds each phase lasts",
     "t": "var",
     "cn": "地图 Ban/Pick 阶段中每个环节的持续时间（秒）。",
-    "c": "system"
-  },
-  {
-    "n": "sv_mapvetopickvote_rnd",
-    "d": "false",
-    "f": [
-      "gamedll",
-      "release"
-    ],
-    "en": "When enabled will shuffle veto pick maps list order every time",
-    "t": "var",
-    "cn": "启用后，每次都会打乱 Ban/Pick 候选地图列表的顺序。",
     "c": "system"
   },
   {
@@ -34956,6 +35503,29 @@
       ],
       "description": "默认值为 5000。引擎元数据限制为 0–1000000。已识别的离散取值含义见下方。"
     }
+  },
+  {
+    "n": "sv_molotov_broken_glass_trap",
+    "d": "false",
+    "f": [
+      "gamedll",
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "莫洛托夫鸡尾酒破碎玻璃陷阱",
+    "c": "gameplay"
+  },
+  {
+    "n": "sv_netprof_delta_sharing_temp",
+    "d": "false",
+    "f": [
+      "release"
+    ],
+    "en": "Temp counter for measuring performance impact of some network changes. To be removed by the end of Sept 2026",
+    "t": "var",
+    "cn": "临时网络性能计数器",
+    "c": "system"
   },
   {
     "n": "sv_networkvar_perfieldtracking",
@@ -35893,6 +36463,28 @@
     "c": "gameplay",
     "value": {
       "description": "默认值为 15。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "sv_spawn_random_nudge_offset",
+    "d": "0",
+    "f": [
+      "gamedll",
+      "clientdll",
+      "replicated",
+      "release",
+      "commandline_enforced"
+    ],
+    "en": "Max distance in X and Y to randomly offset a player from their spawn position, for procedural spawn variation. 0 to disable.",
+    "t": "var",
+    "cn": "随机出生点偏移",
+    "c": "gameplay",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "512"
+      },
+      "description": "默认值为 0。引擎元数据限制为 0–512。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -38256,6 +38848,21 @@
     "c": "network"
   },
   {
+    "n": "tv_playcast_slow_playback_fragment_count",
+    "d": "3",
+    "f": [
+      "hidden",
+      "release"
+    ],
+    "en": "Number of fragments we need to have in the buffer before slowing down playback. For use with tv_playcast_slow_playback_when_fragment_requests_fail",
+    "t": "var",
+    "cn": "减速播放片段计数",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 3。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "tv_playcast_slow_playback_when_fragment_requests_fail",
     "d": "true",
     "f": [
@@ -38820,6 +39427,22 @@
     }
   },
   {
+    "n": "ui_playsettings_flags_listen_rush",
+    "d": "0",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "冲锋模式听众设置标志",
+    "c": "practice",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "ui_playsettings_flags_listen_scrimcomp2v2",
     "d": "0",
     "f": [
@@ -38943,6 +39566,22 @@
     "t": "var",
     "cn": "官方回防模式匹配标签/标志参数",
     "c": "system",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "ui_playsettings_flags_official_rush",
+    "d": "0",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "官方冲锋模式设置标志",
+    "c": "practice",
     "value": {
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
@@ -39125,6 +39764,19 @@
     "c": "system"
   },
   {
+    "n": "ui_playsettings_maps_listen_rush",
+    "d": "mg_rush_001",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "冲锋模式听众地图设置",
+    "c": "practice"
+  },
+  {
     "n": "ui_playsettings_maps_listen_scrimcomp2v2",
     "d": "mg_de_inferno",
     "f": [
@@ -39188,6 +39840,19 @@
     "t": "var",
     "cn": "UI设置：官方回防模式地图选择",
     "c": "system"
+  },
+  {
+    "n": "ui_playsettings_maps_official_rush",
+    "d": "mg_rush_001",
+    "f": [
+      "clientdll",
+      "archive",
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "官方rush地图",
+    "c": "gameplay"
   },
   {
     "n": "ui_playsettings_maps_workshop",
@@ -40091,46 +40756,17 @@
     }
   },
   {
-    "n": "weapon_debug_spread_gap",
-    "d": "0.67",
-    "f": [
-      "clientdll",
-      "cheat",
-      "per_user"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "调试显示武器扩散间距的参数",
-    "c": "cheats",
-    "value": {
-      "description": "默认值为 0.67。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "weapon_debug_spread_show",
-    "d": "0",
+    "d": "false",
     "f": [
       "clientdll",
       "cheat",
       "per_user"
     ],
-    "en": "Enables display of weapon accuracy; 1: show accuracy box, 3: show accuracy with dynamic crosshair",
+    "en": "Draws the current weapon's true inaccuracy + spread radius around the crosshair",
     "t": "var",
     "cn": "开启武器精准度显示；1：显示精准度范围框，3：结合动态准星显示精准度",
-    "c": "cheats",
-    "value": {
-      "options": [
-        {
-          "value": "1",
-          "label": "显示精准度范围框"
-        },
-        {
-          "value": "3",
-          "label": "结合动态准星显示精准度"
-        }
-      ],
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
-    }
+    "c": "cheats"
   },
   {
     "n": "weapon_max_before_cleanup",
