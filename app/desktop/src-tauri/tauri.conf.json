@@ -52,14 +52,14 @@
       }
     },
     "license": "MIT",
-    "licenseFile": "../LICENSE",
+    "licenseFile": "../../../LICENSE",
     "resources": {
       "../../../LICENSE": "licenses/LICENSE.txt",
       "../../../THIRD_PARTY_NOTICES.md": "licenses/THIRD_PARTY_NOTICES.md",
       "../../../THIRD_PARTY_LICENSES.md": "licenses/THIRD_PARTY_LICENSES.md",
-      "../../shared/fonts/inter/LICENSE.txt": "licenses/fonts/inter.txt",
-      "../../shared/fonts/jetbrains-mono/LICENSE.txt": "licenses/fonts/jetbrains-mono.txt",
-      "../../shared/fonts/noto-sans-sc/LICENSE.txt": "licenses/fonts/noto-sans-sc.txt"
+      "../../shared/fonts/inter/LICENSE.txt": "licenses/fonts/inter/LICENSE.txt",
+      "../../shared/fonts/jetbrains-mono/LICENSE.txt": "licenses/fonts/jetbrains-mono/LICENSE.txt",
+      "../../shared/fonts/noto-sans-sc/LICENSE.txt": "licenses/fonts/noto-sans-sc/LICENSE.txt"
     }
   }
 }
