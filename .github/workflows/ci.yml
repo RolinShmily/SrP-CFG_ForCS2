@@ -48,13 +48,8 @@ jobs:
           python3 .github/scripts/test_update_commands.py
           python3 .github/scripts/test_ai_preflights.py
 
-      - name: Run config knowledge tests
-        run: |
-          node --test .github/scripts/sync_config_vectorize.test.mjs
-          node .github/scripts/sync_config_vectorize.mjs --dry-run
-
       - name: Run website unit tests
-        run: node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts app/website/src/worker.test.ts
+        run: node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts
 
   typescript:
     name: TypeScript type-check

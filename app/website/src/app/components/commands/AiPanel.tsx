@@ -1,17 +1,16 @@
 /**
- * AiPanel —— AI 配置助理（对应旧 commands.astro 的 AI 面板 + script，React 化）。
+ * AiPanel —— CS2 官方指令 AI 助手（对应旧 commands.astro 的 AI 面板 + script，React 化）。
  * - Turnstile：显式渲染（execution:execute / interaction-only / theme:dark / zh-CN），
  *   发消息前 execute 取 token；错误码映射与旧实现一致
  * - /api/chat SSE：readAiEventStream（src/lib/ai-stream.ts 保留不动），
  *   IncompleteAiStreamError 自动重试一次，TruncatedAiResponseError 给出引导
- * - 欢迎语/快捷提问按数据库（srpcfg/commands）切换；流式回复用轻量 markdown 渲染
+ * - 检索源仅为 CS2 官方指令向量库；流式回复用轻量 markdown 渲染
  */
 import {
   useCallback,
   useEffect,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import { Bot, Send, X } from "lucide-react";
 import {
@@ -23,8 +22,6 @@ import {
 // Turnstile Site Key 是公开标识，由构建环境变量注入（Vite envPrefix 兼容 PUBLIC_ 前缀，见 vite.config.ts）；
 // Secret Key 仅存在于 Worker。
 const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || "";
-
-type Db = "srpcfg" | "commands";
 
 interface ChatMsg {
   role: "user" | "assistant";
@@ -102,18 +99,11 @@ function renderMarkdown(text: string): string {
   return html;
 }
 
-const quickQuestions: Record<Db, string[]> = {
-  srpcfg: [
-    "Default Preset 里的 J 键执行什么？它从哪里加载？",
-    "srp_practice 和 srp_practice_keys 有什么区别？",
-    "sv_cheats 在配置包哪些位置使用，生效范围是什么？",
-  ],
-  commands: [
-    "cl_crosshairsize 的作用和默认值是什么？",
-    "bind 指令的基本语法是什么？",
-    "sv_cheats 会影响哪些类型的指令？",
-  ],
-};
+const quickQuestions: string[] = [
+  "cl_crosshairsize 的作用和默认值是什么？",
+  "bind 指令的基本语法是什么？",
+  "sv_cheats 会影响哪些类型的指令？",
+];
 
 export function AiPanel({
   open,
@@ -122,8 +112,7 @@ export function AiPanel({
   open: boolean;
   onToggle: (open: boolean) => void;
 }) {
-  const [currentDb, setCurrentDb] = useState<Db>("srpcfg");
-  const [history, setHistory] = useState<Record<Db, ChatMsg[]>>({ srpcfg: [], commands: [] });
+  const [history, setHistory] = useState<ChatMsg[]>([]);
   const [pending, setPending] = useState<ChatMsg | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [input, setInput] = useState("");
@@ -137,10 +126,7 @@ export function AiPanel({
     reject: (error: Error) => void;
     timeoutId: number;
   } | null>(null);
-  const historyRef = useRef<Record<Db, { role: "user" | "assistant"; content: string }[]>>({
-    srpcfg: [],
-    commands: [],
-  });
+  const historyRef = useRef<{ role: "user" | "assistant"; content: string }[]>([]);
 
   const scrollToBottom = useCallback(() => {
     const el = messagesRef.current;
@@ -228,7 +214,6 @@ export function AiPanel({
   const requestAiResponse = useCallback(
     async (
       message: string,
-      requestDb: Db,
       requestHistory: { role: "user" | "assistant"; content: string }[],
       onDelta: (text: string) => void,
     ): Promise<string> => {
@@ -238,7 +223,6 @@ export function AiPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message,
-          db: requestDb,
           history: requestHistory.slice(-6).map((item) => ({
             role: item.role,
             content: item.content.slice(0, 4_000),
@@ -270,13 +254,9 @@ export function AiPanel({
       const message = (rawMessage ?? input).trim();
       if (!message) return;
 
-      const requestDb = currentDb;
-      const requestHistory = historyRef.current[requestDb];
+      const requestHistory = historyRef.current;
       setInput("");
-      setHistory((prev) => ({
-        ...prev,
-        [requestDb]: [...prev[requestDb], { role: "user", content: message }],
-      }));
+      setHistory((prev) => [...prev, { role: "user", content: message }]);
       setPending({ role: "assistant", content: "", pending: true });
       setIsStreaming(true);
 
@@ -284,7 +264,7 @@ export function AiPanel({
         let fullText = "";
         for (let attempt = 0; attempt < 2; attempt += 1) {
           try {
-            fullText = await requestAiResponse(message, requestDb, requestHistory, (text) => {
+            fullText = await requestAiResponse(message, requestHistory, (text) => {
               setPending({ role: "assistant", content: text });
             });
             break;
@@ -296,13 +276,7 @@ export function AiPanel({
 
         requestHistory.push({ role: "user", content: message });
         requestHistory.push({ role: "assistant", content: fullText });
-        setHistory((prev) => ({
-          ...prev,
-          [requestDb]: [
-            ...prev[requestDb],
-            { role: "assistant", content: fullText },
-          ],
-        }));
+        setHistory((prev) => [...prev, { role: "assistant", content: fullText }]);
         setPending(null);
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
@@ -310,26 +284,17 @@ export function AiPanel({
           error instanceof TruncatedAiResponseError
             ? "回答达到长度上限。请缩小问题范围，或要求分批列出字段。"
             : "请重试，或切换到左侧精确检索。";
-        setHistory((prev) => ({
+        setHistory((prev) => [
           ...prev,
-          [requestDb]: [
-            ...prev[requestDb],
-            { role: "assistant", content: errorMessage, error: true, guidance },
-          ],
-        }));
+          { role: "assistant", content: errorMessage, error: true, guidance },
+        ]);
         setPending(null);
       } finally {
         setIsStreaming(false);
       }
     },
-    [input, isStreaming, currentDb, requestAiResponse],
+    [input, isStreaming, requestAiResponse],
   );
-
-  const selectDb = (db: Db) => {
-    if (db === currentDb || isStreaming) return;
-    setCurrentDb(db);
-    setInput("");
-  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -344,9 +309,6 @@ export function AiPanel({
       navigator.clipboard.writeText(codeEl.textContent || "").catch(() => {});
     }
   };
-
-  const messages = history[currentDb];
-  const dbLabel = currentDb === "srpcfg" ? "检索 SrP-CFG 配置源码" : "检索 CS2 官方指令数据";
 
   return (
     <>
@@ -394,8 +356,8 @@ export function AiPanel({
                 <Bot className="h-4 w-4 text-accent" />
               </div>
               <div>
-                <h2 className="font-display text-sm font-semibold text-text">AI 配置助理</h2>
-                <p className="text-[10px] text-text-faint">{dbLabel}</p>
+                <h2 className="font-display text-sm font-semibold text-text">AI 指令助手</h2>
+                <p className="text-[10px] text-text-faint">检索 CS2 官方指令数据</p>
               </div>
             </div>
             <button
@@ -408,38 +370,6 @@ export function AiPanel({
             </button>
           </div>
 
-          {/* 数据库选择 */}
-          <div
-            className="relative z-10 flex select-none border-b border-border bg-bg/30 text-xs"
-            role="radiogroup"
-            aria-label="AI 知识库"
-          >
-            {(
-              [
-                { id: "srpcfg", label: "SrP-CFG 源码" },
-                { id: "commands", label: <>CS2 指令库 <span className="opacity-70 text-[9px]">高阶</span></> },
-              ] as { id: Db; label: ReactNode }[]
-            ).map((db) => {
-              const active = currentDb === db.id;
-              return (
-                <button
-                  key={db.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  disabled={isStreaming}
-                  onClick={() => selectDb(db.id)}
-                  className={[
-                    "min-h-11 flex-1 border-b-2 px-2 py-2 text-center font-medium transition-colors disabled:cursor-wait disabled:opacity-60",
-                    active ? "border-accent text-accent" : "border-transparent text-text-muted hover:text-text",
-                  ].join(" ")}
-                >
-                  {db.label}
-                </button>
-              );
-            })}
-          </div>
-
           {/* 消息区 */}
           <div
             ref={messagesRef}
@@ -449,8 +379,8 @@ export function AiPanel({
             className="no-scrollbar flex-1 space-y-4 overflow-y-auto px-4 py-4"
             onClick={handleCopyCode}
           >
-            <WelcomeMessage db={currentDb} onAsk={(q) => void sendMessage(q)} />
-            {messages.map((msg, index) => (
+            <WelcomeMessage onAsk={(q) => void sendMessage(q)} />
+            {history.map((msg, index) => (
               <Bubble key={index} msg={msg} />
             ))}
             {pending && <Bubble msg={pending} />}
@@ -464,11 +394,7 @@ export function AiPanel({
                 rows={1}
                 maxLength={500}
                 value={input}
-                placeholder={
-                  currentDb === "srpcfg"
-                    ? "询问配置位置、按键、alias 或生效范围..."
-                    : "查询 CS2 官方控制台指令..."
-                }
+                placeholder="查询 CS2 官方控制台指令..."
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="max-h-24 w-full resize-none rounded-[10px] border border-border bg-bg py-2.5 pl-3.5 pr-12 font-body text-sm text-text outline-none transition-colors placeholder:text-text-faint focus:border-accent"
@@ -514,7 +440,7 @@ export function AiPanel({
   );
 }
 
-function WelcomeMessage({ db, onAsk }: { db: Db; onAsk: (question: string) => void }) {
+function WelcomeMessage({ onAsk }: { onAsk: (question: string) => void }) {
   return (
     <div className="flex gap-2.5">
       <div className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg border border-accent/20 bg-accent-bg">
@@ -526,23 +452,12 @@ function WelcomeMessage({ db, onAsk }: { db: Db; onAsk: (question: string) => vo
       <div className="flex-1">
         <div className="rounded-[10px] rounded-tl-[3px] bg-bg-hover px-3.5 py-2.5 text-sm leading-6 text-text">
           <p className="mb-2">
-            {db === "srpcfg" ? (
-              <>
-                默认检索 <span className="font-semibold text-accent">SrP-CFG 配置源码</span>
-                ，可回答文件位置、加载入口、按键绑定、alias、作用范围与源码中明确写出的条件。
-              </>
-            ) : (
-              <>
-                <span className="font-semibold text-accent">CS2 指令库</span>
-                是面向高阶用户的附加检索源，适合查询官方控制台指令与变量；结果可能包含开发者或引擎内部条目。
-              </>
-            )}
+            检索 <span className="font-semibold text-accent">CS2 官方指令库</span>
+            ，适合查询官方控制台指令与变量；结果可能包含开发者或引擎内部条目。
           </p>
-          <p className="mb-2 text-xs text-text-muted">
-            {db === "srpcfg" ? "试着询问配置包的具体功能：" : "试着询问官方指令："}
-          </p>
+          <p className="mb-2 text-xs text-text-muted">试着询问官方指令：</p>
           <div className="flex flex-col gap-1.5">
-            {quickQuestions[db].map((question) => (
+            {quickQuestions.map((question) => (
               <button
                 key={question}
                 type="button"

@@ -18,7 +18,6 @@ Module
     settings.cfg      feature/mode state without physical bindings
     keymap.cfg        physical bindings only
     with-keymap.cfg   settings followed by keymap
-    help.cfg          console vocabulary and usage help
 
 Preset
   Built-in Default, Echo, YSZH and VisionL configurations are examples, not separate
