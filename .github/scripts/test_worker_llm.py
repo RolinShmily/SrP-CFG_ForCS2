@@ -53,6 +53,10 @@ PROBE_SYSTEM_PROMPT = (
 
 REASONING_MARKERS = ("<" + "think", "</" + "think", "<|thinking|>", "thinking_process")
 
+# 允许的推理内容上限（字符）。实测 /no_think 生效时思考量从 340 个流式事件降到 30 个，
+# 残留的 reasoning 字段几乎为空；这里给一个宽容量，只拦住真正在烧 token 的思考。
+MAX_REASONING_CHARS = 200
+
 
 def worker_uses_no_think(source_path=WORKER_SOURCE):
     """确认 worker.ts 的 system prompt 里确实带了 /no_think 软开关。
@@ -96,20 +100,32 @@ def extract_text(payload):
     return ""
 
 
-def has_reasoning_field(payload):
-    """检测响应里是否单独携带推理内容字段。"""
-    if any(k in payload for k in ("reasoning_content", "reasoning")):
-        return True
+def extract_reasoning(payload):
+    """取出响应里单独携带的推理内容文本（没有则返回空串）。
+
+    只看“字段是否存在”会误报：实测 Qwen3 即使 /no_think 生效、思考量已从 340 个
+    流式事件降到 30 个，仍会带一个近乎空的 reasoning 字段。真正该量的是内容多少。
+    """
+
+    def from_obj(obj):
+        if not isinstance(obj, dict):
+            return ""
+        for key in ("reasoning_content", "reasoning"):
+            value = obj.get(key)
+            if isinstance(value, str):
+                return value
+        return ""
+
+    text = from_obj(payload)
     choices = payload.get("choices")
     if isinstance(choices, list) and choices and isinstance(choices[0], dict):
-        delta = choices[0].get("delta")
-        if isinstance(delta, dict) and any(k in delta for k in ("reasoning_content", "reasoning")):
-            return True
-    return False
+        text += from_obj(choices[0])
+        text += from_obj(choices[0].get("delta"))
+    return text
 
 
 def stream_chat(model, token, account, message, timeout=90):
-    """发起一次真实流式调用，返回 (正文, 是否出现过独立推理字段, 事件数)。"""
+    """发起一次真实流式调用，返回 (正文, 推理内容, 事件数)。"""
     payload = {
         "messages": [
             {"role": "system", "content": PROBE_SYSTEM_PROMPT},
@@ -132,7 +148,7 @@ def stream_chat(model, token, account, message, timeout=90):
     )
 
     text_parts = []
-    saw_reasoning_field = False
+    reasoning_parts = []
     events = 0
 
     with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -148,19 +164,22 @@ def stream_chat(model, token, account, message, timeout=90):
             except json.JSONDecodeError:
                 continue
             events += 1
-            if has_reasoning_field(chunk):
-                saw_reasoning_field = True
+            reasoning_parts.append(extract_reasoning(chunk))
             text_parts.append(extract_text(chunk))
 
-    return "".join(text_parts), saw_reasoning_field, events
+    return "".join(text_parts), "".join(reasoning_parts), events
 
 
 def contains_cjk(text):
     return any("\u4e00" <= ch <= "\u9fff" for ch in text)
 
 
-def check_stream(text, saw_reasoning_field):
-    """返回问题列表，空列表表示通过。"""
+def check_stream(text, reasoning):
+    """返回问题列表，空列表表示通过。
+
+    reasoning 是响应里单独携带的推理内容。实测 /no_think 生效时它近乎为空
+    （流式事件 340 → 30），因此这里量的是「内容多少」而非「字段有无」。
+    """
     problems = []
     if not text.strip():
         problems.append("流式响应没有产生任何正文内容（解析逻辑与模型返回结构可能不匹配）")
@@ -176,10 +195,11 @@ def check_stream(text, saw_reasoning_field):
             " —— /no_think 未生效或该模型不支持关闭思考，需改用非推理模型或调大 MAX_OUTPUT_TOKENS"
         )
 
-    if saw_reasoning_field:
+    if len(reasoning) > MAX_REASONING_CHARS:
         problems.append(
-            "响应携带独立的 reasoning 字段；ai-stream.ts 只读 content，因此不会展示给用户，"
-            "但这些 token 仍计入 max_tokens，可能挤掉正文，建议确认思考是否真的已关闭"
+            f"思考内容仍有 {len(reasoning)} 字符（上限 {MAX_REASONING_CHARS}），"
+            f"/no_think 可能未完全生效。这些 token 会计入 max_tokens 并挤掉正文，"
+            f"需调大 MAX_OUTPUT_TOKENS 或改用非推理模型。片段: {reasoning[:200]!r}"
         )
     return problems
 
@@ -223,15 +243,16 @@ def main():
         return 1
 
     try:
-        text, saw_reasoning, events = stream_chat(model, token, account, PROBE_MESSAGE)
+        text, reasoning, events = stream_chat(model, token, account, PROBE_MESSAGE)
     except Exception as e:
         print(f"::error::流式调用失败（{model}）: {type(e).__name__}: {e}")
         return 1
 
     print(f"  流式事件数 : {events}")
     print(f"  正文       : {text[:200]!r}")
+    print(f"  推理内容   : {len(reasoning)} 字符" + (f" {reasoning[:120]!r}" if reasoning else " (已关闭)"))
 
-    problems = check_stream(text, saw_reasoning)
+    problems = check_stream(text, reasoning)
     if problems:
         for problem in problems:
             print(f"::error::预检失败 - {problem}")

@@ -88,32 +88,36 @@ class TestWorkerLlmPreflight(unittest.TestCase):
         )
         self.assertEqual(test_worker_llm.extract_text({"usage": {}}), "")
 
-    def test_detects_reasoning_field(self):
-        self.assertTrue(test_worker_llm.has_reasoning_field({"reasoning_content": "x"}))
-        self.assertTrue(
-            test_worker_llm.has_reasoning_field({"choices": [{"delta": {"reasoning_content": "x"}}]})
+    def test_extract_reasoning_reads_both_shapes(self):
+        self.assertEqual(test_worker_llm.extract_reasoning({"reasoning_content": "x"}), "x")
+        self.assertEqual(
+            test_worker_llm.extract_reasoning({"choices": [{"delta": {"reasoning_content": "y"}}]}),
+            "y",
         )
-        self.assertFalse(test_worker_llm.has_reasoning_field({"response": "x"}))
+        self.assertEqual(test_worker_llm.extract_reasoning({"response": "x"}), "")
 
     def test_flags_empty_stream(self):
-        problems = test_worker_llm.check_stream("", False)
+        problems = test_worker_llm.check_stream("", "")
         self.assertTrue(any("没有产生任何正文" in p for p in problems), problems)
 
     def test_flags_pinyin_output(self):
-        problems = test_worker_llm.check_stream("nǐ hǎo", False)
+        problems = test_worker_llm.check_stream("nǐ hǎo", "")
         self.assertTrue(any("不含中文" in p for p in problems), problems)
 
     def test_flags_inline_thinking_leak(self):
         tag_open = "<" + "think>"
-        problems = test_worker_llm.check_stream(f"答案是 1 {tag_open}让我想想", False)
+        problems = test_worker_llm.check_stream(f"答案是 1 {tag_open}让我想想", "")
         self.assertTrue(any("思考内容泄漏" in p for p in problems), problems)
 
-    def test_flags_reasoning_field_burn(self):
-        problems = test_worker_llm.check_stream("正常中文回答", True)
-        self.assertTrue(any("reasoning 字段" in p for p in problems), problems)
+    def test_tolerates_near_empty_reasoning_field(self):
+        """实测 /no_think 生效时仍会带一个近乎空的 reasoning 字段，不应误报。"""
+        self.assertEqual(test_worker_llm.check_stream("sv_cheats 用于开启服务器作弊。", ""), [])
+        self.assertEqual(test_worker_llm.check_stream("sv_cheats 用于开启服务器作弊。", "嗯"), [])
 
-    def test_passes_on_clean_chinese_stream(self):
-        self.assertEqual(test_worker_llm.check_stream("sv_cheats 用于开启服务器作弊。", False), [])
+    def test_flags_substantial_reasoning_burn(self):
+        heavy = "让我想想。" * 100
+        problems = test_worker_llm.check_stream("正常中文回答", heavy)
+        self.assertTrue(any("思考内容仍有" in p for p in problems), problems)
 
 
 if __name__ == "__main__":
