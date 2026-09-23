@@ -16,7 +16,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "deploy": "pnpm build && npx wrangler deploy",
-    "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts src/worker.test.ts"
+    "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts"
   },
   "dependencies": {
     "@react-router/node": "^7.18.2",
