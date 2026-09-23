@@ -6,7 +6,7 @@ pub mod window;
 
 use std::sync::Mutex;
 
-use srp_cfg_core::{CategoryKey, SnapshotToCfgOptions, UpdateCheckResult};
+use srp_cfg_core::{CategoryKey, DeployScope, SnapshotToCfgOptions, UpdateCheckResult};
 use tauri::State;
 
 use crate::log;
@@ -239,6 +239,15 @@ pub fn open_uploads_folder() -> Result<(), String> {
 #[tauri::command(rename_all = "camelCase")]
 pub fn get_staging_status() -> services::staging::StagingStatus {
     services::staging::get_staging_status()
+}
+
+/// 让暂存区严格等于预安装队列（先清空再按队列重新归类）。
+/// 由「组件安装」页在加载时调用，确保队列与暂存区不会脱钩。
+#[tauri::command(rename_all = "camelCase")]
+pub fn sync_staging_queue(
+    items: Vec<services::staging::StagingQueueItem>,
+) -> services::staging::StagingCounts {
+    services::staging::sync_staging_from_queue(&items)
 }
 
 // ── Append Confirmation ────────────────────────────────────────
@@ -740,10 +749,11 @@ pub fn install_components_pipeline(
     // 2. FIFO 淘汰旧自动备份（默认保留最新 10 份）
     let _ = services::backup::clean_auto_backups(10);
 
-    // 3. 执行部署
+    // 3. 执行部署（只部署界面勾选的组件，取消勾选必须真正生效）
     let staging = staging_paths();
     let use_personal = use_personal_cfg.unwrap_or(false);
-    let summary = services::installer::deploy_overlay(&staging, &gp, use_personal);
+    let scope = DeployScope::from_component_ids(&components);
+    let summary = services::installer::deploy_overlay_scoped(&staging, &gp, use_personal, &scope);
 
     log::success(
         "install",

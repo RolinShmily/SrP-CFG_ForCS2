@@ -471,6 +471,36 @@ mod tests {
         assert_eq!(classify_file("autoexec.cfg"), StagedCategory::Cfg);
         assert_eq!(classify_file("annotations/guide.cfg"), StagedCategory::Cfg);
         assert_eq!(classify_file("srp-cfg/features/jumpthrow.cfg"), StagedCategory::Cfg);
+        // 回归："guidemake" 含子串 "guide"，曾经的纯路径启发式把它归入地图指南，
+        // 导致 srp-cfg/modes/guidemake/*.cfg 被部署到 csgo/annotations/local。
+        // .cfg 必须先于 guide/annotations 路径启发式判定。
+        assert_eq!(classify_file("srp-cfg/modes/guidemake/help.cfg"), StagedCategory::Cfg);
+        assert_eq!(classify_file("srp-cfg/modes/guidemake/settings.cfg"), StagedCategory::Cfg);
+        assert_eq!(
+            classify_file("SrP-CFG_Runtime_Core/srp-cfg/modes/guidemake/runtime.cfg"),
+            StagedCategory::Cfg
+        );
+        // 即便误传内容样本，也不得把 .cfg 判成地图指南。
+        assert_eq!(
+            classify_file_with_content("srp-cfg/modes/guidemake/keymap.cfg", Some("bind \"7\" \"keyc\"")),
+            StagedCategory::Cfg
+        );
+    }
+
+    /// 队列驱动的暂存计划：Runtime Core 包里的 guidemake 文件必须落 cfg 区。
+    #[test]
+    fn plan_staging_keeps_guidemake_in_cfg() {
+        let paths: Vec<String> = vec![
+            "autoexec.cfg".to_string(),
+            "srp-cfg/modes/guidemake/help.cfg".to_string(),
+            "srp-cfg/modes/guidemake/keymap.cfg".to_string(),
+            "srp-cfg/modes/guidemake/runtime.cfg".to_string(),
+            "srp-cfg/modes/guidemake/settings.cfg".to_string(),
+            "srp-cfg/modes/guidemake/with-keymap.cfg".to_string(),
+        ];
+        let plan = plan_staging(&paths);
+        assert_eq!(plan.cfg_count(), 6);
+        assert_eq!(plan.annotations_count(), 0);
     }
 
     #[test]

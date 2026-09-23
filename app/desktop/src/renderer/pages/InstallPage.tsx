@@ -197,10 +197,22 @@ export default function InstallPage({
     backupId?: string;
   } | null>(null);
 
-  // 扫描暂存区
+  // 扫描暂存区：先把暂存区重建为「严格等于预安装队列」，再读取状态
   const loadStagingStatus = useCallback(async () => {
     setLoadingStaging(true);
     try {
+      // 下载/上传完成时是以 Append 模式暂存的，历史下载过的包会一直留在暂存区；
+      // 队列里已经移除的包也仍在，于是「组件安装」页会把早已出队的组件显示为
+      // 已入队并被一并部署。这里先按当前队列重建暂存区，保证两者一致。
+      await window.api
+        .syncStagingQueue(
+          preInstallList
+            .filter((item): item is PreInstallItem & { folderName: string } => !!item.folderName)
+            .map((item) => ({ source: item.sourceType, folderName: item.folderName })),
+        )
+        .catch((e) => {
+          console.error("暂存区同步失败:", e);
+        });
       const status = await window.api.getStagingStatus();
       setStagingStatus(status);
     } catch (e) {
@@ -208,7 +220,7 @@ export default function InstallPage({
     } finally {
       setLoadingStaging(false);
     }
-  }, []);
+  }, [preInstallList]);
 
   // 递归收集目录树中的所有相对路径
   const collectTreeRelPaths = (node?: FsTreeNode, prefix = ""): string[] => {

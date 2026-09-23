@@ -12,6 +12,7 @@ import type {
   ResData,
   SaveData,
   StagingStatus,
+  StagingCounts,
   UpdateCheckResult,
   UploadEntry,
   UploadedEntry,
@@ -332,6 +333,14 @@ export function createMockApi(): AppApi {
         sampleFiles: [],
         files: [],
       },
+    }),
+
+    syncStagingQueue: async (items): Promise<StagingCounts> => ({
+      cfg: items.length > 0 ? 4 : 0,
+      annotations: 0,
+      video: 0,
+      unsupported: 0,
+      blockedVcfg: 0,
     }),
 
     installComponentsPipeline: async (components): Promise<PipelineResult> => {

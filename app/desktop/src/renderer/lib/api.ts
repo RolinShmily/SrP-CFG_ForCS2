@@ -16,6 +16,8 @@ import type {
   ResData,
   SaveData,
   StagingStatus,
+  StagingQueueItem,
+  StagingCounts,
   UpdateCheckResult,
   UploadEntry,
   UploadedEntry,
@@ -209,6 +211,8 @@ export function createApi(): AppApi {
 
     // ── Staging Status ──
     getStagingStatus: () => invoke<StagingStatus>("get_staging_status"),
+    syncStagingQueue: (items: StagingQueueItem[]) =>
+      invoke<StagingCounts>("sync_staging_queue", { items }),
 
     // ── Physical File Explorer ──
     fsScanInstalledRoots: () => invoke<FsTreeRoot[]>("fs_scan_installed_roots"),

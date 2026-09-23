@@ -23,6 +23,57 @@ impl CategoryKey {
     }
 }
 
+/// 部署范围过滤：决定 overlay 部署实际会写入哪几个组件。
+///
+/// 界面上取消勾选的组件必须在这里被排除；否则取消勾选不生效，
+/// 历史遗留或早已出队的暂存文件仍会被写进游戏目录。
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DeployScope {
+    /// 游戏/账号 CFG 区（GameCfg 与 UserCfg 共用 staging/cfg）
+    pub cfg: bool,
+    pub annotations: bool,
+    pub video: bool,
+}
+
+impl DeployScope {
+    /// 不限制：部署暂存区里的全部组件。
+    pub fn all() -> Self {
+        Self { cfg: true, annotations: true, video: true }
+    }
+
+    /// 空集：不部署任何组件。
+    pub fn none() -> Self {
+        Self { cfg: false, annotations: false, video: false }
+    }
+
+    /// 依据界面传入的组件 id（`game-cfg` / `annotations` / `video`）构造。
+    /// 未知 id 被忽略；空列表 → 不部署任何组件。
+    pub fn from_component_ids<I, S>(ids: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: AsRef<str>,
+    {
+        let mut scope = Self::none();
+        for id in ids {
+            match id.as_ref() {
+                "game-cfg" | "user-cfg" | "cfg" => scope.cfg = true,
+                "annotations" => scope.annotations = true,
+                "video" => scope.video = true,
+                _ => {}
+            }
+        }
+        scope
+    }
+
+    pub fn allows(&self, key: CategoryKey) -> bool {
+        match key {
+            CategoryKey::GameCfg | CategoryKey::UserCfg => self.cfg,
+            CategoryKey::Annotations => self.annotations,
+            CategoryKey::Video => self.video,
+        }
+    }
+}
+
 /// 单个分类的输入：staging 顶层条目名 + 目标目录顶层条目名。
 #[derive(Debug, Clone)]
 pub struct CategoryInput {
@@ -206,5 +257,48 @@ mod tests {
             false,
         );
         assert_eq!(decision, AppendConflictDecision::Proceed);
+    }
+
+    // ── DeployScope ───────────────────────────
+
+    #[test]
+    fn deploy_scope_all_allows_every_category() {
+        let scope = DeployScope::all();
+        assert!(scope.allows(CategoryKey::GameCfg));
+        assert!(scope.allows(CategoryKey::UserCfg));
+        assert!(scope.allows(CategoryKey::Annotations));
+        assert!(scope.allows(CategoryKey::Video));
+    }
+
+    #[test]
+    fn deploy_scope_from_component_ids_matches_ui_selection() {
+        // 只勾选 Runtime Core：地图指南与视频预设必须被排除
+        let scope = DeployScope::from_component_ids(["game-cfg"]);
+        assert!(scope.allows(CategoryKey::GameCfg));
+        assert!(scope.allows(CategoryKey::UserCfg));
+        assert!(!scope.allows(CategoryKey::Annotations));
+        assert!(!scope.allows(CategoryKey::Video));
+    }
+
+    #[test]
+    fn deploy_scope_empty_selection_deploys_nothing() {
+        let scope = DeployScope::from_component_ids(Vec::<String>::new());
+        assert_eq!(scope, DeployScope::none());
+        for key in [
+            CategoryKey::GameCfg,
+            CategoryKey::UserCfg,
+            CategoryKey::Annotations,
+            CategoryKey::Video,
+        ] {
+            assert!(!scope.allows(key), "{key:?} should be excluded");
+        }
+    }
+
+    #[test]
+    fn deploy_scope_multi_select_and_unknown_ids() {
+        let scope = DeployScope::from_component_ids(["annotations", "video", "bogus"]);
+        assert!(!scope.allows(CategoryKey::GameCfg));
+        assert!(scope.allows(CategoryKey::Annotations));
+        assert!(scope.allows(CategoryKey::Video));
     }
 }

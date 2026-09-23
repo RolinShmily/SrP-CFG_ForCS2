@@ -12,8 +12,8 @@ use std::path::{Path, PathBuf};
 
 use srp_cfg_core::{
     category, category_mut, clear_category, decide_append_conflicts, merge_append, normalize_state,
-    plan_overlay_category, update_paths, CategoryInput, CategoryKey, DeployAction, EntryList,
-    InstallState,
+    plan_overlay_category, update_paths, CategoryInput, CategoryKey, DeployAction, DeployScope,
+    EntryList, InstallState,
 };
 
 use crate::ctx;
@@ -303,6 +303,16 @@ pub fn deploy_overlay(
     game_paths: &GamePaths,
     use_personal_cfg: bool,
 ) -> InstallResult {
+    deploy_overlay_scoped(staging_paths, game_paths, use_personal_cfg, &DeployScope::all())
+}
+
+/// 与 `deploy_overlay` 相同，但只部署 `scope` 允许的组件。
+pub fn deploy_overlay_scoped(
+    staging_paths: &StagingPaths,
+    game_paths: &GamePaths,
+    use_personal_cfg: bool,
+    scope: &DeployScope,
+) -> InstallResult {
     log::progress("install", "覆盖部署到游戏目录...");
 
     let mut install_data = load_install_data();
@@ -315,6 +325,10 @@ pub fn deploy_overlay(
     let mut total_dirs = 0usize;
 
     for cat in get_categories(staging_paths, game_paths) {
+        // 未选中的组件一律跳过，避免取消勾选失效或误装历史遗留文件。
+        if !scope.allows(cat.key) {
+            continue;
+        }
         if cat.key == CategoryKey::GameCfg && use_personal_cfg {
             continue;
         }

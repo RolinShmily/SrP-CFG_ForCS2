@@ -61,6 +61,8 @@ pub fn run() {
             commands::delete_upload_entry,
             commands::open_uploads_folder,
             commands::get_staging_status,
+            // 队列驱动的暂存区同步
+            commands::sync_staging_queue,
             // 追加安装确认
             commands::confirm_append,
             // 已安装数据（install.json）

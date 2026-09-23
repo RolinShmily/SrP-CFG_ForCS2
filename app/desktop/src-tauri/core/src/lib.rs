@@ -17,6 +17,7 @@ pub mod version;
 
 pub use conflicts::{
     decide_append_conflicts, AppendConflict, AppendConflictDecision, CategoryInput, CategoryKey,
+    DeployScope,
 };
 pub use detection::{
     cs2_game_dir, cs2_manifest_state, parse_acf_value, parse_library_paths, parse_login_users,

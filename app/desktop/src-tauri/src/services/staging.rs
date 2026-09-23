@@ -490,13 +490,74 @@ pub fn process_upload_to_staging(upload_folder: &Path, mode: InstallMode) -> Sta
     counts
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct StagingCounts {
     pub cfg: usize,
     pub annotations: usize,
     pub video: usize,
     pub unsupported: usize,
     pub blocked_vcfg: usize,
+}
+
+// ── 队列驱动的暂存区同步 ──────────────────────────────────────
+
+/// 预安装队列里的一项在传输库中的位置。
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StagingQueueItem {
+    pub source: StagingQueueSource,
+    pub folder_name: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum StagingQueueSource {
+    Download,
+    Upload,
+}
+
+/// 让暂存区严格等于预安装队列。
+///
+/// 下载完成时会以 `Append` 模式自动暂存，而 `Append` 不清空目录，
+/// 因此暂存区会累积历史上下载过的每一个包；队列里已经移除的包也仍然留在暂存区，
+/// 于是「组件安装」页会把早已出队的组件显示为已入队，并在部署时一并写入游戏。
+/// 这里先清空三个暂存目录，再按队列逐包重新归类，使两者始终一致。
+pub fn sync_staging_from_queue(items: &[StagingQueueItem]) -> StagingCounts {
+    clear_directory(&get_staging_path("cfg"));
+    clear_directory(&get_staging_path("annotations"));
+    clear_directory(&get_staging_path("video"));
+
+    let mut total = StagingCounts::default();
+    for item in items {
+        let staged = match item.source {
+            StagingQueueSource::Download => {
+                install_from_download(&item.folder_name, InstallMode::Append)
+            }
+            StagingQueueSource::Upload => install_from_upload(&item.folder_name, InstallMode::Append),
+        };
+        match staged {
+            Some(counts) => {
+                total.cfg += counts.cfg;
+                total.annotations += counts.annotations;
+                total.video += counts.video;
+                total.unsupported += counts.unsupported;
+                total.blocked_vcfg += counts.blocked_vcfg;
+            }
+            None => log::warning(
+                "file-ops",
+                &format!("队列中的包暂存失败，已跳过：{}", item.folder_name),
+            ),
+        }
+    }
+    log::info(
+        "file-ops",
+        &format!(
+            "暂存区已按预安装队列重建：CFG {} 个、地图指南 {} 个、视频 {} 个",
+            total.cfg, total.annotations, total.video
+        ),
+    );
+    total
 }
 
 // ── 暂存区研判 ────────────────────────────────────────────────

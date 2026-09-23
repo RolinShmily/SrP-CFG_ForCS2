@@ -210,6 +210,20 @@ export interface StagingStatus {
   video: ComponentStagingInfo;
 }
 
+// 预安装队列 → 暂存区同步
+export interface StagingQueueItem {
+  source: "download" | "upload";
+  folderName: string;
+}
+
+export interface StagingCounts {
+  cfg: number;
+  annotations: number;
+  video: number;
+  unsupported: number;
+  blockedVcfg: number;
+}
+
 export interface FsTreeNode {
   name: string;
   path: string;
@@ -359,6 +373,8 @@ export interface AppApi {
 
   // Staging Status
   getStagingStatus: () => Promise<StagingStatus>;
+  /** 让暂存区严格等于预安装队列（先清空再按队列重新归类）。 */
+  syncStagingQueue: (items: StagingQueueItem[]) => Promise<StagingCounts>;
 
   // Physical File Explorer
   fsScanInstalledRoots: () => Promise<FsTreeRoot[]>;
