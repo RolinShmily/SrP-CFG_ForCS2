@@ -39,14 +39,8 @@ jobs:
         run: |
           python .github/scripts/test_cf_ai.py
 
-      # 网站问答模型的守门检查：模型名直接从 worker.ts 解析（避免预检与线上不一致），
-      # 并实测上下文窗口是否够 32K、流式解析是否正常、思考内容是否泄漏到正文。
-      - name: Pre-flight website chat model
-        env:
-          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          python .github/scripts/test_worker_llm.py
+      # 网站问答模型的预检刻意不放在这里：它与命令库更新毫无关系，一旦失败会连带
+      # 阻断数据流水线（首次上线时就踩过）。它由 check-website-model.yml 单独把关。
 
       - name: Run update script
         env:

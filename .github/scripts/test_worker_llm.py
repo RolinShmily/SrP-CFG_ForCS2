@@ -40,10 +40,32 @@ AI_GATEWAY_ID = "srp-cfg"
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 WORKER_SOURCE = os.path.join(REPO_ROOT, "app", "website", "src", "worker.ts")
 
-# 触发中文回答的探针问题；同时要求模型给出足够长的正文，以便暴露思考内容泄漏。
+# 触发中文回答的探针；同时要求模型给出足够长的正文，以便暴露思考内容泄漏。
 PROBE_MESSAGE = "请用一句完整的中文说明 CS2 里 sv_cheats 指令的作用。"
 
+# 必须带上与 worker.ts 同构的 system prompt：/no_think 是写在 system prompt 里的
+# 软开关，只发 user 消息会得到“思考未关闭”的假警报（首版预检就踩过这个坑）。
+# test_ai_preflights.py 会断言 worker.ts 确实含 /no_think，防止两边脱节。
+PROBE_SYSTEM_PROMPT = (
+    "你是 CS2 官方控制台指令与变量助手。只解答 CS2 官方控制台指令与变量相关问题，"
+    "使用中文、简练、并以完整句子结束。\n/no_think"
+)
+
 REASONING_MARKERS = ("<" + "think", "</" + "think", "<|thinking|>", "thinking_process")
+
+
+def worker_uses_no_think(source_path=WORKER_SOURCE):
+    """确认 worker.ts 的 system prompt 里确实带了 /no_think 软开关。
+
+    探针会带上同构的 system prompt，因此这里必须保证线上真的有这个开关 ——
+    否则探针会测到一个线上不存在的配置。
+    """
+    try:
+        with open(source_path, "r", encoding="utf-8") as f:
+            source = f.read()
+    except OSError as e:
+        raise RuntimeError(f"无法读取 {source_path}: {e}") from e
+    return "/no_think" in source
 
 
 def read_worker_model(source_path=WORKER_SOURCE):
@@ -89,7 +111,10 @@ def has_reasoning_field(payload):
 def stream_chat(model, token, account, message, timeout=90):
     """发起一次真实流式调用，返回 (正文, 是否出现过独立推理字段, 事件数)。"""
     payload = {
-        "messages": [{"role": "user", "content": message}],
+        "messages": [
+            {"role": "system", "content": PROBE_SYSTEM_PROMPT},
+            {"role": "user", "content": message},
+        ],
         "max_tokens": 512,
         "temperature": 0.2,
         "stream": True,
@@ -187,6 +212,13 @@ def main():
             f"::error::上下文窗口 {window:,} 低于 worker.ts 预算所需的 "
             f"{REQUIRED_CONTEXT_WINDOW:,}，长对话会溢出。请换用更大窗口的模型，"
             "或同步压缩 MAX_HISTORY_ITEMS / MAX_HISTORY_CONTENT_LENGTH。"
+        )
+        return 1
+
+    if not worker_uses_no_think():
+        print(
+            f"::error::{WORKER_SOURCE} 的 system prompt 里没有 /no_think，"
+            "而本预检会带上它做探针 —— 两边配置不一致，预检结果无意义。"
         )
         return 1
 

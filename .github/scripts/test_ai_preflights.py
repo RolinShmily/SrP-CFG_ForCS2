@@ -57,7 +57,16 @@ class TestWorkerLlmPreflight(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 test_worker_llm.read_worker_model("nope.ts")
 
+    def test_probe_system_prompt_mirrors_production(self):
+        """探针必须带 /no_think：首版预检漏了 system prompt，导致“思考未关闭”的假警报。"""
+        self.assertIn("/no_think", test_worker_llm.PROBE_SYSTEM_PROMPT)
+
+    def test_worker_actually_has_no_think_switch(self):
+        """线上必须真的有 /no_think，否则预检测的是一个线上不存在的配置。"""
+        self.assertTrue(test_worker_llm.worker_uses_no_think())
+
     def test_gateway_id_matches_worker_source(self):
+        """预检必须走生产同一个 AI Gateway，否则网关侧的模型限制不会被发现。"""
         """预检必须走生产同一个 AI Gateway，否则网关侧的模型限制不会被发现。"""
         with open(test_worker_llm.WORKER_SOURCE, "r", encoding="utf-8") as f:
             source = f.read()

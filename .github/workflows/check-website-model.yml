@@ -1,0 +1,52 @@
+name: Check Website Chat Model
+
+# 网站问答模型的守门检查。刻意独立成一个 workflow，而不是挂在 update-commands.yml 里：
+# 两者毫无关系，首次上线时把它塞进命令库更新流程，结果它一失败就连带阻断了数据流水线。
+#
+# 它检查的是无法离线验证的模型行为（上下文窗口是否够 32K、流式解析是否正常、
+# 推理模型的思考内容是否泄漏），因此只能真实调用一次。
+
+on:
+  # 改了网站或预检脚本就复核一次
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/website/**'
+      - '.github/scripts/test_worker_llm.py'
+      - '.github/scripts/test_ai_preflights.py'
+      - '.github/workflows/check-website-model.yml'
+  # 模型可能被上游下线或改动行为，定期复核
+  schedule:
+    # 每周一 03:00 (UTC)
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: Website chat model pre-flight
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Run pre-flight unit tests
+        run: python .github/scripts/test_ai_preflights.py
+
+      # 模型名直接从 worker.ts 解析，并带上 cf-aig-gateway-id 走生产同一个网关，
+      # 避免预检与线上跑的不是同一个配置。
+      - name: Pre-flight website chat model
+        env:
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python .github/scripts/test_worker_llm.py
