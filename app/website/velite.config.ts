@@ -1,16 +1,16 @@
 /**
- * Velite 内容管线配置（L3.3，替代 Astro Content Collections — D8）。
+ * Velite 内容管线配置（L3.3）。
  *
- * - root: content —— 16 篇文档 md 由 Velite 管理（L3 收尾迁出 src/content，随 Astro 旧结构删除）
- * - docs collection schema 与旧 content.config.ts 对齐（title 必填 / description 可选）
- * - s.markdown()：构建期渲染 md → HTML（GFM + rehype-slug 锚点，与 Astro 的 GitHub 风格 slug 一致）
- * - s.toc()：构建期从 md 提取目录树（h2 顶层 + h3 嵌套），供 DocsToc 使用
- * - output.data: .velite —— 生成 app/website/.velite/index.ts（构建期由 vite 直接 import）
+ * 「文档中心」已移除：原 16 篇 docs md 迁到仓库根 docs/ 留档，网站不再有 md 内容源，
+ * 因此这里不再声明任何集合（空管线可正常构建，velite --clean 只产出空的 index）。
  *
- * 运行：pnpm build:web（velite --clean && react-router build）
+ * 保留本文件与构建脚本里的 velite 阶段，是为了避免牵动依赖锁与第三方许可清单——
+ * THIRD_PARTY_LICENSES.md 会被打进桌面安装包，CI 也有 check:licenses 校验，
+ * 故 velite / rehype-slug 的依赖清理与许可重算留待依赖审计环节统一处理。
+ *
+ * 若后续「功能」页需要新的内容源，在此新增 collection 即可。
  */
-import { defineConfig, s } from "velite";
-import rehypeSlug from "rehype-slug";
+import { defineConfig } from "velite";
 
 export default defineConfig({
   root: "content",
@@ -21,22 +21,5 @@ export default defineConfig({
     name: "index",
     clean: true,
   },
-  collections: {
-    docs: {
-      name: "Docs",
-      pattern: "docs/**/*.md",
-      schema: s.object({
-        title: s.string(),
-        description: s.string().optional(),
-        // velite 0.4 的 s.slug() 仅校验不派生（需 frontmatter 提供），
-        // 这里用 s.path() 从文件路径派生（docs/xxx.md -> xxx），与旧 Astro doc.id 语义一致
-        slug: s.path().transform((p) => p.replace(/^docs\//, "")),
-        content: s.markdown({
-          gfm: true,
-          rehypePlugins: [rehypeSlug],
-        }),
-        toc: s.toc(),
-      }),
-    },
-  },
+  collections: {},
 });

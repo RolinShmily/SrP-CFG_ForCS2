@@ -3,6 +3,3 @@
 import type __vc from '../velite.config.ts'
 
 type Collections = typeof __vc.collections
-
-export type Docs = Collections['docs']['schema']['_output']
-export declare const docs: Docs[]
