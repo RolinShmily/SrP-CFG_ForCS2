@@ -16,27 +16,39 @@
       "convars": [
         {
           "name": "cl_crosshair_drawoutline",
-          "value": "false"
+          "value": "0"
         },
         {
           "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.300000"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
+          "value": "0"
         },
         {
           "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.500000"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_splitdist",
-          "value": "7"
+          "value": "3"
         },
         {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "1.000000"
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_length",
+          "value": "2"
         },
         {
           "name": "cl_crosshair_recoil",
@@ -47,12 +59,12 @@
           "value": "false"
         },
         {
-          "name": "cl_crosshairalpha",
-          "value": "255"
+          "name": "cl_crosshair_thickness",
+          "value": "2"
         },
         {
-          "name": "cl_crosshaircolor",
-          "value": "5"
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
         },
         {
           "name": "cl_crosshaircolor_b",
@@ -64,44 +76,14 @@
         },
         {
           "name": "cl_crosshaircolor_r",
-          "value": "255"
+          "value": "0"
         },
         {
           "name": "cl_crosshairdot",
           "value": "false"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-3.400000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "0.900000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "4"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "0.800000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "true"
         }
       ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha"
-      ],
+      "removedConvars": [],
       "image": null
     },
     {
@@ -113,521 +95,31 @@
       "convars": [
         {
           "name": "cl_crosshair_drawoutline",
-          "value": "false"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.300000"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.500000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitdist",
-          "value": "7"
-        },
-        {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "0.500000"
-        },
-        {
-          "name": "cl_crosshair_recoil",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_t",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairalpha",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor",
-          "value": "5"
-        },
-        {
-          "name": "cl_crosshaircolor_b",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor_g",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor_r",
           "value": "0"
         },
         {
-          "name": "cl_crosshairdot",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-2.400000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "1.100000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "4"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "0.100000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "true"
-        }
-      ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha"
-      ],
-      "image": null
-    },
-    {
-      "id": "c02",
-      "index": "02",
-      "label": "c02",
-      "file": "config/srp-cfg/features/crosshair-view/library/02.cfg",
-      "alias": "c02",
-      "convars": [
-        {
-          "name": "cl_crosshair_drawoutline",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.300000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
-        },
-        {
           "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.500000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitdist",
-          "value": "7"
-        },
-        {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_recoil",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_t",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairalpha",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor",
-          "value": "5"
-        },
-        {
-          "name": "cl_crosshaircolor_b",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor_g",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor_r",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshairdot",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-3.300000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "1.400000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "5"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "0.000000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "true"
-        }
-      ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha"
-      ],
-      "image": null
-    },
-    {
-      "id": "c03",
-      "index": "03",
-      "label": "c03",
-      "file": "config/srp-cfg/features/crosshair-view/library/03.cfg",
-      "alias": "c03",
-      "convars": [
-        {
-          "name": "cl_crosshair_drawoutline",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.000000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "1.000000"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_splitdist",
           "value": "3"
         },
         {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_recoil",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_t",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairalpha",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor",
-          "value": "1"
-        },
-        {
-          "name": "cl_crosshaircolor_b",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor_g",
-          "value": "246"
-        },
-        {
-          "name": "cl_crosshaircolor_r",
-          "value": "205"
-        },
-        {
-          "name": "cl_crosshairdot",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-6.000000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "2"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "true"
-        }
-      ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha"
-      ],
-      "image": null
-    },
-    {
-      "id": "c04",
-      "index": "04",
-      "label": "c04",
-      "file": "config/srp-cfg/features/crosshair-view/library/04.cfg",
-      "alias": "c04",
-      "convars": [
-        {
-          "name": "cl_crosshair_drawoutline",
-          "value": "true"
-        },
-        {
-          "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.000000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.300000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitdist",
-          "value": "5"
-        },
-        {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_recoil",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_t",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairalpha",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor",
-          "value": "2"
-        },
-        {
-          "name": "cl_crosshaircolor_b",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshaircolor_g",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshaircolor_r",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshairdot",
-          "value": "true"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-4.000000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "0.500000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "4"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "true"
-        }
-      ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha"
-      ],
-      "image": null
-    },
-    {
-      "id": "c05",
-      "index": "05",
-      "label": "c05",
-      "file": "config/srp-cfg/features/crosshair-view/library/05.cfg",
-      "alias": "c05",
-      "convars": [
-        {
-          "name": "cl_crosshair_drawoutline",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.300000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.5"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitdist",
-          "value": "7"
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
         },
         {
           "name": "cl_crosshair_friendly_warning",
           "value": "1"
-        },
-        {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "0.5"
-        },
-        {
-          "name": "cl_crosshair_t",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshairalpha",
-          "value": "255"
-        },
-        {
-          "name": "cl_crosshaircolor",
-          "value": "1"
-        },
-        {
-          "name": "cl_crosshaircolor_b",
-          "value": "50"
-        },
-        {
-          "name": "cl_crosshaircolor_g",
-          "value": "250"
-        },
-        {
-          "name": "cl_crosshaircolor_r",
-          "value": "50"
-        },
-        {
-          "name": "cl_crosshairdot",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-0.500000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "0"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "3.500000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "4"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "1"
-        },
-        {
-          "name": "cl_fixedcrosshairgap",
-          "value": "3"
-        },
-        {
-          "name": "cl_crosshair_recoil",
-          "value": "0"
-        }
-      ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha",
-        "cl_fixedcrosshairgap"
-      ],
-      "image": null
-    },
-    {
-      "id": "c06",
-      "index": "06",
-      "label": "c06",
-      "file": "config/srp-cfg/features/crosshair-view/library/06.cfg",
-      "alias": "c06",
-      "convars": [
-        {
-          "name": "cl_crosshair_drawoutline",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.300000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.500000"
-        },
-        {
-          "name": "cl_crosshair_dynamic_splitdist",
-          "value": "7"
-        },
-        {
-          "name": "cl_crosshair_dynamic_spread_limit",
-          "value": "255"
         },
         {
           "name": "cl_crosshair_gap",
@@ -635,15 +127,11 @@
         },
         {
           "name": "cl_crosshair_length",
-          "value": "3"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_recoil",
           "value": "false"
-        },
-        {
-          "name": "cl_crosshair_screen_height",
-          "value": "1080"
         },
         {
           "name": "cl_crosshair_t",
@@ -659,23 +147,414 @@
         },
         {
           "name": "cl_crosshaircolor_b",
-          "value": "56"
+          "value": "254"
         },
         {
           "name": "cl_crosshaircolor_g",
-          "value": "230"
+          "value": "254"
         },
         {
           "name": "cl_crosshaircolor_r",
-          "value": "206"
+          "value": "255"
         },
         {
           "name": "cl_crosshairdot",
           "value": "true"
+        }
+      ],
+      "removedConvars": [],
+      "image": null
+    },
+    {
+      "id": "c02",
+      "index": "02",
+      "label": "c02",
+      "file": "config/srp-cfg/features/crosshair-view/library/02.cfg",
+      "alias": "c02",
+      "convars": [
+        {
+          "name": "cl_crosshair_drawoutline",
+          "value": "0"
         },
         {
-          "name": "cl_crosshairstyle",
+          "name": "cl_crosshair_dynamic_maxdist_splitratio",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_innermod",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_outermod",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitdist",
+          "value": "3"
+        },
+        {
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshair_length",
+          "value": "6"
+        },
+        {
+          "name": "cl_crosshair_recoil",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_t",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_thickness",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_b",
+          "value": "8"
+        },
+        {
+          "name": "cl_crosshaircolor_g",
+          "value": "228"
+        },
+        {
+          "name": "cl_crosshaircolor_r",
+          "value": "242"
+        },
+        {
+          "name": "cl_crosshairdot",
+          "value": "false"
+        }
+      ],
+      "removedConvars": [],
+      "image": null
+    },
+    {
+      "id": "c03",
+      "index": "03",
+      "label": "c03",
+      "file": "config/srp-cfg/features/crosshair-view/library/03.cfg",
+      "alias": "c03",
+      "convars": [
+        {
+          "name": "cl_crosshair_drawoutline",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_maxdist_splitratio",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_innermod",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_outermod",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitdist",
+          "value": "3"
+        },
+        {
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_length",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshair_recoil",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_t",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_thickness",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_b",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_g",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_r",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshairdot",
+          "value": "false"
+        }
+      ],
+      "removedConvars": [],
+      "image": null
+    },
+    {
+      "id": "c04",
+      "index": "04",
+      "label": "c04",
+      "file": "config/srp-cfg/features/crosshair-view/library/04.cfg",
+      "alias": "c04",
+      "convars": [
+        {
+          "name": "cl_crosshair_drawoutline",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_maxdist_splitratio",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_innermod",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_outermod",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitdist",
+          "value": "3"
+        },
+        {
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshair_length",
           "value": "4"
+        },
+        {
+          "name": "cl_crosshair_recoil",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_t",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_thickness",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_b",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_g",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_r",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshairdot",
+          "value": "false"
+        }
+      ],
+      "removedConvars": [],
+      "image": null
+    },
+    {
+      "id": "c05",
+      "index": "05",
+      "label": "c05",
+      "file": "config/srp-cfg/features/crosshair-view/library/05.cfg",
+      "alias": "c05",
+      "convars": [
+        {
+          "name": "cl_crosshair_drawoutline",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_maxdist_splitratio",
+          "value": "0.3"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_innermod",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_outermod",
+          "value": "0.4"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitdist",
+          "value": "6"
+        },
+        {
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "204"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_length",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshair_recoil",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_t",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_thickness",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_b",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_g",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_r",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshairdot",
+          "value": "true"
+        }
+      ],
+      "removedConvars": [],
+      "image": null
+    },
+    {
+      "id": "c06",
+      "index": "06",
+      "label": "c06",
+      "file": "config/srp-cfg/features/crosshair-view/library/06.cfg",
+      "alias": "c06",
+      "convars": [
+        {
+          "name": "cl_crosshair_drawoutline",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_maxdist_splitratio",
+          "value": "0.3"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_innermod",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitalpha_outermod",
+          "value": "0.4"
+        },
+        {
+          "name": "cl_crosshair_dynamic_splitdist",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_length",
+          "value": "3"
+        },
+        {
+          "name": "cl_crosshair_recoil",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_t",
+          "value": "false"
+        },
+        {
+          "name": "cl_crosshair_thickness",
+          "value": "2"
+        },
+        {
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_b",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshaircolor_g",
+          "value": "255"
+        },
+        {
+          "name": "cl_crosshaircolor_r",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshairdot",
+          "value": "true"
         }
       ],
       "removedConvars": [],
@@ -690,27 +569,39 @@
       "convars": [
         {
           "name": "cl_crosshair_drawoutline",
-          "value": "true"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_maxdist_splitratio",
-          "value": "0.300000"
+          "value": "0.3"
         },
         {
           "name": "cl_crosshair_dynamic_splitalpha_innermod",
-          "value": "1.000000"
+          "value": "1"
         },
         {
           "name": "cl_crosshair_dynamic_splitalpha_outermod",
-          "value": "0.500000"
+          "value": "0.45"
         },
         {
           "name": "cl_crosshair_dynamic_splitdist",
-          "value": "7"
+          "value": "0"
         },
         {
-          "name": "cl_crosshair_outlinethickness",
-          "value": "1.000000"
+          "name": "cl_crosshair_dynamic_spread_limit",
+          "value": "227"
+        },
+        {
+          "name": "cl_crosshair_friendly_warning",
+          "value": "1"
+        },
+        {
+          "name": "cl_crosshair_gap",
+          "value": "0"
+        },
+        {
+          "name": "cl_crosshair_length",
+          "value": "0"
         },
         {
           "name": "cl_crosshair_recoil",
@@ -721,12 +612,12 @@
           "value": "false"
         },
         {
-          "name": "cl_crosshairalpha",
-          "value": "255"
+          "name": "cl_crosshair_thickness",
+          "value": "2"
         },
         {
-          "name": "cl_crosshaircolor",
-          "value": "5"
+          "name": "cl_crosshaircolor_a",
+          "value": "255"
         },
         {
           "name": "cl_crosshaircolor_b",
@@ -743,39 +634,9 @@
         {
           "name": "cl_crosshairdot",
           "value": "true"
-        },
-        {
-          "name": "cl_crosshairgap",
-          "value": "-2.300000"
-        },
-        {
-          "name": "cl_crosshairgap_useweaponvalue",
-          "value": "false"
-        },
-        {
-          "name": "cl_crosshairsize",
-          "value": "0.00000"
-        },
-        {
-          "name": "cl_crosshairstyle",
-          "value": "4"
-        },
-        {
-          "name": "cl_crosshairthickness",
-          "value": "0.100000"
-        },
-        {
-          "name": "cl_crosshairusealpha",
-          "value": "true"
         }
       ],
-      "removedConvars": [
-        "cl_crosshair_outlinethickness",
-        "cl_crosshaircolor",
-        "cl_crosshairgap",
-        "cl_crosshairgap_useweaponvalue",
-        "cl_crosshairusealpha"
-      ],
+      "removedConvars": [],
       "image": null
     }
   ],
