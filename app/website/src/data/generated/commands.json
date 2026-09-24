@@ -3724,16 +3724,23 @@
   },
   {
     "n": "cl_crosshair_drawoutline",
-    "d": "true",
+    "d": "1",
     "f": [
       "clientdll",
       "archive",
       "per_user"
     ],
-    "en": "Draw a black outline around the crosshair for better visibility",
+    "en": "Draw a black outline around the crosshair for better visibility. 0 = No outline, 1 = Full outline, 2 = Half outline",
     "t": "var",
     "cn": "准星边缘绘制黑色轮廓以提高可见度（准星描边）",
-    "c": "graphics"
+    "c": "graphics",
+    "value": {
+      "constraint": {
+        "min": "0",
+        "max": "2"
+      },
+      "description": "默认值为 1。引擎元数据限制为 0–2。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "cl_crosshair_dynamic_maxdist_splitratio",
@@ -4132,14 +4139,14 @@
       "archive",
       "per_user"
     ],
-    "en": "Crosshair style. 0 = Dynamic Cross, 1 = Dynamic Circle, 2 = Dynamic Cross (Legacy), 3 = Static Circle, 4 = Static Cross, 5 = Static Cross (Shot Feedback), 6 = Dot Only, 7 = Dynamic Quad. Styles 0, 1 and 7 track the weapon's actual inaccuracy.",
+    "en": "Crosshair style. 0 = Dynamic Cross, 1 = Dynamic Circle, 2 = Dynamic Cross (Legacy), 3 = Static Circle, 4 = Static Cross, 5 = Static Cross (Shot Feedback), 6 = Dot Only, 7 = Dynamic Quad, 8 = Static Square. Styles 0, 1 and 7 track the weapon's actual inaccuracy.",
     "t": "var",
     "cn": "准星款式：0=默认（禁用），1=默认静态（禁用），2=默认经典（带固定内圈的精准后坐力/扩散反馈），3=精准动态（禁用），4=经典静态，5=传统准星（模拟后坐力 - 非精确反馈）",
     "c": "graphics",
     "value": {
       "constraint": {
         "min": "0",
-        "max": "7"
+        "max": "8"
       },
       "options": [
         {
@@ -4167,7 +4174,7 @@
           "label": "传统准星"
         }
       ],
-      "description": "默认值为 7。引擎元数据限制为 0–7。已识别的离散取值含义见下方。"
+      "description": "默认值为 7。引擎元数据限制为 0–8。已识别的离散取值含义见下方。"
     }
   },
   {
