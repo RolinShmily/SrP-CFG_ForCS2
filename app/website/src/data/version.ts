@@ -40,7 +40,7 @@ export const LATEST_VERSION: string =
     : "0.0.0";
 
 /** GitHub API 不可用（未注入）时的回落版本，仅在此单点维护。 */
-export const FALLBACK_VERSION = "3.3.2";
+export const FALLBACK_VERSION = "3.3.3";
 
 /** 页面展示用版本号（带 v 前缀），供 Hero / CTA / About 等复用。 */
 export const VERSION_DISPLAY =
