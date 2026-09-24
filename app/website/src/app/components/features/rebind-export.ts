@@ -25,7 +25,8 @@
  * 从根上避开转义问题。键名或目标含引号 / 空格的条目会被跳过并单独报出。
  */
 
-import { aliasByName, keymaps, type RebindMap } from "./keymaps-data";
+// 显式带扩展名：node 的 ESM 解析需要它，而一致性测试会加载本模块（见 consistency.test.ts）。
+import { aliasByName, keymaps, type RebindMap } from "./keymaps-data.ts";
 
 /** 一个「预设 + 已开模块」上下文，连同它名下的个人改键。 */
 export interface ExportContext {

@@ -16,6 +16,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "deploy": "pnpm build && npx wrangler deploy",
+    "test": "node --experimental-strip-types --test src/lib/ai-stream.test.ts src/app/components/features/consistency.test.ts",
     "test:ai-stream": "node --experimental-strip-types --test src/lib/ai-stream.test.ts"
   },
   "dependencies": {

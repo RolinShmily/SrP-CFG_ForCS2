@@ -13,9 +13,8 @@
  * - 未绑定          → 纯中性
  */
 import type { CSSProperties } from "react";
-import { MAIN_ROWS, NAV_ROWS, type KeyDef } from "./keyboard-layout";
+import { MAIN_ROWS, NAV_ROWS, ON_CANVAS, type KeyDef } from "./keyboard-layout";
 import { MouseCanvas } from "./MouseCanvas";
-import { MOUSE_KEY_IDS } from "./mouse-layout";
 import { keymaps, type EffectiveKey } from "./keymaps-data";
 import { layerMaterial, NEUTRAL_KEY, type KeyMaterial } from "./layer-colors";
 
@@ -32,13 +31,6 @@ const keyWidth = (w: number) => w * UNIT + (w - 1) * H_GAP;
  * 画布上有物理位置的键。不在这里的绑定会落到「无对应键位」补充条，
  * 这样删掉小键盘、或以后 cfg 新增没画出来的键，都不会静默丢信息。
  */
-const ON_CANVAS = new Set<string>(
-  [
-    ...MAIN_ROWS.flat().map((k) => k.id),
-    ...NAV_ROWS.flat().map((k) => k.id),
-    ...MOUSE_KEY_IDS,
-  ].filter((id): id is string => Boolean(id)),
-);
 
 /** 把材质转成 .srp-keycap 读取的 CSS 变量。 */
 const materialVars = (m: KeyMaterial): CSSProperties =>

@@ -6,7 +6,7 @@
  *
  * 图片走目录约定 —— 文件名即预设 id，构建时扫描 public/images/crosshair/ 得到。
  */
-import crosshairJson from "../../../data/generated/crosshair.json";
+import crosshairJson from "../../../data/generated/crosshair.json" with { type: "json" };
 
 export interface ConvarEntry {
   name: string;

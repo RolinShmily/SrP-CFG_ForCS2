@@ -8,6 +8,8 @@
  *   由 UI 显示「未绑定」——保持键盘形态完整，也让「这个键没用到」本身成为信息。
  * - 纯装饰位（如功能键行与主键区之间的空档）用 id: null。
  */
+// 显式带扩展名：node 的 ESM 解析需要它，而一致性测试会加载本模块（见 consistency.test.ts）。
+import { MOUSE_KEY_IDS } from "./mouse-layout.ts";
 
 export interface KeyDef {
   /** Source 键名；null = 装饰空位 */
@@ -133,4 +135,19 @@ export const NAV_ROWS: KeyDef[][] = [
     { id: "rightarrow", label: "→" },
   ],
 ];
+
+/**
+ * 画布上真实存在的全部键位（键盘 + 鼠标）。
+ *
+ * 放在这里而不是组件里，是为了让一致性测试能用同一份集合做断言，
+ * 避免测试另写一份造成漂移。画布上摆不下的绑定（如 demo-hlae 的 kp_0-kp_9）
+ * 由 KeymapCanvas 的「无对应键位」条兜住。
+ */
+export const ON_CANVAS: Set<string> = new Set<string>(
+  [
+    ...MAIN_ROWS.flat().map((k) => k.id),
+    ...NAV_ROWS.flat().map((k) => k.id),
+    ...MOUSE_KEY_IDS,
+  ].filter((id): id is string => Boolean(id)),
+);
 

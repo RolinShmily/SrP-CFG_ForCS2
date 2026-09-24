@@ -9,7 +9,7 @@
  * 这与游戏里的真实行为一致：预设先应用，之后按下的每个入口键（如 P → srp_practice_keys）
  * 都会再覆盖一批键位，而 custom.cfg 跑在整套 runtime 之后，所以个人改键总是压在最上面。
  */
-import keymapsJson from "../../../data/generated/keymaps.json";
+import keymapsJson from "../../../data/generated/keymaps.json" with { type: "json" };
 
 export interface KeymapEntry {
   op: "bind" | "unbind";

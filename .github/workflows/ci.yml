@@ -58,8 +58,10 @@ jobs:
           python3 .github/scripts/test_update_commands.py
           python3 .github/scripts/test_ai_preflights.py
 
+      # 跑 app/website 的 package.json 里的 test 脚本：ai-stream 与功能页数据一致性。
+      # 后者断言的是「数据对得上但渲染/语义错了」这类问题，例如画布上左右修饰键 id 重复。
       - name: Run website unit tests
-        run: node --experimental-strip-types --test app/website/src/lib/ai-stream.test.ts
+        run: pnpm --filter @srp-cfg/website test
 
   typescript:
     name: TypeScript type-check
