@@ -45,6 +45,11 @@ jobs:
       - name: Verify keymaps.json matches config/
         run: node scripts/extract-keymaps.mjs --check
 
+      # crosshair.json 同理：由 config/srp-cfg 生成并随仓库提交。
+      # 顺带会报告 public/images/crosshair/ 里已就位的截图数量。
+      - name: Verify crosshair.json matches config/
+        run: node scripts/extract-crosshair.mjs --check
+
       # 纯单元测试，无网络无凭据；放在 PR 关口上，避免 update_commands.py 的回归
       # 只能等到每日定时任务才暴露。
       - name: Run command update unit tests

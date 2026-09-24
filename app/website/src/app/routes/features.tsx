@@ -16,6 +16,7 @@ import { Card, SectionHeader } from "@srp-cfg/ui";
 import { Check, Copy, Download, Info, Keyboard, RotateCcw, Undo2 } from "lucide-react";
 import { CfgHighlight } from "../components/features/CfgHighlight";
 import { CommandPicker } from "../components/features/CommandPicker";
+import { CrosshairLibrary } from "../components/features/CrosshairLibrary";
 import { KeymapCanvas } from "../components/features/KeymapCanvas";
 import { layerAccent } from "../components/features/layer-colors";
 import {
@@ -451,6 +452,11 @@ export default function FeaturesPage() {
         </div>
 
         {/* ── 导出 ───────────────────────────────────────────── */}
+        {/* ── 准星 / 视角库（默认折叠）───── */}
+        <div className="mt-6">
+          <CrosshairLibrary />
+        </div>
+
         <div className="mt-6">
           <Card padding="none" className="p-5">
             <div className="mb-3 flex flex-wrap items-center gap-3">
