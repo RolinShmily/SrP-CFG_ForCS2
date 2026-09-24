@@ -198,13 +198,38 @@ while (queue.length) {
   for (const tok of tokensOf(def.body)) if (aliasDefs.has(tok)) queue.push(tok);
 }
 
-const aliases = {};
-for (const name of [...reachable].sort()) {
-  const { body, comment, definedIn } = aliasDefs.get(name);
-  aliases[name] = { body, comment, definedIn };
+// ── 4. alias 目录：全部 alias + 来源分组（供改键选单使用）──────────────
+/**
+ * 分组是“这个 alias 属于哪块配置”，而不是“它何时执行”——读代码的人靠分组就能定位文件。
+ * 优先级从上到下：入口/预设 -> 准星库 -> 地图出生点 -> 运行时 -> 按目录归属的功能 / 模式。
+ */
+function groupOf(name, definedIn) {
+  if (/^srp_(apply|reset)_/.test(name)) return "preset";
+  if (definedIn.endsWith("runtime/commands.cfg")) return "entry";
+  if (definedIn.includes("/library/")) return "crosshair";
+  if (definedIn.includes("/spawn/")) return "spawn";
+  if (definedIn.endsWith("runtime/aliases.cfg")) return "runtime";
+  const m = definedIn.match(/config\/srp-cfg\/(presets|features|modes)\//);
+  if (m) return m[1] === "features" ? "feature" : m[1] === "modes" ? "mode" : "preset";
+  return "other";
 }
 
-// ── 4. 产物 ─────────────────────────────────────────────────────────────
+/** 纯转发类 alias：注释是脚本生成的「注册 alias…」模板，没有给用户看的信息量。 */
+const MECHANICAL_RE = /^(注册 alias|将 alias)/;
+
+const aliasCatalog = [...aliasDefs]
+  .map(([name, a]) => ({
+    name,
+    body: a.body,
+    comment: a.comment,
+    definedIn: a.definedIn,
+    group: groupOf(name, a.definedIn),
+    autoComment: MECHANICAL_RE.test(a.comment),
+    reachable: reachable.has(name),
+  }))
+  .sort((a, b) => a.group.localeCompare(b.group) || a.name.localeCompare(b.name));
+
+// ── 5. 产物 ─────────────────────────────────────────────────────────
 const keysUsed = [
   ...new Set(layers.flatMap((L) => L.entries.map((e) => e.key))),
 ].sort();
@@ -213,21 +238,24 @@ const payload = {
   $comment:
     "由 scripts/extract-keymaps.mjs 从 config/srp-cfg 生成，请勿手改；改 cfg 后重新运行该脚本。",
   layers,
-  aliases,
+  aliasCatalog,
   keyLabels: KEY_LABELS,
   keysUsed,
 };
 
 const json = JSON.stringify(payload, null, 2) + "\n";
 
-// ── 5. 写出 / 校验 ──────────────────────────────────────────────────────
+// ── 6. 写出 / 校验 ──────────────────────────────────────────────────────
 if (CHECK_ONLY) {
   const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
   if (current !== json) {
     console.error("✘ keymaps.json 与 config/ 不一致，请运行 node scripts/extract-keymaps.mjs");
     process.exit(1);
   }
-  console.log(`✓ keymaps.json 与 config/ 一致（${layers.length} 层 / ${keysUsed.length} 键 / ${Object.keys(aliases).length} alias）`);
+  console.log(
+    `✓ keymaps.json 与 config/ 一致（${layers.length} 层 / ${keysUsed.length} 键 / ` +
+      `${aliasCatalog.length} alias，其中可达 ${aliasCatalog.filter((a) => a.reachable).length}）`,
+  );
 } else {
   writeFileSync(OUT, json, "utf8");
   const binds = layers.reduce((n, L) => n + L.entries.filter((e) => e.op === "bind").length, 0);
@@ -237,6 +265,7 @@ if (CHECK_ONLY) {
       `  层 ${layers.length}（preset ${layers.filter((l) => l.kind === "preset").length} / ` +
       `feature ${layers.filter((l) => l.kind === "feature").length} / ` +
       `mode ${layers.filter((l) => l.kind === "mode").length}）\n` +
-      `  bind ${binds} · unbind ${unbinds} · 按键 ${keysUsed.length} · 可达 alias ${Object.keys(aliases).length}`,
+      `  bind ${binds} · unbind ${unbinds} · 按键 ${keysUsed.length} · ` +
+      `alias ${aliasCatalog.length}（可达 ${aliasCatalog.filter((a) => a.reachable).length}）`,
   );
 }

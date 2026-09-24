@@ -72,6 +72,16 @@ function fallbackHue(id: string): number {
 
 const isPreset = (id: string) => id.startsWith("presets/");
 
+/** 个人改键层的特殊色：用近中性亮色，它不属于任何配置层，不该和它们抢色相。 */
+const USER_LAYER_ID = "user/rebinds";
+const USER_MATERIAL = {
+  faceTop: "hsl(0 0% 88% / 0.55)",
+  faceBottom: "hsl(0 0% 62% / 0.38)",
+  edge: "hsl(0 0% 18%)",
+  border: "hsl(0 0% 92% / 0.62)",
+  fg: "hsl(0 0% 98%)",
+};
+
 function hueOf(layerId: string): number {
   const preset = isPreset(layerId);
   return (preset ? PRESET_HUES[layerId] : MODULE_HUES[layerId]) ?? fallbackHue(layerId);
@@ -79,6 +89,8 @@ function hueOf(layerId: string): number {
 
 /** 某一层的键帽材质。 */
 export function layerMaterial(layerId: string): KeyMaterial {
+  if (layerId === USER_LAYER_ID) return USER_MATERIAL;
+
   const preset = isPreset(layerId);
   const hue = hueOf(layerId);
   const { s, l } = preset ? PRESET_STYLE : MODULE_STYLE;
@@ -94,6 +106,14 @@ export function layerMaterial(layerId: string): KeyMaterial {
 
 /** 图例 / chip 用的纯色（不带材质）。 */
 export function layerAccent(layerId: string): { fg: string; bg: string; border: string } {
+  if (layerId === USER_LAYER_ID) {
+    return {
+      fg: USER_MATERIAL.fg,
+      bg: "hsl(0 0% 92% / 0.14)",
+      border: USER_MATERIAL.border,
+    };
+  }
+
   const preset = isPreset(layerId);
   const hue = hueOf(layerId);
   const { s, l } = preset ? PRESET_STYLE : MODULE_STYLE;

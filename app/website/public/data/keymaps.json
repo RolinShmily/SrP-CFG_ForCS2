@@ -2253,773 +2253,3698 @@
       ]
     }
   ],
-  "aliases": {
-    "+Pucci": {
-      "body": "host_timescale 25",
-      "comment": "Hold: accelerate time.",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+  "aliasCatalog": [
+    {
+      "name": "srp_autoview",
+      "body": "exec srp-cfg/features/autoview/settings.cfg",
+      "comment": "注册入口 srp_autoview：执行 srp-cfg/features/autoview/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "+srp_knife_520": {
-      "body": "srp_knife_switch_source",
-      "comment": "准备切换折刀。",
-      "definedIn": "config/srp-cfg/features/knife/runtime.cfg"
-    },
-    "+srp_knife_switch": {
-      "body": "+srp_knife_520",
-      "comment": "切刀循环入口按下。",
-      "definedIn": "config/srp-cfg/features/knife/runtime.cfg"
-    },
-    "ang-1": {
-      "body": "setang pitch yaw -10;alias changeang-- ang-2",
-      "comment": "注册 alias ang-1：依次执行 setang、alias。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "ang1": {
-      "body": "setang pitch yaw 10;alias changeang++ ang2",
-      "comment": "注册 alias ang1：依次执行 setang、alias。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "att0": {
-      "body": "bind mouse1 +firr1;bind mouse2 +firr2",
-      "comment": "注册 alias att0：依次执行 bind、bind。",
-      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg"
-    },
-    "att1": {
-      "body": "bind mouse1 +attack;bind mouse2 +attack2",
-      "comment": "注册 alias att1：依次执行 bind、bind。",
-      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg"
-    },
-    "blur1": {
-      "body": "r_dof_override_near_blurry 50;alias changeblur blur2",
-      "comment": "注册 alias blur1：依次执行 r_dof_override_near_blurry、alias。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "c00": {
-      "body": "exec srp-cfg/features/crosshair-view/library/00.cfg;srp_c00_info;alias whoamic srp_c00_info;alias keyc c01",
-      "comment": "应用准星预设 C00，更新当前说明，并将循环入口指向 C01。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
-    },
-    "campath": {
-      "body": "campath_on",
-      "comment": "将 alias campath 转发到 campath_on。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "campath_draw": {
-      "body": "campath_draw_on",
-      "comment": "将 alias campath_draw 转发到 campath_draw_on。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "campath_draw_on": {
-      "body": "mirv_campath draw enabled 1;alias campath_draw campath_draw_off;echo >>> Camera path display on",
-      "comment": "注册 alias campath_draw_on：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机路径显示已开启√”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "campath_on": {
-      "body": "mirv_campath enabled 1;alias campath campath_off;echo >>> Camera on",
-      "comment": "注册 alias campath_on：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机功能已开启√”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "changeang++": {
-      "body": "ang1",
-      "comment": "将 alias changeang++ 转发到 ang1。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "changeang--": {
-      "body": "ang-1",
-      "comment": "将 alias changeang-- 转发到 ang-1。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "changeblur": {
-      "body": "blur1",
-      "comment": "将 alias changeblur 转发到 blur1。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "changefov": {
-      "body": "fov1",
-      "comment": "将 alias changefov 转发到 fov1。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "checkSetting": {
-      "body": "echo;echo [Current recording FPS];mirv_streams record fps;echo",
-      "comment": "注册 alias checkSetting：依次执行 echo、mirv_streams，并提示“[当前录制FPS]”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "dmsg": {
-      "body": "dmsg_on",
-      "comment": "将 alias dmsg 转发到 dmsg_on。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "dmsg_on": {
-      "body": "alias dmsg dmsg_off;mirv_deathmsg filter add attackerMatch=!Trace block=1;mirv_deathmsg lifetime 90;echo >>> Kill feed filter (current player) on",
-      "comment": "注册 alias dmsg_on：依次执行 alias、mirv_deathmsg、echo，并提示“>>> 独显击杀信息（当前观察玩家）已开启√”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "fire": {
-      "body": "annotation_create grenade molotov label;annotation_create grenade incendiary label",
-      "comment": "注册 alias fire：依次执行 annotation_create、annotation_create。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "fov1": {
-      "body": "fov_cs_debug 10;alias changefov fov2",
-      "comment": "注册 alias fov1：依次执行 fov_cs_debug、alias。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "gear14": {
-      "body": "demo_timescale 0.25;alias gear_up gear1;alias gear_down gear15;echo [Demo playback speed];echo X0.25",
-      "comment": "注册 alias gear14：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X0.25”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "gear4": {
-      "body": "demo_timescale 4;alias gear_up gear8;alias gear_down gear1;echo [Demo playback speed];echo X4",
-      "comment": "注册 alias gear4：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X4”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "gear_down": {
-      "body": "gear14",
-      "comment": "将 alias gear_down 转发到 gear14。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "gear_up": {
-      "body": "gear4",
-      "comment": "将 alias gear_up 转发到 gear4。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "impactsNpreview-on": {
-      "body": "sv_showimpacts 1;sv_grenade_trajectory_prac_pipreview 1;alias switch-impactsNpreview impactsNpreview-off;echo Impacts and grenade preview ON!",
-      "comment": "注册 alias impactsNpreview-on：依次执行 sv_showimpacts、sv_grenade_trajectory_prac_pipreview、alias、echo，并提示“已开启弹痕显示和投掷物预览”。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "keyc": {
-      "body": "c00",
-      "comment": "将 alias keyc 转发到 c00。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
-    },
-    "keyhud": {
-      "body": "pvp-hud-off",
-      "comment": "将 alias keyhud 转发到 pvp-hud-off。",
-      "definedIn": "config/srp-cfg/runtime/aliases.cfg"
-    },
-    "keyv": {
-      "body": "v00",
-      "comment": "将 alias keyv 转发到 v00。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
-    },
-    "mute": {
-      "body": "snd_menumusic_volume 0;snd_roundstart_volume 0;snd_roundend_volume 0;snd_roundaction_volume 0;snd_mapobjective_volume 0;snd_tensecondwarning_volume 0;snd_deathcamera_volume 0;snd_mvp_volume 0;snd_mute_mvp_music_live_players 1;snd_mute_losefocus 0;echo [Audio muted]",
-      "comment": "注册 alias mute：依次执行 snd_menumusic_volume、snd_roundstart_volume、snd_roundend_volume、snd_roundaction_volume、snd_mapobjective_volume、snd_tensecondwarning_volume 等动作，并提示“[关闭各项声音]”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "nothrow": {
-      "body": "cl_grenadecrosshair_decoy 0;cl_grenadecrosshair_explosive 0;cl_grenadecrosshair_fire 0;cl_grenadecrosshair_flash 0;cl_grenadecrosshair_smoke 0;alias switchthrow throw;echo Grenade crosshair off.",
-      "comment": "注册 alias nothrow：依次执行 cl_grenadecrosshair_decoy、cl_grenadecrosshair_explosive、cl_grenadecrosshair_fire、cl_grenadecrosshair_flash、cl_grenadecrosshair_smoke、alias 等动作，并提示“已关闭投掷物准星”。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
-    },
-    "pvp-hud-off": {
-      "body": "cl_draw_only_deathnotices 1;cl_drawhud_force_radar 1;alias keyhud pvp-hud-on;echo Switched to PVP HUD: death notices, crosshair and radar only!",
-      "comment": "注册 alias pvp-hud-off：依次执行 cl_draw_only_deathnotices、cl_drawhud_force_radar、alias、echo，并提示“已切换为PVP HUD：仅显示死亡通知、准星与雷达！”。",
-      "definedIn": "config/srp-cfg/runtime/aliases.cfg"
-    },
-    "rec": {
-      "body": "demo_timescale 1;fps_max 0;echo >>> HLAE recording started;mirv_streams record start",
-      "comment": "注册 alias rec：依次执行 demo_timescale、fps_max、echo、mirv_streams，并提示“>>> HLAE录制开始”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "rec_end": {
-      "body": "mirv_streams record end;echo >>> HLAE recording ended",
-      "comment": "注册 alias rec_end：依次执行 mirv_streams、echo，并提示“>>> HLAE录制结束”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_autoview_keys": {
+    {
+      "name": "srp_autoview_keys",
       "body": "exec srp-cfg/features/autoview/with-keymap.cfg",
       "comment": "注册入口 srp_autoview_keys：执行 srp-cfg/features/autoview/with-keymap.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_c00_info": {
-      "body": "echo Crosshair preset c00 (default).",
-      "comment": "注册 alias srp_c00_info：输出“您当前使用的是 c00 默认准星预设”。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    {
+      "name": "srp_crosshair_view",
+      "body": "exec srp-cfg/features/crosshair-view/settings.cfg",
+      "comment": "注册入口 srp_crosshair_view：执行 srp-cfg/features/crosshair-view/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_crosshair_dot": {
-      "body": "toggle cl_crosshairdot 1 0;echo Crosshair dot toggled.",
-      "comment": "切换准星中心点。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    {
+      "name": "srp_crosshair_view_keys",
+      "body": "exec srp-cfg/features/crosshair-view/with-keymap.cfg",
+      "comment": "注册入口 srp_crosshair_view_keys：执行 srp-cfg/features/crosshair-view/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_demo_camera_mode": {
-      "body": "mirv_input camera;echo Camera mode on. Press Esc to exit and apply the path",
-      "comment": "进入 HLAE 运镜模式。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    {
+      "name": "srp_demo",
+      "body": "exec srp-cfg/modes/demo-hlae/settings.cfg",
+      "comment": "注册入口 srp_demo：执行 srp-cfg/modes/demo-hlae/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_demo_campath": {
-      "body": "campath",
-      "comment": "切换镜头路径启用状态。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_add": {
-      "body": "mirv_campath add;echo Camera node added",
-      "comment": "添加当前镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_clear": {
-      "body": "mirv_campath clear;echo All camera nodes cleared",
-      "comment": "清空全部镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_draw": {
-      "body": "campath_draw",
-      "comment": "切换镜头路径显示。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_print": {
-      "body": "mirv_campath print",
-      "comment": "打印全部镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_0": {
-      "body": "mirv_campath remove 0",
-      "comment": "删除编号 0 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_1": {
-      "body": "mirv_campath remove 1",
-      "comment": "删除编号 1 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_2": {
-      "body": "mirv_campath remove 2",
-      "comment": "删除编号 2 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_3": {
-      "body": "mirv_campath remove 3",
-      "comment": "删除编号 3 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_4": {
-      "body": "mirv_campath remove 4",
-      "comment": "删除编号 4 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_5": {
-      "body": "mirv_campath remove 5",
-      "comment": "删除编号 5 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_6": {
-      "body": "mirv_campath remove 6",
-      "comment": "删除编号 6 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_7": {
-      "body": "mirv_campath remove 7",
-      "comment": "删除编号 7 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_8": {
-      "body": "mirv_campath remove 8",
-      "comment": "删除编号 8 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_remove_9": {
-      "body": "mirv_campath remove 9",
-      "comment": "删除编号 9 的镜头机位。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_start_back": {
-      "body": "mirv_campath edit start delta-0.25",
-      "comment": "将镜头路径起始时间前移 0.25 秒。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_campath_start_forward": {
-      "body": "mirv_campath edit start delta+0.25",
-      "comment": "将镜头路径起始时间后移 0.25 秒。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_cmd_clear": {
-      "body": "mirv_cmd clear;echo >>> Cleared!",
-      "comment": "清空全部 mirv_cmd 指令。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_cmd_print": {
-      "body": "mirv_cmd print",
-      "comment": "打印全部 mirv_cmd 指令。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_crosshair": {
-      "body": "toggle crosshair",
-      "comment": "切换准星显示。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_dmsg": {
-      "body": "dmsg",
-      "comment": "切换当前观察玩家的击杀信息。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_gear_down": {
-      "body": "gear_down",
-      "comment": "降低 Demo 播放速度。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_gear_up": {
-      "body": "gear_up",
-      "comment": "提高 Demo 播放速度。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_gotomark": {
-      "body": "demo_gotomark",
-      "comment": "跳转到已标记的 Demo Tick。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_hud_deathnotices": {
-      "body": "toggle cl_draw_only_deathnotices",
-      "comment": "切换精简 HUD。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_hud_full": {
-      "body": "toggle cl_drawhud",
-      "comment": "切换完整 HUD。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_keys": {
+    {
+      "name": "srp_demo_keys",
       "body": "exec srp-cfg/modes/demo-hlae/with-keymap.cfg",
       "comment": "注册入口 srp_demo_keys：执行 srp-cfg/modes/demo-hlae/with-keymap.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_demo_marktick": {
-      "body": "demo_marktick",
-      "comment": "标记当前 Demo Tick。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    {
+      "name": "srp_guidemake",
+      "body": "exec srp-cfg/modes/guidemake/settings.cfg",
+      "comment": "注册入口 srp_guidemake：执行 srp-cfg/modes/guidemake/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_demo_mute": {
-      "body": "mute",
-      "comment": "切换静音状态。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    {
+      "name": "srp_guidemake_keys",
+      "body": "exec srp-cfg/modes/guidemake/with-keymap.cfg",
+      "comment": "注册入口 srp_guidemake_keys：执行 srp-cfg/modes/guidemake/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_demo_player_voice": {
-      "body": "toggle tv_listen_voice_indices -1 0",
-      "comment": "切换 Demo 玩家语音。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    {
+      "name": "srp_knife",
+      "body": "exec srp-cfg/features/knife/settings.cfg",
+      "comment": "注册入口 srp_knife：执行 srp-cfg/features/knife/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_demo_radar": {
-      "body": "incrementvar cl_drawhud_force_radar -1 1 1",
-      "comment": "循环切换雷达强制显示状态。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_record_end": {
-      "body": "rec_end;demo_pause",
-      "comment": "结束 HLAE 录制并暂停 Demo。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_record_start": {
-      "body": "rec;demo_resume;checkSetting",
-      "comment": "开始 HLAE 录制并继续播放 Demo。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_seek_back": {
-      "body": "demo_goto -5s relative",
-      "comment": "Demo 快退 5 秒。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_seek_forward": {
-      "body": "demo_goto 5s relative",
-      "comment": "Demo 快进 5 秒。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_teamid": {
-      "body": "toggle cl_teamid_overhead_mode 1 3",
-      "comment": "切换队友头顶标识模式。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_tick_rec": {
-      "body": "mirv_cmd addTick rec",
-      "comment": "把当前 Tick 设为录制开始点。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_tick_rec_end": {
-      "body": "mirv_cmd addTick rec_end",
-      "comment": "把当前 Tick 设为录制结束点。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_togglepause": {
-      "body": "demo_togglepause",
-      "comment": "暂停或继续 Demo。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_ui": {
-      "body": "demoui",
-      "comment": "打开 Demo 控制面板。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_voice": {
-      "body": "toggle voice_enable;toggle voice_caster_enable",
-      "comment": "切换游戏与解说语音。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_widefov": {
-      "body": "widefov",
-      "comment": "切换广角 FOV。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_demo_xray": {
-      "body": "toggle spec_show_xray 0 1",
-      "comment": "切换观察 X 光。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
-    },
-    "srp_guide_decoy": {
-      "body": "annotation_create grenade decoy label",
-      "comment": "注册 alias srp_guide_decoy：执行 annotation_create grenade decoy label。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_guide_delete": {
-      "body": "annotation_delete_previous_node_set",
-      "comment": "将 alias srp_guide_delete 转发到 annotation_delete_previous_node_set。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_guide_fire": {
-      "body": "fire",
-      "comment": "将 alias srp_guide_fire 转发到 fire。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_guide_flash": {
-      "body": "annotation_create grenade flash label",
-      "comment": "注册 alias srp_guide_flash：执行 annotation_create grenade flash label。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_guide_he": {
-      "body": "annotation_create grenade he label",
-      "comment": "注册 alias srp_guide_he：执行 annotation_create grenade he label。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_guide_save": {
-      "body": "annotation_save mapguide",
-      "comment": "注册 alias srp_guide_save：执行 annotation_save mapguide。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_guide_smoke": {
-      "body": "annotation_create grenade smoke label",
-      "comment": "注册 alias srp_guide_smoke：执行 annotation_create grenade smoke label。",
-      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
-    },
-    "srp_knife_keys": {
+    {
+      "name": "srp_knife_keys",
       "body": "exec srp-cfg/features/knife/with-keymap.cfg",
       "comment": "注册入口 srp_knife：执行 srp-cfg/features/knife/with-keymap.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_knife_switch_source": {
-      "body": "ent_fire weapon_knife changesubclass 55",
-      "comment": "切刀底层发刀重置指令。",
-      "definedIn": "config/srp-cfg/features/knife/runtime.cfg"
+    {
+      "name": "srp_practice",
+      "body": "exec srp-cfg/modes/practice/settings.cfg",
+      "comment": "注册入口 srp_practice：执行 srp-cfg/modes/practice/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_prac_aoproxy": {
-      "body": "toggle r_aoproxy_show 1 0;echo AO proxy toggled!",
-      "comment": "切换实体代理显示。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_armor": {
-      "body": "give item_assaultsuit;echo Armor added!",
-      "comment": "补充护甲。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bhop": {
-      "body": "toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo Bhop toggled",
-      "comment": "切换连跳模式。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bot_add": {
-      "body": "bot_add;mp_death_drop_gun 0;echo Bot added!",
-      "comment": "添加 Bot。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bot_crouch": {
-      "body": "toggle bot_crouch;echo Bot crouch toggled!",
-      "comment": "切换 Bot 蹲伏。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bot_kick": {
-      "body": "bot_kick;mp_death_drop_gun 1;echo All bots kicked!",
-      "comment": "踢出所有 Bot。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bot_kill": {
-      "body": "bot_kill;echo All bots killed!",
-      "comment": "处死所有 Bot。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bot_mimic": {
-      "body": "toggle bot_mimic 0 -1;echo Bot mimic toggled!",
-      "comment": "切换 Bot 模仿。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_bot_place": {
-      "body": "bot_stop 1;bot_place;echo Bot placed!",
-      "comment": "放置 Bot。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_clear_grenades": {
-      "body": "ent_fire smokegrenade_projectile kill;ent_fire flashbang_projectile kill;ent_fire incgrenade_projectile kill;ent_fire molotov_projectile kill;ent_fire hegrenade_projectile kill;ent_fire decoy_projectile kill;stopsound;echo Grenades cleared!",
-      "comment": "清除场上道具。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_fov": {
-      "body": "toggle fov_cs_debug 0 30;echo FOV toggled!",
-      "comment": "切换广角视野。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_infammo": {
-      "body": "toggle sv_infinite_ammo 1 2;echo Infinite ammo toggled!",
-      "comment": "切换无限弹匣。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_noclip": {
-      "body": "noclip",
-      "comment": "切换飞行。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_regen": {
-      "body": "toggle sv_regeneration_force_on 0 1;echo Auto regen toggled!",
-      "comment": "切换自动回血。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_restart": {
-      "body": "mp_restartgame 1;mp_death_drop_gun 1;echo Game restarting in 1 second!",
-      "comment": "重新开始回合。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_rethrow": {
-      "body": "sv_rethrow_last_grenade;echo Last grenade rethrown!",
-      "comment": "重新投掷道具。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_showpos": {
-      "body": "toggle cl_showpos 0 1",
-      "comment": "切换坐标速度显示。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_teamid": {
-      "body": "toggle cl_teamid_overhead_mode 1 3",
-      "comment": "切换队友头顶标识。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_prac_teammates_enemies": {
-      "body": "toggle mp_teammates_are_enemies 0 1;echo Teammates as enemies toggled!",
-      "comment": "切换友伤模式。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "srp_practice_keys": {
+    {
+      "name": "srp_practice_keys",
       "body": "exec srp-cfg/modes/practice/with-keymap.cfg",
       "comment": "注册入口 srp_practice_keys：执行 srp-cfg/modes/practice/with-keymap.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_preview_dof": {
-      "body": "toggle r_dof_override;echo DOF updated!",
-      "comment": "切换预览景深。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    {
+      "name": "srp_preview",
+      "body": "exec srp-cfg/modes/preview/settings.cfg",
+      "comment": "注册入口 srp_preview：执行 srp-cfg/modes/preview/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_preview_hud": {
-      "body": "toggle cl_drawhud;echo HUD updated!",
-      "comment": "切换预览 HUD。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
-    },
-    "srp_preview_keys": {
+    {
+      "name": "srp_preview_keys",
       "body": "exec srp-cfg/modes/preview/with-keymap.cfg",
       "comment": "注册入口 srp_preview_keys：执行 srp-cfg/modes/preview/with-keymap.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_preview_lock": {
-      "body": "toggle cl_lock_camera;echo Camera lock updated!",
-      "comment": "切换预览摄像机锁定。",
-      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    {
+      "name": "srp_pwa_prac",
+      "body": "exec srp-cfg/modes/pwa-prac/settings.cfg",
+      "comment": "注册入口 srp_pwa_prac：执行 srp-cfg/modes/pwa-prac/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
     },
-    "srp_pwa_prac_bot_add": {
-      "body": "say .bot",
-      "comment": "在当前玩家位置添加 Bot",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_bot_add_crouch": {
-      "body": "pwa_bot_add_crouch",
-      "comment": "添加一个蹲着的bot",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_bot_kick": {
-      "body": "say .kick",
-      "comment": "清除光标指向的bot",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_bot_kickall": {
-      "body": "say .kickall",
-      "comment": "清除所有bot",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_breaks": {
-      "body": "say .break",
-      "comment": "破坏物品",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_clear_smokes": {
-      "body": "say .qy",
-      "comment": "清除烟雾弹",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_follow_grenades": {
-      "body": "say .cam",
-      "comment": "开关追踪道具",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_god": {
-      "body": "say .god",
-      "comment": "开关上帝模式",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_grenades": {
-      "body": "say .u",
-      "comment": "开关道具训练",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_keys": {
+    {
+      "name": "srp_pwa_prac_keys",
       "body": "exec srp-cfg/modes/pwa-prac/with-keymap.cfg",
       "comment": "注册入口 srp_pwa_prac_keys：执行 srp-cfg/modes/pwa-prac/with-keymap.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_pwa_prac_menus": {
-      "body": "say .menu",
-      "comment": "开关指令墙",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_noclip": {
-      "body": "noclip",
-      "comment": "切换飞行。",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_recover": {
-      "body": "say .recover",
-      "comment": "恢复物品",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_restart": {
-      "body": "say .cz",
-      "comment": "重置游戏",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_rethrow_1": {
-      "body": "say .ct",
-      "comment": "重新投掷上一颗投掷物",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_rethrow_2": {
-      "body": "say .ct2",
-      "comment": "重新投掷倒数第二颗投掷物",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_rethrow_3": {
-      "body": "say .ct3",
-      "comment": "重新投掷倒数第三颗投掷物",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_rethrow_4": {
-      "body": "say .ct4",
-      "comment": "重新投掷倒数第四颗投掷物",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_rethrow_5": {
-      "body": "say .ct5",
-      "comment": "重新投掷倒数第五颗投掷物",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_rethrow_position": {
-      "body": "say .tz",
-      "comment": "回到上一次投掷位置",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_switch_flash": {
-      "body": "say .sg",
-      "comment": "开关闪光弹效果",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_switch_impacts": {
-      "body": "say .bi",
-      "comment": "开关子弹落点",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_switch_preview": {
-      "body": "say .up",
-      "comment": "开关预览窗",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_team_attack": {
-      "body": "say .ys",
-      "comment": "开关友伤",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_pwa_prac_teamid": {
-      "body": "toggle cl_teamid_overhead_mode 1 3",
-      "comment": "切换队友头顶标识。",
-      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
-    },
-    "srp_reload": {
+    {
+      "name": "srp_reload",
       "body": "exec autoexec.cfg",
       "comment": "注册入口 srp_reload：执行 autoexec.cfg。",
-      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": true
     },
-    "srp_v00_info": {
+    {
+      "name": "srp_zeus",
+      "body": "exec srp-cfg/features/zeus/settings.cfg",
+      "comment": "注册入口 srp_zeus：执行 srp-cfg/features/zeus/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_zeus_keys",
+      "body": "exec srp-cfg/features/zeus/with-keymap.cfg",
+      "comment": "注册入口 srp_zeus_keys：执行 srp-cfg/features/zeus/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "entry",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-firr1",
+      "body": "-attack;slot2;slot1;att1",
+      "comment": "注册 alias -firr1：依次执行 -attack、slot2、slot1、att1。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "-firr2",
+      "body": "-attack2;slot2;slot1;att1",
+      "comment": "注册 alias -firr2：依次执行 -attack2、slot2、slot1、att1。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_500",
+      "body": "ent_fire weapon_knife changesubclass 500; alias +srp_knife_switch +srp_knife_505; alias -srp_knife_switch -srp_knife_505; say_team 已切换：刺刀",
+      "comment": "切换为刺刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_503",
+      "body": "ent_fire weapon_knife changesubclass 503; alias +srp_knife_switch +srp_knife_521; alias -srp_knife_switch -srp_knife_521; say_team 已切换：海豹短刀",
+      "comment": "切换为海豹短刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_505",
+      "body": "ent_fire weapon_knife changesubclass 505; alias +srp_knife_switch +srp_knife_503; alias -srp_knife_switch -srp_knife_503; say_team 已切换：折叠刀",
+      "comment": "切换为折叠刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_506",
+      "body": "ent_fire weapon_knife changesubclass 506; alias +srp_knife_switch +srp_knife_512; alias -srp_knife_switch -srp_knife_512; say_team 已切换：穿肠刀",
+      "comment": "切换为穿肠刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_507",
+      "body": "ent_fire weapon_knife changesubclass 507; alias +srp_knife_switch +srp_knife_508; alias -srp_knife_switch -srp_knife_508; say_team 已切换：爪子刀",
+      "comment": "切换为爪子刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_508",
+      "body": "ent_fire weapon_knife changesubclass 508; alias +srp_knife_switch +srp_knife_523; alias -srp_knife_switch -srp_knife_523; say_team 已切换：M9刺刀",
+      "comment": "切换为M9刺刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_509",
+      "body": "ent_fire weapon_knife changesubclass 509; alias +srp_knife_switch +srp_knife_506; alias -srp_knife_switch -srp_knife_506; say_team 已切换：猎杀者匕首",
+      "comment": "切换为猎杀者匕首并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_512",
+      "body": "ent_fire weapon_knife changesubclass 512; alias +srp_knife_switch +srp_knife_516; alias -srp_knife_switch -srp_knife_516; say_team 已切换：弯刀",
+      "comment": "切换为弯刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_515",
+      "body": "ent_fire weapon_knife changesubclass 515; alias +srp_knife_switch +srp_knife_507; alias -srp_knife_switch -srp_knife_507; say_team 已切换：蝴蝶刀",
+      "comment": "切换为蝴蝶刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_516",
+      "body": "ent_fire weapon_knife changesubclass 516; alias +srp_knife_switch +srp_knife_59; alias -srp_knife_switch -srp_knife_59; say_team 已切换：暗影双匕",
+      "comment": "切换为暗影双匕并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_517",
+      "body": "ent_fire weapon_knife changesubclass 517; alias +srp_knife_switch +srp_knife_518; alias -srp_knife_switch -srp_knife_518; say_team 已切换：绳系匕首",
+      "comment": "切换为绳系匕首并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_518",
+      "body": "ent_fire weapon_knife changesubclass 518; alias +srp_knife_switch +srp_knife_509; alias -srp_knife_switch -srp_knife_509; say_team 已切换：求生匕首",
+      "comment": "切换为求生匕首并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_519",
+      "body": "ent_fire weapon_knife changesubclass 519; alias +srp_knife_switch +srp_knife_526; alias -srp_knife_switch -srp_knife_526; say_team 已切换：熊刀",
+      "comment": "切换为熊刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_520",
+      "body": "ent_fire weapon_knife changesubclass 520; alias +srp_knife_switch +srp_knife_515; alias -srp_knife_switch -srp_knife_515; say_team 已切换：折刀",
+      "comment": "切换为折刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_521",
+      "body": "ent_fire weapon_knife changesubclass 521; alias +srp_knife_switch +srp_knife_522; alias -srp_knife_switch -srp_knife_522; say_team 已切换：流浪者匕首",
+      "comment": "切换为流浪者匕首并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_522",
+      "body": "ent_fire weapon_knife changesubclass 522; alias +srp_knife_switch +srp_knife_519; alias -srp_knife_switch -srp_knife_519; say_team 已切换：短剑",
+      "comment": "切换为短剑并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_523",
+      "body": "ent_fire weapon_knife changesubclass 523; alias +srp_knife_switch +srp_knife_525; alias -srp_knife_switch -srp_knife_525; say_team 已切换：锯齿爪刀",
+      "comment": "切换为锯齿爪刀并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_525",
+      "body": "ent_fire weapon_knife changesubclass 525; alias +srp_knife_switch +srp_knife_500; alias -srp_knife_switch -srp_knife_500; say_team 已切换：骷髅匕首",
+      "comment": "切换为骷髅匕首并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_526",
+      "body": "ent_fire weapon_knife changesubclass 526; alias +srp_knife_switch +srp_knife_517; alias -srp_knife_switch -srp_knife_517; say_team 已切换：尼泊尔",
+      "comment": "切换为尼泊尔并指向下一把。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_59",
+      "body": "ent_fire weapon_knife changesubclass 59; alias +srp_knife_switch +srp_knife_520; alias -srp_knife_switch -srp_knife_520; say_team 已切换：默认匕首",
+      "comment": "切换为默认匕首并回到开头。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "-srp_knife_switch",
+      "body": "-srp_knife_520",
+      "comment": "切刀循环入口抬起。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+firr1",
+      "body": "+attack",
+      "comment": "将 alias +firr1 转发到 +attack。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "+firr2",
+      "body": "+attack2",
+      "comment": "将 alias +firr2 转发到 +attack2。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_500",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换刺刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_503",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换海豹短刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_505",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换折叠刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_506",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换穿肠刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_507",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换爪子刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_508",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换M9刺刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_509",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换猎杀者匕首。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_512",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换弯刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_515",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换蝴蝶刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_516",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换暗影双匕。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_517",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换绳系匕首。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_518",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换求生匕首。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_519",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换熊刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_520",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换折刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "+srp_knife_521",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换流浪者匕首。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_522",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换短剑。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_523",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换锯齿爪刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_525",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换骷髅匕首。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_526",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换尼泊尔。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_59",
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换默认匕首。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+srp_knife_switch",
+      "body": "+srp_knife_520",
+      "comment": "切刀循环入口按下。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "500",
+      "body": "subclass_create 500;echo Switched: Bayonet",
+      "comment": "注册刀具编号 500：生成刺刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "503",
+      "body": "subclass_create 503;echo Switched: Classic Knife",
+      "comment": "注册刀具编号 503：生成海豹短刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "505",
+      "body": "subclass_create 505;echo Switched: Flip Knife",
+      "comment": "注册刀具编号 505：生成折叠刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "506",
+      "body": "subclass_create 506;echo Switched: Gut Knife",
+      "comment": "注册刀具编号 506：生成穿肠刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "507",
+      "body": "subclass_create 507;echo Switched: Karambit",
+      "comment": "注册刀具编号 507：生成爪子刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "508",
+      "body": "subclass_create 508;echo Switched: M9 Bayonet",
+      "comment": "注册刀具编号 508：生成M9刺刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "509",
+      "body": "subclass_create 509;echo Switched: Huntsman Knife",
+      "comment": "注册刀具编号 509：生成猎杀者匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "512",
+      "body": "subclass_create 512;echo Switched: Falchion Knife",
+      "comment": "注册刀具编号 512：生成弯刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "514",
+      "body": "subclass_create 514;echo Switched: Bowie Knife",
+      "comment": "注册刀具编号 514：生成鲍伊猎刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "515",
+      "body": "subclass_create 515;echo Switched: Butterfly Knife",
+      "comment": "注册刀具编号 515：生成蝴蝶刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "516",
+      "body": "subclass_create 516;echo Switched: Shadow Daggers",
+      "comment": "注册刀具编号 516：生成暗影双匕模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "517",
+      "body": "subclass_create 517;echo Switched: Paracord Knife",
+      "comment": "注册刀具编号 517：生成系绳匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "518",
+      "body": "subclass_create 518;echo Switched: Survival Knife",
+      "comment": "注册刀具编号 518：生成求生匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "519",
+      "body": "subclass_create 519;echo Switched: Ursus Knife",
+      "comment": "注册刀具编号 519：生成熊刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "520",
+      "body": "subclass_create 520;echo Switched: Navaja Knife",
+      "comment": "注册刀具编号 520：生成折刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "521",
+      "body": "subclass_create 521;echo Switched: Nomad Knife",
+      "comment": "注册刀具编号 521：生成流浪者匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "522",
+      "body": "subclass_create 522;echo Switched: Stiletto Knife",
+      "comment": "注册刀具编号 522：生成短剑模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "523",
+      "body": "subclass_create 523;echo Switched: Talon Knife",
+      "comment": "注册刀具编号 523：生成锯齿爪刀模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "524",
+      "body": "subclass_create 524;echo Switched: Default Knife",
+      "comment": "注册刀具编号 524：生成默认匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "525",
+      "body": "subclass_create 525;echo Switched: Skeleton Knife",
+      "comment": "注册刀具编号 525：生成骷髅匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "526",
+      "body": "subclass_create 526;echo Switched: Kukri Knife",
+      "comment": "注册刀具编号 526：生成尼泊尔模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "57",
+      "body": "subclass_create 57;echo Switched: Syringe",
+      "comment": "注册刀具编号 57：生成医疗针模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "59",
+      "body": "subclass_create 59;echo Switched: Default Knife",
+      "comment": "注册刀具编号 57：生成默认匕首模型，并在控制台确认切换结果。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "att0",
+      "body": "bind mouse1 +firr1;bind mouse2 +firr2",
+      "comment": "注册 alias att0：依次执行 bind、bind。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "att1",
+      "body": "bind mouse1 +attack;bind mouse2 +attack2",
+      "comment": "注册 alias att1：依次执行 bind、bind。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "black",
+      "body": "cl_crosshaircolor_r 0;cl_crosshaircolor_g 0;cl_crosshaircolor_b 0;echo Crosshair color: black.",
+      "comment": "注册 alias black：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为黑色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blue",
+      "body": "cl_crosshaircolor_r 0;cl_crosshaircolor_g 0;cl_crosshaircolor_b 255;echo Crosshair color: blue.",
+      "comment": "注册 alias blue：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为蓝色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "brown",
+      "body": "cl_crosshaircolor_r 165;cl_crosshaircolor_g 42;cl_crosshaircolor_b 42;echo Crosshair color: brown.",
+      "comment": "注册 alias brown：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为棕色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "c00",
+      "body": "exec srp-cfg/features/crosshair-view/library/00.cfg;srp_c00_info;alias whoamic srp_c00_info;alias keyc c01",
+      "comment": "应用准星预设 C00，更新当前说明，并将循环入口指向 C01。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "c01",
+      "body": "exec srp-cfg/features/crosshair-view/library/01.cfg;srp_c01_info;alias whoamic srp_c01_info;alias keyc c02",
+      "comment": "应用准星预设 C01，更新当前说明，并将循环入口指向 C02。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "c02",
+      "body": "exec srp-cfg/features/crosshair-view/library/02.cfg;srp_c02_info;alias whoamic srp_c02_info;alias keyc c03",
+      "comment": "应用准星预设 C02，更新当前说明，并将循环入口指向 C03。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "c03",
+      "body": "exec srp-cfg/features/crosshair-view/library/03.cfg;srp_c03_info;alias whoamic srp_c03_info;alias keyc c04",
+      "comment": "应用准星预设 C03，更新当前说明，并将循环入口指向 C04。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "c04",
+      "body": "exec srp-cfg/features/crosshair-view/library/04.cfg;srp_c04_info;alias whoamic srp_c04_info;alias keyc c05",
+      "comment": "应用准星预设 C04，更新当前说明，并将循环入口指向 C05。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "c05",
+      "body": "exec srp-cfg/features/crosshair-view/library/05.cfg;srp_c05_info;alias whoamic srp_c05_info;alias keyc c06",
+      "comment": "应用准星预设 C05，更新当前说明，并将循环入口指向 C06。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "c06",
+      "body": "exec srp-cfg/features/crosshair-view/library/06.cfg;srp_c06_info;alias whoamic srp_c06_info;alias keyc c07",
+      "comment": "应用准星预设 C06，更新当前说明，并将循环入口指向 C07。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "c07",
+      "body": "exec srp-cfg/features/crosshair-view/library/07.cfg;srp_c07_info;alias whoamic srp_c07_info;alias keyc c00",
+      "comment": "应用准星预设 C07，更新当前说明，并将循环入口指向 C00。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "cyan",
+      "body": "cl_crosshaircolor_r 0;cl_crosshaircolor_g 255;cl_crosshaircolor_b 255;echo Crosshair color: cyan.",
+      "comment": "注册 alias cyan：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为青色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gray",
+      "body": "cl_crosshaircolor_r 128;cl_crosshaircolor_g 128;cl_crosshaircolor_b 128;echo Crosshair color: gray.",
+      "comment": "注册 alias gray：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为灰色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "green",
+      "body": "cl_crosshaircolor_r 0;cl_crosshaircolor_g 255;cl_crosshaircolor_b 0;echo Crosshair color: green.",
+      "comment": "注册 alias green：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为绿色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "keep",
+      "body": "cl_grenadecrosshair_keepusercrosshair 1;echo Keep custom crosshair while throwing.",
+      "comment": "注册 alias keep：依次执行 cl_grenadecrosshair_keepusercrosshair、echo，并提示“在投掷时保持自定义准星”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "keyc",
+      "body": "c00",
+      "comment": "将 alias keyc 转发到 c00。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "keyv",
+      "body": "v00",
+      "comment": "将 alias keyv 转发到 v00。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "nothrow",
+      "body": "cl_grenadecrosshair_decoy 0;cl_grenadecrosshair_explosive 0;cl_grenadecrosshair_fire 0;cl_grenadecrosshair_flash 0;cl_grenadecrosshair_smoke 0;alias switchthrow throw;echo Grenade crosshair off.",
+      "comment": "注册 alias nothrow：依次执行 cl_grenadecrosshair_decoy、cl_grenadecrosshair_explosive、cl_grenadecrosshair_fire、cl_grenadecrosshair_flash、cl_grenadecrosshair_smoke、alias 等动作，并提示“已关闭投掷物准星”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "orange",
+      "body": "cl_crosshaircolor_r 255;cl_crosshaircolor_g 165;cl_crosshaircolor_b 0;echo Crosshair color: orange.",
+      "comment": "注册 alias orange：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为橙色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "pink",
+      "body": "cl_crosshaircolor_r 255;cl_crosshaircolor_g 192;cl_crosshaircolor_b 203;echo Crosshair color: pink.",
+      "comment": "注册 alias pink：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为粉色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "purple",
+      "body": "cl_crosshaircolor_r 128;cl_crosshaircolor_g 0;cl_crosshaircolor_b 128;echo Crosshair color: purple.",
+      "comment": "注册 alias purple：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为紫色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "red",
+      "body": "cl_crosshaircolor_r 255;cl_crosshaircolor_g 0;cl_crosshaircolor_b 0;echo Crosshair color: red.",
+      "comment": "注册 alias red：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为红色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c00_info",
+      "body": "echo Crosshair preset c00 (default).",
+      "comment": "注册 alias srp_c00_info：输出“您当前使用的是 c00 默认准星预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_c01_info",
+      "body": "echo Crosshair preset c01. Code: CSGO-H9mcs-8GDFZ-MfxkQ-2Kx7O-pTLoD",
+      "comment": "注册 alias srp_c01_info：输出“您当前使用的是 c01 准星预设! 准星代码: CSGO-H9mcs-8GDFZ-MfxkQ-2Kx7O-pTLoD”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c02_info",
+      "body": "echo Crosshair preset c02. Code: CSGO-oK2db-LY2wT-seq73-YTnJB-3bOUD",
+      "comment": "注册 alias srp_c02_info：输出“您当前使用的是 c02 准星预设! 准星代码: CSGO-oK2db-LY2wT-seq73-YTnJB-3bOUD”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c03_info",
+      "body": "echo Crosshair preset c03. Code: CSGO-9StUb-FrcBs-HhYjr-mzVip-YScNE",
+      "comment": "注册 alias srp_c03_info：输出“您当前使用的是 c03 准星预设! 准星代码: CSGO-9StUb-FrcBs-HhYjr-mzVip-YScNE”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c04_info",
+      "body": "echo Crosshair preset c04. Code: CSGO-pqEaF-5AKXB-DCdnh-vpxAJ-94GSQ",
+      "comment": "注册 alias srp_c04_info：输出“您当前使用的是 c04 准星预设! 准星代码: CSGO-pqEaF-5AKXB-DCdnh-vpxAJ-94GSQ”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c05_info",
+      "body": "echo Crosshair preset c05. Code: CSGO-Q4APO-buiyc-i9V7H-7sxJN-Zy8rN",
+      "comment": "注册 alias srp_c05_info：输出“您当前使用的是 c05 准星预设! 准星代码: CSGO-Q4APO-buiyc-i9V7H-7sxJN-Zy8rN”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c06_info",
+      "body": "echo Crosshair preset c06. Code: CSGO-LpB26-mhWAt-srQVK-fEE34-BWxTC",
+      "comment": "注册 alias srp_c06_info：输出“您当前使用的是 c06 准星预设! 准星代码: CSGO-LpB26-mhWAt-srQVK-fEE34-BWxTC”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_c07_info",
+      "body": "echo Crosshair preset c07. Code: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE",
+      "comment": "注册 alias srp_c07_info：输出“您当前使用的是 c07 准星预设! 准星代码: CSGO-zpRPM-DC5Pd-fmPMp-iReK7-LPZfE”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_crosshair_custom_info",
+      "body": "echo Custom crosshair in use.",
+      "comment": "注册 alias srp_crosshair_custom_info：输出“您当前使用的是自定义准星”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_crosshair_dot",
+      "body": "toggle cl_crosshairdot 1 0;echo Crosshair dot toggled.",
+      "comment": "切换准星中心点。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_knife_switch_source",
+      "body": "ent_fire weapon_knife changesubclass 55",
+      "comment": "切刀底层发刀重置指令。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_v00_info",
       "body": "echo Viewmodel preset v00 (default).",
       "comment": "注册 alias srp_v00_info：输出“您当前使用的是 v00 默认视角预设”。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
     },
-    "srp_v06_info": {
+    {
+      "name": "srp_v01_info",
+      "body": "echo Viewmodel preset v01.",
+      "comment": "注册 alias srp_v01_info：输出“您当前使用的是 v01 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_v02_info",
+      "body": "echo Viewmodel preset v02.",
+      "comment": "注册 alias srp_v02_info：输出“您当前使用的是 v02 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_v03_info",
+      "body": "echo Viewmodel preset v03.",
+      "comment": "注册 alias srp_v03_info：输出“您当前使用的是 v03 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_v04_info",
+      "body": "echo Viewmodel preset v04.",
+      "comment": "注册 alias srp_v04_info：输出“您当前使用的是 v04 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_v05_info",
+      "body": "echo Viewmodel preset v05.",
+      "comment": "注册 alias srp_v05_info：输出“您当前使用的是 v05 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_v06_info",
       "body": "echo Viewmodel preset v06.",
       "comment": "注册 alias srp_v06_info：输出“您当前使用的是 v06 视角预设”。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
     },
-    "switch-impactsNpreview": {
-      "body": "impactsNpreview-on",
-      "comment": "将 alias switch-impactsNpreview 转发到 impactsNpreview-on。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    {
+      "name": "srp_v07_info",
+      "body": "echo Viewmodel preset v07.",
+      "comment": "注册 alias srp_v07_info：输出“您当前使用的是 v07 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
     },
-    "switchperson": {
-      "body": "switchperson-third",
-      "comment": "将 alias switchperson 转发到 switchperson-third。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    {
+      "name": "srp_viewmodel_custom_info",
+      "body": "echo Custom viewmodel in use.",
+      "comment": "注册 alias srp_viewmodel_custom_info：输出“您当前使用的是自定义视角”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
     },
-    "switchperson-third": {
-      "body": "thirdperson;alias switchperson switchperson-first;echo Third person ON!",
-      "comment": "注册 alias switchperson-third：依次执行 thirdperson、alias、echo，并提示“已切换第三人称视角”。",
-      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
-    },
-    "switchthrow": {
+    {
+      "name": "switchthrow",
       "body": "nothrow;alias switchthrow throw",
       "comment": "注册 alias switchthrow：依次执行 nothrow、alias。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
     },
-    "v00": {
+    {
+      "name": "throw",
+      "body": "cl_grenadecrosshair_decoy 1;cl_grenadecrosshair_explosive 1;cl_grenadecrosshair_fire 1;cl_grenadecrosshair_flash 1;cl_grenadecrosshair_smoke 1;alias switchthrow nothrow;echo Grenade crosshair on.",
+      "comment": "注册 alias throw：依次执行 cl_grenadecrosshair_decoy、cl_grenadecrosshair_explosive、cl_grenadecrosshair_fire、cl_grenadecrosshair_flash、cl_grenadecrosshair_smoke、alias 等动作，并提示“已开启投掷物准星”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "v00",
       "body": "viewmodel_fov 68;viewmodel_offset_x 2;viewmodel_offset_y 2;viewmodel_offset_z -1;viewmodel_presetpos 0;srp_v00_info;alias whoamiv srp_v00_info;alias keyv v01",
       "comment": "应用持枪视角预设 V00，更新当前说明，并将循环入口指向 V01。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
     },
-    "v06": {
+    {
+      "name": "v01",
+      "body": "viewmodel_fov 60;viewmodel_offset_x 0;viewmodel_offset_y 1;viewmodel_offset_z -2;viewmodel_presetpos 0;srp_v01_info;alias whoamiv srp_v01_info;alias keyv v02",
+      "comment": "应用持枪视角预设 V01，更新当前说明，并将循环入口指向 V02。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "v02",
+      "body": "viewmodel_fov 68;viewmodel_offset_x 2.5;viewmodel_offset_y -1;viewmodel_offset_z -2;viewmodel_presetpos 0;srp_v02_info;alias whoamiv srp_v02_info;alias keyv v03",
+      "comment": "应用持枪视角预设 V02，更新当前说明，并将循环入口指向 V03。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "v03",
+      "body": "viewmodel_fov 68;viewmodel_offset_x 1.5;viewmodel_offset_y -2;viewmodel_offset_z -2;viewmodel_presetpos 0;srp_v03_info;alias whoamiv srp_v03_info;alias keyv v04",
+      "comment": "应用持枪视角预设 V03，更新当前说明，并将循环入口指向 V04。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "v04",
+      "body": "viewmodel_fov 65;viewmodel_offset_x 2.5;viewmodel_offset_y -2;viewmodel_offset_z -2;viewmodel_presetpos 0;srp_v04_info;alias whoamiv srp_v04_info;alias keyv v05",
+      "comment": "应用持枪视角预设 V04，更新当前说明，并将循环入口指向 V05。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "v05",
+      "body": "viewmodel_fov 62;viewmodel_offset_x 2.5;viewmodel_offset_y 2;viewmodel_offset_z -2;viewmodel_presetpos 0;srp_v05_info;alias whoamiv srp_v05_info;alias keyv v06",
+      "comment": "应用持枪视角预设 V05，更新当前说明，并将循环入口指向 V06。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "v06",
       "body": "viewmodel_fov 68;viewmodel_offset_x 2.5;viewmodel_offset_y 0;viewmodel_offset_z -1.5;viewmodel_presetpos 3;srp_v06_info;alias whoamiv srp_v06_info;alias keyv v07",
       "comment": "应用持枪视角预设 V06，更新当前说明，并将循环入口指向 V07。",
-      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": true
     },
-    "view_0": {
+    {
+      "name": "v07",
+      "body": "viewmodel_fov 68;viewmodel_offset_x 2.5;viewmodel_offset_y 2;viewmodel_offset_z -2;viewmodel_presetpos 0;srp_v07_info;alias whoamiv srp_v07_info;alias keyv v00",
+      "comment": "应用持枪视角预设 V07，更新当前说明，并将循环入口指向 V00。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "view_0",
       "body": "v06",
       "comment": "将 alias view_0 转发到 v06。",
-      "definedIn": "config/srp-cfg/features/autoview/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/autoview/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
     },
-    "view_1": {
+    {
+      "name": "view_1",
       "body": "v00",
       "comment": "将 alias view_1 转发到 v00。",
-      "definedIn": "config/srp-cfg/features/autoview/runtime.cfg"
+      "definedIn": "config/srp-cfg/features/autoview/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": true
     },
-    "widefov": {
+    {
+      "name": "white",
+      "body": "cl_crosshaircolor_r 255;cl_crosshaircolor_g 255;cl_crosshaircolor_b 255;echo Crosshair color: white.",
+      "comment": "注册 alias white：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为白色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "whoamic",
+      "body": "srp_crosshair_custom_info",
+      "comment": "将 alias whoamic 转发到 srp_crosshair_custom_info。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "whoamiv",
+      "body": "srp_viewmodel_custom_info",
+      "comment": "将 alias whoamiv 转发到 srp_viewmodel_custom_info。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "yellow",
+      "body": "cl_crosshaircolor_r 255;cl_crosshaircolor_g 255;cl_crosshaircolor_b 0;echo Crosshair color: yellow.",
+      "comment": "注册 alias yellow：依次执行 cl_crosshaircolor、cl_crosshaircolor_r、cl_crosshaircolor_g、cl_crosshaircolor_b、echo，并提示“准星颜色已更改为黄色”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg",
+      "group": "feature",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "-Pucci",
+      "body": "host_timescale 1",
+      "comment": "Release: restore normal time.",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "+Pucci",
+      "body": "host_timescale 25",
+      "comment": "Hold: accelerate time.",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "ang-1",
+      "body": "setang pitch yaw -10;alias changeang-- ang-2",
+      "comment": "注册 alias ang-1：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "ang-2",
+      "body": "setang pitch yaw -20;alias changeang-- ang-3",
+      "comment": "注册 alias ang-2：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang-3",
+      "body": "setang pitch yaw -30;alias changeang-- ang-4",
+      "comment": "注册 alias ang-3：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang-4",
+      "body": "setang pitch yaw -40;alias changeang-- ang-5",
+      "comment": "注册 alias ang-4：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang-5",
+      "body": "setang pitch yaw -50;alias changeang-- ang0-",
+      "comment": "注册 alias ang-5：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang0-",
+      "body": "setang pitch yaw 0;alias changeang-- ang-1",
+      "comment": "注册 alias ang0-：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang0+",
+      "body": "setang pitch yaw 0;alias changeang++ ang1",
+      "comment": "注册 alias ang0+：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang1",
+      "body": "setang pitch yaw 10;alias changeang++ ang2",
+      "comment": "注册 alias ang1：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "ang2",
+      "body": "setang pitch yaw 20;alias changeang++ ang3",
+      "comment": "注册 alias ang2：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang3",
+      "body": "setang pitch yaw 30;alias changeang++ ang4",
+      "comment": "注册 alias ang3：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang4",
+      "body": "setang pitch yaw 40;alias changeang++ ang5",
+      "comment": "注册 alias ang4：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ang5",
+      "body": "setang pitch yaw 50;alias changeang++ ang0+",
+      "comment": "注册 alias ang5：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "ass",
+      "body": "toggle mp_display_kill_assists;echo [Assist display toggled]",
+      "comment": "注册 alias ass：依次执行 toggle、echo，并提示“[切换助攻显示]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "block",
+      "body": "blockOn",
+      "comment": "将 alias block 转发到 blockOn。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blockOff",
+      "body": "alias block blockOn;mirv_deathmsg lifetime default;echo [Kill feed lifetime restored]",
+      "comment": "注册 alias blockOff：依次执行 alias、mirv_deathmsg、echo，并提示“[击杀信息已恢复默认时间]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blockOn",
+      "body": "alias block blockOff;mirv_deathmsg lifetime 0;echo [Kill feed blocked]",
+      "comment": "注册 alias blockOn：依次执行 alias、mirv_deathmsg、echo，并提示“[屏蔽击杀信息]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blur0",
+      "body": "r_dof_override_near_blurry 3000;alias changeblur blur1",
+      "comment": "注册 alias blur0：依次执行 r_dof_override_near_blurry、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blur1",
+      "body": "r_dof_override_near_blurry 50;alias changeblur blur2",
+      "comment": "注册 alias blur1：依次执行 r_dof_override_near_blurry、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "blur2",
+      "body": "r_dof_override_near_blurry 100;alias changeblur blur3",
+      "comment": "注册 alias blur2：依次执行 r_dof_override_near_blurry、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blur3",
+      "body": "r_dof_override_near_blurry 500;alias changeblur blur4",
+      "comment": "注册 alias blur3：依次执行 r_dof_override_near_blurry、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "blur4",
+      "body": "r_dof_override_near_blurry 1000;alias changeblur blur0",
+      "comment": "注册 alias blur4：依次执行 r_dof_override_near_blurry、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "bluroff",
+      "body": "mirv_streams record fps 60;mirv_streams record screen settings mp4;echo Motion blur off!",
+      "comment": "注册 alias bluroff：依次执行 mirv_streams、echo，并提示“动态模糊关闭”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "bluron",
+      "body": "mirv_streams record fps 600;mirv_streams record screen settings blur;echo Motion blur on!",
+      "comment": "注册 alias bluron：依次执行 mirv_streams、echo，并提示“动态模糊开启”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "campath",
+      "body": "campath_on",
+      "comment": "将 alias campath 转发到 campath_on。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "campath_draw",
+      "body": "campath_draw_on",
+      "comment": "将 alias campath_draw 转发到 campath_draw_on。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "campath_draw_off",
+      "body": "mirv_campath draw enabled 0;alias campath_draw campath_draw_on;echo >>> Camera path display off",
+      "comment": "注册 alias campath_draw_off：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机路径显示已关闭×”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "campath_draw_on",
+      "body": "mirv_campath draw enabled 1;alias campath_draw campath_draw_off;echo >>> Camera path display on",
+      "comment": "注册 alias campath_draw_on：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机路径显示已开启√”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "campath_off",
+      "body": "mirv_campath enabled 0;alias campath campath_on;echo >>> Camera off",
+      "comment": "注册 alias campath_off：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机功能已关闭×”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "campath_on",
+      "body": "mirv_campath enabled 1;alias campath campath_off;echo >>> Camera on",
+      "comment": "注册 alias campath_on：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机功能已开启√”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "changeang--",
+      "body": "ang-1",
+      "comment": "将 alias changeang-- 转发到 ang-1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "changeang++",
+      "body": "ang1",
+      "comment": "将 alias changeang++ 转发到 ang1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "changeblur",
+      "body": "blur1",
+      "comment": "将 alias changeblur 转发到 blur1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "changefov",
+      "body": "fov1",
+      "comment": "将 alias changefov 转发到 fov1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "checkSetting",
+      "body": "echo;echo [Current recording FPS];mirv_streams record fps;echo",
+      "comment": "注册 alias checkSetting：依次执行 echo、mirv_streams，并提示“[当前录制FPS]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "demonoshow",
+      "body": "cl_spec_show_bindings 0;echo Spec hint text hidden!",
+      "comment": "注册 alias demonoshow：依次执行 cl_spec_show_bindings、echo，并提示“屏蔽观察提示小字”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "demoshow",
+      "body": "cl_spec_show_bindings 1;echo Spec hint text shown!",
+      "comment": "注册 alias demoshow：依次执行 cl_spec_show_bindings、echo，并提示“显示观察提示小字”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "depre",
+      "body": "cl_drawhud 1;r_dof_override 0;r_dof_override_near_blurry 0;fov_cs_debug 0;cl_lock_camera 0;echo Preview visual state restored!",
+      "comment": "注册 alias depre：依次执行 cl_drawhud、r_dof_override、r_dof_override_near_blurry、fov_cs_debug、cl_lock_camera、echo，并提示“已恢复预览模式修改的画面状态”。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "dmsg",
+      "body": "dmsg_on",
+      "comment": "将 alias dmsg 转发到 dmsg_on。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "dmsg_off",
+      "body": "alias dmsg dmsg_on;mirv_deathmsg filter clear;mirv_deathmsg lifetime default;mirv_deathmsg clear;echo >>> Kill feed filter off",
+      "comment": "注册 alias dmsg_off：依次执行 alias、mirv_deathmsg、echo，并提示“>>> 独显击杀信息已关闭×”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "dmsg_on",
+      "body": "alias dmsg dmsg_off;mirv_deathmsg filter add attackerMatch=!Trace block=1;mirv_deathmsg lifetime 90;echo >>> Kill feed filter (current player) on",
+      "comment": "注册 alias dmsg_on：依次执行 alias、mirv_deathmsg、echo，并提示“>>> 独显击杀信息（当前观察玩家）已开启√”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "f10",
+      "body": "mirv_input fov 10",
+      "comment": "注册 alias f10：执行 mirv_input fov 10。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f100",
+      "body": "mirv_input fov 100",
+      "comment": "注册 alias f100：执行 mirv_input fov 100。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f15",
+      "body": "mirv_input fov 15",
+      "comment": "注册 alias f15：执行 mirv_input fov 15。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f20",
+      "body": "mirv_input fov 20",
+      "comment": "注册 alias f20：执行 mirv_input fov 20。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f25",
+      "body": "mirv_input fov 25",
+      "comment": "注册 alias f25：执行 mirv_input fov 25。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f30",
+      "body": "mirv_input fov 30",
+      "comment": "注册 alias f30：执行 mirv_input fov 30。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f35",
+      "body": "mirv_input fov 35",
+      "comment": "注册 alias f35：执行 mirv_input fov 35。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f40",
+      "body": "mirv_input fov 40",
+      "comment": "注册 alias f40：执行 mirv_input fov 40。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f45",
+      "body": "mirv_input fov 45",
+      "comment": "注册 alias f45：执行 mirv_input fov 45。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f50",
+      "body": "mirv_input fov 50",
+      "comment": "注册 alias f50：执行 mirv_input fov 50。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f55",
+      "body": "mirv_input fov 55",
+      "comment": "注册 alias f55：执行 mirv_input fov 55。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f60",
+      "body": "mirv_input fov 60",
+      "comment": "注册 alias f60：执行 mirv_input fov 60。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f65",
+      "body": "mirv_input fov 65",
+      "comment": "注册 alias f65：执行 mirv_input fov 65。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f70",
+      "body": "mirv_input fov 70",
+      "comment": "注册 alias f70：执行 mirv_input fov 70。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f75",
+      "body": "mirv_input fov 75",
+      "comment": "注册 alias f75：执行 mirv_input fov 75。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f80",
+      "body": "mirv_input fov 80",
+      "comment": "注册 alias f80：执行 mirv_input fov 80。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f85",
+      "body": "mirv_input fov 85",
+      "comment": "注册 alias f85：执行 mirv_input fov 85。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f90",
+      "body": "mirv_input fov 90",
+      "comment": "注册 alias f90：执行 mirv_input fov 90。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "f95",
+      "body": "mirv_input fov 95",
+      "comment": "注册 alias f95：执行 mirv_input fov 95。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fire",
+      "body": "annotation_create grenade molotov label;annotation_create grenade incendiary label",
+      "comment": "注册 alias fire：依次执行 annotation_create、annotation_create。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "fov0",
+      "body": "fov_cs_debug 0;alias changefov fov1",
+      "comment": "注册 alias fov0：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov1",
+      "body": "fov_cs_debug 10;alias changefov fov2",
+      "comment": "注册 alias fov1：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "fov10",
+      "body": "fov_cs_debug 100;alias changefov fov11",
+      "comment": "注册 alias fov10：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov11",
+      "body": "fov_cs_debug 110;alias changefov fov12",
+      "comment": "注册 alias fov11：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov12",
+      "body": "fov_cs_debug 120;alias changefov fov13",
+      "comment": "注册 alias fov12：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov13",
+      "body": "fov_cs_debug 130;alias changefov fov14",
+      "comment": "注册 alias fov13：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov14",
+      "body": "fov_cs_debug 140;alias changefov fov15",
+      "comment": "注册 alias fov14：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov15",
+      "body": "fov_cs_debug 150;alias changefov fov0",
+      "comment": "注册 alias fov15：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov2",
+      "body": "fov_cs_debug 20;alias changefov fov3",
+      "comment": "注册 alias fov2：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov3",
+      "body": "fov_cs_debug 30;alias changefov fov4",
+      "comment": "注册 alias fov3：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov4",
+      "body": "fov_cs_debug 40;alias changefov fov5",
+      "comment": "注册 alias fov4：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov5",
+      "body": "fov_cs_debug 50;alias changefov fov6",
+      "comment": "注册 alias fov5：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov6",
+      "body": "fov_cs_debug 60;alias changefov fov7",
+      "comment": "注册 alias fov6：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov7",
+      "body": "fov_cs_debug 70;alias changefov fov8",
+      "comment": "注册 alias fov7：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov8",
+      "body": "fov_cs_debug 80;alias changefov fov9",
+      "comment": "注册 alias fov8：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "fov9",
+      "body": "fov_cs_debug 90;alias changefov fov10",
+      "comment": "注册 alias fov9：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gear_down",
+      "body": "gear14",
+      "comment": "将 alias gear_down 转发到 gear14。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "gear_up",
+      "body": "gear4",
+      "comment": "将 alias gear_up 转发到 gear4。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "gear1",
+      "body": "demo_timescale 1;alias gear_up gear4;alias gear_down gear14;echo [Demo playback speed];echo X1",
+      "comment": "注册 alias gear1：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X1”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gear110",
+      "body": "demo_timescale 0.1;alias gear_up gear15;alias gear_down gear110;echo [Demo playback speed];echo X0.1",
+      "comment": "注册 alias gear110：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X0.1”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gear14",
+      "body": "demo_timescale 0.25;alias gear_up gear1;alias gear_down gear15;echo [Demo playback speed];echo X0.25",
+      "comment": "注册 alias gear14：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X0.25”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "gear15",
+      "body": "demo_timescale 0.2;alias gear_up gear14;alias gear_down gear110;echo [Demo playback speed];echo X0.2",
+      "comment": "注册 alias gear15：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X0.2”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gear16",
+      "body": "demo_timescale 16;alias gear_up gear16;alias gear_down gear8;echo [Demo playback speed];echo X16",
+      "comment": "注册 alias gear16：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X16”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gear4",
+      "body": "demo_timescale 4;alias gear_up gear8;alias gear_down gear1;echo [Demo playback speed];echo X4",
+      "comment": "注册 alias gear4：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X4”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "gear8",
+      "body": "demo_timescale 8;alias gear_up gear8;alias gear_down gear4;echo [Demo playback speed];echo X8",
+      "comment": "注册 alias gear8：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X8”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gg",
+      "body": "sv_cheats 1;mp_respawn_on_death_ct 1;mp_respawn_on_death_t 1;sv_showimpacts 1;sv_infinite_ammo 1;sv_alltalk 1;mp_buy_anywhere 1;mp_freezetime 1;echo Practice mode restored!",
+      "comment": "注册 alias gg：依次执行 sv_cheats、mp_respawn_on_death_ct、mp_respawn_on_death_t、sv_showimpacts、sv_infinite_ammo、sv_alltalk 等动作，并提示“恢复跑图模式”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "gkd",
+      "body": "mp_respawn_on_death_ct 0;mp_respawn_on_death_t 0;sv_showimpacts 0;sv_infinite_ammo 0;sv_alltalk 0;mp_buy_anywhere 0;mp_freezetime 4;mp_restartgame 1;sv_cheats 0;echo Standard match mode!",
+      "comment": "注册 alias gkd：依次执行 mp_respawn_on_death_ct、mp_respawn_on_death_t、sv_showimpacts、sv_infinite_ammo、sv_alltalk、mp_buy_anywhere 等动作，并提示“标准实战模式”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "grenadeoff",
+      "body": "sv_grenade_trajectory_prac_pipreview false;echo Grenade trajectory preview off!",
+      "comment": "注册 alias grenadeoff：依次执行 sv_grenade_trajectory_prac_pipreview、echo，并提示“已关闭投掷物轨迹预测”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "grenadeon",
+      "body": "sv_grenade_trajectory_prac_pipreview true;echo Grenade trajectory preview on!",
+      "comment": "注册 alias grenadeon：依次执行 sv_grenade_trajectory_prac_pipreview、echo，并提示“已开启投掷物轨迹预测”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "impactsNpreview-off",
+      "body": "sv_showimpacts 0;sv_grenade_trajectory_prac_pipreview 0;alias switch-impactsNpreview impactsNpreview-on;echo Impacts and grenade preview OFF!",
+      "comment": "注册 alias impactsNpreview-off：依次执行 sv_showimpacts、sv_grenade_trajectory_prac_pipreview、alias、echo，并提示“已关闭弹痕显示和投掷物预览”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "impactsNpreview-on",
+      "body": "sv_showimpacts 1;sv_grenade_trajectory_prac_pipreview 1;alias switch-impactsNpreview impactsNpreview-off;echo Impacts and grenade preview ON!",
+      "comment": "注册 alias impactsNpreview-on：依次执行 sv_showimpacts、sv_grenade_trajectory_prac_pipreview、alias、echo，并提示“已开启弹痕显示和投掷物预览”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "mute",
+      "body": "snd_menumusic_volume 0;snd_roundstart_volume 0;snd_roundend_volume 0;snd_roundaction_volume 0;snd_mapobjective_volume 0;snd_tensecondwarning_volume 0;snd_deathcamera_volume 0;snd_mvp_volume 0;snd_mute_mvp_music_live_players 1;snd_mute_losefocus 0;echo [Audio muted]",
+      "comment": "注册 alias mute：依次执行 snd_menumusic_volume、snd_roundstart_volume、snd_roundend_volume、snd_roundaction_volume、snd_mapobjective_volume、snd_tensecondwarning_volume 等动作，并提示“[关闭各项声音]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "plant",
+      "body": "mp_plant_c4_anywhere 1;echo Plant anywhere ON!",
+      "comment": "注册 alias plant：依次执行 mp_plant_c4_anywhere、echo，并提示“任意处安包”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "pos",
+      "body": "mirv_campath edit position current",
+      "comment": "注册 alias pos：执行 mirv_campath edit position current。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "post",
+      "body": "toggle r_csgo_postprocess_enable;echo [Postprocess toggled]",
+      "comment": "注册 alias post：依次执行 toggle、echo，并提示“[切换后处理滤镜]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "rec",
+      "body": "demo_timescale 1;fps_max 0;echo >>> HLAE recording started;mirv_streams record start",
+      "comment": "注册 alias rec：依次执行 demo_timescale、fps_max、echo、mirv_streams，并提示“>>> HLAE录制开始”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "rec_end",
+      "body": "mirv_streams record end;echo >>> HLAE recording ended",
+      "comment": "注册 alias rec_end：依次执行 mirv_streams、echo，并提示“>>> HLAE录制结束”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "spawn",
+      "body": "exec srp-cfg/modes/practice/spawn/spawn.cfg",
+      "comment": "Load map spawn aliases.",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_demo_block",
+      "body": "block",
+      "comment": "切换击杀信息显示。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_demo_camera_mode",
+      "body": "mirv_input camera;echo Camera mode on. Press Esc to exit and apply the path",
+      "comment": "进入 HLAE 运镜模式。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath",
+      "body": "campath",
+      "comment": "切换镜头路径启用状态。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_add",
+      "body": "mirv_campath add;echo Camera node added",
+      "comment": "添加当前镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_clear",
+      "body": "mirv_campath clear;echo All camera nodes cleared",
+      "comment": "清空全部镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_draw",
+      "body": "campath_draw",
+      "comment": "切换镜头路径显示。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_print",
+      "body": "mirv_campath print",
+      "comment": "打印全部镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_0",
+      "body": "mirv_campath remove 0",
+      "comment": "删除编号 0 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_1",
+      "body": "mirv_campath remove 1",
+      "comment": "删除编号 1 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_2",
+      "body": "mirv_campath remove 2",
+      "comment": "删除编号 2 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_3",
+      "body": "mirv_campath remove 3",
+      "comment": "删除编号 3 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_4",
+      "body": "mirv_campath remove 4",
+      "comment": "删除编号 4 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_5",
+      "body": "mirv_campath remove 5",
+      "comment": "删除编号 5 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_6",
+      "body": "mirv_campath remove 6",
+      "comment": "删除编号 6 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_7",
+      "body": "mirv_campath remove 7",
+      "comment": "删除编号 7 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_8",
+      "body": "mirv_campath remove 8",
+      "comment": "删除编号 8 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_remove_9",
+      "body": "mirv_campath remove 9",
+      "comment": "删除编号 9 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_start_back",
+      "body": "mirv_campath edit start delta-0.25",
+      "comment": "将镜头路径起始时间前移 0.25 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_campath_start_forward",
+      "body": "mirv_campath edit start delta+0.25",
+      "comment": "将镜头路径起始时间后移 0.25 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_cmd_clear",
+      "body": "mirv_cmd clear;echo >>> Cleared!",
+      "comment": "清空全部 mirv_cmd 指令。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_cmd_print",
+      "body": "mirv_cmd print",
+      "comment": "打印全部 mirv_cmd 指令。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_crosshair",
+      "body": "toggle crosshair",
+      "comment": "切换准星显示。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_dmsg",
+      "body": "dmsg",
+      "comment": "切换当前观察玩家的击杀信息。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_gear_down",
+      "body": "gear_down",
+      "comment": "降低 Demo 播放速度。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_gear_up",
+      "body": "gear_up",
+      "comment": "提高 Demo 播放速度。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_gotomark",
+      "body": "demo_gotomark",
+      "comment": "跳转到已标记的 Demo Tick。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_hud_deathnotices",
+      "body": "toggle cl_draw_only_deathnotices",
+      "comment": "切换精简 HUD。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_hud_full",
+      "body": "toggle cl_drawhud",
+      "comment": "切换完整 HUD。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_marktick",
+      "body": "demo_marktick",
+      "comment": "标记当前 Demo Tick。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_mute",
+      "body": "mute",
+      "comment": "切换静音状态。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_player_voice",
+      "body": "toggle tv_listen_voice_indices -1 0",
+      "comment": "切换 Demo 玩家语音。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_radar",
+      "body": "incrementvar cl_drawhud_force_radar -1 1 1",
+      "comment": "循环切换雷达强制显示状态。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_record_end",
+      "body": "rec_end;demo_pause",
+      "comment": "结束 HLAE 录制并暂停 Demo。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_record_start",
+      "body": "rec;demo_resume;checkSetting",
+      "comment": "开始 HLAE 录制并继续播放 Demo。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_seek_back",
+      "body": "demo_goto -5s relative",
+      "comment": "Demo 快退 5 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_seek_forward",
+      "body": "demo_goto 5s relative",
+      "comment": "Demo 快进 5 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_teamid",
+      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "comment": "切换队友头顶标识模式。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_tick_rec",
+      "body": "mirv_cmd addTick rec",
+      "comment": "把当前 Tick 设为录制开始点。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_tick_rec_end",
+      "body": "mirv_cmd addTick rec_end",
+      "comment": "把当前 Tick 设为录制结束点。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_togglepause",
+      "body": "demo_togglepause",
+      "comment": "暂停或继续 Demo。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_ui",
+      "body": "demoui",
+      "comment": "打开 Demo 控制面板。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_voice",
+      "body": "toggle voice_enable;toggle voice_caster_enable",
+      "comment": "切换游戏与解说语音。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_widefov",
+      "body": "widefov",
+      "comment": "切换广角 FOV。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_demo_xray",
+      "body": "toggle spec_show_xray 0 1",
+      "comment": "切换观察 X 光。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_decoy",
+      "body": "annotation_create grenade decoy label",
+      "comment": "注册 alias srp_guide_decoy：执行 annotation_create grenade decoy label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_delete",
+      "body": "annotation_delete_previous_node_set",
+      "comment": "将 alias srp_guide_delete 转发到 annotation_delete_previous_node_set。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_fire",
+      "body": "fire",
+      "comment": "将 alias srp_guide_fire 转发到 fire。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_flash",
+      "body": "annotation_create grenade flash label",
+      "comment": "注册 alias srp_guide_flash：执行 annotation_create grenade flash label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_he",
+      "body": "annotation_create grenade he label",
+      "comment": "注册 alias srp_guide_he：执行 annotation_create grenade he label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_save",
+      "body": "annotation_save mapguide",
+      "comment": "注册 alias srp_guide_save：执行 annotation_save mapguide。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_smoke",
+      "body": "annotation_create grenade smoke label",
+      "comment": "注册 alias srp_guide_smoke：执行 annotation_create grenade smoke label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "srp_guide_upload",
+      "body": "workshop_annotation_submit",
+      "comment": "将 alias srp_guide_upload 转发到 workshop_annotation_submit。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_prac_aoproxy",
+      "body": "toggle r_aoproxy_show 1 0;echo AO proxy toggled!",
+      "comment": "切换实体代理显示。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_armor",
+      "body": "give item_assaultsuit;echo Armor added!",
+      "comment": "补充护甲。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bhop",
+      "body": "toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo Bhop toggled",
+      "comment": "切换连跳模式。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bot_add",
+      "body": "bot_add;mp_death_drop_gun 0;echo Bot added!",
+      "comment": "添加 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bot_crouch",
+      "body": "toggle bot_crouch;echo Bot crouch toggled!",
+      "comment": "切换 Bot 蹲伏。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bot_kick",
+      "body": "bot_kick;mp_death_drop_gun 1;echo All bots kicked!",
+      "comment": "踢出所有 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bot_kill",
+      "body": "bot_kill;echo All bots killed!",
+      "comment": "处死所有 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bot_mimic",
+      "body": "toggle bot_mimic 0 -1;echo Bot mimic toggled!",
+      "comment": "切换 Bot 模仿。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_bot_place",
+      "body": "bot_stop 1;bot_place;echo Bot placed!",
+      "comment": "放置 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_clear_grenades",
+      "body": "ent_fire smokegrenade_projectile kill;ent_fire flashbang_projectile kill;ent_fire incgrenade_projectile kill;ent_fire molotov_projectile kill;ent_fire hegrenade_projectile kill;ent_fire decoy_projectile kill;stopsound;echo Grenades cleared!",
+      "comment": "清除场上道具。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_fov",
+      "body": "toggle fov_cs_debug 0 30;echo FOV toggled!",
+      "comment": "切换广角视野。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_infammo",
+      "body": "toggle sv_infinite_ammo 1 2;echo Infinite ammo toggled!",
+      "comment": "切换无限弹匣。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_noclip",
+      "body": "noclip",
+      "comment": "切换飞行。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_regen",
+      "body": "toggle sv_regeneration_force_on 0 1;echo Auto regen toggled!",
+      "comment": "切换自动回血。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_restart",
+      "body": "mp_restartgame 1;mp_death_drop_gun 1;echo Game restarting in 1 second!",
+      "comment": "重新开始回合。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_rethrow",
+      "body": "sv_rethrow_last_grenade;echo Last grenade rethrown!",
+      "comment": "重新投掷道具。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_showpos",
+      "body": "toggle cl_showpos 0 1",
+      "comment": "切换坐标速度显示。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_teamid",
+      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "comment": "切换队友头顶标识。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_prac_teammates_enemies",
+      "body": "toggle mp_teammates_are_enemies 0 1;echo Teammates as enemies toggled!",
+      "comment": "切换友伤模式。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_preview_dof",
+      "body": "toggle r_dof_override;echo DOF updated!",
+      "comment": "切换预览景深。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_preview_hud",
+      "body": "toggle cl_drawhud;echo HUD updated!",
+      "comment": "切换预览 HUD。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_preview_lock",
+      "body": "toggle cl_lock_camera;echo Camera lock updated!",
+      "comment": "切换预览摄像机锁定。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_bot_add",
+      "body": "say .bot",
+      "comment": "在当前玩家位置添加 Bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_bot_add_crouch",
+      "body": "pwa_bot_add_crouch",
+      "comment": "添加一个蹲着的bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_bot_kick",
+      "body": "say .kick",
+      "comment": "清除光标指向的bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_bot_kickall",
+      "body": "say .kickall",
+      "comment": "清除所有bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_breaks",
+      "body": "say .break",
+      "comment": "破坏物品",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_clear_smokes",
+      "body": "say .qy",
+      "comment": "清除烟雾弹",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_follow_grenades",
+      "body": "say .cam",
+      "comment": "开关追踪道具",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_god",
+      "body": "say .god",
+      "comment": "开关上帝模式",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_grenades",
+      "body": "say .u",
+      "comment": "开关道具训练",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_menus",
+      "body": "say .menu",
+      "comment": "开关指令墙",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_noclip",
+      "body": "noclip",
+      "comment": "切换飞行。",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_recover",
+      "body": "say .recover",
+      "comment": "恢复物品",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_restart",
+      "body": "say .cz",
+      "comment": "重置游戏",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_rethrow_1",
+      "body": "say .ct",
+      "comment": "重新投掷上一颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_rethrow_2",
+      "body": "say .ct2",
+      "comment": "重新投掷倒数第二颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_rethrow_3",
+      "body": "say .ct3",
+      "comment": "重新投掷倒数第三颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_rethrow_4",
+      "body": "say .ct4",
+      "comment": "重新投掷倒数第四颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_rethrow_5",
+      "body": "say .ct5",
+      "comment": "重新投掷倒数第五颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_rethrow_position",
+      "body": "say .tz",
+      "comment": "回到上一次投掷位置",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_spawns",
+      "body": "say .s",
+      "comment": "传送至出生点菜单",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_pwa_prac_switch_flash",
+      "body": "say .sg",
+      "comment": "开关闪光弹效果",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_switch_impacts",
+      "body": "say .bi",
+      "comment": "开关子弹落点",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_switch_preview",
+      "body": "say .up",
+      "comment": "开关预览窗",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_team_attack",
+      "body": "say .ys",
+      "comment": "开关友伤",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "srp_pwa_prac_teamid",
+      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "comment": "切换队友头顶标识。",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg",
+      "group": "mode",
+      "autoComment": false,
+      "reachable": true
+    },
+    {
+      "name": "switch-impactsNpreview",
+      "body": "impactsNpreview-on",
+      "comment": "将 alias switch-impactsNpreview 转发到 impactsNpreview-on。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "switchperson",
+      "body": "switchperson-third",
+      "comment": "将 alias switchperson 转发到 switchperson-third。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "switchperson-first",
+      "body": "firstperson;alias switchperson switchperson-third;echo First person ON!",
+      "comment": "注册 alias switchperson-first：依次执行 firstperson、alias、echo，并提示“已切换第一人称视角”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "switchperson-third",
+      "body": "thirdperson;alias switchperson switchperson-first;echo Third person ON!",
+      "comment": "注册 alias switchperson-third：依次执行 thirdperson、alias、echo，并提示“已切换第三人称视角”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "t",
+      "body": "unbind uparrow;unbind downarrow;unbind leftarrow;unbind rightarrow;unbind pgup;unbind pgdn;unbind -;unbind =;echo >>> Camera conflict keys unbound",
+      "comment": "注册 alias t：依次执行 unbind、echo，并提示“>>> 已解绑运镜冲突按键”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "time",
+      "body": "mirv_campath edit start",
+      "comment": "注册 alias time：执行 mirv_campath edit start。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "widefov",
       "body": "widefovOn",
       "comment": "将 alias widefov 转发到 widefovOn。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
     },
-    "widefovOn": {
+    {
+      "name": "widefovOff",
+      "body": "alias widefov widefovOn;mirv_fov default;echo [Default FOV restored]",
+      "comment": "注册 alias widefovOff：依次执行 alias、mirv_fov、echo，并提示“[已还原默认fov]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "widefovOn",
       "body": "alias widefov widefovOff;mirv_fov 105;echo [Wide FOV on]",
       "comment": "注册 alias widefovOn：依次执行 alias、mirv_fov、echo，并提示“[已开启广角fov]”。",
-      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "xray",
+      "body": "toggle spec_show_xray 0 1;echo X-ray toggled!",
+      "comment": "注册 alias xray：依次执行 toggle、echo，并提示“X光状态updated”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg",
+      "group": "mode",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "srp_apply_default",
+      "body": "exec srp-cfg/presets/default/apply.cfg",
+      "comment": "注册入口 srp_apply_default：执行 srp-cfg/presets/default/apply.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_apply_echo",
+      "body": "exec srp-cfg/presets/echo/apply.cfg",
+      "comment": "注册入口 srp_apply_echo：执行 srp-cfg/presets/echo/apply.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_apply_visionl",
+      "body": "exec srp-cfg/presets/visionl/apply.cfg",
+      "comment": "注册入口 srp_apply_visionl：执行 srp-cfg/presets/visionl/apply.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_apply_yszh",
+      "body": "exec srp-cfg/presets/yszh/apply.cfg",
+      "comment": "注册入口 srp_apply_yszh：执行 srp-cfg/presets/yszh/apply.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_reset_valve",
+      "body": "exec srp-cfg/presets/valve/apply.cfg",
+      "comment": "注册入口 srp_reset_valve：执行 srp-cfg/presets/valve/apply.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_reset_valve_keys",
+      "body": "exec srp-cfg/presets/valve/keymap.cfg",
+      "comment": "注册入口 srp_reset_valve_keys：执行 srp-cfg/presets/valve/keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_reset_valve_settings",
+      "body": "exec srp-cfg/presets/valve/settings.cfg",
+      "comment": "注册入口 srp_reset_valve_settings：执行 srp-cfg/presets/valve/settings.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "srp_reset_valve_user",
+      "body": "exec srp-cfg/presets/valve/apply.cfg;execifexists srp-cfg/user/custom.cfg",
+      "comment": "注册 alias srp_reset_valve_user：依次执行 exec、execifexists。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg",
+      "group": "preset",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "keyhud",
+      "body": "pvp-hud-off",
+      "comment": "将 alias keyhud 转发到 pvp-hud-off。",
+      "definedIn": "config/srp-cfg/runtime/aliases.cfg",
+      "group": "runtime",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "pvp-hud-off",
+      "body": "cl_draw_only_deathnotices 1;cl_drawhud_force_radar 1;alias keyhud pvp-hud-on;echo Switched to PVP HUD: death notices, crosshair and radar only!",
+      "comment": "注册 alias pvp-hud-off：依次执行 cl_draw_only_deathnotices、cl_drawhud_force_radar、alias、echo，并提示“已切换为PVP HUD：仅显示死亡通知、准星与雷达！”。",
+      "definedIn": "config/srp-cfg/runtime/aliases.cfg",
+      "group": "runtime",
+      "autoComment": true,
+      "reachable": true
+    },
+    {
+      "name": "pvp-hud-on",
+      "body": "cl_draw_only_deathnotices 0;cl_drawhud_force_radar 0;alias keyhud pvp-hud-off;echo Switched to PVP HUD: show everything!",
+      "comment": "注册 alias pvp-hud-on：依次执行 cl_draw_only_deathnotices、cl_drawhud_force_radar、alias、echo，并提示“已切换为PVP HUD：全部显示！”。",
+      "definedIn": "config/srp-cfg/runtime/aliases.cfg",
+      "group": "runtime",
+      "autoComment": true,
+      "reachable": false
+    },
+    {
+      "name": "tick",
+      "body": "cl_ticktiming print summary;cl_ticktiming print detail;",
+      "comment": "“显示服务器tick信息”。",
+      "definedIn": "config/srp-cfg/runtime/aliases.cfg",
+      "group": "runtime",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "ancient",
+      "body": "exec srp-cfg/modes/practice/spawn/ancient.cfg",
+      "comment": "注册入口 ancient：执行 srp-cfg/modes/practice/spawn/ancient.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "anubis",
+      "body": "exec srp-cfg/modes/practice/spawn/anubis.cfg",
+      "comment": "注册入口 anubis：执行 srp-cfg/modes/practice/spawn/anubis.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT1",
+      "body": "setpos_exact -192 1696 32;setang 0 270 0;echo Teleported to: Ancient - CT 1",
+      "comment": "注册 CT1 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT10",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT10 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT11",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT11 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT12",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT12 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT13",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT13 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT14",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT14 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT15",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT15 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT2",
+      "body": "setpos_exact -256 1728 32;setang 0 270 0;echo Teleported to: Ancient - CT 2",
+      "comment": "注册 CT2 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT3",
+      "body": "setpos_exact -352 1728 32;setang 0 270 0;echo Teleported to: Ancient - CT 3",
+      "comment": "注册 CT3 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT4",
+      "body": "setpos_exact -448 1728 32;setang 0 270 0;echo Teleported to: Ancient - CT 4",
+      "comment": "注册 CT4 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT5",
+      "body": "setpos_exact -512 1696 32;setang 0 270 0;echo Teleported to: Ancient - CT 5",
+      "comment": "注册 CT5 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT6",
+      "body": "setpos_exact 2456.83 2153.16 140.843;setang 0 251.5 0;echo Teleported to: Inferno - CT 6",
+      "comment": "注册 CT6 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/inferno.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT7",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT7 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT8",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT8 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "CT9",
+      "body": "echo No such spawn, check the map spawn count and choose again",
+      "comment": "初始化 CT9 为不存在提示，避免切换地图后误用旧坐标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/init_spawns.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "dust2",
+      "body": "exec srp-cfg/modes/practice/spawn/dust2.cfg",
+      "comment": "注册入口 dust2：执行 srp-cfg/modes/practice/spawn/dust2.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "inferno",
+      "body": "exec srp-cfg/modes/practice/spawn/inferno.cfg",
+      "comment": "注册入口 inferno：执行 srp-cfg/modes/practice/spawn/inferno.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "italy",
+      "body": "exec srp-cfg/modes/practice/spawn/italy.cfg",
+      "comment": "注册入口 italy：执行 srp-cfg/modes/practice/spawn/italy.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "mirage",
+      "body": "exec srp-cfg/modes/practice/spawn/mirage.cfg",
+      "comment": "注册入口 mirage：执行 srp-cfg/modes/practice/spawn/mirage.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "nuke",
+      "body": "exec srp-cfg/modes/practice/spawn/nuke.cfg",
+      "comment": "注册入口 nuke：执行 srp-cfg/modes/practice/spawn/nuke.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "office",
+      "body": "exec srp-cfg/modes/practice/spawn/office.cfg",
+      "comment": "注册入口 office：执行 srp-cfg/modes/practice/spawn/office.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "overpass",
+      "body": "exec srp-cfg/modes/practice/spawn/overpass.cfg",
+      "comment": "注册入口 overpass：执行 srp-cfg/modes/practice/spawn/overpass.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T1",
+      "body": "setpos_exact -328 -2288 -156;setang 0 90 0;echo Teleported to: Ancient - T 1",
+      "comment": "注册 T1 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T10",
+      "body": "setpos_exact -304 -1608 16;setang 0 135 0;echo Teleported to: Anubis - T 10",
+      "comment": "注册 T10 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T11",
+      "body": "setpos_exact -192 -1608 16;setang 0 90 0;echo Teleported to: Anubis - T 11",
+      "comment": "注册 T11 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T12",
+      "body": "setpos_exact -493.000000 -808.000000 108.563377;setang_exact 0.000000 112.000122 0.000000;echo Teleported to: Dust2 - T 12",
+      "comment": "注册 T12 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/dust2.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T13",
+      "body": "setpos_exact -428.000000 -843.000000 95.296295;setang_exact 0.000000 133.500031 0.000000;echo Teleported to: Dust2 - T 13",
+      "comment": "注册 T13 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/dust2.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T14",
+      "body": "setpos_exact -367.000000 -808.000000 83.744965;setang_exact 0.000000 -177.000046 0.000000;echo Teleported to: Dust2 - T 14",
+      "comment": "注册 T14 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/dust2.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T15",
+      "body": "setpos_exact -332.000000 -754.000000 78.877106;setang_exact 0.000000 -147.500031 0.000000;echo Teleported to: Dust2 - T 15",
+      "comment": "注册 T15 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/dust2.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T2",
+      "body": "setpos_exact -456 -2288 -156;setang 0 90 0;echo Teleported to: Ancient - T 2",
+      "comment": "注册 T2 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T3",
+      "body": "setpos_exact -584 -2288 -156;setang 0 90 0;echo Teleported to: Ancient - T 3",
+      "comment": "注册 T3 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T4",
+      "body": "setpos_exact -392 -2224 -156;setang 0 90 0;echo Teleported to: Ancient - T 4",
+      "comment": "注册 T4 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T5",
+      "body": "setpos_exact -520 -2224 -156;setang 0 90 0;echo Teleported to: Ancient - T 5",
+      "comment": "注册 T5 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/ancient.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T6",
+      "body": "setpos_exact -264 -1560 16;setang 0 90 0;echo Teleported to: Anubis - T 6",
+      "comment": "注册 T6 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T7",
+      "body": "setpos_exact -144 -1568 16;setang 0 60 0;echo Teleported to: Anubis - T 7",
+      "comment": "注册 T7 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T8",
+      "body": "setpos_exact -128.004 -1632 16;setang 0 45 0;echo Teleported to: Anubis - T 8",
+      "comment": "注册 T8 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "T9",
+      "body": "setpos_exact -416 -1608 16;setang 0 150 0;echo Teleported to: Anubis - T 9",
+      "comment": "注册 T9 出生点：设置精确坐标与视角，并输出传送目标。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/anubis.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "train",
+      "body": "exec srp-cfg/modes/practice/spawn/train.cfg",
+      "comment": "注册入口 train：执行 srp-cfg/modes/practice/spawn/train.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
+    },
+    {
+      "name": "vertigo",
+      "body": "exec srp-cfg/modes/practice/spawn/vertigo.cfg",
+      "comment": "注册入口 vertigo：执行 srp-cfg/modes/practice/spawn/vertigo.cfg。",
+      "definedIn": "config/srp-cfg/modes/practice/spawn/spawn.cfg",
+      "group": "spawn",
+      "autoComment": false,
+      "reachable": false
     }
-  },
+  ],
   "keyLabels": {
     "0": "0",
     "mouse1": "鼠标左键",
