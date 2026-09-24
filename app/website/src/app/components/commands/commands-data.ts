@@ -1,10 +1,10 @@
 /**
  * 指令检索中心共享数据（L3.4）。
- * commands.json（public/data，2785 条）随路由模块打包（gzip 后 ~169KB，任务允许"随包下发"）；
+ * commands.json（src/data/generated，2785 条）随路由模块打包（gzip 后 ~169KB，任务允许"随包下发"）；
  * 检索增强字段（n_lower/cn_lower/en_lower/value_lower/pinyin）由 enhance() 模块级计算一次。
  * 过滤/拼音逻辑与旧 commands.astro 的 script 一致。
  */
-import commandsJson from "../../../../public/data/commands.json";
+import commandsJson from "../../../data/generated/commands.json";
 
 export interface CommandValueRange {
   min?: string;

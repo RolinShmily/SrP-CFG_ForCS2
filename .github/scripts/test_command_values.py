@@ -111,7 +111,7 @@ class CommandValueMetadataTests(unittest.TestCase):
         self.assertEqual(options, "0=关闭；1=开启")
 
     def test_repository_data_obeys_numeric_schema(self):
-        path = SCRIPT_DIR.parents[1] / "app/website/public/data/commands.json"
+        path = SCRIPT_DIR.parents[1] / "app/website/src/data/generated/commands.json"
         commands = json.loads(path.read_text(encoding="utf-8"))
 
         numeric = [
@@ -142,7 +142,7 @@ class CommandValueMetadataTests(unittest.TestCase):
             self.assertEqual(len(option_values), len(set(option_values)))
 
     def test_repository_data_obeys_command_contract(self):
-        path = SCRIPT_DIR.parents[1] / "app/website/public/data/commands.json"
+        path = SCRIPT_DIR.parents[1] / "app/website/src/data/generated/commands.json"
         commands = json.loads(path.read_text(encoding="utf-8"))
 
         validate_dataset(commands)

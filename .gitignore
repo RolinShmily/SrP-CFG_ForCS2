@@ -28,9 +28,11 @@ app/website/src/styles/fonts/
 app/desktop/src/renderer/public/fonts/
 app/desktop/src/renderer/styles/fonts/
 
-# 注：app/website/public/data/keymaps.json 是 scripts/extract-keymaps.mjs 的产物，
-# 真源同样是 config/srp-cfg，但**故意随仓库提交**——CI 的 typecheck 不生成任何东西，
-# 不提交就会找不到文件。漂移由 CI 的 `extract-keymaps.mjs --check` 卡住，不要加到这里。
+# 注：app/website/src/data/generated/ 下的 commands.json / keymaps.json / crosshair.json
+# 都是生成物（前者来自 SteamTracking，后两者来自 config/srp-cfg），但**故意随仓库提交**——
+# CI 的 typecheck 不生成任何东西，不提交就会找不到文件。漂移由 CI 的 --check 卡住，不要加到这里。
+# 它们放 src/ 而非 public/，是因为只被 import（构建期内联），
+# 放 public/ 会被原样拷进部署产物而那些拷贝无人请求。
 
 # ─── 工具产物 ────────────────────────────────────────────────
 # Playwright MCP 的截图 / 快照输出目录

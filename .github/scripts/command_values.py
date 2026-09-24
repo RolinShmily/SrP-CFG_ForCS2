@@ -177,7 +177,7 @@ def enrich_dataset(commands: list[dict]) -> list[dict]:
 
 
 def main() -> None:
-    path = Path(sys.argv[1] if len(sys.argv) > 1 else "app/website/public/data/commands.json")
+    path = Path(sys.argv[1] if len(sys.argv) > 1 else "app/website/src/data/generated/commands.json")
     commands = json.loads(path.read_text(encoding="utf-8"))
     enrich_dataset(commands)
     path.write_text(json.dumps(commands, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

@@ -155,7 +155,7 @@ def main():
         print("Missing CLOUDFLARE_ACCOUNT_ID or CLOUDFLARE_AI_TOKEN. Skipping Vectorize sync.")
         return
 
-    commands_path = "app/website/public/data/commands.json"
+    commands_path = "app/website/src/data/generated/commands.json"
     if not os.path.exists(commands_path):
         print(f"Error: {commands_path} not found.")
         return

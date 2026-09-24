@@ -206,10 +206,10 @@ class TestMainDegradation(unittest.TestCase):
         os.chdir(self.tmp)
         self.addCleanup(os.chdir, old_cwd)
 
-        os.makedirs("app/website/public/data", exist_ok=True)
+        os.makedirs("app/website/src/data/generated", exist_ok=True)
         os.makedirs(".github/scripts", exist_ok=True)
         # 一个已存在的命令，用于确认缓存复用逻辑未被破坏。
-        with open("app/website/public/data/commands.json", "w", encoding="utf-8") as f:
+        with open("app/website/src/data/generated/commands.json", "w", encoding="utf-8") as f:
             json.dump([{"n": "existing_cmd", "d": "0", "f": [], "en": "old", "t": "var",
                         "cn": "既有释义", "c": "system", "value": {}}], f)
         with open(".github/scripts/last_sha.txt", "w", encoding="utf-8") as f:
@@ -227,7 +227,7 @@ class TestMainDegradation(unittest.TestCase):
     def test_skips_untranslated_and_keeps_sha_for_retry(self):
         self._run({"good_new": {"name": "good_new", "desc_cn": "好", "category": "network"}})
 
-        with open("app/website/public/data/commands.json", encoding="utf-8") as f:
+        with open("app/website/src/data/generated/commands.json", encoding="utf-8") as f:
             data = {c["n"]: c for c in json.load(f)}
 
         self.assertIn("good_new", data)
@@ -249,14 +249,14 @@ class TestMainDegradation(unittest.TestCase):
         with open(".github/scripts/last_sha.txt", encoding="utf-8") as f:
             self.assertEqual(f.read().strip(), self.NEW_SHA)
 
-        with open("app/website/public/data/commands.json", encoding="utf-8") as f:
+        with open("app/website/src/data/generated/commands.json", encoding="utf-8") as f:
             data = {c["n"]: c for c in json.load(f)}
         self.assertIn("bad_new", data)
 
     def test_total_translation_outage_does_not_crash(self):
         self._run({})
 
-        with open("app/website/public/data/commands.json", encoding="utf-8") as f:
+        with open("app/website/src/data/generated/commands.json", encoding="utf-8") as f:
             data = {c["n"]: c for c in json.load(f)}
         self.assertEqual(set(data), {"existing_cmd"})
         with open(".github/scripts/last_sha.txt", encoding="utf-8") as f:

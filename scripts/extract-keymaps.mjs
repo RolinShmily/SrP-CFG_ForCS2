@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 从 config/srp-cfg 提取按键数据 → app/website/public/data/keymaps.json
+ * 从 config/srp-cfg 提取按键数据 → app/website/src/data/generated/keymaps.json
  *
  * 唯一真源是 config/ 下的 cfg 本身：keymap 层（presets / features / modes）与 alias 定义
  * 都由本脚本解析，网站不手写任何按键映射，cfg 改了重新生成即可，不存在第二份会漂移的数据。
@@ -24,7 +24,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CFG_ROOT = join(ROOT, "config/srp-cfg");
-const OUT = join(ROOT, "app/website/public/data/keymaps.json");
+const OUT = join(ROOT, "app/website/src/data/generated/keymaps.json");
 const CHECK_ONLY = process.argv.includes("--check");
 
 // ── 展示名（仅命名，非按键数据；按键本身全部来自 cfg）────────────────────

@@ -316,7 +316,7 @@ def get_upstream_latest_commit_sha():
     return None
 
 def main():
-    dest_path = "app/website/public/data/commands.json"
+    dest_path = "app/website/src/data/generated/commands.json"
     sha_file = ".github/scripts/last_sha.txt"
     
     # 0. Check upstream commit SHA to see if there are any changes

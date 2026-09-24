@@ -3,12 +3,12 @@
  *
  * - ssr: true：服务端渲染/预渲染模式（构建期 SSG）
  * - prerender：全部静态页面 + 2785 条指令详情页
- *   （指令数据来自 public/data/commands.json）
+ *   （指令数据来自 src/data/generated/commands.json）
  *
  * 待 Astro 迁移完成后删除旧结构（astro.config.ts / src/pages/*.astro）。
  */
 import type { Config } from "@react-router/dev/config";
-import commandsJson from "./public/data/commands.json";
+import commandsJson from "./src/data/generated/commands.json";
 
 export default {
   appDirectory: "src/app",
