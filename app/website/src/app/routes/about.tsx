@@ -65,7 +65,7 @@ const links = [
   },
   {
     label: "技术博文：关于 CFG 你要了解的二三事",
-    url: "https://blog.srprolin.top/posts/srp-cfg/",
+    url: "https://blog.srprolin.top/posts/6-srp-cfg-1/",
     icon: ExternalLink,
   },
 ];
