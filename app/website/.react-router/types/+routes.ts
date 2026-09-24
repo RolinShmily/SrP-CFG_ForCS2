@@ -17,16 +17,11 @@ type Pages = {
   "/download": {
     params: {};
   };
+  "/features": {
+    params: {};
+  };
   "/about": {
     params: {};
-  };
-  "/docs": {
-    params: {};
-  };
-  "/docs/:slug": {
-    params: {
-      "slug": string;
-    };
   };
   "/commands": {
     params: {};
@@ -41,11 +36,11 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/download" | "/about" | "/docs" | "/docs/:slug" | "/commands" | "/commands/:name";
+    page: "/" | "/download" | "/features" | "/about" | "/commands" | "/commands/:name";
   };
   "layout.tsx": {
     id: "layout";
-    page: "/" | "/download" | "/about" | "/docs" | "/docs/:slug" | "/commands" | "/commands/:name";
+    page: "/" | "/download" | "/features" | "/about" | "/commands" | "/commands/:name";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -55,17 +50,13 @@ type RouteFiles = {
     id: "routes/download";
     page: "/download";
   };
+  "routes/features.tsx": {
+    id: "routes/features";
+    page: "/features";
+  };
   "routes/about.tsx": {
     id: "routes/about";
     page: "/about";
-  };
-  "routes/docs.tsx": {
-    id: "routes/docs";
-    page: "/docs";
-  };
-  "routes/docs-detail.tsx": {
-    id: "routes/docs-detail";
-    page: "/docs/:slug";
   };
   "routes/commands.tsx": {
     id: "routes/commands";
@@ -82,9 +73,8 @@ type RouteModules = {
   "layout": typeof import("./src/app/layout.tsx");
   "routes/home": typeof import("./src/app/routes/home.tsx");
   "routes/download": typeof import("./src/app/routes/download.tsx");
+  "routes/features": typeof import("./src/app/routes/features.tsx");
   "routes/about": typeof import("./src/app/routes/about.tsx");
-  "routes/docs": typeof import("./src/app/routes/docs.tsx");
-  "routes/docs-detail": typeof import("./src/app/routes/docs-detail.tsx");
   "routes/commands": typeof import("./src/app/routes/commands.tsx");
   "routes/command-detail": typeof import("./src/app/routes/command-detail.tsx");
 };

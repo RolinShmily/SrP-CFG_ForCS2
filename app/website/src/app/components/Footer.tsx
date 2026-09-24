@@ -7,7 +7,7 @@ import { GithubIcon } from "./GithubIcon";
 import { REPO_URL } from "../../data/navigation";
 
 const footerLinks = [
-  { to: "/docs", label: "项目文档", icon: BookOpen, external: false },
+  { to: "/features", label: "功能与按键", icon: BookOpen, external: false },
   { to: "/download", label: "前往下载", icon: Download, external: false },
   { to: REPO_URL, label: "GitHub", icon: GithubIcon, external: true },
 ];

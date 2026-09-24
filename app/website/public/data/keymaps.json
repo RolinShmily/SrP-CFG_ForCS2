@@ -1,0 +1,3156 @@
+{
+  "$comment": "由 scripts/extract-keymaps.mjs 从 config/srp-cfg 生成，请勿手改；改 cfg 后重新运行该脚本。",
+  "layers": [
+    {
+      "id": "presets/default",
+      "kind": "preset",
+      "name": "default",
+      "label": "RoL1n 默认",
+      "file": "config/srp-cfg/presets/default/keymap.cfg",
+      "entryAlias": null,
+      "entries": [
+        {
+          "op": "bind",
+          "key": "w",
+          "target": "+forward",
+          "comment": "向前移动。"
+        },
+        {
+          "op": "bind",
+          "key": "s",
+          "target": "+back",
+          "comment": "向后移动。"
+        },
+        {
+          "op": "bind",
+          "key": "a",
+          "target": "+left",
+          "comment": "向左移动。"
+        },
+        {
+          "op": "bind",
+          "key": "d",
+          "target": "+right",
+          "comment": "向右移动。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse1",
+          "target": "+attack",
+          "comment": "普通攻击。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse2",
+          "target": "+attack2",
+          "comment": "特殊攻击或辅助开火。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_x",
+          "target": "yaw",
+          "comment": "鼠标水平移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_y",
+          "target": "pitch",
+          "comment": "鼠标垂直移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "e",
+          "target": "+use",
+          "comment": "使用或互动。"
+        },
+        {
+          "op": "bind",
+          "key": "r",
+          "target": "+reload",
+          "comment": "装填弹药。"
+        },
+        {
+          "op": "bind",
+          "key": "f",
+          "target": "+lookatweapon",
+          "comment": "检视武器。"
+        },
+        {
+          "op": "bind",
+          "key": "space",
+          "target": "+jump",
+          "comment": "跳跃。"
+        },
+        {
+          "op": "bind",
+          "key": "ctrl",
+          "target": "+duck",
+          "comment": "蹲下。"
+        },
+        {
+          "op": "bind",
+          "key": "tab",
+          "target": "+showscores",
+          "comment": "显示计分板。"
+        },
+        {
+          "op": "bind",
+          "key": "g",
+          "target": "drop",
+          "comment": "丢弃当前物品。"
+        },
+        {
+          "op": "bind",
+          "key": "m",
+          "target": "teammenu",
+          "comment": "打开队伍选择菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "shift",
+          "target": "+sprint",
+          "comment": "静步移动。"
+        },
+        {
+          "op": "bind",
+          "key": "b",
+          "target": "buymenu",
+          "comment": "打开购买菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "1",
+          "target": "slot1",
+          "comment": "切换主武器。"
+        },
+        {
+          "op": "bind",
+          "key": "2",
+          "target": "slot2",
+          "comment": "切换副武器。"
+        },
+        {
+          "op": "bind",
+          "key": "3",
+          "target": "slot3",
+          "comment": "切换匕首或电击枪。"
+        },
+        {
+          "op": "bind",
+          "key": "4",
+          "target": "slot4",
+          "comment": "切换投掷物选择槽。"
+        },
+        {
+          "op": "bind",
+          "key": "5",
+          "target": "slot5",
+          "comment": "切换 C4。"
+        },
+        {
+          "op": "bind",
+          "key": "6",
+          "target": "slot9",
+          "comment": "切换诱饵弹。"
+        },
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "slot6",
+          "comment": "切换高爆手雷。"
+        },
+        {
+          "op": "bind",
+          "key": "x",
+          "target": "slot7",
+          "comment": "切换闪光弹。"
+        },
+        {
+          "op": "bind",
+          "key": "c",
+          "target": "slot8",
+          "comment": "切换烟雾弹。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "slot10",
+          "comment": "切换燃烧弹。"
+        },
+        {
+          "op": "bind",
+          "key": "q",
+          "target": "lastinv",
+          "comment": "切换到上一个武器。"
+        },
+        {
+          "op": "bind",
+          "key": "=",
+          "target": "slot12",
+          "comment": "切换医疗针槽。"
+        },
+        {
+          "op": "bind",
+          "key": "'",
+          "target": "radio2",
+          "comment": "打开无线电菜单"
+        },
+        {
+          "op": "bind",
+          "key": "y",
+          "target": "+spray_menu",
+          "comment": "打开喷漆菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "u",
+          "target": "messagemode",
+          "comment": "打开全局聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "i",
+          "target": "messagemode2",
+          "comment": "打开团队聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheelup",
+          "target": "+jump",
+          "comment": "跳跃。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheeldown",
+          "target": "+jump",
+          "comment": "跳跃。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse4",
+          "target": "+voicerecord",
+          "comment": "按住进行语音通信。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse3",
+          "target": "player_ping",
+          "comment": "放置玩家标记。"
+        },
+        {
+          "op": "bind",
+          "key": "alt",
+          "target": "+radialradio",
+          "comment": "打开快捷聊天轮盘。"
+        },
+        {
+          "op": "bind",
+          "key": "ralt",
+          "target": "noclip",
+          "comment": "切换飞行模式。"
+        },
+        {
+          "op": "bind",
+          "key": "`",
+          "target": "toggleconsole",
+          "comment": "打开或关闭开发者控制台。"
+        },
+        {
+          "op": "bind",
+          "key": "h",
+          "target": "switchhands",
+          "comment": "切换左右手持枪。"
+        },
+        {
+          "op": "bind",
+          "key": "t",
+          "target": "toggleradarscale",
+          "comment": "切换雷达缩放比例。"
+        },
+        {
+          "op": "bind",
+          "key": "f3",
+          "target": "buy secondary4",
+          "comment": "购买预设副武器。"
+        },
+        {
+          "op": "bind",
+          "key": "f4",
+          "target": "buy rifle1",
+          "comment": "购买预设步枪。"
+        },
+        {
+          "op": "bind",
+          "key": "f5",
+          "target": "buy hegrenade",
+          "comment": "购买高爆手雷。"
+        },
+        {
+          "op": "bind",
+          "key": "f6",
+          "target": "buy flashbang",
+          "comment": "购买闪光弹。"
+        },
+        {
+          "op": "bind",
+          "key": "f7",
+          "target": "buy smokegrenade",
+          "comment": "购买烟雾弹。"
+        },
+        {
+          "op": "bind",
+          "key": "f8",
+          "target": "buy molotov;buy incgrenade",
+          "comment": "购买燃烧瓶或燃烧弹。"
+        },
+        {
+          "op": "bind",
+          "key": "f9",
+          "target": "buy vest",
+          "comment": "购买防弹衣。"
+        },
+        {
+          "op": "bind",
+          "key": "f10",
+          "target": "buy vesthelm",
+          "comment": "购买防弹衣与头盔。"
+        },
+        {
+          "op": "bind",
+          "key": "f11",
+          "target": "buy defuser",
+          "comment": "购买拆弹器。"
+        },
+        {
+          "op": "bind",
+          "key": "backspace",
+          "target": "sellbackall",
+          "comment": "撤销本回合全部购买。"
+        },
+        {
+          "op": "bind",
+          "key": "del",
+          "target": "toggle volume 0.10 1.00",
+          "comment": "在低音量与正常音量之间切换。"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "say_team !drop",
+          "comment": "向平台队友发送发刀指令。"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "toggle cl_teamid_overhead_mode 1 3",
+          "comment": "切换队友头顶标识模式。"
+        },
+        {
+          "op": "bind",
+          "key": "-",
+          "target": "keyhud",
+          "comment": "切换精简 HUD。"
+        },
+        {
+          "op": "bind",
+          "key": "7",
+          "target": "keyc",
+          "comment": "循环切换准星预设。"
+        },
+        {
+          "op": "bind",
+          "key": "8",
+          "target": "keyv",
+          "comment": "循环切换持枪视角预设。"
+        },
+        {
+          "op": "bind",
+          "key": "o",
+          "target": "srp_reload",
+          "comment": "重新载入 Runtime 与用户配置。"
+        },
+        {
+          "op": "bind",
+          "key": "9",
+          "target": "srp_preview_keys",
+          "comment": "进入饰品预览模式并应用键位。"
+        },
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "srp_knife_keys",
+          "comment": "切换匕首模型。"
+        },
+        {
+          "op": "bind",
+          "key": "p",
+          "target": "srp_practice_keys",
+          "comment": "进入跑图模式并应用键位。"
+        },
+        {
+          "op": "bind",
+          "key": "end",
+          "target": "srp_pwa_prac_keys",
+          "comment": "进入完美跑图模式并应用键位。"
+        },
+        {
+          "op": "bind",
+          "key": "[",
+          "target": "srp_autoview_keys",
+          "comment": "启用武器自适应视角键位。"
+        },
+        {
+          "op": "bind",
+          "key": "]",
+          "target": "srp_demo_keys",
+          "comment": "进入 Demo/HLAE 模式并应用键位。"
+        },
+        {
+          "op": "unbind",
+          "key": "f1",
+          "comment": "清除 f1 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "f2",
+          "comment": "清除 f2 的旧绑定，避免与当前键位方案冲突。"
+        }
+      ]
+    },
+    {
+      "id": "presets/echo",
+      "kind": "preset",
+      "name": "echo",
+      "label": "Echo",
+      "file": "config/srp-cfg/presets/echo/keymap.cfg",
+      "entryAlias": null,
+      "entries": [
+        {
+          "op": "bind",
+          "key": "w",
+          "target": "+forward",
+          "comment": "向前移动。"
+        },
+        {
+          "op": "bind",
+          "key": "s",
+          "target": "+back",
+          "comment": "向后移动。"
+        },
+        {
+          "op": "bind",
+          "key": "a",
+          "target": "+left",
+          "comment": "向左移动。"
+        },
+        {
+          "op": "bind",
+          "key": "d",
+          "target": "+right",
+          "comment": "向右移动。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse1",
+          "target": "+attack",
+          "comment": "普通攻击。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse2",
+          "target": "+attack2",
+          "comment": "特殊攻击或辅助开火。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_x",
+          "target": "yaw",
+          "comment": "鼠标水平移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_y",
+          "target": "pitch",
+          "comment": "鼠标垂直移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "e",
+          "target": "+use",
+          "comment": "使用或互动。"
+        },
+        {
+          "op": "bind",
+          "key": "r",
+          "target": "+reload",
+          "comment": "装填弹药。"
+        },
+        {
+          "op": "bind",
+          "key": "f",
+          "target": "+lookatweapon",
+          "comment": "检视武器。"
+        },
+        {
+          "op": "bind",
+          "key": "space",
+          "target": "+jump",
+          "comment": "跳跃。"
+        },
+        {
+          "op": "bind",
+          "key": "ctrl",
+          "target": "+duck",
+          "comment": "蹲下。"
+        },
+        {
+          "op": "bind",
+          "key": "tab",
+          "target": "+showscores",
+          "comment": "显示计分板。"
+        },
+        {
+          "op": "bind",
+          "key": "g",
+          "target": "drop",
+          "comment": "丢弃当前物品。"
+        },
+        {
+          "op": "bind",
+          "key": "m",
+          "target": "teammenu",
+          "comment": "打开队伍选择菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "shift",
+          "target": "+sprint",
+          "comment": "静步移动。"
+        },
+        {
+          "op": "bind",
+          "key": "b",
+          "target": "buymenu",
+          "comment": "打开购买菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "1",
+          "target": "slot1",
+          "comment": "切换主武器。"
+        },
+        {
+          "op": "bind",
+          "key": "2",
+          "target": "slot2",
+          "comment": "切换副武器。"
+        },
+        {
+          "op": "bind",
+          "key": "3",
+          "target": "slot3",
+          "comment": "切换匕首或电击枪。"
+        },
+        {
+          "op": "bind",
+          "key": "4",
+          "target": "slot4",
+          "comment": "切换投掷物选择槽。"
+        },
+        {
+          "op": "bind",
+          "key": "5",
+          "target": "slot5",
+          "comment": "切换 C4。"
+        },
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "radio2;slot12",
+          "comment": "打开无线电菜单并切换 X 光/医疗针槽。"
+        },
+        {
+          "op": "bind",
+          "key": "q",
+          "target": "lastinv",
+          "comment": "切换到上一个武器。"
+        },
+        {
+          "op": "bind",
+          "key": "t",
+          "target": "+spray_menu",
+          "comment": "打开喷漆菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "u",
+          "target": "messagemode2",
+          "comment": "打开团队聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "y",
+          "target": "messagemode",
+          "comment": "打开全局聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheeldown",
+          "target": "invnext",
+          "comment": "选择下一个物品。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheelup",
+          "target": "invprev",
+          "comment": "选择上一个物品。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse4",
+          "target": "+voicerecord",
+          "comment": "按住进行语音通信。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse3",
+          "target": "player_ping",
+          "comment": "放置玩家标记。"
+        },
+        {
+          "op": "bind",
+          "key": "alt",
+          "target": "+radialradio",
+          "comment": "打开快捷聊天轮盘。"
+        },
+        {
+          "op": "bind",
+          "key": "ralt",
+          "target": "noclip",
+          "comment": "切换飞行模式。"
+        },
+        {
+          "op": "bind",
+          "key": "`",
+          "target": "toggleconsole",
+          "comment": "打开或关闭开发者控制台。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "switchhands",
+          "comment": "切换左右手持枪。"
+        },
+        {
+          "op": "bind",
+          "key": "h",
+          "target": "toggleradarscale",
+          "comment": "切换雷达缩放比例。"
+        },
+        {
+          "op": "bind",
+          "key": "del",
+          "target": "toggle volume 0.10 1.00",
+          "comment": "在低音量与正常音量之间切换。"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "say_team !drop",
+          "comment": "向平台队友发送发刀指令。"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "toggle cl_teamid_overhead_mode 1 3",
+          "comment": "切换队友头顶标识模式。"
+        },
+        {
+          "op": "bind",
+          "key": "7",
+          "target": "keyc",
+          "comment": "循环切换准星预设。"
+        },
+        {
+          "op": "bind",
+          "key": "8",
+          "target": "keyv",
+          "comment": "循环切换持枪视角预设。"
+        },
+        {
+          "op": "bind",
+          "key": "o",
+          "target": "srp_reload",
+          "comment": "重新载入 Runtime 与用户配置。"
+        },
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "srp_knife_keys",
+          "comment": "切换匕首模型。"
+        },
+        {
+          "op": "bind",
+          "key": "p",
+          "target": "srp_practice_keys",
+          "comment": "进入跑图模式并应用键位。"
+        },
+        {
+          "op": "bind",
+          "key": "end",
+          "target": "srp_pwa_prac_keys",
+          "comment": "进入完美跑图模式并应用键位。"
+        },
+        {
+          "op": "unbind",
+          "key": "f1",
+          "comment": "清除 f1 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "f2",
+          "comment": "清除 f2 的旧绑定，避免与当前键位方案冲突。"
+        }
+      ]
+    },
+    {
+      "id": "presets/valve",
+      "kind": "preset",
+      "name": "valve",
+      "label": "Valve 基线",
+      "file": "config/srp-cfg/presets/valve/keymap.cfg",
+      "entryAlias": null,
+      "entries": []
+    },
+    {
+      "id": "presets/visionl",
+      "kind": "preset",
+      "name": "visionl",
+      "label": "VisionL",
+      "file": "config/srp-cfg/presets/visionl/keymap.cfg",
+      "entryAlias": null,
+      "entries": [
+        {
+          "op": "bind",
+          "key": "w",
+          "target": "+forward",
+          "comment": "向前移动。"
+        },
+        {
+          "op": "bind",
+          "key": "s",
+          "target": "+back",
+          "comment": "向后移动。"
+        },
+        {
+          "op": "bind",
+          "key": "a",
+          "target": "+left",
+          "comment": "向左移动。"
+        },
+        {
+          "op": "bind",
+          "key": "d",
+          "target": "+right",
+          "comment": "向右移动。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse1",
+          "target": "+attack",
+          "comment": "普通攻击。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse2",
+          "target": "+attack2",
+          "comment": "特殊攻击或辅助开火。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_x",
+          "target": "yaw",
+          "comment": "鼠标水平移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_y",
+          "target": "pitch",
+          "comment": "鼠标垂直移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "e",
+          "target": "+use",
+          "comment": "使用或互动。"
+        },
+        {
+          "op": "bind",
+          "key": "r",
+          "target": "+reload",
+          "comment": "装填弹药。"
+        },
+        {
+          "op": "bind",
+          "key": "f",
+          "target": "+lookatweapon",
+          "comment": "检视武器。"
+        },
+        {
+          "op": "bind",
+          "key": "space",
+          "target": "+jump",
+          "comment": "跳跃。"
+        },
+        {
+          "op": "bind",
+          "key": "ctrl",
+          "target": "+duck",
+          "comment": "蹲下。"
+        },
+        {
+          "op": "bind",
+          "key": "tab",
+          "target": "+showscores",
+          "comment": "显示计分板。"
+        },
+        {
+          "op": "bind",
+          "key": "g",
+          "target": "drop",
+          "comment": "丢弃当前物品。"
+        },
+        {
+          "op": "bind",
+          "key": "m",
+          "target": "teammenu",
+          "comment": "打开队伍选择菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "shift",
+          "target": "+sprint",
+          "comment": "静步移动。"
+        },
+        {
+          "op": "bind",
+          "key": "b",
+          "target": "buymenu",
+          "comment": "打开购买菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "1",
+          "target": "slot1",
+          "comment": "切换主武器。"
+        },
+        {
+          "op": "bind",
+          "key": "2",
+          "target": "slot2",
+          "comment": "切换副武器。"
+        },
+        {
+          "op": "bind",
+          "key": "3",
+          "target": "slot3",
+          "comment": "切换匕首或电击枪。"
+        },
+        {
+          "op": "bind",
+          "key": "4",
+          "target": "slot4",
+          "comment": "切换投掷物选择槽。"
+        },
+        {
+          "op": "bind",
+          "key": "5",
+          "target": "slot5",
+          "comment": "切换 C4。"
+        },
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "radio2;slot12",
+          "comment": "打开无线电菜单并切换 X 光/医疗针槽。"
+        },
+        {
+          "op": "bind",
+          "key": "q",
+          "target": "lastinv",
+          "comment": "切换到上一个武器。"
+        },
+        {
+          "op": "bind",
+          "key": "t",
+          "target": "+spray_menu",
+          "comment": "打开喷漆菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "y",
+          "target": "messagemode",
+          "comment": "打开全局聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "u",
+          "target": "messagemode2",
+          "comment": "打开团队聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "c",
+          "target": "toggleradarscale",
+          "comment": "切换雷达缩放比例。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheeldown",
+          "target": "invnext",
+          "comment": "选择下一个物品。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheelup",
+          "target": "invprev",
+          "comment": "选择上一个物品。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "+voicerecord",
+          "comment": "按住进行语音通信。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse3",
+          "target": "player_ping",
+          "comment": "放置玩家标记。"
+        },
+        {
+          "op": "bind",
+          "key": "alt",
+          "target": "+radialradio",
+          "comment": "打开快捷聊天轮盘。"
+        },
+        {
+          "op": "bind",
+          "key": "`",
+          "target": "toggleconsole",
+          "comment": "打开或关闭开发者控制台。"
+        },
+        {
+          "op": "bind",
+          "key": "h",
+          "target": "switchhands",
+          "comment": "切换左右手持枪。"
+        },
+        {
+          "op": "bind",
+          "key": "del",
+          "target": "toggle volume 0.10 1.00",
+          "comment": "在低音量与正常音量之间切换。"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "say_team !drop",
+          "comment": "向平台队友发送发刀指令。"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "toggle cl_teamid_overhead_mode 1 3",
+          "comment": "切换队友头顶标识模式。"
+        },
+        {
+          "op": "bind",
+          "key": "7",
+          "target": "keyc",
+          "comment": "循环切换准星预设。"
+        },
+        {
+          "op": "bind",
+          "key": "8",
+          "target": "keyv",
+          "comment": "循环切换持枪视角预设。"
+        },
+        {
+          "op": "bind",
+          "key": "o",
+          "target": "srp_reload",
+          "comment": "重新载入 Runtime 与用户配置。"
+        },
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "srp_knife_keys",
+          "comment": "切换匕首模型。"
+        },
+        {
+          "op": "bind",
+          "key": "p",
+          "target": "srp_practice_keys",
+          "comment": "进入跑图模式并应用键位。"
+        },
+        {
+          "op": "bind",
+          "key": "end",
+          "target": "srp_pwa_prac_keys",
+          "comment": "进入完美跑图模式并应用键位。"
+        },
+        {
+          "op": "unbind",
+          "key": "f1",
+          "comment": "清除 f1 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "f2",
+          "comment": "清除 f2 的旧绑定，避免与当前键位方案冲突。"
+        }
+      ]
+    },
+    {
+      "id": "presets/yszh",
+      "kind": "preset",
+      "name": "yszh",
+      "label": "YSZH",
+      "file": "config/srp-cfg/presets/yszh/keymap.cfg",
+      "entryAlias": null,
+      "entries": [
+        {
+          "op": "bind",
+          "key": "w",
+          "target": "+forward",
+          "comment": "向前移动。"
+        },
+        {
+          "op": "bind",
+          "key": "s",
+          "target": "+back",
+          "comment": "向后移动。"
+        },
+        {
+          "op": "bind",
+          "key": "a",
+          "target": "+left",
+          "comment": "向左移动。"
+        },
+        {
+          "op": "bind",
+          "key": "d",
+          "target": "+right",
+          "comment": "向右移动。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse1",
+          "target": "+attack",
+          "comment": "普通攻击。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse2",
+          "target": "+attack2",
+          "comment": "特殊攻击或辅助开火。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_x",
+          "target": "yaw",
+          "comment": "鼠标水平移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse_y",
+          "target": "pitch",
+          "comment": "鼠标垂直移动控制视角。"
+        },
+        {
+          "op": "bind",
+          "key": "e",
+          "target": "+use",
+          "comment": "使用或互动。"
+        },
+        {
+          "op": "bind",
+          "key": "r",
+          "target": "+reload",
+          "comment": "装填弹药。"
+        },
+        {
+          "op": "bind",
+          "key": "f",
+          "target": "+lookatweapon",
+          "comment": "检视武器。"
+        },
+        {
+          "op": "bind",
+          "key": "space",
+          "target": "+jump",
+          "comment": "跳跃。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse4",
+          "target": "+duck",
+          "comment": "蹲下。"
+        },
+        {
+          "op": "bind",
+          "key": "tab",
+          "target": "+showscores",
+          "comment": "显示计分板。"
+        },
+        {
+          "op": "bind",
+          "key": "g",
+          "target": "drop",
+          "comment": "丢弃当前物品。"
+        },
+        {
+          "op": "bind",
+          "key": "m",
+          "target": "teammenu",
+          "comment": "打开队伍选择菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "shift",
+          "target": "+sprint",
+          "comment": "静步移动。"
+        },
+        {
+          "op": "bind",
+          "key": "b",
+          "target": "buymenu",
+          "comment": "打开购买菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "1",
+          "target": "slot1",
+          "comment": "切换主武器。"
+        },
+        {
+          "op": "bind",
+          "key": "2",
+          "target": "slot2",
+          "comment": "切换副武器。"
+        },
+        {
+          "op": "bind",
+          "key": "3",
+          "target": "slot3",
+          "comment": "切换匕首或电击枪。"
+        },
+        {
+          "op": "bind",
+          "key": "4",
+          "target": "slot4",
+          "comment": "切换投掷物选择槽。"
+        },
+        {
+          "op": "bind",
+          "key": "5",
+          "target": "slot5",
+          "comment": "切换 C4。"
+        },
+        {
+          "op": "bind",
+          "key": "6",
+          "target": "slot9",
+          "comment": "切换诱饵弹。"
+        },
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "slot6",
+          "comment": "切换高爆手雷。"
+        },
+        {
+          "op": "bind",
+          "key": "q",
+          "target": "slot7",
+          "comment": "切换闪光弹。"
+        },
+        {
+          "op": "bind",
+          "key": "c",
+          "target": "slot8",
+          "comment": "切换烟雾弹。"
+        },
+        {
+          "op": "bind",
+          "key": "x",
+          "target": "slot10",
+          "comment": "切换燃烧弹。"
+        },
+        {
+          "op": "bind",
+          "key": "'",
+          "target": "radio2;slot12",
+          "comment": "打开无线电菜单并切换 X 光/医疗针槽。"
+        },
+        {
+          "op": "bind",
+          "key": "y",
+          "target": "+spray_menu",
+          "comment": "打开喷漆菜单。"
+        },
+        {
+          "op": "bind",
+          "key": "u",
+          "target": "messagemode",
+          "comment": "打开全局聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "i",
+          "target": "messagemode2",
+          "comment": "打开团队聊天。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheeldown",
+          "target": "invnext",
+          "comment": "选择下一个物品。"
+        },
+        {
+          "op": "bind",
+          "key": "mwheelup",
+          "target": "invprev",
+          "comment": "选择上一个物品。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "+voicerecord",
+          "comment": "按住进行语音通信。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse3",
+          "target": "player_ping",
+          "comment": "放置玩家标记。"
+        },
+        {
+          "op": "bind",
+          "key": "alt",
+          "target": "+radialradio",
+          "comment": "打开快捷聊天轮盘。"
+        },
+        {
+          "op": "bind",
+          "key": "ralt",
+          "target": "noclip",
+          "comment": "切换飞行模式。"
+        },
+        {
+          "op": "bind",
+          "key": "`",
+          "target": "toggleconsole",
+          "comment": "打开或关闭开发者控制台。"
+        },
+        {
+          "op": "bind",
+          "key": "h",
+          "target": "switchhands",
+          "comment": "切换左右手持枪。"
+        },
+        {
+          "op": "bind",
+          "key": "t",
+          "target": "toggleradarscale",
+          "comment": "切换雷达缩放比例。"
+        },
+        {
+          "op": "bind",
+          "key": "del",
+          "target": "toggle volume 0.10 1.00",
+          "comment": "在低音量与正常音量之间切换。"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "say_team !drop",
+          "comment": "向平台队友发送发刀指令。"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "toggle cl_teamid_overhead_mode 1 3",
+          "comment": "切换队友头顶标识模式。"
+        },
+        {
+          "op": "bind",
+          "key": "7",
+          "target": "keyc",
+          "comment": "循环切换准星预设。"
+        },
+        {
+          "op": "bind",
+          "key": "8",
+          "target": "keyv",
+          "comment": "循环切换持枪视角预设。"
+        },
+        {
+          "op": "bind",
+          "key": "o",
+          "target": "srp_reload",
+          "comment": "重新载入 Runtime 与用户配置。"
+        },
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "srp_knife_keys",
+          "comment": "切换匕首模型。"
+        },
+        {
+          "op": "bind",
+          "key": "p",
+          "target": "srp_practice_keys",
+          "comment": "进入跑图模式并应用键位。"
+        },
+        {
+          "op": "bind",
+          "key": "end",
+          "target": "srp_pwa_prac_keys",
+          "comment": "进入完美跑图模式并应用键位。"
+        },
+        {
+          "op": "unbind",
+          "key": "f1",
+          "comment": "清除 f1 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "f2",
+          "comment": "清除 f2 的旧绑定，避免与当前键位方案冲突。"
+        }
+      ]
+    },
+    {
+      "id": "features/autoview",
+      "kind": "feature",
+      "name": "autoview",
+      "label": "自适应视角",
+      "file": "config/srp-cfg/features/autoview/keymap.cfg",
+      "entryAlias": "srp_autoview_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "1",
+          "target": "slot1;view_0",
+          "comment": "切换主武器，并应用主武器持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "2",
+          "target": "slot2;view_1",
+          "comment": "切换副武器，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "3",
+          "target": "slot3;view_1",
+          "comment": "切换匕首或电击枪，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "4",
+          "target": "slot11;view_1",
+          "comment": "切换电击枪，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "5",
+          "target": "slot5;view_1",
+          "comment": "切换 C4，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "6",
+          "target": "slot9;view_1",
+          "comment": "切换诱饵弹，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "slot6;view_1",
+          "comment": "切换高爆手雷，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "x",
+          "target": "slot7;view_1",
+          "comment": "切换闪光弹，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "c",
+          "target": "slot8;view_1",
+          "comment": "切换烟雾弹，并应用通用持枪视角。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "slot10;view_1",
+          "comment": "切换燃烧弹，并应用通用持枪视角。"
+        },
+        {
+          "op": "unbind",
+          "key": "1",
+          "comment": "清除 1 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "2",
+          "comment": "清除 2 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "3",
+          "comment": "清除 3 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "4",
+          "comment": "清除 4 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "5",
+          "comment": "清除 5 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "6",
+          "comment": "清除 6 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "z",
+          "comment": "清除 z 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "x",
+          "comment": "清除 x 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "c",
+          "comment": "清除 c 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "v",
+          "comment": "清除 v 的旧绑定，避免与当前键位方案冲突。"
+        }
+      ]
+    },
+    {
+      "id": "features/crosshair-view",
+      "kind": "feature",
+      "name": "crosshair-view",
+      "label": "准星与视角",
+      "file": "config/srp-cfg/features/crosshair-view/keymap.cfg",
+      "entryAlias": "srp_crosshair_view_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "7",
+          "target": "keyc",
+          "comment": "循环切换准星预设。"
+        },
+        {
+          "op": "bind",
+          "key": "8",
+          "target": "keyv",
+          "comment": "循环切换持枪视角预设。"
+        },
+        {
+          "op": "bind",
+          "key": "leftarrow",
+          "target": "srp_crosshair_dot",
+          "comment": "切换准星中心点。"
+        },
+        {
+          "op": "bind",
+          "key": "downarrow",
+          "target": "switchthrow",
+          "comment": "切换投掷物准星显示。"
+        }
+      ]
+    },
+    {
+      "id": "features/knife",
+      "kind": "feature",
+      "name": "knife",
+      "label": "匕首模型",
+      "file": "config/srp-cfg/features/knife/keymap.cfg",
+      "entryAlias": "srp_knife_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "+srp_knife_switch",
+          "comment": "一键循环切换刀具。"
+        }
+      ]
+    },
+    {
+      "id": "features/zeus",
+      "kind": "feature",
+      "name": "zeus",
+      "label": "电击枪",
+      "file": "config/srp-cfg/features/zeus/keymap.cfg",
+      "entryAlias": "srp_zeus_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "1",
+          "target": "slot1;att1",
+          "comment": "切换主武器，并恢复普通武器状态。"
+        },
+        {
+          "op": "bind",
+          "key": "2",
+          "target": "slot2;att1",
+          "comment": "切换副武器，并恢复普通武器状态。"
+        },
+        {
+          "op": "bind",
+          "key": "3",
+          "target": "slot3;att1",
+          "comment": "切换匕首或电击枪，并恢复普通武器状态。"
+        },
+        {
+          "op": "bind",
+          "key": "4",
+          "target": "slot11;att0",
+          "comment": "切换电击枪，并启用电击枪攻击后回切。"
+        },
+        {
+          "op": "bind",
+          "key": "5",
+          "target": "slot5;att1",
+          "comment": "切换 C4，并恢复普通武器状态。"
+        },
+        {
+          "op": "bind",
+          "key": "q",
+          "target": "lastinv;att1",
+          "comment": "切换到上一个武器，并恢复普通武器状态。"
+        },
+        {
+          "op": "unbind",
+          "key": "1",
+          "comment": "清除 1 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "2",
+          "comment": "清除 2 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "3",
+          "comment": "清除 3 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "4",
+          "comment": "清除 4 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "5",
+          "comment": "清除 5 的旧绑定，避免与当前键位方案冲突。"
+        },
+        {
+          "op": "unbind",
+          "key": "q",
+          "comment": "清除 q 的旧绑定，避免与当前键位方案冲突。"
+        }
+      ]
+    },
+    {
+      "id": "modes/demo-hlae",
+      "kind": "mode",
+      "name": "demo-hlae",
+      "label": "Demo / HLAE",
+      "file": "config/srp-cfg/modes/demo-hlae/keymap.cfg",
+      "entryAlias": "srp_demo_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "uparrow",
+          "target": "srp_demo_record_start",
+          "comment": "开始 HLAE 录制并继续播放 Demo。"
+        },
+        {
+          "op": "bind",
+          "key": "downarrow",
+          "target": "srp_demo_record_end",
+          "comment": "结束 HLAE 录制并暂停 Demo。"
+        },
+        {
+          "op": "bind",
+          "key": "t",
+          "target": "srp_demo_campath",
+          "comment": "切换镜头路径启用状态。"
+        },
+        {
+          "op": "bind",
+          "key": "y",
+          "target": "srp_demo_campath_draw",
+          "comment": "切换镜头路径显示。"
+        },
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "srp_demo_dmsg",
+          "comment": "切换当前观察玩家的击杀信息。"
+        },
+        {
+          "op": "bind",
+          "key": "=",
+          "target": "srp_demo_widefov",
+          "comment": "切换广角 FOV。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse5",
+          "target": "srp_demo_gear_up",
+          "comment": "提高 Demo 播放速度。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse4",
+          "target": "srp_demo_gear_down",
+          "comment": "降低 Demo 播放速度。"
+        },
+        {
+          "op": "bind",
+          "key": "q",
+          "target": "srp_demo_ui",
+          "comment": "打开 Demo 控制面板。"
+        },
+        {
+          "op": "bind",
+          "key": "p",
+          "target": "srp_demo_togglepause",
+          "comment": "暂停或继续 Demo。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse3",
+          "target": "srp_demo_togglepause",
+          "comment": "暂停或继续 Demo。"
+        },
+        {
+          "op": "bind",
+          "key": "h",
+          "target": "srp_demo_hud_deathnotices",
+          "comment": "切换精简 HUD。"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "srp_demo_voice",
+          "comment": "切换游戏与解说语音。"
+        },
+        {
+          "op": "bind",
+          "key": "'",
+          "target": "srp_demo_player_voice",
+          "comment": "切换 Demo 玩家语音。"
+        },
+        {
+          "op": "bind",
+          "key": "x",
+          "target": "srp_demo_xray",
+          "comment": "切换观察 X 光。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "srp_demo_crosshair",
+          "comment": "切换准星显示。"
+        },
+        {
+          "op": "bind",
+          "key": "b",
+          "target": "srp_demo_hud_full",
+          "comment": "切换完整 HUD。"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "srp_demo_radar",
+          "comment": "循环切换雷达强制显示状态。"
+        },
+        {
+          "op": "bind",
+          "key": "ralt",
+          "target": "srp_demo_teamid",
+          "comment": "切换队友头顶标识模式。"
+        },
+        {
+          "op": "bind",
+          "key": "m",
+          "target": "srp_demo_mute",
+          "comment": "切换静音状态。"
+        },
+        {
+          "op": "bind",
+          "key": "r",
+          "target": "srp_demo_camera_mode",
+          "comment": "进入 HLAE 运镜模式。"
+        },
+        {
+          "op": "bind",
+          "key": "u",
+          "target": "srp_demo_marktick",
+          "comment": "标记当前 Demo Tick。"
+        },
+        {
+          "op": "bind",
+          "key": "i",
+          "target": "srp_demo_gotomark",
+          "comment": "跳转到已标记的 Demo Tick。"
+        },
+        {
+          "op": "bind",
+          "key": ",",
+          "target": "srp_demo_seek_back",
+          "comment": "Demo 快退 5 秒。"
+        },
+        {
+          "op": "bind",
+          "key": ".",
+          "target": "srp_demo_seek_forward",
+          "comment": "Demo 快进 5 秒。"
+        },
+        {
+          "op": "bind",
+          "key": "[",
+          "target": "srp_demo_campath_start_forward",
+          "comment": "将镜头路径起始时间后移 0.25 秒。"
+        },
+        {
+          "op": "bind",
+          "key": "]",
+          "target": "srp_demo_campath_start_back",
+          "comment": "将镜头路径起始时间前移 0.25 秒。"
+        },
+        {
+          "op": "bind",
+          "key": "f5",
+          "target": "srp_demo_tick_rec",
+          "comment": "把当前 Tick 设为录制开始点。"
+        },
+        {
+          "op": "bind",
+          "key": "f6",
+          "target": "srp_demo_tick_rec_end",
+          "comment": "把当前 Tick 设为录制结束点。"
+        },
+        {
+          "op": "bind",
+          "key": "f7",
+          "target": "srp_demo_cmd_print",
+          "comment": "打印全部 mirv_cmd 指令。"
+        },
+        {
+          "op": "bind",
+          "key": "f8",
+          "target": "srp_demo_cmd_clear",
+          "comment": "清空全部 mirv_cmd 指令。"
+        },
+        {
+          "op": "bind",
+          "key": "capslock",
+          "target": "srp_demo_campath_add",
+          "comment": "添加当前镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "ins",
+          "target": "srp_demo_campath_print",
+          "comment": "打印全部镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "del",
+          "target": "srp_demo_campath_clear",
+          "comment": "清空全部镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_1",
+          "target": "srp_demo_campath_remove_1",
+          "comment": "删除编号 1 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_2",
+          "target": "srp_demo_campath_remove_2",
+          "comment": "删除编号 2 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_3",
+          "target": "srp_demo_campath_remove_3",
+          "comment": "删除编号 3 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_4",
+          "target": "srp_demo_campath_remove_4",
+          "comment": "删除编号 4 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_5",
+          "target": "srp_demo_campath_remove_5",
+          "comment": "删除编号 5 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_6",
+          "target": "srp_demo_campath_remove_6",
+          "comment": "删除编号 6 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_7",
+          "target": "srp_demo_campath_remove_7",
+          "comment": "删除编号 7 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_8",
+          "target": "srp_demo_campath_remove_8",
+          "comment": "删除编号 8 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_9",
+          "target": "srp_demo_campath_remove_9",
+          "comment": "删除编号 9 的镜头机位。"
+        },
+        {
+          "op": "bind",
+          "key": "kp_0",
+          "target": "srp_demo_campath_remove_0",
+          "comment": "删除编号 0 的镜头机位。"
+        }
+      ]
+    },
+    {
+      "id": "modes/guidemake",
+      "kind": "mode",
+      "name": "guidemake",
+      "label": "标点制作",
+      "file": "config/srp-cfg/modes/guidemake/keymap.cfg",
+      "entryAlias": "srp_guidemake_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "srp_guide_he",
+          "comment": "选择高爆手雷指南类型。"
+        },
+        {
+          "op": "bind",
+          "key": "x",
+          "target": "srp_guide_flash",
+          "comment": "选择闪光弹指南类型。"
+        },
+        {
+          "op": "bind",
+          "key": "c",
+          "target": "srp_guide_smoke",
+          "comment": "选择烟雾弹指南类型。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "srp_guide_fire",
+          "comment": "选择燃烧弹指南类型。"
+        },
+        {
+          "op": "bind",
+          "key": "6",
+          "target": "srp_guide_decoy",
+          "comment": "选择诱饵弹指南类型。"
+        },
+        {
+          "op": "bind",
+          "key": "del",
+          "target": "srp_guide_delete",
+          "comment": "删除当前指南标记。"
+        },
+        {
+          "op": "bind",
+          "key": "enter",
+          "target": "srp_guide_save",
+          "comment": "保存当前指南标记。"
+        }
+      ]
+    },
+    {
+      "id": "modes/practice",
+      "kind": "mode",
+      "name": "practice",
+      "label": "跑图训练",
+      "file": "config/srp-cfg/modes/practice/keymap.cfg",
+      "entryAlias": "srp_practice_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "f1",
+          "target": "srp_prac_armor",
+          "comment": "补充头盔与护甲。"
+        },
+        {
+          "op": "bind",
+          "key": "f2",
+          "target": "srp_prac_regen",
+          "comment": "切换自动回血。"
+        },
+        {
+          "op": "bind",
+          "key": "f3",
+          "target": "switchperson",
+          "comment": "切换第一人称与第三人称视角。"
+        },
+        {
+          "op": "bind",
+          "key": "f4",
+          "target": "srp_prac_bot_add",
+          "comment": "添加 Bot 并关闭 Bot 死亡掉枪。"
+        },
+        {
+          "op": "bind",
+          "key": "f5",
+          "target": "srp_prac_bot_crouch",
+          "comment": "切换 Bot 蹲伏。"
+        },
+        {
+          "op": "bind",
+          "key": "f6",
+          "target": "srp_prac_bot_mimic",
+          "comment": "切换 Bot 镜像模仿。"
+        },
+        {
+          "op": "bind",
+          "key": "f7",
+          "target": "srp_prac_fov",
+          "comment": "切换调试广角视野。"
+        },
+        {
+          "op": "bind",
+          "key": "f8",
+          "target": "srp_prac_bot_kick",
+          "comment": "踢出全部 Bot 并恢复死亡掉枪。"
+        },
+        {
+          "op": "bind",
+          "key": "f9",
+          "target": "srp_prac_teammates_enemies",
+          "comment": "切换队友互为敌人。"
+        },
+        {
+          "op": "bind",
+          "key": "f10",
+          "target": "srp_prac_bhop",
+          "comment": "切换连跳训练环境。"
+        },
+        {
+          "op": "bind",
+          "key": "0",
+          "target": "+Pucci",
+          "comment": "按住时加速游戏时间。"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "srp_prac_showpos",
+          "comment": "切换速度与坐标显示。"
+        },
+        {
+          "op": "bind",
+          "key": "l",
+          "target": "srp_prac_rethrow",
+          "comment": "重新投掷上一颗投掷物。"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "srp_prac_noclip",
+          "comment": "切换飞行模式。"
+        },
+        {
+          "op": "bind",
+          "key": ",",
+          "target": "srp_prac_clear_grenades",
+          "comment": "清除场上全部投掷物并停止残留声音。"
+        },
+        {
+          "op": "bind",
+          "key": ".",
+          "target": "srp_prac_aoproxy",
+          "comment": "切换实体 AO 代理显示。"
+        },
+        {
+          "op": "bind",
+          "key": "/",
+          "target": "srp_prac_infammo",
+          "comment": "切换无限弹匣与无限备弹。"
+        },
+        {
+          "op": "bind",
+          "key": "ralt",
+          "target": "srp_prac_teamid",
+          "comment": "切换队友头顶标识模式。"
+        },
+        {
+          "op": "bind",
+          "key": "uparrow",
+          "target": "switch-impactsNpreview",
+          "comment": "切换弹痕与投掷物轨迹预览。"
+        },
+        {
+          "op": "bind",
+          "key": "downarrow",
+          "target": "srp_prac_bot_kill",
+          "comment": "处死全部 Bot。"
+        },
+        {
+          "op": "bind",
+          "key": "rightarrow",
+          "target": "srp_prac_restart",
+          "comment": "一秒后重启训练回合。"
+        },
+        {
+          "op": "bind",
+          "key": "mouse5",
+          "target": "srp_prac_bot_place",
+          "comment": "在准星位置放置并冻结 Bot。"
+        }
+      ]
+    },
+    {
+      "id": "modes/preview",
+      "kind": "mode",
+      "name": "preview",
+      "label": "饰品预览",
+      "file": "config/srp-cfg/modes/preview/keymap.cfg",
+      "entryAlias": "srp_preview_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "z",
+          "target": "srp_preview_hud",
+          "comment": "切换预览 HUD。"
+        },
+        {
+          "op": "bind",
+          "key": "x",
+          "target": "srp_preview_lock",
+          "comment": "切换预览摄像机锁定。"
+        },
+        {
+          "op": "bind",
+          "key": "c",
+          "target": "srp_preview_dof",
+          "comment": "切换预览景深。"
+        },
+        {
+          "op": "bind",
+          "key": "v",
+          "target": "changeblur",
+          "comment": "循环切换预览景深强度。"
+        },
+        {
+          "op": "bind",
+          "key": "downarrow",
+          "target": "changefov",
+          "comment": "循环切换预览视野。"
+        },
+        {
+          "op": "bind",
+          "key": "-",
+          "target": "changeang--",
+          "comment": "向下调整预览检视角度。"
+        },
+        {
+          "op": "bind",
+          "key": "=",
+          "target": "changeang++",
+          "comment": "向上调整预览检视角度。"
+        }
+      ]
+    },
+    {
+      "id": "modes/pwa-prac",
+      "kind": "mode",
+      "name": "pwa-prac",
+      "label": "完美跑图",
+      "file": "config/srp-cfg/modes/pwa-prac/keymap.cfg",
+      "entryAlias": "srp_pwa_prac_keys",
+      "entries": [
+        {
+          "op": "bind",
+          "key": "mouse5",
+          "target": "srp_pwa_prac_bot_add",
+          "comment": "在当前玩家位置添加 Bot"
+        },
+        {
+          "op": "bind",
+          "key": "rshift",
+          "target": "srp_pwa_prac_bot_add_crouch",
+          "comment": "添加一个蹲着的bot"
+        },
+        {
+          "op": "bind",
+          "key": "downarrow",
+          "target": "srp_pwa_prac_bot_kick",
+          "comment": "清除光标指向的bot"
+        },
+        {
+          "op": "bind",
+          "key": "k",
+          "target": "srp_pwa_prac_bot_kickall",
+          "comment": "清除所有bot"
+        },
+        {
+          "op": "bind",
+          "key": "rightarrow",
+          "target": "srp_pwa_prac_restart",
+          "comment": "重置游戏"
+        },
+        {
+          "op": "bind",
+          "key": "uparrow",
+          "target": "srp_pwa_prac_switch_preview;srp_pwa_prac_switch_impacts",
+          "comment": "开关预览窗 开关子弹落点"
+        },
+        {
+          "op": "bind",
+          "key": ",",
+          "target": "srp_pwa_prac_clear_smokes",
+          "comment": "清除烟雾弹"
+        },
+        {
+          "op": "bind",
+          "key": ".",
+          "target": "srp_pwa_prac_switch_flash",
+          "comment": "开关闪光弹效果"
+        },
+        {
+          "op": "bind",
+          "key": "f2",
+          "target": "srp_pwa_prac_god",
+          "comment": "开关上帝模式"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "srp_pwa_prac_noclip",
+          "comment": "切换飞行模式。"
+        },
+        {
+          "op": "bind",
+          "key": "f9",
+          "target": "srp_pwa_prac_team_attack",
+          "comment": "开关友伤"
+        },
+        {
+          "op": "bind",
+          "key": "j",
+          "target": "srp_pwa_prac_rethrow_position",
+          "comment": "回到上一次投掷位置"
+        },
+        {
+          "op": "bind",
+          "key": "l",
+          "target": "srp_pwa_prac_rethrow_1",
+          "comment": "重新投掷上一颗投掷物"
+        },
+        {
+          "op": "bind",
+          "key": "f5",
+          "target": "srp_pwa_prac_rethrow_2",
+          "comment": "重新投掷倒数第二颗投掷物"
+        },
+        {
+          "op": "bind",
+          "key": "f6",
+          "target": "srp_pwa_prac_rethrow_3",
+          "comment": "重新投掷倒数第三颗投掷物"
+        },
+        {
+          "op": "bind",
+          "key": "f7",
+          "target": "srp_pwa_prac_rethrow_4",
+          "comment": "重新投掷倒数第四颗投掷物"
+        },
+        {
+          "op": "bind",
+          "key": "f8",
+          "target": "srp_pwa_prac_rethrow_5",
+          "comment": "重新投掷倒数第五颗投掷物"
+        },
+        {
+          "op": "bind",
+          "key": "f3",
+          "target": "srp_pwa_prac_follow_grenades",
+          "comment": "开关追踪道具"
+        },
+        {
+          "op": "bind",
+          "key": "f1",
+          "target": "srp_pwa_prac_grenades",
+          "comment": "开关道具训练"
+        },
+        {
+          "op": "bind",
+          "key": "f4",
+          "target": "srp_pwa_prac_menus",
+          "comment": "开关指令墙"
+        },
+        {
+          "op": "bind",
+          "key": "f10",
+          "target": "srp_pwa_prac_breaks",
+          "comment": "破坏物品"
+        },
+        {
+          "op": "bind",
+          "key": "f11",
+          "target": "srp_pwa_prac_recover",
+          "comment": "恢复物品"
+        },
+        {
+          "op": "bind",
+          "key": "n",
+          "target": "srp_pwa_prac_noclip",
+          "comment": "切换飞行"
+        },
+        {
+          "op": "bind",
+          "key": "ralt",
+          "target": "srp_pwa_prac_teamid",
+          "comment": "切换队友头顶标识"
+        }
+      ]
+    }
+  ],
+  "aliases": {
+    "+Pucci": {
+      "body": "host_timescale 25",
+      "comment": "Hold: accelerate time.",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "+srp_knife_520": {
+      "body": "srp_knife_switch_source",
+      "comment": "准备切换折刀。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg"
+    },
+    "+srp_knife_switch": {
+      "body": "+srp_knife_520",
+      "comment": "切刀循环入口按下。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg"
+    },
+    "ang-1": {
+      "body": "setang pitch yaw -10;alias changeang-- ang-2",
+      "comment": "注册 alias ang-1：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "ang1": {
+      "body": "setang pitch yaw 10;alias changeang++ ang2",
+      "comment": "注册 alias ang1：依次执行 setang、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "att0": {
+      "body": "bind mouse1 +firr1;bind mouse2 +firr2",
+      "comment": "注册 alias att0：依次执行 bind、bind。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg"
+    },
+    "att1": {
+      "body": "bind mouse1 +attack;bind mouse2 +attack2",
+      "comment": "注册 alias att1：依次执行 bind、bind。",
+      "definedIn": "config/srp-cfg/features/zeus/runtime.cfg"
+    },
+    "blur1": {
+      "body": "r_dof_override_near_blurry 50;alias changeblur blur2",
+      "comment": "注册 alias blur1：依次执行 r_dof_override_near_blurry、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "c00": {
+      "body": "exec srp-cfg/features/crosshair-view/library/00.cfg;srp_c00_info;alias whoamic srp_c00_info;alias keyc c01",
+      "comment": "应用准星预设 C00，更新当前说明，并将循环入口指向 C01。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "campath": {
+      "body": "campath_on",
+      "comment": "将 alias campath 转发到 campath_on。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "campath_draw": {
+      "body": "campath_draw_on",
+      "comment": "将 alias campath_draw 转发到 campath_draw_on。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "campath_draw_on": {
+      "body": "mirv_campath draw enabled 1;alias campath_draw campath_draw_off;echo >>> Camera path display on",
+      "comment": "注册 alias campath_draw_on：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机路径显示已开启√”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "campath_on": {
+      "body": "mirv_campath enabled 1;alias campath campath_off;echo >>> Camera on",
+      "comment": "注册 alias campath_on：依次执行 mirv_campath、alias、echo，并提示“>>> 摄像机功能已开启√”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "changeang++": {
+      "body": "ang1",
+      "comment": "将 alias changeang++ 转发到 ang1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "changeang--": {
+      "body": "ang-1",
+      "comment": "将 alias changeang-- 转发到 ang-1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "changeblur": {
+      "body": "blur1",
+      "comment": "将 alias changeblur 转发到 blur1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "changefov": {
+      "body": "fov1",
+      "comment": "将 alias changefov 转发到 fov1。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "checkSetting": {
+      "body": "echo;echo [Current recording FPS];mirv_streams record fps;echo",
+      "comment": "注册 alias checkSetting：依次执行 echo、mirv_streams，并提示“[当前录制FPS]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "dmsg": {
+      "body": "dmsg_on",
+      "comment": "将 alias dmsg 转发到 dmsg_on。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "dmsg_on": {
+      "body": "alias dmsg dmsg_off;mirv_deathmsg filter add attackerMatch=!Trace block=1;mirv_deathmsg lifetime 90;echo >>> Kill feed filter (current player) on",
+      "comment": "注册 alias dmsg_on：依次执行 alias、mirv_deathmsg、echo，并提示“>>> 独显击杀信息（当前观察玩家）已开启√”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "fire": {
+      "body": "annotation_create grenade molotov label;annotation_create grenade incendiary label",
+      "comment": "注册 alias fire：依次执行 annotation_create、annotation_create。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "fov1": {
+      "body": "fov_cs_debug 10;alias changefov fov2",
+      "comment": "注册 alias fov1：依次执行 fov_cs_debug、alias。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "gear14": {
+      "body": "demo_timescale 0.25;alias gear_up gear1;alias gear_down gear15;echo [Demo playback speed];echo X0.25",
+      "comment": "注册 alias gear14：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X0.25”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "gear4": {
+      "body": "demo_timescale 4;alias gear_up gear8;alias gear_down gear1;echo [Demo playback speed];echo X4",
+      "comment": "注册 alias gear4：依次执行 demo_timescale、alias、echo，并提示“[Demo播放速度] / X4”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "gear_down": {
+      "body": "gear14",
+      "comment": "将 alias gear_down 转发到 gear14。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "gear_up": {
+      "body": "gear4",
+      "comment": "将 alias gear_up 转发到 gear4。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "impactsNpreview-on": {
+      "body": "sv_showimpacts 1;sv_grenade_trajectory_prac_pipreview 1;alias switch-impactsNpreview impactsNpreview-off;echo Impacts and grenade preview ON!",
+      "comment": "注册 alias impactsNpreview-on：依次执行 sv_showimpacts、sv_grenade_trajectory_prac_pipreview、alias、echo，并提示“已开启弹痕显示和投掷物预览”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "keyc": {
+      "body": "c00",
+      "comment": "将 alias keyc 转发到 c00。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "keyhud": {
+      "body": "pvp-hud-off",
+      "comment": "将 alias keyhud 转发到 pvp-hud-off。",
+      "definedIn": "config/srp-cfg/runtime/aliases.cfg"
+    },
+    "keyv": {
+      "body": "v00",
+      "comment": "将 alias keyv 转发到 v00。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "mute": {
+      "body": "snd_menumusic_volume 0;snd_roundstart_volume 0;snd_roundend_volume 0;snd_roundaction_volume 0;snd_mapobjective_volume 0;snd_tensecondwarning_volume 0;snd_deathcamera_volume 0;snd_mvp_volume 0;snd_mute_mvp_music_live_players 1;snd_mute_losefocus 0;echo [Audio muted]",
+      "comment": "注册 alias mute：依次执行 snd_menumusic_volume、snd_roundstart_volume、snd_roundend_volume、snd_roundaction_volume、snd_mapobjective_volume、snd_tensecondwarning_volume 等动作，并提示“[关闭各项声音]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "nothrow": {
+      "body": "cl_grenadecrosshair_decoy 0;cl_grenadecrosshair_explosive 0;cl_grenadecrosshair_fire 0;cl_grenadecrosshair_flash 0;cl_grenadecrosshair_smoke 0;alias switchthrow throw;echo Grenade crosshair off.",
+      "comment": "注册 alias nothrow：依次执行 cl_grenadecrosshair_decoy、cl_grenadecrosshair_explosive、cl_grenadecrosshair_fire、cl_grenadecrosshair_flash、cl_grenadecrosshair_smoke、alias 等动作，并提示“已关闭投掷物准星”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "pvp-hud-off": {
+      "body": "cl_draw_only_deathnotices 1;cl_drawhud_force_radar 1;alias keyhud pvp-hud-on;echo Switched to PVP HUD: death notices, crosshair and radar only!",
+      "comment": "注册 alias pvp-hud-off：依次执行 cl_draw_only_deathnotices、cl_drawhud_force_radar、alias、echo，并提示“已切换为PVP HUD：仅显示死亡通知、准星与雷达！”。",
+      "definedIn": "config/srp-cfg/runtime/aliases.cfg"
+    },
+    "rec": {
+      "body": "demo_timescale 1;fps_max 0;echo >>> HLAE recording started;mirv_streams record start",
+      "comment": "注册 alias rec：依次执行 demo_timescale、fps_max、echo、mirv_streams，并提示“>>> HLAE录制开始”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "rec_end": {
+      "body": "mirv_streams record end;echo >>> HLAE recording ended",
+      "comment": "注册 alias rec_end：依次执行 mirv_streams、echo，并提示“>>> HLAE录制结束”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_autoview_keys": {
+      "body": "exec srp-cfg/features/autoview/with-keymap.cfg",
+      "comment": "注册入口 srp_autoview_keys：执行 srp-cfg/features/autoview/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_c00_info": {
+      "body": "echo Crosshair preset c00 (default).",
+      "comment": "注册 alias srp_c00_info：输出“您当前使用的是 c00 默认准星预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "srp_crosshair_dot": {
+      "body": "toggle cl_crosshairdot 1 0;echo Crosshair dot toggled.",
+      "comment": "切换准星中心点。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "srp_demo_camera_mode": {
+      "body": "mirv_input camera;echo Camera mode on. Press Esc to exit and apply the path",
+      "comment": "进入 HLAE 运镜模式。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath": {
+      "body": "campath",
+      "comment": "切换镜头路径启用状态。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_add": {
+      "body": "mirv_campath add;echo Camera node added",
+      "comment": "添加当前镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_clear": {
+      "body": "mirv_campath clear;echo All camera nodes cleared",
+      "comment": "清空全部镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_draw": {
+      "body": "campath_draw",
+      "comment": "切换镜头路径显示。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_print": {
+      "body": "mirv_campath print",
+      "comment": "打印全部镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_0": {
+      "body": "mirv_campath remove 0",
+      "comment": "删除编号 0 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_1": {
+      "body": "mirv_campath remove 1",
+      "comment": "删除编号 1 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_2": {
+      "body": "mirv_campath remove 2",
+      "comment": "删除编号 2 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_3": {
+      "body": "mirv_campath remove 3",
+      "comment": "删除编号 3 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_4": {
+      "body": "mirv_campath remove 4",
+      "comment": "删除编号 4 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_5": {
+      "body": "mirv_campath remove 5",
+      "comment": "删除编号 5 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_6": {
+      "body": "mirv_campath remove 6",
+      "comment": "删除编号 6 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_7": {
+      "body": "mirv_campath remove 7",
+      "comment": "删除编号 7 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_8": {
+      "body": "mirv_campath remove 8",
+      "comment": "删除编号 8 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_remove_9": {
+      "body": "mirv_campath remove 9",
+      "comment": "删除编号 9 的镜头机位。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_start_back": {
+      "body": "mirv_campath edit start delta-0.25",
+      "comment": "将镜头路径起始时间前移 0.25 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_campath_start_forward": {
+      "body": "mirv_campath edit start delta+0.25",
+      "comment": "将镜头路径起始时间后移 0.25 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_cmd_clear": {
+      "body": "mirv_cmd clear;echo >>> Cleared!",
+      "comment": "清空全部 mirv_cmd 指令。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_cmd_print": {
+      "body": "mirv_cmd print",
+      "comment": "打印全部 mirv_cmd 指令。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_crosshair": {
+      "body": "toggle crosshair",
+      "comment": "切换准星显示。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_dmsg": {
+      "body": "dmsg",
+      "comment": "切换当前观察玩家的击杀信息。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_gear_down": {
+      "body": "gear_down",
+      "comment": "降低 Demo 播放速度。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_gear_up": {
+      "body": "gear_up",
+      "comment": "提高 Demo 播放速度。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_gotomark": {
+      "body": "demo_gotomark",
+      "comment": "跳转到已标记的 Demo Tick。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_hud_deathnotices": {
+      "body": "toggle cl_draw_only_deathnotices",
+      "comment": "切换精简 HUD。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_hud_full": {
+      "body": "toggle cl_drawhud",
+      "comment": "切换完整 HUD。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_keys": {
+      "body": "exec srp-cfg/modes/demo-hlae/with-keymap.cfg",
+      "comment": "注册入口 srp_demo_keys：执行 srp-cfg/modes/demo-hlae/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_demo_marktick": {
+      "body": "demo_marktick",
+      "comment": "标记当前 Demo Tick。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_mute": {
+      "body": "mute",
+      "comment": "切换静音状态。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_player_voice": {
+      "body": "toggle tv_listen_voice_indices -1 0",
+      "comment": "切换 Demo 玩家语音。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_radar": {
+      "body": "incrementvar cl_drawhud_force_radar -1 1 1",
+      "comment": "循环切换雷达强制显示状态。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_record_end": {
+      "body": "rec_end;demo_pause",
+      "comment": "结束 HLAE 录制并暂停 Demo。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_record_start": {
+      "body": "rec;demo_resume;checkSetting",
+      "comment": "开始 HLAE 录制并继续播放 Demo。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_seek_back": {
+      "body": "demo_goto -5s relative",
+      "comment": "Demo 快退 5 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_seek_forward": {
+      "body": "demo_goto 5s relative",
+      "comment": "Demo 快进 5 秒。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_teamid": {
+      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "comment": "切换队友头顶标识模式。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_tick_rec": {
+      "body": "mirv_cmd addTick rec",
+      "comment": "把当前 Tick 设为录制开始点。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_tick_rec_end": {
+      "body": "mirv_cmd addTick rec_end",
+      "comment": "把当前 Tick 设为录制结束点。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_togglepause": {
+      "body": "demo_togglepause",
+      "comment": "暂停或继续 Demo。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_ui": {
+      "body": "demoui",
+      "comment": "打开 Demo 控制面板。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_voice": {
+      "body": "toggle voice_enable;toggle voice_caster_enable",
+      "comment": "切换游戏与解说语音。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_widefov": {
+      "body": "widefov",
+      "comment": "切换广角 FOV。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_demo_xray": {
+      "body": "toggle spec_show_xray 0 1",
+      "comment": "切换观察 X 光。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "srp_guide_decoy": {
+      "body": "annotation_create grenade decoy label",
+      "comment": "注册 alias srp_guide_decoy：执行 annotation_create grenade decoy label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_guide_delete": {
+      "body": "annotation_delete_previous_node_set",
+      "comment": "将 alias srp_guide_delete 转发到 annotation_delete_previous_node_set。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_guide_fire": {
+      "body": "fire",
+      "comment": "将 alias srp_guide_fire 转发到 fire。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_guide_flash": {
+      "body": "annotation_create grenade flash label",
+      "comment": "注册 alias srp_guide_flash：执行 annotation_create grenade flash label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_guide_he": {
+      "body": "annotation_create grenade he label",
+      "comment": "注册 alias srp_guide_he：执行 annotation_create grenade he label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_guide_save": {
+      "body": "annotation_save mapguide",
+      "comment": "注册 alias srp_guide_save：执行 annotation_save mapguide。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_guide_smoke": {
+      "body": "annotation_create grenade smoke label",
+      "comment": "注册 alias srp_guide_smoke：执行 annotation_create grenade smoke label。",
+      "definedIn": "config/srp-cfg/modes/guidemake/runtime.cfg"
+    },
+    "srp_knife_keys": {
+      "body": "exec srp-cfg/features/knife/with-keymap.cfg",
+      "comment": "注册入口 srp_knife：执行 srp-cfg/features/knife/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_knife_switch_source": {
+      "body": "ent_fire weapon_knife changesubclass 55",
+      "comment": "切刀底层发刀重置指令。",
+      "definedIn": "config/srp-cfg/features/knife/runtime.cfg"
+    },
+    "srp_prac_aoproxy": {
+      "body": "toggle r_aoproxy_show 1 0;echo AO proxy toggled!",
+      "comment": "切换实体代理显示。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_armor": {
+      "body": "give item_assaultsuit;echo Armor added!",
+      "comment": "补充护甲。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bhop": {
+      "body": "toggle sv_enablebunnyhopping;toggle sv_autobunnyhopping;toggle cl_showpos;toggle sv_airaccelerate 1000 12;echo Bhop toggled",
+      "comment": "切换连跳模式。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bot_add": {
+      "body": "bot_add;mp_death_drop_gun 0;echo Bot added!",
+      "comment": "添加 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bot_crouch": {
+      "body": "toggle bot_crouch;echo Bot crouch toggled!",
+      "comment": "切换 Bot 蹲伏。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bot_kick": {
+      "body": "bot_kick;mp_death_drop_gun 1;echo All bots kicked!",
+      "comment": "踢出所有 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bot_kill": {
+      "body": "bot_kill;echo All bots killed!",
+      "comment": "处死所有 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bot_mimic": {
+      "body": "toggle bot_mimic 0 -1;echo Bot mimic toggled!",
+      "comment": "切换 Bot 模仿。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_bot_place": {
+      "body": "bot_stop 1;bot_place;echo Bot placed!",
+      "comment": "放置 Bot。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_clear_grenades": {
+      "body": "ent_fire smokegrenade_projectile kill;ent_fire flashbang_projectile kill;ent_fire incgrenade_projectile kill;ent_fire molotov_projectile kill;ent_fire hegrenade_projectile kill;ent_fire decoy_projectile kill;stopsound;echo Grenades cleared!",
+      "comment": "清除场上道具。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_fov": {
+      "body": "toggle fov_cs_debug 0 30;echo FOV toggled!",
+      "comment": "切换广角视野。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_infammo": {
+      "body": "toggle sv_infinite_ammo 1 2;echo Infinite ammo toggled!",
+      "comment": "切换无限弹匣。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_noclip": {
+      "body": "noclip",
+      "comment": "切换飞行。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_regen": {
+      "body": "toggle sv_regeneration_force_on 0 1;echo Auto regen toggled!",
+      "comment": "切换自动回血。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_restart": {
+      "body": "mp_restartgame 1;mp_death_drop_gun 1;echo Game restarting in 1 second!",
+      "comment": "重新开始回合。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_rethrow": {
+      "body": "sv_rethrow_last_grenade;echo Last grenade rethrown!",
+      "comment": "重新投掷道具。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_showpos": {
+      "body": "toggle cl_showpos 0 1",
+      "comment": "切换坐标速度显示。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_teamid": {
+      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "comment": "切换队友头顶标识。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_prac_teammates_enemies": {
+      "body": "toggle mp_teammates_are_enemies 0 1;echo Teammates as enemies toggled!",
+      "comment": "切换友伤模式。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "srp_practice_keys": {
+      "body": "exec srp-cfg/modes/practice/with-keymap.cfg",
+      "comment": "注册入口 srp_practice_keys：执行 srp-cfg/modes/practice/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_preview_dof": {
+      "body": "toggle r_dof_override;echo DOF updated!",
+      "comment": "切换预览景深。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "srp_preview_hud": {
+      "body": "toggle cl_drawhud;echo HUD updated!",
+      "comment": "切换预览 HUD。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "srp_preview_keys": {
+      "body": "exec srp-cfg/modes/preview/with-keymap.cfg",
+      "comment": "注册入口 srp_preview_keys：执行 srp-cfg/modes/preview/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_preview_lock": {
+      "body": "toggle cl_lock_camera;echo Camera lock updated!",
+      "comment": "切换预览摄像机锁定。",
+      "definedIn": "config/srp-cfg/modes/preview/runtime.cfg"
+    },
+    "srp_pwa_prac_bot_add": {
+      "body": "say .bot",
+      "comment": "在当前玩家位置添加 Bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_bot_add_crouch": {
+      "body": "pwa_bot_add_crouch",
+      "comment": "添加一个蹲着的bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_bot_kick": {
+      "body": "say .kick",
+      "comment": "清除光标指向的bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_bot_kickall": {
+      "body": "say .kickall",
+      "comment": "清除所有bot",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_breaks": {
+      "body": "say .break",
+      "comment": "破坏物品",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_clear_smokes": {
+      "body": "say .qy",
+      "comment": "清除烟雾弹",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_follow_grenades": {
+      "body": "say .cam",
+      "comment": "开关追踪道具",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_god": {
+      "body": "say .god",
+      "comment": "开关上帝模式",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_grenades": {
+      "body": "say .u",
+      "comment": "开关道具训练",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_keys": {
+      "body": "exec srp-cfg/modes/pwa-prac/with-keymap.cfg",
+      "comment": "注册入口 srp_pwa_prac_keys：执行 srp-cfg/modes/pwa-prac/with-keymap.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_pwa_prac_menus": {
+      "body": "say .menu",
+      "comment": "开关指令墙",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_noclip": {
+      "body": "noclip",
+      "comment": "切换飞行。",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_recover": {
+      "body": "say .recover",
+      "comment": "恢复物品",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_restart": {
+      "body": "say .cz",
+      "comment": "重置游戏",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_rethrow_1": {
+      "body": "say .ct",
+      "comment": "重新投掷上一颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_rethrow_2": {
+      "body": "say .ct2",
+      "comment": "重新投掷倒数第二颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_rethrow_3": {
+      "body": "say .ct3",
+      "comment": "重新投掷倒数第三颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_rethrow_4": {
+      "body": "say .ct4",
+      "comment": "重新投掷倒数第四颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_rethrow_5": {
+      "body": "say .ct5",
+      "comment": "重新投掷倒数第五颗投掷物",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_rethrow_position": {
+      "body": "say .tz",
+      "comment": "回到上一次投掷位置",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_switch_flash": {
+      "body": "say .sg",
+      "comment": "开关闪光弹效果",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_switch_impacts": {
+      "body": "say .bi",
+      "comment": "开关子弹落点",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_switch_preview": {
+      "body": "say .up",
+      "comment": "开关预览窗",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_team_attack": {
+      "body": "say .ys",
+      "comment": "开关友伤",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_pwa_prac_teamid": {
+      "body": "toggle cl_teamid_overhead_mode 1 3",
+      "comment": "切换队友头顶标识。",
+      "definedIn": "config/srp-cfg/modes/pwa-prac/runtime.cfg"
+    },
+    "srp_reload": {
+      "body": "exec autoexec.cfg",
+      "comment": "注册入口 srp_reload：执行 autoexec.cfg。",
+      "definedIn": "config/srp-cfg/runtime/commands.cfg"
+    },
+    "srp_v00_info": {
+      "body": "echo Viewmodel preset v00 (default).",
+      "comment": "注册 alias srp_v00_info：输出“您当前使用的是 v00 默认视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "srp_v06_info": {
+      "body": "echo Viewmodel preset v06.",
+      "comment": "注册 alias srp_v06_info：输出“您当前使用的是 v06 视角预设”。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "switch-impactsNpreview": {
+      "body": "impactsNpreview-on",
+      "comment": "将 alias switch-impactsNpreview 转发到 impactsNpreview-on。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "switchperson": {
+      "body": "switchperson-third",
+      "comment": "将 alias switchperson 转发到 switchperson-third。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "switchperson-third": {
+      "body": "thirdperson;alias switchperson switchperson-first;echo Third person ON!",
+      "comment": "注册 alias switchperson-third：依次执行 thirdperson、alias、echo，并提示“已切换第三人称视角”。",
+      "definedIn": "config/srp-cfg/modes/practice/runtime.cfg"
+    },
+    "switchthrow": {
+      "body": "nothrow;alias switchthrow throw",
+      "comment": "注册 alias switchthrow：依次执行 nothrow、alias。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "v00": {
+      "body": "viewmodel_fov 68;viewmodel_offset_x 2;viewmodel_offset_y 2;viewmodel_offset_z -1;viewmodel_presetpos 0;srp_v00_info;alias whoamiv srp_v00_info;alias keyv v01",
+      "comment": "应用持枪视角预设 V00，更新当前说明，并将循环入口指向 V01。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "v06": {
+      "body": "viewmodel_fov 68;viewmodel_offset_x 2.5;viewmodel_offset_y 0;viewmodel_offset_z -1.5;viewmodel_presetpos 3;srp_v06_info;alias whoamiv srp_v06_info;alias keyv v07",
+      "comment": "应用持枪视角预设 V06，更新当前说明，并将循环入口指向 V07。",
+      "definedIn": "config/srp-cfg/features/crosshair-view/runtime.cfg"
+    },
+    "view_0": {
+      "body": "v06",
+      "comment": "将 alias view_0 转发到 v06。",
+      "definedIn": "config/srp-cfg/features/autoview/runtime.cfg"
+    },
+    "view_1": {
+      "body": "v00",
+      "comment": "将 alias view_1 转发到 v00。",
+      "definedIn": "config/srp-cfg/features/autoview/runtime.cfg"
+    },
+    "widefov": {
+      "body": "widefovOn",
+      "comment": "将 alias widefov 转发到 widefovOn。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    },
+    "widefovOn": {
+      "body": "alias widefov widefovOff;mirv_fov 105;echo [Wide FOV on]",
+      "comment": "注册 alias widefovOn：依次执行 alias、mirv_fov、echo，并提示“[已开启广角fov]”。",
+      "definedIn": "config/srp-cfg/modes/demo-hlae/runtime.cfg"
+    }
+  },
+  "keyLabels": {
+    "0": "0",
+    "mouse1": "鼠标左键",
+    "mouse2": "鼠标右键",
+    "mouse3": "鼠标中键",
+    "mouse4": "鼠标侧键 4",
+    "mouse5": "鼠标侧键 5",
+    "mouse_x": "鼠标横向",
+    "mouse_y": "鼠标纵向",
+    "mwheelup": "滚轮上",
+    "mwheeldown": "滚轮下",
+    "`": "~ 反引号",
+    "'": "' 引号",
+    "\\": "\\ 反斜杠",
+    "\"": "\" 引号键",
+    ",": ", 逗号",
+    ".": ". 句点",
+    "/": "/ 斜杠",
+    "-": "- 减号",
+    "=": "= 等号",
+    "[": "[ 左方括号",
+    "]": "] 右方括号",
+    "ctrl": "左 Ctrl",
+    "rshift": "右 Shift",
+    "alt": "左 Alt",
+    "ralt": "右 Alt",
+    "capslock": "Caps Lock",
+    "backspace": "Backspace",
+    "space": "空格",
+    "tab": "Tab",
+    "enter": "Enter",
+    "ins": "Insert",
+    "del": "Delete",
+    "end": "End",
+    "uparrow": "↑",
+    "downarrow": "↓",
+    "leftarrow": "←",
+    "rightarrow": "→"
+  },
+  "keysUsed": [
+    "'",
+    ",",
+    "-",
+    ".",
+    "/",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "=",
+    "[",
+    "]",
+    "`",
+    "a",
+    "alt",
+    "b",
+    "backspace",
+    "c",
+    "capslock",
+    "ctrl",
+    "d",
+    "del",
+    "downarrow",
+    "e",
+    "end",
+    "enter",
+    "f",
+    "f1",
+    "f10",
+    "f11",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "g",
+    "h",
+    "i",
+    "ins",
+    "j",
+    "k",
+    "kp_0",
+    "kp_1",
+    "kp_2",
+    "kp_3",
+    "kp_4",
+    "kp_5",
+    "kp_6",
+    "kp_7",
+    "kp_8",
+    "kp_9",
+    "l",
+    "leftarrow",
+    "m",
+    "mouse1",
+    "mouse2",
+    "mouse3",
+    "mouse4",
+    "mouse5",
+    "mouse_x",
+    "mouse_y",
+    "mwheeldown",
+    "mwheelup",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "ralt",
+    "rightarrow",
+    "rshift",
+    "s",
+    "shift",
+    "space",
+    "t",
+    "tab",
+    "u",
+    "uparrow",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z"
+  ]
+}

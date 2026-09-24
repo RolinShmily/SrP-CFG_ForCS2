@@ -11,8 +11,8 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "node ../../scripts/sync-fonts.mjs && vite dev",
-    "build": "node ../../scripts/sync-fonts.mjs && velite --clean && react-router build",
+    "dev": "node ../../scripts/sync-fonts.mjs && node ../../scripts/extract-keymaps.mjs && vite dev",
+    "build": "node ../../scripts/sync-fonts.mjs && node ../../scripts/extract-keymaps.mjs && velite --clean && react-router build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "deploy": "pnpm build && npx wrangler deploy",

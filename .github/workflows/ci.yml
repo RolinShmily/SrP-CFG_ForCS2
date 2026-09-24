@@ -40,6 +40,11 @@ jobs:
       - name: Validate CFG architecture
         run: python3 .github/scripts/validate_cfg.py
 
+      # keymaps.json 由 config/srp-cfg 生成并随仓库提交（typecheck 需要它存在），
+      # 故在此校验产物与 cfg 一致，避免改了 cfg 忘了重新生成。仅用 Node 内置模块，无需装依赖。
+      - name: Verify keymaps.json matches config/
+        run: node scripts/extract-keymaps.mjs --check
+
       # 纯单元测试，无网络无凭据；放在 PR 关口上，避免 update_commands.py 的回归
       # 只能等到每日定时任务才暴露。
       - name: Run command update unit tests

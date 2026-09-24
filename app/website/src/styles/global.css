@@ -536,3 +536,56 @@ body.doc-panel-open {
 .inline-code:hover {
   background: rgba(242, 138, 26, 0.22);
 }
+
+/* ============================================================
+ * 功能页：3D 键帽（keyboard-layout-editor 那种实体键帽质感）
+ *
+ * 键帽材质由 KeymapCanvas 以内联 CSS 变量注入（色相随层级变化），但立体感与按压态
+ * 必须写在真实 CSS 规则里 —— 内联 box-shadow 优先级高于类，`active:` 工具类覆盖不掉它。
+ *
+ * 立体感的三个来源：
+ *   1. 顶面线性渐变（上亮下暗）
+ *   2. 下沿实体边 `0 Npx 0`（键帽厚度，最关键的一层）
+ *   3. 键帽落影 + 顶部内高光
+ * ============================================================ */
+.srp-keycap {
+  --key-face-top: #2b323a;
+  --key-face-bottom: #1f242b;
+  --key-edge: #0e1216;
+  --key-border: rgba(255, 255, 255, 0.07);
+  --key-fg: #8b95a1;
+  --key-depth: 4px;
+
+  background-image: linear-gradient(180deg, var(--key-face-top) 0%, var(--key-face-bottom) 100%);
+  border: 1px solid var(--key-border);
+  border-radius: 6px;
+  color: var(--key-fg);
+  box-shadow:
+    0 var(--key-depth) 0 0 var(--key-edge),
+    0 calc(var(--key-depth) + 2px) 7px -2px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28);
+  transition:
+    transform 60ms ease,
+    box-shadow 60ms ease,
+    filter 120ms ease;
+}
+
+.srp-keycap:hover {
+  filter: brightness(1.2);
+}
+
+/* 按下：顶面下沉一个键帽厚度，同时抽掉下沿边与落影 */
+.srp-keycap:active {
+  transform: translateY(var(--key-depth));
+  box-shadow:
+    0 0 0 0 var(--key-edge),
+    0 1px 2px -1px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* 选中态用中性光环，与层级配色解耦，避免和「这是哪一层绑的」混淆 */
+.srp-keycap[data-selected="true"] {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 1px;
+}

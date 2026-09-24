@@ -15,7 +15,7 @@ export {
 export const navLinks = [
   { href: "/", label: "首页" },
   { href: "/download", label: "下载" },
-  { href: "/docs", label: "文档" },
+  { href: "/features", label: "功能" },
   { href: "/commands", label: "指令" },
   { href: "/about", label: "关于" },
 ];

@@ -42,8 +42,8 @@ const decoupledPackages = [
       "分层覆盖机制，不影响原生按键",
       "包含 RoL1n / Echo / CS2 默认等模版",
     ],
-    actionText: "查阅运行时文档",
-    actionLink: "/docs/srpcfg-1",
+    actionText: "查看运行时功能与按键",
+    actionLink: "/features",
   },
   {
     id: "map_guides",
@@ -59,7 +59,7 @@ const decoupledPackages = [
       "可与社区自制标点无缝并存",
     ],
     actionText: "查看标点生态",
-    actionLink: "/docs/srpcfg-3",
+    actionLink: "/features",
   },
   {
     id: "video_settings",
@@ -75,7 +75,7 @@ const decoupledPackages = [
       "完全独立按需分发",
     ],
     actionText: "了解画质优化",
-    actionLink: "/docs/srpcfg-3",
+    actionLink: "/features",
   },
 ];
 

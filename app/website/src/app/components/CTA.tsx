@@ -65,11 +65,11 @@ export function CTA() {
               </Link>
 
               <Link
-                to="/docs"
+                to="/features"
                 className="inline-flex items-center justify-center gap-2.5 rounded-full border-2 border-slate-700 bg-slate-900/60 px-8 py-3.5 text-sm font-bold text-white transition-all hover:border-amber-400 hover:bg-slate-800 active:scale-[0.98]"
               >
                 <BookOpen className="h-4 w-4 text-slate-300" />
-                <span>查阅架构与指南</span>
+                <span>浏览功能与按键</span>
               </Link>
 
               <a

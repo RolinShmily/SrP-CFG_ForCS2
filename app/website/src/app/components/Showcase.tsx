@@ -231,10 +231,10 @@ export function Showcase() {
                 </Link>
 
                 <Link
-                  to="/docs/srpcfg-3"
+                  to="/features"
                   className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-6 py-3 text-xs font-bold text-slate-300 transition hover:border-amber-400/50 hover:text-white"
                 >
-                  <span>阅读《Desktop 使用指南》</span>
+                  <span>浏览功能与按键映射</span>
                 </Link>
               </div>
             </div>

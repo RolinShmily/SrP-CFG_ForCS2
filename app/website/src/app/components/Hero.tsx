@@ -220,10 +220,10 @@ export function Hero() {
                   ))}
 
                   <Link
-                    to="/docs/srpcfg-3"
+                    to="/features"
                     className="mt-2 inline-flex items-center justify-between rounded-[20px] border border-slate-800 bg-slate-900/60 p-4 text-xs font-semibold text-slate-300 transition hover:border-amber-500/40 hover:bg-slate-800 hover:text-white"
                   >
-                    <span>查阅桌面套件完整指南</span>
+                    <span>浏览功能与按键映射</span>
                     <ArrowRight className="h-4 w-4 text-amber-400" />
                   </Link>
                 </div>
