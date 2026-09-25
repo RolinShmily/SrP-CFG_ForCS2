@@ -39,10 +39,6 @@
           "value": "227"
         },
         {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
-        },
-        {
           "name": "cl_crosshair_gap",
           "value": "1"
         },
@@ -63,6 +59,10 @@
           "value": "2"
         },
         {
+          "name": "cl_crosshairalpha",
+          "value": "255"
+        },
+        {
           "name": "cl_crosshaircolor_a",
           "value": "255"
         },
@@ -81,6 +81,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "false"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -118,10 +130,6 @@
           "value": "227"
         },
         {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
-        },
-        {
           "name": "cl_crosshair_gap",
           "value": "1"
         },
@@ -134,15 +142,11 @@
           "value": "false"
         },
         {
-          "name": "cl_crosshair_t",
-          "value": "false"
-        },
-        {
           "name": "cl_crosshair_thickness",
           "value": "1"
         },
         {
-          "name": "cl_crosshaircolor_a",
+          "name": "cl_crosshairalpha",
           "value": "255"
         },
         {
@@ -160,6 +164,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "true"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -197,10 +213,6 @@
           "value": "227"
         },
         {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
-        },
-        {
           "name": "cl_crosshair_gap",
           "value": "2"
         },
@@ -221,6 +233,10 @@
           "value": "2"
         },
         {
+          "name": "cl_crosshairalpha",
+          "value": "255"
+        },
+        {
           "name": "cl_crosshaircolor_a",
           "value": "255"
         },
@@ -239,6 +255,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "false"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -276,10 +304,6 @@
           "value": "227"
         },
         {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
-        },
-        {
           "name": "cl_crosshair_gap",
           "value": "1"
         },
@@ -300,6 +324,10 @@
           "value": "1"
         },
         {
+          "name": "cl_crosshairalpha",
+          "value": "255"
+        },
+        {
           "name": "cl_crosshaircolor_a",
           "value": "255"
         },
@@ -318,6 +346,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "false"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -379,6 +419,10 @@
           "value": "1"
         },
         {
+          "name": "cl_crosshairalpha",
+          "value": "255"
+        },
+        {
           "name": "cl_crosshaircolor_a",
           "value": "255"
         },
@@ -397,6 +441,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "false"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -432,10 +488,6 @@
         {
           "name": "cl_crosshair_dynamic_spread_limit",
           "value": "204"
-        },
-        {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
         },
         {
           "name": "cl_crosshair_gap",
@@ -476,6 +528,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "true"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "5"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -511,10 +575,6 @@
         {
           "name": "cl_crosshair_dynamic_spread_limit",
           "value": "227"
-        },
-        {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
         },
         {
           "name": "cl_crosshair_gap",
@@ -555,6 +615,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "true"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
@@ -590,10 +662,6 @@
         {
           "name": "cl_crosshair_dynamic_spread_limit",
           "value": "227"
-        },
-        {
-          "name": "cl_crosshair_friendly_warning",
-          "value": "1"
         },
         {
           "name": "cl_crosshair_gap",
@@ -634,6 +702,18 @@
         {
           "name": "cl_crosshairdot",
           "value": "true"
+        },
+        {
+          "name": "cl_crosshairsize",
+          "value": "0.5"
+        },
+        {
+          "name": "cl_crosshairstyle",
+          "value": "4"
+        },
+        {
+          "name": "cl_crosshairthickness",
+          "value": "0.8"
         }
       ],
       "removedConvars": [],
