@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "v*"
   workflow_dispatch:
 
 permissions:
@@ -14,9 +16,14 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# 日常 push / PR 只跑轻量检查（数据漂移、网站单测、typecheck、workflow lint），
+# 重检查（CFG 架构、命令库脚本测试、Rust 核心/许可、Windows 壳层编译）放到发版关口，
+# 即 push 到 v* tag 时（或手动 workflow_dispatch）才跑，避免每次提交都被长任务拖住。
+# 测试强度不变——没有任何测试被删除，只是调整了触发时机。
+
 jobs:
   validate:
-    name: Validate config & unit tests
+    name: Config drift & website unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,6 +33,32 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '22'
+
+      # keymaps.json 由 config/srp-cfg 生成并随仓库提交（typecheck 需要它存在），
+      # 故在此校验产物与 cfg 一致，避免改了 cfg 忘了重新生成。仅用 Node 内置模块，无需装依赖。
+      - name: Verify keymaps.json matches config/
+        run: node scripts/extract-keymaps.mjs --check
+
+      # crosshair.json 同理：由 config/srp-cfg 生成并随仓库提交。
+      # 顺带会报告 public/images/crosshair/ 里已就位的截图数量。
+      - name: Verify crosshair.json matches config/
+        run: node scripts/extract-crosshair.mjs --check
+
+      # 跑 app/website 的 unit tests：ai-stream 解析与功能页数据一致性。
+      # 后者断言的是「数据对得上但渲染/语义错了」这类问题，例如画布上左右修饰键 id 重复。
+      # 测试只 import 相对路径的 .ts（node --experimental-strip-types）与 .json，
+      # 不依赖 pnpm / node_modules，直接调 node 即可，避免本 job 额外引入 pnpm 链路。
+      - name: Run website unit tests
+        working-directory: app/website
+        run: node --experimental-strip-types --test src/lib/ai-stream.test.ts src/app/components/features/consistency.test.ts
+
+  config-validation:
+    name: CFG architecture & command tooling tests
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
 
       - name: Setup Python
         uses: actions/setup-python@v7
@@ -40,28 +73,13 @@ jobs:
       - name: Validate CFG architecture
         run: python3 .github/scripts/validate_cfg.py
 
-      # keymaps.json 由 config/srp-cfg 生成并随仓库提交（typecheck 需要它存在），
-      # 故在此校验产物与 cfg 一致，避免改了 cfg 忘了重新生成。仅用 Node 内置模块，无需装依赖。
-      - name: Verify keymaps.json matches config/
-        run: node scripts/extract-keymaps.mjs --check
-
-      # crosshair.json 同理：由 config/srp-cfg 生成并随仓库提交。
-      # 顺带会报告 public/images/crosshair/ 里已就位的截图数量。
-      - name: Verify crosshair.json matches config/
-        run: node scripts/extract-crosshair.mjs --check
-
-      # 纯单元测试，无网络无凭据；放在 PR 关口上，避免 update_commands.py 的回归
+      # 纯单元测试，无网络无凭据；放在发版关口上，避免 update_commands.py 的回归
       # 只能等到每日定时任务才暴露。
       - name: Run command update unit tests
         run: |
           python3 .github/scripts/test_command_values.py
           python3 .github/scripts/test_update_commands.py
           python3 .github/scripts/test_ai_preflights.py
-
-      # 跑 app/website 的 package.json 里的 test 脚本：ai-stream 与功能页数据一致性。
-      # 后者断言的是「数据对得上但渲染/语义错了」这类问题，例如画布上左右修饰键 id 重复。
-      - name: Run website unit tests
-        run: pnpm --filter @srp-cfg/website test
 
   typescript:
     name: TypeScript type-check
@@ -89,6 +107,7 @@ jobs:
   desktop-shell:
     name: Desktop shell (Tauri, Windows)
     runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -104,18 +123,18 @@ jobs:
           workspaces: app/desktop/src-tauri
 
       # 壳层（src/**）依赖 tauri，在 Linux 上需要 webkit2gtk 才能编译，因此只能在此平台把关。
-      # 此前壳层不被任何 PR 检查编译：zip / winreg 这类壳层依赖的破坏性升级
-      # 只会在打 tag 发版时才暴露。
+      # 该检查较重（Windows 全量 cargo），只在发版时跑；日常 push 的 TS 层由 typecheck 把关。
       - name: Type-check the Tauri shell
         run: cargo check --workspace --manifest-path app/desktop/src-tauri/Cargo.toml
 
-      # 壳层自身的单元测试（含快照 id 路径穿越防线）也必须跑起来。
+      # 壳层自身的单元测试（含快照 id 路径穿越防线）。
       - name: Run desktop shell unit tests
         run: cargo test -p srp-cfg-desktop --manifest-path app/desktop/src-tauri/Cargo.toml
 
   rust-and-licenses:
     name: Rust core tests & license inventory
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -136,8 +155,7 @@ jobs:
         with:
           workspaces: app/desktop/src-tauri
 
-      # 纯逻辑核心的测试（含归档路径穿越防线）必须在 PR 阶段就跑，
-      # 不能只在发版的 release-desktop 里执行。
+      # 纯逻辑核心的测试（含归档路径穿越防线）与许可清单校验，随发版关口执行。
       - name: Run Rust core unit tests
         run: cargo test -p srp-cfg-core --manifest-path app/desktop/src-tauri/Cargo.toml
 
