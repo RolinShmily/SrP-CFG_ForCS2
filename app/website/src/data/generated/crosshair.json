@@ -84,7 +84,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c00.webp"
     },
     {
       "id": "c01",
@@ -163,7 +163,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c01.webp"
     },
     {
       "id": "c02",
@@ -242,7 +242,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c02.webp"
     },
     {
       "id": "c03",
@@ -321,7 +321,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c03.webp"
     },
     {
       "id": "c04",
@@ -400,7 +400,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c04.webp"
     },
     {
       "id": "c05",
@@ -479,7 +479,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c05.webp"
     },
     {
       "id": "c06",
@@ -558,7 +558,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c06.webp"
     },
     {
       "id": "c07",
@@ -637,7 +637,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/c07.webp"
     }
   ],
   "viewmodels": [
@@ -670,7 +670,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v00.webp"
     },
     {
       "id": "v01",
@@ -701,7 +701,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v01.webp"
     },
     {
       "id": "v02",
@@ -732,7 +732,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v02.webp"
     },
     {
       "id": "v03",
@@ -763,7 +763,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v03.webp"
     },
     {
       "id": "v04",
@@ -794,7 +794,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v04.webp"
     },
     {
       "id": "v05",
@@ -825,7 +825,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v05.webp"
     },
     {
       "id": "v06",
@@ -856,7 +856,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v06.webp"
     },
     {
       "id": "v07",
@@ -887,7 +887,7 @@
         }
       ],
       "removedConvars": [],
-      "image": null
+      "image": "/images/crosshair/v07.webp"
     }
   ],
   "colors": [

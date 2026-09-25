@@ -11,11 +11,23 @@
  * 所以预设和截图都能持续扩展，这个组件不用动。
  */
 import { useState } from "react";
-import { Check, ChevronDown, Copy, ImageOff } from "lucide-react";
-import { Card } from "@srp-cfg/ui";
+import { Check, ChevronDown, Copy, ImageOff, Maximize2 } from "lucide-react";
+import { Card, Modal } from "@srp-cfg/ui";
 import { imageHint, type Preset, crosshair as data } from "./crosshair-data";
 
 type TabId = "crosshair" | "viewmodel" | "color";
+
+/**
+ * 两类预设的展示名与放大视图宽度。
+ * 准星截图是围绕准星的紧裁小图，放太大只会糊；视角是全屏截图，尽量给大才看得出
+ * viewmodel_offset 的差别。
+ */
+const KINDS = {
+  crosshair: { label: "准星", zoomWidth: "max-w-2xl" },
+  viewmodel: { label: "视角", zoomWidth: "max-w-6xl" },
+} as const;
+
+type Kind = keyof typeof KINDS;
 
 const TABS: { id: TabId; label: string; hint: string }[] = [
   { id: "crosshair", label: "准星库", hint: `c00 – c07 · ${data.crosshairs.length} 个` },
@@ -48,18 +60,15 @@ function CopyAlias({ value }: { value: string }) {
   );
 }
 
-/** 截图位：有图显示图，没图显示占位并提示该放哪个文件。 */
-function Shot({ preset, kind }: { preset: Preset; kind: string }) {
-  return (
-    <div className="relative overflow-hidden rounded-[6px] border border-border bg-bg">
-      {preset.image ? (
-        <img
-          src={preset.image}
-          alt={`${kind}预设 ${preset.id} 的效果截图`}
-          loading="lazy"
-          className="h-[148px] w-full object-contain"
-        />
-      ) : (
+/** 截图位：有图显示图（可点击放大），没图显示占位并提示该放哪个文件。 */
+function Shot({ preset, kind }: { preset: Preset; kind: Kind }) {
+  const [zoom, setZoom] = useState(false);
+  const { label, zoomWidth } = KINDS[kind];
+  const alt = `${label}预设 ${preset.id} 的效果截图`;
+
+  if (!preset.image) {
+    return (
+      <div className="relative overflow-hidden rounded-[6px] border border-border bg-bg">
         <div className="flex h-[148px] w-full flex-col items-center justify-center gap-1.5 border border-dashed border-border/70 px-3 text-center">
           <ImageOff className="h-4 w-4 text-text-faint" />
           <span className="text-[10px] text-text-faint">尚无截图</span>
@@ -67,13 +76,49 @@ function Shot({ preset, kind }: { preset: Preset; kind: string }) {
             {imageHint(preset.id)}
           </code>
         </div>
-      )}
-    </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="relative overflow-hidden rounded-[6px] border border-border bg-bg">
+        <button
+          type="button"
+          onClick={() => setZoom(true)}
+          aria-label={`放大查看${alt}`}
+          className="group relative block w-full cursor-zoom-in"
+        >
+          <img
+            src={preset.image}
+            alt={alt}
+            loading="lazy"
+            className="h-[148px] w-full object-contain"
+          />
+          <span className="pointer-events-none absolute right-1.5 top-1.5 flex items-center gap-1 rounded-[4px] bg-black/60 px-1.5 py-0.5 text-[10px] text-white/85 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+            <Maximize2 className="h-3 w-3" aria-hidden />
+            放大
+          </span>
+        </button>
+      </div>
+      <Modal
+        open={zoom}
+        title={`${label}预设 ${preset.id}`}
+        onClose={() => setZoom(false)}
+        maxWidth={zoomWidth}
+      >
+        <img
+          src={preset.image}
+          alt={alt}
+          className="mx-auto h-auto max-h-[75vh] w-full rounded-[4px] object-contain"
+        />
+      </Modal>
+    </>
   );
 }
 
 /** 单个预设卡片：截图 + 编号 + 参数（默认收起）。 */
-function PresetCard({ preset, kind }: { preset: Preset; kind: string }) {
+function PresetCard({ preset, kind }: { preset: Preset; kind: Kind }) {
   const [open, setOpen] = useState(false);
   return (
     <Card padding="none" className="flex flex-col gap-3 p-3">
@@ -206,7 +251,7 @@ export function CrosshairLibrary() {
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {list.map((p) => (
-                <PresetCard key={p.id} preset={p} kind={tab === "crosshair" ? "准星" : "视角"} />
+                <PresetCard key={p.id} preset={p} kind={tab} />
               ))}
             </div>
           )}

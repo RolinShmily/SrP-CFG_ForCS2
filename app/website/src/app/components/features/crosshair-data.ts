@@ -56,4 +56,4 @@ export interface CrosshairData {
 export const crosshair = crosshairJson as CrosshairData;
 
 /** 目录约定：图片应放在哪、叫什么名字 —— 占位框里要显示给维护者看。 */
-export const imageHint = (id: string) => `public/images/crosshair/${id}.png`;
+export const imageHint = (id: string) => `public/images/crosshair/${id}.webp`;
