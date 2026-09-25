@@ -646,7 +646,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -664,7 +665,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -682,7 +684,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -717,7 +720,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -876,7 +880,8 @@
     "f": [
       "clientdll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -924,7 +929,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Load annotation to a file after first clearing existing annotations",
     "t": "cmd",
@@ -1052,7 +1058,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "bot_add <t|ct> <type> <difficulty> <name> - Adds a bot matching the given criteria.",
     "t": "cmd",
@@ -1064,7 +1071,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "bot_add_ct <type> <difficulty> <name> - Adds a Counter-Terrorist bot matching the given criteria.",
     "t": "cmd",
@@ -1076,7 +1084,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "bot_add_t <type> <difficulty> <name> - Adds a terrorist bot matching the given criteria.",
     "t": "cmd",
@@ -1100,7 +1109,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use grenades.",
     "t": "var",
@@ -1112,7 +1122,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use the machine gun.",
     "t": "var",
@@ -1124,7 +1135,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use pistols.",
     "t": "var",
@@ -1136,7 +1148,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use rifles.",
     "t": "var",
@@ -1149,7 +1162,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may occasionally go 'rogue'. Rogue bots do not obey radio commands, nor pursue scenario goals.",
     "t": "var",
@@ -1161,7 +1175,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use shotguns.",
     "t": "var",
@@ -1173,7 +1188,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use sniper rifles.",
     "t": "var",
@@ -1185,7 +1201,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots may use sub-machine guns.",
     "t": "var",
@@ -1209,7 +1226,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots will automatically leave to make room for human players.",
     "t": "var",
@@ -1224,7 +1242,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Upper bound above Average Human Contribution Score that a bot must be above to change its difficulty",
     "t": "var",
@@ -1246,7 +1265,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Lower bound below Average Human Contribution Score that a bot must be below to change its difficulty",
     "t": "var",
@@ -1266,7 +1286,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Control how bots talk. Allowed values: 'off', 'radio', 'minimal', or 'normal'.",
     "t": "var",
@@ -1278,7 +1299,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether bots can be controlled by players",
     "t": "var",
@@ -1292,7 +1314,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Max distance bots can see targets (in coop) when they are idle, dormant, hiding or asleep.",
     "t": "var",
@@ -1310,7 +1333,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -1368,7 +1392,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero and there is a human on the team, the bots will not do the scenario tasks.",
     "t": "var",
@@ -1381,7 +1406,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero and there is a human on the team, the bots will not get scenario items.",
     "t": "var",
@@ -1394,7 +1420,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Defines the skill of bots joining the game.  Values are: 0=easy, 1=normal, 2=hard, 3=expert.",
     "t": "var",
@@ -1428,7 +1455,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots will not fire weapons (for debugging).",
     "t": "var",
@@ -1440,7 +1468,8 @@
     "d": "2000",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots will not buy if their money falls below this amount.",
     "t": "var",
@@ -1455,7 +1484,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots use no CPU for AI. Instead, they run around randomly.",
     "t": "var",
@@ -1467,7 +1497,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -1515,7 +1546,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots will ignore enemies (for debugging).",
     "t": "var",
@@ -1527,7 +1559,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Bots will not see non-bot players.",
     "t": "var",
@@ -1539,7 +1572,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots wait until a player joins before entering the game.",
     "t": "var",
@@ -1551,7 +1585,8 @@
     "d": "any",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Determines the team bots will join into. Allowed values: 'any', 'T', or 'CT'.",
     "t": "var",
@@ -1563,7 +1598,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "bot_kick <all> <t|ct> <type> <difficulty> <name> - Kicks a specific bot, or all bots, matching the given criteria.",
     "t": "cmd",
@@ -1575,7 +1611,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "bot_kill <all> <t|ct> <type> <difficulty> <name> - Kills a specific bot, or all bots, matching the given criteria.",
     "t": "cmd",
@@ -1587,7 +1624,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Restricts the bots to only using knives",
     "t": "cmd",
@@ -1612,7 +1650,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Bots will see players through smoke clouds up to this length.",
     "t": "var",
@@ -1629,7 +1668,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Max distance bots can see targets.",
     "t": "var",
@@ -1649,7 +1689,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Bot uses usercmd of player by index.",
     "t": "var",
@@ -1739,7 +1780,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "This string is prefixed to the name of all bots that join the game.",
     "t": "var",
@@ -1752,7 +1794,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines the total number of bots in the game.",
     "t": "var",
@@ -1768,7 +1811,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines the type of quota.",
     "t": "var",
@@ -1840,7 +1884,8 @@
     "d": "0",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "bot_stop <1|all> | <not_bomber> | <t> | <ct>",
     "t": "var",
@@ -1885,7 +1930,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots can only walk, not run.",
     "t": "var",
@@ -1897,7 +1943,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "If nonzero, bots will stay in idle mode and not attack.",
     "t": "var",
@@ -1922,7 +1969,8 @@
     "f": [
       "gamedll",
       "notify",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Player takes damage but won't die",
     "t": "var",
@@ -1948,7 +1996,8 @@
     "f": [
       "gamedll",
       "notify",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "HP to set when damaged below zero in Buddha Mode",
     "t": "var",
@@ -2245,7 +2294,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Start a vote on an issue.",
     "t": "cmd",
@@ -2497,7 +2547,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2516,7 +2567,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2535,7 +2587,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2554,7 +2607,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2573,7 +2627,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2592,7 +2647,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2611,7 +2667,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2630,7 +2687,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2649,7 +2707,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2668,7 +2727,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2687,7 +2747,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2706,7 +2767,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2725,7 +2787,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2744,7 +2807,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2763,7 +2827,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2782,7 +2847,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2801,7 +2867,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2820,7 +2887,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2839,7 +2907,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2858,7 +2927,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2877,7 +2947,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2896,7 +2967,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2915,7 +2987,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2934,7 +3007,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2953,7 +3027,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2972,7 +3047,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -2991,7 +3067,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -3328,17 +3405,6 @@
     "c": "cheats"
   },
   {
-    "n": "cl_aggregate_particles",
-    "d": "false",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "是否启用粒子聚合（优化粒子效果性能）",
-    "c": "graphics"
-  },
-  {
     "n": "cl_allow_animated_avatars",
     "d": "true",
     "f": [
@@ -3363,6 +3429,17 @@
     "t": "var",
     "cn": "是否允许单个按键绑定多个输入指令（多键合一/一键多投）",
     "c": "system"
+  },
+  {
+    "n": "cl_auto_cursor_scale",
+    "d": "true",
+    "f": [
+      "archive"
+    ],
+    "en": "Automatic cursor size scaling.",
+    "t": "var",
+    "cn": "自动光标大小缩放",
+    "c": "graphics"
   },
   {
     "n": "cl_autobuy",
@@ -3728,7 +3805,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Draw a black outline around the crosshair for better visibility. 0 = No outline, 1 = Full outline, 2 = Half outline",
     "t": "var",
@@ -3748,7 +3826,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Style 2 only: how the bar length is divided between inner and outer bars once split. inner = cl_crosshairsize * (1 - ratio), outer = cl_crosshairsize * ratio. [0 - 1]",
     "t": "var",
@@ -3768,7 +3847,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Style 2 only: alpha multiplier for the INNER crosshair bars once they have split. [0 - 1]",
     "t": "var",
@@ -3788,7 +3868,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Style 2 only: alpha multiplier for the OUTER crosshair bars once they have split. [0.3 - 1]",
     "t": "var",
@@ -3808,7 +3889,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Style 2: distance at which the crosshair bars split in two.",
     "t": "var",
@@ -3848,7 +3930,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "0: off, 1: on",
     "t": "var",
@@ -3918,7 +4001,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Crosshair follows the weapon's predicted recoil (aim punch)",
     "t": "var",
@@ -3951,7 +4035,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "If >1 sniper scope cross lines gain extra width (1 for single-pixel hairline)",
     "t": "var",
@@ -3973,7 +4058,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "T-style crosshair: hide the top bar",
     "t": "var",
@@ -4007,7 +4093,8 @@
       "clientdll",
       "hidden",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -4047,7 +4134,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Crosshair color, blue component",
     "t": "var",
@@ -4067,7 +4155,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Crosshair color, green component",
     "t": "var",
@@ -4087,7 +4176,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Crosshair color, red component",
     "t": "var",
@@ -4107,7 +4197,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Draw a dot at the center of the crosshair",
     "t": "var",
@@ -4121,7 +4212,8 @@
       "clientdll",
       "hidden",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -4137,7 +4229,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Crosshair style. 0 = Dynamic Cross, 1 = Dynamic Circle, 2 = Dynamic Cross (Legacy), 3 = Static Circle, 4 = Static Cross, 5 = Static Cross (Shot Feedback), 6 = Dot Only, 7 = Dynamic Quad, 8 = Static Square. Styles 0, 1 and 7 track the weapon's actual inaccuracy.",
     "t": "var",
@@ -4184,7 +4277,8 @@
       "clientdll",
       "hidden",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -4192,6 +4286,20 @@
     "c": "graphics",
     "value": {
       "description": "默认值为 0.6。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "cl_cursor_scale",
+    "d": "1",
+    "f": [
+      "archive"
+    ],
+    "en": "Cursor size scaling factor.",
+    "t": "var",
+    "cn": "光标大小缩放因子",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -4526,7 +4634,8 @@
     "d": "false",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "For drawing only the crosshair and death notices (used for moviemaking)",
     "t": "var",
@@ -4562,7 +4671,8 @@
     "d": "true",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Enable the rendering of the hud",
     "t": "var",
@@ -4574,7 +4684,8 @@
     "d": "0",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "0: default; 1: draw deathnotices even if hud disabled; -1: force no deathnotices",
     "t": "var",
@@ -5474,7 +5585,8 @@
     "d": "true",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "When a perf report is dumped at the end of the session, should it be detailed?",
     "t": "var",
@@ -5774,7 +5886,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "0 = team color, 1 =  white, 2 = bright white, 3 = light blue, 4 = blue, 5 = purple, 6 = red, 7 = orange, 8 = yellow, 9 = green, 10 = aqua, 11 = pink, 12 = teammate color.",
     "t": "var",
@@ -5890,7 +6003,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -5930,7 +6044,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Show frame time (FPS) in the HUD.  0=never, 1=only if poor, 2=always",
     "t": "var",
@@ -6197,6 +6312,17 @@
     "c": "system"
   },
   {
+    "n": "cl_input_enable_raw_keyboard",
+    "d": "false",
+    "f": [
+      "release"
+    ],
+    "en": "Enable raw keyboard input",
+    "t": "var",
+    "cn": "启用原始键盘输入",
+    "c": "system"
+  },
+  {
     "n": "cl_interp",
     "d": "",
     "f": [
@@ -6431,6 +6557,17 @@
     }
   },
   {
+    "n": "cl_joystick_enabled",
+    "d": "true",
+    "f": [
+      "archive"
+    ],
+    "en": "Enable joystick input",
+    "t": "var",
+    "cn": "启用手柄输入",
+    "c": "system"
+  },
+  {
     "n": "cl_latch_report",
     "d": "false",
     "f": [
@@ -6487,7 +6624,8 @@
     "d": "false",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -6557,6 +6695,20 @@
     "t": "var",
     "cn": "匹配房间控制室辅助参数（内部匹配系统调试）",
     "c": "system",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "cl_max_particle_pvs_aabb_edge_length",
+    "d": "0",
+    "f": [
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "最大粒子PVS AABB边长",
+    "c": "graphics",
     "value": {
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
@@ -6741,66 +6893,10 @@
     "c": "graphics"
   },
   {
-    "n": "cl_particle_batch_mode",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子效果批处理模式设置",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "cl_particle_fallback_base",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子降级基数设置（低配置优化参数）",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "cl_particle_fallback_multiplier",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子降级倍率系数（控制低画质下的粒子衰减速度）",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "cl_particle_max_count",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子最大渲染数量限制（控制同屏烟雾、火花等粒子的上限）",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "cl_particle_retire_cost",
     "d": "0",
     "f": [
-      "reference"
+      "cheat"
     ],
     "en": "",
     "t": "var",
@@ -6811,40 +6907,12 @@
     }
   },
   {
-    "n": "cl_particle_sim_fallback_base_multiplier",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子模拟降级基本乘数（用于性能优化）",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
-    "n": "cl_particle_sim_fallback_threshold_ms",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子模拟降级延迟阈值（毫秒，当帧时过高时降低粒子物理效果）",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
-  },
-  {
     "n": "cl_particle_simulate",
-    "d": "false",
+    "d": "true",
     "f": [
-      "reference"
+      "cheat"
     ],
-    "en": "",
+    "en": "Enables/Disables Particle Simulation",
     "t": "var",
     "cn": "是否启用粒子系统模拟（关闭可提升帧率，但会丢失烟闪雷等特效）",
     "c": "graphics"
@@ -7030,7 +7098,8 @@
     "f": [
       "clientdll",
       "cheat",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -7143,7 +7212,8 @@
       "clientdll",
       "archive",
       "userinfo",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Left handed preference",
     "t": "var",
@@ -7234,7 +7304,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If set to 0, the radar is maximally used. Otherwise the player is always centered, even at map extents.",
     "t": "var",
@@ -7247,7 +7318,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Sets the minimum icon scale. Valid values are 0.4 to 1.25.",
     "t": "var",
@@ -7267,7 +7339,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "1",
     "t": "var",
@@ -7280,7 +7353,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Sets the radar scale. Valid values are 0.25 to 1.0.",
     "t": "var",
@@ -7372,7 +7446,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If set, the radar will toggle to square when the scoreboard is visible.",
     "t": "var",
@@ -8357,7 +8432,8 @@
     "d": "0",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Draw fps meter at top of screen (1 = fps, 2 = smooth fps, 3 = server MS, 4 = Show FPS and Log to file )",
     "t": "var",
@@ -8799,7 +8875,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -8812,7 +8889,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Show team overhead id in teammate color",
     "t": "var",
@@ -9574,7 +9652,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score added for an assist",
     "t": "var",
@@ -9590,7 +9669,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "extra requirements to earn contribution score for an assist",
     "t": "var",
@@ -9606,7 +9686,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for defusing a bomb while at least one enemy remains alive",
     "t": "var",
@@ -9622,7 +9703,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for defusing a bomb after eliminating enemy team",
     "t": "var",
@@ -9638,7 +9720,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score awarded to bomb planter and terrorists remaining alive if bomb explosion wins the round",
     "t": "var",
@@ -9654,7 +9737,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for planting a bomb",
     "t": "var",
@@ -9670,7 +9754,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for picking up a cash bundle",
     "t": "var",
@@ -9686,7 +9771,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for breaking an item crate",
     "t": "var",
@@ -9702,7 +9788,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for killing a hostage, normally negative",
     "t": "var",
@@ -9718,7 +9805,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score added to rescuer per hostage rescued",
     "t": "var",
@@ -9734,7 +9822,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score added to all alive CTs per hostage rescued",
     "t": "var",
@@ -9750,7 +9839,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score added for a kill",
     "t": "var",
@@ -9766,7 +9856,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "percentage of victim's contribution score to award to their killer as a bonus",
     "t": "var",
@@ -9782,7 +9873,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "extra requirements to earn contribution score for a kill",
     "t": "var",
@@ -9798,7 +9890,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score added for an objective related kill",
     "t": "var",
@@ -9814,7 +9907,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score awarded to players for active participation in the round",
     "t": "var",
@@ -9830,7 +9924,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for a suicide, normally negative",
     "t": "var",
@@ -9846,7 +9941,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of contribution score for a team kill, normally negative",
     "t": "var",
@@ -10027,7 +10123,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -10604,7 +10701,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Bot difficulty for offline play.",
     "t": "var",
@@ -11241,7 +11339,8 @@
     "n": "disconnect",
     "d": "",
     "f": [
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Disconnect from server",
     "t": "cmd",
@@ -11309,6 +11408,31 @@
     "value": {
       "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
+  },
+  {
+    "n": "dota_teammate_max_invis",
+    "d": "0",
+    "f": [
+      "reference"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "最大隐身队友数",
+    "c": "gameplay",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "dota_use_heightmap",
+    "d": "false",
+    "f": [
+      "reference"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "使用高度图",
+    "c": "gameplay"
   },
   {
     "n": "drawcross",
@@ -11404,7 +11528,8 @@
     "d": "0.8",
     "f": [
       "archive",
-      "demo"
+      "demo",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -11449,10 +11574,22 @@
     "c": "system"
   },
   {
+    "n": "dumpparticlelist",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "Print out information on existing particle systems",
+    "t": "cmd",
+    "cn": "打印粒子系统信息",
+    "c": "graphics"
+  },
+  {
     "n": "echo",
     "d": "",
     "f": [
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Echo text to console.",
     "t": "cmd",
@@ -11747,7 +11884,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "vconsole_fuzzy_matching"
+      "vconsole_fuzzy_matching",
+      "workshop_whitelisted"
     ],
     "en": "Creates an entity of the given designer or subclass name where the player is looking.",
     "t": "cmd",
@@ -11784,7 +11922,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "vconsole_fuzzy_matching"
+      "vconsole_fuzzy_matching",
+      "workshop_whitelisted"
     ],
     "en": "Usage:",
     "t": "cmd",
@@ -11810,7 +11949,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "vconsole_fuzzy_matching"
+      "vconsole_fuzzy_matching",
+      "workshop_whitelisted"
     ],
     "en": "Usage:",
     "t": "cmd",
@@ -12166,7 +12306,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Sets the targetname of the given entity(s)",
     "t": "cmd",
@@ -12547,7 +12688,9 @@
     "d": "",
     "f": [
       "dontrecord",
-      "release"
+      "release",
+      "execute_immediately",
+      "workshop_whitelisted"
     ],
     "en": "Execute a cfg file",
     "t": "cmd",
@@ -12571,7 +12714,9 @@
     "d": "",
     "f": [
       "dontrecord",
-      "release"
+      "release",
+      "execute_immediately",
+      "workshop_whitelisted"
     ],
     "en": "Execute a cfg file if file exists",
     "t": "cmd",
@@ -12647,7 +12792,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If friendly fire is off, this will scale the penetration power and damage a bullet does when penetrating another friendly player",
     "t": "var",
@@ -12683,7 +12829,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How much to reduce damage done to teammates when shot.  Range is from 0 - 1 (with 1 being damage equal to what is done to an enemy)",
     "t": "var",
@@ -12705,7 +12852,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How much to reduce damage done to teammates by a thrown grenade.  Range is from 0 - 1 (with 1 being damage equal to what is done to an enemy)",
     "t": "var",
@@ -12727,7 +12875,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How much to damage a player does to himself with his own grenade.  Range is from 0 - 1 (with 1 being damage equal to what is done to an enemy)",
     "t": "var",
@@ -12755,7 +12904,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How much to reduce damage done to teammates by things other than bullets and grenades.  Range is from 0 - 1 (with 1 being damage equal to what is done to an enemy)",
     "t": "var",
@@ -13107,7 +13257,8 @@
     "d": "0",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Sets the view fov if cheats are on.",
     "t": "var",
@@ -13142,7 +13293,8 @@
     "d": "120",
     "f": [
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Frame rate limiter.  0=no limit.  Does not apply to dedicated server.",
     "t": "var",
@@ -13241,6 +13393,17 @@
     }
   },
   {
+    "n": "fs_spew_readfieldlist",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "index <threshold bytes>: spew changes to ent index, optionally only spewing if update is > than threshold bytes",
+    "t": "cmd",
+    "cn": "输出字段列表",
+    "c": "system"
+  },
+  {
     "n": "func_break_max_pieces",
     "d": "15",
     "f": [
@@ -13332,7 +13495,8 @@
     "n": "game_alias",
     "d": "",
     "f": [
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Set the configuration of game type and mode based on game alias like \"deathmatch\".",
     "t": "cmd",
@@ -13346,7 +13510,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "The current game mode (based on game type). See GameModes.txt.",
     "t": "var",
@@ -13363,7 +13528,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "The current game type. See GameModes.txt.",
     "t": "var",
@@ -13586,7 +13752,8 @@
     "f": [
       "gamedll",
       "vconsole_fuzzy_matching",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Give item to player.",
     "t": "cmd",
@@ -13667,7 +13834,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Toggle by default, or 0 to disable and 1 to enable. Player becomes invulnerable.",
     "t": "cmd",
@@ -13698,6 +13866,20 @@
     "c": "system"
   },
   {
+    "n": "hammer_bake_light_triangle_batch_size",
+    "d": "65536",
+    "f": [
+      "release"
+    ],
+    "en": "Triangle batch size.",
+    "t": "var",
+    "cn": "光照三角形批处理大小",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 65536。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "healme",
     "d": "",
     "f": [
@@ -13718,7 +13900,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -13733,7 +13916,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -13751,7 +13935,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -13769,7 +13954,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -13787,7 +13973,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -13911,7 +14098,8 @@
     "d": "1",
     "f": [
       "replicated",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Prescale the clock by this amount.",
     "t": "var",
@@ -13984,7 +14172,8 @@
     "f": [
       "clientdll",
       "release",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Write settings if user agrees",
     "t": "cmd",
@@ -13998,7 +14187,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Show hostage AI debug information",
     "t": "var",
@@ -14035,10 +14225,25 @@
     "c": "system"
   },
   {
+    "n": "hostip",
+    "d": "0",
+    "f": [
+      "release"
+    ],
+    "en": "Host game server ip",
+    "t": "var",
+    "cn": "主机游戏服务器IP",
+    "c": "network",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "hostname",
     "d": "",
     "f": [
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Hostname for server.",
     "t": "var",
@@ -14090,7 +14295,8 @@
     "d": "1",
     "f": [
       "clientdll",
-      "archive"
+      "archive",
+      "workshop_whitelisted"
     ],
     "en": "Scales hud elements",
     "t": "var",
@@ -14110,7 +14316,8 @@
     "f": [
       "clientdll",
       "archive",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Enables display of target names",
     "t": "var",
@@ -14185,6 +14392,19 @@
     "value": {
       "description": "默认值为 -1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
+  },
+  {
+    "n": "ime_installed_names",
+    "d": "",
+    "f": [
+      "hidden",
+      "dontrecord",
+      "release"
+    ],
+    "en": "Spew list of installed IMEs.",
+    "t": "cmd",
+    "cn": "列出已安装IME",
+    "c": "system"
   },
   {
     "n": "imgui_debug_entity",
@@ -14282,7 +14502,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -14476,7 +14697,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Maximum number of flames that can be created",
     "t": "var",
@@ -14492,7 +14714,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Maximum distance flames can spread from their initial ignition point",
     "t": "var",
@@ -14772,6 +14995,17 @@
     "c": "gameplay"
   },
   {
+    "n": "ip",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Overrides IP for multihomed hosts",
+    "t": "var",
+    "cn": "IP地址覆盖",
+    "c": "network"
+  },
+  {
     "n": "iv_debugbone",
     "d": "",
     "f": [
@@ -14882,6 +15116,20 @@
     "c": "system",
     "value": {
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "joy_axisbutton_threshold",
+    "d": "0.3",
+    "f": [
+      "archive"
+    ],
+    "en": "Analog axis range before a button press is registered.",
+    "t": "var",
+    "cn": "模拟轴按钮阈值",
+    "c": "mouse",
+    "value": {
+      "description": "默认值为 0.3。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -15599,7 +15847,8 @@
     "d": "",
     "f": [
       "dontrecord",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Set the color of a logging channel.",
     "t": "cmd",
@@ -15623,7 +15872,8 @@
     "d": "",
     "f": [
       "dontrecord",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Set the flags on a logging channel.",
     "t": "cmd",
@@ -15647,7 +15897,8 @@
     "d": "",
     "f": [
       "dontrecord",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Set the verbosity of a logging channel.",
     "t": "cmd",
@@ -15758,6 +16009,20 @@
     "c": "practice"
   },
   {
+    "n": "lua_is_currently_executing",
+    "d": "false",
+    "f": [
+      "hidden",
+      "dontrecord",
+      "release",
+      "flag_36"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "Lua脚本执行中",
+    "c": "system"
+  },
+  {
     "n": "m_pitch",
     "d": "0.022",
     "f": [
@@ -15847,7 +16112,8 @@
       "clientdll",
       "release",
       "vconsole_fuzzy_matching",
-      "vconsole_set_focus"
+      "vconsole_set_focus",
+      "workshop_whitelisted"
     ],
     "en": "Launch a workshop map",
     "t": "cmd",
@@ -15974,7 +16240,8 @@
     "n": "mat_fullbright",
     "d": "0",
     "f": [
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "Debug rendering modes",
     "t": "var",
@@ -16579,7 +16846,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -16658,7 +16926,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of money awared to every player after each round",
     "t": "var",
@@ -16676,7 +16945,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If set, everyone can pick up the c4, not just Ts.",
     "t": "var",
@@ -16690,7 +16960,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Kick idle/team-killing/team-damaging players",
     "t": "var",
@@ -16704,7 +16975,8 @@
       "gamedll",
       "notify",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -16801,7 +17073,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Use the specified behavior tree file to drive the bot behavior.",
     "t": "var",
@@ -16813,7 +17086,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Clears the cache for behavior tree files.",
     "t": "cmd",
@@ -16828,7 +17102,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Whether players can purchase grenades from the buy menu or not.",
     "t": "var",
@@ -16843,7 +17118,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Whether players can purchase guns: pistols (1), SMGs (2), rifles (4), shotguns (8), sniper rifles (16), heavy MGs (32).",
     "t": "var",
@@ -16866,7 +17142,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When set, players can buy anywhere, not only in buyzones. 0 = default. 1 = both teams. 2 = Terrorists. 3 = Counter-Terrorists.",
     "t": "var",
@@ -16903,7 +17180,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When set, players can buy when immune, ignoring buytime. 0 = default. 1 = both teams. 2 = Terrorists. 3 = Counter-Terrorists.",
     "t": "var",
@@ -16939,7 +17217,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many seconds after round start players can buy items for.",
     "t": "var",
@@ -16960,7 +17239,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If set, the planted c4 cannot be defused.",
     "t": "var",
@@ -16976,7 +17256,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "how long from when the C4 is armed until it blows",
     "t": "var",
@@ -17046,7 +17327,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -17066,7 +17348,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The difficulty offset modifier for bots during coop missions.",
     "t": "var",
@@ -17084,7 +17367,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default grenades that the CTs will spawn with.\t To give multiple grenades, separate each weapon class with a space like this: 'weapon_molotov weapon_hegrenade'",
     "t": "var",
@@ -17099,7 +17383,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default melee weapon that the CTs will spawn with.\t Even if this is blank, a knife will be given.\tTo give a taser, it should look like this: 'weapon_knife weapon_taser'.\t Remember to set mp_weapons_allow_zeus to 1 if you want to give a taser!",
     "t": "var",
@@ -17114,7 +17399,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default primary (rifle) weapon that the CTs will spawn with",
     "t": "var",
@@ -17129,7 +17415,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default secondary (pistol) weapon that the CTs will spawn with",
     "t": "var",
@@ -17144,7 +17431,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether non-headshot hits do any damage.",
     "t": "var",
@@ -17159,7 +17447,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scales the damage a CT player takes by this much when they take damage in the body. (1 == 100%, 0.5 == 50%)",
     "t": "var",
@@ -17187,7 +17476,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scales the damage a CT player takes by this much when they take damage in the head (1 == 100%, 0.5 == 50%).  REMEMBER! headshots do 4x the damage of the body before this scaler is applied.",
     "t": "var",
@@ -17215,7 +17505,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scales the damage a T player takes by this much when they take damage in the body. (1 == 100%, 0.5 == 50%)",
     "t": "var",
@@ -17243,7 +17534,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scales the damage a T player takes by this much when they take damage in the head (1 == 100%, 0.5 == 50%).\t REMEMBER! headshots do 4x the damage of the body before this scaler is applied.",
     "t": "var",
@@ -17270,7 +17562,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If Set to non-0, will determine the fraction of damage dealt that will be given to attacker.",
     "t": "var",
@@ -17288,7 +17581,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Whether c4 is droppable",
     "t": "var",
@@ -17303,7 +17597,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Drop defuser on player death",
     "t": "var",
@@ -17318,7 +17613,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Which grenade to drop on player death: 0=none, 1=best, 2=current or best, 3=all grenades",
     "t": "var",
@@ -17358,7 +17654,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Which gun to drop on player death: 0=none, 1=best, 2=current or best, 3=both",
     "t": "var",
@@ -17393,7 +17690,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Drop healthshot on player death",
     "t": "var",
@@ -17421,7 +17719,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether a player can early-out of the deathcam.",
     "t": "var",
@@ -17436,7 +17735,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If the map doesn't define an objective (bomb, hostage, etc), the value of this convar will declare the winner when the time runs out in the round.",
     "t": "var",
@@ -17454,7 +17754,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How to allocate defusers to CTs at start or round: 0=none, 1=random, 2=everyone",
     "t": "var",
@@ -17499,7 +17800,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "When a bot disconnects, kill them first.  Requires mp_disconnect_kills_players.",
     "t": "var",
@@ -17511,7 +17813,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "When a player disconnects, kill them first (triggering item drops, stats, etc.)",
     "t": "var",
@@ -17526,7 +17829,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Whether to display and score player assists",
     "t": "var",
@@ -17575,7 +17879,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Percent of points additionally awarded when someone gets a kill with the bonus weapon during the bonus period.",
     "t": "var",
@@ -17596,7 +17901,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Additional dogtags to drop when making a kill with the bonus weapon",
     "t": "var",
@@ -17614,7 +17920,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Points to award for picking up a dogtag in deathmatch.",
     "t": "var",
@@ -17652,7 +17959,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Number of base points to award for a kill in deathmatch.  Cheaper weapons award 1 or 2 additional points.",
     "t": "var",
@@ -17693,7 +18001,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "In deathmatch, enables team DM visuals & scoring (0: personal, 1: team mode, 2: use team contribution score)",
     "t": "var",
@@ -17725,7 +18034,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Team deathmatch victory points to award for kill with bonus weapon",
     "t": "var",
@@ -17743,7 +18053,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Team deathmatch victory points to award for collecting enemy dogtags",
     "t": "var",
@@ -17761,7 +18072,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Team deathmatch victory points to award for enemy kill",
     "t": "var",
@@ -17812,7 +18124,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Whether dogtags should despawn when their killer dies",
     "t": "var",
@@ -17826,7 +18139,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many seconds dogtags should stay around before despawning automatically (0 = infinite)",
     "t": "var",
@@ -17852,7 +18166,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Who is eligible to pick up a dogtag (0 = killer only, 1 = killer's team, 2 = victim's team, 3 = killer & victim's team, 4 = anyone)",
     "t": "var",
@@ -17892,7 +18207,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Allows players to drop grenades.",
     "t": "var",
@@ -17907,7 +18223,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Allows players to drop knives.",
     "t": "var",
@@ -17922,7 +18239,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Reset all player money every N rounds (0 for never)",
     "t": "var",
@@ -17937,7 +18255,8 @@
     "d": "20",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If mp_endmatch_votenextmap is set, players have this much time to vote on the next map at match end.",
     "t": "var",
@@ -17954,7 +18273,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Whether or not players vote for the next map at the end of the match when the final scoreboard comes up",
     "t": "var",
@@ -17968,7 +18288,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If set, keeps the current map in the list of voting options.  If not set, the current map will not appear in the list of voting options.",
     "t": "var",
@@ -18042,7 +18363,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Reset all player equipment every N rounds (0 for never)",
     "t": "var",
@@ -18072,7 +18394,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The amount of time a player has on the team screen to make a selection before being auto-teamed",
     "t": "var",
@@ -18090,7 +18413,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Restricts spectator modes for dead players",
     "t": "var",
@@ -18106,7 +18430,8 @@
     "f": [
       "gamedll",
       "notify",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -18124,7 +18449,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether kevlar (1+) and/or helmet (2+) are given automatically.",
     "t": "var",
@@ -18156,7 +18482,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "how many seconds to keep players frozen when the round starts",
     "t": "var",
@@ -18179,7 +18506,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Allows team members to injure other members of their team",
     "t": "var",
@@ -18194,7 +18522,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Whether this map should spawn a c4 bomb for a player or not.",
     "t": "var",
@@ -18208,7 +18537,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If above 0, deal non-lethal damage to players over time.",
     "t": "var",
@@ -18228,7 +18558,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "x,y,z to display an X for the bomb plant in guardian missions with custom bomb plant boundaries.",
     "t": "var",
@@ -18241,7 +18572,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If set to the index of a bombsite, will cause random spawns to be only created near that site.",
     "t": "var",
@@ -18259,7 +18591,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether the match switches sides in a halftime event.",
     "t": "var",
@@ -18312,7 +18645,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Set to 1 to stay in halftime indefinitely. Set to 0 to resume the timer.",
     "t": "var",
@@ -18329,7 +18663,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Maximum number of hostages to spawn.",
     "t": "var",
@@ -18346,7 +18681,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Additional time added to round time if a hostage is reached by a CT.",
     "t": "var",
@@ -18396,7 +18732,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Comma separated list of zero based indices to force spawn positions, e.g. '0,2' or '1,6'",
     "t": "var",
@@ -18409,7 +18746,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Comma separated list of xyz locations to force spawn positions, e.g. 'x1 y1 z1,x2 y2 z2'",
     "t": "var",
@@ -18423,7 +18761,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "0 = spawn hostages randomly every round, 1 = same spawns for entire match.",
     "t": "var",
@@ -18450,7 +18789,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Restricts human players to a single team {any, CT, T}",
     "t": "var",
@@ -18463,7 +18803,9 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Ignore conditions which would end the current round",
     "t": "var",
@@ -18478,7 +18820,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Set this convar to a comma-delimited list of definition indices of weapons that should be prohibited from use.",
     "t": "var",
@@ -18492,7 +18835,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Number of seconds after round start to allow a player to join a game",
     "t": "var",
@@ -18514,7 +18858,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Max # of players 1 team can have over another (0 disables check)",
     "t": "var",
@@ -18603,7 +18948,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Can a team clinch and end the match by being so far ahead that the other team has no way to catching up?",
     "t": "var",
@@ -18618,7 +18964,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "At the end of the match, perform a changelevel even if next map is the same",
     "t": "var",
@@ -18632,7 +18979,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "At the end of the match, perform a restart instead of loading a new map",
     "t": "var",
@@ -18646,7 +18994,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Time (in seconds) until a match restarts.",
     "t": "var",
@@ -18668,7 +19017,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines the highest level of armor allowed to be purchased. (0) None, (1) Kevlar, (2) Helmet",
     "t": "var",
@@ -18700,7 +19050,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "maximum amount of money allowed in a player's account",
     "t": "var",
@@ -18722,7 +19073,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "max number of rounds to play before server changes maps",
     "t": "var",
@@ -18776,7 +19128,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -18885,7 +19238,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -18900,7 +19254,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Players can earn money by performing in-game actions",
     "t": "var",
@@ -18992,7 +19347,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Allow the purchasing of the promoted item.",
     "t": "var",
@@ -19007,7 +19363,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether players are to spawn. 0 = default; 1 = both teams; 2 = Terrorists; 3 = CTs.",
     "t": "var",
@@ -19043,7 +19400,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If using mp_randomspawn, determines whether to test distance when selecting this spot.",
     "t": "var",
@@ -19061,7 +19419,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If using mp_randomspawn, determines whether to test Line of Sight when spawning.",
     "t": "var",
@@ -19088,7 +19447,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many seconds after respawn immunity lasts. Set to negative value to disable warmup immunity.",
     "t": "var",
@@ -19106,7 +19466,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When set to 1, counter-terrorists will respawn after dying.",
     "t": "var",
@@ -19121,7 +19482,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When set to 1, terrorists will respawn after dying.",
     "t": "var",
@@ -19136,7 +19498,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Time between respawn waves for CTs.",
     "t": "var",
@@ -19154,7 +19517,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Time between respawn waves for Terrorists.",
     "t": "var",
@@ -19169,7 +19533,8 @@
     "d": "0",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If non-zero, game will restart in the specified number of seconds",
     "t": "var",
@@ -19204,7 +19569,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT bonus card for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19219,7 +19585,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT bonus card availability pattern for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19234,7 +19601,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT Loadouts for default pistol round when playing bomb site retake.",
     "t": "var",
@@ -19249,7 +19617,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT enemy card for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19264,7 +19633,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT Loadouts for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19279,7 +19649,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT Loadouts for force buy round when playing bomb site retake.",
     "t": "var",
@@ -19294,7 +19665,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "CT Loadouts for upgraded pistol round when playing bomb site retake.",
     "t": "var",
@@ -19309,7 +19681,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Limit the number of consecutive rounds targeting the same site.",
     "t": "var",
@@ -19344,7 +19717,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T bonus card for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19359,7 +19733,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T bonus card availability pattern for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19374,7 +19749,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T Loadouts for default pistol round when playing bomb site retake.",
     "t": "var",
@@ -19389,7 +19765,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T enemy card for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19404,7 +19781,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T Loadouts for full buy round when playing bomb site retake.",
     "t": "var",
@@ -19419,7 +19797,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T Loadouts for force buy round when playing bomb site retake.",
     "t": "var",
@@ -19434,7 +19813,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "T Loadouts for upgraded pistol round when playing bomb site retake.",
     "t": "var",
@@ -19449,7 +19829,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Number of seconds to delay before restarting a round after a win",
     "t": "var",
@@ -19470,7 +19851,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many minutes each round takes.",
     "t": "var",
@@ -19492,7 +19874,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many minutes each round of Bomb Defuse takes. If 0 then use mp_roundtime instead.",
     "t": "var",
@@ -19514,7 +19897,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many minutes each round of Hostage Rescue takes. If 0 then use mp_roundtime instead.",
     "t": "var",
@@ -19594,7 +19978,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How solid are enemies: 0 = transparent; 1 = fully solid",
     "t": "var",
@@ -19622,7 +20007,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How solid are teammates: 0 = transparent; 1 = fully solid; 2 = can stand on top of heads",
     "t": "var",
@@ -19651,8 +20037,9 @@
     "d": "5",
     "f": [
       "gamedll",
-      "replicated",
-      "release"
+      "release",
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Kick players who team-kill within this many seconds of a round restart.",
     "t": "var",
@@ -19669,7 +20056,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "How many spectators are allowed in a match.",
     "t": "var",
@@ -19690,7 +20078,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines what the initial loss streak is.",
     "t": "var",
@@ -19711,7 +20100,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "amount of money each player gets when they reset",
     "t": "var",
@@ -19730,7 +20120,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Punish players for suicides",
     "t": "var",
@@ -19757,7 +20148,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default grenades that the Ts will spawn with.\tTo give multiple grenades, separate each weapon class with a space like this: 'weapon_molotov weapon_hegrenade'",
     "t": "var",
@@ -19772,7 +20164,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default melee weapon that the Ts will spawn with",
     "t": "var",
@@ -19787,7 +20180,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default primary (rifle) weapon that the Ts will spawn with",
     "t": "var",
@@ -19802,7 +20196,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The default secondary (pistol) weapon that the Ts will spawn with",
     "t": "var",
@@ -19817,7 +20212,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scalar for player tagging modifier when hit. Lower values for greater tagging.",
     "t": "var",
@@ -19835,7 +20231,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines recharge time for taser. -1 = disabled.",
     "t": "var",
@@ -19856,8 +20253,8 @@
     "d": "300",
     "f": [
       "gamedll",
-      "replicated",
-      "release"
+      "release",
+      "commandline_enforced"
     ],
     "en": "The damage threshhold players have to exceed in a match to get kicked.",
     "t": "var",
@@ -19872,8 +20269,8 @@
     "d": "200",
     "f": [
       "gamedll",
-      "replicated",
-      "release"
+      "release",
+      "commandline_enforced"
     ],
     "en": "The damage threshhold players have to exceed in a match to get warned that they are about to be kicked.",
     "t": "var",
@@ -19888,8 +20285,8 @@
     "d": "50",
     "f": [
       "gamedll",
-      "replicated",
-      "release"
+      "release",
+      "commandline_enforced"
     ],
     "en": "The damage threshold players have to exceed at the start of the round to be warned/kick.",
     "t": "var",
@@ -19907,7 +20304,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many seconds for team intro",
     "t": "var",
@@ -20028,7 +20426,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Teams can earn money by performing in-game actions",
     "t": "var",
@@ -20064,7 +20463,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Enter a team's shorthand image name to display their logo. Images can be found here: 'resource/flash/econ/tournaments/teams'",
     "t": "var",
@@ -20076,7 +20476,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Enter a team's shorthand image name to display their logo. Images can be found here: 'resource/flash/econ/tournaments/teams'",
     "t": "var",
@@ -20127,7 +20528,8 @@
     "d": "5",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Decide on a match stat and hold it additionally for at least so many seconds",
     "t": "var",
@@ -20158,7 +20560,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When set, your teammates act as enemies and all players are valid targets.",
     "t": "var",
@@ -20170,7 +20573,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "A non-empty string overrides the first team's name.",
     "t": "var",
@@ -20182,7 +20586,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "A non-empty string overrides the second team's name.",
     "t": "var",
@@ -20277,7 +20682,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many seconds is a full technical timeout?",
     "t": "var",
@@ -20295,7 +20701,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How many technical timeouts are there per team?",
     "t": "var",
@@ -20314,7 +20721,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "game time per map in minutes",
     "t": "var",
@@ -20370,7 +20778,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When set to 1, and that player's team is set to respawn, they will respawn in waves. If set to 2, teams will respawn when the whole team is dead.",
     "t": "var",
@@ -20402,7 +20811,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "End warmup immediately.",
     "t": "cmd",
@@ -20417,7 +20827,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Which items can drop during warmup (bitfield, 1=gun, 2=c4, 4=nade, 8=defuser, 16=taser, 32=healthshot)",
     "t": "var",
@@ -20461,7 +20872,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines whether weapons are free to buy during warmup.",
     "t": "var",
@@ -20476,7 +20888,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Which items are unlimited during warmup (bitfield, 1=gun, 2=c4, 4=nade, 8=defuser/kevlar, 16=taser, 32=healthshot)",
     "t": "var",
@@ -20519,7 +20932,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Whether or not to do a warmup period at the start of a match in an offline (bot) match.",
     "t": "var",
@@ -20533,7 +20947,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Whether or not to do a warmup period at the start of an online match.",
     "t": "var",
@@ -20548,7 +20963,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Set to 1 to stay in warmup indefinitely. Set to 0 to resume the timer.",
     "t": "var",
@@ -20578,7 +20994,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "How long the warmup period lasts. Changing this value resets warmup.",
     "t": "var",
@@ -20599,7 +21016,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Warmup time to use when all players have connected. 0 to disable.",
     "t": "var",
@@ -20617,7 +21035,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Warmup time to use when the match will be cancelled (eg. due to a live VAC ban).",
     "t": "var",
@@ -20668,7 +21087,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If Set to non-0, will hurt the attacker by the specified fraction of max damage if they miss.",
     "t": "var",
@@ -20686,7 +21106,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines which team, if any, can purchase Heavy guns. -1 = any; 0 = non; 2 = Ts; 3 = CTs.",
     "t": "var",
@@ -20722,7 +21143,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If this convar is set, when a match starts, the game will not delete weapons placed in the map.",
     "t": "var",
@@ -20737,7 +21159,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines which team, if any, can purchase Pistols. -1 = any; 0 = non; 2 = Ts; 3 = CTs.",
     "t": "var",
@@ -20773,7 +21196,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines which team, if any, can purchase Rifles. -1 = any; 0 = non; 2 = Ts; 3 = CTs.",
     "t": "var",
@@ -20809,7 +21233,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines which team, if any, can purchase SMGs. -1 = any; 0 = non; 2 = Ts; 3 = CTs.",
     "t": "var",
@@ -20845,7 +21270,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines how many purchases of each weapon type allowed per player per round (0 to disallow purchasing, -1 to have no limit).",
     "t": "var",
@@ -20873,7 +21299,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines how many Zeus purchases a player can make per round (0 to disallow, -1 to have no limit).",
     "t": "var",
@@ -20901,7 +21328,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Max number of times a player may purchase any weapon per match",
     "t": "var",
@@ -20923,7 +21351,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "The amount of time to show the win panel between matches / halfs",
     "t": "var",
@@ -21091,6 +21520,20 @@
     "t": "cmd",
     "cn": "清除当前选中的导航网格集合",
     "c": "practice"
+  },
+  {
+    "n": "nav_corner_adjust_adjacent",
+    "d": "18",
+    "f": [
+      "cheat"
+    ],
+    "en": "radius used to raise/lower corners in nearby areas when raising/lowering corners.",
+    "t": "var",
+    "cn": "角落调整半径",
+    "c": "gameplay",
+    "value": {
+      "description": "默认值为 18。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "nav_create_indirect_connection",
@@ -22126,7 +22569,7 @@
   },
   {
     "n": "nav_gen_opt_to_quads_se_limit_start",
-    "d": "1e-05",
+    "d": "0.00001",
     "f": [
       "gamedll",
       "cheat"
@@ -22136,7 +22579,7 @@
     "cn": "优化为四边形时的二次误差（SE）起始限制值",
     "c": "practice",
     "value": {
-      "description": "默认值为 1e-05。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+      "description": "默认值为 0.00001。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -22368,6 +22811,20 @@
         }
       ],
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
+    }
+  },
+  {
+    "n": "nav_max_vis_delta_list_length",
+    "d": "64",
+    "f": [
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "最大可见列表长度",
+    "c": "gameplay",
+    "value": {
+      "description": "默认值为 64。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -22885,6 +23342,20 @@
     "t": "cmd",
     "cn": "设置可移动网格的休眠标志（0=启用，1=休眠）",
     "c": "practice"
+  },
+  {
+    "n": "nav_show_potentially_visible",
+    "d": "0",
+    "f": [
+      "cheat"
+    ],
+    "en": "Show areas that are potentially visible from the current nav area",
+    "t": "var",
+    "cn": "显示潜在可见区域",
+    "c": "gameplay",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "nav_smooth_arrival_enable",
@@ -24267,6 +24738,20 @@
     "c": "practice"
   },
   {
+    "n": "nav_validate",
+    "d": "0",
+    "f": [
+      "cheat"
+    ],
+    "en": "Level of validation for nav system.  Higher will be slower.",
+    "t": "var",
+    "cn": "导航验证级别",
+    "c": "gameplay",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "nav_volume_debug",
     "d": "0",
     "f": [
@@ -24420,6 +24905,17 @@
     "c": "system"
   },
   {
+    "n": "net_channels",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Shows net channel info",
+    "t": "cmd",
+    "cn": "显示网络通道信息",
+    "c": "network"
+  },
+  {
     "n": "net_client_steamdatagram_enable_override",
     "d": "0",
     "f": [
@@ -24447,6 +24943,239 @@
       ],
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。已识别的离散取值含义见下方。"
     }
+  },
+  {
+    "n": "net_connections_stats",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Print detailed network statistics for each network connection",
+    "t": "cmd",
+    "cn": "打印网络连接统计",
+    "c": "network"
+  },
+  {
+    "n": "net_fakeclear",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Clear all simulated network conditions",
+    "t": "cmd",
+    "cn": "清除模拟网络条件",
+    "c": "network"
+  },
+  {
+    "n": "net_fakejitter",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Shortcut to set jitter net options.  Run with no arguments for usage.",
+    "t": "cmd",
+    "cn": "设置抖动网络选项",
+    "c": "network"
+  },
+  {
+    "n": "net_fakelag",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Shortcut to set both FakePacketLag_Recv and FakePacketLag_Send net options",
+    "t": "cmd",
+    "cn": "设置延迟网络选项",
+    "c": "network"
+  },
+  {
+    "n": "net_fakeloss",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Shortcut to set both FakePacketLoss_Recv and FakePacketLoss_Send net options",
+    "t": "cmd",
+    "cn": "设置丢包网络选项",
+    "c": "network"
+  },
+  {
+    "n": "net_fakestatus",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Print current simulated network condifions",
+    "t": "cmd",
+    "cn": "打印当前模拟网络条件",
+    "c": "network"
+  },
+  {
+    "n": "net_limit_sv_recv_max_message_size_kb",
+    "d": "32",
+    "f": [
+      "release"
+    ],
+    "en": "Server will reject message larger than N kb",
+    "t": "var",
+    "cn": "最大接收消息大小",
+    "c": "network",
+    "value": {
+      "description": "默认值为 32。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "net_limit_sv_recv_segments_per_packet",
+    "d": "50",
+    "f": [
+      "release"
+    ],
+    "en": "Server will reject packets with more than N segments",
+    "t": "var",
+    "cn": "最大接收分段数",
+    "c": "network",
+    "value": {
+      "description": "默认值为 50。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "net_limit_sv_recvbuffer_kb",
+    "d": "128",
+    "f": [
+      "release"
+    ],
+    "en": "Server will not buffer more than N kb from connected clients",
+    "t": "var",
+    "cn": "最大接收缓冲大小",
+    "c": "network",
+    "value": {
+      "description": "默认值为 128。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "net_limit_sv_recvbuffer_msg",
+    "d": "100",
+    "f": [
+      "release"
+    ],
+    "en": "Server will not buffer more than N messages from connected clients",
+    "t": "var",
+    "cn": "最大接收消息缓冲",
+    "c": "network",
+    "value": {
+      "description": "默认值为 100。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "net_listallmessages",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "List all registered net messages",
+    "t": "cmd",
+    "cn": "列出所有注册的网络消息",
+    "c": "network"
+  },
+  {
+    "n": "net_messageinfo",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "Display info about a message (by classname or id)",
+    "t": "cmd",
+    "cn": "显示消息信息",
+    "c": "network"
+  },
+  {
+    "n": "net_option",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Get or set SteamNetworkingSockets options such as fake packet lag and loss",
+    "t": "cmd",
+    "cn": "获取或设置网络选项",
+    "c": "network"
+  },
+  {
+    "n": "net_permutation_info",
+    "d": "",
+    "f": [
+      "cheat",
+      "vconsole_fuzzy_matching"
+    ],
+    "en": "show permutation information for serializer",
+    "t": "cmd",
+    "cn": "显示序列化器的排列信息",
+    "c": "network"
+  },
+  {
+    "n": "net_print_sdr_ping_times",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Print current ping times to SDR points of presence, and selected route",
+    "t": "cmd",
+    "cn": "打印SDR ping时间",
+    "c": "network"
+  },
+  {
+    "n": "net_public_adr",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "For servers behind NAT/DHCP meant to be exposed to the public internet, this is the public facing ip address string: (\"x.x.x.x\" )",
+    "t": "var",
+    "cn": "公网IP地址",
+    "c": "network"
+  },
+  {
+    "n": "net_showudp",
+    "d": "false",
+    "f": [
+      "release"
+    ],
+    "en": "Dump UDP packets summary to console",
+    "t": "var",
+    "cn": "显示UDP包",
+    "c": "network"
+  },
+  {
+    "n": "net_showudp_remoteonly",
+    "d": "true",
+    "f": [
+      "release"
+    ],
+    "en": "Dump non-loopback udp only",
+    "t": "var",
+    "cn": "仅显示远程UDP",
+    "c": "network"
+  },
+  {
+    "n": "net_status",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "Shows current network status",
+    "t": "cmd",
+    "cn": "显示网络状态",
+    "c": "network"
+  },
+  {
+    "n": "net_validatemessages",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "Activates/deactivates net message validation",
+    "t": "cmd",
+    "cn": "激活/停用网络消息验证",
+    "c": "network"
   },
   {
     "n": "nextdemo",
@@ -24504,7 +25233,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Toggle. Player becomes non-solid and flies.  Optional argument of 0 or 1 to force enable/disable",
     "t": "cmd",
@@ -24516,7 +25246,8 @@
     "d": "true",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -24780,7 +25511,7 @@
       "archive",
       "dontrecord",
       "server_cannot_query",
-      "missing1"
+      "snapshot_ignored"
     ],
     "en": "Current server access password",
     "t": "var",
@@ -24810,6 +25541,18 @@
     "t": "cmd",
     "cn": "打开国服完美世界账户充值页面。",
     "c": "system"
+  },
+  {
+    "n": "pet_disable_test_mode",
+    "d": "false",
+    "f": [
+      "archive",
+      "cheat"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "禁用测试模式",
+    "c": "cheats"
   },
   {
     "n": "phys_dynamic_scaling",
@@ -25083,7 +25826,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Creates a ping notification where the player is looking.",
     "t": "cmd",
@@ -25096,7 +25840,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Cooldown for how long it takes for a player's ping token to refresh allowing them to ping again (they get 5 tokens).",
     "t": "var",
@@ -25508,6 +26253,17 @@
     }
   },
   {
+    "n": "r_allow_low_gpu_memory_mode",
+    "d": "true",
+    "f": [
+      "release"
+    ],
+    "en": "Allow Low GPU Memory mode (i.e. when building maps).",
+    "t": "var",
+    "cn": "允许低GPU内存模式",
+    "c": "graphics"
+  },
+  {
     "n": "r_animatable_mesh_shaders",
     "d": "false",
     "f": [
@@ -25780,7 +26536,7 @@
   },
   {
     "n": "r_csgo_mboit_bias",
-    "d": "5e-06",
+    "d": "0.000005",
     "f": [
       "clientdll",
       "cheat"
@@ -25790,7 +26546,7 @@
     "cn": "MBOIT 算法的偏差值（Bias）调整，用于优化半透明渲染渲染排序错误",
     "c": "graphics",
     "value": {
-      "description": "默认值为 5e-06。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+      "description": "默认值为 0.000005。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -25975,7 +26731,8 @@
     "d": "true",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -25987,7 +26744,8 @@
     "d": "true",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -26339,7 +27097,8 @@
     "n": "r_directlighting",
     "d": "true",
     "f": [
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "Set to use direct lighting",
     "t": "var",
@@ -26461,6 +27220,20 @@
     "c": "graphics"
   },
   {
+    "n": "r_draw_particle_children_with_parents",
+    "d": "-1",
+    "f": [
+      "cheat"
+    ],
+    "en": "Draw particle children with parents (-1=use gameinfo, 0=no, 1=yes)",
+    "t": "var",
+    "cn": "绘制带父级的粒子子对象",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 -1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
     "n": "r_drawblankworld",
     "d": "false",
     "f": [
@@ -26530,6 +27303,19 @@
     "c": "graphics"
   },
   {
+    "n": "r_drawparticles",
+    "d": "true",
+    "f": [
+      "cheat",
+      "menubar_item",
+      "gameinfo_cannot_override"
+    ],
+    "en": "SceneSystem/Particles/Draw Particles",
+    "t": "var",
+    "cn": "绘制粒子",
+    "c": "graphics"
+  },
+  {
     "n": "r_drawropes",
     "d": "true",
     "f": [
@@ -26545,7 +27331,8 @@
     "n": "r_drawskybox",
     "d": "true",
     "f": [
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "Render the 2d skybox.",
     "t": "var",
@@ -26582,7 +27369,8 @@
     "d": "true",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Render view model",
     "t": "var",
@@ -26979,9 +27767,9 @@
     "n": "r_freezeparticles",
     "d": "false",
     "f": [
-      "reference"
+      "cheat"
     ],
-    "en": "",
+    "en": "Pause particle simulation",
     "t": "var",
     "cn": "冻结游戏中的粒子效果（如烟雾、火光等）",
     "c": "cheats"
@@ -26991,7 +27779,8 @@
     "d": "2.2",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored",
+      "workshop_whitelisted"
     ],
     "en": "Screen Gamma (only in fullscreen modes)",
     "t": "var",
@@ -27172,17 +27961,6 @@
     "c": "graphics"
   },
   {
-    "n": "r_limit_particle_job_duration",
-    "d": "false",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "限制粒子任务处理的持续时间",
-    "c": "graphics"
-  },
-  {
     "n": "r_mapextents",
     "d": "16384",
     "f": [
@@ -27245,7 +28023,8 @@
     "d": "-1",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "Override the near clipping plane. -1 means use the default.",
     "t": "var",
@@ -27262,17 +28041,32 @@
     }
   },
   {
-    "n": "r_particle_max_detail_level",
-    "d": "0",
+    "n": "r_particle_max_draw_distance",
+    "d": "1000000",
     "f": [
-      "reference"
+      "cheat"
     ],
-    "en": "",
+    "en": "The maximum distance that particles will render",
     "t": "var",
-    "cn": "粒子效果的最大细节等级（LOD）",
+    "cn": "最大绘制距离",
     "c": "graphics",
     "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+      "description": "默认值为 1000000。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "r_particle_multiplier",
+    "d": "1",
+    "f": [
+      "cheat",
+      "gameinfo_cannot_override"
+    ],
+    "en": "Render each particle system N times for perf testing",
+    "t": "var",
+    "cn": "粒子渲染倍数",
+    "c": "graphics",
+    "value": {
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -27286,20 +28080,6 @@
     "t": "var",
     "cn": "计算粒子阴影效果",
     "c": "graphics"
-  },
-  {
-    "n": "r_particle_timescale",
-    "d": "0",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "粒子系统的时间流速缩放",
-    "c": "graphics",
-    "value": {
-      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
-    }
   },
   {
     "n": "r_pixelvisibility_partial",
@@ -27344,7 +28124,8 @@
     "d": "false",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "",
     "t": "var",
@@ -27381,7 +28162,8 @@
     "n": "r_shadows",
     "d": "true",
     "f": [
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "",
     "t": "var",
@@ -27531,28 +28313,6 @@
     }
   },
   {
-    "n": "r_threaded_particle_creation",
-    "d": "false",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "多线程粒子创建开关",
-    "c": "graphics"
-  },
-  {
-    "n": "r_threaded_particles",
-    "d": "false",
-    "f": [
-      "reference"
-    ],
-    "en": "",
-    "t": "var",
-    "cn": "启用多线程粒子系统渲染",
-    "c": "graphics"
-  },
-  {
     "n": "r_translucent",
     "d": "true",
     "f": [
@@ -27561,6 +28321,42 @@
     "en": "Enable rendering of translucent geometry",
     "t": "var",
     "cn": "启用半透明几何图形的渲染",
+    "c": "graphics"
+  },
+  {
+    "n": "r_vma_defrag_threshold_mb",
+    "d": "256",
+    "f": [
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "内存整理阈值",
+    "c": "system",
+    "value": {
+      "description": "默认值为 256。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "r_vulkan_accurate_renderarea",
+    "d": "true",
+    "f": [
+      "release"
+    ],
+    "en": "Sets the renderArea of a render pass to its viewport bounds (false will use RT size). More accurate renderArea, but results in more render passes.",
+    "t": "var",
+    "cn": "精确渲染区域",
+    "c": "graphics"
+  },
+  {
+    "n": "r_vulkan_sw_cmd_lists",
+    "d": "true",
+    "f": [
+      "release"
+    ],
+    "en": "Enable Software Command lists for Vulkan",
+    "t": "var",
+    "cn": "启用Vulkan软件命令列表",
     "c": "graphics"
   },
   {
@@ -27649,7 +28445,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Opens a radio menu",
     "t": "cmd",
@@ -27661,7 +28458,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Opens a radio menu",
     "t": "cmd",
@@ -27673,7 +28471,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Opens a radio menu",
     "t": "cmd",
@@ -27685,7 +28484,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Opens a radio menu",
     "t": "cmd",
@@ -28013,7 +28813,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -28183,7 +28984,8 @@
     "d": "",
     "f": [
       "cheat",
-      "vconsole_set_focus"
+      "vconsole_set_focus",
+      "workshop_whitelisted"
     ],
     "en": "Poor man's restart: reload the current map from disk.",
     "t": "cmd",
@@ -28350,7 +29152,8 @@
     "d": "1",
     "f": [
       "clientdll",
-      "archive"
+      "archive",
+      "workshop_whitelisted"
     ],
     "en": "The percentage of the screen width that is considered safe from overscan. Cannot result in a width less than the height.",
     "t": "var",
@@ -28369,7 +29172,8 @@
     "d": "1",
     "f": [
       "clientdll",
-      "archive"
+      "archive",
+      "workshop_whitelisted"
     ],
     "en": "The percentage of the screen height that is considered safe from overscan",
     "t": "var",
@@ -28403,7 +29207,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Display player message",
     "t": "cmd",
@@ -28415,7 +29220,8 @@
     "d": "",
     "f": [
       "gamedll",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Display player message to team",
     "t": "cmd",
@@ -28509,7 +29315,8 @@
     "n": "sc_disable_spotlight_shadows",
     "d": "false",
     "f": [
-      "cheat"
+      "cheat",
+      "gameinfo_cannot_override"
     ],
     "en": "",
     "t": "var",
@@ -29039,6 +29846,17 @@
     "c": "system"
   },
   {
+    "n": "sdr",
+    "d": "",
+    "f": [
+      "release"
+    ],
+    "en": "An old command that has been renamed to 'net_option'",
+    "t": "cmd",
+    "cn": "已重命名为net_option",
+    "c": "network"
+  },
+  {
     "n": "sellbackall",
     "d": "",
     "f": [
@@ -29147,7 +29965,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Snap player eyes to specified pitch yaw <roll:optional> (must have sv_cheats).",
     "t": "cmd",
@@ -29207,7 +30026,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "client_can_execute"
+      "client_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Move player to specified origin (must have sv_cheats).",
     "t": "cmd",
@@ -29239,6 +30059,34 @@
     "t": "cmd",
     "cn": "将指定的玩家传送移动到指定坐标位置[需要开启 sv_cheats]",
     "c": "cheats"
+  },
+  {
+    "n": "sfm_orbitspeed",
+    "d": "0.333",
+    "f": [
+      "archive"
+    ],
+    "en": "Camera orbit scale.",
+    "t": "var",
+    "cn": "相机环绕速度",
+    "c": "practice",
+    "value": {
+      "description": "默认值为 0.333。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "sfm_panspeed",
+    "d": "0.1",
+    "f": [
+      "archive"
+    ],
+    "en": "Camera pan speed",
+    "t": "var",
+    "cn": "相机平移速度",
+    "c": "practice",
+    "value": {
+      "description": "默认值为 0.1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
   },
   {
     "n": "shake",
@@ -29581,7 +30429,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29641,7 +30490,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29653,7 +30503,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29665,7 +30516,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29677,7 +30529,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29689,7 +30542,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29701,7 +30555,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29713,7 +30568,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29725,7 +30581,8 @@
     "d": "",
     "f": [
       "clientdll",
-      "server_can_execute"
+      "server_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "cmd",
@@ -29748,7 +30605,7 @@
     "d": "true",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored"
     ],
     "en": "",
     "t": "var",
@@ -29896,7 +30753,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Deathcam Timers",
     "t": "var",
@@ -30141,7 +30999,7 @@
     "d": "1",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored"
     ],
     "en": "",
     "t": "var",
@@ -30202,7 +31060,8 @@
     "d": "1",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored",
+      "workshop_whitelisted"
     ],
     "en": "Game volume",
     "t": "var",
@@ -30272,7 +31131,8 @@
     "f": [
       "clientdll",
       "archive",
-      "clientcmd_can_execute"
+      "clientcmd_can_execute",
+      "workshop_whitelisted"
     ],
     "en": "Select Headphone EQ Preset",
     "t": "var",
@@ -30356,7 +31216,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Map Objective Music",
     "t": "var",
@@ -30476,7 +31337,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Menu / Non-gameplay music",
     "t": "var",
@@ -30575,7 +31437,7 @@
     "d": "0.001",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored"
     ],
     "en": "",
     "t": "var",
@@ -30649,7 +31511,8 @@
     "d": "1",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored",
+      "workshop_whitelisted"
     ],
     "en": "Music volume",
     "t": "var",
@@ -30668,7 +31531,7 @@
     "d": "true",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored"
     ],
     "en": "",
     "t": "var",
@@ -30694,7 +31557,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of MVP Music",
     "t": "var",
@@ -30981,7 +31845,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Move Action Music",
     "t": "var",
@@ -31081,7 +31946,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Won/Lost Music",
     "t": "var",
@@ -31181,7 +32047,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Round Start Music",
     "t": "var",
@@ -32023,7 +32890,8 @@
     "d": "0",
     "f": [
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -32032,6 +32900,111 @@
     "value": {
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
+  },
+  {
+    "n": "snd_steamaudio_baked_data_stats",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "Display baked data stats for the current mod.",
+    "t": "cmd",
+    "cn": "显示当前模组的烘焙数据统计",
+    "c": "audio"
+  },
+  {
+    "n": "snd_steamaudio_baked_occlusion_mode",
+    "d": "0",
+    "f": [
+      "cheat"
+    ],
+    "en": "0: distance ratio only. 1: deviation only (1/r). 2: deviation only (linear). 3: Mode 0 and Mode 1, 4: Mode 0 and Mode 2",
+    "t": "var",
+    "cn": "烘焙遮挡模式",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_baked_occlusion_pathing_deviation_slope",
+    "d": "0.1",
+    "f": [
+      "cheat"
+    ],
+    "en": "Adjust how much occlusion goes does with deviation angle.",
+    "t": "var",
+    "cn": "遮挡路径偏差斜率",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 0.1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_baked_occlusion_pathing_exponent",
+    "d": "0.1",
+    "f": [
+      "cheat"
+    ],
+    "en": "Adjust scaling of pathing energy by exponentiall scaling with pathing delta.",
+    "t": "var",
+    "cn": "路径能量指数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 0.1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_baked_occlusion_reflection_factor",
+    "d": "1",
+    "f": [
+      "cheat"
+    ],
+    "en": "Adjust scaling for reflection energy when combining it to calculate occlusion value.",
+    "t": "var",
+    "cn": "反射能量因子",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_baked_occlusion_reflection_regularization",
+    "d": "0",
+    "f": [
+      "cheat"
+    ],
+    "en": "Ambient noise energy to serve as a floor for reflection energy.",
+    "t": "var",
+    "cn": "反射能量正则化",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_enable_pathing",
+    "d": "false",
+    "f": [
+      "cheat"
+    ],
+    "en": "This variable is checked by soundstack to globally enabling pathing for audio processing.",
+    "t": "var",
+    "cn": "启用音频路径",
+    "c": "audio"
+  },
+  {
+    "n": "snd_steamaudio_enable_perspective_correction",
+    "d": "false",
+    "f": [
+      "archive",
+      "release",
+      "workshop_whitelisted"
+    ],
+    "en": "Enable perspective correction for 3D audio.",
+    "t": "var",
+    "cn": "启用3D音频视角校正",
+    "c": "audio"
   },
   {
     "n": "snd_steamaudio_enable_reverb",
@@ -32045,6 +33018,165 @@
     "c": "audio",
     "value": {
       "description": "默认值为 0。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_enable_spatial_blend_fix",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "Toggles the speculative fix for low-frequency issues when using spatial blend.",
+    "t": "cmd",
+    "cn": "切换空间混合修复",
+    "c": "audio"
+  },
+  {
+    "n": "snd_steamaudio_halton_sequence",
+    "d": "",
+    "f": [
+      "cheat"
+    ],
+    "en": "Generate Halton Sequence for a given order and number of samples.",
+    "t": "cmd",
+    "cn": "生成Halton序列",
+    "c": "audio"
+  },
+  {
+    "n": "snd_steamaudio_hammer_probes_always_render",
+    "d": "true",
+    "f": [
+      "archive"
+    ],
+    "en": "Render Steam Audio Probes even when probes are unselected.",
+    "t": "var",
+    "cn": "始终渲染音频探针",
+    "c": "audio"
+  },
+  {
+    "n": "snd_steamaudio_ir_duration",
+    "d": "2",
+    "f": [
+      "cheat"
+    ],
+    "en": "The time delay between a sound being emitted and the last audible reflection in Steam Audio.",
+    "t": "var",
+    "cn": "音频反射延迟",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 2。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_max_convolution_sources",
+    "d": "4",
+    "f": [
+      "cheat"
+    ],
+    "en": "The maximum number of simultaneous sources that can be modeled by Steam Audio.",
+    "t": "var",
+    "cn": "最大卷积源数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 4。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_max_occlusion_samples",
+    "d": "64",
+    "f": [
+      "cheat"
+    ],
+    "en": "The maximum number of rays that can be traced for volumetric occlusion by Steam Audio.",
+    "t": "var",
+    "cn": "最大遮挡样本数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 64。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_num_bounces",
+    "d": "128",
+    "f": [
+      "cheat"
+    ],
+    "en": "The maximum number of times any ray can bounce when using Steam Audio.",
+    "t": "var",
+    "cn": "最大反射次数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 128。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_num_diffuse_samples",
+    "d": "2048",
+    "f": [
+      "cheat"
+    ],
+    "en": "The number of directions considered for ray bounce by Steam Audio.",
+    "t": "var",
+    "cn": "漫反射样本数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 2048。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_num_rays",
+    "d": "65536",
+    "f": [
+      "cheat"
+    ],
+    "en": "The number of rays to trace for reflection modeling by Steam Audio.",
+    "t": "var",
+    "cn": "反射光线数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 65536。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_num_threads",
+    "d": "2",
+    "f": [
+      "cheat"
+    ],
+    "en": "Sets the number of threads used for realtime reflection by Steam Audio.",
+    "t": "var",
+    "cn": "音频线程数",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 2。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_pathing_order",
+    "d": "1",
+    "f": [
+      "cheat"
+    ],
+    "en": "The amount of directional detail in the simulated by Steam Audio.",
+    "t": "var",
+    "cn": "音频路径级别",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
+    }
+  },
+  {
+    "n": "snd_steamaudio_pathing_order_rendering",
+    "d": "1",
+    "f": [
+      "cheat"
+    ],
+    "en": "The amount of directional detail in the rendered audio by Steam Audio.",
+    "t": "var",
+    "cn": "渲染音频路径级别",
+    "c": "audio",
+    "value": {
+      "description": "默认值为 1。上游未公开固定的 Min/Max 限制。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -32126,7 +33258,8 @@
     "f": [
       "clientdll",
       "archive",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Volume of Ten Second Warnings",
     "t": "var",
@@ -32273,7 +33406,7 @@
     "d": "1",
     "f": [
       "archive",
-      "missing1"
+      "snapshot_ignored"
     ],
     "en": "Voice volume",
     "t": "var",
@@ -32365,7 +33498,8 @@
     "n": "speaker_config",
     "d": "-1",
     "f": [
-      "archive"
+      "archive",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -32406,7 +33540,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "The time that the death cam will spend watching the player's ragdoll before going into the freeze death cam.",
     "t": "var",
@@ -32424,7 +33559,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Time spend frozen in observer freeze cam.",
     "t": "var",
@@ -32441,7 +33577,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Time players are prevented from skipping the freeze cam",
     "t": "var",
@@ -32458,7 +33595,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Time taken to zoom in to frame a target in observer freeze cam.",
     "t": "var",
@@ -32649,7 +33787,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Enable Spectator Hltv Replay when killed by bot",
     "t": "var",
@@ -32662,7 +33801,8 @@
     "f": [
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Enable Killer Replay, requires hltv server running (0:off, 1:default, 2:force)",
     "t": "var",
@@ -32691,7 +33831,8 @@
     "d": "5.3438",
     "f": [
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Replay time in seconds before the highlighted event",
     "t": "var",
@@ -32956,7 +34097,8 @@
     "f": [
       "gamedll",
       "cheat",
-      "vconsole_fuzzy_matching"
+      "vconsole_fuzzy_matching",
+      "workshop_whitelisted"
     ],
     "en": "Creates an entity of the given subclass where the player is looking.",
     "t": "cmd",
@@ -33059,7 +34201,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -33092,7 +34235,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -33124,7 +34268,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -33155,7 +34300,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "0:off | 1: view-only | 2: edit.",
     "t": "var",
@@ -33200,7 +34346,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Allow voting?",
     "t": "var",
@@ -33214,7 +34361,8 @@
       "gamedll",
       "notify",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Players can hear all other players' voice communication, no team restrictions",
     "t": "var",
@@ -33273,7 +34421,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Adjust the difficulty of bots each round based on contribution score.",
     "t": "var",
@@ -33445,7 +34594,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When enabled will automatically turn on full all talk mode in warmup, at halftime and at the end of the match",
     "t": "var",
@@ -33460,7 +34610,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Players automatically re-jump while holding jump button",
     "t": "var",
@@ -33476,7 +34627,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Enable automatic ammo purchase when inside buy zones during buy periods",
     "t": "var",
@@ -33488,7 +34640,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Execute a mapname cfg file on the server automatically in custom game modes that require it.",
     "t": "var",
@@ -33508,7 +34661,7 @@
   },
   {
     "n": "sv_bhop_time_window",
-    "d": "0.0078125",
+    "d": "0.007812",
     "f": [
       "gamedll",
       "clientdll",
@@ -33523,7 +34676,7 @@
       "constraint": {
         "min": "0"
       },
-      "description": "默认值为 0.0078125。引擎元数据仅公开下限 0，未公开固定上限。具体控制对象与作用见上方释义。"
+      "description": "默认值为 0.007812。引擎元数据仅公开下限 0，未公开固定上限。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -33531,7 +34684,8 @@
     "d": "1",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Given a bot will buy a grenade, controls the odds of the grenade type. Proportional to all other sv_bot_buy_*_weight convars.",
     "t": "var",
@@ -33549,7 +34703,8 @@
     "d": "1",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Given a bot will buy a grenade, controls the odds of the grenade type. Proportional to all other sv_bot_buy_*_weight convars.",
     "t": "var",
@@ -33568,7 +34723,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Chance bots will buy a grenade with leftover money (after prim, sec and armor). Input as percent (0-100.0)",
     "t": "var",
@@ -33587,7 +34743,8 @@
     "d": "6",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Given a bot will buy a grenade, controls the odds of the grenade type. Proportional to all other sv_bot_buy_*_weight convars.",
     "t": "var",
@@ -33605,7 +34762,8 @@
     "d": "1",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Given a bot will buy a grenade, controls the odds of the grenade type. Proportional to all other sv_bot_buy_*_weight convars.",
     "t": "var",
@@ -33623,7 +34781,8 @@
     "d": "1",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Given a bot will buy a grenade, controls the odds of the grenade type. Proportional to all other sv_bot_buy_*_weight convars.",
     "t": "var",
@@ -33642,7 +34801,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If > 0, some # of bots will lower thier difficulty each time they win. The argument defines how many will lower their difficulty each time.",
     "t": "var",
@@ -33660,7 +34820,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Bounce multiplier for when physically simulated objects collide with other objects.",
     "t": "var",
@@ -33677,7 +34838,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Override for buy status map info. 0 = everyone can buy, 1 = ct only, 2 = t only 3 = nobody",
     "t": "var",
@@ -33740,7 +34902,9 @@
     "f": [
       "notify",
       "replicated",
-      "release"
+      "release",
+      "gameinfo_cannot_override",
+      "workshop_whitelisted"
     ],
     "en": "Allow cheats on server",
     "t": "var",
@@ -33890,7 +35054,8 @@
       "notify",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Dead players can speak (voice, text) to the living",
     "t": "var",
@@ -34000,7 +35165,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If set, clients won't slam the player model render settings each frame for immunity [mod authors use this]",
     "t": "var",
@@ -34029,7 +35195,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "0: regular radar; 1: always disabled; 2: disabled in warmup",
     "t": "var",
@@ -34061,7 +35228,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Disable teamselect menu on clients",
     "t": "var",
@@ -34091,7 +35259,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Delay between player disconnecting and their corpse getting cleaned up.",
     "t": "var",
@@ -34138,7 +35307,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Allow jump speed to exceed 1.1x max speed",
     "t": "var",
@@ -34168,7 +35338,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34196,7 +35367,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34214,7 +35386,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scale damage when distributed across two players",
     "t": "var",
@@ -34232,7 +35405,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Landing on a another player's head gives them this ratio of the damage.",
     "t": "var",
@@ -34328,7 +35502,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "World friction.",
     "t": "var",
@@ -34357,7 +35532,8 @@
     "d": "0",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Dedicated server game mode flags to run",
     "t": "var",
@@ -34374,7 +35550,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Force all clients to disable their game instructors.",
     "t": "var",
@@ -34387,7 +35564,8 @@
     "f": [
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Force all clients to enable their game instructors.",
     "t": "var",
@@ -34403,7 +35581,8 @@
       "replicated",
       "cheat",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Player's extra item to give",
     "t": "var",
@@ -34418,7 +35597,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "World gravity.",
     "t": "var",
@@ -34467,7 +35647,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Shows grenade trajectory practice picture-in-picture preview.",
     "t": "var",
@@ -34482,7 +35663,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Shows grenade trajectory practice visualization for this number of seconds.",
     "t": "var",
@@ -34504,7 +35686,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Length of time grenade trajectory remains visible as a spectator.",
     "t": "var",
@@ -34524,7 +35707,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Extra starting equipment for CT players in guardian modes",
     "t": "var",
@@ -34537,7 +35721,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Extra starting equipment for Terrorist players in guardian modes",
     "t": "var",
@@ -34550,7 +35735,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "List of additional weapons to refill ammo on waves.",
     "t": "var",
@@ -34563,7 +35749,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Starting health in guardian modes.",
     "t": "var",
@@ -34579,7 +35766,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Starting health in guardian modes.",
     "t": "var",
@@ -34596,7 +35784,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34610,7 +35799,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34628,7 +35818,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34646,7 +35837,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34688,7 +35880,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34705,7 +35898,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34722,7 +35916,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -34751,7 +35946,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Force human players on to a team. 0 to disable.",
     "t": "var",
@@ -34773,7 +35969,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Turn off Fire in the hole messages",
     "t": "var",
@@ -34789,7 +35986,8 @@
       "replicated",
       "cheat",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Player's active weapon will never run out of ammo",
     "t": "var",
@@ -34825,12 +36023,13 @@
   },
   {
     "n": "sv_jump_impulse",
-    "d": "301.993",
+    "d": "301.99338",
     "f": [
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Initial upward velocity for player jumps; sqrt(2*gravity*height).",
     "t": "var",
@@ -34840,7 +36039,7 @@
       "constraint": {
         "min": "0"
       },
-      "description": "默认值为 301.993。引擎元数据仅公开下限 0，未公开固定上限。具体控制对象与作用见上方释义。"
+      "description": "默认值为 301.99338。引擎元数据仅公开下限 0，未公开固定上限。具体控制对象与作用见上方释义。"
     }
   },
   {
@@ -34864,7 +36063,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "For subtick jumps, if this much time or less has elapsed since the last time the user has pressed the jump key, pretend they hadn't. Lowering this makes bunnyhopping easier.",
     "t": "var",
@@ -34882,7 +36082,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "How long should a kick ban from the server should last (in minutes)",
     "t": "var",
@@ -34941,7 +36142,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Scale top speed on ladders",
     "t": "var",
@@ -35029,7 +36231,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Whether or not to use the pre-2026 jump code.",
     "t": "var",
@@ -35059,6 +36262,17 @@
     "t": "var",
     "cn": "启用后，限制每名玩家每条命只能执行一次“随机购买(buyrandom)”指令。",
     "c": "gameplay"
+  },
+  {
+    "n": "sv_listen_directudp",
+    "d": "true",
+    "f": [
+      "release"
+    ],
+    "en": "Server will listen for direct UDP connections on the configured port.  This can be turned off to only listen for P2P/SDR connections.",
+    "t": "var",
+    "cn": "服务器监听UDP",
+    "c": "network"
   },
   {
     "n": "sv_load_forced_client_names_file",
@@ -35247,7 +36461,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -35332,7 +36547,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -35403,7 +36619,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Maximum speed any ballistically moving object is allowed to attain per axis.",
     "t": "var",
@@ -35476,7 +36693,8 @@
     "f": [
       "gamedll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Minimum number of chickens to attempt to spawn in the map",
     "t": "var",
@@ -35639,7 +36857,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -35988,7 +37207,8 @@
     "d": "10",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "The number of seconds before radio command tokens refresh.",
     "t": "var",
@@ -36028,7 +37248,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Cheat to test regenerative health systems",
     "t": "var",
@@ -36200,7 +37421,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Force on if not prohibited",
     "t": "var",
@@ -36227,7 +37449,8 @@
     "d": "false",
     "f": [
       "gamedll",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Show chat notification upon teammate death",
     "t": "var",
@@ -36254,7 +37477,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "1=show hits and near misses, 2=show hits only",
     "t": "var",
@@ -36281,7 +37505,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "cheat"
+      "cheat",
+      "workshop_whitelisted"
     ],
     "en": "Display lag_compensated hitboxes. 0 = off, 1 = server only, 2 = client only, 3 = both server and client",
     "t": "var",
@@ -36316,7 +37541,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Shows client (red) and server (blue) bullet impact point (1=both, 2=client-only, 3=server-only)",
     "t": "var",
@@ -36347,7 +37573,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Shows extra data when bullets penetrate. (use sv_showimpacts_time to increase time shown)",
     "t": "var",
@@ -36408,7 +37635,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Dedicated server skirmish id to run",
     "t": "var",
@@ -36618,7 +37846,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "sv_legacy_jump only: Stamina penalty for jumping",
     "t": "var",
@@ -36639,7 +37868,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "sv_legacy_jump only: Stamina penalty for landing",
     "t": "var",
@@ -36659,7 +37889,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Maximum stamina penalty",
     "t": "var",
@@ -36680,7 +37911,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Rate at which stamina recovers (units/sec)",
     "t": "var",
@@ -36701,7 +37933,8 @@
       "clientdll",
       "replicated",
       "cheat",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -36726,7 +37959,8 @@
     "n": "sv_steamauth_enforce",
     "d": "2",
     "f": [
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "By default, player must maintain a reliable connection to Steam servers. When player Steam session drops, enforce it: 2 = instantly kick, 1 = kick at next spawn, 0 = do not kick.",
     "t": "var",
@@ -36809,7 +38043,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "Minimum stopping speed when on ground.",
     "t": "var",
@@ -36946,7 +38181,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Dead players can hear all dead enemy communication (voice, chat)",
     "t": "var",
@@ -36961,7 +38197,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Living players can hear all living enemy communication (voice, chat)",
     "t": "var",
@@ -37006,7 +38243,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If >0, server will override cl_teamid_overhead_maxdist",
     "t": "var",
@@ -37024,7 +38262,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If >0, server will override cl_teamid_overhead_maxdist_spec",
     "t": "var",
@@ -37207,7 +38446,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Determines which scene is used for the versus screen.",
     "t": "var",
@@ -37518,7 +38758,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Restricts vote to change level to rounds prior to match point (default 0, vote is never disallowed)",
     "t": "var",
@@ -37532,7 +38773,8 @@
       "gamedll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When non-zero, restricts vote to change level to this many first rounds or minutes of the match (default 0, vote is not disallowed)",
     "t": "var",
@@ -37550,7 +38792,8 @@
       "clientdll",
       "replicated",
       "cheat",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -37568,7 +38811,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Delay between end of warmup and start of match.",
     "t": "var",
@@ -37607,7 +38851,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -37625,7 +38870,8 @@
       "clientdll",
       "notify",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "",
     "t": "var",
@@ -38404,7 +39650,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "SourceTV broadcast delay in seconds",
     "t": "var",
@@ -38424,7 +39671,8 @@
     "f": [
       "gamedll",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "SourceTV[instance 1] broadcast delay in seconds",
     "t": "var",
@@ -40228,7 +41476,8 @@
       "clientdll",
       "archive",
       "userinfo",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "Viewmodel FOV",
     "t": "var",
@@ -40249,7 +41498,8 @@
       "clientdll",
       "archive",
       "userinfo",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "viewmodel_offset_x",
     "t": "var",
@@ -40270,7 +41520,8 @@
       "clientdll",
       "archive",
       "userinfo",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "viewmodel_offset_y",
     "t": "var",
@@ -40291,7 +41542,8 @@
       "clientdll",
       "archive",
       "userinfo",
-      "per_user"
+      "per_user",
+      "workshop_whitelisted"
     ],
     "en": "viewmodel_offset_z",
     "t": "var",
@@ -40310,7 +41562,8 @@
     "d": "1",
     "f": [
       "clientdll",
-      "archive"
+      "archive",
+      "workshop_whitelisted"
     ],
     "en": "1:\"Desktop\", 2:\"Classic\"",
     "t": "var",
@@ -40647,6 +41900,17 @@
     "c": "graphics"
   },
   {
+    "n": "vulkan_link_time_optimize_libraries",
+    "d": "true",
+    "f": [
+      "release"
+    ],
+    "en": "",
+    "t": "var",
+    "cn": "Vulkan链接优化",
+    "c": "system"
+  },
+  {
     "n": "weapon_accuracy_forcespread",
     "d": "0",
     "f": [
@@ -40671,7 +41935,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Disable weapon inaccuracy spread",
     "t": "var",
@@ -40732,7 +41997,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scale factor for jumping inaccuracy, set to 0 to make jumping accuracy equal to standing",
     "t": "var",
@@ -40752,7 +42018,8 @@
       "gamedll",
       "clientdll",
       "replicated",
-      "release"
+      "release",
+      "workshop_whitelisted"
     ],
     "en": "If set to non-zero, weapons will delete themselves after the specified time (in seconds) if no players are near.",
     "t": "var",
@@ -40783,7 +42050,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "If set to non-zero, will remove the oldest dropped weapon to maintain the specified number of dropped weapons in the world.",
     "t": "var",
@@ -40815,7 +42083,8 @@
       "clientdll",
       "replicated",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "When enabled will show knife reticle on clients. Used for game modes requiring target id display when holding a knife.",
     "t": "var",
@@ -40831,7 +42100,8 @@
       "replicated",
       "cheat",
       "release",
-      "commandline_enforced"
+      "commandline_enforced",
+      "workshop_whitelisted"
     ],
     "en": "Scaling for falloff of weapon firing sounds",
     "t": "var",
