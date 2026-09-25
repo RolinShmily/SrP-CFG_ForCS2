@@ -4,7 +4,7 @@
 import { Link } from "react-router";
 import { BookOpen, Download } from "lucide-react";
 import { GithubIcon } from "./GithubIcon";
-import { REPO_URL, ICP_BEIAN } from "../../data/navigation";
+import { REPO_URL } from "../../data/navigation";
 
 const footerLinks = [
   { to: "/features", label: "功能与按键", icon: BookOpen, external: false },
@@ -51,24 +51,6 @@ export function Footer() {
             );
           })}
         </div>
-      </div>
-      <div className="mx-auto mt-7 flex max-w-[1280px] flex-col items-center gap-2 border-t border-border/60 px-5 pt-6 sm:px-7">
-        <a
-          href={ICP_BEIAN.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="工业和信息化部政务服务平台 · ICP/IP地址/域名信息备案管理系统"
-          className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-mono text-[11px] tracking-wide text-text-faint no-underline transition-colors duration-200 hover:border-accent/40 hover:bg-accent-bg hover:text-accent-light"
-        >
-          <img
-            src="/images/foot-icp.png"
-            alt="ICP 备案图标"
-            width="16"
-            height="15"
-            className="h-[15px] w-4 shrink-0 opacity-85"
-          />
-          <span>{ICP_BEIAN.number}</span>
-        </a>
       </div>
     </footer>
   );
