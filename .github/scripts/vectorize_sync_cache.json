@@ -2879,5 +2879,7 @@
   "snd_steamaudio_pathing_order": "70c305b82b69439b6dcfef2bdded18f9",
   "snd_steamaudio_pathing_order_rendering": "96e09da97e2a291f168c36adcd8c7d39",
   "sv_listen_directudp": "e8310667ed161b6e8c660ece1a06bf9c",
-  "vulkan_link_time_optimize_libraries": "ab7914f7d53dd492b23b0ec8904d983b"
+  "vulkan_link_time_optimize_libraries": "ab7914f7d53dd492b23b0ec8904d983b",
+  "sv_clantags_enabled": "79e5b2f6ed662ef0a290bf4225f46635",
+  "sv_smoke_lighting_changed": "5661c340b1ecf1e0b7249c8e47d390fd"
 }
