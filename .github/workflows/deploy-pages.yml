@@ -1,16 +1,12 @@
 name: Deploy Website to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
-      - refactor
-    paths:
-      - 'website/**'
-      - '.github/workflows/deploy-pages.yml'
-      - 'pnpm-workspace.yaml'
-      - 'package.json'
   workflow_dispatch:
+    inputs:
+      base_path:
+        description: '网站子路径 BasePath（默认 /SrP-CFG_ForCS2；若绑定独立域名可填 /）'
+        required: false
+        default: '/SrP-CFG_ForCS2'
 
 permissions:
   contents: write
@@ -44,7 +40,7 @@ jobs:
       - name: Build Static Website
         env:
           DEPLOY_TARGET: gh-pages
-          NEXT_PUBLIC_BASE_PATH: /SrP-CFG_ForCS2
+          NEXT_PUBLIC_BASE_PATH: ${{ github.event.inputs.base_path || '/SrP-CFG_ForCS2' }}
         run: |
           pnpm --filter srp-cfg-website build
           touch website/out/.nojekyll
