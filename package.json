@@ -1,0 +1,11 @@
+{
+  "name": "srp-cfg-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter srp-cfg-website dev",
+    "build": "pnpm --filter srp-cfg-website build",
+    "lint": "pnpm --filter srp-cfg-website lint"
+  },
+  "packageManager": "pnpm@11.3.0"
+}

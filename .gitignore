@@ -7,9 +7,10 @@
 node_modules/
 
 # ─── 构建产物 ────────────────────────────────────────────────
-app/website/build/
-app/website/dist/
-app/website/.wrangler/
+.next/
+out/
+website/.next/
+website/out/
 app/desktop/dist/
 app/desktop/src-tauri/target/
 app/desktop/src-tauri/gen/schemas/

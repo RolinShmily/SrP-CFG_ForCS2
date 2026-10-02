@@ -1,0 +1,58 @@
+name: Deploy Website to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - refactor
+    paths:
+      - 'website/**'
+      - '.github/workflows/deploy-pages.yml'
+      - 'pnpm-workspace.yaml'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    name: Build & Deploy to gh-pages
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --ignore-scripts
+
+      - name: Build Static Website
+        env:
+          DEPLOY_TARGET: gh-pages
+          NEXT_PUBLIC_BASE_PATH: /SrP-CFG_ForCS2
+        run: |
+          pnpm --filter srp-cfg-website build
+          touch website/out/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./website/out
+          publish_branch: gh-pages
+          force_orphan: true

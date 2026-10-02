@@ -1,0 +1,442 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/600.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #171c27;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.78);
+    --text-dim: rgba(255, 255, 255, 0.55);
+
+    --cs-orange: #ff9e00;
+    --cs-blue: #3b82f6;
+    --cs-emerald: #10b981;
+  }
+
+  .dark {
+    --bg-base: #141926;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-dim: rgba(255, 255, 255, 0.5);
+
+    --cs-orange: #ffa41c;
+    --cs-blue: #4c93f7;
+    --cs-emerald: #10b981;
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* ===================================================
+   CS2 官方全屏通栏视差背景 (Full-Bleed Parallax Bands)
+
+   官方 SVG 为不透明大色块（#E48717 / #283780 / #BEBEBE），
+   直接铺满会压死正文对比度。因此拆为三层：
+     ::before  官方斜切光带（视差固定，压低为点缀色）
+     ::after   渐隐遮罩（保证正文始终落在石墨底上）
+     内容层    z-10 之上的玻璃面板
+
+   底色取自 “石墨灰” 而非 “纯黑”：#141926 / #171c27，
+   保留地形与层次，同时避免死黑带来的压迫感。
+   =================================================== */
+
+.cs2-band {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: rgb(var(--band-rgb, 23 28 39));
+}
+
+.cs2-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  pointer-events: none;
+}
+
+.cs2-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Light veil only: it exists to blend neighbouring bands into each other,
+     not to bury the artwork. The vector must stay clearly legible. */
+  background:
+    radial-gradient(
+      ellipse 85% 60% at 50% 0%,
+      var(--band-tint, transparent) 0%,
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(var(--band-rgb) / 0.66) 0%,
+      rgb(var(--band-rgb) / 0.3) 26%,
+      rgb(var(--band-rgb) / 0.38) 68%,
+      rgb(var(--band-rgb) / 0.7) 100%
+    );
+}
+
+/*
+  各区段：官方矢量以接近全强度呈现（官方即为 opacity:1 + cover + fixed）。
+  之前把矢量压到 0.2 再叠厚遮罩，等于把背景彻底藏起来，这是“背景没有存在感”的根因。
+  正文改由下方的不透明展板承载来保证可读性，而不是靠糊黑背景。
+*/
+:root {
+  --cs2-bg-header: url("/cs2/header_bg.svg");
+  --cs2-bg-orange: url("/cs2/bgOrange.svg");
+  --cs2-bg-blue: url("/cs2/bgDarkBlue.svg");
+  --cs2-bg-gray: url("/cs2/bgGray.svg");
+  --cs2-linemap: url("/cs2/linemap-20.png");
+}
+
+.cs2-band-header {
+  --band-rgb: 22 27 39;
+  --band-tint: rgba(255, 158, 0, 0.16);
+  min-height: 100vh;
+}
+.cs2-band-header::before {
+  background-image: var(--cs2-bg-header);
+  background-position: center top;
+  opacity: 0.62;
+}
+
+.cs2-band-orange {
+  --band-rgb: 26 30 42;
+  --band-tint: rgba(255, 158, 0, 0.15);
+}
+.cs2-band-orange::before {
+  background-image: var(--cs2-bg-orange);
+  background-position: center 30%;
+  opacity: 0.52;
+}
+
+.cs2-band-blue {
+  --band-rgb: 19 26 42;
+  --band-tint: rgba(76, 147, 247, 0.18);
+}
+.cs2-band-blue::before {
+  background-image: var(--cs2-bg-blue);
+  background-position: center 40%;
+  opacity: 0.56;
+}
+
+.cs2-band-gray {
+  --band-rgb: 25 29 38;
+  --band-tint: rgba(255, 158, 0, 0.1);
+}
+.cs2-band-gray::before {
+  background-image: var(--cs2-bg-gray);
+  background-position: center 55%;
+  opacity: 0.42;
+}
+
+.cs2-linemap-layer {
+  position: absolute;
+  inset: 0;
+  background-image: var(--cs2-linemap);
+  background-repeat: repeat;
+  background-size: 512px 512px;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+/* ===================================================
+   官方分层体系 (Layer System)
+
+   官方页面没有任何投影。层次完全由三层叠加 + 发丝线给出：
+     1. .cs2-band   全屏通栏：品牌底色 + 官方矢量（视差固定）
+     2. .cs2-layer  居中内容层：限制宽度与节律留白
+     3. .cs2-inner  不透明内层面板：与底层 SVG 干净切开
+   层级感来自“实色 + 发丝线”，而非阴影。
+   =================================================== */
+
+.cs2-layer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  padding-block: clamp(4.5rem, 9vw, 7.5rem);
+}
+
+/* Hero needs extra headroom for the fixed island nav. */
+.cs2-layer-hero {
+  padding-block-start: clamp(6.5rem, 11vw, 10rem);
+}
+
+/*
+  不透明展板 (Opaque Board)。
+  官方正是如此：带纹理的背景整张铺开，正文坐在一块不透明的浅色/深色展板上，
+  背景从展板四周完整地露出来。对比度由“展板实色”保证，而非把背景压黑。
+
+  圆角尺度：展板 > 内层 > 控件，逐级递收，避免“有棱有角”。
+*/
+.cs2-board {
+  position: relative;
+  background-color: #1d2330;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: clamp(2rem, 3.8vw, 3.25rem);
+}
+
+/*
+  卡片体系 (Bold Card System)
+
+  参照 tasteskill.dev 的做法：静置扁平干净，悬停才给出抬升与柔和投影；
+  层级感由发丝描边 + 慢速缓动 (500ms) 提供，而不是常态挂阴影。
+  卡片内部元素（图标环、下划线、角标箭头）都在悬停时才“显影”。
+*/
+.cs2-card {
+  position: relative;
+  border-radius: 1.75rem;
+  background-color: #171c26;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cs2-card:hover {
+  transform: translateY(-6px);
+  background-color: #1d2330;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 24px 48px -26px rgba(0, 0, 0, 0.6);
+}
+
+/* 图标环：悬停时提亮并落下微影 */
+.cs2-icon-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transition: background-color 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cs2-card:hover .cs2-icon-ring {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 8px 18px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* 悬停时由中心展开的下划线 */
+.cs2-underline {
+  position: relative;
+}
+
+.cs2-underline::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.4rem;
+  height: 2px;
+  width: 0;
+  border-radius: 9999px;
+  background-color: currentColor;
+  transform: translateX(-50%);
+  transition: width 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs2-card:hover .cs2-underline::after {
+  width: 100%;
+}
+
+/* 悬停浮现的右上角标箭头 */
+.cs2-hover-arrow {
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 500ms ease-out,
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs2-card:hover .cs2-hover-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* 悬停时提亮的装饰性序号 */
+.cs2-hover-index {
+  opacity: 0.28;
+  transition: opacity 600ms ease-out;
+}
+
+.cs2-card:hover .cs2-hover-index {
+  opacity: 0.7;
+}
+
+/* 展板内部的次级面（表格、子卡片、代码槽） */
+.cs2-inner {
+  position: relative;
+  background-color: #171c26;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.75rem;
+}
+
+.cs2-inner-raised {
+  background-color: #232a38;
+  border-color: rgba(255, 255, 255, 0.13);
+  border-radius: 1.75rem;
+}
+
+.cs2-inner-well {
+  background-color: #141922;
+  border-color: rgba(255, 255, 255, 0.07);
+  border-radius: 1.75rem;
+}
+
+/* ===================================================
+   3D 运镜体系 (Scroll-Driven Camera)
+
+   平面化的根源是只有位移没有透视。这里给每一层加上真实的透视与旋转：
+     .cs2-scene  父层建立 perspective 相机
+     .cs2-3d     子层开启 preserve-3d，接受 rotateX/rotateY/translateZ
+   滚动驱动的 transform 由 Motion 的 motion value 写入行内样式；
+   reduced-motion 下由全局媒体查询强制 transform: none 归零。
+   =================================================== */
+
+.cs2-scene {
+  perspective: 1500px;
+  perspective-origin: 50% 25%;
+}
+
+.cs2-3d {
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+}
+
+/* 鼠标跟随的3D 倾斜卡片 */
+.cs2-tilt {
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* 战术雷达扫描光带动效 (Radar Scanline) */
+@keyframes radarSweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(200%);
+    opacity: 0;
+  }
+}
+
+.radar-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.15) 50%, transparent 100%);
+  pointer-events: none;
+  animation: radarSweep 4s ease-in-out infinite;
+}
+
+/* 官方醒目橙金行动按钮（无投影，仅描边与亮度反馈，同官方按钮体系） */
+.cs2-action-btn {
+  /* Pill, per the Meta reference: no squared-off primary actions. */
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ffaa00 0%, #e67e00 100%);
+  color: #000000;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: filter 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs2-action-btn:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.cs2-action-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+
+/* 移动端降级 */
+@media (max-width: 768px) {
+  .cs2-band::before {
+    background-attachment: scroll;
+  }
+}
+
+/* ===================================================
+   REDUCED MOTION: 滚动渐入与运镜全部静态化
+   CSS 先于 React 水合生效，保证内容即时可见且永不位移。
+   =================================================== */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .cs2-3d,
+  .cs2-tilt {
+    transform: none !important;
+  }
+
+  .cs2-card,
+  .cs2-icon-ring,
+  .cs2-underline::after,
+  .cs2-hover-arrow,
+  .cs2-hover-index {
+    transition: none !important;
+  }
+
+  .cs2-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .cs2-hover-arrow {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .radar-scanline {
+    display: none !important;
+  }
+
+  .cs2-action-btn {
+    transition: none !important;
+  }
+
+  .cs2-action-btn:hover,
+  .cs2-action-btn:active {
+    transform: none !important;
+  }
+}
