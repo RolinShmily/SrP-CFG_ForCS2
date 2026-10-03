@@ -1,0 +1,42 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "windows-msvc",
+      "displayName": "Visual Studio 2022 x64 (MSBuild)",
+      "description": "Target Windows with Visual Studio 2022 (x64)",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build-gui",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.11.2/msvc2022_64"
+      }
+    },
+    {
+      "name": "windows-ninja",
+      "displayName": "Ninja Multi-Config (极速增量构建)",
+      "description": "Ultra fast incremental build using Ninja",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build-ninja",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.11.2/msvc2022_64"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "release-msvc",
+      "displayName": "Release (MSBuild)",
+      "configurePreset": "windows-msvc",
+      "configuration": "Release",
+      "targets": ["srp_gui"]
+    },
+    {
+      "name": "release-ninja",
+      "displayName": "Release (Ninja 增量极速)",
+      "configurePreset": "windows-ninja",
+      "configuration": "Release",
+      "targets": ["srp_gui"]
+    }
+  ]
+}

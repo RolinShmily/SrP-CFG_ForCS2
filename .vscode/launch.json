@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "⚡ 极速启动 srp_gui (免构建/QML秒级生效)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build-gui/gui/Release/srp_gui.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build-gui/gui/Release",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "C:/Qt/6.11.2/msvc2022_64/bin;${workspaceFolder}/build-gui/gui/Release;${env:PATH}"
+                },
+                {
+                    "name": "SRP_QML_FILE",
+                    "value": "${workspaceFolder}/app/gui/qml/App.qml"
+                }
+            ],
+            "console": "internalConsole"
+        },
+        {
+            "name": "🚀 增量调试 srp_gui (仅构建当前Target)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${command:cmake.launchTargetDirectory}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "C:/Qt/6.11.2/msvc2022_64/bin;${command:cmake.launchTargetDirectory};${env:PATH}"
+                },
+                {
+                    "name": "SRP_QML_FILE",
+                    "value": "${workspaceFolder}/app/gui/qml/App.qml"
+                }
+            ],
+            "console": "internalConsole"
+        }
+    ]
+}

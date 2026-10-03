@@ -7,6 +7,11 @@
 node_modules/
 
 # ─── 构建产物 ────────────────────────────────────────────────
+build/
+build-*/
+*.vcxproj*
+*.sln
+app/gui/preview_*.png
 .next/
 out/
 website/.next/
