@@ -9,6 +9,7 @@ add_library(srp_core STATIC
     src/i18n.cpp
     src/vcfg.cpp
     src/actions.cpp
+    src/preset.cpp
 )
 
 target_include_directories(srp_core PUBLIC

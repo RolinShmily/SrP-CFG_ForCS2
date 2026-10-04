@@ -2,6 +2,7 @@
 #include "srp/core/i18n.h"
 #include "srp/core/vcfg.h"
 #include "srp/core/actions.h"
+#include "srp/core/preset.h"
 
 #include <iostream>
 #include <string_view>
@@ -25,6 +26,9 @@ void printHelp() {
     std::cout << "  convars-status     Inspect Convars in current user's VCFG\n";
     std::cout << "  convars-clean-all  Remove all convars from current user's VCFG (creates .bak)\n";
     std::cout << "  keybinds-clean-all Remove all keybinds from current user's VCFG (creates .bak)\n";
+    std::cout << "  presets            List all presets and their status/diff\n";
+    std::cout << "  preset-load <id>   Load preset into custom.cfg\n";
+    std::cout << "  preset-unload      Unload presets from custom.cfg\n";
     std::cout << "  users              List all detected Steam users\n";
     std::cout << "  switch-user <id>   Inspect state for a specific Steam AccountID\n\n";
     std::cout << "Options:\n";
@@ -117,8 +121,8 @@ int main(int argc, char* argv[]) {
                    arg == "convars-status" || arg == "convars-clean-all" ||
                    arg == "convars-clean-srp" || arg == "users") {
             command = std::string(arg);
-        } else if (arg == "switch-user") {
-            command = "switch-user";
+        } else if (arg == "switch-user" || arg == "preset-load") {
+            command = std::string(arg);
             if (i + 1 < argc) {
                 targetAccountId = argv[++i];
             }
@@ -217,6 +221,46 @@ int main(int argc, char* argv[]) {
             return 0;
         } else {
             std::cerr << "[✗] Failed to clear Keybinds.\n";
+            return 1;
+        }
+    }
+
+    if (command == "presets") {
+        std::string cfgDir = res.cs2CfgPath.value_or("");
+        auto presets = srp::core::scanPresets(cfgDir);
+        std::string active = srp::core::getActivePresetId(cfgDir);
+        std::cout << "Available Presets (" << presets.size() << "):\n";
+        for (const auto& p : presets) {
+            bool isActive = (p.id == active);
+            std::cout << (isActive ? " [Active] " : "          ")
+                      << p.displayName << (p.hasDiff ? " (*)" : "")
+                      << "  ->  Command: " << p.command << "\n";
+        }
+        return 0;
+    }
+
+    if (command == "preset-load") {
+        if (targetAccountId.empty()) {
+            std::cerr << "Usage: srp_cli preset-load <preset_id>\n";
+            return 1;
+        }
+        std::string cfgDir = res.cs2CfgPath.value_or("");
+        if (srp::core::loadPreset(targetAccountId, cfgDir)) {
+            std::cout << "[✓] " << srp::core::tr("presets.load_notify") << " (" << targetAccountId << ")\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] Failed to load preset: " << targetAccountId << "\n";
+            return 1;
+        }
+    }
+
+    if (command == "preset-unload") {
+        std::string cfgDir = res.cs2CfgPath.value_or("");
+        if (srp::core::unloadPreset(cfgDir)) {
+            std::cout << "[✓] " << srp::core::tr("presets.unload_notify") << "\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] Failed to unload preset.\n";
             return 1;
         }
     }
