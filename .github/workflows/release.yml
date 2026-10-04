@@ -1,0 +1,257 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build & Publish Release
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Validate SemVer tag format
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          echo "Triggered tag: ${TAG}"
+          if [[ "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Tag validation passed."
+          else
+            echo "::error::Tag '${TAG}' does not match required semver format v3.4.0 (regex: ^v[0-9]+\.[0-9]+\.[0-9]+$)"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.11.1
+
+      - name: Setup Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          echo "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+
+      - name: Build Release Targets
+        run: |
+          cmake --build build --config Release
+
+      - name: Package CLI, GUI, Setup Installer & Incremental Packages
+        shell: pwsh
+        run: |
+          $qtBin = "$env:QT_ROOT_DIR/bin"
+          $tag = if ("${{ github.ref_name }}" -match "^v[0-9]") { "${{ github.ref_name }}" } else { "v3.4.0-dev" }
+          New-Item -ItemType Directory -Path "dist" -Force | Out-Null
+          New-Item -ItemType Directory -Path "dist/packages" -Force | Out-Null
+          New-Item -ItemType Directory -Path "dist/gh-pages" -Force | Out-Null
+          New-Item -ItemType Directory -Path "dist/gh-pages/packages" -Force | Out-Null
+
+          # ==========================================
+          # 1. 打包 Standalone CLI 独立命令行包
+          # ==========================================
+          $cliDir = "dist/srp-cfg-$tag-windows-x64-cli"
+          New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
+          Copy-Item "build/app/cli/srp_cli.exe" -Destination "$cliDir/srp.exe"
+          Copy-Item "LICENSE" -Destination "$cliDir/" -ErrorAction SilentlyContinue
+          Copy-Item "README.md" -Destination "$cliDir/" -ErrorAction SilentlyContinue
+          $cliZip = "dist/srp-cfg-$tag-windows-x64-cli.zip"
+          Compress-Archive -Path "$cliDir" -DestinationPath $cliZip -Force
+
+          # ==========================================
+          # 2. 打包 Standalone GUI 绿色便携免安装包 (自带离线出厂预设)
+          # ==========================================
+          $guiDir = "dist/srp-cfg-$tag-windows-x64-gui"
+          New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
+          Copy-Item "build/app/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
+          Copy-Item "build/app/cli/srp_cli.exe" -Destination "$guiDir/srp.exe"
+
+          # 拷入 HuskarUI 动态链接库
+          Copy-Item "build/HuskarUI/bin/HuskarUIBasic.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+          Copy-Item "build/HuskarUI/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+          Copy-Item "build/bin/HuskarUIBasic.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+          Copy-Item "build/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+
+          # 嵌入完整的离线出厂 config/ 预设资产包 (开箱即用)
+          Copy-Item "config" -Destination "$guiDir/config" -Recurse -Force
+
+          Copy-Item "LICENSE" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+          Copy-Item "README.md" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+
+          # 收集 Qt 运行时与 QML 模块依赖
+          & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
+
+          # 瘦身裁剪：移除无用光栅器与冗余 QML 样式
+          Remove-Item -Path "$guiDir/opengl32sw.dll" -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "$guiDir/D3Dcompiler_47.dll" -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "$guiDir/Qt6OpenGL.dll" -Force -ErrorAction SilentlyContinue
+
+          $unusedStyles = @("FluentWinUI3", "Imagine", "Material", "Universal", "Fusion")
+          foreach ($style in $unusedStyles) {
+              Remove-Item -Path "$guiDir/qml/QtQuick/Controls/$style" -Recurse -Force -ErrorAction SilentlyContinue
+              Remove-Item -Path "$guiDir/Qt6QuickControls2$style.dll" -Force -ErrorAction SilentlyContinue
+          }
+
+          $guiZip = "dist/srp-cfg-$tag-windows-x64-gui.zip"
+          Compress-Archive -Path "$guiDir" -DestinationPath $guiZip -Force
+
+          # ==========================================
+          # 3. 构建 Windows 安装器 (Inno Setup)
+          # ==========================================
+          $absGuiDir = (Resolve-Path "$guiDir").Path
+          $absDistDir = (Resolve-Path "dist").Path
+          ISCC.exe /DMyAppVersion="$tag" /DSourceDir="$absGuiDir" /DOutputDir="$absDistDir" installer/installer.iss
+
+          # ==========================================
+          # 4. 构建三大原子增量包 (srp-cfg, video, annotations)
+          # ==========================================
+          # 4.1 srp-cfg 增量包
+          $srpStage = "dist/stage-srp"
+          New-Item -ItemType Directory -Path $srpStage -Force | Out-Null
+          Copy-Item "config/srp-cfg" -Destination "$srpStage/srp-cfg" -Recurse -Force
+          Copy-Item "config/autoexec.cfg" -Destination "$srpStage/autoexec.cfg" -Force
+          $srpVer = (Get-Content "config/srp-cfg/VERSION.txt" -Raw).Trim()
+          $srpZip = "dist/packages/srp-cfg-v$srpVer.zip"
+          $srpLatestZip = "dist/packages/srp-cfg-latest.zip"
+          Compress-Archive -Path "$srpStage/*" -DestinationPath $srpZip -Force
+          Copy-Item $srpZip -Destination $srpLatestZip -Force
+          Remove-Item -Path $srpStage -Recurse -Force
+
+          # 4.2 video 增量包
+          $videoStage = "dist/stage-video"
+          New-Item -ItemType Directory -Path $videoStage -Force | Out-Null
+          Copy-Item "config/video/*" -Destination "$videoStage" -Recurse -Force
+          $videoVer = (Get-Content "config/video/VERSION.txt" -Raw).Trim()
+          $videoZip = "dist/packages/video-v$videoVer.zip"
+          $videoLatestZip = "dist/packages/video-latest.zip"
+          Compress-Archive -Path "$videoStage/*" -DestinationPath $videoZip -Force
+          Copy-Item $videoZip -Destination $videoLatestZip -Force
+          Remove-Item -Path $videoStage -Recurse -Force
+
+          # 4.3 annotations 增量包
+          $annoStage = "dist/stage-anno"
+          New-Item -ItemType Directory -Path $annoStage -Force | Out-Null
+          Copy-Item "config/annotations/*" -Destination "$annoStage" -Recurse -Force
+          $annoVer = (Get-Content "config/annotations/VERSION.txt" -Raw).Trim()
+          $annoZip = "dist/packages/annotations-v$annoVer.zip"
+          $annoLatestZip = "dist/packages/annotations-latest.zip"
+          Compress-Archive -Path "$annoStage/*" -DestinationPath $annoZip -Force
+          Copy-Item $annoZip -Destination $annoLatestZip -Force
+          Remove-Item -Path $annoStage -Recurse -Force
+
+          # ==========================================
+          # 5. 生成清单 (latest.json & packages.json)
+          # ==========================================
+          $guiSha256 = (Get-FileHash -Path $guiZip -Algorithm SHA256).Hash.ToLower()
+          $setupExePath = "dist/srp-cfg-$tag-windows-x64-setup.exe"
+          $setupSha256 = if (Test-Path $setupExePath) { (Get-FileHash -Path $setupExePath -Algorithm SHA256).Hash.ToLower() } else { "" }
+          $cleanAppVer = $tag.TrimStart('v')
+
+          # 5.1 客户端整体升级清单 latest.json
+          $latest = @{
+              version = $cleanAppVer
+              tag = $tag
+              published_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+              gui_zip_url = "https://github.com/${{ github.repository }}/releases/download/$tag/srp-cfg-$tag-windows-x64-gui.zip"
+              gui_zip_sha256 = $guiSha256
+              setup_exe_url = "https://github.com/${{ github.repository }}/releases/download/$tag/srp-cfg-$tag-windows-x64-setup.exe"
+              setup_exe_sha256 = $setupSha256
+              notes_zh = "SrP-CFG $tag 发布"
+              notes_en = "SrP-CFG $tag Release"
+          } | ConvertTo-Json -Depth 4
+          $latest | Set-Content -Path "dist/latest.json" -Encoding utf8
+
+          # 5.2 三大原子包增量更新清单 packages.json (供 gh-pages 与客户端热更)
+          $srpSha = (Get-FileHash -Path $srpLatestZip -Algorithm SHA256).Hash.ToLower()
+          $srpSize = (Get-Item $srpLatestZip).Length
+          $videoSha = (Get-FileHash -Path $videoLatestZip -Algorithm SHA256).Hash.ToLower()
+          $videoSize = (Get-Item $videoLatestZip).Length
+          $annoSha = (Get-FileHash -Path $annoLatestZip -Algorithm SHA256).Hash.ToLower()
+          $annoSize = (Get-Item $annoLatestZip).Length
+
+          $packagesManifest = @{
+              schema_version = 1
+              published_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+              packages = @{
+                  "srp-cfg" = @{
+                      version = $srpVer
+                      size = $srpSize
+                      sha256 = $srpSha
+                      url = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/srp-cfg-latest.zip"
+                      cdn_url = "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/srp-cfg-latest.zip"
+                  }
+                  "video" = @{
+                      version = $videoVer
+                      size = $videoSize
+                      sha256 = $videoSha
+                      url = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-latest.zip"
+                      cdn_url = "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/video-latest.zip"
+                  }
+                  "annotations" = @{
+                      version = $annoVer
+                      size = $annoSize
+                      sha256 = $annoSha
+                      url = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/annotations-latest.zip"
+                      cdn_url = "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/annotations-latest.zip"
+                  }
+              }
+          } | ConvertTo-Json -Depth 5
+          $packagesManifest | Set-Content -Path "dist/packages.json" -Encoding utf8
+
+          # 准备 gh-pages 静态分发目录
+          Copy-Item "dist/packages.json" -Destination "dist/gh-pages/packages.json" -Force
+          Copy-Item "dist/packages/*" -Destination "dist/gh-pages/packages/" -Recurse -Force
+
+      # ==========================================
+      # 6. 发布到 GitHub Releases
+      # ==========================================
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: |
+            dist/*.zip
+            dist/*.exe
+            dist/*.json
+            dist/packages/*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+      # ==========================================
+      # 7. 部署到 gh-pages 分支 (供客户端与 CDN 极速热更新)
+      # ==========================================
+      - name: Deploy Incremental Packages to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/gh-pages
+          publish_branch: gh-pages
+          keep_files: true

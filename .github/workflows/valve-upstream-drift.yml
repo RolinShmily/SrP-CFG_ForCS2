@@ -1,0 +1,57 @@
+name: CS2 Valve Baseline Drift Check
+
+on:
+  schedule:
+    # 每周日凌晨 02:00 UTC (北京时间周日 10:00) 定时执行
+    - cron: '0 2 * * 0'
+  workflow_dispatch: # 支持在 GitHub Actions 页面手动随时触发
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Drift Detection Script
+        id: detect
+        run: |
+          python scripts/check_valve_baseline_drift.py
+        continue-on-error: true
+
+      - name: Check Detection Result
+        run: |
+          echo "Has critical removed convars: ${{ steps.detect.outputs.has_critical }}"
+          echo "Has unexpected value drifts: ${{ steps.detect.outputs.has_drift }}"
+
+      - name: Create or Update Issue on Drift
+        if: steps.detect.outputs.has_critical == 'true' || steps.detect.outputs.has_drift == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_TITLE="[Upstream Drift] CS2 Valve 基线参数变动提示 (${{ steps.detect.outputs.commit_sha }})"
+          # 检查是否已有同标题未关闭的 Issue，避免重复轰炸
+          EXISTING_ISSUE=$(gh issue list --state open --search "$ISSUE_TITLE" --json number -q '.[0].number')
+          if [ -n "$EXISTING_ISSUE" ]; then
+            echo "Updating existing issue #$EXISTING_ISSUE..."
+            gh issue comment "$EXISTING_ISSUE" --body-file drift_report.md
+          else
+            echo "Creating new issue..."
+            gh issue create --title "$ISSUE_TITLE" --body-file drift_report.md --label "upstream-drift" || \
+            gh issue create --title "$ISSUE_TITLE" --body-file drift_report.md
+          fi
+
+      - name: Fail Job if Critical Convars Removed
+        if: steps.detect.outputs.has_critical == 'true'
+        run: |
+          echo "::error::Deprecated or removed ConVars detected in Valve baseline! Please check the drift report."
+          exit 1
