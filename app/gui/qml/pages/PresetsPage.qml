@@ -32,6 +32,16 @@ Item {
                 editorArea.text = PresetsController.editorContent;
             }
         }
+        function onSelectedPresetChanged() {
+            if (presetSelect.currentIndex !== PresetsController.selectedPresetIndex) {
+                presetSelect.currentIndex = PresetsController.selectedPresetIndex;
+            }
+        }
+        function onSelectedFileChanged() {
+            if (fileSelect.currentIndex !== PresetsController.selectedFileIndex) {
+                fileSelect.currentIndex = PresetsController.selectedFileIndex;
+            }
+        }
         function onMessageNotify(success, message) {
             if (success) {
                 HusMessage.success(message);
@@ -50,7 +60,7 @@ Item {
         // 左侧控制区：预设选择、控制台指令、加载/卸载状态
         // ==========================================
         Rectangle {
-            Layout.preferredWidth: 320
+            Layout.preferredWidth: 310
             Layout.fillHeight: true
             color: MetaTheme.cardBg
             border.color: MetaTheme.cardBorder
@@ -262,7 +272,7 @@ Item {
         }
 
         // ==========================================
-        // 右侧代码编辑器区：现代 IDE 风格内嵌视口与文件多选
+        // 右侧代码编辑器区：现代专业 IDE 风格（带文件多选与底部状态栏）
         // ==========================================
         Rectangle {
             Layout.fillWidth: true
@@ -276,17 +286,17 @@ Item {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 16
-                spacing: 12
+                spacing: 10
 
-                // 顶部工具栏 (Header Bar)
+                // 顶部工具栏 (Header Bar - 绝对不溢出布局)
                 RowLayout {
                     Layout.fillWidth: true
-                    spacing: 10
+                    spacing: 8
 
-                    // 配置文件下拉选择器
+                    // 配置文件下拉选择器 (紧凑宽度)
                     HusSelect {
                         id: fileSelect
-                        Layout.preferredWidth: 160
+                        Layout.preferredWidth: 150
                         sizeHint: "small"
                         model: PresetsController.availableFiles
                         textRole: "label"
@@ -299,27 +309,6 @@ Item {
                         }
                         onActivated: function(index) {
                             PresetsController.setSelectedFileIndex(index);
-                        }
-                    }
-
-                    // 路径指示标签
-                    RowLayout {
-                        spacing: 6
-                        Layout.alignment: Qt.AlignVCenter
-
-                        AppIcon {
-                            source: "qrc:/SrPGui/resources/icons/overview.svg"
-                            size: 13
-                            color: MetaTheme.textTertiary
-                        }
-
-                        Text {
-                            text: PresetsController.currentFilePathDisplay
-                            font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
-                            font.pixelSize: 11
-                            color: MetaTheme.textSecondary
-                            elide: Text.ElideMiddle
-                            Layout.maximumWidth: 260
                         }
                     }
 
@@ -342,14 +331,6 @@ Item {
                     }
 
                     Item { Layout.fillWidth: true }
-
-                    // 代码行数统计
-                    Text {
-                        text: editorArea.lineCount + " 行"
-                        font.pixelSize: 11
-                        color: MetaTheme.textTertiary
-                        Layout.rightMargin: 4
-                    }
 
                     // 恢复默认按钮
                     AppButton {
@@ -381,7 +362,7 @@ Item {
                 }
 
                 // ==========================================
-                // 内嵌式代码编辑容器 (Inset Editor Viewport)
+                // 内嵌式代码编辑容器 (带底部状态栏的完整 IDE 视口)
                 // ==========================================
                 Rectangle {
                     Layout.fillWidth: true
@@ -392,96 +373,152 @@ Item {
                     radius: MetaTheme.radiusMd
                     clip: true
 
-                    RowLayout {
+                    ColumnLayout {
                         anchors.fill: parent
                         spacing: 0
 
-                        // 行号指示器列 (背景微灰，严格跟随滚动)
-                        Rectangle {
-                            Layout.preferredWidth: 44
+                        // 编辑视口与行号
+                        RowLayout {
+                            Layout.fillWidth: true
                             Layout.fillHeight: true
-                            color: MetaTheme.editorGutterBg
+                            spacing: 0
 
+                            // 行号指示器列 (背景微灰，严格跟随滚动)
                             Rectangle {
-                                anchors.right: parent.right
-                                width: 1
-                                height: parent.height
-                                color: MetaTheme.editorBorder
+                                Layout.preferredWidth: 44
+                                Layout.fillHeight: true
+                                color: MetaTheme.editorGutterBg
+
+                                Rectangle {
+                                    anchors.right: parent.right
+                                    width: 1
+                                    height: parent.height
+                                    color: MetaTheme.editorBorder
+                                }
+
+                                Flickable {
+                                    id: lineNumFlickable
+                                    anchors.fill: parent
+                                    contentY: editorFlickable.contentY
+                                    interactive: false
+                                    clip: true
+
+                                    Column {
+                                        width: parent.width - 8
+                                        anchors.top: parent.top
+                                        anchors.topMargin: 8
+
+                                        Repeater {
+                                            model: editorArea.lineCount
+                                            Text {
+                                                width: parent.width
+                                                horizontalAlignment: Text.AlignRight
+                                                text: (index + 1).toString()
+                                                font.family: editorArea.font.family
+                                                font.pixelSize: editorArea.font.pixelSize
+                                                color: MetaTheme.textTertiary
+                                                height: editorArea.cursorRectangle.height > 0 ? editorArea.cursorRectangle.height : 18
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
+                            // 代码编辑视口
                             Flickable {
-                                id: lineNumFlickable
-                                anchors.fill: parent
-                                contentY: editorFlickable.contentY
-                                interactive: false
+                                id: editorFlickable
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
                                 clip: true
+                                boundsBehavior: Flickable.StopAtBounds
 
-                                Column {
-                                    width: parent.width - 8
-                                    anchors.top: parent.top
-                                    anchors.topMargin: 8
+                                contentWidth: Math.max(editorArea.implicitWidth + 32, width)
+                                contentHeight: editorArea.implicitHeight + 32
 
-                                    Repeater {
-                                        model: editorArea.lineCount
-                                        Text {
-                                            width: parent.width
-                                            horizontalAlignment: Text.AlignRight
-                                            text: (index + 1).toString()
-                                            font.family: editorArea.font.family
-                                            font.pixelSize: editorArea.font.pixelSize
-                                            color: MetaTheme.textTertiary
-                                            height: editorArea.cursorRectangle.height > 0 ? editorArea.cursorRectangle.height : 18
-                                        }
+                                ScrollBar.vertical: HusScrollBar { }
+                                ScrollBar.horizontal: HusScrollBar { }
+
+                                TextEdit {
+                                    id: editorArea
+                                    anchors.fill: parent
+                                    anchors.margins: 8
+                                    text: PresetsController.editorContent
+                                    font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
+                                    font.pixelSize: 12
+                                    color: MetaTheme.textPrimary
+                                    selectionColor: MetaTheme.primaryTint
+                                    selectedTextColor: MetaTheme.textPrimary
+                                    selectByMouse: true
+                                    wrapMode: TextEdit.NoWrap
+                                    tabStopDistance: 24
+
+                                    Component.onCompleted: {
+                                        PresetsController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
+                                    }
+
+                                    onTextChanged: {
+                                        PresetsController.updateEditorContent(editorArea.text);
                                     }
                                 }
                             }
                         }
 
-                        // 代码编辑视口
-                        Flickable {
-                            id: editorFlickable
+                        // 编辑器底部状态栏 (Editor Status Bar)
+                        Rectangle {
                             Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            clip: true
-                            boundsBehavior: Flickable.StopAtBounds
+                            Layout.preferredHeight: 24
+                            color: MetaTheme.editorGutterBg
 
-                            contentWidth: Math.max(editorArea.implicitWidth + 32, width)
-                            contentHeight: editorArea.implicitHeight + 32
-
-                            ScrollBar.vertical: HusScrollBar {
-                                parent: editorFlickable.parent
-                                anchors.top: editorFlickable.top
-                                anchors.right: editorFlickable.right
-                                anchors.bottom: editorFlickable.bottom
+                            Rectangle {
+                                anchors.top: parent.top
+                                width: parent.width
+                                height: 1
+                                color: MetaTheme.editorBorder
                             }
 
-                            ScrollBar.horizontal: HusScrollBar {
-                                parent: editorFlickable.parent
-                                anchors.left: editorFlickable.left
-                                anchors.right: editorFlickable.right
-                                anchors.bottom: editorFlickable.bottom
-                            }
-
-                            TextEdit {
-                                id: editorArea
+                            RowLayout {
                                 anchors.fill: parent
-                                anchors.margins: 8
-                                text: PresetsController.editorContent
-                                font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
-                                font.pixelSize: 12
-                                color: MetaTheme.textPrimary
-                                selectionColor: MetaTheme.primaryTint
-                                selectedTextColor: MetaTheme.textPrimary
-                                selectByMouse: true
-                                wrapMode: TextEdit.NoWrap
-                                tabStopDistance: 24
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 10
+                                spacing: 12
 
-                                Component.onCompleted: {
-                                    PresetsController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
+                                // 文件路径指示
+                                RowLayout {
+                                    spacing: 4
+                                    Layout.alignment: Qt.AlignVCenter
+
+                                    Text {
+                                        text: "📄"
+                                        font.pixelSize: 10
+                                    }
+                                    Text {
+                                        text: PresetsController.currentFilePathDisplay
+                                        font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
+                                        font.pixelSize: 10
+                                        color: MetaTheme.textSecondary
+                                        elide: Text.ElideMiddle
+                                        Layout.maximumWidth: 320
+                                    }
                                 }
 
-                                onTextChanged: {
-                                    PresetsController.updateEditorContent(editorArea.text);
+                                Item { Layout.fillWidth: true }
+
+                                // 格式与统计信息
+                                Text {
+                                    text: editorArea.lineCount + " 行"
+                                    font.pixelSize: 10
+                                    color: MetaTheme.textTertiary
+                                }
+                                Text {
+                                    text: "UTF-8"
+                                    font.pixelSize: 10
+                                    color: MetaTheme.textTertiary
+                                }
+                                Text {
+                                    text: "Source 2 CFG"
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    color: MetaTheme.textSecondary
                                 }
                             }
                         }

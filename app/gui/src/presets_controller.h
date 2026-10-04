@@ -39,7 +39,7 @@ public:
 
     QVariantList availablePresets() const { return m_availablePresets; }
     int selectedPresetIndex() const { return m_selectedPresetIndex; }
-    void setSelectedPresetIndex(int index);
+    Q_INVOKABLE void setSelectedPresetIndex(int index);
 
     QString selectedPresetId() const;
     QString selectedPresetName() const;
@@ -51,7 +51,7 @@ public:
 
     QVariantList availableFiles() const { return m_availableFiles; }
     int selectedFileIndex() const { return m_selectedFileIndex; }
-    void setSelectedFileIndex(int index);
+    Q_INVOKABLE void setSelectedFileIndex(int index);
     QString selectedFileName() const;
     QString currentFilePathDisplay() const;
 
