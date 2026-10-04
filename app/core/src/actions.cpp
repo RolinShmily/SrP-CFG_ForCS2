@@ -18,6 +18,11 @@ namespace fs = std::filesystem;
 
 namespace {
 
+constexpr const char* SRP_HOOK_START = "// ─── SrP-CFG Launcher Hook (Managed) ───";
+constexpr const char* SRP_HOOK_CMD1  = "exec srp-cfg/runtime/init.cfg";
+constexpr const char* SRP_HOOK_CMD2  = "exec srp-cfg/user/custom.cfg";
+constexpr const char* SRP_HOOK_END   = "// ─── End of SrP-CFG ───";
+
 std::string trimString(const std::string& str) {
     size_t first = str.find_first_not_of(" \t\r\n");
     if (first == std::string::npos) return "";
@@ -39,6 +44,109 @@ std::string readVersionFile(const fs::path& verPath) {
         return line;
     }
     return "";
+}
+
+bool mountAutoexecHook(const fs::path& autoexecPath) {
+    std::error_code ec;
+    if (!fs::exists(autoexecPath, ec)) {
+        std::ofstream out(autoexecPath, std::ios::out | std::ios::trunc);
+        if (!out) return false;
+        out << SRP_HOOK_START << "\n";
+        out << SRP_HOOK_CMD1 << "\n";
+        out << SRP_HOOK_CMD2 << "\n";
+        out << SRP_HOOK_END << "\n";
+        return true;
+    }
+
+    // 已存在文件：读取并检测是否已经挂载
+    std::ifstream in(autoexecPath);
+    if (!in) return false;
+    std::ostringstream ss;
+    ss << in.rdbuf();
+    std::string content = ss.str();
+    in.close();
+
+    if (content.find("srp-cfg/runtime/init.cfg") != std::string::npos) {
+        // 已有挂载点，无需重复插入
+        return true;
+    }
+
+    // 备份原有 autoexec.cfg
+    fs::path bak = autoexecPath;
+    bak += ".bak";
+    fs::copy_file(autoexecPath, bak, fs::copy_options::overwrite_existing, ec);
+
+    // 在最前面优雅插入非侵入式挂载块，完整保留玩家原有全部内容
+    std::ofstream out(autoexecPath, std::ios::out | std::ios::trunc);
+    if (!out) return false;
+    out << SRP_HOOK_START << "\n";
+    out << SRP_HOOK_CMD1 << "\n";
+    out << SRP_HOOK_CMD2 << "\n";
+    out << SRP_HOOK_END << "\n\n";
+    out << content;
+    return true;
+}
+
+bool unmountAutoexecHook(const fs::path& autoexecPath) {
+    std::error_code ec;
+    if (!fs::exists(autoexecPath, ec)) return true;
+
+    std::ifstream in(autoexecPath);
+    if (!in) return false;
+
+    std::vector<std::string> remainingLines;
+    std::string line;
+    bool inHookBlock = false;
+    while (std::getline(in, line)) {
+        std::string trimmed = trimString(line);
+        if (trimmed == SRP_HOOK_START) {
+            inHookBlock = true;
+            continue;
+        }
+        if (inHookBlock) {
+            if (trimmed == SRP_HOOK_END) {
+                inHookBlock = false;
+            }
+            continue;
+        }
+        // 兜底去除散落的单个挂载指令
+        if (trimmed.find("srp-cfg/runtime/init.cfg") != std::string::npos ||
+            trimmed.find("srp-cfg/user/custom.cfg") != std::string::npos) {
+            continue;
+        }
+        remainingLines.push_back(line);
+    }
+    in.close();
+
+    // 检查剩余内容是否有实质内容（非全空行）
+    bool hasUserContent = false;
+    for (const auto& l : remainingLines) {
+        if (!trimString(l).empty()) {
+            hasUserContent = true;
+            break;
+        }
+    }
+
+    if (!hasUserContent) {
+        // 如果原本全是我们注入的启动引线，直接干净删除该文件
+        fs::remove(autoexecPath, ec);
+    } else {
+        // 备份原有 autoexec.cfg
+        fs::path bak = autoexecPath;
+        bak += ".bak";
+        fs::copy_file(autoexecPath, bak, fs::copy_options::overwrite_existing, ec);
+
+        // 如果用户原有自己的内容，写回用户内容
+        std::ofstream out(autoexecPath, std::ios::out | std::ios::trunc);
+        if (!out) return false;
+        for (size_t i = 0; i < remainingLines.size(); ++i) {
+            out << remainingLines[i];
+            if (i + 1 < remainingLines.size() || !remainingLines[i].empty()) {
+                out << "\n";
+            }
+        }
+    }
+    return true;
 }
 
 } // namespace
@@ -92,7 +200,20 @@ bool isSrpInstalled(const std::string& gameCfgDir) {
     fs::path initPath = cfgPath / "srp-cfg" / "runtime" / "init.cfg";
     fs::path autoexecPath = cfgPath / "autoexec.cfg";
 
-    return fs::exists(initPath, ec) && fs::exists(autoexecPath, ec);
+    if (!fs::exists(initPath, ec) || !fs::exists(autoexecPath, ec)) {
+        return false;
+    }
+
+    // 检查 autoexec.cfg 中是否挂载了 srp-cfg
+    std::ifstream in(autoexecPath);
+    if (!in) return false;
+    std::string line;
+    while (std::getline(in, line)) {
+        if (line.find("srp-cfg/runtime/init.cfg") != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
 }
 
 std::string getInstalledSrpVersion(const std::string& gameCfgDir) {
@@ -187,18 +308,9 @@ bool installSrp(const std::string& gameCfgDir, const std::string& sourceConfigDi
         }
     }
 
-    // 3. 部署 autoexec.cfg
-    fs::path srcAutoexec = srcPath / "autoexec.cfg";
+    // 3. 非侵入式挂载 autoexec.cfg 启动引线 (不破坏玩家原有任何指令)
     fs::path dstAutoexec = dstCfg / "autoexec.cfg";
-    if (fs::exists(srcAutoexec, ec)) {
-        fs::copy_file(srcAutoexec, dstAutoexec, fs::copy_options::overwrite_existing, ec);
-    } else {
-        std::ofstream out(dstAutoexec, std::ios::out | std::ios::trunc);
-        if (out) {
-            out << "exec srp-cfg/runtime/init.cfg\n";
-            out << "exec srp-cfg/user/custom.cfg\n";
-        }
-    }
+    mountAutoexecHook(dstAutoexec);
 
     return isSrpInstalled(gameCfgDir);
 }
@@ -221,11 +333,9 @@ bool uninstallSrp(const std::string& gameCfgDir) {
         fs::remove_all(srpDir, ec);
     }
 
-    // 3. 停用 autoexec.cfg
+    // 3. 精准解挂 autoexec.cfg (仅剔除挂载块，玩家自己的指令 100% 保留)
     fs::path autoexec = cfgPath / "autoexec.cfg";
-    if (fs::exists(autoexec, ec)) {
-        fs::remove(autoexec, ec);
-    }
+    unmountAutoexecHook(autoexec);
 
     return !isSrpInstalled(gameCfgDir);
 }
