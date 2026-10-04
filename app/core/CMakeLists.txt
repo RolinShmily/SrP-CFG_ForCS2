@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(srp_core STATIC
     src/detection.cpp
     src/i18n.cpp
+    src/vcfg.cpp
+    src/actions.cpp
 )
 
 target_include_directories(srp_core PUBLIC
@@ -14,5 +16,5 @@ target_include_directories(srp_core PUBLIC
 )
 
 if(WIN32)
-    target_link_libraries(srp_core PRIVATE advapi32)
+    target_link_libraries(srp_core PRIVATE advapi32 shell32)
 endif()

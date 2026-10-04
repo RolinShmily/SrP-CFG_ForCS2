@@ -20,6 +20,7 @@ struct SteamUser {
     std::string steamId64;
     std::string accountId;
     std::optional<std::string> personaName;
+    std::string avatarPath; // 本地缓存的高清真实头像路径
 };
 
 struct LoginUsers {
@@ -28,10 +29,16 @@ struct LoginUsers {
     bool hasAutoLoginUser = false;
 };
 
+struct ConvarsSummary {
+    size_t totalCount = 0;
+    size_t totalBindings = 0;
+};
+
 struct DetectionResult {
     std::optional<std::string> steamPath;
     Cs2InstallState cs2InstallState = Cs2InstallState::NotInstalled;
     std::optional<std::string> cs2InstallDir;
+    std::optional<std::string> cs2Version;
     std::optional<std::string> cs2CfgPath;
     std::optional<std::string> annotationsPath;
     std::optional<std::string> userCfgPath;

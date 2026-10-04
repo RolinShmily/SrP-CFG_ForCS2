@@ -20,6 +20,7 @@ std::optional<std::string> detectSteamPath();
 std::vector<std::string> readLibraryPaths(const std::string& steamRoot);
 std::pair<Cs2InstallState, std::optional<std::string>> detectCs2InstallState(const std::vector<std::string>& libraries);
 std::optional<std::string> detectCs2CfgPath(const std::vector<std::string>& libraries);
+std::optional<std::string> detectCs2Version(const std::vector<std::string>& libraries, const std::optional<std::string>& installDir);
 std::optional<std::string> detectAnnotationsPath(const std::vector<std::string>& libraries);
 LoginUsers detectSteamUsers(const std::string& steamRoot);
 std::optional<std::string> detectUserCfgPath(const std::string& steamRoot, const std::string& accountId);

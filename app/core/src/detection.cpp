@@ -367,6 +367,50 @@ std::optional<std::string> detectCs2CfgPath(const std::vector<std::string>& libr
     return std::nullopt;
 }
 
+std::optional<std::string> detectCs2Version(const std::vector<std::string>& libraries, const std::optional<std::string>& installDir) {
+    std::string buildId;
+    std::string patchVersion;
+
+    // 1. 尝试从 appmanifest_730.acf 获取 buildid
+    for (const auto& lib : libraries) {
+        fs::path manifestPath = fs::u8path(lib) / "steamapps" / "appmanifest_730.acf";
+        std::string content = readFileToString(manifestPath);
+        if (content.empty()) continue;
+        if (auto b = parseAcfValue(content, "buildid"); b && !b->empty()) {
+            buildId = *b;
+            break;
+        }
+    }
+
+    // 2. 尝试从 steam.inf 获取 PatchVersion
+    if (installDir && !installDir->empty()) {
+        fs::path infPath = fs::u8path(*installDir) / "game" / "csgo" / "steam.inf";
+        std::string content = readFileToString(infPath);
+        if (!content.empty()) {
+            std::istringstream stream(content);
+            std::string line;
+            while (std::getline(stream, line)) {
+                if (startsWith(line, "PatchVersion=")) {
+                    patchVersion = line.substr(std::string("PatchVersion=").length());
+                    while (!patchVersion.empty() && (patchVersion.back() == '\r' || patchVersion.back() == ' ')) {
+                        patchVersion.pop_back();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!patchVersion.empty() && !buildId.empty()) {
+        return "v" + patchVersion + " (Build " + buildId + ")";
+    } else if (!buildId.empty()) {
+        return "Build " + buildId;
+    } else if (!patchVersion.empty()) {
+        return "v" + patchVersion;
+    }
+    return std::nullopt;
+}
+
 std::optional<std::string> detectAnnotationsPath(const std::vector<std::string>& libraries) {
     for (const auto& lib : libraries) {
         fs::path csgoDir = fs::u8path(cs2GameDir(lib, std::nullopt)) / "game" / "csgo";
@@ -448,6 +492,23 @@ LoginUsers detectSteamUsers(const std::string& steamRoot) {
         }
     }
 
+    // 匹配本地缓存的高清真实头像 (config/avatarcache/{steamId64}.png)
+    fs::path avatarCacheDir = fs::u8path(steamRoot) / "config" / "avatarcache";
+    for (auto& u : parsed.users) {
+        fs::path p = avatarCacheDir / (u.steamId64 + ".png");
+        std::error_code ec;
+        if (fs::exists(p, ec)) {
+            u.avatarPath = p.string();
+        }
+    }
+    if (parsed.currentUser) {
+        fs::path p = avatarCacheDir / (parsed.currentUser->steamId64 + ".png");
+        std::error_code ec;
+        if (fs::exists(p, ec)) {
+            parsed.currentUser->avatarPath = p.string();
+        }
+    }
+
     return parsed;
 }
 
@@ -478,6 +539,7 @@ DetectionResult detectAll() {
     auto [state, installDir] = detectCs2InstallState(libraries);
     res.cs2InstallState = state;
     res.cs2InstallDir = installDir;
+    res.cs2Version = detectCs2Version(libraries, installDir);
     res.cs2CfgPath = detectCs2CfgPath(libraries);
     res.annotationsPath = detectAnnotationsPath(libraries);
 
