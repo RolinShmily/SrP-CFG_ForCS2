@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(srp_root LANGUAGES CXX)
+project(srp_root VERSION 3.4.0 LANGUAGES CXX)
 
 # 自动探测 Windows 下的 Qt6 安装路径
 if(NOT Qt6_FOUND AND NOT CMAKE_PREFIX_PATH)
