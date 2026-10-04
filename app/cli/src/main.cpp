@@ -1,32 +1,42 @@
 #include "srp/core/detection.h"
 #include "srp/core/i18n.h"
+#include "srp/core/vcfg.h"
+#include "srp/core/actions.h"
 
 #include <iostream>
+#include <string_view>
+#include <vector>
 
 #if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
-int main(int argc, char* argv[]) {
-#if defined(_WIN32)
-    SetConsoleOutputCP(CP_UTF8);
-#endif
+namespace {
 
-    bool useEnglish = false;
-    for (int i = 1; i < argc; ++i) {
-        std::string_view arg(argv[i]);
-        if (arg == "--en" || arg == "--english") {
-            useEnglish = true;
-        }
-    }
+void printHelp() {
+    std::cout << "Usage: srp_cli [command] [options]\n\n";
+    std::cout << "Commands:\n";
+    std::cout << "  detect             Run full environment and path diagnostics (default)\n";
+    std::cout << "  launch             Launch CS2 game via Steam protocol\n";
+    std::cout << "  reset-valve        Reset current user custom.cfg to Valve Baseline\n";
+    std::cout << "  open-cfg           Open CS2 global CFG directory in explorer\n";
+    std::cout << "  open-user-cfg      Open current Steam user local CFG directory in explorer\n";
+    std::cout << "  convars-status     Inspect Convars in current user's VCFG\n";
+    std::cout << "  convars-clean-all  Remove all convars from current user's VCFG (creates .bak)\n";
+    std::cout << "  keybinds-clean-all Remove all keybinds from current user's VCFG (creates .bak)\n";
+    std::cout << "  users              List all detected Steam users\n";
+    std::cout << "  switch-user <id>   Inspect state for a specific Steam AccountID\n\n";
+    std::cout << "Options:\n";
+    std::cout << "  --en, --english    Use English output\n";
+    std::cout << "  --zh               Use Chinese output\n";
+    std::cout << "  -h, --help         Show this help message\n";
+}
 
-    srp::core::setLanguage(useEnglish ? srp::core::Language::EnUS : srp::core::Language::ZhCN);
-
+void printDiagnostics(const srp::core::DetectionResult& res) {
     std::cout << "========================================\n";
     std::cout << "   SrP-CFG Environment Diagnostics (C++)\n";
     std::cout << "========================================\n\n";
-
-    auto res = srp::core::detectAll();
 
     if (res.steamPath) {
         std::cout << "[✓] " << srp::core::tr("detect.steam.found") << *res.steamPath << "\n";
@@ -46,6 +56,10 @@ int main(int argc, char* argv[]) {
         case srp::core::Cs2InstallState::NotInstalled:
             std::cout << "[✗] " << srp::core::tr("detect.cs2.not_installed") << "\n";
             break;
+    }
+
+    if (res.cs2Version) {
+        std::cout << "[i] CS2 Version: " << *res.cs2Version << "\n";
     }
 
     if (res.cs2CfgPath) {
@@ -70,8 +84,178 @@ int main(int argc, char* argv[]) {
 
     if (res.userCfgPath) {
         std::cout << "\n[✓] " << srp::core::tr("detect.user_cfg.found") << *res.userCfgPath << "\n";
+        auto convarsSummary = srp::core::inspectConvars(*res.userCfgPath);
+        std::cout << "[i] Convars: " << convarsSummary.totalCount
+                  << ", Keybinds: " << convarsSummary.totalBindings << "\n";
     }
 
     std::cout << "\n[✓] " << srp::core::tr("detect.complete") << "\n";
-    return 0;
+}
+
+} // namespace
+
+int main(int argc, char* argv[]) {
+#if defined(_WIN32)
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+
+    std::string command = "detect";
+    std::string targetAccountId;
+    bool useEnglish = false;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string_view arg(argv[i]);
+        if (arg == "--en" || arg == "--english") {
+            useEnglish = true;
+        } else if (arg == "--zh") {
+            useEnglish = false;
+        } else if (arg == "-h" || arg == "--help") {
+            printHelp();
+            return 0;
+        } else if (arg == "detect" || arg == "launch" || arg == "reset-valve" ||
+                   arg == "open-cfg" || arg == "open-user-cfg" ||
+                   arg == "convars-status" || arg == "convars-clean-all" ||
+                   arg == "convars-clean-srp" || arg == "users") {
+            command = std::string(arg);
+        } else if (arg == "switch-user") {
+            command = "switch-user";
+            if (i + 1 < argc) {
+                targetAccountId = argv[++i];
+            }
+        } else if (arg.empty() || arg[0] != '-') {
+            command = std::string(arg);
+        }
+    }
+
+    srp::core::setLanguage(useEnglish ? srp::core::Language::EnUS : srp::core::Language::ZhCN);
+
+    auto res = srp::core::detectAll();
+
+    if (command == "detect") {
+        printDiagnostics(res);
+        return 0;
+    }
+
+    if (command == "launch") {
+        std::cout << "[*] Dispatching CS2 launch command...\n";
+        if (srp::core::launchCs2()) {
+            std::cout << "[✓] " << srp::core::tr("feedback.launch_success") << "\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] " << srp::core::tr("feedback.launch_failed") << "\n";
+            return 1;
+        }
+    }
+
+    if (command == "open-cfg") {
+        if (!res.cs2CfgPath) {
+            std::cerr << "[✗] Global CFG path not detected.\n";
+            return 1;
+        }
+        std::cout << "[*] Opening: " << *res.cs2CfgPath << "\n";
+        srp::core::openFolderInExplorer(*res.cs2CfgPath);
+        return 0;
+    }
+
+    if (command == "open-user-cfg") {
+        if (!res.userCfgPath) {
+            std::cerr << "[✗] User CFG path not detected.\n";
+            return 1;
+        }
+        std::cout << "[*] Opening: " << *res.userCfgPath << "\n";
+        srp::core::openFolderInExplorer(*res.userCfgPath);
+        return 0;
+    }
+
+    if (command == "reset-valve") {
+        if (!res.userCfgPath) {
+            std::cerr << "[✗] User CFG path not detected.\n";
+            return 1;
+        }
+        if (srp::core::resetValveBaseline(*res.userCfgPath)) {
+            std::cout << "[✓] " << srp::core::tr("feedback.reset_success") << "\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] Failed to reset Valve Baseline.\n";
+            return 1;
+        }
+    }
+
+    if (command == "convars-status") {
+        if (!res.userCfgPath) {
+            std::cerr << "[✗] User CFG path not detected.\n";
+            return 1;
+        }
+        auto summary = srp::core::inspectConvars(*res.userCfgPath);
+        std::cout << "Config in " << *res.userCfgPath << ":\n";
+        std::cout << "  - Convars:  " << summary.totalCount << "\n";
+        std::cout << "  - Keybinds: " << summary.totalBindings << "\n";
+        return 0;
+    }
+
+    if (command == "convars-clean-all") {
+        if (!res.userCfgPath) {
+            std::cerr << "[✗] User CFG path not detected.\n";
+            return 1;
+        }
+        if (srp::core::cleanAllConvars(*res.userCfgPath)) {
+            std::cout << "[✓] " << srp::core::tr("feedback.clean_all_success") << "\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] Failed to clear Convars.\n";
+            return 1;
+        }
+    }
+
+    if (command == "keybinds-clean-all") {
+        if (!res.userCfgPath) {
+            std::cerr << "[✗] User CFG path not detected.\n";
+            return 1;
+        }
+        if (srp::core::cleanAllKeybinds(*res.userCfgPath)) {
+            std::cout << "[✓] " << srp::core::tr("feedback.clean_keybinds_success") << "\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] Failed to clear Keybinds.\n";
+            return 1;
+        }
+    }
+
+    if (command == "users") {
+        std::cout << "Detected Steam Users (" << res.steamUsers.size() << "):\n";
+        for (const auto& u : res.steamUsers) {
+            bool isCurrent = res.currentUser && (res.currentUser->accountId == u.accountId);
+            std::cout << (isCurrent ? " * " : "   ")
+                      << u.personaName.value_or(u.accountId)
+                      << " (ID32: " << u.accountId << ", ID64: " << u.steamId64 << ")\n";
+        }
+        return 0;
+    }
+
+    if (command == "switch-user") {
+        if (targetAccountId.empty()) {
+            std::cerr << "Usage: srp_cli switch-user <account_id>\n";
+            return 1;
+        }
+        if (!res.steamPath) {
+            std::cerr << "[✗] Steam path not found.\n";
+            return 1;
+        }
+        auto targetPath = srp::core::detectUserCfgPath(*res.steamPath, targetAccountId);
+        if (targetPath) {
+            std::cout << "[✓] " << srp::core::tr("feedback.account_switched") << targetAccountId << "\n";
+            std::cout << "User CFG path: " << *targetPath << "\n";
+            auto summary = srp::core::inspectConvars(*targetPath);
+            std::cout << "Convars: " << summary.totalCount
+                      << ", Keybinds: " << summary.totalBindings << "\n";
+            return 0;
+        } else {
+            std::cerr << "[✗] Failed to locate user CFG directory for ID: " << targetAccountId << "\n";
+            return 1;
+        }
+    }
+
+    std::cerr << "Unknown command: " << command << "\n";
+    printHelp();
+    return 1;
 }
