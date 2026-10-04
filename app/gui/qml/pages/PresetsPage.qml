@@ -106,6 +106,11 @@ Item {
                         model: PresetsController.availablePresets
                         textRole: "label"
                         currentIndex: PresetsController.selectedPresetIndex
+                        onCurrentIndexChanged: {
+                            if (currentIndex >= 0 && currentIndex !== PresetsController.selectedPresetIndex) {
+                                PresetsController.setSelectedPresetIndex(currentIndex);
+                            }
+                        }
                         onActivated: function(index) {
                             PresetsController.setSelectedPresetIndex(index);
                         }
@@ -257,7 +262,7 @@ Item {
         }
 
         // ==========================================
-        // 右侧代码编辑器区：文件名切换、保存、恢复出厂、语法高亮与行号
+        // 右侧代码编辑器区：现代 IDE 风格内嵌视口与文件多选
         // ==========================================
         Rectangle {
             Layout.fillWidth: true
@@ -270,182 +275,214 @@ Item {
 
             ColumnLayout {
                 anchors.fill: parent
-                spacing: 0
+                anchors.margins: 16
+                spacing: 12
 
-                // 顶部工具栏 (文件名切换与操作按钮组)
-                Rectangle {
+                // 顶部工具栏 (Header Bar)
+                RowLayout {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 48
-                    color: MetaTheme.cardBg
+                    spacing: 10
 
+                    // 配置文件下拉选择器
+                    HusSelect {
+                        id: fileSelect
+                        Layout.preferredWidth: 160
+                        sizeHint: "small"
+                        model: PresetsController.availableFiles
+                        textRole: "label"
+                        valueRole: "value"
+                        currentIndex: PresetsController.selectedFileIndex
+                        onCurrentIndexChanged: {
+                            if (currentIndex >= 0 && currentIndex !== PresetsController.selectedFileIndex) {
+                                PresetsController.setSelectedFileIndex(currentIndex);
+                            }
+                        }
+                        onActivated: function(index) {
+                            PresetsController.setSelectedFileIndex(index);
+                        }
+                    }
+
+                    // 路径指示标签
                     RowLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: 16
-                        anchors.rightMargin: 16
-                        spacing: 10
+                        spacing: 6
+                        Layout.alignment: Qt.AlignVCenter
 
-                        // 文件选择下拉框
-                        HusSelect {
-                            id: fileSelect
-                            Layout.preferredWidth: 160
-                            sizeHint: "small"
-                            model: PresetsController.availableFiles
-                            textRole: "label"
-                            valueRole: "value"
-                            currentIndex: PresetsController.selectedFileIndex
-                            onActivated: function(index) {
-                                PresetsController.setSelectedFileIndex(index);
-                            }
+                        AppIcon {
+                            source: "qrc:/SrPGui/resources/icons/overview.svg"
+                            size: 13
+                            color: MetaTheme.textTertiary
                         }
 
-                        // 未保存脏状态提示
-                        RowLayout {
-                            visible: PresetsController.isEditorDirty
-                            spacing: 4
-
-                            Rectangle {
-                                width: 6; height: 6; radius: 3
-                                color: MetaTheme.statusWarning
-                            }
-                            Text {
-                                text: "未保存 (*)"
-                                font.pixelSize: 11
-                                font.bold: true
-                                color: MetaTheme.statusWarning
-                            }
+                        Text {
+                            text: PresetsController.currentFilePathDisplay
+                            font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
+                            font.pixelSize: 11
+                            color: MetaTheme.textSecondary
+                            elide: Text.ElideMiddle
+                            Layout.maximumWidth: 260
                         }
+                    }
 
-                        Item { Layout.fillWidth: true }
+                    // 未保存脏状态微标
+                    RowLayout {
+                        visible: PresetsController.isEditorDirty
+                        spacing: 4
+                        Layout.alignment: Qt.AlignVCenter
 
-                        // 恢复默认按钮
-                        AppButton {
-                            text: PresetsController.tr("presets.btn_reset", OverviewController.currentLang)
-                            type: HusButton.Type_Default
-                            iconSource: HusIcon.UndoOutlined
-                            sizeHint: "small"
-                            Layout.preferredHeight: 28
-                            onClicked: resetFileModal.openWarning()
-
-                            HusToolTip {
-                                text: "恢复官方初始默认模板"
-                            }
+                        Rectangle {
+                            width: 6; height: 6; radius: 3
+                            color: MetaTheme.statusWarning
                         }
+                        Text {
+                            text: "未保存 (*)"
+                            font.pixelSize: 11
+                            font.bold: true
+                            color: MetaTheme.statusWarning
+                        }
+                    }
 
-                        // 保存按钮
-                        AppButton {
-                            text: PresetsController.tr("presets.btn_save", OverviewController.currentLang)
-                            type: PresetsController.isEditorDirty ? HusButton.Type_Primary : HusButton.Type_Default
-                            iconSource: HusIcon.SaveOutlined
-                            sizeHint: "small"
-                            Layout.preferredHeight: 28
-                            onClicked: PresetsController.saveCurrentFile(editorArea.text)
+                    Item { Layout.fillWidth: true }
 
-                            HusToolTip {
-                                text: "保存并建立 .bak 备份"
-                            }
+                    // 代码行数统计
+                    Text {
+                        text: editorArea.lineCount + " 行"
+                        font.pixelSize: 11
+                        color: MetaTheme.textTertiary
+                        Layout.rightMargin: 4
+                    }
+
+                    // 恢复默认按钮
+                    AppButton {
+                        text: PresetsController.tr("presets.btn_reset", OverviewController.currentLang)
+                        type: HusButton.Type_Default
+                        iconSource: HusIcon.UndoOutlined
+                        sizeHint: "small"
+                        Layout.preferredHeight: 28
+                        onClicked: resetFileModal.openWarning()
+
+                        HusToolTip {
+                            text: "恢复官方初始默认模板"
+                        }
+                    }
+
+                    // 保存按钮
+                    AppButton {
+                        text: PresetsController.tr("presets.btn_save", OverviewController.currentLang)
+                        type: PresetsController.isEditorDirty ? HusButton.Type_Primary : HusButton.Type_Default
+                        iconSource: HusIcon.SaveOutlined
+                        sizeHint: "small"
+                        Layout.preferredHeight: 28
+                        onClicked: PresetsController.saveCurrentFile(editorArea.text)
+
+                        HusToolTip {
+                            text: "保存并建立 .bak 备份"
                         }
                     }
                 }
 
-                // 工具栏下方分割线
+                // ==========================================
+                // 内嵌式代码编辑容器 (Inset Editor Viewport)
+                // ==========================================
                 Rectangle {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 1
-                    color: MetaTheme.divider
-                }
-
-                // 主体代码编辑区与行号
-                RowLayout {
-                    Layout.fillWidth: true
                     Layout.fillHeight: true
-                    spacing: 0
+                    color: MetaTheme.editorBg
+                    border.color: MetaTheme.editorBorder
+                    border.width: 1
+                    radius: MetaTheme.radiusMd
+                    clip: true
 
-                    // 行号指示器列 (背景微灰，严格跟随滚动)
-                    Rectangle {
-                        Layout.preferredWidth: 44
-                        Layout.fillHeight: true
-                        color: MetaTheme.surfaceSoft
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 0
 
+                        // 行号指示器列 (背景微灰，严格跟随滚动)
                         Rectangle {
-                            anchors.right: parent.right
-                            width: 1
-                            height: parent.height
-                            color: MetaTheme.divider
-                        }
+                            Layout.preferredWidth: 44
+                            Layout.fillHeight: true
+                            color: MetaTheme.editorGutterBg
 
-                        Flickable {
-                            id: lineNumFlickable
-                            anchors.fill: parent
-                            contentY: editorFlickable.contentY
-                            interactive: false
-                            clip: true
+                            Rectangle {
+                                anchors.right: parent.right
+                                width: 1
+                                height: parent.height
+                                color: MetaTheme.editorBorder
+                            }
 
-                            Column {
-                                width: parent.width - 8
-                                anchors.top: parent.top
-                                anchors.topMargin: 8
+                            Flickable {
+                                id: lineNumFlickable
+                                anchors.fill: parent
+                                contentY: editorFlickable.contentY
+                                interactive: false
+                                clip: true
 
-                                Repeater {
-                                    model: editorArea.lineCount
-                                    Text {
-                                        width: parent.width
-                                        horizontalAlignment: Text.AlignRight
-                                        text: (index + 1).toString()
-                                        font.family: editorArea.font.family
-                                        font.pixelSize: editorArea.font.pixelSize
-                                        color: MetaTheme.textTertiary
-                                        height: editorArea.cursorRectangle.height > 0 ? editorArea.cursorRectangle.height : 18
+                                Column {
+                                    width: parent.width - 8
+                                    anchors.top: parent.top
+                                    anchors.topMargin: 8
+
+                                    Repeater {
+                                        model: editorArea.lineCount
+                                        Text {
+                                            width: parent.width
+                                            horizontalAlignment: Text.AlignRight
+                                            text: (index + 1).toString()
+                                            font.family: editorArea.font.family
+                                            font.pixelSize: editorArea.font.pixelSize
+                                            color: MetaTheme.textTertiary
+                                            height: editorArea.cursorRectangle.height > 0 ? editorArea.cursorRectangle.height : 18
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    // 代码编辑视口
-                    Flickable {
-                        id: editorFlickable
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        clip: true
-                        boundsBehavior: Flickable.StopAtBounds
+                        // 代码编辑视口
+                        Flickable {
+                            id: editorFlickable
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            clip: true
+                            boundsBehavior: Flickable.StopAtBounds
 
-                        contentWidth: Math.max(editorArea.implicitWidth + 32, width)
-                        contentHeight: editorArea.implicitHeight + 32
+                            contentWidth: Math.max(editorArea.implicitWidth + 32, width)
+                            contentHeight: editorArea.implicitHeight + 32
 
-                        ScrollBar.vertical: HusScrollBar {
-                            parent: editorFlickable.parent
-                            anchors.top: editorFlickable.top
-                            anchors.right: editorFlickable.right
-                            anchors.bottom: editorFlickable.bottom
-                        }
-
-                        ScrollBar.horizontal: HusScrollBar {
-                            parent: editorFlickable.parent
-                            anchors.left: editorFlickable.left
-                            anchors.right: editorFlickable.right
-                            anchors.bottom: editorFlickable.bottom
-                        }
-
-                        TextEdit {
-                            id: editorArea
-                            anchors.fill: parent
-                            anchors.margins: 8
-                            text: PresetsController.editorContent
-                            font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
-                            font.pixelSize: 12
-                            color: MetaTheme.textPrimary
-                            selectionColor: MetaTheme.primaryTint
-                            selectedTextColor: MetaTheme.textPrimary
-                            selectByMouse: true
-                            wrapMode: TextEdit.NoWrap
-                            tabStopDistance: 24
-
-                            Component.onCompleted: {
-                                PresetsController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
+                            ScrollBar.vertical: HusScrollBar {
+                                parent: editorFlickable.parent
+                                anchors.top: editorFlickable.top
+                                anchors.right: editorFlickable.right
+                                anchors.bottom: editorFlickable.bottom
                             }
 
-                            onTextChanged: {
-                                PresetsController.updateEditorContent(editorArea.text);
+                            ScrollBar.horizontal: HusScrollBar {
+                                parent: editorFlickable.parent
+                                anchors.left: editorFlickable.left
+                                anchors.right: editorFlickable.right
+                                anchors.bottom: editorFlickable.bottom
+                            }
+
+                            TextEdit {
+                                id: editorArea
+                                anchors.fill: parent
+                                anchors.margins: 8
+                                text: PresetsController.editorContent
+                                font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
+                                font.pixelSize: 12
+                                color: MetaTheme.textPrimary
+                                selectionColor: MetaTheme.primaryTint
+                                selectedTextColor: MetaTheme.textPrimary
+                                selectByMouse: true
+                                wrapMode: TextEdit.NoWrap
+                                tabStopDistance: 24
+
+                                Component.onCompleted: {
+                                    PresetsController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
+                                }
+
+                                onTextChanged: {
+                                    PresetsController.updateEditorContent(editorArea.text);
+                                }
                             }
                         }
                     }
@@ -474,7 +511,7 @@ Item {
     HusModal {
         id: resetFileModal
         title: "确认恢复官方出厂默认"
-        description: "此操作将把当前预设的此配置文件还原为官方纯净出厂版本。\n您现有的修改将自动备份为 .bak。确认继续？"
+        description: "此操作将把当前选中的配置文件还原为官方纯净出厂版本。\n您现有的修改将自动备份为 .bak。确认继续？"
         cancelText: "取消"
         confirmText: "确认恢复"
         onConfirm: {

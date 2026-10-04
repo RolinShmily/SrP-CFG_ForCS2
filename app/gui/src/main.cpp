@@ -46,6 +46,8 @@ int main(int argc, char* argv[]) {
 
     QString screenshotPath;
     QString initialRoute = "overview";
+    int initialPresetIndex = -1;
+    int initialFileIndex = -1;
     bool forceDark = false;
     bool forceLight = false;
     bool forceEn = false;
@@ -54,6 +56,17 @@ int main(int argc, char* argv[]) {
             screenshotPath = QString::fromUtf8(argv[++i]);
         } else if (std::string_view(argv[i]) == "--route" && i + 1 < argc) {
             initialRoute = QString::fromUtf8(argv[++i]);
+        } else if (std::string_view(argv[i]) == "--preset" && i + 1 < argc) {
+            QString p = QString::fromUtf8(argv[++i]).toLower();
+            if (p == "default") initialPresetIndex = 0;
+            else if (p == "echo") initialPresetIndex = 1;
+            else if (p == "visionl") initialPresetIndex = 2;
+            else if (p == "yszh") initialPresetIndex = 3;
+        } else if (std::string_view(argv[i]) == "--file" && i + 1 < argc) {
+            QString f = QString::fromUtf8(argv[++i]).toLower();
+            if (f == "settings" || f == "settings.cfg") initialFileIndex = 0;
+            else if (f == "keymap" || f == "keymap.cfg") initialFileIndex = 1;
+            else if (f == "custom" || f == "custom.cfg" || f == "user/custom.cfg") initialFileIndex = 2;
         } else if (std::string_view(argv[i]) == "--dark") {
             forceDark = true;
         } else if (std::string_view(argv[i]) == "--light") {
@@ -74,6 +87,12 @@ int main(int argc, char* argv[]) {
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "OverviewController", overviewCtrl);
 
     auto* presetsCtrl = new PresetsController(&app);
+    if (initialPresetIndex >= 0) {
+        presetsCtrl->setSelectedPresetIndex(initialPresetIndex);
+    }
+    if (initialFileIndex >= 0) {
+        presetsCtrl->setSelectedFileIndex(initialFileIndex);
+    }
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "PresetsController", presetsCtrl);
 
 #ifdef HUSKARUI_IMPORT_PATH

@@ -31,6 +31,11 @@ QtObject {
     readonly property color sidebarSelectedBorder: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08)
     readonly property real sidebarSelectedBorderWidth: 1
 
+    // 代码编辑器视口色彩规范 (提供专业 IDE 嵌入感与高对比度层次)
+    readonly property color editorBg: HusTheme.isDark ? "#0c0d10" : "#f8fafc"
+    readonly property color editorGutterBg: HusTheme.isDark ? "#121418" : "#f1f5f9"
+    readonly property color editorBorder: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.08)
+
     // 表面与背景
     readonly property color canvasBg: HusTheme.isDark ? obsidian : "#fbfcfd"
     readonly property color sidebarBg: HusTheme.isDark ? "#101114" : "#f3f4f6"

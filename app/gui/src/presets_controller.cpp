@@ -15,7 +15,8 @@ PresetsController::PresetsController(QObject* parent)
     s_instance = this;
     m_availableFiles = {
         QVariantMap{{QStringLiteral("label"), QStringLiteral("settings.cfg")}, {QStringLiteral("value"), QStringLiteral("settings.cfg")}},
-        QVariantMap{{QStringLiteral("label"), QStringLiteral("keymap.cfg")}, {QStringLiteral("value"), QStringLiteral("keymap.cfg")}}
+        QVariantMap{{QStringLiteral("label"), QStringLiteral("keymap.cfg")}, {QStringLiteral("value"), QStringLiteral("keymap.cfg")}},
+        QVariantMap{{QStringLiteral("label"), QStringLiteral("user/custom.cfg")}, {QStringLiteral("value"), QStringLiteral("user/custom.cfg")}}
     };
 
     refreshPresets();
@@ -80,10 +81,11 @@ void PresetsController::refreshPresets() {
 }
 
 void PresetsController::setSelectedPresetIndex(int index) {
-    if (index >= 0 && index < m_availablePresets.size() && index != m_selectedPresetIndex) {
+    if (index >= 0 && index < m_availablePresets.size()) {
         m_selectedPresetIndex = index;
         emit selectedPresetChanged();
         emit isPresetLoadedChanged();
+        emit currentFilePathDisplayChanged();
         loadCurrentFileContent();
     }
 }
@@ -121,9 +123,10 @@ bool PresetsController::isPresetLoaded() const {
 }
 
 void PresetsController::setSelectedFileIndex(int index) {
-    if (index >= 0 && index < m_availableFiles.size() && index != m_selectedFileIndex) {
+    if (index >= 0 && index < m_availableFiles.size()) {
         m_selectedFileIndex = index;
         emit selectedFileChanged();
+        emit currentFilePathDisplayChanged();
         loadCurrentFileContent();
     }
 }
@@ -133,6 +136,13 @@ QString PresetsController::selectedFileName() const {
         return m_availableFiles[m_selectedFileIndex].toMap().value(QStringLiteral("value")).toString();
     }
     return QStringLiteral("settings.cfg");
+}
+
+QString PresetsController::currentFilePathDisplay() const {
+    if (selectedFileName() == QStringLiteral("user/custom.cfg")) {
+        return QStringLiteral("srp-cfg/user/custom.cfg");
+    }
+    return QStringLiteral("srp-cfg/presets/") + selectedPresetId() + QStringLiteral("/") + selectedFileName();
 }
 
 void PresetsController::loadCurrentFileContent() {

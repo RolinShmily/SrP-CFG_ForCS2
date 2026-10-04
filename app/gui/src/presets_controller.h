@@ -24,6 +24,7 @@ class PresetsController : public QObject {
     Q_PROPERTY(QVariantList availableFiles READ availableFiles CONSTANT)
     Q_PROPERTY(int selectedFileIndex READ selectedFileIndex WRITE setSelectedFileIndex NOTIFY selectedFileChanged)
     Q_PROPERTY(QString selectedFileName READ selectedFileName NOTIFY selectedFileChanged)
+    Q_PROPERTY(QString currentFilePathDisplay READ currentFilePathDisplay NOTIFY currentFilePathDisplayChanged)
 
     Q_PROPERTY(QString editorContent READ editorContent NOTIFY editorContentChanged)
     Q_PROPERTY(bool isEditorDirty READ isEditorDirty NOTIFY editorDirtyChanged)
@@ -52,6 +53,7 @@ public:
     int selectedFileIndex() const { return m_selectedFileIndex; }
     void setSelectedFileIndex(int index);
     QString selectedFileName() const;
+    QString currentFilePathDisplay() const;
 
     QString editorContent() const { return m_editorContent; }
     bool isEditorDirty() const { return m_isEditorDirty; }
@@ -76,6 +78,7 @@ signals:
     void activePresetChanged();
     void isPresetLoadedChanged();
     void selectedFileChanged();
+    void currentFilePathDisplayChanged();
     void editorContentChanged();
     void editorDirtyChanged();
     void srpInstalledChanged();
