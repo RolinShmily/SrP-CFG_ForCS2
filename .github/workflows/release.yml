@@ -63,15 +63,12 @@ jobs:
         run: |
           cmake --build build --config Release
 
-      - name: Package CLI, GUI, Setup Installer & Incremental Packages
+      - name: Package CLI, GUI, and Setup Installer
         shell: pwsh
         run: |
           $qtBin = "$env:QT_ROOT_DIR/bin"
           $tag = if ("${{ github.ref_name }}" -match "^v[0-9]") { "${{ github.ref_name }}" } else { "v3.4.0-dev" }
           New-Item -ItemType Directory -Path "dist" -Force | Out-Null
-          New-Item -ItemType Directory -Path "dist/packages" -Force | Out-Null
-          New-Item -ItemType Directory -Path "dist/gh-pages" -Force | Out-Null
-          New-Item -ItemType Directory -Path "dist/gh-pages/packages" -Force | Out-Null
 
           # ==========================================
           # 1. 打包 Standalone CLI 独立命令行包
@@ -98,13 +95,13 @@ jobs:
           Copy-Item "build/bin/HuskarUIBasic.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
           Copy-Item "build/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
 
-          # 嵌入完整的离线出厂 config/ 预设资产包 (开箱即用)
+          # 随附出厂 config/ 预设资产包 (保证开箱即用)
           Copy-Item "config" -Destination "$guiDir/config" -Recurse -Force
 
           Copy-Item "LICENSE" -Destination "$guiDir/" -ErrorAction SilentlyContinue
           Copy-Item "README.md" -Destination "$guiDir/" -ErrorAction SilentlyContinue
 
-          # 收集 Qt 运行时与 QML 模块依赖
+          # 自动收集 Qt 运行时与 QML 模块依赖
           & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
 
           # 瘦身裁剪：移除无用光栅器与冗余 QML 样式
@@ -129,51 +126,13 @@ jobs:
           ISCC.exe /DMyAppVersion="$tag" /DSourceDir="$absGuiDir" /DOutputDir="$absDistDir" installer/installer.iss
 
           # ==========================================
-          # 4. 构建三大原子增量包 (srp-cfg, video, annotations)
-          # ==========================================
-          # 4.1 srp-cfg 增量包
-          $srpStage = "dist/stage-srp"
-          New-Item -ItemType Directory -Path $srpStage -Force | Out-Null
-          Copy-Item "config/srp-cfg" -Destination "$srpStage/srp-cfg" -Recurse -Force
-          Copy-Item "config/autoexec.cfg" -Destination "$srpStage/autoexec.cfg" -Force
-          $srpVer = (Get-Content "config/srp-cfg/VERSION.txt" -Raw).Trim()
-          $srpZip = "dist/packages/srp-cfg-v$srpVer.zip"
-          $srpLatestZip = "dist/packages/srp-cfg-latest.zip"
-          Compress-Archive -Path "$srpStage/*" -DestinationPath $srpZip -Force
-          Copy-Item $srpZip -Destination $srpLatestZip -Force
-          Remove-Item -Path $srpStage -Recurse -Force
-
-          # 4.2 video 增量包
-          $videoStage = "dist/stage-video"
-          New-Item -ItemType Directory -Path $videoStage -Force | Out-Null
-          Copy-Item "config/video/*" -Destination "$videoStage" -Recurse -Force
-          $videoVer = (Get-Content "config/video/VERSION.txt" -Raw).Trim()
-          $videoZip = "dist/packages/video-v$videoVer.zip"
-          $videoLatestZip = "dist/packages/video-latest.zip"
-          Compress-Archive -Path "$videoStage/*" -DestinationPath $videoZip -Force
-          Copy-Item $videoZip -Destination $videoLatestZip -Force
-          Remove-Item -Path $videoStage -Recurse -Force
-
-          # 4.3 annotations 增量包
-          $annoStage = "dist/stage-anno"
-          New-Item -ItemType Directory -Path $annoStage -Force | Out-Null
-          Copy-Item "config/annotations/*" -Destination "$annoStage" -Recurse -Force
-          $annoVer = (Get-Content "config/annotations/VERSION.txt" -Raw).Trim()
-          $annoZip = "dist/packages/annotations-v$annoVer.zip"
-          $annoLatestZip = "dist/packages/annotations-latest.zip"
-          Compress-Archive -Path "$annoStage/*" -DestinationPath $annoZip -Force
-          Copy-Item $annoZip -Destination $annoLatestZip -Force
-          Remove-Item -Path $annoStage -Recurse -Force
-
-          # ==========================================
-          # 5. 生成清单 (latest.json & packages.json)
+          # 4. 生成客户端升级清单 latest.json
           # ==========================================
           $guiSha256 = (Get-FileHash -Path $guiZip -Algorithm SHA256).Hash.ToLower()
           $setupExePath = "dist/srp-cfg-$tag-windows-x64-setup.exe"
           $setupSha256 = if (Test-Path $setupExePath) { (Get-FileHash -Path $setupExePath -Algorithm SHA256).Hash.ToLower() } else { "" }
           $cleanAppVer = $tag.TrimStart('v')
 
-          # 5.1 客户端整体升级清单 latest.json
           $latest = @{
               version = $cleanAppVer
               tag = $tag
@@ -187,71 +146,18 @@ jobs:
           } | ConvertTo-Json -Depth 4
           $latest | Set-Content -Path "dist/latest.json" -Encoding utf8
 
-          # 5.2 三大原子包增量更新清单 packages.json (供 gh-pages 与客户端热更)
-          $srpSha = (Get-FileHash -Path $srpLatestZip -Algorithm SHA256).Hash.ToLower()
-          $srpSize = (Get-Item $srpLatestZip).Length
-          $videoSha = (Get-FileHash -Path $videoLatestZip -Algorithm SHA256).Hash.ToLower()
-          $videoSize = (Get-Item $videoLatestZip).Length
-          $annoSha = (Get-FileHash -Path $annoLatestZip -Algorithm SHA256).Hash.ToLower()
-          $annoSize = (Get-Item $annoLatestZip).Length
-
-          $packagesManifest = @{
-              schema_version = 1
-              published_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-              packages = @{
-                  "srp-cfg" = @{
-                      version = $srpVer
-                      size = $srpSize
-                      sha256 = $srpSha
-                      url = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/srp-cfg-latest.zip"
-                      cdn_url = "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/srp-cfg-latest.zip"
-                  }
-                  "video" = @{
-                      version = $videoVer
-                      size = $videoSize
-                      sha256 = $videoSha
-                      url = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-latest.zip"
-                      cdn_url = "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/video-latest.zip"
-                  }
-                  "annotations" = @{
-                      version = $annoVer
-                      size = $annoSize
-                      sha256 = $annoSha
-                      url = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/annotations-latest.zip"
-                      cdn_url = "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/annotations-latest.zip"
-                  }
-              }
-          } | ConvertTo-Json -Depth 5
-          $packagesManifest | Set-Content -Path "dist/packages.json" -Encoding utf8
-
-          # 准备 gh-pages 静态分发目录
-          Copy-Item "dist/packages.json" -Destination "dist/gh-pages/packages.json" -Force
-          Copy-Item "dist/packages/*" -Destination "dist/gh-pages/packages/" -Recurse -Force
-
       # ==========================================
-      # 6. 发布到 GitHub Releases
+      # 5. 发布到 GitHub Releases (仅包含软件制品)
       # ==========================================
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: |
-            dist/*.zip
-            dist/*.exe
-            dist/*.json
-            dist/packages/*.zip
+            dist/srp-cfg-*-windows-x64-cli.zip
+            dist/srp-cfg-*-windows-x64-gui.zip
+            dist/srp-cfg-*-windows-x64-setup.exe
+            dist/latest.json
           draft: false
           prerelease: false
           generate_release_notes: true
-
-      # ==========================================
-      # 7. 部署到 gh-pages 分支 (供客户端与 CDN 极速热更新)
-      # ==========================================
-      - name: Deploy Incremental Packages to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        if: startsWith(github.ref, 'refs/tags/v')
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/gh-pages
-          publish_branch: gh-pages
-          keep_files: true
