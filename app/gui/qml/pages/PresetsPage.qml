@@ -403,22 +403,24 @@ Item {
                                     interactive: false
                                     clip: true
 
-                                    Column {
+                                    Text {
+                                        id: lineNumbersText
                                         width: parent.width - 8
-                                        anchors.top: parent.top
-                                        anchors.topMargin: 8
-
-                                        Repeater {
-                                            model: editorArea.lineCount
-                                            Text {
-                                                width: parent.width
-                                                horizontalAlignment: Text.AlignRight
-                                                text: (index + 1).toString()
-                                                font.family: editorArea.font.family
-                                                font.pixelSize: editorArea.font.pixelSize
-                                                color: MetaTheme.textTertiary
-                                                height: editorArea.cursorRectangle.height > 0 ? editorArea.cursorRectangle.height : 18
+                                        anchors.right: parent.right
+                                        anchors.rightMargin: 8
+                                        horizontalAlignment: Text.AlignRight
+                                        font.family: editorArea.font.family
+                                        font.pixelSize: editorArea.font.pixelSize
+                                        color: MetaTheme.textTertiary
+                                        topPadding: 8
+                                        bottomPadding: 8
+                                        text: {
+                                            let count = Math.max(1, editorArea.lineCount);
+                                            let arr = [];
+                                            for (let i = 1; i <= count; ++i) {
+                                                arr.push(i);
                                             }
+                                            return arr.join("\n");
                                         }
                                     }
                                 }
@@ -432,19 +434,26 @@ Item {
                                 clip: true
                                 boundsBehavior: Flickable.StopAtBounds
 
-                                contentWidth: Math.max(editorArea.implicitWidth + 32, width)
-                                contentHeight: editorArea.implicitHeight + 32
+                                contentWidth: editorArea.width
+                                contentHeight: editorArea.height
 
-                                ScrollBar.vertical: HusScrollBar { }
-                                ScrollBar.horizontal: HusScrollBar { }
+                                ScrollBar.vertical: HusScrollBar {
+                                    policy: editorFlickable.contentHeight > editorFlickable.height ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                                }
+                                ScrollBar.horizontal: HusScrollBar {
+                                    policy: editorFlickable.contentWidth > editorFlickable.width ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                                }
 
                                 TextEdit {
                                     id: editorArea
-                                    anchors.fill: parent
-                                    anchors.margins: 8
+                                    width: Math.max(editorFlickable.width, implicitWidth + 24)
                                     text: PresetsController.editorContent
                                     font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
                                     font.pixelSize: 12
+                                    topPadding: 8
+                                    bottomPadding: 8
+                                    leftPadding: 8
+                                    rightPadding: 16
                                     color: MetaTheme.textPrimary
                                     selectionColor: MetaTheme.primaryTint
                                     selectedTextColor: MetaTheme.textPrimary
