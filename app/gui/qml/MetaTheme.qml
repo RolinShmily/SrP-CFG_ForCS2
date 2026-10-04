@@ -17,6 +17,14 @@ QtObject {
     readonly property color primaryTint: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.09) : Qt.rgba(0, 0, 0, 0.05)
     readonly property color onPrimaryText: HusTheme.isDark ? "#09090b" : starkWhite
 
+    // 次级/默认按钮调色板 (解决亮色模式下白底白按、悬停不明显与闪烁问题)
+    readonly property color btnDefaultBg: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.05) : "#f1f3f5"
+    readonly property color btnDefaultHoverBg: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.11) : "#e2e6ea"
+    readonly property color btnDefaultPressedBg: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.18) : "#d8dde2"
+    readonly property color btnDefaultBorder: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.10) : "#e2e8f0"
+    readonly property color btnDefaultHoverBorder: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.22) : "#cbd5e1"
+    readonly property color btnDefaultText: HusTheme.isDark ? "#f4f4f5" : "#1e293b"
+
     // 表面与背景
     readonly property color canvasBg: HusTheme.isDark ? obsidian : "#fbfcfd"
     readonly property color sidebarBg: HusTheme.isDark ? "#101114" : "#f3f4f6"

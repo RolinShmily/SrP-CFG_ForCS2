@@ -5,6 +5,7 @@ import QtQuick.Dialogs
 import HuskarUI.Basic
 import SrPGui
 import "../components"
+import "../components"
 
 Item {
     id: overviewRoot
@@ -205,20 +206,18 @@ Item {
                     spacing: 10
 
                     // 大号【启动游戏】主按钮
-                    HusIconButton {
+                    AppButton {
                         text: OverviewController.tr("overview.hero.launch_game", OverviewController.currentLang)
                         type: HusButton.Type_Primary
                         iconSource: HusIcon.PlayCircleOutlined
                         sizeHint: "normal"
-                        colorBg: MetaTheme.primaryColor
-                        colorText: MetaTheme.onPrimaryText
                         Layout.preferredHeight: 36
                         Layout.preferredWidth: 120
                         onClicked: OverviewController.launchGame()
                     }
 
                     // 辅助按钮组
-                    HusIconButton {
+                    AppButton {
                         text: OverviewController.tr("overview.hero.reset_valve", OverviewController.currentLang)
                         type: HusButton.Type_Default
                         iconSource: HusIcon.UndoOutlined
@@ -237,7 +236,7 @@ Item {
                         }
                     }
 
-                    HusIconButton {
+                    AppButton {
                         text: OverviewController.tr("overview.hero.open_cfg", OverviewController.currentLang)
                         type: HusButton.Type_Default
                         iconSource: HusIcon.FolderOpenOutlined
@@ -246,7 +245,7 @@ Item {
                         onClicked: OverviewController.openCfgFolder()
                     }
 
-                    HusIconButton {
+                    AppButton {
                         text: OverviewController.tr("overview.hero.open_user_cfg", OverviewController.currentLang)
                         type: HusButton.Type_Default
                         iconSource: HusIcon.UserOutlined
@@ -369,7 +368,7 @@ Item {
 
                         Item { Layout.fillWidth: true }
 
-                        HusIconButton {
+                        AppButton {
                             text: overviewRoot.isPathChecking ? "检测中..." : OverviewController.tr("overview.path.redetect", OverviewController.currentLang)
                             type: HusButton.Type_Text
                             iconSource: HusIcon.SyncOutlined
@@ -408,7 +407,7 @@ Item {
                                 }
                             }
 
-                            HusButton {
+                            AppButton {
                                 text: "..."
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
@@ -420,7 +419,7 @@ Item {
                                 }
                             }
 
-                            HusIconButton {
+                            AppButton {
                                 text: OverviewController.tr("overview.path.browse", OverviewController.currentLang)
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
@@ -463,7 +462,7 @@ Item {
                                 }
                             }
 
-                            HusButton {
+                            AppButton {
                                 text: "..."
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
@@ -475,7 +474,7 @@ Item {
                                 }
                             }
 
-                            HusIconButton {
+                            AppButton {
                                 text: OverviewController.tr("overview.path.browse", OverviewController.currentLang)
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
@@ -525,14 +524,12 @@ Item {
                             spacing: 6
 
                             // 未装配时显示：立即装配 (主色按钮)
-                            HusIconButton {
+                            AppButton {
                                 visible: !OverviewController.isSrpInstalled
                                 text: OverviewController.tr("overview.path.btn_install_srp", OverviewController.currentLang)
                                 type: HusButton.Type_Primary
                                 sizeHint: "small"
                                 iconSource: HusIcon.DownloadOutlined
-                                colorBg: MetaTheme.primaryColor
-                                colorText: MetaTheme.onPrimaryText
                                 Layout.preferredHeight: 26
                                 onClicked: OverviewController.installSrp()
 
@@ -542,7 +539,7 @@ Item {
                             }
 
                             // 已装配时显示：重新装配 (次要按钮)
-                            HusIconButton {
+                            AppButton {
                                 visible: OverviewController.isSrpInstalled
                                 text: OverviewController.tr("overview.path.btn_reinstall_srp", OverviewController.currentLang)
                                 type: HusButton.Type_Default
@@ -557,18 +554,17 @@ Item {
                             }
 
                             // 已装配时显示：卸载 (高级危险微光按钮)
-                            HusIconButton {
+                            AppButton {
                                 visible: OverviewController.isSrpInstalled
                                 text: OverviewController.tr("overview.path.btn_uninstall_srp", OverviewController.currentLang)
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
                                 iconSource: HusIcon.DeleteOutlined
                                 Layout.preferredHeight: 26
-                                colorBg: hovered ? MetaTheme.surfaceSoft : "transparent"
-                                borderBg.color: hovered ? Qt.rgba(247/255, 79/255, 79/255, 0.45) : MetaTheme.cardBorder
+                                colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(247/255, 79/255, 79/255, 0.15) : "#fee2e2") : MetaTheme.btnDefaultBg
+                                borderBg.color: hovered ? Qt.rgba(247/255, 79/255, 79/255, 0.45) : MetaTheme.btnDefaultBorder
                                 borderBg.width: 1
-                                radiusBg.all: MetaTheme.radiusSm
-                                colorText: hovered ? MetaTheme.statusCritical : MetaTheme.textSecondary
+                                colorText: hovered ? MetaTheme.statusCritical : MetaTheme.btnDefaultText
                                 onClicked: OverviewController.uninstallSrp()
 
                                 HusToolTip {
@@ -610,7 +606,7 @@ Item {
 
                         Item { Layout.fillWidth: true }
 
-                        HusIconButton {
+                        AppButton {
                             text: overviewRoot.isConvarsChecking ? "解析中..." : OverviewController.tr("overview.convars.redetect", OverviewController.currentLang)
                             type: HusButton.Type_Text
                             iconSource: HusIcon.SyncOutlined
@@ -677,7 +673,7 @@ Item {
                         Layout.fillWidth: true
                         spacing: 10
 
-                        HusIconButton {
+                        AppButton {
                             id: cleanConvarsBtn
                             text: OverviewController.tr("overview.convars.remove_all", OverviewController.currentLang)
                             type: HusButton.Type_Default
@@ -685,11 +681,10 @@ Item {
                             iconSource: HusIcon.DeleteOutlined
                             Layout.fillWidth: true
                             Layout.preferredHeight: 32
-                            colorBg: hovered ? MetaTheme.surfaceSoft : "transparent"
-                            borderBg.color: hovered ? Qt.rgba(247/255, 79/255, 79/255, 0.45) : MetaTheme.cardBorder
+                            colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(247/255, 79/255, 79/255, 0.15) : "#fee2e2") : MetaTheme.btnDefaultBg
+                            borderBg.color: hovered ? Qt.rgba(247/255, 79/255, 79/255, 0.45) : MetaTheme.btnDefaultBorder
                             borderBg.width: 1
-                            radiusBg.all: MetaTheme.radiusSm
-                            colorText: hovered ? MetaTheme.statusCritical : MetaTheme.textSecondary
+                            colorText: hovered ? MetaTheme.statusCritical : MetaTheme.btnDefaultText
                             onClicked: OverviewController.cleanAllConvars()
 
                             HusToolTip {
@@ -697,7 +692,7 @@ Item {
                             }
                         }
 
-                        HusIconButton {
+                        AppButton {
                             id: cleanKeysBtn
                             text: OverviewController.tr("overview.convars.remove_keybinds", OverviewController.currentLang)
                             type: HusButton.Type_Default
@@ -705,11 +700,10 @@ Item {
                             iconSource: HusIcon.DisconnectOutlined
                             Layout.fillWidth: true
                             Layout.preferredHeight: 32
-                            colorBg: hovered ? MetaTheme.surfaceSoft : "transparent"
-                            borderBg.color: hovered ? Qt.rgba(245/255, 158/255, 11/255, 0.45) : MetaTheme.cardBorder
+                            colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(245/255, 158/255, 11/255, 0.15) : "#fef3c7") : MetaTheme.btnDefaultBg
+                            borderBg.color: hovered ? Qt.rgba(245/255, 158/255, 11/255, 0.45) : MetaTheme.btnDefaultBorder
                             borderBg.width: 1
-                            radiusBg.all: MetaTheme.radiusSm
-                            colorText: hovered ? MetaTheme.statusWarning : MetaTheme.textSecondary
+                            colorText: hovered ? MetaTheme.statusWarning : MetaTheme.btnDefaultText
                             onClicked: OverviewController.cleanAllKeybinds()
 
                             HusToolTip {

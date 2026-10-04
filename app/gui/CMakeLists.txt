@@ -46,6 +46,7 @@ qt_add_qml_module(srp_gui
     QML_FILES
         qml/Main.qml
         qml/MetaTheme.qml
+        qml/components/AppButton.qml
         qml/components/AppIcon.qml
         qml/components/AppHeaderExtras.qml
         qml/components/AppSidebar.qml
