@@ -60,14 +60,20 @@ Rectangle {
                 }
 
                 // 3. CFG 自由装配 (可折叠组头部，不设选中高光，带丝滑旋转箭头)
-                Rectangle {
+                Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 34
-                    radius: MetaTheme.radiusMd
-                    color: groupMouse.containsMouse ? MetaTheme.surfaceSoft : "transparent"
 
-                    Behavior on color {
-                        ColorAnimation { duration: 120; easing.type: Easing.OutCubic }
+                    // 悬停高光层 (通过 opacity 控制，绝不插值透明黑，0 闪烁)
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: MetaTheme.radiusMd
+                        color: MetaTheme.sidebarHoverBg
+                        opacity: groupMouse.containsMouse ? 1.0 : 0.0
+
+                        Behavior on opacity {
+                            NumberAnimation { duration: 90; easing.type: Easing.OutQuad }
+                        }
                     }
 
                     RowLayout {
@@ -79,7 +85,7 @@ Rectangle {
                         AppIcon {
                             source: "qrc:/SrPGui/resources/icons/assembly.svg"
                             size: 15
-                            color: MetaTheme.textSecondary
+                            color: groupMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary
                             Layout.alignment: Qt.AlignVCenter
                         }
 
@@ -87,7 +93,7 @@ Rectangle {
                             text: OverviewController.tr("nav.assembly", OverviewController.currentLang)
                             font.pixelSize: 12
                             font.bold: true
-                            color: MetaTheme.textPrimary
+                            color: groupMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary
                             Layout.fillWidth: true
                             elide: Text.ElideRight
                         }
@@ -277,8 +283,8 @@ Rectangle {
         }
     }
 
-    // 单个一级导航项组件 (带丝滑平滑过渡)
-    component NavItem: Rectangle {
+    // 单个一级导航项组件 (分层叠加模型，彻底根除向 transparent 插值的闪烁与深灰 Bug)
+    component NavItem: Item {
         id: itemRoot
         property string iconSource: ""
         property string label: ""
@@ -287,14 +293,34 @@ Rectangle {
 
         Layout.fillWidth: true
         Layout.preferredHeight: 34
-        radius: MetaTheme.radiusMd
-        color: selected ? MetaTheme.primaryTint : (itemMouse.containsMouse ? MetaTheme.surfaceSoft : "transparent")
 
-        Behavior on color {
-            ColorAnimation { duration: 120; easing.type: Easing.OutCubic }
+        // 1. 悬停反馈层 (未选中时 hover 显示清爽浅灰/微光暗色)
+        Rectangle {
+            anchors.fill: parent
+            radius: MetaTheme.radiusMd
+            color: MetaTheme.sidebarHoverBg
+            opacity: (!itemRoot.selected && itemMouse.containsMouse) ? 1.0 : 0.0
+
+            Behavior on opacity {
+                NumberAnimation { duration: 90; easing.type: Easing.OutQuad }
+            }
         }
 
-        // 选中左侧 3px 指示条
+        // 2. 选中激活层 (坚实明确的卡片选中质感)
+        Rectangle {
+            anchors.fill: parent
+            radius: MetaTheme.radiusMd
+            color: MetaTheme.sidebarSelectedBg
+            border.color: MetaTheme.sidebarSelectedBorder
+            border.width: MetaTheme.sidebarSelectedBorderWidth
+            opacity: itemRoot.selected ? 1.0 : 0.0
+
+            Behavior on opacity {
+                NumberAnimation { duration: 110; easing.type: Easing.OutQuad }
+            }
+        }
+
+        // 3. 选中左侧 3px 指示条
         Rectangle {
             visible: itemRoot.selected
             width: 3
@@ -315,7 +341,7 @@ Rectangle {
             AppIcon {
                 source: itemRoot.iconSource
                 size: 15
-                color: itemRoot.selected ? MetaTheme.primaryColor : MetaTheme.textSecondary
+                color: itemRoot.selected ? MetaTheme.primaryColor : (itemMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary)
                 Layout.alignment: Qt.AlignVCenter
             }
 
@@ -323,7 +349,7 @@ Rectangle {
                 text: itemRoot.label
                 font.pixelSize: 12
                 font.bold: itemRoot.selected
-                color: itemRoot.selected ? MetaTheme.textPrimary : MetaTheme.textSecondary
+                color: itemRoot.selected ? MetaTheme.textPrimary : (itemMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary)
                 Layout.fillWidth: true
                 elide: Text.ElideRight
             }
@@ -338,8 +364,8 @@ Rectangle {
         }
     }
 
-    // 二级导航项组件
-    component NavSubItem: Rectangle {
+    // 二级导航项组件 (分层叠加模型，彻底消除深灰闪烁)
+    component NavSubItem: Item {
         id: subRoot
         property string label: ""
         property bool selected: false
@@ -347,11 +373,29 @@ Rectangle {
 
         Layout.fillWidth: true
         Layout.preferredHeight: 28
-        radius: MetaTheme.radiusSm
-        color: selected ? MetaTheme.primaryTint : (subMouse.containsMouse ? MetaTheme.surfaceSoft : "transparent")
 
-        Behavior on color {
-            ColorAnimation { duration: 120; easing.type: Easing.OutCubic }
+        Rectangle {
+            anchors.fill: parent
+            radius: MetaTheme.radiusSm
+            color: MetaTheme.sidebarHoverBg
+            opacity: (!subRoot.selected && subMouse.containsMouse) ? 1.0 : 0.0
+
+            Behavior on opacity {
+                NumberAnimation { duration: 90; easing.type: Easing.OutQuad }
+            }
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            radius: MetaTheme.radiusSm
+            color: MetaTheme.sidebarSelectedBg
+            border.color: MetaTheme.sidebarSelectedBorder
+            border.width: MetaTheme.sidebarSelectedBorderWidth
+            opacity: subRoot.selected ? 1.0 : 0.0
+
+            Behavior on opacity {
+                NumberAnimation { duration: 110; easing.type: Easing.OutQuad }
+            }
         }
 
         RowLayout {
@@ -364,13 +408,13 @@ Rectangle {
                 width: 4
                 height: 4
                 radius: 2
-                color: subRoot.selected ? MetaTheme.primaryColor : MetaTheme.textDisabled
+                color: subRoot.selected ? MetaTheme.primaryColor : (subMouse.containsMouse ? MetaTheme.textSecondary : MetaTheme.textDisabled)
             }
 
             Text {
                 text: subRoot.label
                 font.pixelSize: 11
-                color: subRoot.selected ? MetaTheme.textPrimary : MetaTheme.textSecondary
+                color: subRoot.selected ? MetaTheme.textPrimary : (subMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary)
                 Layout.fillWidth: true
                 elide: Text.ElideRight
             }

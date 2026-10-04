@@ -25,6 +25,12 @@ QtObject {
     readonly property color btnDefaultHoverBorder: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.22) : "#cbd5e1"
     readonly property color btnDefaultText: HusTheme.isDark ? "#f4f4f5" : "#1e293b"
 
+    // 侧边栏交互色彩规范 (彻底解决亮色闪烁与无选中感)
+    readonly property color sidebarHoverBg: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.06) : "#e2e6ea"
+    readonly property color sidebarSelectedBg: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.10) : starkWhite
+    readonly property color sidebarSelectedBorder: HusTheme.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08)
+    readonly property real sidebarSelectedBorderWidth: 1
+
     // 表面与背景
     readonly property color canvasBg: HusTheme.isDark ? obsidian : "#fbfcfd"
     readonly property color sidebarBg: HusTheme.isDark ? "#101114" : "#f3f4f6"
