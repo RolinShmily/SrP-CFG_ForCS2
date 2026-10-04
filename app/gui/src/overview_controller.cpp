@@ -7,10 +7,23 @@
 
 namespace srp::gui {
 
+static OverviewController* s_overviewInstance = nullptr;
+
 OverviewController::OverviewController(QObject* parent)
     : QObject(parent) {
+    s_overviewInstance = this;
     m_currentLang = (srp::core::currentLanguage() == srp::core::Language::ZhCN) ? "zh" : "en";
     refresh();
+}
+
+OverviewController::~OverviewController() {
+    if (s_overviewInstance == this) {
+        s_overviewInstance = nullptr;
+    }
+}
+
+OverviewController* OverviewController::instance() {
+    return s_overviewInstance;
 }
 
 void OverviewController::refresh() {

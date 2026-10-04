@@ -30,7 +30,9 @@ class OverviewController : public QObject {
 
 public:
     explicit OverviewController(QObject* parent = nullptr);
-    ~OverviewController() override = default;
+    ~OverviewController() override;
+
+    static OverviewController* instance();
 
     QString steamPath() const { return m_steamPath; }
     QString gamePath() const { return m_gamePath; }

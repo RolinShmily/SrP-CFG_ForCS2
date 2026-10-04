@@ -31,6 +31,10 @@ qt_add_executable(srp_gui
     src/main.cpp
     src/overview_controller.h
     src/overview_controller.cpp
+    src/presets_controller.h
+    src/presets_controller.cpp
+    src/cs2_cfg_highlighter.h
+    src/cs2_cfg_highlighter.cpp
     ${GUI_RC_FILE}
 )
 
@@ -51,6 +55,7 @@ qt_add_qml_module(srp_gui
         qml/components/AppHeaderExtras.qml
         qml/components/AppSidebar.qml
         qml/pages/OverviewPage.qml
+        qml/pages/PresetsPage.qml
     RESOURCES
         resources/icon.png
         resources/favicon.ico

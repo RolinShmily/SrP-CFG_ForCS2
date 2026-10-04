@@ -14,6 +14,8 @@
 #include "hustheme.h"
 #include "srp/core/i18n.h"
 #include "overview_controller.h"
+#include "presets_controller.h"
+#include "cs2_cfg_highlighter.h"
 
 void customLog(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     static std::ofstream logFile("srp_gui_debug.log", std::ios::app);
@@ -43,12 +45,15 @@ int main(int argc, char* argv[]) {
     qDebug() << "[FONT] Added HuskarUI-Icons font IDs:" << fontId1 << fontId2;
 
     QString screenshotPath;
+    QString initialRoute = "overview";
     bool forceDark = false;
     bool forceLight = false;
     bool forceEn = false;
     for (int i = 1; i < argc; ++i) {
         if (std::string_view(argv[i]) == "--screenshot" && i + 1 < argc) {
             screenshotPath = QString::fromUtf8(argv[++i]);
+        } else if (std::string_view(argv[i]) == "--route" && i + 1 < argc) {
+            initialRoute = QString::fromUtf8(argv[++i]);
         } else if (std::string_view(argv[i]) == "--dark") {
             forceDark = true;
         } else if (std::string_view(argv[i]) == "--light") {
@@ -67,6 +72,9 @@ int main(int argc, char* argv[]) {
 
     auto* overviewCtrl = new srp::gui::OverviewController(&app);
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "OverviewController", overviewCtrl);
+
+    auto* presetsCtrl = new PresetsController(&app);
+    qmlRegisterSingletonInstance("SrPGui", 1, 0, "PresetsController", presetsCtrl);
 
 #ifdef HUSKARUI_IMPORT_PATH
     qDebug() << "HUSKARUI_IMPORT_PATH:" << HUSKARUI_IMPORT_PATH;
@@ -125,6 +133,7 @@ int main(int argc, char* argv[]) {
             }
         }, Qt::QueuedConnection);
 
+    engine.setInitialProperties({{QStringLiteral("initialRoute"), initialRoute}});
     engine.load(url);
 
     return app.exec();

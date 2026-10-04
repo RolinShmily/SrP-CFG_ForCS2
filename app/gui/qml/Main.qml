@@ -28,6 +28,8 @@ HusWindow {
     captionBar.showThemeButton: false
     captionBar.showTopButton: false
 
+    property string initialRoute: "overview"
+
     captionBar.winExtraButtonsDelegate: Component {
         AppHeaderExtras {
             onRequestAccountSwitch: {
@@ -59,6 +61,7 @@ HusWindow {
         AppSidebar {
             id: sidebar
             Layout.fillHeight: true
+            activeRoute: mainWindow.initialRoute
         }
 
         // 分割线
@@ -79,10 +82,16 @@ HusWindow {
                 visible: sidebar.activeRoute === "overview"
             }
 
+            PresetsPage {
+                id: presetsPage
+                anchors.fill: parent
+                visible: sidebar.activeRoute === "presets"
+            }
+
             // 占位其他页面（后续迭代逐步接入）
             Item {
                 anchors.fill: parent
-                visible: sidebar.activeRoute !== "overview"
+                visible: sidebar.activeRoute !== "overview" && sidebar.activeRoute !== "presets"
 
                 ColumnLayout {
                     anchors.centerIn: parent
