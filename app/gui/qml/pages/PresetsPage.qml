@@ -49,15 +49,19 @@ Item {
     }
 
     RowLayout {
-        anchors.fill: parent
-        anchors.margins: 16
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: Math.min(parent.width - 32, 1920)
+        anchors.topMargin: 16
+        anchors.bottomMargin: 16
         spacing: 16
 
         // ==========================================
-        // 左侧控制区：预设选择、控制台指令、加载/卸载状态
+        // 左侧控制区：自适应黄金比例 (宽屏下舒展至 460~540px)
         // ==========================================
         Rectangle {
-            Layout.preferredWidth: 310
+            Layout.preferredWidth: Math.max(340, Math.min(540, Math.round(parent.width * 0.30)))
             Layout.fillHeight: true
             color: MetaTheme.cardBg
             border.color: MetaTheme.cardBorder
@@ -68,7 +72,7 @@ Item {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 18
-                spacing: 16
+                spacing: 14
 
                 // 页面主标题
                 ColumnLayout {
@@ -113,11 +117,6 @@ Item {
                         model: PresetsController.availablePresets
                         textRole: "label"
                         currentIndex: PresetsController.selectedPresetIndex
-                        onCurrentIndexChanged: {
-                            if (currentIndex >= 0 && currentIndex !== PresetsController.selectedPresetIndex) {
-                                PresetsController.setSelectedPresetIndex(currentIndex);
-                            }
-                        }
                         onActivated: function(index) {
                             PresetsController.setSelectedPresetIndex(index);
                         }
@@ -173,6 +172,8 @@ Item {
                         }
                     }
                 }
+
+
 
                 // 状态卡片 (检测 custom.cfg 有效字段)
                 Rectangle {
@@ -299,11 +300,6 @@ Item {
                         textRole: "label"
                         valueRole: "value"
                         currentIndex: PresetsController.selectedFileIndex
-                        onCurrentIndexChanged: {
-                            if (currentIndex >= 0 && currentIndex !== PresetsController.selectedFileIndex) {
-                                PresetsController.setSelectedFileIndex(currentIndex);
-                            }
-                        }
                         onActivated: function(index) {
                             PresetsController.setSelectedFileIndex(index);
                         }
@@ -359,7 +355,7 @@ Item {
                 }
 
                 // ==========================================
-                // 专业内聚代码编辑器 (行号、高亮、状态栏内置一体化)
+                // 专业内聚代码编辑器 (行号、高亮、缩放、状态栏内置一体化)
                 // ==========================================
                 AppCodeEditor {
                     id: codeEditor
@@ -368,6 +364,12 @@ Item {
                     text: PresetsController.editorContent
                     currentFilePath: PresetsController.currentFilePathDisplay
                     isDark: HusTheme.isDark
+                    fontPixelSize: PresetsController.editorFontSize
+                    onFontPixelSizeChanged: {
+                        if (PresetsController.editorFontSize !== fontPixelSize) {
+                            PresetsController.setEditorFontSize(fontPixelSize);
+                        }
+                    }
                     onTextChanged: {
                         PresetsController.updateEditorContent(codeEditor.text);
                     }

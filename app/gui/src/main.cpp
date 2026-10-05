@@ -49,6 +49,10 @@ int main(int argc, char* argv[]) {
     QString initialRoute = "overview";
     int initialPresetIndex = -1;
     int initialFileIndex = -1;
+    int customWidth = -1;
+    int customHeight = -1;
+    int initialZoom = -1;
+    bool startMaximized = false;
     bool forceDark = false;
     bool forceLight = false;
     bool forceEn = false;
@@ -68,6 +72,14 @@ int main(int argc, char* argv[]) {
             if (f == "settings" || f == "settings.cfg") initialFileIndex = 0;
             else if (f == "keymap" || f == "keymap.cfg") initialFileIndex = 1;
             else if (f == "custom" || f == "custom.cfg" || f == "user/custom.cfg") initialFileIndex = 2;
+        } else if (std::string_view(argv[i]) == "--width" && i + 1 < argc) {
+            customWidth = std::atoi(argv[++i]);
+        } else if (std::string_view(argv[i]) == "--height" && i + 1 < argc) {
+            customHeight = std::atoi(argv[++i]);
+        } else if (std::string_view(argv[i]) == "--maximized") {
+            startMaximized = true;
+        } else if (std::string_view(argv[i]) == "--zoom" && i + 1 < argc) {
+            initialZoom = std::atoi(argv[++i]);
         } else if (std::string_view(argv[i]) == "--dark") {
             forceDark = true;
         } else if (std::string_view(argv[i]) == "--light") {
@@ -95,6 +107,9 @@ int main(int argc, char* argv[]) {
     }
     if (initialFileIndex >= 0) {
         presetsCtrl->setSelectedFileIndex(initialFileIndex);
+    }
+    if (initialZoom >= 9 && initialZoom <= 28) {
+        presetsCtrl->setEditorFontSize(initialZoom);
     }
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "PresetsController", presetsCtrl);
 
@@ -133,12 +148,23 @@ int main(int argc, char* argv[]) {
 
     const QUrl url(QStringLiteral("qrc:/SrPGui/qml/Main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url, &engine, screenshotPath, &app](QObject *obj, const QUrl &objUrl) {
+        &app, [url, &engine, screenshotPath, customWidth, customHeight, startMaximized, &app](QObject *obj, const QUrl &objUrl) {
             if (!obj && url == objUrl) {
                 qCritical() << "[CRITICAL] Failed to load QML root object:" << url.toString();
                 QCoreApplication::exit(-1);
             } else {
                 qDebug() << "[INFO] QML root object loaded successfully!";
+                if (!engine.rootObjects().isEmpty()) {
+                    auto* win = qobject_cast<QQuickWindow*>(engine.rootObjects().first());
+                    if (win) {
+                        if (customWidth > 0 && customHeight > 0) {
+                            win->resize(customWidth, customHeight);
+                        }
+                        if (startMaximized) {
+                            win->showMaximized();
+                        }
+                    }
+                }
                 if (!screenshotPath.isEmpty()) {
                     QTimer::singleShot(1200, [&engine, screenshotPath, &app]() {
                         if (!engine.rootObjects().isEmpty()) {

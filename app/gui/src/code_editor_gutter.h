@@ -3,6 +3,9 @@
 #include <QQuickPaintedItem>
 #include <QQuickTextDocument>
 #include <QColor>
+#include <QFont>
+#include <QPointer>
+#include <QVector>
 
 class CodeEditorGutter : public QQuickPaintedItem {
     Q_OBJECT
@@ -32,6 +35,11 @@ public:
 
     void paint(QPainter* painter) override;
 
+    Q_INVOKABLE void requestRedraw() { polish(); update(); }
+
+protected:
+    void updatePolish() override;
+
 signals:
     void editorChanged();
     void scrollYChanged();
@@ -42,7 +50,11 @@ signals:
 private:
     void connectDocument();
 
-    QQuickItem* m_editor = nullptr;
+    QPointer<QQuickItem> m_editor;
+    struct LineNumber { int number; qreal y; qreal height; };
+    QVector<LineNumber> m_lines;
+    QVector<QMetaObject::Connection> m_connections;
+    QFont m_font;
     qreal m_scrollY = 0;
     QColor m_textColor = QColor("#8c8c8c");
     QColor m_backgroundColor = QColor("transparent");

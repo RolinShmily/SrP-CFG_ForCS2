@@ -13,7 +13,34 @@ Rectangle {
     property alias textDocument: editorArea.textDocument
     property string currentFilePath: ""
     property bool isDark: HusTheme.isDark
-    property int gutterWidth: 44
+
+    // 代码字体大小与缩放控制
+    property int defaultFontPixelSize: 12
+    property int fontPixelSize: 12
+    property int minFontPixelSize: 9
+    property int maxFontPixelSize: 28
+
+    // 行号槽宽度自适应：随行数位数与字号动态扩展，保持宽敞美观
+    property int gutterWidth: Math.max(44, (editorArea.lineCount.toString().length + 1) * Math.round(control.fontPixelSize * 0.65) + 16)
+
+    function zoomIn() {
+        if (fontPixelSize < maxFontPixelSize) {
+            fontPixelSize += 1;
+            gutter.requestRedraw();
+        }
+    }
+
+    function zoomOut() {
+        if (fontPixelSize > minFontPixelSize) {
+            fontPixelSize -= 1;
+            gutter.requestRedraw();
+        }
+    }
+
+    function resetZoom() {
+        fontPixelSize = defaultFontPixelSize;
+        gutter.requestRedraw();
+    }
 
     color: MetaTheme.editorBg
     border.color: MetaTheme.editorBorder
@@ -21,11 +48,31 @@ Rectangle {
     radius: MetaTheme.radiusMd
     clip: true
 
+    // 快捷键支持：Ctrl + / - / = / 0
+    Shortcut {
+        sequence: "Ctrl+="
+        onActivated: control.zoomIn()
+    }
+    Shortcut {
+        sequence: "Ctrl++"
+        onActivated: control.zoomIn()
+    }
+    Shortcut {
+        sequence: "Ctrl+-"
+        onActivated: control.zoomOut()
+    }
+    Shortcut {
+        sequence: "Ctrl+0"
+        onActivated: control.resetZoom()
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
+        // ==========================================
         // 编辑视口与行号一体化区域
+        // ==========================================
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -42,11 +89,25 @@ Rectangle {
                 backgroundColor: MetaTheme.editorGutterBg
                 borderColor: MetaTheme.editorBorder
                 z: 2
+
+                WheelHandler {
+                    target: null
+                    acceptedModifiers: Qt.ControlModifier
+                    onWheel: (event) => {
+                        if (event.angleDelta.y > 0) {
+                            control.zoomIn();
+                        } else if (event.angleDelta.y < 0) {
+                            control.zoomOut();
+                        }
+                        event.accepted = true;
+                    }
+                }
             }
 
             // 代码编辑视口
             Flickable {
                 id: editorFlickable
+                objectName: "editorFlickable"
                 anchors.left: gutter.right
                 anchors.right: parent.right
                 anchors.top: parent.top
@@ -56,6 +117,21 @@ Rectangle {
 
                 contentWidth: editorArea.width
                 contentHeight: editorArea.height
+
+                // 内置优先拦截 Ctrl + 滚轮缩放，未按 Ctrl 时完全无视并放行 Flickable 正常滚动
+                WheelHandler {
+                    id: editorZoomHandler
+                    target: null
+                    acceptedModifiers: Qt.ControlModifier
+                    onWheel: (event) => {
+                        if (event.angleDelta.y > 0) {
+                            control.zoomIn();
+                        } else if (event.angleDelta.y < 0) {
+                            control.zoomOut();
+                        }
+                        event.accepted = true;
+                    }
+                }
 
                 ScrollBar.vertical: HusScrollBar {
                     policy: editorFlickable.contentHeight > editorFlickable.height ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
@@ -68,7 +144,7 @@ Rectangle {
                     id: editorArea
                     width: Math.max(editorFlickable.width, implicitWidth + 24)
                     font.family: "Cascadia Code, JetBrains Mono, Consolas, monospace"
-                    font.pixelSize: 12
+                    font.pixelSize: control.fontPixelSize
                     topPadding: 8
                     bottomPadding: 8
                     leftPadding: 8
@@ -78,16 +154,32 @@ Rectangle {
                     selectedTextColor: MetaTheme.textPrimary
                     selectByMouse: true
                     wrapMode: TextEdit.NoWrap
-                    tabStopDistance: 24
+                    tabStopDistance: Math.round(control.fontPixelSize * 2)
 
                     Component.onCompleted: {
                         PresetsController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
+                    }
+
+                    WheelHandler {
+                        id: textEditZoomHandler
+                        target: null
+                        acceptedModifiers: Qt.ControlModifier
+                        onWheel: (event) => {
+                            if (event.angleDelta.y > 0) {
+                                control.zoomIn();
+                            } else if (event.angleDelta.y < 0) {
+                                control.zoomOut();
+                            }
+                            event.accepted = true;
+                        }
                     }
                 }
             }
         }
 
+        // ==========================================
         // 编辑器底部状态栏 (Editor Status Bar)
+        // ==========================================
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 24
@@ -127,6 +219,36 @@ Rectangle {
                 }
 
                 Item { Layout.fillWidth: true }
+
+                // 实时代码缩放百分比微标 (支持点击重置为 100%)
+                Rectangle {
+                    Layout.preferredHeight: 18
+                    Layout.preferredWidth: zoomText.implicitWidth + 8
+                    radius: 3
+                    color: zoomMouseArea.containsMouse ? MetaTheme.cardBorder : "transparent"
+
+                    Text {
+                        id: zoomText
+                        anchors.centerIn: parent
+                        text: Math.round(control.fontPixelSize / control.defaultFontPixelSize * 100) + "%"
+                        font.pixelSize: 10
+                        color: control.fontPixelSize !== control.defaultFontPixelSize ? MetaTheme.primary : MetaTheme.textTertiary
+                        font.bold: control.fontPixelSize !== control.defaultFontPixelSize
+                    }
+
+                    MouseArea {
+                        id: zoomMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: control.resetZoom()
+                    }
+
+                    HusToolTip {
+                        visible: zoomMouseArea.containsMouse
+                        text: "Ctrl + 滚轮放缩代码，点击重置 100%"
+                    }
+                }
 
                 // 格式与统计信息
                 Text {

@@ -5,7 +5,9 @@
 #include <QStringList>
 #include <QVariantList>
 #include <QQuickTextDocument>
-#include <memory>
+#include <QFileSystemWatcher>
+#include <QTimer>
+#include <QPointer>
 
 class Cs2CfgHighlighter;
 
@@ -17,6 +19,8 @@ class PresetsController : public QObject {
     Q_PROPERTY(QString selectedPresetId READ selectedPresetId NOTIFY selectedPresetChanged)
     Q_PROPERTY(QString selectedPresetName READ selectedPresetName NOTIFY selectedPresetChanged)
     Q_PROPERTY(QString selectedPresetCommand READ selectedPresetCommand NOTIFY selectedPresetChanged)
+    Q_PROPERTY(QString selectedPresetDescription READ selectedPresetDescription NOTIFY selectedPresetChanged)
+    Q_PROPERTY(QVariantList selectedPresetTags READ selectedPresetTags NOTIFY selectedPresetChanged)
     Q_PROPERTY(bool selectedPresetHasDiff READ selectedPresetHasDiff NOTIFY selectedPresetChanged)
     Q_PROPERTY(QString activePresetId READ activePresetId NOTIFY activePresetChanged)
     Q_PROPERTY(bool isPresetLoaded READ isPresetLoaded NOTIFY isPresetLoadedChanged)
@@ -28,6 +32,7 @@ class PresetsController : public QObject {
 
     Q_PROPERTY(QString editorContent READ editorContent NOTIFY editorContentChanged)
     Q_PROPERTY(bool isEditorDirty READ isEditorDirty NOTIFY editorDirtyChanged)
+    Q_PROPERTY(int editorFontSize READ editorFontSize WRITE setEditorFontSize NOTIFY editorFontSizeChanged)
     Q_PROPERTY(bool isSrpInstalled READ isSrpInstalled NOTIFY srpInstalledChanged)
     Q_PROPERTY(QString currentLang READ currentLang NOTIFY languageChanged)
 
@@ -44,6 +49,8 @@ public:
     QString selectedPresetId() const;
     QString selectedPresetName() const;
     QString selectedPresetCommand() const;
+    QString selectedPresetDescription() const;
+    QVariantList selectedPresetTags() const;
     bool selectedPresetHasDiff() const;
 
     QString activePresetId() const { return m_activePresetId; }
@@ -57,6 +64,8 @@ public:
 
     QString editorContent() const { return m_editorContent; }
     bool isEditorDirty() const { return m_isEditorDirty; }
+    int editorFontSize() const { return m_editorFontSize; }
+    Q_INVOKABLE void setEditorFontSize(int size);
     bool isSrpInstalled() const;
     QString currentLang() const;
 
@@ -67,6 +76,11 @@ public:
     Q_INVOKABLE bool saveCurrentFile(const QString& content);
     Q_INVOKABLE bool resetCurrentFileToDefault();
     Q_INVOKABLE bool installSrpAndLoadCurrentPreset();
+    Q_INVOKABLE void openPresetFolder();
+
+    Q_INVOKABLE void zoomIn();
+    Q_INVOKABLE void zoomOut();
+    Q_INVOKABLE void resetZoom();
 
     Q_INVOKABLE void attachHighlighter(QQuickTextDocument* document, bool isDark);
     Q_INVOKABLE void updateTheme(bool isDark);
@@ -82,6 +96,7 @@ signals:
     void currentFilePathDisplayChanged();
     void editorContentChanged();
     void editorDirtyChanged();
+    void editorFontSizeChanged();
     void srpInstalledChanged();
     void languageChanged();
     void promptInstallSrp();
@@ -90,6 +105,10 @@ signals:
 private:
     void refreshPresets();
     void loadCurrentFileContent();
+    QString getCurrentAbsoluteFilePath() const;
+    void watchCurrentFile();
+    void synchronizeCurrentFile();
+    bool canChangeCustomCfg();
     std::string getEffectiveGameCfgDir() const;
 
     static PresetsController* s_instance;
@@ -104,7 +123,12 @@ private:
     QString m_editorContent;
     QString m_savedFileContent;
     bool m_isEditorDirty = false;
+    int m_editorFontSize = 12;
 
-    std::unique_ptr<Cs2CfgHighlighter> m_highlighter;
+    QPointer<Cs2CfgHighlighter> m_highlighter;
     QQuickTextDocument* m_quickDoc = nullptr;
+    QFileSystemWatcher* m_fileWatcher = nullptr;
+    QTimer m_fileChangeTimer;
+    QString m_watchedFilePath;
+    bool m_externalChangeNotified = false;
 };

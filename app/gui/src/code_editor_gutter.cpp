@@ -7,21 +7,25 @@
 CodeEditorGutter::CodeEditorGutter(QQuickItem* parent)
     : QQuickPaintedItem(parent) {
     setAntialiasing(true);
+    connect(this, &QQuickItem::heightChanged, this, &CodeEditorGutter::requestRedraw);
+    connect(this, &QQuickItem::widthChanged, this, &CodeEditorGutter::requestRedraw);
 }
 
 void CodeEditorGutter::setEditor(QQuickItem* item) {
     if (m_editor == item) return;
+    for (const auto& connection : m_connections) disconnect(connection);
+    m_connections.clear();
     m_editor = item;
     connectDocument();
     emit editorChanged();
-    update();
+    requestRedraw();
 }
 
 void CodeEditorGutter::setScrollY(qreal y) {
     if (qFuzzyCompare(m_scrollY, y)) return;
     m_scrollY = y;
     emit scrollYChanged();
-    update();
+    requestRedraw();
 }
 
 void CodeEditorGutter::setTextColor(const QColor& c) {
@@ -54,9 +58,29 @@ void CodeEditorGutter::connectDocument() {
     auto* doc = quickDoc->textDocument();
     if (!doc) return;
 
-    connect(doc, &QTextDocument::contentsChanged, this, [this]() {
-        update();
-    });
+    m_connections.append(connect(doc, &QTextDocument::contentsChanged, this, &CodeEditorGutter::requestRedraw));
+    m_connections.append(connect(m_editor.data(), &QQuickItem::widthChanged, this, &CodeEditorGutter::requestRedraw));
+    m_connections.append(connect(m_editor.data(), &QQuickItem::heightChanged, this, &CodeEditorGutter::requestRedraw));
+}
+
+void CodeEditorGutter::updatePolish() {
+    // QTextDocument may trigger layout/timers on access. Read it on the GUI thread,
+    // then let the render thread paint only this geometry snapshot.
+    m_lines.clear();
+    if (!m_editor) return;
+    auto* quickDoc = m_editor->property("textDocument").value<QQuickTextDocument*>();
+    if (!quickDoc || !quickDoc->textDocument()) return;
+    auto* doc = quickDoc->textDocument();
+    const qreal padding = m_editor->property("topPadding").toReal();
+    m_font = m_editor->property("font").value<QFont>();
+    for (QTextBlock block = doc->begin(); block.isValid(); block = block.next()) {
+        auto* layout = block.layout();
+        if (!layout) continue;
+        const qreal y = layout->position().y() + padding - m_scrollY;
+        const qreal h = layout->boundingRect().height();
+        if (y > height()) break;
+        if (y + h >= 0) m_lines.append({block.blockNumber() + 1, y, h});
+    }
 }
 
 void CodeEditorGutter::paint(QPainter* painter) {
@@ -73,56 +97,11 @@ void CodeEditorGutter::paint(QPainter* painter) {
         painter->drawLine(QPointF(width() - 1, 0), QPointF(width() - 1, height()));
     }
 
-    if (!m_editor) {
-        painter->restore();
-        return;
-    }
-
-    QVariant docProp = m_editor->property("textDocument");
-    if (!docProp.isValid()) {
-        painter->restore();
-        return;
-    }
-    auto* quickDoc = docProp.value<QQuickTextDocument*>();
-    if (!quickDoc) {
-        painter->restore();
-        return;
-    }
-    auto* doc = quickDoc->textDocument();
-    if (!doc) {
-        painter->restore();
-        return;
-    }
-
-    qreal topPadding = m_editor->property("topPadding").toReal();
-    QFont font = m_editor->property("font").value<QFont>();
-    painter->setFont(font);
+    painter->setFont(m_font);
     painter->setPen(m_textColor);
-
-    const qreal viewH = height();
-    const qreal rightMargin = 8.0;
-    const qreal textW = width() - rightMargin;
-
-    // 遍历每一个物理 QTextBlock 渲染行号
-    for (QTextBlock block = doc->begin(); block.isValid(); block = block.next()) {
-        QTextLayout* layout = block.layout();
-        if (!layout) continue;
-
-        qreal blockY = layout->position().y() + topPadding - m_scrollY;
-        qreal blockH = layout->boundingRect().height();
-
-        // 仅在可视区域内绘制
-        if (blockY + blockH >= 0 && blockY <= viewH) {
-            QString numStr = QString::number(block.blockNumber() + 1);
-            painter->drawText(QRectF(0, blockY, textW, blockH),
-                              Qt::AlignRight | Qt::AlignTop,
-                              numStr);
-        }
-
-        // 超出可视区下方直接截断循环，提升千万行性能
-        if (blockY > viewH + 100) {
-            break;
-        }
+    for (const auto& line : m_lines) {
+        painter->drawText(QRectF(0, line.y, width() - 8.0, line.height),
+                          Qt::AlignRight | Qt::AlignTop, QString::number(line.number));
     }
 
     painter->restore();

@@ -24,6 +24,10 @@ bool loadPreset(const std::string& presetId, const std::string& gameCfgDir);
 // 从 custom.cfg 中卸载（注释掉）所有 srp_apply_* 预设命令
 bool unloadPreset(const std::string& gameCfgDir);
 
+// 获取读取文件的实际路径，供 GUI 监听使用，与读取时的回退规则保持一致。
+std::string resolvePresetFilePath(const std::string& presetId, const std::string& fileName,
+                                  const std::string& gameCfgDir, const std::string& sourceConfigDir = {});
+
 // 读取指定预设的文件内容（优先从游戏安装目录读取，若未装配则读取源目录）
 std::string readPresetFile(const std::string& presetId, const std::string& fileName,
                            const std::string& gameCfgDir, const std::string& sourceConfigDir = {});
