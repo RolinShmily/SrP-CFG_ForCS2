@@ -1,5 +1,7 @@
 #include "srp/core/actions.h"
 #include "srp/core/vcfg.h"
+#include "srp/core/assembly.h"
+#include "srp/core/config_backup.h"
 
 #include <filesystem>
 #include <fstream>
@@ -274,43 +276,36 @@ bool installSrp(const std::string& gameCfgDir, const std::string& sourceConfigDi
         fs::create_directories(dstCfg, ec);
     }
 
-    // 0. 保护现有用户 custom.cfg (如果已存在，绝不冲掉)
-    fs::path dstSrp = dstCfg / "srp-cfg";
-    fs::path userCustom = dstSrp / "user" / "custom.cfg";
-    std::string existingCustomContent;
-    bool hasExistingCustom = false;
-    if (fs::exists(userCustom, ec)) {
-        std::ifstream in(userCustom);
-        if (in) {
-            std::ostringstream ss;
-            ss << in.rdbuf();
-            existingCustomContent = ss.str();
-            hasExistingCustom = true;
-        }
-        // 自动创建备份
-        fs::path bak = userCustom;
-        bak += ".bak";
-        fs::copy_file(userCustom, bak, fs::copy_options::overwrite_existing, ec);
-    }
-
-    // 1. 复制整个 srp-cfg 运行时目录
-    fs::path srcSrp = srcPath / "srp-cfg";
-    if (fs::exists(srcSrp, ec)) {
-        fs::copy(srcSrp, dstSrp, fs::copy_options::recursive | fs::copy_options::overwrite_existing, ec);
-        if (ec) return false;
-    }
-
-    // 2. 如果之前有用户的 custom.cfg，恢复回去；否则保持模板
-    if (hasExistingCustom) {
-        std::ofstream out(userCustom, std::ios::out | std::ios::trunc);
-        if (out) {
-            out << existingCustomContent;
+    // Leave the user file and all existing backups untouched, even during reinstall.
+    // Never copy development backups into a user's installation.
+    const fs::path dstSrp = dstCfg / "srp-cfg";
+    const fs::path srcSrp = fs::is_directory(srcPath / "srp-cfg", ec) ? srcPath / "srp-cfg" : srcPath;
+    if (!fs::is_regular_file(srcSrp / "runtime/init.cfg", ec)) return false;
+    fs::recursive_directory_iterator it(srcSrp, ec), end;
+    for (; !ec && it != end; it.increment(ec)) {
+        const auto relative = it->path().lexically_relative(srcSrp);
+        if (it->is_directory(ec)) {
+            if (it->path().filename() == ".backups") it.disable_recursion_pending();
+            else fs::create_directories(dstSrp / relative, ec);
+        } else if (it->is_regular_file(ec)) {
+            if (it->path().extension() == ".bak" || it->path().extension() == ".tmp") continue;
+            if (relative == fs::path("user/custom.cfg") && fs::exists(dstSrp / relative, ec)) continue;
+            const fs::path target = dstSrp / relative;
+            if (fs::exists(target, ec) && it->path().extension() == ".cfg") {
+                std::ifstream in(it->path(), std::ios::binary);
+                if (!in) return false;
+                const std::string content{std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>()};
+                if (in.bad() || !writeConfigWithBackup(target.u8string(), content, "reinstall").success) return false;
+            } else {
+                fs::copy_file(it->path(), target, fs::copy_options::overwrite_existing, ec);
+            }
         }
     }
+    if (ec) return false;
 
     // 3. 非侵入式挂载 autoexec.cfg 启动引线 (不破坏玩家原有任何指令)
     fs::path dstAutoexec = dstCfg / "autoexec.cfg";
-    mountAutoexecHook(dstAutoexec);
+    if (!mountAutoexecHook(dstAutoexec)) return false;
 
     return isSrpInstalled(gameCfgDir);
 }
@@ -341,46 +336,14 @@ bool uninstallSrp(const std::string& gameCfgDir) {
 }
 
 bool resetValveBaseline(const std::string& gameCfgDir, const std::string& userCfgDir) {
-    if (gameCfgDir.empty()) return false;
-
-    std::error_code ec;
-    fs::path cfgDir = fs::u8path(gameCfgDir);
-
-    // 1. 修改 custom.cfg: 写入 Valve 基线预设
-    auto writeValveCustom = [](const fs::path& customCfg) -> bool {
-        std::error_code ec;
-        if (!fs::exists(customCfg.parent_path(), ec)) {
-            fs::create_directories(customCfg.parent_path(), ec);
-        }
-
-        if (fs::exists(customCfg, ec)) {
-            fs::path bak = customCfg;
-            bak += ".bak";
-            fs::copy_file(customCfg, bak, fs::copy_options::overwrite_existing, ec);
-        }
-
-        std::ofstream out(customCfg, std::ios::out | std::ios::trunc);
-        if (!out) return false;
-
-        out << "// ─── SrP-CFG Preset Layer ───\n";
-        out << "// Applied: Valve Baseline Default\n";
-        out << "exec srp-cfg/valve/apply.cfg\n\n";
-        out << "// ─── SrP-CFG User Layer ───\n";
-        out << "// Add your personal habit overrides below:\n";
-        return true;
-    };
-
-    bool ok = false;
-    ok |= writeValveCustom(cfgDir / "srp-cfg" / "user" / "custom.cfg");
-    writeValveCustom(cfgDir / "custom.cfg");
-
-    // 2. 联动清理用户端的脏按键与脏变量缓存 (带 .bak 备份)
+    const auto result = assembleValve(gameCfgDir, true, true);
+    if (!result.success) return false;
     if (!userCfgDir.empty()) {
-        cleanAllKeybinds(userCfgDir);
-        cleanAllConvars(userCfgDir);
+        const bool keys = cleanAllKeybinds(userCfgDir);
+        const bool convars = cleanAllConvars(userCfgDir);
+        return keys && convars;
     }
-
-    return ok;
+    return true;
 }
 
 } // namespace srp::core

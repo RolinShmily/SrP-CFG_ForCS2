@@ -1,5 +1,7 @@
 #include "srp/core/preset.h"
 #include "srp/core/actions.h"
+#include "srp/core/assembly.h"
+#include "srp/core/config_backup.h"
 
 #include <filesystem>
 #include <fstream>
@@ -45,15 +47,6 @@ std::string readFileContent(const fs::path& path) {
     std::ostringstream ss;
     ss << file.rdbuf();
     return ss.str();
-}
-
-bool writeFileContent(const fs::path& path, const std::string& content) {
-    std::error_code ec;
-    fs::create_directories(path.parent_path(), ec);
-    std::ofstream file(path, std::ios::binary | std::ios::trunc);
-    if (!file.is_open()) return false;
-    file.write(content.data(), static_cast<std::streamsize>(content.size()));
-    return file.good();
 }
 
 fs::path resolveSourcePresetDir(const std::string& presetId, const std::string& sourceConfigDir) {
@@ -115,129 +108,17 @@ std::vector<PresetInfo> scanPresets(const std::string& gameCfgDir, const std::st
 }
 
 std::string getActivePresetId(const std::string& gameCfgDir, const std::string& sourceConfigDir) {
-    fs::path customPath = resolveCustomCfgPath(gameCfgDir, sourceConfigDir);
-    if (!fs::exists(customPath)) return "";
-
-    std::ifstream file(customPath);
-    if (!file.is_open()) return "";
-
-    std::string line;
-    while (std::getline(file, line)) {
-        std::string trimmed = trim(line);
-        if (trimmed.rfind("srp_apply_", 0) == 0) {
-            // 匹配到了未被注释的 srp_apply_<id> 命令
-            std::string presetId = trimmed.substr(std::string("srp_apply_").length());
-            // 去除行末注释或空格
-            auto endPos = presetId.find_first_of(" \t;/\r\n");
-            if (endPos != std::string::npos) {
-                presetId = presetId.substr(0, endPos);
-            }
-            return presetId;
-        }
-    }
-
-    return "";
+    if (!gameCfgDir.empty()) return inspectValveAssembly(gameCfgDir).activePresetId;
+    // Factory templates have no active starting point; do not report quoted/commented examples.
+    return {};
 }
 
 bool loadPreset(const std::string& presetId, const std::string& gameCfgDir) {
-    fs::path customPath = resolveCustomCfgPath(gameCfgDir, "");
-    if (!fs::exists(customPath)) {
-        return false;
-    }
-
-    // 自动备份 custom.cfg
-    std::error_code ec;
-    fs::copy_file(customPath, customPath.string() + ".bak", fs::copy_options::overwrite_existing, ec);
-
-    std::string content = readFileContent(customPath);
-    std::istringstream stream(content);
-    std::string line;
-    std::ostringstream out;
-
-    std::string targetCmd = "srp_apply_" + presetId;
-    bool presetHandled = false;
-    bool inPresetLayer = false;
-
-    while (std::getline(stream, line)) {
-        std::string trimmed = trim(line);
-
-        if (trimmed.find("SrP-CFG Preset Layer") != std::string::npos) {
-            inPresetLayer = true;
-            out << line << "\n";
-            continue;
-        }
-        if (trimmed.find("Preset Layer End") != std::string::npos) {
-            if (!presetHandled) {
-                out << targetCmd << "\n";
-                presetHandled = true;
-            }
-            inPresetLayer = false;
-            out << line << "\n";
-            continue;
-        }
-
-        if (inPresetLayer) {
-            // 检查当前行是否包含任何预设命令
-            bool isPresetLine = (trimmed.find("srp_apply_") != std::string::npos);
-            if (isPresetLine) {
-                if (trimmed.find(targetCmd) != std::string::npos) {
-                    out << targetCmd << "\n";
-                    presetHandled = true;
-                } else {
-                    // 其他预设行统一增加注释
-                    if (trimmed.rfind("//", 0) == 0) {
-                        out << line << "\n";
-                    } else {
-                        out << "// " << trimmed << "\n";
-                    }
-                }
-                continue;
-            }
-        }
-
-        out << line << "\n";
-    }
-
-    return writeFileContent(customPath, out.str());
+    return setPresetEntry(gameCfgDir, presetId).success;
 }
 
 bool unloadPreset(const std::string& gameCfgDir) {
-    fs::path customPath = resolveCustomCfgPath(gameCfgDir, "");
-    if (!fs::exists(customPath)) return false;
-
-    std::error_code ec;
-    fs::copy_file(customPath, customPath.string() + ".bak", fs::copy_options::overwrite_existing, ec);
-
-    std::string content = readFileContent(customPath);
-    std::istringstream stream(content);
-    std::string line;
-    std::ostringstream out;
-
-    bool inPresetLayer = false;
-    while (std::getline(stream, line)) {
-        std::string trimmed = trim(line);
-        if (trimmed.find("SrP-CFG Preset Layer") != std::string::npos) {
-            inPresetLayer = true;
-            out << line << "\n";
-            continue;
-        }
-        if (trimmed.find("Preset Layer End") != std::string::npos) {
-            inPresetLayer = false;
-            out << line << "\n";
-            continue;
-        }
-
-        if (inPresetLayer) {
-            if (trimmed.rfind("srp_apply_", 0) == 0) {
-                out << "// " << trimmed << "\n";
-                continue;
-            }
-        }
-
-        out << line << "\n";
-    }
-
-    return writeFileContent(customPath, out.str());
+    return setPresetEntry(gameCfgDir, "").success;
 }
 
 std::string resolvePresetFilePath(const std::string& presetId, const std::string& fileName,
@@ -259,26 +140,16 @@ std::string readPresetFile(const std::string& presetId, const std::string& fileN
 
 bool savePresetFile(const std::string& presetId, const std::string& fileName,
                     const std::string& content, const std::string& gameCfgDir) {
-    fs::path targetPath;
+    if (!isSrpInstalled(gameCfgDir)) return false;
+    fs::path target = fs::u8path(gameCfgDir) / "srp-cfg";
     if (fileName == "user/custom.cfg" || fileName == "custom.cfg") {
-        targetPath = resolveCustomCfgPath(gameCfgDir, "");
+        target /= "user/custom.cfg";
     } else {
-        fs::path targetDir;
-        if (!gameCfgDir.empty() && fs::exists(fs::u8path(gameCfgDir) / "srp-cfg")) {
-            targetDir = resolveInstalledPresetDir(presetId, gameCfgDir);
-        } else {
-            targetDir = resolveSourcePresetDir(presetId, "");
-        }
-        targetPath = targetDir / fileName;
+        if (fileName != "settings.cfg" && fileName != "keymap.cfg") return false;
+        if (presetId != "default" && presetId != "echo" && presetId != "visionl" && presetId != "yszh") return false;
+        target /= fs::path("presets") / presetId / fileName;
     }
-
-    // 保存前备份为 .bak
-    if (fs::exists(targetPath)) {
-        std::error_code ec;
-        fs::copy_file(targetPath, targetPath.string() + ".bak", fs::copy_options::overwrite_existing, ec);
-    }
-
-    return writeFileContent(targetPath, content);
+    return writeConfigWithBackup(target.u8string(), content, "editor-save").success;
 }
 
 bool resetPresetFileToDefault(const std::string& presetId, const std::string& fileName,

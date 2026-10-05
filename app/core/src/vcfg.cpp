@@ -1,4 +1,5 @@
 #include "srp/core/vcfg.h"
+#include "srp/core/config_backup.h"
 
 #include <algorithm>
 #include <cctype>
@@ -19,15 +20,6 @@ std::string readFileToString(const fs::path& filePath) {
     std::ostringstream ss;
     ss << file.rdbuf();
     return ss.str();
-}
-
-void backupFile(const fs::path& filePath) {
-    std::error_code ec;
-    if (fs::exists(filePath, ec)) {
-        fs::path bak = filePath;
-        bak += ".bak";
-        fs::copy_file(filePath, bak, fs::copy_options::overwrite_existing, ec);
-    }
 }
 
 std::vector<std::string> tokenizeVdf(const std::string& content) {
@@ -152,27 +144,15 @@ ConvarsSummary inspectConvars(const std::string& userCfgDir) {
 bool cleanAllConvars(const std::string& userCfgDir) {
     if (userCfgDir.empty()) return false;
 
-    fs::path vcfgPath = findConvarsFile(userCfgDir);
-    backupFile(vcfgPath);
-
-    std::ofstream out(vcfgPath, std::ios::out | std::ios::trunc);
-    if (!out) return false;
-
-    out << "\"config\"\n{\n\t\"convars\"\n\t{\n\t}\n}\n";
-    return true;
+    const fs::path vcfgPath = findConvarsFile(userCfgDir);
+    return writeConfigWithBackup(vcfgPath.u8string(), "\"config\"\n{\n\t\"convars\"\n\t{\n\t}\n}\n", "clear-convars").success;
 }
 
 bool cleanAllKeybinds(const std::string& userCfgDir) {
     if (userCfgDir.empty()) return false;
 
-    fs::path vcfgPath = findKeybindsFile(userCfgDir);
-    backupFile(vcfgPath);
-
-    std::ofstream out(vcfgPath, std::ios::out | std::ios::trunc);
-    if (!out) return false;
-
-    out << "\"config\"\n{\n\t\"bindings\"\n\t{\n\t}\n}\n";
-    return true;
+    const fs::path vcfgPath = findKeybindsFile(userCfgDir);
+    return writeConfigWithBackup(vcfgPath.u8string(), "\"config\"\n{\n\t\"bindings\"\n\t{\n\t}\n}\n", "clear-keybinds").success;
 }
 
 } // namespace srp::core
