@@ -118,6 +118,10 @@ jobs:
           Copy-Item "README.md" -Destination "$guiDir/README.md"
           Copy-Item "README.zh-CN.md" -Destination "$guiDir/README.zh-CN.md"
 
+          # Qt 6.8 scans custom imports but does not reliably copy third-party modules.
+          New-Item -ItemType Directory -Path "$guiDir/qml" -Force | Out-Null
+          Copy-Item "build/HuskarUI/qml/HuskarUI" -Destination "$guiDir/qml/HuskarUI" -Recurse
+
           # 自动收集 Qt 运行时与 QML 模块依赖
           & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --compiler-runtime "$guiDir/SrP-CFG.exe"
           if ($LASTEXITCODE -ne 0) { throw 'Qt runtime deployment failed' }

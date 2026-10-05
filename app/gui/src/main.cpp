@@ -4,6 +4,7 @@
 #include <QIcon>
 #include <QDebug>
 #include <QTimer>
+#include <QDir>
 #include <QFontDatabase>
 #include <iostream>
 #include <fstream>
@@ -134,8 +135,13 @@ int main(int argc, char* argv[]) {
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "AssemblyController", assemblyCtrl);
 
 #ifdef HUSKARUI_IMPORT_PATH
-    qDebug() << "HUSKARUI_IMPORT_PATH:" << HUSKARUI_IMPORT_PATH;
-    engine.addImportPath(QString::fromUtf8(HUSKARUI_IMPORT_PATH));
+    const auto deployedQml = QCoreApplication::applicationDirPath() + "/qml";
+    if (QDir(deployedQml + "/HuskarUI/Basic").exists()) {
+        engine.addImportPath(deployedQml);
+    } else {
+        // Development builds use the build-tree modules; portable builds use app-local modules.
+        engine.addImportPath(QString::fromUtf8(HUSKARUI_IMPORT_PATH));
+    }
 #endif
 
     // Light is the product default; manual theme switching remains available.
