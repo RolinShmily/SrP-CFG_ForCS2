@@ -77,6 +77,10 @@ jobs:
           ANNO_SHA=$(sha256sum website/public/packages/annotations-latest.zip | awk '{print $1}')
           ANNO_SIZE=$(stat -c%s website/public/packages/annotations-latest.zip)
           PUB_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          # 内容寻址，清单与下载不会因 latest.zip 的更新而错配。
+          cp website/public/packages/srp-cfg-latest.zip website/public/packages/srp-cfg-v${SRP_VER}-${SRP_SHA}.zip
+          cp website/public/packages/video-latest.zip website/public/packages/video-v${VIDEO_VER}-${VIDEO_SHA}.zip
+          cp website/public/packages/annotations-latest.zip website/public/packages/annotations-v${ANNO_VER}-${ANNO_SHA}.zip
 
           cat <<EOF > website/public/packages.json
           {
@@ -87,21 +91,21 @@ jobs:
                 "version": "${SRP_VER}",
                 "size": ${SRP_SIZE},
                 "sha256": "${SRP_SHA}",
-                "url": "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/srp-cfg-latest.zip",
+                "url": "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/srp-cfg-v${SRP_VER}-${SRP_SHA}.zip",
                 "cdn_url": "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/srp-cfg-latest.zip"
               },
               "video": {
                 "version": "${VIDEO_VER}",
                 "size": ${VIDEO_SIZE},
                 "sha256": "${VIDEO_SHA}",
-                "url": "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-latest.zip",
+                "url": "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v${VIDEO_VER}-${VIDEO_SHA}.zip",
                 "cdn_url": "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/video-latest.zip"
               },
               "annotations": {
                 "version": "${ANNO_VER}",
                 "size": ${ANNO_SIZE},
                 "sha256": "${ANNO_SHA}",
-                "url": "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/annotations-latest.zip",
+                "url": "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/annotations-v${ANNO_VER}-${ANNO_SHA}.zip",
                 "cdn_url": "https://cdn.jsdelivr.net/gh/RolinShmily/SrP-CFG_ForCS2@gh-pages/packages/annotations-latest.zip"
               }
             }

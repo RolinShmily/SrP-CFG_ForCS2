@@ -57,7 +57,8 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+          $version = if ("${{ github.ref_name }}" -match "^v([0-9]+\.[0-9]+\.[0-9]+)$") { $Matches[1] } else { "3.4.0" }
+          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DSRP_APP_VERSION="$version" -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
 
       - name: Build Release Targets
         run: |
@@ -76,6 +77,7 @@ jobs:
           $cliDir = "dist/srp-cfg-$tag-windows-x64-cli"
           New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
           Copy-Item "build/app/cli/srp_cli.exe" -Destination "$cliDir/srp.exe"
+          Copy-Item "config" -Destination "$cliDir/config" -Recurse -Force
           Copy-Item "LICENSE" -Destination "$cliDir/" -ErrorAction SilentlyContinue
           Copy-Item "README.md" -Destination "$cliDir/" -ErrorAction SilentlyContinue
           $cliZip = "dist/srp-cfg-$tag-windows-x64-cli.zip"
@@ -95,7 +97,10 @@ jobs:
           Copy-Item "build/bin/HuskarUIBasic.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
           Copy-Item "build/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
 
-          # 随附出厂 config/ 预设资产包 (保证开箱即用)
+          # 三个独立离线包；客户端首次运行初始化到用户可写暂存区。
+          foreach ($packageId in @("srp-cfg", "video", "annotations")) {
+              if (!(Test-Path "config/$packageId/VERSION.txt")) { throw "Missing package version: $packageId" }
+          }
           Copy-Item "config" -Destination "$guiDir/config" -Recurse -Force
 
           Copy-Item "LICENSE" -Destination "$guiDir/" -ErrorAction SilentlyContinue
