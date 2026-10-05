@@ -331,7 +331,8 @@ std::vector<std::string> readLibraryPaths(const std::string& steamRoot) {
     // 确保 steamRoot 本身在首位
     bool foundRoot = false;
     for (const auto& lib : libraries) {
-        if (fs::equivalent(fs::u8path(lib), fs::u8path(steamRoot), std::error_code{})) {
+        std::error_code eqEc;
+        if (fs::equivalent(fs::u8path(lib), fs::u8path(steamRoot), eqEc)) {
             foundRoot = true;
             break;
         }

@@ -5,9 +5,13 @@ import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const repo = fileURLToPath(new URL('../', import.meta.url));
 const command = 'pnpm --filter srp-cfg-website list --prod --depth Infinity --json';
-const raw = process.platform === 'win32'
-  ? execFileSync('cmd.exe', ['/d', '/s', '/c', command], { cwd: repo, encoding: 'utf8' })
-  : execFileSync('pnpm', ['--filter', 'srp-cfg-website', 'list', '--prod', '--depth', 'Infinity', '--json'], { cwd: repo, encoding: 'utf8' });
+const raw = execFileSync(
+  process.platform === 'win32' ? 'cmd.exe' : 'pnpm',
+  process.platform === 'win32'
+    ? ['/d', '/s', '/c', command]
+    : ['--filter', 'srp-cfg-website', 'list', '--prod', '--depth', 'Infinity', '--json'],
+  { cwd: repo, encoding: 'utf8' }
+);
 const packages = new Map();
 function visit(node) {
   for (const [name, value] of Object.entries(node.dependencies || {})) {

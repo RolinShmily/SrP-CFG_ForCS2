@@ -122,7 +122,7 @@ jobs:
           pnpm --filter srp-cfg-website lint
 
       - name: Collect dependency licenses
-        run: pnpm licenses
+        run: node scripts/collect-licenses.mjs
 
       - name: Build Static Website
         env:
