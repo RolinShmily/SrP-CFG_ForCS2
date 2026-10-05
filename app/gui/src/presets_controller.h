@@ -70,6 +70,7 @@ public:
 
     Q_INVOKABLE void attachHighlighter(QQuickTextDocument* document, bool isDark);
     Q_INVOKABLE void updateTheme(bool isDark);
+    Q_INVOKABLE void applyDocumentFormat();
     Q_INVOKABLE QString tr(const QString& key, const QString& langDependency = QString()) const;
 
 signals:
@@ -105,4 +106,5 @@ private:
     bool m_isEditorDirty = false;
 
     std::unique_ptr<Cs2CfgHighlighter> m_highlighter;
+    QQuickTextDocument* m_quickDoc = nullptr;
 };

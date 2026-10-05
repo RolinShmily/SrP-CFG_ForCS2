@@ -5,6 +5,8 @@
 #include "srp/core/actions.h"
 #include "srp/core/detection.h"
 #include "srp/core/i18n.h"
+#include <QTextBlockFormat>
+#include <QTextCursor>
 
 using srp::gui::OverviewController;
 
@@ -267,6 +269,10 @@ void PresetsController::attachHighlighter(QQuickTextDocument* document, bool isD
     if (!document) return;
     m_highlighter = std::make_unique<Cs2CfgHighlighter>(document->textDocument());
     m_highlighter->setDarkTheme(isDark);
+}
+
+void PresetsController::applyDocumentFormat() {
+    // 保留空实现供 QML 调用，避免 ABI 破坏
 }
 
 void PresetsController::updateTheme(bool isDark) {

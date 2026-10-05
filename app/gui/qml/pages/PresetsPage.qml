@@ -388,6 +388,7 @@ Item {
                                 Layout.preferredWidth: 44
                                 Layout.fillHeight: true
                                 color: MetaTheme.editorGutterBg
+                                clip: true
 
                                 Rectangle {
                                     anchors.right: parent.right
@@ -400,27 +401,32 @@ Item {
                                     id: lineNumFlickable
                                     anchors.fill: parent
                                     contentY: editorFlickable.contentY
+                                    contentHeight: lineNumColumn.implicitHeight + 16
                                     interactive: false
                                     clip: true
 
-                                    Text {
-                                        id: lineNumbersText
+                                    Column {
+                                        id: lineNumColumn
                                         width: parent.width - 8
-                                        anchors.right: parent.right
-                                        anchors.rightMargin: 8
-                                        horizontalAlignment: Text.AlignRight
-                                        font.family: editorArea.font.family
-                                        font.pixelSize: editorArea.font.pixelSize
-                                        color: MetaTheme.textTertiary
-                                        topPadding: 8
-                                        bottomPadding: 8
-                                        text: {
-                                            let count = Math.max(1, editorArea.lineCount);
-                                            let arr = [];
-                                            for (let i = 1; i <= count; ++i) {
-                                                arr.push(i);
+                                        x: 0
+                                        y: 8
+
+                                        Repeater {
+                                            model: editorArea.lineCount
+                                            Text {
+                                                width: parent.width
+                                                horizontalAlignment: Text.AlignRight
+                                                verticalAlignment: Text.AlignTop
+                                                text: (index + 1).toString()
+                                                font.family: editorArea.font.family
+                                                font.pixelSize: editorArea.font.pixelSize
+                                                color: MetaTheme.textTertiary
+                                                height: {
+                                                    let lines = editorArea.text.split("\n");
+                                                    let line = lines[index] || "";
+                                                    return /[\u4e00-\u9fa5]/.test(line) ? 16 : 14;
+                                                }
                                             }
-                                            return arr.join("\n");
                                         }
                                     }
                                 }
