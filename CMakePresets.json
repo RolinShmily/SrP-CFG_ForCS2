@@ -1,42 +1,35 @@
 {
   "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
   "configurePresets": [
     {
       "name": "windows-msvc",
-      "displayName": "Visual Studio 2022 x64 (MSBuild)",
-      "description": "Target Windows with Visual Studio 2022 (x64)",
+      "displayName": "Windows / Visual Studio 2022 x64",
       "generator": "Visual Studio 17 2022",
       "architecture": "x64",
-      "binaryDir": "${sourceDir}/build-gui",
-      "cacheVariables": {
-        "CMAKE_PREFIX_PATH": "C:/Qt/6.11.2/msvc2022_64"
-      }
+      "binaryDir": "${sourceDir}/build-gui"
     },
     {
       "name": "windows-ninja",
-      "displayName": "Ninja Multi-Config (极速增量构建)",
-      "description": "Ultra fast incremental build using Ninja",
+      "displayName": "Windows / Ninja (Developer PowerShell)",
       "generator": "Ninja Multi-Config",
-      "binaryDir": "${sourceDir}/build-ninja",
-      "cacheVariables": {
-        "CMAKE_PREFIX_PATH": "C:/Qt/6.11.2/msvc2022_64"
-      }
+      "binaryDir": "${sourceDir}/build-ninja"
+    },
+    {
+      "name": "core",
+      "displayName": "Core and CLI only (no Qt)",
+      "binaryDir": "${sourceDir}/build-core",
+      "cacheVariables": { "SRP_BUILD_GUI": "OFF", "BUILD_TESTING": "ON" }
     }
   ],
   "buildPresets": [
-    {
-      "name": "release-msvc",
-      "displayName": "Release (MSBuild)",
-      "configurePreset": "windows-msvc",
-      "configuration": "Release",
-      "targets": ["srp_gui"]
-    },
-    {
-      "name": "release-ninja",
-      "displayName": "Release (Ninja 增量极速)",
-      "configurePreset": "windows-ninja",
-      "configuration": "Release",
-      "targets": ["srp_gui"]
-    }
+    { "name": "release-msvc", "configurePreset": "windows-msvc", "configuration": "Release" },
+    { "name": "release-ninja", "configurePreset": "windows-ninja", "configuration": "Release" },
+    { "name": "core", "configurePreset": "core", "configuration": "Release" }
+  ],
+  "testPresets": [
+    { "name": "release-msvc", "configurePreset": "windows-msvc", "configuration": "Release", "output": { "outputOnFailure": true } },
+    { "name": "release-ninja", "configurePreset": "windows-ninja", "configuration": "Release", "output": { "outputOnFailure": true } },
+    { "name": "core", "configurePreset": "core", "configuration": "Release", "output": { "outputOnFailure": true } }
   ]
 }

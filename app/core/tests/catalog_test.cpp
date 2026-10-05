@@ -18,7 +18,31 @@ int main(int argc,char** argv){
  const auto root=fs::temp_directory_path()/("srp-catalog-test-"+std::to_string(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
  struct Cleanup{fs::path p;~Cleanup(){std::error_code ec;fs::remove_all(p,ec);}}cleanup{root};
  try{
-  require(argc>1,"extension fixture provided");const auto fixture=fs::u8path(argv[1]);
+  // Generate the extension fixture from tracked configs; no developer-local files needed.
+  const auto fixture=argc>1 ? fs::u8path(argv[1]) : root/"fixture";
+  if(argc<=1){
+   const auto bundle=fs::u8path(srp::core::findBundledConfigDir());
+   require(!bundle.empty(),"bundled configs available");
+   fs::create_directories(fixture);
+   fs::copy(bundle,fixture,fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+   put(fixture/"annotations/nuke-notes/nuke-notes.txt","<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->\n{\n MapName = \"de_nuke\"\n ScreenText = {}\n}\n");
+   auto guides=read(fixture/"annotations/catalog.json");
+   guides.insert(guides.find('[')+1,R"({"id":"nuke","name":"Nuke","directory":"nuke-notes","map":"de_nuke","files":["nuke-notes.txt"]},)");
+   put(fixture/"annotations/catalog.json",guides);
+   auto catalog=read(fixture/"srp-cfg/catalog.json");
+   for(const std::string category:{"features","modes","presets"}){
+    const std::string id=category=="features" ? "future-feature" : category=="modes" ? "future-mode" : "future-preset";
+    const auto directory=category+"/"+id;const auto command="srp_future_"+category;
+    put(fixture/"srp-cfg"/directory/"settings.cfg","echo future settings\n");
+    put(fixture/"srp-cfg"/directory/"extra.cfg","echo extension file\n");
+    if(category=="presets")put(fixture/"srp-cfg"/directory/"apply.cfg","exec srp-cfg/"+directory+"/settings.cfg\n");
+    const auto entry="{\"id\":\""+id+"\",\"name\":\"Future\",\"category\":\""+category+"\",\"directory\":\""+directory+"\",\"command\":\""+command+"\",\"files\":[\"settings.cfg\",\"extra.cfg\"],\"description_en\":\"New preset description\"},";
+    catalog.insert(catalog.find('[')+1,entry);
+    const auto commands=fixture/"srp-cfg/runtime/commands.cfg";
+    put(commands,read(commands)+"\nalias \""+command+"\" \"exec srp-cfg/"+directory+"/"+(category=="presets" ? "apply.cfg" : "settings.cfg")+"\"\n");
+   }
+   put(fixture/"srp-cfg/catalog.json",catalog);
+  }
   srp::core::setPackageStoreRoot((root/"store").u8string());srp::core::setBundledConfigDir(fixture.u8string());
   require(srp::core::initializePackages().success,"initialize expanded package without application changes");
   const auto guides=srp::core::annotationGuides();require(guides.size()==5 && guides.front().id=="nuke" && guides.front().file=="nuke-notes.txt","new map custom filename and ordering driven by catalog");

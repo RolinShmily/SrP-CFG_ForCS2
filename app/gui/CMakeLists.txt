@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(NOT TARGET HuskarUIBasic)
     set(BUILD_HUSKARUI_GALLERY OFF CACHE BOOL "" FORCE)
     set(BUILD_HUSKARUI_ON_DESKTOP_PLATFORM ON CACHE BOOL "" FORCE)
+    set(INSTALL_HUSKARUI_IN_DEFAULT_LOCATION OFF CACHE BOOL "" FORCE)
     add_subdirectory(3rdparty/HuskarUI)
 endif()
 
@@ -84,10 +85,7 @@ qt_add_qml_module(srp_gui
         resources/icon.png
         resources/favicon.ico
         resources/font/HuskarUI-Icons.ttf
-        resources/images/cs2_bg.jpg
         resources/images/cs2_logo.svg
-        resources/images/cs2_ctt.png
-        resources/images/cs2_hero_banner.png
         resources/images/cs2_official_banner.jpg
         resources/icons/overview.svg
         resources/icons/presets.svg
@@ -99,7 +97,6 @@ qt_add_qml_module(srp_gui
         resources/icons/sun.svg
         resources/icons/moon.svg
         resources/icons/globe.svg
-        resources/icons/pin.svg
         resources/icons/play.svg
         resources/icons/undo.svg
         resources/icons/folder.svg

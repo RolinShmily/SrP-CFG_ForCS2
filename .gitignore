@@ -1,58 +1,36 @@
-# ─── 本地环境与机密 ───────────────────────────────────────────
+# Local settings and credentials
 .env
 .env.*
 !.env.example
+.vscode/
+CMakeUserPresets.json
 
-# ─── 依赖 ────────────────────────────────────────────────────
+# Dependencies and build/release outputs
 node_modules/
-
-# ─── 构建产物 ────────────────────────────────────────────────
+.pnpm-store/
 build/
 build-*/
-*.vcxproj*
-*.sln
-app/gui/preview_*.png
+dist/
 .next/
 out/
-website/.next/
-website/out/
-app/desktop/dist/
-app/desktop/src-tauri/target/
-app/desktop/src-tauri/gen/schemas/
-.vite/
+*.vcxproj*
+*.sln
 *.tsbuildinfo
-.pnpm-store/
+website/public/packages/
+website/public/packages.json
+website/public/third-party-licenses.txt
+drift_report.md
 
-# ─── 发布打包产物（由 CI 生成，不入库）───────────────────────
-/packages.json
-/SrP-CFG_*.zip
-
-# ─── 生成物：自托管字体副本 ──────────────────────────────────
-# 真源为 app/shared/fonts，由 scripts/sync-fonts.mjs 在构建期生成
-app/website/public/fonts/
-app/website/src/styles/fonts/
-app/desktop/src/renderer/public/fonts/
-app/desktop/src/renderer/styles/fonts/
-
-# 注：app/website/src/data/generated/ 下的 commands.json / keymaps.json / crosshair.json
-# 都是生成物（前者来自 SteamTracking，后两者来自 config/srp-cfg），但**故意随仓库提交**——
-# CI 的 typecheck 不生成任何东西，不提交就会找不到文件。漂移由 CI 的 --check 卡住，不要加到这里。
-# 它们放 src/ 而非 public/，是因为只被 import（构建期内联），
-# 放 public/ 会被原样拷进部署产物而那些拷贝无人请求。
-
-# ─── 工具产物 ────────────────────────────────────────────────
-# Playwright MCP 的截图 / 快照输出目录
+# Temporary tooling artifacts
+*.log
+srp_gui_debug.log
 .playwright-mcp/
-
-# ─── Python ─────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 .venv/
-
-# ─── 临时文件 ────────────────────────────────────────────────
 tmp/
 
-# ─── 本地 AI 智能体配置（仅开发者本机使用，不入库）───────────
+# Developer-local agent configuration
 AGENTS.md
 CLAUDE.md
 skills-lock.json
