@@ -3,6 +3,7 @@
 #include "srp/core/vcfg.h"
 #include "srp/core/actions.h"
 #include "srp/core/preset.h"
+#include "srp/core/assembly.h"
 
 #include <iostream>
 #include <string_view>
@@ -29,11 +30,24 @@ void printHelp() {
     std::cout << "  presets            List all presets and their status/diff\n";
     std::cout << "  preset-load <id>   Load preset into custom.cfg\n";
     std::cout << "  preset-unload      Unload presets from custom.cfg\n";
+    std::cout << "  valve-status       Inspect Valve assembly entries in custom.cfg\n";
+    std::cout << "  valve-assemble     Assemble --settings and/or --keymap; cancels active preset\n";
+    std::cout << "  valve-unload       Unload only --settings and/or --keymap\n";
+    std::cout << "  modules            List feature and mode entry states\n";
+    std::cout << "  feature-assemble <id>  Add feature, optionally --keymap\n";
+    std::cout << "  feature-unload <id>    Remove all direct feature entries\n";
+    std::cout << "  mode-bind <id> --key <key> [--keymap] [--confirm]  Bind launcher\n";
+    std::cout << "  mode-unbind <id>   Remove mode launchers and legacy direct entries\n";
     std::cout << "  users              List all detected Steam users\n";
     std::cout << "  switch-user <id>   Inspect state for a specific Steam AccountID\n\n";
     std::cout << "Options:\n";
     std::cout << "  --en, --english    Use English output\n";
     std::cout << "  --zh               Use Chinese output\n";
+    std::cout << "  --cfg-dir <path>   Explicit game CFG directory (assembly/preset commands)\n";
+    std::cout << "  --key <key>        CS2 mode launch key (e.g. f6, p, mouse5)\n";
+    std::cout << "  --confirm          Accept a mode binding conflict\n";
+    std::cout << "  --settings         Select Valve settings\n";
+    std::cout << "  --keymap           Include keymap (Valve/features/mode entry)\n";
     std::cout << "  -h, --help         Show this help message\n";
 }
 
@@ -106,6 +120,9 @@ int main(int argc, char* argv[]) {
     std::string command = "detect";
     std::string targetAccountId;
     bool useEnglish = false;
+    std::string explicitCfgDir;
+    bool valveSettings = false, valveKeymap = false, confirmBinding = false;
+    std::string launchKey;
 
     for (int i = 1; i < argc; ++i) {
         std::string_view arg(argv[i]);
@@ -113,6 +130,19 @@ int main(int argc, char* argv[]) {
             useEnglish = true;
         } else if (arg == "--zh") {
             useEnglish = false;
+        } else if (arg == "--cfg-dir") {
+            if (i + 1 >= argc) { std::cerr << "--cfg-dir requires a path\n"; return 1; }
+            explicitCfgDir = argv[++i];
+            if (explicitCfgDir.empty()) { std::cerr << "Empty CFG path\n"; return 1; }
+        } else if (arg == "--key") {
+            if (i + 1 >= argc) { std::cerr << "--key requires a CS2 key name\n"; return 1; }
+            launchKey = argv[++i];
+        } else if (arg == "--confirm") {
+            confirmBinding = true;
+        } else if (arg == "--settings") {
+            valveSettings = true;
+        } else if (arg == "--keymap") {
+            valveKeymap = true;
         } else if (arg == "-h" || arg == "--help") {
             printHelp();
             return 0;
@@ -121,7 +151,7 @@ int main(int argc, char* argv[]) {
                    arg == "convars-status" || arg == "convars-clean-all" ||
                    arg == "convars-clean-srp" || arg == "users") {
             command = std::string(arg);
-        } else if (arg == "switch-user" || arg == "preset-load") {
+        } else if (arg == "switch-user" || arg == "preset-load" || arg == "feature-assemble" || arg == "feature-unload" || arg == "mode-bind" || arg == "mode-unbind") {
             command = std::string(arg);
             if (i + 1 < argc) {
                 targetAccountId = argv[++i];
@@ -133,7 +163,64 @@ int main(int argc, char* argv[]) {
 
     srp::core::setLanguage(useEnglish ? srp::core::Language::EnUS : srp::core::Language::ZhCN);
 
-    auto res = srp::core::detectAll();
+    auto res = explicitCfgDir.empty() ? srp::core::detectAll() : srp::core::DetectionResult{};
+    if (!explicitCfgDir.empty()) res.cs2CfgPath = explicitCfgDir;
+
+    if (command == "modules" || command == "feature-assemble" || command == "feature-unload" || command == "mode-bind" || command == "mode-unbind") {
+        const auto cfg = res.cs2CfgPath.value_or("");
+        if (cfg.empty()) { std::cerr << srp::core::tr("feedback.invalid_cfg_dir") << '\n'; return 1; }
+        if (command != "modules") {
+            srp::core::ConfigWriteResult result;
+            if (command == "mode-bind") {
+                const auto plan = srp::core::planModeBinding(cfg, targetAccountId, launchKey, valveKeymap);
+                if (!plan.success) { std::cerr << srp::core::tr(plan.error) << '\n'; return 1; }
+                if (plan.needsConfirmation && !confirmBinding) {
+                    std::cerr << srp::core::tr("assembly.binding_conflict") << ": " << launchKey << '\n'
+                        << plan.previousCommand << " -> " << plan.newCommand << "\nUse --confirm to accept\n";
+                    return 2;
+                }
+                result = srp::core::applyModeBinding(cfg, plan, confirmBinding);
+            } else if (command == "mode-unbind") result = srp::core::removeModeBinding(cfg, targetAccountId);
+            else if (command == "feature-unload") result = srp::core::unloadFeature(cfg, targetAccountId);
+            else result = srp::core::assembleFeature(cfg, targetAccountId, valveKeymap);
+            if (!result.success) { std::cerr << srp::core::tr(result.error.rfind("assembly.", 0) == 0 ? result.error : "valve.write_failed") << '\n'; return 1; }
+            const char* message = command == "mode-bind" ? "assembly.mode_bound" : command == "mode-unbind" ? "assembly.mode_removed"
+                : command == "feature-unload" ? "assembly.feature_removed" : "assembly.feature_added";
+            std::cout << srp::core::tr(result.changed ? message : "valve.no_changes") << '\n';
+        }
+        for (const auto& entry : srp::core::assemblyModules()) {
+            const auto state = srp::core::inspectModuleAssembly(cfg, entry.id);
+            std::cout << entry.id << ": ";
+            if (entry.category == "features") std::cout << srp::core::tr(state.settings ? (state.keymap ? "assembly.with_keys_state" : "assembly.settings_state") : "valve.not_assembled");
+            else {
+                std::cout << srp::core::tr(state.legacyAutoLoad ? "assembly.legacy" : state.launchKeys.empty() ? "assembly.not_bound" : "assembly.launch_key");
+                for (const auto& key : state.launchKeys) std::cout << " " << key;
+            }
+            std::cout << '\n';
+        }
+        return 0;
+    }
+    if (command == "valve-status" || command == "valve-assemble" || command == "valve-unload") {
+        const std::string cfg = res.cs2CfgPath.value_or("");
+        if (cfg.empty()) { std::cerr << srp::core::tr("feedback.invalid_cfg_dir") << "\n"; return 1; }
+        if (command != "valve-status") {
+            if (!valveSettings && !valveKeymap) { std::cerr << "Use --settings and/or --keymap\n"; return 1; }
+            const auto result = command == "valve-assemble" ? srp::core::assembleValve(cfg, valveSettings, valveKeymap)
+                                                            : srp::core::disassembleValve(cfg, valveSettings, valveKeymap);
+            if (!result.success) { std::cerr << srp::core::tr("valve.write_failed") << "\n"; return 1; }
+            std::cout << srp::core::tr(!result.changed ? "valve.no_changes" : command == "valve-assemble" ? "valve.assembled" : "valve.unloaded") << "\n";
+        }
+        const auto state = srp::core::inspectValveAssembly(cfg);
+        auto label = [](bool assembled) { return srp::core::tr(assembled ? "valve.assembled_state" : "valve.not_assembled"); };
+        std::cout << srp::core::tr("valve.settings") << ": " << label(state.settings) << "\n"
+                  << srp::core::tr("valve.keymap") << ": " << label(state.keymap) << "\n";
+        if (!state.activePresetId.empty()) std::cout << "Preset: " << state.activePresetId << "\n";
+        return 0;
+    }
+    if (!explicitCfgDir.empty() && command != "presets" && command != "preset-load" && command != "preset-unload") {
+        std::cerr << "--cfg-dir is supported only by assembly and preset commands\n";
+        return 1;
+    }
 
     if (command == "detect") {
         printDiagnostics(res);
@@ -172,11 +259,11 @@ int main(int argc, char* argv[]) {
     }
 
     if (command == "reset-valve") {
-        if (!res.userCfgPath) {
-            std::cerr << "[✗] User CFG path not detected.\n";
+        if (!res.cs2CfgPath) {
+            std::cerr << srp::core::tr("feedback.invalid_cfg_dir") << "\n";
             return 1;
         }
-        if (srp::core::resetValveBaseline(*res.userCfgPath)) {
+        if (srp::core::resetValveBaseline(*res.cs2CfgPath, res.userCfgPath.value_or(""))) {
             std::cout << "[✓] " << srp::core::tr("feedback.reset_success") << "\n";
             return 0;
         } else {
