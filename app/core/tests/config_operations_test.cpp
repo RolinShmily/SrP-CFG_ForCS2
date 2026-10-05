@@ -1,6 +1,7 @@
 #include "srp/core/assembly.h"
 #include "srp/core/actions.h"
 #include "srp/core/preset.h"
+#include "srp/core/packages.h"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -42,9 +43,12 @@ struct TemporaryDirectory {
 int main() {
     try {
         TemporaryDirectory temp;
+        setPackageStoreRoot((temp.path / "store").u8string());
+        require(initializePackages().success, "isolated package defaults");
         const auto dir = temp.path / "game-cfg";
         const auto custom = dir / "srp-cfg/user/custom.cfg";
         const auto source = temp.path / "source";
+        require(installSrp(dir.u8string()), "install runtime entries for isolated regression");
         put(dir / "srp-cfg/runtime/init.cfg", "// runtime\n");
         put(dir / "autoexec.cfg", "exec srp-cfg/runtime/init.cfg\nexec srp-cfg/user/custom.cfg\n");
         const std::string userLayer = "// SrP-CFG User Layer\r\nsensitivity 1.20\r\nalias \"mine\" \"srp_apply_echo;exec srp-cfg/valve/apply.cfg\"\r\nbind \"mouse4\" \"+voicerecord\"\r\nexec srp-cfg/features/zeus/settings.cfg\r\n";

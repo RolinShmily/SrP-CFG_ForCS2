@@ -9,6 +9,8 @@ struct PresetInfo {
     std::string id;          // 如 "default", "echo", "visionl", "yszh"
     std::string displayName; // 如 "Default", "Echo", "VisionL", "Yszh"
     std::string command;     // 如 "srp_apply_default"
+    std::string descriptionZh, descriptionEn;
+    std::vector<std::string> files, tagsZh, tagsEn;
     bool hasDiff = false;    // 是否与官方初始模板存在差异（出厂差异标记 *）
 };
 

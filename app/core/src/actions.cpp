@@ -2,6 +2,7 @@
 #include "srp/core/vcfg.h"
 #include "srp/core/assembly.h"
 #include "srp/core/config_backup.h"
+#include "srp/core/packages.h"
 
 #include <filesystem>
 #include <fstream>
@@ -226,6 +227,8 @@ std::string getInstalledSrpVersion(const std::string& gameCfgDir) {
 }
 
 std::string findSourceConfigDir() {
+    // Defaults are immutable; installed editors still target game files.
+    if (initializePackages().success) return packageOriginalDir();
     std::vector<fs::path> candidates = {
         "config",
         "../config",
@@ -265,7 +268,7 @@ std::string getSourceSrpVersion() {
 bool installSrp(const std::string& gameCfgDir, const std::string& sourceConfigDir) {
     if (gameCfgDir.empty()) return false;
 
-    std::string srcDir = sourceConfigDir.empty() ? findSourceConfigDir() : sourceConfigDir;
+    std::string srcDir = sourceConfigDir.empty() ? (initializePackages().success ? packageWorkDir() : findSourceConfigDir()) : sourceConfigDir;
     if (srcDir.empty()) return false;
 
     std::error_code ec;

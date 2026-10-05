@@ -2,6 +2,7 @@
 #include "srp/core/actions.h"
 #include "srp/core/assembly.h"
 #include "srp/core/config_backup.h"
+#include "srp/core/catalog.h"
 
 #include <filesystem>
 #include <fstream>
@@ -49,20 +50,21 @@ std::string readFileContent(const fs::path& path) {
     return ss.str();
 }
 
+std::string presetDirectory(const std::string& id, const fs::path& root) {
+    for (const auto& e : configCatalog("srp-cfg",root.u8string())) if(e.category=="presets" && e.id==id)return e.directory;
+    return {};
+}
 fs::path resolveSourcePresetDir(const std::string& presetId, const std::string& sourceConfigDir) {
     fs::path base = sourceConfigDir.empty() ? fs::u8path(findSourceConfigDir()) : fs::u8path(sourceConfigDir);
-    if (fs::exists(base / "srp-cfg" / "presets" / presetId)) {
-        return base / "srp-cfg" / "presets" / presetId;
-    }
-    if (fs::exists(base / "presets" / presetId)) {
-        return base / "presets" / presetId;
-    }
-    return base / "srp-cfg" / "presets" / presetId;
+    if (fs::is_directory(base / "srp-cfg")) base /= "srp-cfg";
+    const auto directory=presetDirectory(presetId,base);
+    return directory.empty()?fs::path():base/fs::u8path(directory);
 }
 
 fs::path resolveInstalledPresetDir(const std::string& presetId, const std::string& gameCfgDir) {
     if (gameCfgDir.empty()) return {};
-    return fs::u8path(gameCfgDir) / "srp-cfg" / "presets" / presetId;
+    const auto directory = presetDirectory(presetId,fs::u8path(findSourceConfigDir())/"srp-cfg");
+    return directory.empty()?fs::path():fs::u8path(gameCfgDir)/"srp-cfg"/fs::u8path(directory);
 }
 
 fs::path resolveCustomCfgPath(const std::string& gameCfgDir, const std::string& sourceConfigDir) {
@@ -82,28 +84,16 @@ fs::path resolveCustomCfgPath(const std::string& gameCfgDir, const std::string& 
 std::vector<PresetInfo> scanPresets(const std::string& gameCfgDir, const std::string& sourceConfigDir) {
     std::vector<PresetInfo> list;
 
-    // 默认内置的官方四大预设基准
-    static const struct {
-        const char* id;
-        const char* name;
-        const char* cmd;
-    } kBuiltins[] = {
-        {"default", "Default", "srp_apply_default"},
-        {"echo", "Echo", "srp_apply_echo"},
-        {"visionl", "VisionL", "srp_apply_visionl"},
-        {"yszh", "Yszh", "srp_apply_yszh"}
-    };
-
-    for (const auto& b : kBuiltins) {
-        PresetInfo info;
-        info.id = b.id;
-        info.displayName = b.name;
-        info.command = b.cmd;
-        info.hasDiff = isPresetFileModified(b.id, "settings.cfg", gameCfgDir, sourceConfigDir)
-                    || isPresetFileModified(b.id, "keymap.cfg", gameCfgDir, sourceConfigDir);
-        list.push_back(info);
+    std::string root = sourceConfigDir.empty() ? findSourceConfigDir() : sourceConfigDir;
+    fs::path base = fs::u8path(root);
+    if (fs::is_directory(base / "srp-cfg")) base /= "srp-cfg";
+    for (const auto& e : configCatalog("srp-cfg",base.u8string())) {
+        if (e.category != "presets") continue;
+        PresetInfo info; info.id=e.id; info.displayName=e.name; info.command=e.command;
+        info.descriptionZh=e.descriptionZh;info.descriptionEn=e.descriptionEn;info.files=e.files;info.tagsZh=e.tagsZh;info.tagsEn=e.tagsEn;
+        for (const auto& file : e.files) info.hasDiff = info.hasDiff || isPresetFileModified(e.id,file,gameCfgDir,sourceConfigDir);
+        list.push_back(std::move(info));
     }
-
     return list;
 }
 
@@ -126,11 +116,16 @@ std::string resolvePresetFilePath(const std::string& presetId, const std::string
     if (fileName == "user/custom.cfg" || fileName == "custom.cfg") {
         return resolveCustomCfgPath(gameCfgDir, sourceConfigDir).u8string();
     }
+    const auto sourceDirectory=resolveSourcePresetDir(presetId,sourceConfigDir);
+    fs::path catalogRoot = sourceConfigDir.empty() ? fs::u8path(findSourceConfigDir()) : fs::u8path(sourceConfigDir);
+    if(fs::is_directory(catalogRoot/"srp-cfg"))catalogRoot/="srp-cfg";
+    const auto entryDirectory=presetDirectory(presetId,catalogRoot);
+    if(sourceDirectory.empty() || !catalogFileAllowed("srp-cfg",entryDirectory+"/"+fileName,catalogRoot.u8string())) return {};
     if (!gameCfgDir.empty()) {
         fs::path installed = resolveInstalledPresetDir(presetId, gameCfgDir) / fileName;
         if (fs::is_regular_file(installed)) return installed.u8string();
     }
-    return (resolveSourcePresetDir(presetId, sourceConfigDir) / fileName).u8string();
+    return (sourceDirectory / fs::u8path(fileName)).u8string();
 }
 
 std::string readPresetFile(const std::string& presetId, const std::string& fileName,
@@ -145,9 +140,10 @@ bool savePresetFile(const std::string& presetId, const std::string& fileName,
     if (fileName == "user/custom.cfg" || fileName == "custom.cfg") {
         target /= "user/custom.cfg";
     } else {
-        if (fileName != "settings.cfg" && fileName != "keymap.cfg") return false;
-        if (presetId != "default" && presetId != "echo" && presetId != "visionl" && presetId != "yszh") return false;
-        target /= fs::path("presets") / presetId / fileName;
+        const auto root = fs::u8path(findSourceConfigDir()) / "srp-cfg";
+        const auto directory=presetDirectory(presetId,root);
+        if (directory.empty() || !catalogFileAllowed("srp-cfg",directory+"/"+fileName,root.u8string())) return false;
+        target /= fs::u8path(directory) / fs::u8path(fileName);
     }
     return writeConfigWithBackup(target.u8string(), content, "editor-save").success;
 }
@@ -161,7 +157,9 @@ bool resetPresetFileToDefault(const std::string& presetId, const std::string& fi
         std::string defaultContent = readFileContent(sourcePath);
         return savePresetFile(presetId, fileName, defaultContent, gameCfgDir);
     }
-    fs::path sourcePath = resolveSourcePresetDir(presetId, sourceConfigDir) / fileName;
+    const auto resolved = resolvePresetFilePath(presetId,fileName,"",sourceConfigDir);
+    if (resolved.empty()) return false;
+    fs::path sourcePath = fs::u8path(resolved);
     if (!fs::exists(sourcePath)) {
         return false;
     }
@@ -181,7 +179,9 @@ bool isPresetFileModified(const std::string& presetId, const std::string& fileNa
         std::string installedText = normalizeLineEndings(readFileContent(installedPath));
         return sourceText != installedText;
     }
-    fs::path sourcePath = resolveSourcePresetDir(presetId, sourceConfigDir) / fileName;
+    const auto resolved = resolvePresetFilePath(presetId,fileName,"",sourceConfigDir);
+    if (resolved.empty()) return false;
+    fs::path sourcePath = fs::u8path(resolved);
     if (!fs::exists(sourcePath)) return false;
 
     fs::path installedPath = resolveInstalledPresetDir(presetId, gameCfgDir) / fileName;

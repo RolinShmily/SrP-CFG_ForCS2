@@ -66,12 +66,13 @@ bool replaceFile(const fs::path& from, const fs::path& to) {
 #endif
 }
 }
-ConfigWriteResult writeConfigWithBackup(const std::string& filePath,
-    const std::string& content, const std::string& reason) {
+static ConfigWriteResult writeConfigImpl(const std::string& filePath,
+    const std::string& content, const std::string& reason, bool removing) {
     if (filePath.empty()) return {false, false, "Empty file path"};
     try {
         const fs::path path = fs::u8path(filePath);
         const bool exists = fs::exists(path);
+        if (removing && !exists) return {true, false, {}};
         std::string previous;
         if (exists) {
             if (!fs::is_regular_file(path)) return {false, false, "Target is not a regular file"};
@@ -79,12 +80,12 @@ ConfigWriteResult writeConfigWithBackup(const std::string& filePath,
             if (!in) return {false, false, "Cannot read current file"};
             previous.assign(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
             if (in.bad()) return {false, false, "Cannot read current file"};
-            if (previous == content) return {true, false, {}};
+            if (!removing && previous == content) return {true, false, {}};
         }
         fs::create_directories(path.parent_path());
         const auto stamp = uniqueStamp();
         TempFile staged{path.parent_path() / fs::u8path("." + path.filename().u8string() + "." + stamp + ".tmp")};
-        if (!writeBytes(staged.path, content)) return {false, false, "Cannot write temporary file"};
+        if (!removing && !writeBytes(staged.path, content)) return {false, false, "Cannot write temporary file"};
         const fs::path history = path.parent_path() / ".backups" / path.filename();
         const fs::path latest = fs::u8path(filePath + ".bak");
         TempFile previousBackup{fs::u8path(filePath + ".bak." + stamp + ".previous.tmp")};
@@ -108,7 +109,7 @@ ConfigWriteResult writeConfigWithBackup(const std::string& filePath,
                 return {false, false, "Cannot replace latest backup"};
             }
         }
-        if (!replaceFile(staged.path, path)) {
+        if (!(removing ? replaceFile(path, staged.path) : replaceFile(staged.path, path))) {
 #if defined(_WIN32)
             const DWORD replaceError = GetLastError();
 #endif
@@ -149,5 +150,11 @@ ConfigWriteResult writeConfigWithBackup(const std::string& filePath,
     } catch (const fs::filesystem_error& error) {
         return {false, false, error.what()};
     }
+}
+ConfigWriteResult writeConfigWithBackup(const std::string& filePath, const std::string& content, const std::string& reason) {
+    return writeConfigImpl(filePath, content, reason, false);
+}
+ConfigWriteResult removeConfigWithBackup(const std::string& filePath, const std::string& reason) {
+    return writeConfigImpl(filePath, {}, reason, true);
 }
 }

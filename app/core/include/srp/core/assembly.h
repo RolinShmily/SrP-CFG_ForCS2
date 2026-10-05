@@ -5,10 +5,11 @@
 
 namespace srp::core {
 struct AssemblyModule {
-    std::string id, name, category, command;
-    std::string directory() const { return category + "/" + id; }
+    std::string id, name, category, command, keymapCommand, relativeDirectory;
+    std::vector<std::string> files;
+    std::string directory() const { return relativeDirectory; }
 };
-const std::vector<AssemblyModule>& assemblyModules();
+std::vector<AssemblyModule> assemblyModules();
 struct ModuleAssemblyState {
     bool settings = false, keymap = false;
     std::vector<std::string> launchKeys;

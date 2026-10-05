@@ -11,4 +11,5 @@ struct ConfigWriteResult {
 // A no-op does not alter backups. Failed writes leave the target intact.
 ConfigWriteResult writeConfigWithBackup(const std::string& filePath,
     const std::string& content, const std::string& reason);
+ConfigWriteResult removeConfigWithBackup(const std::string& filePath, const std::string& reason);
 }

@@ -1,5 +1,7 @@
 #include "srp/core/assembly.h"
 #include "srp/core/actions.h"
+#include "srp/core/catalog.h"
+#include <optional>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -70,9 +72,8 @@ std::vector<Command> commands(const std::string& text) {
 std::string preset(const Command& cmd) {
     if (cmd.words.size() != 1) return {};
     const auto& word = cmd.words[0];
-    for (const std::string id : {"default", "echo", "visionl", "yszh"}) {
-        if (word == "srp_apply_" + id) return id;
-    }
+    for (const auto& e : configCatalog("srp-cfg")) if (e.category == "presets" && word == lower(e.command)) return e.id;
+    if (word.rfind("srp_apply_",0) == 0 && catalogIdentifier(word.substr(10))) return word.substr(10);
     return {};
 }
 int valve(const Command& cmd) {
@@ -95,19 +96,23 @@ bool read(const fs::path& path, std::string& out) {
     out.assign(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
     return !in.bad();
 }
-const AssemblyModule* module(const std::string& id) {
-    for (const auto& entry : assemblyModules()) if (entry.id == id) return &entry;
-    return nullptr;
+std::optional<AssemblyModule> module(const std::string& id) {
+    for (const auto& entry : assemblyModules()) if (entry.id == id) return entry;
+    return {};
+}
+bool available(const AssemblyModule& entry,const std::string& dir,bool keys) {
+    CatalogEntry e;e.id=entry.id;e.category=entry.category;e.directory=entry.directory();e.command=entry.command;e.keymapCommand=entry.keymapCommand;
+    return catalogEntryAvailable(e,(fs::u8path(dir)/"srp-cfg").u8string(),keys);
 }
 int moduleCommand(const Command& cmd, const AssemblyModule& entry) {
     if (cmd.words.size() == 1) {
-        if (cmd.words[0] == entry.command) return 1;
-        if (cmd.words[0] == entry.command + "_keys") return 3;
+        if (cmd.words[0] == lower(entry.command)) return 1;
+        if (!entry.keymapCommand.empty() && cmd.words[0] == lower(entry.keymapCommand)) return 3;
     }
     if (cmd.words.size() == 2 && (cmd.words[0] == "exec" || cmd.words[0] == "execifexists")) {
         std::string path = cmd.words[1];
         std::replace(path.begin(), path.end(), '\\', '/');
-        const auto base = "srp-cfg/" + entry.directory() + "/";
+        const auto base = "srp-cfg/" + lower(entry.directory()) + "/";
         if (path == base + "settings.cfg") return 1;
         if (path == base + "keymap.cfg") return 2;
         if (path == base + "with-keymap.cfg") return 3;
@@ -116,10 +121,8 @@ int moduleCommand(const Command& cmd, const AssemblyModule& entry) {
 }
 bool allowed(const std::string& path) {
     if (path == "user/custom.cfg" || path == "valve/settings.cfg" || path == "valve/keymap.cfg") return true;
-    for (const auto& entry : assemblyModules()) {
-        if (path == entry.directory() + "/settings.cfg" || path == entry.directory() + "/keymap.cfg") return true;
-    }
-    return false;
+    const auto root = findSourceConfigDir();
+    return catalogFileAllowed("srp-cfg",path,(fs::u8path(root)/"srp-cfg").u8string());
 }
 fs::path sourceRoot(const std::string& dir) {
     const std::string source = dir.empty() ? findSourceConfigDir() : dir;
@@ -254,19 +257,11 @@ ConfigWriteResult change(const std::string& dir, bool settings, bool keymap, boo
         add ? "assemble-valve" : "unload-valve");
 }
 }
-const std::vector<AssemblyModule>& assemblyModules() {
-    static const std::vector<AssemblyModule> modules = {
-        {"autoview", "AutoView", "features", "srp_autoview"},
-        {"crosshair-view", "Crosshair-View", "features", "srp_crosshair_view"},
-        {"knife", "Knife", "features", "srp_knife"},
-        {"zeus", "Zeus", "features", "srp_zeus"},
-        {"demo-hlae", "Demo-HLAE", "modes", "srp_demo"},
-        {"guidemake", "GuideMake", "modes", "srp_guidemake"},
-        {"practice", "Practice", "modes", "srp_practice"},
-        {"preview", "Preview", "modes", "srp_preview"},
-        {"pwa-prac", "PWA-Prac", "modes", "srp_pwa_prac"}
-    };
-    return modules;
+std::vector<AssemblyModule> assemblyModules() {
+    std::vector<AssemblyModule> result;
+    for (const auto& e : configCatalog("srp-cfg")) if (e.category == "features" || e.category == "modes")
+        result.push_back({e.id,e.name,e.category,e.command,e.keymapCommand,e.directory,e.files});
+    return result;
 }
 bool isValidLaunchKey(const std::string& key) {
     const auto value = lower(key);
@@ -281,7 +276,7 @@ bool isValidLaunchKey(const std::string& key) {
 }
 ModuleAssemblyState inspectModuleAssembly(const std::string& dir, const std::string& id) {
     ModuleAssemblyState state;
-    const auto* entry = module(id);
+    const auto entry = module(id);
     std::string content;
     if (!entry || dir.empty() || !read(fs::u8path(dir) / "srp-cfg/user/custom.cfg", content)) return state;
     std::map<std::string, Command> bindings;
@@ -307,18 +302,20 @@ ModuleAssemblyState inspectModuleAssembly(const std::string& dir, const std::str
     return state;
 }
 ConfigWriteResult assembleFeature(const std::string& dir, const std::string& id, bool keys) {
-    const auto* entry = module(id);
+    const auto entry = module(id);
     if (!entry || entry->category != "features") return {false, false, "Unknown feature"};
+    if (keys && entry->keymapCommand.empty()) return {false,false,"assembly.no_keymap"};
+    if(!available(*entry,dir,keys))return {false,false,"assembly.needs_deploy"};
     std::string content;
     if (!readCustom(dir, content)) return {false, false, "Cannot read installed custom.cfg"};
     const auto state = inspectModuleAssembly(dir, id);
     if (state.settings && state.keymap == keys) return {true, false, {}};
     return writeConfigWithBackup((fs::u8path(dir) / "srp-cfg/user/custom.cfg").u8string(),
         transformCommands(content, [&](const Command& cmd) { return moduleCommand(cmd, *entry) != 0; },
-            entry->command + (keys ? "_keys\n" : "\n"), true), "assemble-feature");
+            (keys ? entry->keymapCommand : entry->command) + "\n", true), "assemble-feature");
 }
 ConfigWriteResult unloadFeature(const std::string& dir, const std::string& id) {
-    const auto* entry = module(id);
+    const auto entry = module(id);
     if (!entry || entry->category != "features") return {false, false, "Unknown feature"};
     std::string content;
     if (!readCustom(dir, content)) return {false, false, "Cannot read installed custom.cfg"};
@@ -327,15 +324,18 @@ ConfigWriteResult unloadFeature(const std::string& dir, const std::string& id) {
 }
 ModeBindingPlan planModeBinding(const std::string& dir, const std::string& id, const std::string& inputKey, bool keys) {
     ModeBindingPlan plan;
-    const auto* entry = module(id);
+    const auto entry = module(id);
     const auto key = lower(inputKey);
     if (!entry || entry->category != "modes" || !isValidLaunchKey(key)) { plan.error = "assembly.invalid_key"; return plan; }
+    if(!available(*entry,dir,keys)){plan.error="assembly.needs_deploy";return plan;}
     if (!readCustom(dir, plan.originalContent)) { plan.error = "valve.write_failed"; return plan; }
     const auto list = commands(plan.originalContent);
     // Resolve inherited preset/feature keymaps for a meaningful conflict preview.
     const auto presetId = inspect(plan.originalContent).activePresetId;
     std::string inherited;
-    if (!presetId.empty() && read(fs::u8path(dir) / "srp-cfg/presets" / presetId / "keymap.cfg", inherited)) {
+    std::string presetDirectory;
+    for(const auto& e : configCatalog("srp-cfg"))if(e.category=="presets"&&e.id==presetId)presetDirectory=e.directory;
+    if (!presetDirectory.empty() && read(fs::u8path(dir) / "srp-cfg" / presetDirectory / "keymap.cfg", inherited)) {
         for (const auto& cmd : commands(inherited)) {
             if (cmd.words.size() == 3 && cmd.words[0] == "bind" && cmd.words[1] == key) plan.previousCommand = cmd.rawWords[2];
         }
@@ -362,7 +362,8 @@ ModeBindingPlan planModeBinding(const std::string& dir, const std::string& id, c
             plan.previousCommand = cmd.rawWords[2];
         }
     }
-    plan.newCommand = entry->command + (keys ? "_keys" : "");
+    if (keys && entry->keymapCommand.empty()) { plan.error = "assembly.no_keymap"; return plan; }
+    plan.newCommand = keys ? entry->keymapCommand : entry->command;
     plan.needsConfirmation = !plan.previousCommand.empty() && plan.previousCommand != plan.newCommand;
     if (std::any_of(list.begin(), list.end(), [&](const Command& cmd) { return moduleCommand(cmd, *entry) != 0; })) {
         plan.needsConfirmation = true; // Migrating legacy startup execution must be explicit.
@@ -401,7 +402,7 @@ ConfigWriteResult applyModeBinding(const std::string& dir, const ModeBindingPlan
     return writeConfigWithBackup((fs::u8path(dir) / "srp-cfg/user/custom.cfg").u8string(), plan.newContent, "bind-mode");
 }
 ConfigWriteResult removeModeBinding(const std::string& dir, const std::string& id) {
-    const auto* entry = module(id);
+    const auto entry = module(id);
     if (!entry || entry->category != "modes") return {false, false, "Unknown mode"};
     std::string content;
     if (!readCustom(dir, content)) return {false, false, "valve.write_failed"};
@@ -429,8 +430,14 @@ ConfigWriteResult disassembleValve(const std::string& dir, bool settings, bool k
     return change(dir, settings, keymap, false);
 }
 ConfigWriteResult setPresetEntry(const std::string& dir, const std::string& id) {
-    if (id != "default" && id != "echo" && id != "visionl" && id != "yszh" && !id.empty())
-        return {false, false, "Unknown preset"};
+    std::string entryCommand;
+    if (!id.empty()) {
+        for (const auto& e : configCatalog("srp-cfg")) if (e.category == "presets" && e.id == id) {
+            if(!catalogEntryAvailable(e,(fs::u8path(dir)/"srp-cfg").u8string()))return {false,false,"assembly.needs_deploy"};
+            entryCommand = e.command;
+        }
+        if (entryCommand.empty()) return {false,false,"Unknown preset"};
+    }
     if (!isSrpInstalled(dir)) return {false, false, "SrP-CFG is not installed"};
     const fs::path path = fs::u8path(dir) / "srp-cfg/user/custom.cfg";
     std::string content;
@@ -438,7 +445,7 @@ ConfigWriteResult setPresetEntry(const std::string& dir, const std::string& id) 
     const auto state = inspect(content);
     if (state.activePresetId == id && (id.empty() || (!state.settings && !state.keymap))) return {true, false, {}};
     return writeConfigWithBackup(path.u8string(), transform(content, !id.empty(), true,
-        id.empty() ? "" : "srp_apply_" + id + "\n"), id.empty() ? "unload-preset" : "load-preset");
+        id.empty() ? "" : entryCommand + "\n"), id.empty() ? "unload-preset" : "load-preset");
 }
 std::string resolveAssemblyFilePath(const std::string& rel, const std::string& dir, const std::string& source) {
     if (!allowed(rel)) return {};

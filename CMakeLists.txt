@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
-project(srp_root VERSION 3.4.0 LANGUAGES CXX)
+set(SRP_APP_VERSION "3.4.0" CACHE STRING "Application release version")
+if(NOT SRP_APP_VERSION MATCHES "^[0-9]+[.][0-9]+[.][0-9]+$")
+    message(FATAL_ERROR "SRP_APP_VERSION must be a stable major.minor.patch version")
+endif()
+project(srp_root VERSION ${SRP_APP_VERSION} LANGUAGES CXX)
 
 # 自动探测 Windows 下的 Qt6 安装路径
 if(NOT Qt6_FOUND AND NOT CMAKE_PREFIX_PATH)
