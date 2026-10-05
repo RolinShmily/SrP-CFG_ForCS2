@@ -1,0 +1,14 @@
+# Static-only Worker: Next.js export and independent configuration archives.
+name = "srp-cfg"
+compatibility_date = "2026-10-06"
+workers_dev = true
+preview_urls = false
+
+[[routes]]
+pattern = "cfg.srprolin.top"
+custom_domain = true
+
+[assets]
+directory = "./website/out"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"

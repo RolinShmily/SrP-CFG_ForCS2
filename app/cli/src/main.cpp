@@ -46,7 +46,7 @@ void printHelp() {
     std::cout << "  version            Show application version\n";
     std::cout << "  app-update-check   Check software Release (no download or install)\n";
     std::cout << "  packages           List staged package versions\n";
-    std::cout << "  packages-check     Fetch gh-pages manifest\n";
+    std::cout << "  packages-check     Fetch official configuration manifest\n";
     std::cout << "  package-update <id> Update staged package (never deploys)\n";
     std::cout << "  package-reset <id> --file <relative> Restore staged default\n";
     std::cout << "  video-status       Inspect staged video fields\n";

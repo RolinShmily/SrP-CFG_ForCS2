@@ -53,7 +53,7 @@ export function parsePackageManifest(value: unknown): PackageManifest {
     if (!entry || typeof entry.version !== "string" || !/^\d+\.\d+\.\d+$/.test(entry.version) || typeof entry.url !== "string") continue;
     try {
       const url = new URL(entry.url);
-      if (url.origin !== "https://rolinshmily.github.io" || !url.pathname.startsWith(`/SrP-CFG_ForCS2/packages/${id}-`) || !url.pathname.endsWith(".zip") || url.search || url.hash) continue;
+      if (url.origin !== "https://cfg.srprolin.top" || url.username || url.password || !url.pathname.startsWith(`/packages/${id}-`) || !url.pathname.endsWith(".zip") || url.search || url.hash) continue;
       const hash = checksum(entry.sha256), bytes = size(entry.size);
       if (hash && bytes) result[id] = { version: entry.version, url: entry.url, sha256: hash, size: bytes };
     } catch (error) { if (!(error instanceof TypeError)) throw error; }

@@ -11,7 +11,7 @@ const stack = [
   { name: "Radix UI", url: "https://www.radix-ui.com", icon: Component },
   { name: "Lucide", url: "https://lucide.dev", icon: Shapes },
   { name: "Motion", url: "https://motion.dev", icon: Activity },
-  { name: "GitHub Pages", url: "https://pages.github.com", icon: Globe2 },
+  { name: "Cloudflare Workers", url: "https://workers.cloudflare.com", icon: Globe2 },
 ];
 
 export function Footer() {

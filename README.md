@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/ci.yml?branch=main&label=CI)](https://github.com/RolinShmily/SrP-CFG_ForCS2/actions)
-[![Deploy Pages](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-pages.yml?branch=main&label=gh-pages)](https://rolinshmily.github.io/SrP-CFG_ForCS2/)
+[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.top)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-brightgreen.svg)](#)
 
 [English](README.md) | [简体中文](README.zh-CN.md)
@@ -82,7 +82,7 @@ SrP-CFG_ForCS2/
 
 ### Option 1: Desktop Workspace (Recommended)
 
-1. Download the installer (`setup.exe`) or portable archive (`gui.zip`) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Official Website](https://rolinshmily.github.io/SrP-CFG_ForCS2/).
+1. Download the installer (`setup.exe`) or portable archive (`gui.zip`) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Official Website](https://cfg.srprolin.top/).
 2. Launch **SrP-CFG**; the application automatically detects Steam, CS2, and active accounts.
 3. Initialize in **Overview**, configure modules in **Presets** or **Free Assembly**, and fine-tune `custom.cfg` in the integrated code editor.
 

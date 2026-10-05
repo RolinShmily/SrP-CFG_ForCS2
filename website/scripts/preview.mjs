@@ -20,7 +20,7 @@ const server = createServer(async(req,res)=>{
     catch(error){
       if(error.code==='ENOENT' && pathname==='/packages.json'){
         // Local preview only: CI generates the real same-origin manifest before building.
-        const response=await fetch('https://rolinshmily.github.io/SrP-CFG_ForCS2/packages.json',{signal:AbortSignal.timeout(10000)});
+        const response=await fetch('https://cfg.srprolin.top/packages.json',{signal:AbortSignal.timeout(10000)});
         if(!response.ok)throw new Error(`Package manifest: HTTP ${response.status}`);
         const body=await response.text();if(body.length>262144)throw new Error('Manifest size limit');
         res.writeHead(200,{'Content-Type':types['.json']});res.end(body);return;

@@ -209,7 +209,7 @@ ConfigWriteResult promote(const std::map<std::string, fs::path>& replacements, c
 }
 using detail::JsonParser;
 bool allowedUrl(const std::string& url) {
-    const std::string prefix = "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/";
+    const std::string prefix = "https://cfg.srprolin.top/packages/";
     return url.rfind(prefix, 0) == 0 && safeRelative(url.substr(prefix.size())) && url.find_first_of("?#") == std::string::npos;
 }
 #if defined(_WIN32)
@@ -379,7 +379,7 @@ ConfigWriteResult resetPackageFile(const std::string& id, const std::string& rel
     } catch (const fs::filesystem_error&) { return {false, false, "pkg.write_failed"}; }
       catch (const std::runtime_error& e) { return {false, false, e.what()}; }
 }
-std::string packageManifestUrl() { return "https://rolinshmily.github.io/SrP-CFG_ForCS2/packages.json"; }
+std::string packageManifestUrl() { return "https://cfg.srprolin.top/packages.json"; }
 bool parsePackageManifest(const std::string& json, std::vector<ConfigPackage>& packages, std::string& error) {
     try {
         if (json.size() > 256 * 1024) throw std::runtime_error("pkg.invalid_manifest");

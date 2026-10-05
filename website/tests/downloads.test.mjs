@@ -25,11 +25,11 @@ test('download source is explicit and portable prefixes the whole release URL',(
  assert.equal(softwareUrl(gui,'mirror'),'https://gh.269601.xyz/'+gui);
  assert.equal(softwareUrl(setup,'github'),setup);
 });
-test('configuration packages keep independent versions, checksums and trusted gh-pages paths',()=>{
- const entry={version:'3.4.0',sha256:'b'.repeat(64),size:4200,url:'https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v3.4.0-test.zip'};
+test('configuration packages keep independent versions, checksums and trusted Worker paths',()=>{
+ const entry={version:'3.4.0',sha256:'b'.repeat(64),size:4200,url:'https://cfg.srprolin.top/packages/video-v3.4.0-test.zip'};
  const manifest={schema_version:1,packages:{video:entry}};
  assert.equal(parsePackageManifest(manifest).video?.version,'3.4.0');
- for(const update of [{url:'https://evil.example/video.zip'},{sha256:'bad'},{size:-1},{url:entry.url+'?redirect=evil'},{url:entry.url.replace('video-','annotations-')}])assert.equal(parsePackageManifest({...manifest,packages:{video:{...entry,...update}}}).video,undefined);
+ for(const update of [{url:'https://evil.example/video.zip'},{url:'https://user:pass@cfg.srprolin.top/packages/video-v3.4.0-test.zip'},{url:'https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v3.4.0-test.zip'},{sha256:'bad'},{size:-1},{url:entry.url+'?redirect=evil'},{url:entry.url.replace('video-','annotations-')}])assert.equal(parsePackageManifest({...manifest,packages:{video:{...entry,...update}}}).video,undefined);
  assert.deepEqual(parsePackageManifest({...manifest,schema_version:2}),{});
 });
 test('small downloads are shown in KB and asset paths honor static subpaths',()=>{

@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/ci.yml?branch=main&label=CI)](https://github.com/RolinShmily/SrP-CFG_ForCS2/actions)
-[![Deploy Pages](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-pages.yml?branch=main&label=gh-pages)](https://rolinshmily.github.io/SrP-CFG_ForCS2/)
+[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.top)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-brightgreen.svg)](#)
 
 [简体中文](README.zh-CN.md) | [English](README.md)
@@ -82,7 +82,7 @@ SrP-CFG_ForCS2/
 
 ### 方式 1：使用桌面工作台（推荐）
 
-1. 前往 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或 [官方网站](https://rolinshmily.github.io/SrP-CFG_ForCS2/) 下载安装版 (`setup.exe`) 或免安装绿色便携版 (`gui.zip`)。
+1. 前往 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或 [官方网站](https://cfg.srprolin.top/) 下载安装版 (`setup.exe`) 或免安装绿色便携版 (`gui.zip`)。
 2. 启动 **SrP-CFG**，程序将自动识别 Steam、CS2 路径以及活跃用户。
 3. 在**总览**中完成初始化装配；在**预设包**或**自由装配**中定制功能；在右侧固定代码编辑器中即时微调 `custom.cfg`。
 

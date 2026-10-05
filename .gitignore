@@ -8,6 +8,7 @@ CMakeUserPresets.json
 # Dependencies and build/release outputs
 node_modules/
 .pnpm-store/
+.wrangler/
 build/
 build-*/
 dist/

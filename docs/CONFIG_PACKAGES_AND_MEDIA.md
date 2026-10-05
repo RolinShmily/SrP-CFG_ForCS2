@@ -30,7 +30,7 @@ CLI 与 GUI 均可传入 `--store <path>` 使用独立暂存区。安装目录�
 
 ## 在线更新
 
-读取 `https://rolinshmily.github.io/SrP-CFG_ForCS2/packages.json`（schema 1）。只接受已知三个包和指定 Pages 路径的 HTTPS 下载；验证版本、大小和 SHA-256。大小限制为 ZIP 16 MiB、解包总量 64 MiB、单文件 16 MiB、最多 5000 条目。拒绝绝对/越界路径、Windows 非法名称、链接及大小写重复路径。
+读取 Cloudflare Worker 上的 `https://cfg.srprolin.top/packages.json`（schema 1）。只接受已知三个包和官网 `/packages/` 路径的 HTTPS 下载；验证版本、大小和 SHA-256。大小限制为 ZIP 16 MiB、解包总量 64 MiB、单文件 16 MiB、最多 5000 条目。拒绝绝对/越界路径、Windows 非法名称、链接及大小写重复路径。
 
 Windows 网络使用 WinHTTP，哈希使用 BCrypt；解包通过系统 Windows PowerShell/.NET 执行应用生成的校验脚本，配置包本身不提供可执行脚本。当前在线更新只实现 Windows 平台。
 
@@ -43,7 +43,7 @@ Windows 网络使用 WinHTTP，哈希使用 BCrypt；解包通过系统 Windows 
 - 更新只修改暂存区，绝不自动部署到游戏。
 - 内容 SHA-256 也参与更新判断，同版本不同内容可更新，相同哈希不重复导入。
 
-Pages 工作流继续生成版本 ZIP、latest ZIP，并将清单下载 URL 改为带 SHA 的内容文件名，避免清单与 mutable latest ZIP 错配。此次代码未发布到 Pages，现有线上 latest URL 仍兼容客户端。
+Worker 工作流生成版本 ZIP、latest ZIP，清单下载 URL 使用带 SHA 的内容文件名，避免清单与 mutable latest ZIP 错配。网站与包一起静态部署，不再依赖 gh-pages 分支。旧软件包中的 Pages 地址不会自动改变，需下载安装包含官网地址迁移的新构建。
 
 ## SrP-CFG 接入
 
@@ -114,7 +114,7 @@ srp annotation-remove mirage --annotations-dir <annotations/local>
 - `srp_media_tests`：临时目录验证初始化、更新保留/刷新、原始包不变、旧基准、失败发布回滚、视频字段合并、BOM/CRLF、缺失账号文件拒绝、KV3 地图校验、选择性移除和 Windows 占用失败保护。
 - `srp_config_tests`：既有装配、模式绑定、备份、首页恢复回归。
 - 真实 QML harness：鼠标选项、文本双向同步、保存、更新保留草稿、外部替换/冲突、地图选择/装配/移除、复制命令、固定编辑器、缩放、中英文/深色、异步真实下载且 UI 仍响应。
-- CLI 真实 gh-pages 下载/校验/导入，所有写入隔离暂存/账号/指南目录。
+- CLI 在线下载/校验/导入，所有写入隔离暂存/账号/指南目录。
 - 受控 ZIP：正常、路径越界、反斜杠、绝对路径、符号链接、大小写重复、坏哈希。
 - 正式 GUI 预览：两页亮/暗、中/英、980×640 最小窗口、1920×1080 宽屏及首页。
 

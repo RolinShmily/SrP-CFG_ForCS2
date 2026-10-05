@@ -97,9 +97,10 @@ int main(int argc,char** argv){
 #endif
   std::vector<srp::core::ConfigPackage> packages;std::string error;
   std::string manifest="{\"schema_version\":1,\"packages\":{";
-  for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"version\":\"3.4.0\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/"+id+"-latest.zip\"}";}manifest+="}}";
+  for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"version\":\"3.4.0\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://cfg.srprolin.top/packages/"+id+"-latest.zip\"}";}manifest+="}}";
   require(srp::core::parsePackageManifest(manifest,packages,error)&&packages.size()==3,"manifest parses all three packages");
-  auto unsafe=manifest;unsafe.replace(unsafe.find("https://rolinshmily.github.io"),27,"https://attacker.invalid");
+  require(srp::core::packageManifestUrl()=="https://cfg.srprolin.top/packages.json","manifest uses official Worker domain");
+  auto unsafe=manifest;const std::string trusted="https://cfg.srprolin.top";unsafe.replace(unsafe.find(trusted),trusted.size(),"https://attacker.invalid");
   require(!srp::core::parsePackageManifest(unsafe,packages,error),"untrusted manifest host rejected");
   require(!srp::core::parsePackageManifest("{\"schema_version\":1,\"schema_version\":2}",packages,error),"duplicate manifest keys rejected");
   require(!srp::core::importPackageArchive({"video","3.4.0",std::string(64,'0'),"",100},target.u8string()).success,"archive mismatch rejected before extraction");

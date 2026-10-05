@@ -26,7 +26,7 @@
 
 发现新版后展示官网和 GitHub Releases 下载入口；不下载制品、不执行安装器、不替换程序、不退出当前软件。网络失败明确显示重试/官网下载提示。固定导航地址来自程序，清单不能改写目标链接。
 
-配置包更新继续使用独立 gh-pages packages.json，与软件 Release 检查无关。
+配置包更新使用官网 Cloudflare Worker 上的独立 packages.json，与软件 Release 检查无关。
 
 ## 版本与设置存储
 
