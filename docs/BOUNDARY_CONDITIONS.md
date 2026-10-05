@@ -46,19 +46,20 @@
 ---
 
 ## 5. 页面 7：cs2_video.txt 视频设置
+- **已落实**：见 [CONFIG_PACKAGES_AND_MEDIA.md](CONFIG_PACKAGES_AND_MEDIA.md)。暂存副本编辑与游戏应用分开；原始包和修改基准独立，应用合并已支持选项并保留硬件/未知字段，运行游戏时暂停应用。
 - **边界条件**：
   - CS2 显卡驱动与不同分辨率配置存在硬件差异（如 `setting.gpu_mem_level`）；直接拷贝不同机型的 `cs2_video.txt` 可能导致游戏闪退。
   - 初稿提供键值对解析与当前用户的读写应用，提供备份机制。
 - **待后续实现**：
-  - 自动保留用户的硬件特定键（如 `VendorID`, `DeviceID`），仅替换画质与渲染关键字段；
   - 提供职业选手预设（如 S1mple / Donk 画质配置）。
 
 ---
 
 ## 6. 页面 8：annotations 地图标注
+- **已落实**：见 [CONFIG_PACKAGES_AND_MEDIA.md](CONFIG_PACKAGES_AND_MEDIA.md)。四指南独立勾选部署、状态与范围分开，编辑暂存副本，卸载只删除选中的 SrP 文件且保留备份及个人指南。
 - **边界条件**：
-  - 游戏目录可能只读或受权限保护，目标路径为 `game/csgo/annotations/local/mapguide/<mapname>.txt`。
-  - 首次安装需自动创建 `annotations/local/mapguide` 目录。
+  - 游戏目录可能只读或受权限保护，目标路径为 `game/csgo/annotations/local/SrP-<Map>-Guide/SrP-<Map>-Guide.txt`。
+  - 首次部署按地图创建目录，保留个人 `mapguide/mapguide.txt`。
 - **待后续实现**：
   - 地图点位图文预览与点位快速查找；
   - 支持多套地图点位包并存与快速切换。
