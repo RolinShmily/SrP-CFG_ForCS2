@@ -25,6 +25,7 @@
 ---
 
 ## 3. 页面 3 & 4 & 5：自由装配 (ValveBaseline, Features, Modes)
+- **统一工作区已落实**：见 [ASSEMBLY_WORKSPACE.md](ASSEMBLY_WORKSPACE.md)。Valve、特性、模式、用户配置组成连续左侧内容，最右侧滚动条控制左侧，右侧编辑器固定。特性直接装配，模式配置启动键；不在启动时直接执行模式。Valve 细则见 [VALVE_ASSEMBLY.md](VALVE_ASSEMBLY.md)。
 - **边界条件**：
   - 各特性/模式在 `custom.cfg` 中生效依赖于执行链 (`exec`)。装配与卸载需要原子性修改 `custom.cfg`。
   - 特性或模式的 `keymap.cfg` 可能会互相覆盖按键；初稿状态提供装配状态查询与装配/卸载命令。
@@ -36,7 +37,7 @@
 
 ## 4. 页面 6：user/custom.cfg (全宽代码编辑器)
 - **边界条件**：
-  - 大文件加载与保存时的编码处理（确保严格 UTF-8 无 BOM 与 CRLF 保持）；
+  - 大文件加载与保存时的编码处理（UTF-8，保留原文件 BOM 和换行格式）；
   - 每次保存自动建立 `.bak` 副本，防止用户手滑清空配置。
 - **待后续实现**：
   - 完整的 Source Engine CFG / VCFG 语法高亮分词器（基于 QSyntaxHighlighter / QML TextEdit 增强）；
