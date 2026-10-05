@@ -35,6 +35,8 @@ qt_add_executable(srp_gui
     src/presets_controller.cpp
     src/cs2_cfg_highlighter.h
     src/cs2_cfg_highlighter.cpp
+    src/code_editor_gutter.h
+    src/code_editor_gutter.cpp
     ${GUI_RC_FILE}
 )
 
@@ -52,6 +54,7 @@ qt_add_qml_module(srp_gui
         qml/MetaTheme.qml
         qml/components/AppButton.qml
         qml/components/AppIcon.qml
+        qml/components/AppCodeEditor.qml
         qml/components/AppHeaderExtras.qml
         qml/components/AppSidebar.qml
         qml/pages/OverviewPage.qml

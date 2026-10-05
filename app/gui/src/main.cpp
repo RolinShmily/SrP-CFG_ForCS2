@@ -16,6 +16,7 @@
 #include "overview_controller.h"
 #include "presets_controller.h"
 #include "cs2_cfg_highlighter.h"
+#include "code_editor_gutter.h"
 
 void customLog(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     static std::ofstream logFile("srp_gui_debug.log", std::ios::app);
@@ -82,6 +83,8 @@ int main(int argc, char* argv[]) {
 
     QQmlApplicationEngine engine;
     HusApp::initialize(&engine);
+
+    qmlRegisterType<CodeEditorGutter>("SrPGui", 1, 0, "CodeEditorGutter");
 
     auto* overviewCtrl = new srp::gui::OverviewController(&app);
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "OverviewController", overviewCtrl);
