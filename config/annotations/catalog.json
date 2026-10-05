@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "dust2",
+      "name": "Dust II",
+      "directory": "SrP-Dust2-Guide",
+      "map": "de_dust2",
+      "files": [
+        "SrP-Dust2-Guide.txt"
+      ]
+    },
+    {
+      "id": "mirage",
+      "name": "Mirage",
+      "directory": "SrP-Mirage-Guide",
+      "map": "de_mirage",
+      "files": [
+        "SrP-Mirage-Guide.txt"
+      ]
+    },
+    {
+      "id": "ancient",
+      "name": "Ancient",
+      "directory": "SrP-Ancient-Guide",
+      "map": "de_ancient",
+      "files": [
+        "SrP-Ancient-Guide.txt"
+      ]
+    },
+    {
+      "id": "inferno",
+      "name": "Inferno",
+      "directory": "SrP-Inferno-Guide",
+      "map": "de_inferno",
+      "files": [
+        "SrP-Inferno-Guide.txt"
+      ]
+    }
+  ]
+}

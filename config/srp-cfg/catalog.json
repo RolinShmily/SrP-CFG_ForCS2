@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "default",
+      "name": "Default",
+      "category": "presets",
+      "directory": "presets/default",
+      "command": "srp_apply_default",
+      "description_zh": "标准平衡基线。包含准星、雷达及常用基础功能配置。",
+      "description_en": "Balanced baseline with crosshairs, radar and standard setup.",
+      "tags_zh": ["基础配置", "均衡"],
+      "tags_en": ["Baseline", "Balanced"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "apply.cfg"
+      ]
+    },
+    {
+      "id": "echo",
+      "name": "Echo",
+      "category": "presets",
+      "directory": "presets/echo",
+      "command": "srp_apply_echo",
+      "description_zh": "进阶竞技偏好，包含按键别名与实战映射。",
+      "description_en": "Competitive preferences with key aliases and practical bindings.",
+      "tags_zh": ["竞技偏好", "按键别名"],
+      "tags_en": ["Competitive", "Key aliases"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "apply.cfg"
+      ]
+    },
+    {
+      "id": "visionl",
+      "name": "VisionL",
+      "category": "presets",
+      "directory": "presets/visionl",
+      "command": "srp_apply_visionl",
+      "description_zh": "界面与视觉清晰度配置，调整 HUD、雷达与队友标识。",
+      "description_en": "Visual clarity settings for HUD, radar and teammate indicators.",
+      "tags_zh": ["HUD", "视觉清晰"],
+      "tags_en": ["HUD", "Visual clarity"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "apply.cfg"
+      ]
+    },
+    {
+      "id": "yszh",
+      "name": "Yszh",
+      "category": "presets",
+      "directory": "presets/yszh",
+      "command": "srp_apply_yszh",
+      "description_zh": "饮水致幻个人偏好配置，包含灵敏度、音频和投掷辅助。",
+      "description_en": "Yszh preferences with sensitivity, audio and grenade assistance.",
+      "tags_zh": ["个人偏好", "投掷辅助"],
+      "tags_en": ["Personal", "Grenade assistance"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "apply.cfg"
+      ]
+    },
+    {
+      "id": "autoview",
+      "name": "AutoView",
+      "category": "features",
+      "directory": "features/autoview",
+      "command": "srp_autoview",
+      "keymap_command": "srp_autoview_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "crosshair-view",
+      "name": "Crosshair-View",
+      "category": "features",
+      "directory": "features/crosshair-view",
+      "command": "srp_crosshair_view",
+      "keymap_command": "srp_crosshair_view_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "knife",
+      "name": "Knife",
+      "category": "features",
+      "directory": "features/knife",
+      "command": "srp_knife",
+      "keymap_command": "srp_knife_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "zeus",
+      "name": "Zeus",
+      "category": "features",
+      "directory": "features/zeus",
+      "command": "srp_zeus",
+      "keymap_command": "srp_zeus_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "demo-hlae",
+      "name": "Demo-HLAE",
+      "category": "modes",
+      "directory": "modes/demo-hlae",
+      "command": "srp_demo",
+      "keymap_command": "srp_demo_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "guidemake",
+      "name": "GuideMake",
+      "category": "modes",
+      "directory": "modes/guidemake",
+      "command": "srp_guidemake",
+      "keymap_command": "srp_guidemake_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "practice",
+      "name": "Practice",
+      "category": "modes",
+      "directory": "modes/practice",
+      "command": "srp_practice",
+      "keymap_command": "srp_practice_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "preview",
+      "name": "Preview",
+      "category": "modes",
+      "directory": "modes/preview",
+      "command": "srp_preview",
+      "keymap_command": "srp_preview_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "pwa-prac",
+      "name": "PWA-Prac",
+      "category": "modes",
+      "directory": "modes/pwa-prac",
+      "command": "srp_pwa_prac",
+      "keymap_command": "srp_pwa_prac_keys",
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    }
+  ]
+}
