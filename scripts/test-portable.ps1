@@ -1,6 +1,9 @@
 param([Parameter(Mandatory=$true)][string]$PackageDir, [Parameter(Mandatory=$true)][string]$Version)
 $ErrorActionPreference = 'Stop'
 $package = (Resolve-Path $PackageDir).Path
+foreach ($required in @('vcruntime140.dll', 'msvcp140.dll')) {
+    if (!(Test-Path (Join-Path $package $required))) { throw "Missing app-local MSVC runtime: $required" }
+}
 $temporary = Join-Path ([IO.Path]::GetTempPath()) ('srp-portable-' + [Guid]::NewGuid().ToString('N'))
 $oldPath = $env:PATH
 $oldImports = $env:QML2_IMPORT_PATH

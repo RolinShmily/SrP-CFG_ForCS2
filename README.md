@@ -1,7 +1,7 @@
-<h1 align=\"center\">SrP-CFG</h1>
-<h4 align=\"center\">Modular Counter-Strike 2 Configuration Workspace · Modern Qt Desktop Suite · Pure Open-Source Engine</h4>
+<h1 align="center">SrP-CFG</h1>
+<h4 align="center">Modular Counter-Strike 2 Configuration Workspace · Modern Qt Desktop Suite · Pure Open-Source Engine</h4>
 
-<div align=\"center\">
+<div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
@@ -116,7 +116,7 @@ srp annotation-deploy mirage
 | `srp_preview` | Activate inspect and skin preview environment | No |
 | `srp_demo` | Start DEMO / HLAE playback enhancement mode | No |
 | `srp_apply_default` | Apply official competitive preset | Yes |
-| `srp_apply_echo` / `visionl` / `yszh` | Apply popular community presets | Yes |
+| `srp_apply_echo` / `srp_apply_visionl` / `srp_apply_yszh` | Apply popular community presets | Yes |
 | `srp_reload` | Re-execute the `Runtime → User` boot chain immediately | Depends on custom.cfg |
 
 ---
@@ -126,7 +126,7 @@ srp annotation-deploy mirage
 ### Requirements
 - **C++ Compiler**: C++17 compatible compiler (MSVC 2022 on Windows, or GCC / Clang)
 - **CMake**: >= 3.21
-- **Qt 6**: >= 6.5 (required for desktop GUI: Core, Gui, Quick, QuickControls2, Concurrent)
+- **Qt 6**: >= 6.5 (desktop GUI needs Core, Gui, Quick, QuickControls2, Concurrent and ShaderTools, including private development headers)
 - **Node.js & pnpm**: Node >= 22, pnpm 11+ (required for official website)
 
 ### Building Core and CLI (No Qt Required)
@@ -138,6 +138,7 @@ ctest --preset core
 
 ### Building Full Desktop Application (Visual Studio 2022)
 ```bash
+git submodule update --init --recursive
 cmake --preset windows-msvc
 cmake --build --preset release-msvc
 # Launch the desktop client
@@ -147,7 +148,7 @@ run_gui.bat
 ### Running Website Local Preview
 ```bash
 cd website
-pnpm install
+pnpm install --frozen-lockfile --ignore-scripts
 pnpm test
 pnpm lint
 pnpm build

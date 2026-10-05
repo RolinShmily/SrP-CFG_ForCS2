@@ -1,7 +1,7 @@
-<h1 align=\"center\">SrP-CFG</h1>
-<h4 align=\"center\">模块化 Counter-Strike 2 配置工作台 · 现代 Qt 桌面套件 · 纯净开源引擎</h4>
+<h1 align="center">SrP-CFG</h1>
+<h4 align="center">模块化 Counter-Strike 2 配置工作台 · 现代 Qt 桌面套件 · 纯净开源引擎</h4>
 
-<div align=\"center\">
+<div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
@@ -70,7 +70,7 @@ SrP-CFG_ForCS2/
 
 ### 核心安全与防护特性
 
-1. **零注入 · 纯原生**：仅通过 CS2 原生 `+exec`、标准 `.cfg` 与 KV3 机制运作。**零 DLL 注入、零内存修改、零 Hook**，绝对安全。
+1. **零注入 · 纯原生**：仅通过 CS2 原生 `+exec`、标准 `.cfg` 与 KV3 机制运作。**零 DLL 注入、零内存修改、零 Hook**。配置兼容性仍随游戏版本变化。
 2. **多代快照与原子备份**：写入游戏或更新工作副本前，自动建立 `.bak` 并保留最多 20 份不同内容的去重历史备份，写入失败自动回滚。
 3. **暂存区事务机制**：配置包下载更新先落盘到用户可写暂存区（Original / Work），玩家手工微调的工作副本在包更新时受保护。
 4. **游戏运行安全互锁**：探测 CS2 进程状态，游戏运行时暂停画面配置写入，防止退出时被游戏覆盖。
@@ -116,7 +116,7 @@ srp annotation-deploy mirage
 | `srp_preview` | 激活检视与换肤预览环境 | 否 |
 | `srp_demo` | 启动 DEMO / HLAE 录像观战增强模式 | 否 |
 | `srp_apply_default` | 应用官方精选竞技预设 | 是 |
-| `srp_apply_echo` / `visionl` / `yszh` | 应用精选社区知名模板 | 是 |
+| `srp_apply_echo` / `srp_apply_visionl` / `srp_apply_yszh` | 应用精选社区知名模板 | 是 |
 | `srp_reload` | 重新执行 `Runtime → User` 启动链立即重载 | 视用户配置 |
 
 ---
@@ -126,7 +126,7 @@ srp annotation-deploy mirage
 ### 环境要求
 - **C++ 编译器**：支持 C++17 的 MSVC (Visual Studio 2022) 或 GCC / Clang
 - **CMake**：>= 3.21
-- **Qt 6**：>= 6.5 (桌面 GUI 需要，包含 Core, Gui, Quick, QuickControls2, Concurrent)
+- **Qt 6**：>= 6.5 (桌面 GUI 需要 Core、Gui、Quick、QuickControls2、Concurrent、ShaderTools 及私有开发头文件)
 - **Node.js & pnpm**：Node >= 22, pnpm 11+ (官方网站需要)
 
 ### 编译核心与命令行 (无需 Qt)
@@ -138,6 +138,7 @@ ctest --preset core
 
 ### 编译桌面完整版 (Visual Studio 2022)
 ```bash
+git submodule update --init --recursive
 cmake --preset windows-msvc
 cmake --build --preset release-msvc
 # 运行桌面客户端
@@ -147,7 +148,7 @@ run_gui.bat
 ### 运行官方网站本地预览
 ```bash
 cd website
-pnpm install
+pnpm install --frozen-lockfile --ignore-scripts
 pnpm test
 pnpm lint
 pnpm build

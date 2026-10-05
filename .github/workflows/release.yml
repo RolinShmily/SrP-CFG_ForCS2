@@ -71,9 +71,12 @@ jobs:
       - name: Package CLI, GUI, and Setup Installer
         shell: pwsh
         run: |
+          $ErrorActionPreference = 'Stop'
           $qtBin = "$env:QT_ROOT_DIR/bin"
           $tag = if ("${{ github.ref_name }}" -match "^v[0-9]") { "${{ github.ref_name }}" } else { "v3.4.0-dev" }
           New-Item -ItemType Directory -Path "dist" -Force | Out-Null
+          $crt = Get-ChildItem "$env:VCToolsRedistDir/x64/Microsoft.VC*.CRT" -Directory | Select-Object -First 1
+          if (!$crt) { throw 'MSVC x64 redistributable DLL directory not found' }
 
           # ==========================================
           # 1. 打包 Standalone CLI 独立命令行包
@@ -81,6 +84,7 @@ jobs:
           $cliDir = "dist/srp-cfg-$tag-windows-x64-cli"
           New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
           Copy-Item "build/app/cli/srp_cli.exe" -Destination "$cliDir/srp.exe"
+          Copy-Item "$($crt.FullName)/*.dll" -Destination $cliDir
           Copy-Item "config" -Destination "$cliDir/config" -Recurse -Force
           Copy-Item "LICENSE" -Destination "$cliDir/LICENSE.txt"
           Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$cliDir/THIRD_PARTY_NOTICES.md"
@@ -97,6 +101,7 @@ jobs:
           New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
           Copy-Item "build/app/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
           Copy-Item "build/app/cli/srp_cli.exe" -Destination "$guiDir/srp.exe"
+          Copy-Item "$($crt.FullName)/*.dll" -Destination $guiDir
 
           # The configured Ninja build produces these exact runtime paths.
           Copy-Item "build/HuskarUI/bin/HuskarUIBasic.dll" -Destination "$guiDir/"
