@@ -112,6 +112,11 @@ jobs:
           }
           EOF
 
+      - name: Validate Website
+        run: |
+          pnpm --filter srp-cfg-website test
+          pnpm --filter srp-cfg-website lint
+
       - name: Build Static Website
         env:
           DEPLOY_TARGET: gh-pages
