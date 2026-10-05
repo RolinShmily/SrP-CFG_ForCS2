@@ -1,82 +1,38 @@
-# Third-Party Notices & Attribution (第三方开源声明)
+# Third-party notices / 第三方声明
 
-SrP-CFG is licensed under the [MIT License](LICENSE) © 2025-2026 RoL1n_SrP.  
-This document records the third-party open-source components, libraries, fonts, and frameworks used across the desktop suite, configuration packages, and official website.
+SrP-CFG's own code and documentation are MIT licensed, © 2025–2026 RoL1n_SrP. The root [LICENSE](LICENSE) does not replace third-party licenses or grant rights to Valve trademarks and artwork.
 
----
+SrP-CFG 自有代码和文档采用 MIT，作者 RoL1n_SrP。第三方库、字体、游戏图片和商标保留各自权利。
 
-## 1. Desktop Application Runtime & Libraries (桌面客户端)
+## Desktop / 桌面应用
 
-### Qt 6 Toolkit
-- **Copyright**: Copyright (C) 2024 The Qt Company Ltd. and other contributors.
-- **License**: [GNU Lesser General Public License version 3 (LGPLv3)](https://www.gnu.org/licenses/lgpl-3.0.html) / Commercial.
-- **Notice & LGPL Compliance**:
-  - SrP-CFG dynamically links against Qt 6 libraries (`Qt6Core.dll`, `Qt6Gui.dll`, `Qt6Quick.dll`, `Qt6QuickControls2.dll`, `Qt6Concurrent.dll`, etc.).
-  - In accordance with the GNU LGPLv3, end users have the right to modify, recompile, and replace these dynamic link libraries with their own compatible versions without violating the application license.
-  - Full source code for SrP-CFG is openly available in this repository under the MIT License.
-- **Upstream**: [https://www.qt.io/](https://www.qt.io/)
+| Component | Terms and copyright | License text |
+| --- | --- | --- |
+| Qt 6 runtime | LGPL-3.0, The Qt Company and contributors; dynamically linked | [Qt license notice, GPLv3 and LGPLv3](licenses/Qt-LGPL-3.0.txt) |
+| HuskarUI | MIT, © 2026 mengps | [MIT](licenses/HuskarUI-MIT.txt) |
+| QWindowKit | Apache-2.0, Stdware Collections and wangwenx190 | [Apache-2.0](licenses/QWindowKit-Apache-2.0.txt) |
+| StdCoreLib | MIT, © 2022–present Stdware Collections | [MIT](licenses/StdCoreLib.txt) |
+| QR Code Generator | MIT, Project Nayuki | [MIT](licenses/QRCodeGenerator-MIT.txt) |
 
-### HuskarUI
-- **Copyright**: Copyright (c) 2026 mengps
-- **License**: [MIT License](https://opensource.org/licenses/MIT)
-- **Notice**: Embedded in `app/gui/3rdparty/HuskarUI`.
-- **Upstream**: [https://github.com/mengps/HuskarUI](https://github.com/mengps/HuskarUI)
+HuskarUI and its icon-font asset are retained from the pinned upstream submodule. This repository does not assert a separate font license that upstream has not documented. See [HuskarUI](https://github.com/mengps/HuskarUI) for its source and notices.
 
-### QWindowKit
-- **Copyright**:
-  - Copyright (C) 2023-present Stdware Collections (https://www.github.com/stdware)
-  - Copyright (C) 2021-2023 wangwenx190 (Yuhang Zhao)
-- **License**: [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- **Notice**: Submodule / submodule dependency of HuskarUI under `app/gui/3rdparty/HuskarUI/3rdparty/qwindowkit`.
-- **Upstream**: [https://github.com/stdware/qwindowkit](https://github.com/stdware/qwindowkit)
+Qt DLLs remain replaceable by compatible builds. Reverse engineering to debug modifications to LGPL components is permitted under their license. Qt source and module-specific third-party notices are available from [Qt source archives](https://download.qt.io/archive/qt/) and [Qt third-party licensing](https://doc.qt.io/qt-6/licenses-used-in-qt.html). Check the packaged DLL versions when obtaining matching Qt source. SrP-CFG's source is available in this repository; GPL-covered development tools are build tools rather than a relicensing of SrP-CFG itself.
 
-### QR Code Generator (C++)
-- **Copyright**: Copyright (c) Project Nayuki
-- **License**: [MIT License](https://opensource.org/licenses/MIT)
-- **Notice**: Bundled in HuskarUI (`3rdparty/QR-Code-generator`).
-- **Upstream**: [https://www.nayuki.io/page/qr-code-generator-library](https://www.nayuki.io/page/qr-code-generator-library)
+Qt 动态库可替换为兼容版本；为调试 LGPL 组件修改而进行的逆向工程遵循 LGPL 权利。获取源码时应与发布包中的 Qt 版本对应。
 
----
+## Website and fonts / 网站与字体
 
-## 2. Fonts (字体资产)
+The website uses Next.js, React, Motion, Radix UI, Lucide, Tailwind CSS, Font Awesome and their dependencies. Their terms differ: Font Awesome includes CC-BY-4.0 artwork, fonts use OFL, and build-time native packages may have additional notices. Do not treat the entire dependency graph as MIT.
 
-### Inter
-- **Copyright**: Copyright (c) 2016 The Inter Project Authors
-- **License**: [SIL Open Font License 1.1](https://openfontlicense.org)
-- **Upstream**: [https://github.com/rsms/inter](https://github.com/rsms/inter)
+`node scripts/collect-licenses.mjs` collects installed production dependency license files into `website/public/third-party-licenses.txt`; the Pages workflow publishes this generated file. Uninstalled platform-specific dependencies are excluded. Packages without standalone license text retain their declared license and upstream reference in the generated report.
 
-### JetBrains Mono
-- **Copyright**: Copyright 2020 The JetBrains Mono Project Authors
-- **License**: [SIL Open Font License 1.1](https://openfontlicense.org)
-- **Upstream**: [https://github.com/JetBrains/JetBrainsMono](https://github.com/JetBrains/JetBrainsMono)
+| Font | Copyright | Terms |
+| --- | --- | --- |
+| Inter | The Inter Project Authors | [OFL-1.1](licenses/Inter-OFL-1.1.txt) |
+| JetBrains Mono | The JetBrains Mono Project Authors | [OFL-1.1](licenses/JetBrainsMono-OFL-1.1.txt) |
 
-### HuskarUI-Icons
-- **Copyright**: Copyright (C) mengps. Shipped with HuskarUI.
-- **License**: [SIL Open Font License 1.1](https://openfontlicense.org) / MIT
+## CS2 content / 游戏内容
 
----
+Counter-Strike, CS2, Steam and Valve are Valve Corporation trademarks. CS2 artwork and extracted game data remain subject to their original rights. Valve baseline data references [SteamDatabase/GameTracking-CS2](https://github.com/SteamDatabase/GameTracking-CS2). Community preset attribution is retained in the configuration files.
 
-## 3. Web Showcase & Dependencies (展示网站及依赖)
-
-The official website is built with Next.js, React, TypeScript, Tailwind CSS, Motion, Radix UI, and Lucide.  
-All direct and transitive production dependencies are published under permissive open-source licenses (MIT, Apache-2.0, ISC, BSD).
-
-| Component | License | Author / Copyright | Upstream |
-| :--- | :--- | :--- | :--- |
-| **Next.js** | MIT | Copyright (c) Vercel, Inc. | [vercel/next.js](https://github.com/vercel/next.js) |
-| **React** | MIT | Copyright (c) Meta Platforms, Inc. | [facebook/react](https://github.com/facebook/react) |
-| **Tailwind CSS** | MIT | Copyright (c) Tailwind Labs, Inc. | [tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss) |
-| **Motion** | MIT | Copyright (c) Framer B.V. | [motiondivision/motion](https://github.com/motiondivision/motion) |
-| **Radix UI** | MIT | Copyright (c) WorkOS | [radix-ui/primitives](https://github.com/radix-ui/primitives) |
-| **Lucide Icons** | ISC | Copyright (c) Lucide Contributors | [lucide-icons/lucide](https://github.com/lucide-icons/lucide) |
-| **FontAwesome** | MIT / CC BY 4.0 | Copyright (c) Fonticons, Inc. | [FortAwesome/Font-Awesome](https://github.com/FortAwesome/Font-Awesome) |
-
-A complete dependency license manifest is automatically generated during build and accessible at `website/public/third-party-licenses.txt`.
-
----
-
-## 4. Game Data & Trademarks (游戏数据与商标声明)
-
-- **Trademarks**: Counter-Strike, Counter-Strike 2, CS2, Steam, and Valve are registered trademarks of **Valve Corporation**.
-- **Disclaimer**: SrP-CFG is an independent open-source utility and is **not affiliated with, endorsed by, sponsored by, or associated with Valve Corporation**.
-- **Game Compatibility**: SrP-CFG interacts with Counter-Strike 2 strictly through public engine command scripts (`.cfg`), KeyValues (`cs2_video.txt`), and native KV3 structures (`MapAnnotationNode`). No engine binaries are modified, and no anti-cheat boundaries are violated.
+SrP-CFG is an independent tool with no Valve endorsement. It edits configuration files; this statement does not guarantee any particular anti-cheat or future game compatibility outcome.

@@ -41,7 +41,7 @@ export function Footer() {
     )}</div></div>
     <div className="footer-bottom">
       <span>© 2024–2026 RoL1n_SrP</span>
-      <a className="footer-license" href={`${REPOSITORY}/blob/refactor/config/srp-cfg/LICENSE.txt`} target="_blank" rel="noreferrer"><Scale size={16} aria-hidden="true" />{t.footer.license}<ArrowUpRight size={13} aria-hidden="true" /></a>
+      <a className="footer-license" href={`${REPOSITORY}/blob/main/LICENSE`} target="_blank" rel="noreferrer"><Scale size={16} aria-hidden="true" />{t.footer.license}<ArrowUpRight size={13} aria-hidden="true" /></a>
       <a href="#overview" className="footer-top">{t.footer.top}<ArrowUp size={16} aria-hidden="true" /></a>
     </div>
   </div></footer>;

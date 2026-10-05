@@ -54,6 +54,7 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2022_64'
+          modules: qtshadertools
 
       - name: Configure CMake
         run: |
@@ -62,7 +63,10 @@ jobs:
 
       - name: Build Release Targets
         run: |
-          cmake --build build --config Release
+          cmake --build build --config Release --parallel 2
+          if ($LASTEXITCODE -ne 0) { throw 'Release build failed' }
+          ctest --test-dir build -C Release --output-on-failure
+          if ($LASTEXITCODE -ne 0) { throw 'Release regression tests failed' }
 
       - name: Package CLI, GUI, and Setup Installer
         shell: pwsh
@@ -80,6 +84,7 @@ jobs:
           Copy-Item "config" -Destination "$cliDir/config" -Recurse -Force
           Copy-Item "LICENSE" -Destination "$cliDir/LICENSE.txt"
           Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$cliDir/THIRD_PARTY_NOTICES.md"
+          Copy-Item "licenses" -Destination "$cliDir/licenses" -Recurse
           Copy-Item "README.md" -Destination "$cliDir/README.md"
           Copy-Item "README.zh-CN.md" -Destination "$cliDir/README.zh-CN.md"
           $cliZip = "dist/srp-cfg-$tag-windows-x64-cli.zip"
@@ -93,32 +98,30 @@ jobs:
           Copy-Item "build/app/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
           Copy-Item "build/app/cli/srp_cli.exe" -Destination "$guiDir/srp.exe"
 
-          # 拷入 HuskarUI 动态链接库
-          Copy-Item "build/HuskarUI/bin/HuskarUIBasic.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
-          Copy-Item "build/HuskarUI/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
-          Copy-Item "build/bin/HuskarUIBasic.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
-          Copy-Item "build/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+          # The configured Ninja build produces these exact runtime paths.
+          Copy-Item "build/HuskarUI/bin/HuskarUIBasic.dll" -Destination "$guiDir/"
+          Copy-Item "build/HuskarUI/bin/HuskarUIImpl.dll" -Destination "$guiDir/"
 
           # 三个独立离线包；客户端首次运行初始化到用户可写暂存区。
           python scripts/check_repository.py
+          if ($LASTEXITCODE -ne 0) { throw 'Repository validation failed' }
           Copy-Item "config" -Destination "$guiDir/config" -Recurse -Force
 
           Copy-Item "LICENSE" -Destination "$guiDir/LICENSE.txt"
           Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$guiDir/THIRD_PARTY_NOTICES.md"
+          Copy-Item "licenses" -Destination "$guiDir/licenses" -Recurse
           Copy-Item "README.md" -Destination "$guiDir/README.md"
           Copy-Item "README.zh-CN.md" -Destination "$guiDir/README.zh-CN.md"
 
           # 自动收集 Qt 运行时与 QML 模块依赖
-          & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
-
-          # 瘦身裁剪：移除纯软件光栅化与冗余 QML 控件样式
-          Remove-Item -Path "$guiDir/opengl32sw.dll" -Force -ErrorAction SilentlyContinue
-
-          $unusedStyles = @("FluentWinUI3", "Imagine", "Material", "Universal", "Fusion")
-          foreach ($style in $unusedStyles) {
-              Remove-Item -Path "$guiDir/qml/QtQuick/Controls/$style" -Recurse -Force -ErrorAction SilentlyContinue
-              Remove-Item -Path "$guiDir/Qt6QuickControls2$style.dll" -Force -ErrorAction SilentlyContinue
+          & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --compiler-runtime "$guiDir/SrP-CFG.exe"
+          if ($LASTEXITCODE -ne 0) { throw 'Qt runtime deployment failed' }
+          foreach ($module in @('Basic', 'Impl')) {
+              if (!(Test-Path "$guiDir/qml/HuskarUI/$module/qmldir")) { throw "Missing deployed HuskarUI module: $module" }
           }
+
+          # Verify the package with no build-tree / Qt SDK paths available.
+          & scripts/test-portable.ps1 -PackageDir $guiDir -Version $tag.TrimStart('v')
 
           $guiZip = "dist/srp-cfg-$tag-windows-x64-gui.zip"
           Compress-Archive -Path "$guiDir" -DestinationPath $guiZip -Force
@@ -129,13 +132,14 @@ jobs:
           $absGuiDir = (Resolve-Path "$guiDir").Path
           $absDistDir = (Resolve-Path "dist").Path
           ISCC.exe /DMyAppVersion="$tag" /DSourceDir="$absGuiDir" /DOutputDir="$absDistDir" installer/installer.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed' }
 
           # ==========================================
           # 4. 生成客户端升级清单 latest.json
           # ==========================================
           $guiSha256 = (Get-FileHash -Path $guiZip -Algorithm SHA256).Hash.ToLower()
           $setupExePath = "dist/srp-cfg-$tag-windows-x64-setup.exe"
-          $setupSha256 = if (Test-Path $setupExePath) { (Get-FileHash -Path $setupExePath -Algorithm SHA256).Hash.ToLower() } else { "" }
+          $setupSha256 = (Get-FileHash -Path $setupExePath -Algorithm SHA256).Hash.ToLower()
           $cleanAppVer = $tag.TrimStart('v')
 
           $latest = @{
@@ -158,6 +162,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
+          fail_on_unmatched_files: true
           files: |
             dist/srp-cfg-*-windows-x64-cli.zip
             dist/srp-cfg-*-windows-x64-gui.zip
