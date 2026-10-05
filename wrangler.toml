@@ -4,10 +4,6 @@ compatibility_date = "2026-10-06"
 workers_dev = true
 preview_urls = false
 
-[[routes]]
-pattern = "cfg.srprolin.top"
-custom_domain = true
-
 [assets]
 directory = "./website/out"
 html_handling = "auto-trailing-slash"

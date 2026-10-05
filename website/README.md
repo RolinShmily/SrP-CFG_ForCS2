@@ -53,9 +53,9 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 ## 部署
 
-`deploy-worker.yml` 在 main 更新或手动触发时打包三个配置包、运行解析测试/类型检查、构建 website/out，并使用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg`、静态资源目录和官网 Custom Domain `cfg.srprolin.top`；没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
+`deploy-worker.yml` 在 main 更新或手动触发时打包三个配置包、运行解析测试/类型检查、构建 website/out，并使用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg` 和静态资源目录，启用 workers.dev；不声明 Custom Domain，也没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
 
-CI 通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认证；凭据不写入 TOML。Token 需要 Worker 部署权限和官网所属 Zone 的域名配置权限。Wrangler 会管理 Custom Domain；若已有冲突 DNS 记录，部署会明确报错。
+CI 通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认证；凭据不写入 TOML。Token 需要 Worker 部署权限。CI 不修改官网 DNS 或域名绑定；官网 `cfg.srprolin.top` 由 Cloudflare 控制台单独绑定到该 Worker。官网绑定前，可使用部署日志中的 workers.dev 地址预览网站；APP 配置更新地址需等官网绑定完成后才能验证。
 
 配置清单及 ZIP 下载地址统一为 `https://cfg.srprolin.top/packages.json` 和 `/packages/`。APP core 只信任该 HTTPS 域名下的配置路径。旧版 APP 仍使用原 gh-pages 地址，需要下载包含地址迁移的新软件包。GitHub Releases 继续发布软件制品。
 
