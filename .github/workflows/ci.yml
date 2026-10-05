@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: Core and CLI (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build-core -DSRP_BUILD_GUI=OFF -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build-core --config Release --parallel 2
+      - name: Test isolated fixtures
+        run: ctest --test-dir build-core -C Release --output-on-failure
+
+  desktop:
+    name: Windows desktop (Qt 6.8)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.0'
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: qtshadertools
+      - name: Configure
+        run: cmake -S . -B build-gui -A x64 -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DBUILD_TESTING=OFF
+      - name: Build
+        run: cmake --build build-gui --config Release --parallel 2
+
+  website:
+    name: Website and repository checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+          run_install: false
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: python3 scripts/check_repository.py
+      - run: pnpm test
+      - run: pnpm lint
+      - run: pnpm licenses
+      - name: Build static website
+        env:
+          DEPLOY_TARGET: gh-pages
+          NEXT_PUBLIC_BASE_PATH: /SrP-CFG_ForCS2
+        run: pnpm build

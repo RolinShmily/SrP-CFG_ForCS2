@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
-      - refactor
     paths:
       - 'config/**'
       - 'website/**'
       - '.github/workflows/deploy-pages.yml'
+      - 'scripts/collect-licenses.mjs'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
   workflow_dispatch:
     inputs:
       base_path:
@@ -20,7 +23,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -43,7 +46,7 @@ jobs:
           run_install: false
 
       - name: Install Dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Package Incremental Config Bundles (srp-cfg, video, annotations)
         shell: bash
@@ -51,6 +54,7 @@ jobs:
           mkdir -p website/public/packages
 
           # 1. 打包 srp-cfg
+          python3 scripts/check_repository.py
           SRP_VER=$(cat config/srp-cfg/VERSION.txt | tr -d '\r\n ')
           mkdir -p /tmp/srp-stage
           cp -r config/srp-cfg /tmp/srp-stage/
@@ -116,6 +120,9 @@ jobs:
         run: |
           pnpm --filter srp-cfg-website test
           pnpm --filter srp-cfg-website lint
+
+      - name: Collect dependency licenses
+        run: pnpm licenses
 
       - name: Build Static Website
         env:

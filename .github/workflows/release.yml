@@ -78,8 +78,10 @@ jobs:
           New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
           Copy-Item "build/app/cli/srp_cli.exe" -Destination "$cliDir/srp.exe"
           Copy-Item "config" -Destination "$cliDir/config" -Recurse -Force
-          Copy-Item "LICENSE" -Destination "$cliDir/" -ErrorAction SilentlyContinue
-          Copy-Item "README.md" -Destination "$cliDir/" -ErrorAction SilentlyContinue
+          Copy-Item "LICENSE" -Destination "$cliDir/LICENSE.txt"
+          Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$cliDir/THIRD_PARTY_NOTICES.md"
+          Copy-Item "README.md" -Destination "$cliDir/README.md"
+          Copy-Item "README.zh-CN.md" -Destination "$cliDir/README.zh-CN.md"
           $cliZip = "dist/srp-cfg-$tag-windows-x64-cli.zip"
           Compress-Archive -Path "$cliDir" -DestinationPath $cliZip -Force
 
@@ -98,21 +100,19 @@ jobs:
           Copy-Item "build/bin/HuskarUIImpl.dll" -Destination "$guiDir/" -ErrorAction SilentlyContinue
 
           # 三个独立离线包；客户端首次运行初始化到用户可写暂存区。
-          foreach ($packageId in @("srp-cfg", "video", "annotations")) {
-              if (!(Test-Path "config/$packageId/VERSION.txt")) { throw "Missing package version: $packageId" }
-          }
+          python scripts/check_repository.py
           Copy-Item "config" -Destination "$guiDir/config" -Recurse -Force
 
-          Copy-Item "LICENSE" -Destination "$guiDir/" -ErrorAction SilentlyContinue
-          Copy-Item "README.md" -Destination "$guiDir/" -ErrorAction SilentlyContinue
+          Copy-Item "LICENSE" -Destination "$guiDir/LICENSE.txt"
+          Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$guiDir/THIRD_PARTY_NOTICES.md"
+          Copy-Item "README.md" -Destination "$guiDir/README.md"
+          Copy-Item "README.zh-CN.md" -Destination "$guiDir/README.zh-CN.md"
 
           # 自动收集 Qt 运行时与 QML 模块依赖
           & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
 
-          # 瘦身裁剪：移除无用光栅器与冗余 QML 样式
+          # 瘦身裁剪：移除纯软件光栅化与冗余 QML 控件样式
           Remove-Item -Path "$guiDir/opengl32sw.dll" -Force -ErrorAction SilentlyContinue
-          Remove-Item -Path "$guiDir/D3Dcompiler_47.dll" -Force -ErrorAction SilentlyContinue
-          Remove-Item -Path "$guiDir/Qt6OpenGL.dll" -Force -ErrorAction SilentlyContinue
 
           $unusedStyles = @("FluentWinUI3", "Imagine", "Material", "Universal", "Fusion")
           foreach ($style in $unusedStyles) {
