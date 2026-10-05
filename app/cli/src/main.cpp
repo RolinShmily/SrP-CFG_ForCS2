@@ -4,6 +4,11 @@
 #include "srp/core/actions.h"
 #include "srp/core/preset.h"
 #include "srp/core/assembly.h"
+#include "srp/core/packages.h"
+#include "srp/core/media_config.h"
+#include "srp/core/app_update.h"
+#include <fstream>
+#include <filesystem>
 
 #include <iostream>
 #include <string_view>
@@ -38,6 +43,17 @@ void printHelp() {
     std::cout << "  feature-unload <id>    Remove all direct feature entries\n";
     std::cout << "  mode-bind <id> --key <key> [--keymap] [--confirm]  Bind launcher\n";
     std::cout << "  mode-unbind <id>   Remove mode launchers and legacy direct entries\n";
+    std::cout << "  version            Show application version\n";
+    std::cout << "  app-update-check   Check software Release (no download or install)\n";
+    std::cout << "  packages           List staged package versions\n";
+    std::cout << "  packages-check     Fetch gh-pages manifest\n";
+    std::cout << "  package-update <id> Update staged package (never deploys)\n";
+    std::cout << "  package-reset <id> --file <relative> Restore staged default\n";
+    std::cout << "  video-status       Inspect staged video fields\n";
+    std::cout << "  video-set --field <key> --value <value> Edit staged option\n";
+    std::cout << "  video-apply        Merge staged video into --user-cfg-dir\n";
+    std::cout << "  annotations        List guide deployment states\n";
+    std::cout << "  annotation-deploy <id> / annotation-remove <id> --annotations-dir\n";
     std::cout << "  users              List all detected Steam users\n";
     std::cout << "  switch-user <id>   Inspect state for a specific Steam AccountID\n\n";
     std::cout << "Options:\n";
@@ -48,6 +64,10 @@ void printHelp() {
     std::cout << "  --confirm          Accept a mode binding conflict\n";
     std::cout << "  --settings         Select Valve settings\n";
     std::cout << "  --keymap           Include keymap (Valve/features/mode entry)\n";
+    std::cout << "  --store <path>     Explicit package staging root\n";
+    std::cout << "  --user-cfg-dir <path>   Explicit account CFG for video apply\n";
+    std::cout << "  --annotations-dir <path>   Explicit annotations/local path\n";
+    std::cout << "  --file <relative> --field <key> --value <value>   Staged edits\n";
     std::cout << "  -h, --help         Show this help message\n";
 }
 
@@ -122,7 +142,7 @@ int main(int argc, char* argv[]) {
     bool useEnglish = false;
     std::string explicitCfgDir;
     bool valveSettings = false, valveKeymap = false, confirmBinding = false;
-    std::string launchKey;
+    std::string launchKey, storeDir, userCfgDir, annotationsDir, fileName, field, fieldValue;
 
     for (int i = 1; i < argc; ++i) {
         std::string_view arg(argv[i]);
@@ -137,6 +157,15 @@ int main(int argc, char* argv[]) {
         } else if (arg == "--key") {
             if (i + 1 >= argc) { std::cerr << "--key requires a CS2 key name\n"; return 1; }
             launchKey = argv[++i];
+        } else if (arg == "--store" || arg == "--user-cfg-dir" || arg == "--annotations-dir" || arg == "--file" || arg == "--field" || arg == "--value") {
+            if (i + 1 >= argc) { std::cerr << arg << " requires a value\n"; return 1; }
+            const std::string value = argv[++i];
+            if (arg == "--store") storeDir = value;
+            else if (arg == "--user-cfg-dir") userCfgDir = value;
+            else if (arg == "--annotations-dir") annotationsDir = value;
+            else if (arg == "--file") fileName = value;
+            else if (arg == "--field") field = value;
+            else fieldValue = value;
         } else if (arg == "--confirm") {
             confirmBinding = true;
         } else if (arg == "--settings") {
@@ -151,7 +180,7 @@ int main(int argc, char* argv[]) {
                    arg == "convars-status" || arg == "convars-clean-all" ||
                    arg == "convars-clean-srp" || arg == "users") {
             command = std::string(arg);
-        } else if (arg == "switch-user" || arg == "preset-load" || arg == "feature-assemble" || arg == "feature-unload" || arg == "mode-bind" || arg == "mode-unbind") {
+        } else if (arg == "switch-user" || arg == "preset-load" || arg == "feature-assemble" || arg == "feature-unload" || arg == "mode-bind" || arg == "mode-unbind" || arg == "package-update" || arg == "package-reset" || arg == "annotation-deploy" || arg == "annotation-remove") {
             command = std::string(arg);
             if (i + 1 < argc) {
                 targetAccountId = argv[++i];
@@ -163,6 +192,64 @@ int main(int argc, char* argv[]) {
 
     srp::core::setLanguage(useEnglish ? srp::core::Language::EnUS : srp::core::Language::ZhCN);
 
+    if(command=="version"){std::cout<<srp::core::applicationVersion()<<"\n";return 0;}
+    if(command=="app-update-check"){
+        const auto result=srp::core::checkAppUpdate();
+        std::cout<<"SrP-CFG v"<<srp::core::applicationVersion()<<"\n";
+        if(result.success)std::cout<<srp::core::tr(result.updateAvailable?"appupdate.available":"appupdate.current")<<" · v"<<result.release.version<<"\n";
+        else std::cerr<<srp::core::tr(result.error)<<"\n";
+        std::cout<<srp::core::websiteUrl()<<"\n"<<srp::core::releasesUrl()<<"\n";
+        return result.success?0:1;
+    }
+    if (!storeDir.empty()) srp::core::setPackageStoreRoot(storeDir);
+    const bool packageCommand = command == "packages" || command == "packages-check" || command == "package-update" || command == "package-reset";
+    const bool mediaCommand = command.rfind("video-", 0) == 0 || command == "annotations" || command.rfind("annotation-",0) == 0;
+    if (packageCommand || mediaCommand) {
+        const auto initialized = srp::core::initializePackages();
+        if (!initialized.success) { std::cerr << srp::core::tr(initialized.error) << '\n'; return 1; }
+        const auto finish = [](const srp::core::ConfigWriteResult& result, const char* success) {
+            std::cout << srp::core::tr(result.success ? success : result.error) << '\n'; return result.success ? 0 : 1;
+        };
+        if (command == "packages-check") {
+            std::vector<srp::core::ConfigPackage> latest; const auto result = srp::core::checkPackageUpdates(latest);
+            if (!result.success) return finish(result,"pkg.checked");
+            for (const auto& p : latest) std::cout << p.id << " " << p.version << " " << p.sha256 << '\n'; return 0;
+        }
+        if (command == "package-update") return finish(srp::core::updatePackage(targetAccountId),"pkg.updated");
+        if (command == "package-reset") return finish(srp::core::resetPackageFile(targetAccountId,fileName),"media.restored");
+        if (command == "packages") {
+            for (const auto* id : {"srp-cfg","video","annotations"}) std::cout << id << " " << srp::core::packageVersion(id) << '\n';
+            std::cout << srp::core::packageWorkDir() << '\n'; return 0;
+        }
+        const auto read = [](const std::string& path) { std::ifstream f(std::filesystem::u8path(path),std::ios::binary); return std::string(std::istreambuf_iterator<char>(f),std::istreambuf_iterator<char>()); };
+        const auto video = read(srp::core::packageFilePath("video","cs2_video.txt"));
+        if (command == "video-status") {
+            const auto parsed = srp::core::parseVideoConfig(video);
+            if (!parsed.success) return finish({false,false,parsed.error},"media.saved");
+            for (const auto& [key,value] : parsed.values) std::cout << key << " = " << value << '\n'; return 0;
+        }
+        if (command == "video-set") {
+            std::string changed; const auto result = srp::core::changeVideoOption(video,field,fieldValue,changed);
+            return finish(result.success ? srp::core::savePackageFile("video","cs2_video.txt",changed) : result,"media.saved");
+        }
+        if (command == "video-apply") {
+            if (userCfgDir.empty()) userCfgDir = srp::core::detectAll().userCfgPath.value_or("");
+            return finish(srp::core::applyVideoConfig(video,userCfgDir),"video.applied");
+        }
+        if (annotationsDir.empty()) annotationsDir = srp::core::detectAll().annotationsPath.value_or("");
+        if (command == "annotations") {
+            for (const auto& guide : srp::core::annotationGuides()) {
+                const auto target = srp::core::annotationTarget(guide.id,annotationsDir);
+                std::cout << guide.id << ": " << srp::core::tr(!target.empty() && std::filesystem::is_regular_file(std::filesystem::u8path(target)) ? "annotations.installed" : "annotations.not_installed") << '\n';
+            } return 0;
+        }
+        if (command == "annotation-remove") return finish(srp::core::removeAnnotation(targetAccountId,annotationsDir),"annotations.removed");
+        if (command == "annotation-deploy") {
+            for (const auto& guide : srp::core::annotationGuides()) if (guide.id == targetAccountId)
+                return finish(srp::core::deployAnnotation(guide.id,read(srp::core::packageFilePath("annotations",guide.relativeFile())),annotationsDir),"annotations.deployed");
+        }
+        std::cerr << "Unknown package/media command or guide\n"; return 1;
+    }
     auto res = explicitCfgDir.empty() ? srp::core::detectAll() : srp::core::DetectionResult{};
     if (!explicitCfgDir.empty()) res.cs2CfgPath = explicitCfgDir;
 
