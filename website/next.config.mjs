@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
-const isGithubPages = process.env.DEPLOY_TARGET === 'gh-pages';
-const defaultRepoPath = '/SrP-CFG_ForCS2';
-const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? (isGithubPages ? defaultRepoPath : '');
+// Root-path static export by default; CI uses the same configuration as local builds.
+const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 const basePath = rawBasePath === '/' ? '' : rawBasePath;
 
 const nextConfig = {

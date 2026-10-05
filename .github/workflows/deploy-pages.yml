@@ -13,11 +13,6 @@ on:
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
   workflow_dispatch:
-    inputs:
-      base_path:
-        description: '网站子路径 BasePath（默认 /SrP-CFG_ForCS2；若绑定独立域名可填 /）'
-        required: false
-        default: '/SrP-CFG_ForCS2'
 
 permissions:
   contents: write
@@ -125,9 +120,6 @@ jobs:
         run: node scripts/collect-licenses.mjs
 
       - name: Build Static Website
-        env:
-          DEPLOY_TARGET: gh-pages
-          NEXT_PUBLIC_BASE_PATH: ${{ github.event.inputs.base_path || '/SrP-CFG_ForCS2' }}
         run: |
           pnpm --filter srp-cfg-website build
           touch website/out/.nojekyll

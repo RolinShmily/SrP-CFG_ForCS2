@@ -68,7 +68,4 @@ jobs:
       - run: pnpm lint
       - run: node scripts/collect-licenses.mjs
       - name: Build static website
-        env:
-          DEPLOY_TARGET: gh-pages
-          NEXT_PUBLIC_BASE_PATH: /SrP-CFG_ForCS2
         run: pnpm build

@@ -45,7 +45,7 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 无清单或无匹配资产时显示状态、重试与官方 Releases 入口，不硬编码新版本或虚构制品。SHA-256 与文件大小存在时显示。页面只链接下载，不自动执行校验、安装或升级。
 
-本次线上最新软件 Release 仍为旧版，尚无新版工作流的 latest.json / 匹配制品；网页会诚实显示缺失状态。成功软件下载的 UI 测试使用受控 3.4.1 清单，不表示该版本已经发布。
+线上 v3.4.0 Release 已提供 latest.json、GUI ZIP 和 Setup EXE。解析测试同时覆盖受控清单与缺失制品的回退行为。
 
 ## 独立配置包
 
@@ -53,7 +53,7 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 ## 部署
 
-现有 Deploy Website & Config Packages workflow 保持静态部署，并增加解析测试和类型检查。默认 `/SrP-CFG_ForCS2` 子路径；workflow_dispatch 的 base_path 填 `/` 可生成自定义域名根路径版本。域名/DNS/CNAME 的配置需与部署路径匹配，不由网站代码擅自修改。
+Deploy Website & Config Packages workflow 将 website/out 的内容发布到 gh-pages 根目录，网站默认从 `/` 加载资源。自动 CI 与手动部署均直接使用默认构建配置，不再提供 base_path 输入，也不设置仓库名路径前缀。域名/DNS/CNAME 由托管设置管理。
 
 根路径和仓库子路径均已验证图片、CSS、字体、SVG 背景、图标和清单地址。next.config.mjs 继续使用 output: export / unoptimized images。
 
@@ -61,4 +61,4 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 测试下载元数据的仓库边界、版本错配、制品筛选、配置包 SHA/大小和镜像拼接。真实浏览器验证中英文和来源持久化、键盘切页、手动前后切换、导航聚合、层展开/收起、手机菜单、375/390px 无溢出、减少动态效果、API 失败回退与无水合异常。
 
-截图及本地验证脚本在 build-gui/verification-website（忽略目录，不参与部署）。未新增依赖，未发布新软件 Release。
+截图及本地验证脚本在 build-gui/verification-website（忽略目录，不参与部署）。未新增依赖。
