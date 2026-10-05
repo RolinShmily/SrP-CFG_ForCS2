@@ -5,8 +5,6 @@
 #include <QDebug>
 #include <QTimer>
 #include <QFontDatabase>
-#include <QSettings>
-#include <QStyleHints>
 #include <iostream>
 #include <fstream>
 
@@ -15,6 +13,7 @@
 #include "srp/core/i18n.h"
 #include "overview_controller.h"
 #include "presets_controller.h"
+#include "assembly_controller.h"
 #include "cs2_cfg_highlighter.h"
 #include "code_editor_gutter.h"
 
@@ -113,34 +112,19 @@ int main(int argc, char* argv[]) {
     }
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "PresetsController", presetsCtrl);
 
+    auto* assemblyCtrl = new AssemblyController(&app);
+    if (initialRoute.startsWith("assembly_") && initialFileIndex >= 0) {
+        assemblyCtrl->setSelectedFileIndex(initialFileIndex == 2 ? 0 : initialFileIndex + 1);
+    }
+    qmlRegisterSingletonInstance("SrPGui", 1, 0, "AssemblyController", assemblyCtrl);
+
 #ifdef HUSKARUI_IMPORT_PATH
     qDebug() << "HUSKARUI_IMPORT_PATH:" << HUSKARUI_IMPORT_PATH;
     engine.addImportPath(QString::fromUtf8(HUSKARUI_IMPORT_PATH));
 #endif
 
-    bool isSystemDark = false;
-#if defined(_WIN32)
-    QSettings personalize("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
-    if (personalize.contains("AppsUseLightTheme")) {
-        isSystemDark = (personalize.value("AppsUseLightTheme").toInt() == 0);
-    } else {
-        isSystemDark = (QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark);
-    }
-#else
-    isSystemDark = (QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark);
-#endif
-
-    if (forceLight) {
-        HusTheme::instance()->setDarkMode(HusTheme::DarkMode::Light);
-    } else if (forceDark || isSystemDark) {
-        HusTheme::instance()->setDarkMode(HusTheme::DarkMode::Dark);
-    } else {
-        HusTheme::instance()->setDarkMode(HusTheme::DarkMode::Light);
-    }
-
-    QObject::connect(QGuiApplication::styleHints(), &QStyleHints::colorSchemeChanged, [](Qt::ColorScheme scheme) {
-        HusTheme::instance()->setDarkMode(scheme == Qt::ColorScheme::Dark ? HusTheme::DarkMode::Dark : HusTheme::DarkMode::Light);
-    });
+    // Light is the product default; manual theme switching remains available.
+    HusTheme::instance()->setDarkMode(forceDark && !forceLight ? HusTheme::DarkMode::Dark : HusTheme::DarkMode::Light);
 
     if (forceEn) {
         srp::core::setLanguage(srp::core::Language::EnUS);

@@ -41,9 +41,9 @@ Item {
         }
         function onMessageNotify(success, message) {
             if (success) {
-                HusMessage.success(message);
+                AppFeedback.success(message);
             } else {
-                HusMessage.error(message);
+                AppFeedback.error(message);
             }
         }
     }
@@ -163,7 +163,7 @@ Item {
                             Layout.preferredWidth: 24
                             onClicked: {
                                 OverviewController.copyToClipboard(PresetsController.selectedPresetCommand);
-                                HusMessage.success("已复制指令至剪贴板");
+                                AppFeedback.success("已复制指令至剪贴板");
                             }
 
                             HusToolTip {
@@ -361,6 +361,7 @@ Item {
                     id: codeEditor
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    shortcutsEnabled: presetsPageRoot.visible
                     text: PresetsController.editorContent
                     currentFilePath: PresetsController.currentFilePathDisplay
                     isDark: HusTheme.isDark
@@ -379,7 +380,7 @@ Item {
     }
 
     // 未安装 SrP-CFG 联动安装弹窗
-    HusModal {
+    AppModal {
         id: installPromptModal
         title: PresetsController.tr("presets.modal_install_title", OverviewController.currentLang)
         description: PresetsController.tr("presets.modal_install_desc", OverviewController.currentLang)
@@ -395,7 +396,7 @@ Item {
     }
 
     // 恢复默认确认弹窗
-    HusModal {
+    AppModal {
         id: resetFileModal
         title: "确认恢复官方出厂默认"
         description: "此操作将把当前选中的配置文件还原为官方纯净出厂版本。\n您现有的修改将自动备份为 .bak。确认继续？"

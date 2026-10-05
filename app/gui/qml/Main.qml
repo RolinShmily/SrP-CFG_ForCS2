@@ -39,14 +39,28 @@ HusWindow {
         }
     }
 
+    HusMessage {
+        id: feedback
+        objectName: "appFeedbackHost"
+        parent: mainWindow.captionBar
+        width: mainWindow.width
+        anchors.top: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        z: 999
+        colorBg: MetaTheme.cardBg
+        colorMessage: MetaTheme.textPrimary
+        Component.onCompleted: AppFeedback.host = feedback
+        Component.onDestruction: AppFeedback.host = null
+    }
+
     // 接收消息通知
     Connections {
         target: OverviewController
         function onMessageNotify(success, message) {
             if (success) {
-                HusMessage.success(message);
+                AppFeedback.success(message);
             } else {
-                HusMessage.error(message);
+                AppFeedback.error(message);
             }
         }
     }
@@ -62,6 +76,10 @@ HusWindow {
             id: sidebar
             Layout.fillHeight: true
             activeRoute: mainWindow.initialRoute
+            onAssemblyRequested: (route) => {
+                assemblyPage.navigateTo(route);
+                sidebar.activeRoute = assemblyPage.activeSection;
+            }
         }
 
         // 分割线
@@ -88,10 +106,18 @@ HusWindow {
                 visible: sidebar.activeRoute === "presets"
             }
 
+            AssemblyPage {
+                id: assemblyPage
+                anchors.fill: parent
+                initialSection: mainWindow.initialRoute
+                visible: sidebar.activeRoute.startsWith("assembly_")
+                onSectionChanged: (route) => { sidebar.activeRoute = route; }
+            }
+
             // 占位其他页面（后续迭代逐步接入）
             Item {
                 anchors.fill: parent
-                visible: sidebar.activeRoute !== "overview" && sidebar.activeRoute !== "presets"
+                visible: sidebar.activeRoute !== "overview" && sidebar.activeRoute !== "presets" && !sidebar.activeRoute.startsWith("assembly_")
 
                 ColumnLayout {
                     anchors.centerIn: parent

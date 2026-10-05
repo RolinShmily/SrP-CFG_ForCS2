@@ -11,8 +11,15 @@ Rectangle {
     clip: true
 
     property string activeRoute: "overview"
+    signal assemblyRequested(string route)
     // 自由装配默认折叠收起
     property bool assemblyExpanded: false
+    onActiveRouteChanged: {
+        if (activeRoute.startsWith("assembly_")) assemblyExpanded = true;
+    }
+    Component.onCompleted: {
+        if (activeRoute.startsWith("assembly_")) assemblyExpanded = true;
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -145,22 +152,22 @@ Rectangle {
                         NavSubItem {
                             label: OverviewController.tr("nav.valve_baseline", OverviewController.currentLang)
                             selected: sidebar.activeRoute === "assembly_baseline"
-                            onClicked: sidebar.activeRoute = "assembly_baseline"
+                            onClicked: sidebar.assemblyRequested("assembly_baseline")
                         }
                         NavSubItem {
                             label: OverviewController.tr("nav.features", OverviewController.currentLang)
                             selected: sidebar.activeRoute === "assembly_features"
-                            onClicked: sidebar.activeRoute = "assembly_features"
+                            onClicked: sidebar.assemblyRequested("assembly_features")
                         }
                         NavSubItem {
                             label: OverviewController.tr("nav.modes", OverviewController.currentLang)
                             selected: sidebar.activeRoute === "assembly_modes"
-                            onClicked: sidebar.activeRoute = "assembly_modes"
+                            onClicked: sidebar.assemblyRequested("assembly_modes")
                         }
                         NavSubItem {
                             label: OverviewController.tr("nav.user_custom", OverviewController.currentLang)
                             selected: sidebar.activeRoute === "assembly_usercfg"
-                            onClicked: sidebar.activeRoute = "assembly_usercfg"
+                            onClicked: sidebar.assemblyRequested("assembly_usercfg")
                         }
                     }
                 }

@@ -12,6 +12,9 @@ Rectangle {
     property alias lineCount: editorArea.lineCount
     property alias textDocument: editorArea.textDocument
     property string currentFilePath: ""
+    property var editorController: PresetsController
+    property bool shortcutsEnabled: visible
+    onFontPixelSizeChanged: Qt.callLater(gutter.requestRedraw)
     property bool isDark: HusTheme.isDark
 
     // 代码字体大小与缩放控制
@@ -50,18 +53,22 @@ Rectangle {
 
     // 快捷键支持：Ctrl + / - / = / 0
     Shortcut {
+        enabled: control.shortcutsEnabled
         sequence: "Ctrl+="
         onActivated: control.zoomIn()
     }
     Shortcut {
+        enabled: control.shortcutsEnabled
         sequence: "Ctrl++"
         onActivated: control.zoomIn()
     }
     Shortcut {
+        enabled: control.shortcutsEnabled
         sequence: "Ctrl+-"
         onActivated: control.zoomOut()
     }
     Shortcut {
+        enabled: control.shortcutsEnabled
         sequence: "Ctrl+0"
         onActivated: control.resetZoom()
     }
@@ -89,19 +96,16 @@ Rectangle {
                 backgroundColor: MetaTheme.editorGutterBg
                 borderColor: MetaTheme.editorBorder
                 z: 2
-
-                WheelHandler {
-                    target: null
-                    acceptedModifiers: Qt.ControlModifier
-                    onWheel: (event) => {
-                        if (event.angleDelta.y > 0) {
-                            control.zoomIn();
-                        } else if (event.angleDelta.y < 0) {
-                            control.zoomOut();
-                        }
-                        event.accepted = true;
-                    }
+                onZoomRequested: (direction) => {
+                    if (direction > 0) control.zoomIn();
+                    else control.zoomOut();
                 }
+                onScrollRequested: (horizontal, vertical) => {
+                    editorFlickable.cancelFlick();
+                    editorFlickable.contentY = Math.max(0, Math.min(Math.max(0, editorFlickable.contentHeight - editorFlickable.height), editorFlickable.contentY + vertical));
+                    editorFlickable.contentX = Math.max(0, Math.min(Math.max(0, editorFlickable.contentWidth - editorFlickable.width), editorFlickable.contentX + horizontal));
+                }
+
             }
 
             // 代码编辑视口
@@ -118,20 +122,7 @@ Rectangle {
                 contentWidth: editorArea.width
                 contentHeight: editorArea.height
 
-                // 内置优先拦截 Ctrl + 滚轮缩放，未按 Ctrl 时完全无视并放行 Flickable 正常滚动
-                WheelHandler {
-                    id: editorZoomHandler
-                    target: null
-                    acceptedModifiers: Qt.ControlModifier
-                    onWheel: (event) => {
-                        if (event.angleDelta.y > 0) {
-                            control.zoomIn();
-                        } else if (event.angleDelta.y < 0) {
-                            control.zoomOut();
-                        }
-                        event.accepted = true;
-                    }
-                }
+                // Wheel scroll/zoom uses one event filter, avoiding lingering pointer grabs.
 
                 ScrollBar.vertical: HusScrollBar {
                     policy: editorFlickable.contentHeight > editorFlickable.height ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
@@ -154,25 +145,13 @@ Rectangle {
                     selectedTextColor: MetaTheme.textPrimary
                     selectByMouse: true
                     wrapMode: TextEdit.NoWrap
+                    textFormat: TextEdit.PlainText
                     tabStopDistance: Math.round(control.fontPixelSize * 2)
 
                     Component.onCompleted: {
-                        PresetsController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
+                        control.editorController.attachHighlighter(editorArea.textDocument, HusTheme.isDark);
                     }
 
-                    WheelHandler {
-                        id: textEditZoomHandler
-                        target: null
-                        acceptedModifiers: Qt.ControlModifier
-                        onWheel: (event) => {
-                            if (event.angleDelta.y > 0) {
-                                control.zoomIn();
-                            } else if (event.angleDelta.y < 0) {
-                                control.zoomOut();
-                            }
-                            event.accepted = true;
-                        }
-                    }
                 }
             }
         }
@@ -232,7 +211,7 @@ Rectangle {
                         anchors.centerIn: parent
                         text: Math.round(control.fontPixelSize / control.defaultFontPixelSize * 100) + "%"
                         font.pixelSize: 10
-                        color: control.fontPixelSize !== control.defaultFontPixelSize ? MetaTheme.primary : MetaTheme.textTertiary
+                        color: control.fontPixelSize !== control.defaultFontPixelSize ? MetaTheme.primaryColor : MetaTheme.textTertiary
                         font.bold: control.fontPixelSize !== control.defaultFontPixelSize
                     }
 
@@ -246,13 +225,13 @@ Rectangle {
 
                     HusToolTip {
                         visible: zoomMouseArea.containsMouse
-                        text: "Ctrl + 滚轮放缩代码，点击重置 100%"
+                        text: OverviewController.tr("editor.zoom_tip", OverviewController.currentLang)
                     }
                 }
 
                 // 格式与统计信息
                 Text {
-                    text: editorArea.lineCount + " 行"
+                    text: OverviewController.tr("editor.lines", OverviewController.currentLang).arg(editorArea.lineCount)
                     font.pixelSize: 10
                     color: MetaTheme.textTertiary
                 }

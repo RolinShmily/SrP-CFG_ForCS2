@@ -3,12 +3,42 @@
 #include <QTextBlock>
 #include <QTextLayout>
 #include <QTextDocument>
+#include <QWheelEvent>
 
 CodeEditorGutter::CodeEditorGutter(QQuickItem* parent)
     : QQuickPaintedItem(parent) {
     setAntialiasing(true);
+    connect(this, &QQuickItem::windowChanged, this, [this](QQuickWindow* window) {
+        if (m_wheelWindow) m_wheelWindow->removeEventFilter(this);
+        m_wheelWindow = window;
+        if (window) window->installEventFilter(this);
+    });
     connect(this, &QQuickItem::heightChanged, this, &CodeEditorGutter::requestRedraw);
     connect(this, &QQuickItem::widthChanged, this, &CodeEditorGutter::requestRedraw);
+}
+
+bool CodeEditorGutter::eventFilter(QObject* watched, QEvent* event) {
+    if (watched == m_wheelWindow && event->type() == QEvent::Wheel && isVisible() && isEnabled() && parentItem()) {
+        auto* wheel = static_cast<QWheelEvent*>(event);
+        const QPointF local = parentItem()->mapFromScene(wheel->position());
+        if (parentItem()->contains(local)) {
+            if (wheel->modifiers().testFlag(Qt::ControlModifier)) {
+                const int delta = wheel->angleDelta().y();
+                if (delta) emit zoomRequested(delta > 0 ? 1 : -1);
+            } else {
+                QPointF delta = wheel->pixelDelta();
+                if (delta.isNull()) {
+                    const qreal step = m_editor ? m_editor->property("font").value<QFont>().pixelSize() * 6.0 : 72.0;
+                    delta = QPointF(wheel->angleDelta()) * (step / 120.0);
+                }
+                if (wheel->modifiers().testFlag(Qt::ShiftModifier)) delta = QPointF(delta.y(), delta.x());
+                emit scrollRequested(-delta.x(), -delta.y());
+            }
+            wheel->accept();
+            return true;
+        }
+    }
+    return QQuickPaintedItem::eventFilter(watched, event);
 }
 
 void CodeEditorGutter::setEditor(QQuickItem* item) {

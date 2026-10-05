@@ -6,6 +6,7 @@
 #include <QFont>
 #include <QPointer>
 #include <QVector>
+#include <QQuickWindow>
 
 class CodeEditorGutter : public QQuickPaintedItem {
     Q_OBJECT
@@ -39,8 +40,11 @@ public:
 
 protected:
     void updatePolish() override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
 
 signals:
+    void zoomRequested(int direction);
+    void scrollRequested(qreal horizontal, qreal vertical);
     void editorChanged();
     void scrollYChanged();
     void textColorChanged();
@@ -50,6 +54,7 @@ signals:
 private:
     void connectDocument();
 
+    QPointer<QQuickWindow> m_wheelWindow;
     QPointer<QQuickItem> m_editor;
     struct LineNumber { int number; qreal y; qreal height; };
     QVector<LineNumber> m_lines;

@@ -70,7 +70,7 @@ Item {
     }
 
     // 首次未检测到 SrP-CFG 运行环境时的引导弹窗
-    HusModal {
+    AppModal {
         id: installModal
         title: OverviewController.tr("modal.install.title", OverviewController.currentLang)
         description: OverviewController.tr("modal.install.desc", OverviewController.currentLang)
@@ -86,7 +86,7 @@ Item {
     }
 
     // 已安装环境时的二次确认弹窗
-    HusModal {
+    AppModal {
         id: resetConfirmModal
         title: OverviewController.tr("modal.reset.title", OverviewController.currentLang)
         description: OverviewController.tr("modal.reset.desc", OverviewController.currentLang)

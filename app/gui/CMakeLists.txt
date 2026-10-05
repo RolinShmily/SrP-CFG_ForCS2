@@ -17,7 +17,7 @@ if(QT_KNOWN_POLICY_QTP0004)
     qt_policy(SET QTP0004 NEW)
 endif()
 
-set_source_files_properties(qml/MetaTheme.qml
+set_source_files_properties(qml/MetaTheme.qml qml/components/AppFeedback.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE TRUE
 )
@@ -33,6 +33,8 @@ qt_add_executable(srp_gui
     src/overview_controller.cpp
     src/presets_controller.h
     src/presets_controller.cpp
+    src/assembly_controller.h
+    src/assembly_controller.cpp
     src/cs2_cfg_highlighter.h
     src/cs2_cfg_highlighter.cpp
     src/code_editor_gutter.h
@@ -52,6 +54,8 @@ qt_add_qml_module(srp_gui
     QML_FILES
         qml/Main.qml
         qml/MetaTheme.qml
+        qml/components/AppModal.qml
+        qml/components/AppFeedback.qml
         qml/components/AppButton.qml
         qml/components/AppIcon.qml
         qml/components/AppCodeEditor.qml
@@ -59,6 +63,8 @@ qt_add_qml_module(srp_gui
         qml/components/AppSidebar.qml
         qml/pages/OverviewPage.qml
         qml/pages/PresetsPage.qml
+        qml/components/AssemblyModuleCard.qml
+        qml/pages/AssemblyPage.qml
     RESOURCES
         resources/icon.png
         resources/favicon.ico
