@@ -1,92 +1,65 @@
 "use client";
-
-import React from "react";
+import { useEffect, useState } from "react";
+import { ArrowDownToLine, ArrowUpRight, Archive, Check, Copy, FileCode2, LoaderCircle, Map, Monitor, Package, RefreshCw, Settings2 } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
-import { Download, ArrowRight, ShieldCheck, Zap } from "lucide-react";
-import { GithubIcon } from "@/components/icons";
-import { SpotlightCard } from "@/components/spotlight-card";
-import { Reveal } from "@/components/reveal";
+import { assetPath, fetchJson, formatSize, packageIds, parseAppRelease, parsePackageManifest, RELEASE_API, RELEASE_MANIFEST, RELEASES, REPOSITORY, softwareUrl, type AppRelease, type DownloadAsset, type DownloadSource, type PackageManifest } from "@/lib/downloads";
+import { Reveal } from "./reveal";
 
+function Checksum({ hash }: { hash?: string }) {
+  const { t } = useI18n();
+  const [status, setStatus] = useState<"idle"|"copied"|"failed">("idle");
+  useEffect(() => { if(status === "idle") return;const timer=setTimeout(()=>setStatus("idle"),3000);return()=>clearTimeout(timer); }, [status]);
+  if(!hash) return null;
+  return <details className="checksum"><summary>SHA-256</summary><code>{hash}</code><button onClick={async()=>{try{await navigator.clipboard.writeText(hash);setStatus("copied");}catch(error){console.warn("Clipboard unavailable",error);setStatus("failed");}}}>{status==="copied"?<Check size={13}/>:<Copy size={13}/>}<span aria-live="polite">{status==="copied"?t.downloads.copied:status==="failed"?t.downloads.copyFailed:t.downloads.hash}</span></button></details>;
+}
+function DownloadLink({ asset, source, label }: { asset?: DownloadAsset; source?: DownloadSource; label: string }) {
+  return asset ? <a className="button button-primary" href={source ? softwareUrl(asset.url,source) : asset.url} rel="noreferrer"><ArrowDownToLine size={17}/>{label}</a> : <span className="download-unavailable"><ArrowDownToLine size={17}/>{label}</span>;
+}
 export function CtaSection() {
   const { t } = useI18n();
-
-  return (
-    <section id="download" className="cs2-band cs2-band-orange border-b border-white/[0.08] relative overflow-hidden">
-      {/* Linemap overlay */}
-      <div className="cs2-linemap-layer opacity-30" />
-
-      {/* Atmospheric Orange Flare */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-[#ff9e00]/20 blur-[150px] pointer-events-none rounded-full" />
-
-      <div className="cs2-layer">
-        <Reveal>
-        <SpotlightCard glowColor="orange" className="p-10 sm:p-16 lg:p-20 border-white/[0.16] cs2-board ">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Copy */}
-            <div className="lg:col-span-8 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#ff9e00]/20 border border-[#ff9e00]/50 text-xs font-mono font-bold text-[#ff9e00] uppercase tracking-wider">
-                <Zap className="w-3.5 h-3.5" />
-                <span>{t.cta.badge}</span>
-              </div>
-
-              <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-[-0.04em] text-white leading-[0.98]">
-                {t.cta.title} <br />
-                <span className="text-[#ff9e00] drop-">
-                  {t.cta.titleHighlight}
-                </span>
-              </h2>
-
-              <p className="text-base sm:text-xl text-white/80 leading-relaxed max-w-2xl font-normal">
-                {t.cta.subtitle}
-              </p>
-
-              {/* Guarantees with Icons */}
-              <div className="pt-2 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs sm:text-sm font-mono text-white/70">
-                <span className="flex items-center gap-2 text-white font-bold">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  {t.cta.trust1}
-                </span>
-                <span>•</span>
-                <span>{t.cta.trust2}</span>
-                <span>•</span>
-                <span>{t.cta.trust3}</span>
-              </div>
-            </div>
-
-            {/* Right Buttons */}
-            <div className="lg:col-span-4 flex flex-col gap-4">
-              <a
-                href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cs2-action-btn whitespace-nowrap h-14 px-8 rounded-full text-sm flex items-center justify-center gap-2 "
-              >
-                <Download className="w-5 h-5" />
-                <span>{t.cta.downloadBtn}</span>
-              </a>
-
-              <a
-                href="#keypad"
-                className="whitespace-nowrap h-14 px-8 rounded-full border border-white/[0.16] hover:border-[#ff9e00] bg-white/[0.04] hover:bg-white/10 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95"
-              >
-                <span>{t.cta.viewDocsBtn}</span>
-                <ArrowRight className="w-4 h-4 text-[#ff9e00]" />
-              </a>
-
-              <a
-                href="https://github.com/RolinShmily/SrP-CFG_ForCS2"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-2 text-xs font-mono text-white/50 hover:text-white transition-colors"
-              >
-                <GithubIcon className="w-4 h-4" />
-                <span>{t.cta.githubBtn}</span>
-              </a>
-            </div>
-          </div>
-        </SpotlightCard>
-        </Reveal>
-      </div>
-    </section>
-  );
+  const [source,setSource]=useState<DownloadSource>("mirror");
+  const [release,setRelease]=useState<AppRelease>();
+  const [packages,setPackages]=useState<PackageManifest>({});
+  const [appState,setAppState]=useState<"loading"|"error"|"empty"|"ready">("loading");
+  const [packageState,setPackageState]=useState<"loading"|"error"|"ready">("loading");
+  const [attempt,setAttempt]=useState(0);
+  const [restored,setRestored]=useState(false);
+  useEffect(()=>{try{const saved=localStorage.getItem("srp_download_source");if(saved==="github"||saved==="mirror")setSource(saved);}catch(error){if(!(error instanceof DOMException))console.warn(error);}setRestored(true);},[]);
+  useEffect(()=>{
+    if(!restored)return;
+    const controller=new AbortController();
+    setAppState("loading");setRelease(undefined);
+    (async()=>{
+      let found:AppRelease|undefined;
+      try { found=parseAppRelease(await fetchJson(softwareUrl(RELEASE_MANIFEST,source),controller.signal)); }
+      catch(error){if(controller.signal.aborted)return;console.info("Release manifest unavailable; trying GitHub API",error);}
+      if(found){setRelease(found);setAppState("ready");return;}
+      try {found=parseAppRelease(await fetchJson(RELEASE_API,controller.signal));if(controller.signal.aborted)return;setRelease(found);setAppState(found?"ready":"empty");}
+      catch(error){if(!controller.signal.aborted){console.info("Software release information unavailable",error);setAppState("error");}}
+    })();
+    return()=>controller.abort();
+  },[source,attempt,restored]);
+  useEffect(()=>{
+    const controller=new AbortController();setPackageState("loading");
+    fetchJson(assetPath("/packages.json"),controller.signal).then(value=>{if(controller.signal.aborted)return;const entries=parsePackageManifest(value);setPackages(entries);setPackageState(packageIds.every(id=>!!entries[id])?"ready":"error");}).catch(error=>{if(!controller.signal.aborted){console.info("Package metadata unavailable",error);setPackageState("error");}});
+    return()=>controller.abort();
+  },[attempt]);
+  function choose(value:DownloadSource){setSource(value);try{localStorage.setItem("srp_download_source",value);}catch(error){if(!(error instanceof DOMException))console.warn(error);}}
+  const appAssets=[{name:t.downloads.setup,note:t.downloads.setupNote,asset:release?.setup,Icon:Monitor},{name:t.downloads.portable,note:t.downloads.portableNote,asset:release?.portable,Icon:Archive}];
+  const packageDescriptions=[t.downloads.srp,t.downloads.video,t.downloads.annotations];const icons=[FileCode2,Settings2,Map];
+  return <section id="download" className="cs2-band cs2-band-orange downloads-section"><div className="content-width section-space">
+    <Reveal className="section-heading"><div className="eyebrow">{t.downloads.eyebrow}</div><h2>{t.downloads.title}</h2><p>{t.downloads.description}</p></Reveal>
+    <div className="download-board">
+      <div className="download-heading"><div><span className="eyebrow">DESKTOP APP</span><h3>{t.downloads.app}</h3><p>{t.downloads.appNote}</p></div><div className="source-control"><span id="source-label">{t.downloads.source}</span><div role="group" aria-labelledby="source-label"><button aria-pressed={source==="mirror"} onClick={()=>choose("mirror")}>{t.downloads.mirror}</button><button aria-pressed={source==="github"} onClick={()=>choose("github")}>{t.downloads.direct}</button></div></div></div>
+      <p className="source-note">{t.downloads.sourceNote}</p>
+      <div className={`release-status status-${appState}`} role="status">{appState==="loading"?<><LoaderCircle className="spin" size={16}/>{t.downloads.loading}</>:appState==="ready"?<><span className="status-dot"/>{t.downloads.latest} · v{release?.version}</>:<><span>{appState==="empty"?t.downloads.noRelease:t.downloads.unavailable}</span><button className="text-button" onClick={()=>setAttempt(value=>value+1)}><RefreshCw size={14}/>{t.downloads.retry}</button></>}</div>
+      <div className="app-download-grid">{appAssets.map(({name,note,asset,Icon})=><article key={name} className="app-download-card"><Icon size={27}/><div><h4>{name}</h4><p>{note}</p></div><div className="download-meta"><span className="font-mono">{asset ? `v${release?.version}` : "Windows x64"}</span>{asset?.size&&<span>{formatSize(asset.size)}</span>}</div><DownloadLink asset={asset} source={source} label={t.downloads.download}/><Checksum hash={asset?.sha256}/></article>)}</div>
+      <a className="release-fallback" href={RELEASES} target="_blank" rel="noreferrer">{t.downloads.releases}<ArrowUpRight size={15}/></a>
+      <div className="download-divider"/>
+      <div className="package-heading"><Package size={22}/><div><h3>{t.downloads.packages}</h3><p>{t.downloads.packageNote}</p></div></div>
+      <div className="package-download-grid">{packageIds.map((id,index)=>{const entry=packages[id];const Icon=icons[index];return <article key={id} className="package-download-card"><div className="package-card-top"><Icon size={21}/><span className="font-mono">{entry?`v${entry.version}`:"—"}</span></div><h4 className="font-mono">{id}</h4><p>{packageDescriptions[index]}</p><div className="download-meta">{entry?.size?<span>{formatSize(entry.size)}</span>:<span>{packageState==="loading"?t.downloads.loading:t.downloads.unavailable}</span>}</div><DownloadLink asset={entry} label={`${t.downloads.download} ZIP`}/><Checksum hash={entry?.sha256}/></article>;})}</div>
+      <div className="package-source"><span>{t.downloads.packageSource}</span>{packageState==="error"&&<button className="text-button" onClick={()=>setAttempt(value=>value+1)}><RefreshCw size={14}/>{t.downloads.retry}</button>}</div>
+      <div className="download-help"><span>{t.downloads.instructions}</span><a href={`${REPOSITORY}#readme`} target="_blank" rel="noreferrer">{t.downloads.readme}<ArrowUpRight size={15}/></a></div>
+    </div>
+  </div></section>;
 }

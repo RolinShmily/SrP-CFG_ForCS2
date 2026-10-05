@@ -11,9 +11,9 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "SrP-CFG - CS2 原生配置运行时与桌面套件",
+  title: "SrP-CFG — 你的 CS2 配置工作台",
   description:
-    "面向 CS2 竞技选手与深度定制玩家的现代化原生配置运行时与跨平台桌面管理套件。100% VAC 安全原生机制，Steam 云同步双轨共存，全物理路径差异审计与 10 级时间戳快照回滚。",
+    "管理 CS2 预设、自由装配功能、定制视频设置与地图指南。下载 Windows 桌面软件及独立 srp-cfg、video、annotations 配置包。",
   keywords: [
     "CS2",
     "Counter-Strike 2",
@@ -22,19 +22,18 @@ export const metadata: Metadata = {
     "jumpthrow",
     "practice cfg",
     "CS2 config",
-    "Tauri",
-    "Rust",
-    "VAC Safe",
+    "Qt",
+    "HuskarUI",
+    "CS2 video settings",
   ],
   authors: [{ name: "RoL1n_SrP", url: "https://blog.srprolin.top" }],
   creator: "RoL1n_SrP",
   icons: {
-    icon: "/favicon.ico",
+    icon: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/favicon.ico`,
   },
   openGraph: {
-    title: "SrP-CFG - CS2 原生配置运行时与桌面套件",
-    description:
-      "零注入 · 100% VAC 安全。原生机制、Steam 云同步双轨、秒级快照与 CS2 语法高亮编辑器。",
+    title: "SrP-CFG — 你的 CS2 配置工作台",
+    description: "预设、自由装配、视频设置与地图指南。在一个桌面工作台管理你的 CS2 配置。",
     url: "https://cfg.srprolin.top",
     siteName: "SrP-CFG",
     locale: "zh_CN",
@@ -42,9 +41,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SrP-CFG - CS2 原生配置运行时与桌面套件",
-    description:
-      "面向 CS2 竞技玩家的原生配置运行时与桌面管理套件，100% VAC 安全。",
+    title: "SrP-CFG — 你的 CS2 配置工作台",
+    description: "了解 SrP-CFG 桌面软件，下载便携版、安装版及独立配置包。",
   },
 };
 
@@ -67,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
-        {basePath && (
+        {basePath ? (
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -81,7 +79,7 @@ export default function RootLayout({
               `,
             }}
           />
-        )}
+        ) : null}
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
         <ThemeProvider
@@ -94,7 +92,7 @@ export default function RootLayout({
             <MotionProvider>
               <div className="relative flex min-h-screen flex-col">
                 <Navbar />
-                <main className="flex-1">{children}</main>
+                <main id="main-content" tabIndex={-1} className="flex-1">{children}</main>
                 <Footer />
               </div>
             </MotionProvider>

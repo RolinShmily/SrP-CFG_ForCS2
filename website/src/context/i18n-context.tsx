@@ -29,16 +29,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem("srp_locale") as Locale | null;
       if (saved === "zh" || saved === "en") {
         setLocaleState(saved);
-      } else {
-        const browserLang = navigator.language.toLowerCase();
-        if (browserLang.startsWith("zh")) {
-          setLocaleState("zh");
-        } else {
-          setLocaleState("en");
-        }
       }
-    } catch {
-      // ignore local storage errors
+    } catch (error) {
+      if (!(error instanceof DOMException)) console.warn("Language preference unavailable", error);
     }
   }, []);
 
@@ -46,9 +39,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     setLocaleState(newLocale);
     try {
       localStorage.setItem("srp_locale", newLocale);
-      document.documentElement.lang = newLocale === "zh" ? "zh-CN" : "en-US";
-    } catch {
-      // ignore
+    } catch (error) {
+      if (!(error instanceof DOMException)) console.warn("Language preference unavailable", error);
     }
   };
 
@@ -56,6 +48,11 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     const next = locale === "zh" ? "en" : "zh";
     setLocale(next);
   };
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
+    document.title = locale === "zh" ? "SrP-CFG — 你的 CS2 配置工作台" : "SrP-CFG — Your CS2 config workspace";
+  }, [locale]);
 
   const t = locale === "zh" ? zh : en;
 
