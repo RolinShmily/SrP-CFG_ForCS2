@@ -51,6 +51,9 @@ qt_add_executable(srp_gui
     ${GUI_RC_FILE}
 )
 
+# Desktop GUI applications must not allocate a console when launched on Windows.
+set_target_properties(srp_gui PROPERTIES WIN32_EXECUTABLE TRUE)
+
 set(HUSKARUI_IMPORT_PATH "${CMAKE_BINARY_DIR}/HuskarUI/qml")
 target_compile_definitions(srp_gui PRIVATE
     HUSKARUI_IMPORT_PATH="${HUSKARUI_IMPORT_PATH}"
