@@ -5,7 +5,6 @@ import QtQuick.Dialogs
 import HuskarUI.Basic
 import SrPGui
 import "../components"
-import "../components"
 
 Item {
     id: overviewRoot
@@ -187,7 +186,7 @@ Item {
                                 color: OverviewController.cs2Status === "Installed" ? MetaTheme.statusSuccess : MetaTheme.statusWarning
                             }
 
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: OverviewController.cs2Version.length > 0 ? OverviewController.cs2Version : "Counter-Strike 2"
                                 font.pixelSize: 11
                                 font.bold: true
@@ -283,7 +282,7 @@ Item {
                         ColumnLayout {
                             spacing: 1
 
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: OverviewController.currentUserName.length > 0 ? OverviewController.currentUserName : "Steam User"
                                 font.pixelSize: 11
                                 font.bold: true
@@ -359,7 +358,7 @@ Item {
                     RowLayout {
                         Layout.fillWidth: true
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("overview.path.title", OverviewController.currentLang)
                             font.pixelSize: 13
                             font.bold: true
@@ -383,7 +382,7 @@ Item {
                         Layout.fillWidth: true
                         spacing: 4
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("overview.path.steam_label", OverviewController.currentLang)
                             font.pixelSize: 11
                             font.bold: true
@@ -438,7 +437,7 @@ Item {
                         Layout.fillWidth: true
                         spacing: 4
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("overview.path.game_label", OverviewController.currentLang)
                             font.pixelSize: 11
                             font.bold: true
@@ -508,7 +507,7 @@ Item {
                             color: OverviewController.isSrpInstalled ? MetaTheme.statusSuccess : MetaTheme.statusWarning
                         }
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.isSrpInstalled
                                   ? (OverviewController.tr("overview.path.srp_status_installed", OverviewController.currentLang) + " (" + OverviewController.installedSrpVersion + ")")
                                   : OverviewController.tr("overview.path.srp_status_not_installed", OverviewController.currentLang)
@@ -597,7 +596,7 @@ Item {
                     RowLayout {
                         Layout.fillWidth: true
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("overview.convars.title", OverviewController.currentLang)
                             font.pixelSize: 13
                             font.bold: true
@@ -626,13 +625,13 @@ Item {
                             Layout.fillWidth: true
                             spacing: 4
 
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: OverviewController.totalConvars.toString()
                                 font.pixelSize: 28
                                 font.bold: true
                                 color: MetaTheme.textPrimary
                             }
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: OverviewController.tr("overview.convars.total_entries", OverviewController.currentLang)
                                 font.pixelSize: 11
                                 color: MetaTheme.textSecondary
@@ -652,13 +651,13 @@ Item {
                             Layout.fillWidth: true
                             spacing: 4
 
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: OverviewController.totalBindings.toString()
                                 font.pixelSize: 28
                                 font.bold: true
                                 color: MetaTheme.textPrimary
                             }
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: OverviewController.tr("overview.convars.keybinds_count", OverviewController.currentLang)
                                 font.pixelSize: 11
                                 color: MetaTheme.textSecondary
@@ -713,6 +712,11 @@ Item {
                     }
                 }
             }
+        }
+
+        PackagePanel {
+            Layout.fillWidth: true
+            packageId: "srp-cfg"
         }
 
         // 下半区自然弹性留白

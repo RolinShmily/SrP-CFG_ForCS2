@@ -25,7 +25,7 @@ class PresetsController : public QObject {
     Q_PROPERTY(QString activePresetId READ activePresetId NOTIFY activePresetChanged)
     Q_PROPERTY(bool isPresetLoaded READ isPresetLoaded NOTIFY isPresetLoadedChanged)
 
-    Q_PROPERTY(QVariantList availableFiles READ availableFiles CONSTANT)
+    Q_PROPERTY(QVariantList availableFiles READ availableFiles NOTIFY selectedFileChanged)
     Q_PROPERTY(int selectedFileIndex READ selectedFileIndex WRITE setSelectedFileIndex NOTIFY selectedFileChanged)
     Q_PROPERTY(QString selectedFileName READ selectedFileName NOTIFY selectedFileChanged)
     Q_PROPERTY(QString currentFilePathDisplay READ currentFilePathDisplay NOTIFY currentFilePathDisplayChanged)
@@ -104,6 +104,7 @@ signals:
 
 private:
     void refreshPresets();
+    void refreshFiles();
     void loadCurrentFileContent();
     QString getCurrentAbsoluteFilePath() const;
     void watchCurrentFile();
@@ -122,6 +123,8 @@ private:
 
     QString m_editorContent;
     QString m_savedFileContent;
+    bool m_hasBom = false;
+    QString m_newline = "\n";
     bool m_isEditorDirty = false;
     int m_editorFontSize = 12;
 

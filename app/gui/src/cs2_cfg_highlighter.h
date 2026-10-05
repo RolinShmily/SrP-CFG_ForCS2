@@ -13,6 +13,7 @@ public:
     explicit Cs2CfgHighlighter(QTextDocument* parent = nullptr);
 
     void setDarkTheme(bool isDark);
+    void setStructuredMode(bool enabled);
 
 protected:
     void highlightBlock(const QString& text) override;
@@ -30,4 +31,5 @@ private:
     QTextCharFormat m_commentFormat;
 
     bool m_isDark = true;
+    bool m_structured = false;
 };

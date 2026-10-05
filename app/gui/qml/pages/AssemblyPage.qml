@@ -230,7 +230,7 @@ Item {
                             anchors.left: parent.left; anchors.right: parent.right; anchors.top: parent.top
                             anchors.margins: 16
                             spacing: 12
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 Layout.fillWidth: true
                                 text: page.t("assembly.user_description")
                                 color: MetaTheme.textSecondary
@@ -324,7 +324,7 @@ Item {
                     currentFilePath: AssemblyController.currentFilePathDisplay
                     onTextChanged: AssemblyController.updateEditorContent(text)
                 }
-                Text {
+                Text { font.family: MetaTheme.fontFamily;
                     visible: !AssemblyController.canSave && !AssemblyController.isBusy
                     Layout.fillWidth: true
                     text: page.t("valve.readonly")
@@ -336,7 +336,7 @@ Item {
         }
     }
 
-    component SectionTitle: Text {
+    component SectionTitle: Text { font.family: MetaTheme.fontFamily;
         Layout.fillWidth: true
         font.pixelSize: 22
         font.bold: true
@@ -364,7 +364,7 @@ Item {
             implicitWidth: 5; implicitHeight: 5; radius: 3
             color: parent.assembled ? MetaTheme.statusSuccess : MetaTheme.textDisabled
         }
-        Text {
+        Text { font.family: MetaTheme.fontFamily;
             text: page.t(parent.assembled ? "valve.assembled_state" : "valve.not_assembled")
             font.pixelSize: 11
             color: parent.assembled ? MetaTheme.textSecondary : MetaTheme.textTertiary

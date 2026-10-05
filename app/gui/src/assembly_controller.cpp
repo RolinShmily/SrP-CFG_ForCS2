@@ -1,9 +1,11 @@
 #include "assembly_controller.h"
 #include "overview_controller.h"
+#include "package_controller.h"
 #include "cs2_cfg_highlighter.h"
 #include "srp/core/assembly.h"
 #include "srp/core/actions.h"
 #include "srp/core/i18n.h"
+#include "srp/core/catalog.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -15,7 +17,7 @@ QStringList editorFiles() {
     QStringList result = {"user/custom.cfg", "valve/settings.cfg", "valve/keymap.cfg"};
     for (const auto& entry : srp::core::assemblyModules()) {
         const auto base = QString::fromStdString(entry.directory());
-        result << base + "/settings.cfg" << base + "/keymap.cfg";
+        for (const auto& file : entry.files) result << base + "/" + QString::fromStdString(file);
     }
     return result;
 }
@@ -30,16 +32,11 @@ AssemblyController::AssemblyController(QObject* parent) : QObject(parent), m_fil
         connect(overview, &OverviewController::detectionChanged, this, &AssemblyController::refresh);
         connect(overview, &OverviewController::srpInstallStateChanged, this, &AssemblyController::refresh);
     }
+    if (auto* packages = PackageController::instance()) connect(packages, &PackageController::packageChanged, this, [this](const QString& id) { if (id == "srp-cfg") refresh(); });
     refresh();
 }
-QStringList AssemblyController::featureIds() const {
-    QStringList ids; for (const auto& entry : srp::core::assemblyModules()) if (entry.category == "features") ids << QString::fromStdString(entry.id);
-    return ids;
-}
-QStringList AssemblyController::modeIds() const {
-    QStringList ids; for (const auto& entry : srp::core::assemblyModules()) if (entry.category == "modes") ids << QString::fromStdString(entry.id);
-    return ids;
-}
+QStringList AssemblyController::featureIds() const { return m_featureIds; }
+QStringList AssemblyController::modeIds() const { return m_modeIds; }
 QString AssemblyController::cfgDir() const {
     return OverviewController::instance() ? OverviewController::instance()->cfgPath() : QString();
 }
@@ -50,13 +47,17 @@ bool AssemblyController::canSave() const {
     return !m_busy && m_documentCfgDir == cfgDir() && srp::core::isSrpInstalled(cfgDir().toStdString());
 }
 QString AssemblyController::activePresetName() const {
-    if (m_preset == "default") return "Default";
-    if (m_preset == "echo") return "Echo";
-    if (m_preset == "visionl") return "VisionL";
-    if (m_preset == "yszh") return "Yszh";
+    for (const auto& e : srp::core::configCatalog("srp-cfg")) if(e.category=="presets" && QString::fromStdString(e.id)==m_preset) return QString::fromStdString(e.name);
     return m_preset;
 }
 void AssemblyController::updateState() {
+    const auto previousFile = relativeFile();
+    auto paths = editorFiles();
+    if (m_dirty && !paths.contains(previousFile)) paths.append(previousFile);
+    m_filePaths = paths; m_index = std::max(0,static_cast<int>(m_filePaths.indexOf(previousFile)));
+    QStringList features,modes;
+    for (const auto& e : srp::core::assemblyModules()) (e.category=="features" ? features : modes) << QString::fromStdString(e.id);
+    if(features!=m_featureIds || modes!=m_modeIds){m_featureIds=features;m_modeIds=modes;emit catalogChanged();}
     const auto state = srp::core::inspectValveAssembly(cfgDir().toStdString());
     m_settings = state.settings;
     m_keymap = state.keymap;
@@ -74,7 +75,7 @@ void AssemblyController::updateState() {
         m_modules.append(QVariantMap{
             {"id", QString::fromStdString(entry.id)}, {"name", QString::fromStdString(entry.name)},
             {"category", QString::fromStdString(entry.category)}, {"directory", QString::fromStdString(entry.directory())},
-            {"command", QString::fromStdString(entry.command)}, {"settings", state.settings}, {"keymap", state.keymap},
+            {"command", QString::fromStdString(entry.command)}, {"keymapCommand", QString::fromStdString(entry.keymapCommand)}, {"settings", state.settings}, {"keymap", state.keymap},
             {"launchKeys", keys}, {"legacyAutoLoad", state.legacyAutoLoad}});
     }
     emit filesChanged();
@@ -144,7 +145,7 @@ void AssemblyController::refresh() {
             return;
         }
         loadDocument();
-    } else if (m_documentPath.isEmpty()) {
+    } else if (m_documentPath.isEmpty() || (!m_dirty && !srp::core::isSrpInstalled(cfgDir().toStdString()) && m_documentPath != QString::fromStdString(srp::core::resolveAssemblyFilePath(relativeFile().toStdString(),cfgDir().toStdString())))) {
         loadDocument();
     } else {
         synchronize();

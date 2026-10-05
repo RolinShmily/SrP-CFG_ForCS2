@@ -4,6 +4,7 @@ import HuskarUI.Basic
 
 QtObject {
     id: meta
+    readonly property string fontFamily: HusTheme.Primary.fontPrimaryFamily
 
     // 核心黑白
     readonly property color starkBlack: "#141517"

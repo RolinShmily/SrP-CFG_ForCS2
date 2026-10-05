@@ -14,6 +14,12 @@
 #include "overview_controller.h"
 #include "presets_controller.h"
 #include "assembly_controller.h"
+#include "package_controller.h"
+#include "media_controller.h"
+#include "srp/core/packages.h"
+#include "srp/core/app_update.h"
+#include "preferences_controller.h"
+#include "app_update_controller.h"
 #include "cs2_cfg_highlighter.h"
 #include "code_editor_gutter.h"
 
@@ -36,7 +42,7 @@ int main(int argc, char* argv[]) {
     app.setOrganizationDomain("srprolin.top");
     app.setApplicationName("SrP-CFG");
     app.setApplicationDisplayName("SrP-CFG");
-    app.setApplicationVersion("3.4.0");
+    app.setApplicationVersion(QString::fromStdString(srp::core::applicationVersion()));
     app.setWindowIcon(QIcon(":/SrPGui/resources/icon.png"));
 
     // 加载 HuskarUI-Icons 字体
@@ -46,8 +52,9 @@ int main(int argc, char* argv[]) {
 
     QString screenshotPath;
     QString initialRoute = "overview";
+    QString initialPresetId;
     int initialPresetIndex = -1;
-    int initialFileIndex = -1;
+    QString initialFileName;
     int customWidth = -1;
     int customHeight = -1;
     int initialZoom = -1;
@@ -61,20 +68,16 @@ int main(int argc, char* argv[]) {
         } else if (std::string_view(argv[i]) == "--route" && i + 1 < argc) {
             initialRoute = QString::fromUtf8(argv[++i]);
         } else if (std::string_view(argv[i]) == "--preset" && i + 1 < argc) {
-            QString p = QString::fromUtf8(argv[++i]).toLower();
-            if (p == "default") initialPresetIndex = 0;
-            else if (p == "echo") initialPresetIndex = 1;
-            else if (p == "visionl") initialPresetIndex = 2;
-            else if (p == "yszh") initialPresetIndex = 3;
+            initialPresetId = QString::fromUtf8(argv[++i]);
         } else if (std::string_view(argv[i]) == "--file" && i + 1 < argc) {
             QString f = QString::fromUtf8(argv[++i]).toLower();
-            if (f == "settings" || f == "settings.cfg") initialFileIndex = 0;
-            else if (f == "keymap" || f == "keymap.cfg") initialFileIndex = 1;
-            else if (f == "custom" || f == "custom.cfg" || f == "user/custom.cfg") initialFileIndex = 2;
+            initialFileName = f == "settings" ? "settings.cfg" : f == "keymap" ? "keymap.cfg" : (f == "custom" || f == "custom.cfg") ? "user/custom.cfg" : f;
         } else if (std::string_view(argv[i]) == "--width" && i + 1 < argc) {
             customWidth = std::atoi(argv[++i]);
         } else if (std::string_view(argv[i]) == "--height" && i + 1 < argc) {
             customHeight = std::atoi(argv[++i]);
+        } else if (std::string_view(argv[i]) == "--store" && i + 1 < argc) {
+            srp::core::setPackageStoreRoot(argv[++i]);
         } else if (std::string_view(argv[i]) == "--maximized") {
             startMaximized = true;
         } else if (std::string_view(argv[i]) == "--zoom" && i + 1 < argc) {
@@ -94,27 +97,39 @@ int main(int argc, char* argv[]) {
 
     QQmlApplicationEngine engine;
     HusApp::initialize(&engine);
+    auto* preferencesCtrl=new PreferencesController(&app);
+    if(forceEn)srp::core::setLanguage(srp::core::Language::EnUS);
+    qmlRegisterSingletonInstance("SrPGui",1,0,"PreferencesController",preferencesCtrl);
 
     qmlRegisterType<CodeEditorGutter>("SrPGui", 1, 0, "CodeEditorGutter");
 
     auto* overviewCtrl = new srp::gui::OverviewController(&app);
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "OverviewController", overviewCtrl);
 
+    auto* appUpdateCtrl=new AppUpdateController(&app);
+    qmlRegisterSingletonInstance("SrPGui",1,0,"AppUpdateController",appUpdateCtrl);
+    auto* packageCtrl = new PackageController(&app);
+    qmlRegisterSingletonInstance("SrPGui", 1, 0, "PackageController", packageCtrl);
+    auto* videoCtrl = new MediaController(true, &app);
+    auto* annotationsCtrl = new MediaController(false, &app);
+    qmlRegisterSingletonInstance("SrPGui", 1, 0, "VideoController", videoCtrl);
+    qmlRegisterSingletonInstance("SrPGui", 1, 0, "AnnotationsController", annotationsCtrl);
+
     auto* presetsCtrl = new PresetsController(&app);
+    for (int i=0;i<presetsCtrl->availablePresets().size();++i) if(presetsCtrl->availablePresets()[i].toMap()["id"].toString()==initialPresetId) initialPresetIndex=i;
     if (initialPresetIndex >= 0) {
         presetsCtrl->setSelectedPresetIndex(initialPresetIndex);
     }
-    if (initialFileIndex >= 0) {
-        presetsCtrl->setSelectedFileIndex(initialFileIndex);
-    }
+    for (int i=0;i<presetsCtrl->availableFiles().size();++i) if(presetsCtrl->availableFiles()[i].toMap()["value"].toString()==initialFileName) presetsCtrl->setSelectedFileIndex(i);
     if (initialZoom >= 9 && initialZoom <= 28) {
         presetsCtrl->setEditorFontSize(initialZoom);
     }
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "PresetsController", presetsCtrl);
 
     auto* assemblyCtrl = new AssemblyController(&app);
-    if (initialRoute.startsWith("assembly_") && initialFileIndex >= 0) {
-        assemblyCtrl->setSelectedFileIndex(initialFileIndex == 2 ? 0 : initialFileIndex + 1);
+    if (initialRoute.startsWith("assembly_") && !initialFileName.isEmpty()) {
+        const auto relative = initialFileName=="settings.cfg" || initialFileName=="keymap.cfg" ? "valve/"+initialFileName : initialFileName;
+        assemblyCtrl->openFile(relative);
     }
     qmlRegisterSingletonInstance("SrPGui", 1, 0, "AssemblyController", assemblyCtrl);
 

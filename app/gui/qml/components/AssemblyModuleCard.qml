@@ -24,7 +24,7 @@ Rectangle {
         spacing: 12
         RowLayout {
             Layout.fillWidth: true
-            Text {
+            Text { font.family: MetaTheme.fontFamily;
                 text: card.state.name || card.moduleId
                 font.pixelSize: 17
                 font.bold: true
@@ -47,7 +47,7 @@ Rectangle {
                 implicitWidth: 5; implicitHeight: 5; radius: 3
                 color: card.state.settings ? MetaTheme.statusSuccess : MetaTheme.textDisabled
             }
-            Text {
+            Text { font.family: MetaTheme.fontFamily;
                 Layout.fillWidth: true
                 text: card.isMode
                     ? (card.state.legacyAutoLoad ? card.t("assembly.legacy") : (card.state.launchKeys && card.state.launchKeys.length > 0 ? card.t("assembly.bound_state").arg(card.state.launchKeys.join(", ")) : card.t("assembly.not_bound")))
@@ -60,7 +60,7 @@ Rectangle {
         RowLayout {
             visible: card.isMode
             Layout.fillWidth: true
-            Text { text: card.t("assembly.launch_key"); color: MetaTheme.textSecondary; font.pixelSize: 12 }
+            Text { font.family: MetaTheme.fontFamily; text: card.t("assembly.launch_key"); color: MetaTheme.textSecondary; font.pixelSize: 12 }
             HusInput {
                 id: launchKey
                 objectName: "launchKey_" + card.moduleId
@@ -79,6 +79,7 @@ Rectangle {
         HusCheckBox {
             id: keysChoice
             objectName: "moduleKeys_" + card.moduleId
+            visible: !!card.state.keymapCommand
             text: card.t(card.isMode ? "assembly.keys_on_enter" : "assembly.include_keys")
             enabled: !AssemblyController.isBusy
             effectEnabled: false
@@ -96,7 +97,7 @@ Rectangle {
                 anchors.leftMargin: 10; anchors.rightMargin: 4
                 Text {
                     Layout.fillWidth: true
-                    text: (card.state.command || "") + (keysChoice.checked ? "_keys" : "")
+                    text: keysChoice.checked ? (card.state.keymapCommand || card.state.command || "") : (card.state.command || "")
                     font.family: "Consolas"
                     font.pixelSize: 11
                     color: MetaTheme.textSecondary
@@ -108,7 +109,7 @@ Rectangle {
                     type: HusButton.Type_Text
                     contentDescription: card.t("valve.copy")
                     onClicked: {
-                        OverviewController.copyToClipboard((card.state.command || "") + (keysChoice.checked ? "_keys" : ""));
+                        HusApi.setClipboardText(keysChoice.checked ? card.state.keymapCommand : (card.state.command || ""));
                         AppFeedback.success(card.t("valve.copied"));
                     }
                 }
@@ -118,6 +119,7 @@ Rectangle {
             Layout.fillWidth: true
             spacing: 6
             AppButton {
+                visible: !!card.state.keymapCommand
                 text: card.t("assembly.edit_keys")
                 sizeHint: "small"
                 iconSource: HusIcon.EditOutlined

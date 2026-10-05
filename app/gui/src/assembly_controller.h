@@ -12,8 +12,8 @@ class AssemblyController : public QObject {
     Q_OBJECT
     Q_PROPERTY(QVariantList availableFiles READ availableFiles NOTIFY filesChanged)
     Q_PROPERTY(QVariantList modules READ modules NOTIFY stateChanged)
-    Q_PROPERTY(QStringList featureIds READ featureIds CONSTANT)
-    Q_PROPERTY(QStringList modeIds READ modeIds CONSTANT)
+    Q_PROPERTY(QStringList featureIds READ featureIds NOTIFY catalogChanged)
+    Q_PROPERTY(QStringList modeIds READ modeIds NOTIFY catalogChanged)
     Q_PROPERTY(int selectedFileIndex READ selectedFileIndex NOTIFY selectedFileChanged)
     Q_PROPERTY(QString currentFilePathDisplay READ currentFilePathDisplay NOTIFY selectedFileChanged)
     Q_PROPERTY(QString editorContent READ editorContent NOTIFY editorContentChanged)
@@ -56,6 +56,7 @@ public:
     Q_INVOKABLE void updateTheme(bool dark);
 signals:
     void filesChanged();
+    void catalogChanged();
     void selectedFileChanged();
     void editorContentChanged();
     void editorDirtyChanged();
@@ -80,6 +81,7 @@ private:
     void runModule();
     void completeModule(const srp::core::ConfigWriteResult& result);
     QVariantList m_files, m_modules;
+    QStringList m_featureIds, m_modeIds;
     QStringList m_filePaths;
     enum class Pending { Valve, Feature, Mode };
     Pending m_pending = Pending::Valve;

@@ -10,7 +10,7 @@ if(NOT TARGET HuskarUIBasic)
     add_subdirectory(3rdparty/HuskarUI)
 endif()
 
-find_package(Qt6 6.5 COMPONENTS Core Gui Quick QuickControls2 REQUIRED)
+find_package(Qt6 6.5 COMPONENTS Core Gui Quick QuickControls2 Concurrent REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
 
 if(QT_KNOWN_POLICY_QTP0004)
@@ -35,6 +35,14 @@ qt_add_executable(srp_gui
     src/presets_controller.cpp
     src/assembly_controller.h
     src/assembly_controller.cpp
+    src/package_controller.h
+    src/package_controller.cpp
+    src/media_controller.h
+    src/media_controller.cpp
+    src/preferences_controller.h
+    src/preferences_controller.cpp
+    src/app_update_controller.h
+    src/app_update_controller.cpp
     src/cs2_cfg_highlighter.h
     src/cs2_cfg_highlighter.cpp
     src/code_editor_gutter.h
@@ -55,6 +63,9 @@ qt_add_qml_module(srp_gui
         qml/Main.qml
         qml/MetaTheme.qml
         qml/components/AppModal.qml
+        qml/components/AppDialog.qml
+        qml/components/AboutDialog.qml
+        qml/components/SettingsDialog.qml
         qml/components/AppFeedback.qml
         qml/components/AppButton.qml
         qml/components/AppIcon.qml
@@ -65,6 +76,10 @@ qt_add_qml_module(srp_gui
         qml/pages/PresetsPage.qml
         qml/components/AssemblyModuleCard.qml
         qml/pages/AssemblyPage.qml
+        qml/components/PackagePanel.qml
+        qml/components/MediaEditorPanel.qml
+        qml/pages/VideoPage.qml
+        qml/pages/AnnotationsPage.qml
     RESOURCES
         resources/icon.png
         resources/favicon.ico
@@ -112,4 +127,5 @@ target_link_libraries(srp_gui PRIVATE
     Qt6::Gui
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Concurrent
 )

@@ -12,6 +12,7 @@ Rectangle {
     property alias lineCount: editorArea.lineCount
     property alias textDocument: editorArea.textDocument
     property string currentFilePath: ""
+    property string syntaxLabel: "Source 2 CFG"
     property var editorController: PresetsController
     property bool shortcutsEnabled: visible
     onFontPixelSizeChanged: Qt.callLater(gutter.requestRedraw)
@@ -53,22 +54,22 @@ Rectangle {
 
     // 快捷键支持：Ctrl + / - / = / 0
     Shortcut {
-        enabled: control.shortcutsEnabled
+        enabled: control.shortcutsEnabled && control.enabled
         sequence: "Ctrl+="
         onActivated: control.zoomIn()
     }
     Shortcut {
-        enabled: control.shortcutsEnabled
+        enabled: control.shortcutsEnabled && control.enabled
         sequence: "Ctrl++"
         onActivated: control.zoomIn()
     }
     Shortcut {
-        enabled: control.shortcutsEnabled
+        enabled: control.shortcutsEnabled && control.enabled
         sequence: "Ctrl+-"
         onActivated: control.zoomOut()
     }
     Shortcut {
-        enabled: control.shortcutsEnabled
+        enabled: control.shortcutsEnabled && control.enabled
         sequence: "Ctrl+0"
         onActivated: control.resetZoom()
     }
@@ -183,7 +184,7 @@ Rectangle {
                     Layout.alignment: Qt.AlignVCenter
                     visible: control.currentFilePath.length > 0
 
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: "📄"
                         font.pixelSize: 10
                     }
@@ -206,7 +207,7 @@ Rectangle {
                     radius: 3
                     color: zoomMouseArea.containsMouse ? MetaTheme.cardBorder : "transparent"
 
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         id: zoomText
                         anchors.centerIn: parent
                         text: Math.round(control.fontPixelSize / control.defaultFontPixelSize * 100) + "%"
@@ -230,18 +231,18 @@ Rectangle {
                 }
 
                 // 格式与统计信息
-                Text {
+                Text { font.family: MetaTheme.fontFamily;
                     text: OverviewController.tr("editor.lines", OverviewController.currentLang).arg(editorArea.lineCount)
                     font.pixelSize: 10
                     color: MetaTheme.textTertiary
                 }
-                Text {
+                Text { font.family: MetaTheme.fontFamily;
                     text: "UTF-8"
                     font.pixelSize: 10
                     color: MetaTheme.textTertiary
                 }
-                Text {
-                    text: "Source 2 CFG"
+                Text { font.family: MetaTheme.fontFamily;
+                    text: control.syntaxLabel
                     font.pixelSize: 10
                     font.bold: true
                     color: MetaTheme.textSecondary

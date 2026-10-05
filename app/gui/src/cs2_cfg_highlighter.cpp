@@ -5,6 +5,10 @@ Cs2CfgHighlighter::Cs2CfgHighlighter(QTextDocument* parent)
     setupRules();
 }
 
+void Cs2CfgHighlighter::setStructuredMode(bool enabled) {
+    m_structured = enabled; setupRules(); rehighlight();
+}
+
 void Cs2CfgHighlighter::setDarkTheme(bool isDark) {
     if (m_isDark != isDark) {
         m_isDark = isDark;
@@ -98,6 +102,18 @@ void Cs2CfgHighlighter::highlightBlock(const QString& text) {
             auto match = matchIterator.next();
             setFormat(match.capturedStart(), match.capturedLength(), rule.format);
         }
+    }
+
+    if (m_structured) {
+        QTextCharFormat key; key.setForeground(m_isDark ? QColor("#93c5fd") : QColor("#1d4ed8"));
+        QTextCharFormat boolean; boolean.setForeground(m_isDark ? QColor("#c084fc") : QColor("#7e22ce"));
+        const QRegularExpression keys(QStringLiteral("^\\s*(\"[^\"]+\"|[A-Za-z_][A-Za-z0-9_]*)"));
+        const auto match = keys.match(text);
+        if (match.hasMatch()) setFormat(match.capturedStart(1), match.capturedLength(1), key);
+        const QRegularExpression values(QStringLiteral("\\b(true|false|null)\\b"));
+        auto valueMatches = values.globalMatch(text);
+        while (valueMatches.hasNext()) { const auto value = valueMatches.next(); setFormat(value.capturedStart(), value.capturedLength(), boolean); }
+        if (text.trimmed().startsWith("<!--")) setFormat(0, text.length(), m_commentFormat);
     }
 
     // 单行注释覆盖在其上 (保证注释内字符串/数字不高亮)

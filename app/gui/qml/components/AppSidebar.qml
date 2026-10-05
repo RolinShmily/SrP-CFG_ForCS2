@@ -12,6 +12,10 @@ Rectangle {
 
     property string activeRoute: "overview"
     signal assemblyRequested(string route)
+    signal aboutRequested()
+    signal settingsRequested()
+    property bool aboutOpen: false
+    property bool settingsOpen: false
     // 自由装配默认折叠收起
     property bool assemblyExpanded: false
     onActiveRouteChanged: {
@@ -27,7 +31,7 @@ Rectangle {
         spacing: 6
 
         // 导航组小标题
-        Text {
+        Text { font.family: MetaTheme.fontFamily;
             text: OverviewController.tr("nav.navigation", OverviewController.currentLang)
             font.pixelSize: 11
             font.bold: true
@@ -96,7 +100,7 @@ Rectangle {
                             Layout.alignment: Qt.AlignVCenter
                         }
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("nav.assembly", OverviewController.currentLang)
                             font.pixelSize: 12
                             font.bold: true
@@ -105,7 +109,7 @@ Rectangle {
                             elide: Text.ElideRight
                         }
 
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: "▶"
                             font.pixelSize: 8
                             color: MetaTheme.textTertiary
@@ -206,14 +210,14 @@ Rectangle {
 
                 RowLayout {
                     Layout.fillWidth: true
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: OverviewController.tr("sidebar.env_title", OverviewController.currentLang)
                         font.pixelSize: 10
                         font.bold: true
                         color: MetaTheme.textTertiary
                     }
                     Item { Layout.fillWidth: true }
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: OverviewController.tr("sidebar.env_ready", OverviewController.currentLang)
                         font.pixelSize: 10
                         color: MetaTheme.statusSuccess
@@ -226,13 +230,13 @@ Rectangle {
                         width: 5; height: 5; radius: 2.5
                         color: OverviewController.steamPath.length > 0 ? MetaTheme.statusSuccess : MetaTheme.statusCritical
                     }
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: OverviewController.tr("sidebar.env_steam", OverviewController.currentLang)
                         font.pixelSize: 10
                         color: MetaTheme.textSecondary
                     }
                     Item { Layout.fillWidth: true }
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: OverviewController.steamPath.length > 0 ? OverviewController.tr("sidebar.status_ok", OverviewController.currentLang) : OverviewController.tr("sidebar.status_missing", OverviewController.currentLang)
                         font.pixelSize: 10
                         color: OverviewController.steamPath.length > 0 ? MetaTheme.textPrimary : MetaTheme.statusCritical
@@ -245,13 +249,13 @@ Rectangle {
                         width: 5; height: 5; radius: 2.5
                         color: OverviewController.gamePath.length > 0 ? MetaTheme.statusSuccess : MetaTheme.statusWarning
                     }
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: OverviewController.tr("sidebar.env_game", OverviewController.currentLang)
                         font.pixelSize: 10
                         color: MetaTheme.textSecondary
                     }
                     Item { Layout.fillWidth: true }
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: OverviewController.gamePath.length > 0 ? OverviewController.tr("sidebar.status_matched", OverviewController.currentLang) : OverviewController.tr("sidebar.status_unlocated", OverviewController.currentLang)
                         font.pixelSize: 10
                         color: OverviewController.gamePath.length > 0 ? MetaTheme.textPrimary : MetaTheme.statusWarning
@@ -277,15 +281,17 @@ Rectangle {
             NavItem {
                 iconSource: "qrc:/SrPGui/resources/icons/info.svg"
                 label: OverviewController.tr("nav.about", OverviewController.currentLang)
-                selected: sidebar.activeRoute === "about"
-                onClicked: sidebar.activeRoute = "about"
+                objectName: "navAbout"
+                selected: sidebar.aboutOpen
+                onClicked: sidebar.aboutRequested()
             }
 
             NavItem {
                 iconSource: "qrc:/SrPGui/resources/icons/settings.svg"
                 label: OverviewController.tr("nav.settings", OverviewController.currentLang)
-                selected: sidebar.activeRoute === "settings"
-                onClicked: sidebar.activeRoute = "settings"
+                objectName: "navSettings"
+                selected: sidebar.settingsOpen
+                onClicked: sidebar.settingsRequested()
             }
         }
     }
@@ -352,7 +358,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignVCenter
             }
 
-            Text {
+            Text { font.family: MetaTheme.fontFamily;
                 text: itemRoot.label
                 font.pixelSize: 12
                 font.bold: itemRoot.selected
@@ -418,7 +424,7 @@ Rectangle {
                 color: subRoot.selected ? MetaTheme.primaryColor : (subMouse.containsMouse ? MetaTheme.textSecondary : MetaTheme.textDisabled)
             }
 
-            Text {
+            Text { font.family: MetaTheme.fontFamily;
                 text: subRoot.label
                 font.pixelSize: 11
                 color: subRoot.selected ? MetaTheme.textPrimary : (subMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary)

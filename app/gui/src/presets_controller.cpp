@@ -1,6 +1,7 @@
 #include "presets_controller.h"
 #include "cs2_cfg_highlighter.h"
 #include "overview_controller.h"
+#include "package_controller.h"
 #include "srp/core/preset.h"
 #include "srp/core/actions.h"
 #include "srp/core/detection.h"
@@ -37,7 +38,13 @@ PresetsController::PresetsController(QObject* parent)
         m_fileChangeTimer.start();
     });
     connect(&m_fileChangeTimer, &QTimer::timeout, this, &PresetsController::synchronizeCurrentFile);
+    if (auto* packages = PackageController::instance()) connect(packages, &PackageController::packageChanged, this, [this](const QString& id) {
+        if (id != "srp-cfg") return;
+        refreshPresets();
+        if (!m_isEditorDirty) loadCurrentFileContent();
+    });
 
+    if(auto* overview=OverviewController::instance()) connect(overview,&OverviewController::languageChanged,this,[this]{emit languageChanged();emit selectedPresetChanged();});
     refreshPresets();
     loadCurrentFileContent();
 }
@@ -82,6 +89,8 @@ void PresetsController::refreshPresets() {
     auto list = srp::core::scanPresets(cfgDir);
     m_activePresetId = QString::fromStdString(srp::core::getActivePresetId(cfgDir));
 
+    const QString selectedId = selectedPresetId();
+    const QVariantMap selectedMetadata = m_selectedPresetIndex < m_availablePresets.size() ? m_availablePresets[m_selectedPresetIndex].toMap() : QVariantMap();
     QVariantList qlist;
     for (const auto& p : list) {
         QVariantMap map;
@@ -89,11 +98,25 @@ void PresetsController::refreshPresets() {
         map[QStringLiteral("displayName")] = QString::fromStdString(p.displayName);
         map[QStringLiteral("command")] = QString::fromStdString(p.command);
         map[QStringLiteral("hasDiff")] = p.hasDiff;
+        map["descriptionZh"] = QString::fromStdString(p.descriptionZh); map["descriptionEn"] = QString::fromStdString(p.descriptionEn);
+        QStringList files,tagsZh,tagsEn;
+        for (const auto& f : p.files) files << QString::fromStdString(f);
+        for (const auto& t : p.tagsZh) tagsZh << QString::fromStdString(t);
+        for (const auto& t : p.tagsEn) tagsEn << QString::fromStdString(t);
+        map["files"] = files; map["tagsZh"] = tagsZh; map["tagsEn"] = tagsEn;
         map[QStringLiteral("label")] = QString::fromStdString(p.displayName) + (p.hasDiff ? QStringLiteral(" (*)") : QStringLiteral(""));
         qlist.append(map);
     }
 
-    m_availablePresets = qlist;
+    int selected = -1;
+    for (int i=0;i<qlist.size();++i) if(qlist[i].toMap()["id"].toString()==selectedId)selected=i;
+    if(m_isEditorDirty && !selectedMetadata.isEmpty()){
+        if(selected<0){selected=static_cast<int>(qlist.size());qlist.append(selectedMetadata);}
+        else qlist[selected]=selectedMetadata;
+    }
+    m_availablePresets = qlist; m_selectedPresetIndex = std::max(0,selected);
+    refreshFiles();
+    emit selectedPresetChanged();
     emit presetsChanged();
     emit activePresetChanged();
     emit isPresetLoadedChanged();
@@ -107,6 +130,7 @@ void PresetsController::setSelectedPresetIndex(int index) {
             return;
         }
         m_selectedPresetIndex = index;
+        refreshFiles();
         emit selectedPresetChanged();
         emit isPresetLoadedChanged();
         emit currentFilePathDisplayChanged();
@@ -119,54 +143,44 @@ QString PresetsController::selectedPresetId() const {
     if (m_selectedPresetIndex >= 0 && m_selectedPresetIndex < m_availablePresets.size()) {
         return m_availablePresets[m_selectedPresetIndex].toMap().value(QStringLiteral("id")).toString();
     }
-    return QStringLiteral("default");
+    return {};
 }
 
 QString PresetsController::selectedPresetName() const {
     if (m_selectedPresetIndex >= 0 && m_selectedPresetIndex < m_availablePresets.size()) {
         return m_availablePresets[m_selectedPresetIndex].toMap().value(QStringLiteral("displayName")).toString();
     }
-    return QStringLiteral("Default");
+    return {};
 }
 
 QString PresetsController::selectedPresetCommand() const {
     if (m_selectedPresetIndex >= 0 && m_selectedPresetIndex < m_availablePresets.size()) {
         return m_availablePresets[m_selectedPresetIndex].toMap().value(QStringLiteral("command")).toString();
     }
-    return QStringLiteral("srp_apply_default");
+    return {};
 }
 
+void PresetsController::refreshFiles() {
+    const auto previous = selectedFileName();
+    QVariantList files;
+    if(m_selectedPresetIndex < m_availablePresets.size()) for(const auto& f : m_availablePresets[m_selectedPresetIndex].toMap()["files"].toStringList())
+        files.append(QVariantMap{{"label",f},{"value",f}});
+    files.append(QVariantMap{{"label","user/custom.cfg"},{"value","user/custom.cfg"}});
+    if(m_isEditorDirty && std::none_of(files.begin(),files.end(),[&](const auto& f){return f.toMap()["value"].toString()==previous;}))
+        files.append(QVariantMap{{"label",previous},{"value",previous}});
+    m_availableFiles=files; m_selectedFileIndex=0;
+    for(int i=0;i<files.size();++i)if(files[i].toMap()["value"].toString()==previous)m_selectedFileIndex=i;
+    emit selectedFileChanged();
+}
 QString PresetsController::selectedPresetDescription() const {
-    QString id = selectedPresetId();
-    bool isZh = currentLang().startsWith(QStringLiteral("zh"));
-    if (id == QStringLiteral("echo")) {
-        return isZh ? QStringLiteral("进阶竞技偏好。灵敏度 1.10，包含全套按键别名优化与实战按键映射。")
-                    : QStringLiteral("Advanced competitive preference. Sensitivity 1.10 with full alias optimizations.");
-    }
-    if (id == QStringLiteral("visionl")) {
-        return isZh ? QStringLiteral("界面与视觉清晰度专项。极简 HUD 尺寸，雷达与队友标识高对比度调校。")
-                    : QStringLiteral("Visual clarity tuned. Compact HUD with high-contrast radar and team markers.");
-    }
-    if (id == QStringLiteral("yszh")) {
-        return isZh ? QStringLiteral("饮水致幻专属高敏激进配置。投掷物十字线秒放辅助与全局音频增强。")
-                    : QStringLiteral("Aggressive high-sens config with instant grenade crosshair and audio boost.");
-    }
-    return isZh ? QStringLiteral("官方推荐标准平衡基线。包含狙击、投掷物准星、雷达视野及常用基础功能规范。")
-                : QStringLiteral("Official recommended balanced baseline with crosshairs, radar and standard setup.");
+    if(m_selectedPresetIndex>=m_availablePresets.size())return {};
+    const auto item=m_availablePresets[m_selectedPresetIndex].toMap();
+    return item[currentLang().startsWith("zh") ? "descriptionZh" : "descriptionEn"].toString();
 }
-
 QVariantList PresetsController::selectedPresetTags() const {
-    QString id = selectedPresetId();
-    if (id == QStringLiteral("echo")) {
-        return {QStringLiteral("竞技偏好"), QStringLiteral("按键别名"), QStringLiteral("Sens 1.10")};
-    }
-    if (id == QStringLiteral("visionl")) {
-        return {QStringLiteral("极简 HUD"), QStringLiteral("雷达高对比"), QStringLiteral("纯净视野")};
-    }
-    if (id == QStringLiteral("yszh")) {
-        return {QStringLiteral("高敏激进"), QStringLiteral("音频细节"), QStringLiteral("秒放投掷")};
-    }
-    return {QStringLiteral("官方基线"), QStringLiteral("全能平衡"), QStringLiteral("准星/雷达")};
+    QVariantList result; if(m_selectedPresetIndex>=m_availablePresets.size())return result;
+    for(const auto& tag:m_availablePresets[m_selectedPresetIndex].toMap()[currentLang().startsWith("zh")?"tagsZh":"tagsEn"].toStringList())result.append(tag);
+    return result;
 }
 
 void PresetsController::setEditorFontSize(int size) {
@@ -198,6 +212,7 @@ void PresetsController::openPresetFolder() {
         path = cfgDir.empty() ? (srp::core::findSourceConfigDir() + "/srp-cfg/presets/" + selectedPresetId().toStdString())
                               : (cfgDir + "/srp-cfg/presets/" + selectedPresetId().toStdString());
     }
+    path = QFileInfo(getCurrentAbsoluteFilePath()).absolutePath().toStdString();
     srp::core::openFolderInExplorer(path);
 }
 
@@ -237,7 +252,9 @@ QString PresetsController::currentFilePathDisplay() const {
     if (selectedFileName() == QStringLiteral("user/custom.cfg")) {
         return QStringLiteral("srp-cfg/user/custom.cfg");
     }
-    return QStringLiteral("srp-cfg/presets/") + selectedPresetId() + QStringLiteral("/") + selectedFileName();
+    const QString path = getCurrentAbsoluteFilePath();
+    const QString relative = path.section("/srp-cfg/",-1);
+    return "srp-cfg/" + relative;
 }
 
 QString PresetsController::getCurrentAbsoluteFilePath() const {
@@ -260,7 +277,9 @@ void PresetsController::synchronizeCurrentFile() {
     if (!file.open(QIODevice::ReadOnly)) return;
     const QByteArray bytes = file.readAll();
     if (file.error() != QFileDevice::NoError) return;
-    const QString content = QString::fromUtf8(bytes);
+    QString content = QString::fromUtf8(bytes);
+    if(content.startsWith(QChar(0xfeff)))content.remove(0,1);
+    content.replace("\r\n","\n");content.replace('\r','\n');
     if (content == m_savedFileContent) return;
 
     if (m_isEditorDirty) {
@@ -270,6 +289,8 @@ void PresetsController::synchronizeCurrentFile() {
         }
         return;
     }
+    m_hasBom = bytes.startsWith("\xEF\xBB\xBF");
+    m_newline = bytes.contains("\r\n") ? "\r\n" : "\n";
     m_savedFileContent = content;
     m_editorContent = content;
     m_externalChangeNotified = false;
@@ -293,7 +314,10 @@ void PresetsController::loadCurrentFileContent() {
         cfgDir
     );
 
-    m_savedFileContent = QString::fromStdString(text);
+    m_hasBom = text.rfind("\xEF\xBB\xBF",0)==0;
+    m_newline = text.find("\r\n") != std::string::npos ? "\r\n" : "\n";
+    m_savedFileContent = QString::fromStdString(m_hasBom ? text.substr(3) : text);
+    m_savedFileContent.replace("\r\n","\n");m_savedFileContent.replace('\r','\n');
     m_editorContent = m_savedFileContent;
     m_isEditorDirty = false;
 
@@ -359,10 +383,13 @@ bool PresetsController::unloadPreset() {
 
 bool PresetsController::saveCurrentFile(const QString& content) {
     std::string cfgDir = getEffectiveGameCfgDir();
+    QString output = content;
+    if(m_newline=="\r\n")output.replace("\n","\r\n");
+    if(m_hasBom)output.prepend(QChar(0xfeff));
     bool success = srp::core::savePresetFile(
         selectedPresetId().toStdString(),
         selectedFileName().toStdString(),
-        content.toStdString(),
+        output.toStdString(),
         cfgDir
     );
 

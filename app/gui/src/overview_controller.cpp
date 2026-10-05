@@ -3,7 +3,9 @@
 #include "srp/core/vcfg.h"
 #include "srp/core/actions.h"
 #include "srp/core/i18n.h"
+#include "package_controller.h"
 #include <QUrl>
+#include <QTimer>
 
 namespace srp::gui {
 
@@ -14,6 +16,9 @@ OverviewController::OverviewController(QObject* parent)
     s_overviewInstance = this;
     m_currentLang = (srp::core::currentLanguage() == srp::core::Language::ZhCN) ? "zh" : "en";
     refresh();
+    QTimer::singleShot(0, this, [this] {
+        if (auto* packages = PackageController::instance()) connect(packages, &PackageController::packageChanged, this, [this](const QString& id) { if (id == "srp-cfg") checkSrpInstalled(); });
+    });
 }
 
 OverviewController::~OverviewController() {
@@ -111,6 +116,10 @@ bool OverviewController::checkSrpInstalled() {
 bool OverviewController::installSrp() {
     if (m_cfgPath.isEmpty()) {
         emit messageNotify(false, QString::fromStdString(srp::core::tr("feedback.invalid_cfg_dir")));
+        return false;
+    }
+    if (auto* packages = PackageController::instance(); packages && packages->busy()) {
+        emit messageNotify(false, QString::fromStdString(srp::core::tr("pkg.busy")));
         return false;
     }
     bool ok = srp::core::installSrp(m_cfgPath.toStdString());
@@ -293,14 +302,11 @@ void OverviewController::cleanAllKeybinds() {
     }
 }
 
-void OverviewController::toggleLanguage() {
-    if (m_currentLang == "zh") {
-        m_currentLang = "en";
-        srp::core::setLanguage(srp::core::Language::EnUS);
-    } else {
-        m_currentLang = "zh";
-        srp::core::setLanguage(srp::core::Language::ZhCN);
-    }
+void OverviewController::toggleLanguage() { setLanguage(m_currentLang == "zh" ? "en" : "zh"); }
+void OverviewController::setLanguage(const QString& language) {
+    if((language!="zh"&&language!="en")||language==m_currentLang)return;
+    m_currentLang=language;
+    srp::core::setLanguage(language=="en"?srp::core::Language::EnUS:srp::core::Language::ZhCN);
     emit languageChanged();
 }
 

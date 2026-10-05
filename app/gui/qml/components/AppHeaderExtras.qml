@@ -61,7 +61,7 @@ RowLayout {
                 }
             }
 
-            Text {
+            Text { font.family: MetaTheme.fontFamily;
                 text: OverviewController.currentUserName.length > 0 ? OverviewController.currentUserName : "Steam"
                 font.pixelSize: 11
                 font.bold: true
@@ -71,7 +71,7 @@ RowLayout {
             }
 
             // 轻量下拉指示小角标
-            Text {
+            Text { font.family: MetaTheme.fontFamily;
                 text: "▾"
                 font.pixelSize: 9
                 color: accountCapsuleMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textTertiary

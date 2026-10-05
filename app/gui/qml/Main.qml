@@ -23,6 +23,7 @@ HusWindow {
     captionBar.winIconHeight: 20
     captionBar.winTitle: OverviewController.tr("title.app", OverviewController.currentLang)
     captionBar.winTitleColor: MetaTheme.textPrimary
+    captionBar.winTitleFont.family: MetaTheme.fontFamily
     captionBar.winTitleFont.pixelSize: 13
     captionBar.winTitleFont.bold: true
     captionBar.showThemeButton: false
@@ -65,6 +66,26 @@ HusWindow {
         }
     }
 
+    Connections {
+        target: PackageController
+        function onMessageNotify(success, message) { if (success) AppFeedback.success(message); else AppFeedback.error(message); }
+    }
+
+    AboutDialog { id: aboutDialog }
+    SettingsDialog { id: settingsDialog }
+    Connections {
+        target: PreferencesController
+        function onMessageNotify(success, message) { if(success) AppFeedback.success(message); else AppFeedback.error(message); }
+    }
+    Connections {
+        target: AppUpdateController
+        function onMessageNotify(success, message) { if(success) AppFeedback.success(message); else AppFeedback.error(message); }
+    }
+    Component.onCompleted: {
+        if(initialRoute === "about") aboutDialog.open();
+        if(initialRoute === "settings") settingsDialog.open();
+    }
+
     // 主体布局：一体化侧边栏 + 内容区
     RowLayout {
         anchors.fill: parent
@@ -75,7 +96,11 @@ HusWindow {
         AppSidebar {
             id: sidebar
             Layout.fillHeight: true
-            activeRoute: mainWindow.initialRoute
+            activeRoute: mainWindow.initialRoute === "about" || mainWindow.initialRoute === "settings" ? "overview" : mainWindow.initialRoute
+            aboutOpen: aboutDialog.visible
+            settingsOpen: settingsDialog.visible
+            onAboutRequested: aboutDialog.open()
+            onSettingsRequested: settingsDialog.open()
             onAssemblyRequested: (route) => {
                 assemblyPage.navigateTo(route);
                 sidebar.activeRoute = assemblyPage.activeSection;
@@ -93,6 +118,7 @@ HusWindow {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            enabled: !aboutDialog.visible && !settingsDialog.visible
 
             OverviewPage {
                 id: overviewPage
@@ -114,40 +140,10 @@ HusWindow {
                 onSectionChanged: (route) => { sidebar.activeRoute = route; }
             }
 
-            // 占位其他页面（后续迭代逐步接入）
-            Item {
-                anchors.fill: parent
-                visible: sidebar.activeRoute !== "overview" && sidebar.activeRoute !== "presets" && !sidebar.activeRoute.startsWith("assembly_")
+            VideoPage { anchors.fill: parent; visible: sidebar.activeRoute === "video_settings" }
+            AnnotationsPage { anchors.fill: parent; visible: sidebar.activeRoute === "map_guides" }
 
-                ColumnLayout {
-                    anchors.centerIn: parent
-                    spacing: 12
 
-                    HusAvatar {
-                        size: 54
-                        iconSource: HusIcon.BuildOutlined
-                        colorBg: MetaTheme.surfaceSoft
-                        colorIcon: MetaTheme.textSecondary
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Text {
-                        text: sidebar.activeRoute + " 正在规划中..."
-                        font.pixelSize: 15
-                        font.bold: true
-                        color: MetaTheme.textSecondary
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    HusButton {
-                        text: "返回总览"
-                        type: HusButton.Type_Primary
-                        sizeHint: "small"
-                        Layout.alignment: Qt.AlignHCenter
-                        onClicked: sidebar.activeRoute = "overview"
-                    }
-                }
-            }
         }
     }
 }

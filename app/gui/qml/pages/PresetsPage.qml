@@ -8,8 +8,11 @@ import "../components"
 Item {
     id: presetsPageRoot
 
+    property bool editorReady: false
+    property bool synchronizingEditor: false
     Component.onCompleted: {
         PresetsController.reload();
+        editorReady = true;
     }
 
     Connections {
@@ -25,9 +28,9 @@ Item {
             installPromptModal.openWarning();
         }
         function onEditorContentChanged() {
-            if (codeEditor.text !== PresetsController.editorContent) {
-                codeEditor.text = PresetsController.editorContent;
-            }
+            presetsPageRoot.synchronizingEditor = true;
+            if (codeEditor.text !== PresetsController.editorContent) codeEditor.text = PresetsController.editorContent;
+            presetsPageRoot.synchronizingEditor = false;
         }
         function onSelectedPresetChanged() {
             if (presetSelect.currentIndex !== PresetsController.selectedPresetIndex) {
@@ -79,13 +82,13 @@ Item {
                     Layout.fillWidth: true
                     spacing: 4
 
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: PresetsController.tr("presets.title", OverviewController.currentLang)
                         font.pixelSize: 18
                         font.bold: true
                         color: MetaTheme.textPrimary
                     }
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: "选择并加载生效预设，或在右侧深度调校"
                         font.pixelSize: 11
                         color: MetaTheme.textSecondary
@@ -104,7 +107,7 @@ Item {
                     Layout.fillWidth: true
                     spacing: 6
 
-                    Text {
+                    Text { font.family: MetaTheme.fontFamily;
                         text: PresetsController.tr("presets.select_label", OverviewController.currentLang)
                         font.pixelSize: 11
                         font.bold: true
@@ -193,7 +196,7 @@ Item {
                         RowLayout {
                             Layout.fillWidth: true
 
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: PresetsController.tr("presets.status_card_title", OverviewController.currentLang)
                                 font.pixelSize: 12
                                 font.bold: true
@@ -207,7 +210,7 @@ Item {
                                 color: PresetsController.isPresetLoaded ? MetaTheme.statusSuccess : MetaTheme.textDisabled
                             }
 
-                            Text {
+                            Text { font.family: MetaTheme.fontFamily;
                                 text: PresetsController.isPresetLoaded ? "已激活" : "未加载"
                                 font.pixelSize: 10
                                 font.bold: true
@@ -216,7 +219,7 @@ Item {
                         }
 
                         // 状态大文本
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: PresetsController.isPresetLoaded
                                   ? (PresetsController.selectedPresetName + " 预设已在 custom.cfg 生效")
                                   : "当前预设未作为起点启用"
@@ -315,7 +318,7 @@ Item {
                             width: 6; height: 6; radius: 3
                             color: MetaTheme.statusWarning
                         }
-                        Text {
+                        Text { font.family: MetaTheme.fontFamily;
                             text: "未保存 (*)"
                             font.pixelSize: 11
                             font.bold: true
@@ -372,7 +375,8 @@ Item {
                         }
                     }
                     onTextChanged: {
-                        PresetsController.updateEditorContent(codeEditor.text);
+                        if (presetsPageRoot.editorReady && !presetsPageRoot.synchronizingEditor)
+                            PresetsController.updateEditorContent(codeEditor.text);
                     }
                 }
             }

@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE void cleanAllConvars();
     Q_INVOKABLE void cleanAllKeybinds();
     Q_INVOKABLE void toggleLanguage();
+    Q_INVOKABLE void setLanguage(const QString& language);
     Q_INVOKABLE QString tr(const QString& key, const QString& langDependency = QString()) const;
 
 signals:
