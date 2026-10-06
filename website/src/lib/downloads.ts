@@ -4,7 +4,8 @@ export const RELEASE_MANIFEST = `${RELEASES}/latest/download/latest.json`;
 export const RELEASE_API = "https://api.github.com/repos/RolinShmily/SrP-CFG_ForCS2/releases/latest";
 export const MIRROR = "https://gh.269601.xyz/";
 export type DownloadSource = "mirror" | "github";
-export const packageIds = ["srp-cfg", "video", "annotations"] as const;
+// Website downloads include the agent skill; APP config package IDs remain separate.
+export const packageIds = ["srp-cfg", "video", "annotations", "srpcfg-skill"] as const;
 export type PackageId = typeof packageIds[number];
 export interface DownloadAsset { url: string; sha256?: string; size?: number; }
 export interface AppRelease { version: string; setup?: DownloadAsset; portable?: DownloadAsset; }

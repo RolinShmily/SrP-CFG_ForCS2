@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseAppRelease, parsePackageManifest, softwareUrl, formatSize, assetPath } from '../src/lib/downloads.ts';
+import { parseAppRelease, parsePackageManifest, packageIds, softwareUrl, formatSize, assetPath } from '../src/lib/downloads.ts';
 const base='https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/download/v3.4.1/';
 const gui=base+'srp-cfg-v3.4.1-windows-x64-gui.zip';
 const setup=base+'srp-cfg-v3.4.1-windows-x64-setup.exe';
@@ -31,6 +31,14 @@ test('configuration packages keep independent versions, checksums and trusted Wo
  assert.equal(parsePackageManifest(manifest).video?.version,'3.4.0');
  for(const update of [{url:'https://evil.example/video.zip'},{url:'https://user:pass@cfg.srprolin.top/packages/video-v3.4.0-test.zip'},{url:'https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v3.4.0-test.zip'},{sha256:'bad'},{size:-1},{url:entry.url+'?redirect=evil'},{url:entry.url.replace('video-','annotations-')}])assert.equal(parsePackageManifest({...manifest,packages:{video:{...entry,...update}}}).video,undefined);
  assert.deepEqual(parsePackageManifest({...manifest,schema_version:2}),{});
+});
+test('skill is a separately versioned trusted ZIP alongside the three config packages',()=>{
+ assert.deepEqual(packageIds,['srp-cfg','video','annotations','srpcfg-skill']);
+ const skill={version:'1.0.0',sha256:'c'.repeat(64),size:18000,url:'https://cfg.srprolin.top/packages/srpcfg-skill-v1.0.0-test.zip'};
+ const manifest={schema_version:1,packages:{'srpcfg-skill':skill,video:{...skill,version:'3.4.0',url:'https://cfg.srprolin.top/packages/video-v3.4.0-test.zip'}}};
+ assert.equal(parsePackageManifest(manifest)['srpcfg-skill']?.version,'1.0.0');
+ assert.equal(parsePackageManifest(manifest).video?.version,'3.4.0');
+ for(const url of [skill.url.replace('srpcfg-skill-','video-'),'https://evil.example/packages/srpcfg-skill-v1.0.0.zip',skill.url+'?redirect=x'])assert.equal(parsePackageManifest({schema_version:1,packages:{'srpcfg-skill':{...skill,url}}})['srpcfg-skill'],undefined);
 });
 test('small downloads are shown in KB and asset paths honor static subpaths',()=>{
  assert.equal(formatSize(4000),'4 KB');assert.equal(formatSize(3*1024*1024),'3.0 MB');

@@ -73,9 +73,13 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
 .nav-actions { display: flex; align-items: center; gap: 6px; padding: 5px; }
 .nav-actions button,.github-link { min-width: 38px; min-height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; font-size: 12px; border: 0; background: transparent; }
 .nav-actions button:hover,.github-link:hover { background: #ffffff12; }
+.nav-skill { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 12px; border: 1px solid #ffa52b55; border-radius: 10px; color: #ffd092; font-size: 12px; white-space: nowrap; transition: background .25s,border-color .25s; }
+.nav-skill:hover { background: #ffa52b15; border-color: var(--cs-orange); }
+#srpcfg-skill { scroll-margin-top: 110px; }
+#srpcfg-skill:target { border-color: var(--cs-orange); }
 .nav-download { background: var(--cs-orange); color: #171923; display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; }
 .nav-menu { display: none !important; }
-.is-compact .nav-islands { max-width: 920px; gap: 0; background: #19212df5; border-radius: 18px; padding: 3px; box-shadow: 0 10px 40px #0006; }
+.is-compact .nav-islands { max-width: 1040px; gap: 0; background: #19212df5; border-radius: 18px; padding: 3px; box-shadow: 0 10px 40px #0006; }
 .is-compact .nav-brand,.is-compact .nav-links,.is-compact .nav-actions { border-color: transparent; box-shadow: none; background: transparent; backdrop-filter: none; }
 .mobile-nav { pointer-events: auto; margin: 8px 0 0 auto; width: 230px; padding: 10px; background: #1a2332; border: 1px solid #ffffff22; border-radius: 14px; box-shadow: 0 14px 28px #0005; }
 .mobile-nav a { display: block; padding: 13px 15px; border-radius: 8px; }
@@ -126,7 +130,7 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
 .showcase-note .font-mono { margin-left: auto; }
 
 .product-features { background: #131923; }
-.feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+.feature-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 22px; }
 .feature-card { border-top: 1px solid #ffffff28; padding: 27px 24px 24px 0; }
 .feature-card-top { display: flex; justify-content: space-between; color: var(--cs-orange); margin-bottom: 24px; }
 .feature-card-top span { font-size: 10px; color: #8693a6; }
@@ -195,7 +199,15 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
 .download-divider { height: 1px; background: #ffffff20; margin-block: 35px; }
 .package-heading { display: flex; align-items: center; gap: 14px; margin-bottom: 25px; }
 .package-heading>svg { color: var(--cs-orange); }
-.package-download-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.package-download-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.cli-introduction { display: grid; grid-template-columns: 1.15fr 1fr; gap: 30px; margin-bottom: 35px; padding-bottom: 30px; border-bottom: 1px solid #ffffff20; }
+.cli-introduction svg { color: var(--cs-orange); }
+.cli-introduction h3 { font-size: 23px; line-height: 1.4; margin-block: 12px; }
+.cli-introduction p { color: #b6c3d3; font-size: 13px; line-height: 1.85; }
+.cli-introduction .text-button { margin-top: 13px; }
+.cli-example { min-width: 0; }
+.cli-example pre { margin: 0 0 14px; padding: 22px; border: 1px solid #ffffff23; border-radius: 12px; background: #111925; color: #ffd092; font-size: 14px; line-height: 2; overflow-wrap: anywhere; white-space: pre-wrap; }
+.package-download-card .skill-install-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #ffffff18; color: #c9d4e3; }
 .package-download-card { border: 1px solid #ffffff23; padding: 23px; border-radius: 14px; background: #161f2c; display: flex; flex-direction: column; }
 .package-card-top { display: flex; align-items: center; justify-content: space-between; color: var(--cs-orange); margin-bottom: 22px; }
 .package-card-top>.font-mono { font-size: 10px; color: #b9c4d4; }
@@ -249,6 +261,8 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
   .download-board { padding: 30px; }
 }
 @media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-menu { display: flex !important; }
   .product-hero { padding-top: 140px; }
   .hero-content { display: block; }
   .hero-copy { max-width: 620px; }
@@ -285,6 +299,8 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
   .nav-links { display: none; }
   .nav-menu { display: flex !important; }
   .nav-actions .github-link { display: none; }
+  .nav-skill { padding: 10px; }
+  .nav-skill span { display: none; }
   .nav-brand { padding-right: 10px; gap: 8px; font-size: 13px; }
   .nav-brand img { width: 25px; height: 25px; }
   .brand-dot { display: none; }
@@ -327,7 +343,7 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
   .download-board { padding: 22px 18px; border-radius: 18px; }
   .download-heading h3,.package-heading h3 { font-size: 23px; }
   .source-control button { font-size: 11px; }
-  .app-download-grid,.package-download-grid { grid-template-columns: 1fr; }
+  .app-download-grid,.package-download-grid,.cli-introduction { grid-template-columns: 1fr; }
   .app-download-card { padding: 22px; }
   .package-download-card { padding: 23px; }
   .package-heading { align-items: start; }
@@ -336,6 +352,10 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
   .footer-stack { flex-direction: column; gap: 16px; }
   .footer-bottom { column-gap: 16px; }
   .footer-top { margin-left: 0; }
+}
+@media (max-width: 400px) {
+  .nav-download { min-height: 44px; min-width: 42px; justify-content: center; padding: 10px; }
+  .nav-download span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

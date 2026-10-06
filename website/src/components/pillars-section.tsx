@@ -1,10 +1,10 @@
 "use client";
-import { FileCode2, FolderSync, History } from "lucide-react";
+import { FileCode2, FolderSync, History, Terminal } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 import { Reveal } from "./reveal";
 export function PillarsSection() {
   const { t } = useI18n();
-  const icons = [FileCode2, FolderSync, History];
+  const icons = [FileCode2, FolderSync, History, Terminal];
   return <section className="product-features">
     <div className="content-width section-space">
       <Reveal className="section-heading"><div className="eyebrow">{t.features.eyebrow}</div><h2>{t.features.title}</h2><p>{t.features.description}</p></Reveal>

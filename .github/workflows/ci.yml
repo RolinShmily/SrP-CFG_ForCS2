@@ -64,6 +64,8 @@ jobs:
           run_install: false
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: python3 scripts/check_repository.py
+      - run: python3 scripts/test_website_packages.py
+      - run: python3 scripts/package-website.py
       - run: pnpm test
       - run: pnpm lint
       - run: node scripts/collect-licenses.mjs

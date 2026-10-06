@@ -1,4 +1,4 @@
-name: Deploy Website & Config Packages to Cloudflare Worker
+name: Deploy Website & Packages to Cloudflare Worker
 
 on:
   push:
@@ -6,10 +6,14 @@ on:
       - main
     paths:
       - 'config/**'
+      - 'skills/**'
       - 'website/**'
       - '.github/workflows/deploy-worker.yml'
       - 'wrangler.toml'
+      - 'scripts/package-website.py'
+      - 'scripts/test_website_packages.py'
       - 'scripts/collect-licenses.mjs'
+      - 'LICENSE'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
@@ -45,73 +49,11 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      - name: Package Incremental Config Bundles (srp-cfg, video, annotations)
-        shell: bash
+      - name: Package Configs & Agent Skill
         run: |
-          mkdir -p website/public/packages
-
-          # 1. 打包 srp-cfg
           python3 scripts/check_repository.py
-          SRP_VER=$(cat config/srp-cfg/VERSION.txt | tr -d '\r\n ')
-          mkdir -p /tmp/srp-stage
-          cp -r config/srp-cfg /tmp/srp-stage/
-          cp config/autoexec.cfg /tmp/srp-stage/
-          (cd /tmp/srp-stage && zip -r -9 $GITHUB_WORKSPACE/website/public/packages/srp-cfg-v${SRP_VER}.zip .)
-          cp website/public/packages/srp-cfg-v${SRP_VER}.zip website/public/packages/srp-cfg-latest.zip
-          rm -rf /tmp/srp-stage
-
-          # 2. 打包 video
-          VIDEO_VER=$(cat config/video/VERSION.txt | tr -d '\r\n ')
-          (cd config/video && zip -r -9 $GITHUB_WORKSPACE/website/public/packages/video-v${VIDEO_VER}.zip .)
-          cp website/public/packages/video-v${VIDEO_VER}.zip website/public/packages/video-latest.zip
-
-          # 3. 打包 annotations
-          ANNO_VER=$(cat config/annotations/VERSION.txt | tr -d '\r\n ')
-          (cd config/annotations && zip -r -9 $GITHUB_WORKSPACE/website/public/packages/annotations-v${ANNO_VER}.zip .)
-          cp website/public/packages/annotations-v${ANNO_VER}.zip website/public/packages/annotations-latest.zip
-
-          # 4. 计算哈希与大小并生成 packages.json 清单
-          SRP_SHA=$(sha256sum website/public/packages/srp-cfg-latest.zip | awk '{print $1}')
-          SRP_SIZE=$(stat -c%s website/public/packages/srp-cfg-latest.zip)
-          VIDEO_SHA=$(sha256sum website/public/packages/video-latest.zip | awk '{print $1}')
-          VIDEO_SIZE=$(stat -c%s website/public/packages/video-latest.zip)
-          ANNO_SHA=$(sha256sum website/public/packages/annotations-latest.zip | awk '{print $1}')
-          ANNO_SIZE=$(stat -c%s website/public/packages/annotations-latest.zip)
-          PUB_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          # 内容寻址，清单与下载不会因 latest.zip 的更新而错配。
-          cp website/public/packages/srp-cfg-latest.zip website/public/packages/srp-cfg-v${SRP_VER}-${SRP_SHA}.zip
-          cp website/public/packages/video-latest.zip website/public/packages/video-v${VIDEO_VER}-${VIDEO_SHA}.zip
-          cp website/public/packages/annotations-latest.zip website/public/packages/annotations-v${ANNO_VER}-${ANNO_SHA}.zip
-
-          cat <<EOF > website/public/packages.json
-          {
-            "schema_version": 1,
-            "published_at": "${PUB_DATE}",
-            "packages": {
-              "srp-cfg": {
-                "version": "${SRP_VER}",
-                "size": ${SRP_SIZE},
-                "sha256": "${SRP_SHA}",
-                "url": "https://cfg.srprolin.top/packages/srp-cfg-v${SRP_VER}-${SRP_SHA}.zip",
-                "cdn_url": "https://cfg.srprolin.top/packages/srp-cfg-v${SRP_VER}-${SRP_SHA}.zip"
-              },
-              "video": {
-                "version": "${VIDEO_VER}",
-                "size": ${VIDEO_SIZE},
-                "sha256": "${VIDEO_SHA}",
-                "url": "https://cfg.srprolin.top/packages/video-v${VIDEO_VER}-${VIDEO_SHA}.zip",
-                "cdn_url": "https://cfg.srprolin.top/packages/video-v${VIDEO_VER}-${VIDEO_SHA}.zip"
-              },
-              "annotations": {
-                "version": "${ANNO_VER}",
-                "size": ${ANNO_SIZE},
-                "sha256": "${ANNO_SHA}",
-                "url": "https://cfg.srprolin.top/packages/annotations-v${ANNO_VER}-${ANNO_SHA}.zip",
-                "cdn_url": "https://cfg.srprolin.top/packages/annotations-v${ANNO_VER}-${ANNO_SHA}.zip"
-              }
-            }
-          }
-          EOF
+          python3 scripts/test_website_packages.py
+          python3 scripts/package-website.py
 
       - name: Validate Website
         run: |
@@ -122,8 +64,7 @@ jobs:
         run: node scripts/collect-licenses.mjs
 
       - name: Build Static Website
-        run: |
-          pnpm --filter srp-cfg-website build
+        run: pnpm --filter srp-cfg-website build
 
       - name: Deploy Cloudflare Worker
         env:
