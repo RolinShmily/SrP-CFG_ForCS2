@@ -22,17 +22,17 @@
 namespace {
 
 void printHelp() {
-    std::cout << "Usage: srp_cli [command] [options]\n\n";
+    std::cout << "Usage: srpcfg [command] [options]\n\n";
     std::cout << "Commands:\n";
     std::cout << "  detect             Run full environment and path diagnostics (default)\n";
     std::cout << "  launch             Launch CS2 game via Steam protocol\n";
-    std::cout << "  reset-valve        Reset current user custom.cfg to Valve Baseline\n";
+    std::cout << "  reset-valve        Assemble Valve settings/keys and clear current-account VCFG\n";
     std::cout << "  open-cfg           Open CS2 global CFG directory in explorer\n";
     std::cout << "  open-user-cfg      Open current Steam user local CFG directory in explorer\n";
     std::cout << "  convars-status     Inspect Convars in current user's VCFG\n";
     std::cout << "  convars-clean-all  Remove all convars from current user's VCFG (creates .bak)\n";
     std::cout << "  keybinds-clean-all Remove all keybinds from current user's VCFG (creates .bak)\n";
-    std::cout << "  presets            List all presets and their status/diff\n";
+    std::cout << "  presets            List preset IDs, active status and differences\n";
     std::cout << "  preset-load <id>   Load preset into custom.cfg\n";
     std::cout << "  preset-unload      Unload presets from custom.cfg\n";
     std::cout << "  valve-status       Inspect Valve assembly entries in custom.cfg\n";
@@ -51,7 +51,7 @@ void printHelp() {
     std::cout << "  package-reset <id> --file <relative> Restore staged default\n";
     std::cout << "  video-status       Inspect staged video fields\n";
     std::cout << "  video-set --field <key> --value <value> Edit staged option\n";
-    std::cout << "  video-apply        Merge staged video into --user-cfg-dir\n";
+    std::cout << "  video-apply        Merge staged video into current or --user-cfg-dir account\n";
     std::cout << "  annotations        List guide deployment states\n";
     std::cout << "  annotation-deploy <id> / annotation-remove <id> --annotations-dir\n";
     std::cout << "  users              List all detected Steam users\n";
@@ -407,7 +407,7 @@ int main(int argc, char* argv[]) {
         for (const auto& p : presets) {
             bool isActive = (p.id == active);
             std::cout << (isActive ? " [Active] " : "          ")
-                      << p.displayName << (p.hasDiff ? " (*)" : "")
+                      << p.displayName << " [" << p.id << "]" << (p.hasDiff ? " (*)" : "")
                       << "  ->  Command: " << p.command << "\n";
         }
         return 0;
@@ -415,7 +415,7 @@ int main(int argc, char* argv[]) {
 
     if (command == "preset-load") {
         if (targetAccountId.empty()) {
-            std::cerr << "Usage: srp_cli preset-load <preset_id>\n";
+            std::cerr << "Usage: srpcfg preset-load <preset_id>\n";
             return 1;
         }
         std::string cfgDir = res.cs2CfgPath.value_or("");
@@ -452,7 +452,7 @@ int main(int argc, char* argv[]) {
 
     if (command == "switch-user") {
         if (targetAccountId.empty()) {
-            std::cerr << "Usage: srp_cli switch-user <account_id>\n";
+            std::cerr << "Usage: srpcfg switch-user <account_id>\n";
             return 1;
         }
         if (!res.steamPath) {

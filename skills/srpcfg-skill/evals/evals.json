@@ -1,0 +1,38 @@
+{
+  "skill_name": "srpcfg-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "用 srpcfg 把视频暂存副本的 MSAA 改成 2，只保存副本，不要应用到游戏。CLI 路径和独立 store 由测试环境提供。先核对版本和帮助，执行并记录前后状态。",
+      "expected_output": "Run version/help, video-set and video-status with the supplied store; staged MSAA is 2 and no game files change.",
+      "files": [],
+      "expectations": [
+        "Help exposes srpcfg as the CLI name",
+        "Staged MSAA is 2 after saving",
+        "Game account file remains byte-identical and video-apply was not called"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "在测试提供的独立 CFG 目录把 Practice 模式入口绑定到 f6，但 f6 已绑定 echo existing；不批准覆盖现有按键。执行后报告冲突，不能自动加 --confirm。",
+      "expected_output": "Discover mode, attempt binding without confirmation, report exit 2 with previous/proposed commands and leave custom.cfg byte-identical.",
+      "files": [],
+      "expectations": [
+        "Practice is discovered and presets expose stable IDs",
+        "Binding reports conflict exit 2 and previous/proposed commands without --confirm",
+        "custom.cfg remains byte-identical and no backup/write occurred"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "在测试 annotations/local 中装配 mirage 指南，然后卸载它。只操作这个 ID；目录已包含个人 mapguide 和另一张地图指南。执行并验证保留情况和移除备份。",
+      "expected_output": "Discover guide IDs; deploy/remove mirage using the supplied store and annotations target; preserve personal and unrelated files and retain the removed-guide backup.",
+      "files": [],
+      "expectations": [
+        "Mirage is discovered and deployed from staging",
+        "Only selected guide is removed and its exact bytes are backed up",
+        "Personal mapguide and unrelated Dust2 file remain byte-identical"
+      ]
+    }
+  ]
+}

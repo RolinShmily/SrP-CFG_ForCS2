@@ -8,9 +8,9 @@ function Get-PeSubsystem([string]$Executable) {
     return [BitConverter]::ToUInt16($bytes, $pe + 24 + 68)
 }
 if ((Get-PeSubsystem (Join-Path $package 'SrP-CFG.exe')) -ne 2) { throw 'GUI must use the Windows subsystem (no console)' }
-if ((Get-PeSubsystem (Join-Path $package 'srp.exe')) -ne 3) { throw 'CLI must use the console subsystem' }
-foreach ($required in @('vcruntime140.dll', 'msvcp140.dll')) {
-    if (!(Test-Path (Join-Path $package $required))) { throw "Missing app-local MSVC runtime: $required" }
+if ((Get-PeSubsystem (Join-Path $package 'srpcfg.exe')) -ne 3) { throw 'CLI must use the console subsystem' }
+foreach ($required in @('vcruntime140.dll', 'msvcp140.dll', 'skills/srpcfg-skill/SKILL.md', 'skills/srpcfg-skill/references/commands.md', 'skills/srpcfg-skill/scripts/inspect_cli.py')) {
+    if (!(Test-Path (Join-Path $package $required))) { throw "Missing required package file: $required" }
 }
 $temporary = Join-Path ([IO.Path]::GetTempPath()) ('srp-portable-' + [Guid]::NewGuid().ToString('N'))
 $oldPath = $env:PATH
@@ -26,7 +26,7 @@ try {
     $env:QML2_IMPORT_PATH = ''
     $env:QT_PLUGIN_PATH = ''
     $env:LOCALAPPDATA = Join-Path $temporary 'profile'
-    $actual = & "$appDir/srp.exe" version
+    $actual = & "$appDir/srpcfg.exe" version
     if ($LASTEXITCODE -ne 0 -or ($actual -join "`n").Trim() -ne $Version) { throw "Unexpected packaged CLI version: $actual" }
     Push-Location $appDir
     try {
