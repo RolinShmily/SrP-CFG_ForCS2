@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-set(SRP_APP_VERSION "3.4.0" CACHE STRING "Application release version")
+set(SRP_APP_VERSION "3.4.1" CACHE STRING "Application release version")
 if(NOT SRP_APP_VERSION MATCHES "^(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)$")
     message(FATAL_ERROR "SRP_APP_VERSION must be a stable major.minor.patch version")
 endif()

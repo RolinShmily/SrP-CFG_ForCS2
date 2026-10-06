@@ -24,7 +24,7 @@ jobs:
           if [[ "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "Tag validation passed."
           else
-            echo "::error::Tag '${TAG}' does not match required semver format v3.4.0 (regex: ^v[0-9]+\.[0-9]+\.[0-9]+$)"
+            echo "::error::Tag '${TAG}' does not match required semver format vMAJOR.MINOR.PATCH (regex: ^v[0-9]+\.[0-9]+\.[0-9]+$)"
             exit 1
           fi
 
@@ -58,8 +58,9 @@ jobs:
 
       - name: Configure CMake
         run: |
-          $version = if ("${{ github.ref_name }}" -match "^v([0-9]+\.[0-9]+\.[0-9]+)$") { $Matches[1] } else { "3.4.0" }
-          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DSRP_APP_VERSION="$version" -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+          $versionArgs = @()
+          if ("${{ github.ref_name }}" -match "^v([0-9]+\.[0-9]+\.[0-9]+)$") { $versionArgs += "-DSRP_APP_VERSION=$($Matches[1])" }
+          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release @versionArgs -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
 
       - name: Build Release Targets
         run: |
@@ -73,7 +74,9 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $qtBin = "$env:QT_ROOT_DIR/bin"
-          $tag = if ("${{ github.ref_name }}" -match "^v[0-9]") { "${{ github.ref_name }}" } else { "v3.4.0-dev" }
+          $versionLine = (Select-String -Path 'build/CMakeCache.txt' -Pattern '^SRP_APP_VERSION:STRING=(.+)$').Matches
+          if (!$versionLine) { throw 'Build application version is missing' }
+          $tag = "v$($versionLine[0].Groups[1].Value)"
           New-Item -ItemType Directory -Path "dist" -Force | Out-Null
           $crt = Get-ChildItem "$env:VCToolsRedistDir/x64/Microsoft.VC*.CRT" -Directory | Select-Object -First 1
           if (!$crt) { throw 'MSVC x64 redistributable DLL directory not found' }

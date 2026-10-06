@@ -46,7 +46,7 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 无清单或无匹配资产时显示状态、重试与官方 Releases 入口，不硬编码新版本或虚构制品。SHA-256 与文件大小存在时显示。页面只链接下载，不自动执行校验、安装或升级。
 
-线上 v3.4.0 Release 已提供 latest.json、GUI ZIP 和 Setup EXE。解析测试同时覆盖受控清单与缺失制品的回退行为。
+正式软件 Release 提供 latest.json、GUI ZIP、CLI ZIP 和 Setup EXE。解析测试同时覆盖受控清单与缺失制品的回退行为。
 
 ## 独立配置包
 
