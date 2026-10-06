@@ -9,7 +9,7 @@
 - `config/srp-cfg/catalog.json`：预设、特性、模式。
 - `config/annotations/catalog.json`：地图指南。
 
-release 打包整个 config，Pages 打包整个对应目录，清单与文件一起随独立包更新。无需改工作流添加单个条目。
+release 打包整个 config，Worker 打包整个对应目录，清单与文件一起随独立包更新。无需改工作流添加单个条目。
 
 ## 新增地图指南
 

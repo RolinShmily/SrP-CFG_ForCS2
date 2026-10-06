@@ -55,7 +55,7 @@ The repository enforces clean separation of concerns:
 SrP-CFG_ForCS2/
 ├── app/
 │   ├── core/                  # C++17 pure logic library (VCFG/CFG/KV3 parsing, atomic backups, staging store)
-│   ├── cli/                   # srp headless CLI tool (headless automation, CI & script friendly)
+│   ├── cli/                   # srpcfg CLI tool (automation, CI & script friendly)
 │   └── gui/                   # SrP-CFG desktop app (Qt 6 + HuskarUI + QML + QWindowKit)
 ├── config/                    # Shipped offline bundled configuration packages
 │   ├── srp-cfg/               # Runtime scripts, catalog.json, presets & modules
@@ -90,19 +90,19 @@ SrP-CFG_ForCS2/
 
 ```bash
 # View help and available subcommands
-srp --help
+srpcfg --help
 
 # List module statuses
-srp modules
+srpcfg modules
 
 # Assemble a feature module (e.g. autoview)
-srp feature-assemble autoview --keymap
+srpcfg feature-assemble autoview --keymap
 
-# Bind a launch key for practice mode
-srp mode-bind practice --key p --confirm
+# Bind a launch key; inspect any conflict before approving --confirm
+srpcfg mode-bind practice --key p
 
 # Deploy a map guide (e.g. mirage)
-srp annotation-deploy mirage
+srpcfg annotation-deploy mirage
 ```
 
 ---
@@ -156,6 +156,10 @@ pnpm preview
 ```
 
 ---
+
+## Agent Skill
+
+The repository and software bundles include [srpcfg-skill](skills/srpcfg-skill/SKILL.md). The [website download section](https://cfg.srprolin.top/#download) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-skill` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
 
 ## 🤝 Contributing
 

@@ -43,9 +43,9 @@ srp-cfg/user/.backups/custom.cfg/<UTC时间戳>-<唯一序号>-<操作原因>.ba
 ## CLI
 
 ```text
-srp_cli valve-status --en
-srp_cli valve-assemble --settings --keymap --zh
-srp_cli valve-unload --settings --en
+srpcfg valve-status --en
+srpcfg valve-assemble --settings --keymap --zh
+srpcfg valve-unload --settings --en
 ```
 
 `--cfg-dir <游戏CFG目录>` 支持 Valve 与预设命令，供手动指定目录或隔离测试。CLI 为显式操作入口，装配直接取消预设，没有 GUI 确认弹窗。

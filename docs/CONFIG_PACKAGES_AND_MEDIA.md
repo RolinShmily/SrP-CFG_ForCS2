@@ -95,16 +95,16 @@ game/csgo/annotations/local/
 ## CLI 示例
 
 ```text
-srp packages
-srp packages-check
-srp package-update video
-srp package-reset video --file cs2_video.txt
-srp video-status
-srp video-set --field setting.msaa_samples --value 2
-srp video-apply --user-cfg-dir <account-cfg>
-srp annotations --annotations-dir <annotations/local>
-srp annotation-deploy mirage --annotations-dir <annotations/local>
-srp annotation-remove mirage --annotations-dir <annotations/local>
+srpcfg packages
+srpcfg packages-check
+srpcfg package-update video
+srpcfg package-reset video --file cs2_video.txt
+srpcfg video-status
+srpcfg video-set --field setting.msaa_samples --value 2
+srpcfg video-apply --user-cfg-dir <account-cfg>
+srpcfg annotations --annotations-dir <annotations/local>
+srpcfg annotation-deploy mirage --annotations-dir <annotations/local>
+srpcfg annotation-remove mirage --annotations-dir <annotations/local>
 ```
 
 命令支持 `--zh/--en`、`--store`；成功/无变化返回 0，失败返回 1。

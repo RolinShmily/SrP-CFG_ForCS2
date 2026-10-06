@@ -55,7 +55,7 @@ CS2 引擎启动
 SrP-CFG_ForCS2/
 ├── app/
 │   ├── core/                  # C++17 纯逻辑核心库 (VCFG/CFG/KV3 解析、原子备份、暂存区事务)
-│   ├── cli/                   # srp 独立命令行工具 (无头自动化管理、CI 与脚本友好)
+│   ├── cli/                   # srpcfg 独立命令行工具 (自动化管理、CI 与脚本友好)
 │   └── gui/                   # SrP-CFG 桌面端应用 (Qt 6 + HuskarUI + QML + QWindowKit)
 ├── config/                    # 源码内置的离线出厂配置包
 │   ├── srp-cfg/               # 运行时脚本、catalog.json、预设与模块
@@ -90,19 +90,19 @@ SrP-CFG_ForCS2/
 
 ```bash
 # 查看帮助与子命令
-srp --help
+srpcfg --help
 
 # 查看所有模块状态
-srp modules
+srpcfg modules
 
 # 装配特定功能模块 (如 autoview)
-srp feature-assemble autoview --keymap
+srpcfg feature-assemble autoview --keymap
 
-# 为练习模式绑定启动键
-srp mode-bind practice --key p --confirm
+# 为练习模式绑定启动键；遇冲突先查看，再明确批准 --confirm
+srpcfg mode-bind practice --key p
 
 # 部署特定地图标注 (如 mirage)
-srp annotation-deploy mirage
+srpcfg annotation-deploy mirage
 ```
 
 ---
@@ -156,6 +156,10 @@ pnpm preview
 ```
 
 ---
+
+## 智能体 Skill
+
+仓库和软件包随附 [srpcfg-skill](skills/srpcfg-skill/SKILL.md)。[网站下载区](https://cfg.srprolin.top/#download) 另提供独立版本的 Skill ZIP，解压后将 `srpcfg-skill` 文件夹加入智能体的技能目录，即可按 CLI 工作流管理 CS2 配置。技能 ZIP 不包含 CLI 可执行文件。Windows 命令文件为 `srpcfg.exe`，请与随附 `config/` 保持在一起；PowerShell 中未加入 PATH 时使用 `./srpcfg.exe`。游戏内控制台 alias 仍使用原有 `srp_*` 名称。
 
 ## 🤝 贡献与规范
 

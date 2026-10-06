@@ -37,8 +37,8 @@
 CLI：
 
 ```text
-srp_cli version
-srp_cli app-update-check --en
+srpcfg version
+srpcfg app-update-check --en
 ```
 
 检查失败返回 1，但始终提供官网和 Releases 地址。

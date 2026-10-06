@@ -60,12 +60,12 @@ bind "p" "srp_practice_keys"
 ## CLI
 
 ```text
-srp_cli modules --en
-srp_cli feature-assemble autoview --keymap
-srp_cli feature-unload autoview
-srp_cli mode-bind demo-hlae --key f6 --keymap
-srp_cli mode-bind practice --key p --keymap --confirm
-srp_cli mode-unbind demo-hlae
+srpcfg modules --en
+srpcfg feature-assemble autoview --keymap
+srpcfg feature-unload autoview
+srpcfg mode-bind demo-hlae --key f6 --keymap
+srpcfg mode-bind practice --key p --keymap --confirm
+srpcfg mode-unbind demo-hlae
 ```
 
 所有命令支持 `--cfg-dir <游戏CFG目录>`。遇到冲突且没有 `--confirm` 时返回 2，失败返回 1，成功或无变化返回 0。CLI 和 GUI 使用相同 core 接口。
