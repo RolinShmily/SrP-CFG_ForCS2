@@ -12,6 +12,9 @@ Item {
     property bool isPathChecking: false
     property bool isConvarsChecking: false
 
+    // 首次构建时后台检查一次配置包更新，使「SrP-CFG 运行时」卡的状态徽标一进入即可信
+    Component.onCompleted: PackageController.checkUpdates()
+
     function triggerAccountSelect() {
         if (steamIdSelect) {
             steamIdSelect.forceActiveFocus();
@@ -331,16 +334,17 @@ Item {
         }
 
         // ==========================================
-        // 2. 下半区：两个紧凑独立的圆角卡片 (逻辑彻底解耦，标题样式严格对齐，零废话小字)
+        // 2. 下半区：路径检测 / Convars 检测 两张卡片，其下为 SrP-CFG 运行时卡
         // ==========================================
         RowLayout {
             Layout.fillWidth: true
             spacing: 16
 
             // --------------------------------------
-            // 左卡片：路径检测 (独立逻辑：只检测路径与装配环境)
+            // 左卡片：路径检测 (独立逻辑：只检测路径)
             // --------------------------------------
             Rectangle {
+                id: pathCard
                 Layout.fillWidth: true
                 Layout.preferredHeight: 216
                 color: MetaTheme.cardBg
@@ -350,6 +354,7 @@ Item {
                 clip: true
 
                 ColumnLayout {
+                    id: pathBody
                     anchors.fill: parent
                     anchors.margins: 16
                     spacing: 12
@@ -487,91 +492,6 @@ Item {
                         }
                     }
 
-                    // 分割微线
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: MetaTheme.divider
-                        Layout.topMargin: 2
-                        Layout.bottomMargin: 2
-                    }
-
-                    // SrP-CFG 部署控制与版本状态行
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 8
-
-                        // 状态小圆点与文本
-                        Rectangle {
-                            width: 6; height: 6; radius: 3
-                            color: OverviewController.isSrpInstalled ? MetaTheme.statusSuccess : MetaTheme.statusWarning
-                        }
-
-                        Text { font.family: MetaTheme.fontFamily;
-                            text: OverviewController.isSrpInstalled
-                                  ? (OverviewController.tr("overview.path.srp_status_installed", OverviewController.currentLang) + " (" + OverviewController.installedSrpVersion + ")")
-                                  : OverviewController.tr("overview.path.srp_status_not_installed", OverviewController.currentLang)
-                            font.pixelSize: 11
-                            font.bold: true
-                            color: OverviewController.isSrpInstalled ? MetaTheme.textPrimary : MetaTheme.textSecondary
-                        }
-
-                        Item { Layout.fillWidth: true }
-
-                        // 操作按钮组
-                        RowLayout {
-                            spacing: 6
-
-                            // 未装配时显示：立即装配 (主色按钮)
-                            AppButton {
-                                visible: !OverviewController.isSrpInstalled
-                                text: OverviewController.tr("overview.path.btn_install_srp", OverviewController.currentLang)
-                                type: HusButton.Type_Primary
-                                sizeHint: "small"
-                                iconSource: HusIcon.DownloadOutlined
-                                Layout.preferredHeight: 26
-                                onClicked: OverviewController.installSrp()
-
-                                HusToolTip {
-                                    text: OverviewController.tr("tooltip.install_srp", OverviewController.currentLang)
-                                }
-                            }
-
-                            // 已装配时显示：重新装配 (次要按钮)
-                            AppButton {
-                                visible: OverviewController.isSrpInstalled
-                                text: OverviewController.tr("overview.path.btn_reinstall_srp", OverviewController.currentLang)
-                                type: HusButton.Type_Default
-                                sizeHint: "small"
-                                iconSource: HusIcon.SyncOutlined
-                                Layout.preferredHeight: 26
-                                onClicked: OverviewController.installSrp()
-
-                                HusToolTip {
-                                    text: OverviewController.tr("tooltip.reinstall_srp", OverviewController.currentLang)
-                                }
-                            }
-
-                            // 已装配时显示：卸载 (高级危险微光按钮)
-                            AppButton {
-                                visible: OverviewController.isSrpInstalled
-                                text: OverviewController.tr("overview.path.btn_uninstall_srp", OverviewController.currentLang)
-                                type: HusButton.Type_Default
-                                sizeHint: "small"
-                                iconSource: HusIcon.DeleteOutlined
-                                Layout.preferredHeight: 26
-                                colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(247/255, 79/255, 79/255, 0.15) : "#fee2e2") : MetaTheme.btnDefaultBg
-                                borderBg.color: hovered ? Qt.rgba(247/255, 79/255, 79/255, 0.45) : MetaTheme.btnDefaultBorder
-                                borderBg.width: 1
-                                colorText: hovered ? MetaTheme.statusCritical : MetaTheme.btnDefaultText
-                                onClicked: OverviewController.uninstallSrp()
-
-                                HusToolTip {
-                                    text: OverviewController.tr("tooltip.uninstall_srp", OverviewController.currentLang)
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
@@ -582,12 +502,13 @@ Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 216
                 color: MetaTheme.cardBg
-                border.color: MetaTheme.cardBorder
-                border.width: 1
-                radius: MetaTheme.radiusLg
-                clip: true
+                    border.color: MetaTheme.cardBorder
+                    border.width: 1
+                    radius: MetaTheme.radiusLg
+                    clip: true
 
-                ColumnLayout {
+                    ColumnLayout {
+                        id: convarsBody
                     anchors.fill: parent
                     anchors.margins: 16
                     spacing: 12
@@ -714,9 +635,11 @@ Item {
             }
         }
 
-        PackagePanel {
-            Layout.fillWidth: true
-            packageId: "srp-cfg"
+        // SrP-CFG 运行时卡 (合并原「路径检测」底部装配行 + 原底部 srp-cfg 更新条)
+        // 宽度直接绑定上方左卡，中英一致
+        RuntimePanel {
+            Layout.preferredWidth: pathCard.width
+            Layout.alignment: Qt.AlignLeft
         }
 
         // 下半区自然弹性留白

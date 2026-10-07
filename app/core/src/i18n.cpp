@@ -167,6 +167,18 @@ const std::unordered_map<std::string_view, std::string_view> g_dictZh = {
     {"overview.path.btn_reinstall_srp", "重新装配"},
     {"overview.path.btn_uninstall_srp", "卸载"},
 
+    // SrP-CFG 运行时卡片 (装配 = 单包部署状态；暂存 = 本地暂存 vs 远端最新)
+    {"overview.runtime.title", "SrP-CFG 运行时"},
+    {"overview.runtime.installed", "已装配"},
+    {"overview.runtime.not_installed", "未装配"},
+    {"overview.runtime.badge_latest", "已是最新"},
+    {"overview.runtime.badge_update", "可更新"},
+    {"overview.runtime.badge_unknown", "未知"},
+    {"overview.runtime.staged", "暂存"},
+    {"overview.runtime.latest", "最新"},
+    {"overview.runtime.btn_check", "检查更新"},
+    {"overview.runtime.btn_update", "更新暂存"},
+
     // Convars 与按键绑定检测卡片
     {"overview.convars.title", "Convars 与按键绑定检测"},
     {"overview.convars.parsed_from_vcfg", "解析 vcfg 获得"},
@@ -458,6 +470,18 @@ const std::unordered_map<std::string_view, std::string_view> g_dictEn = {
     {"overview.path.btn_install_srp", "Deploy"},
     {"overview.path.btn_reinstall_srp", "Redeploy"},
     {"overview.path.btn_uninstall_srp", "Uninstall"},
+
+    // SrP-CFG Runtime Card
+    {"overview.runtime.title", "SrP-CFG Runtime"},
+    {"overview.runtime.installed", "Installed"},
+    {"overview.runtime.not_installed", "Not installed"},
+    {"overview.runtime.badge_latest", "Up to date"},
+    {"overview.runtime.badge_update", "Update available"},
+    {"overview.runtime.badge_unknown", "Unknown"},
+    {"overview.runtime.staged", "Staged"},
+    {"overview.runtime.latest", "Latest"},
+    {"overview.runtime.btn_check", "Check updates"},
+    {"overview.runtime.btn_update", "Update"},
 
     // Convars & Keybinds Diagnostics Card
     {"overview.convars.title", "Convars & Keybinds Detection"},

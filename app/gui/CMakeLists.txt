@@ -81,6 +81,7 @@ qt_add_qml_module(srp_gui
         qml/components/AssemblyModuleCard.qml
         qml/pages/AssemblyPage.qml
         qml/components/PackagePanel.qml
+        qml/components/RuntimePanel.qml
         qml/components/MediaEditorPanel.qml
         qml/pages/VideoPage.qml
         qml/pages/AnnotationsPage.qml
