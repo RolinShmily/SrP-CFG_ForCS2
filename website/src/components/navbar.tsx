@@ -35,7 +35,7 @@ export function Navbar() {
       <div className="nav-actions">
         <button onClick={toggleLocale} aria-label={t.nav.language} title={t.nav.language}><Globe2 size={16} /><span>{locale === "zh" ? "EN" : "中"}</span></button>
         <a className="github-link" href={REPOSITORY} target="_blank" rel="noreferrer" aria-label="GitHub"><GithubIcon /></a>
-        <a className="nav-skill" href="#srpcfg-skill" aria-label={t.nav.skill} title={t.nav.skill} onClick={() => setOpen(false)}><Terminal size={16} aria-hidden="true" /><span>Skill</span></a>
+        <a className="nav-skill" href="#srpcfg-cli" aria-label={t.nav.skill} title={t.nav.skill} onClick={() => setOpen(false)}><Terminal size={16} aria-hidden="true" /><span>Skill</span></a>
         <a className="nav-download" href="#download" aria-label={t.nav.download}><ArrowDownToLine size={15} /><span>{t.nav.download}</span></a>
         <button className="nav-menu" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? t.nav.close : t.nav.menu} onClick={() => setOpen(!open)}>{open ? <X size={19} /> : <Menu size={19} />}</button>
       </div>

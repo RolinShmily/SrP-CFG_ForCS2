@@ -19,7 +19,7 @@ if(BUILD_TESTING)
     find_package(Python3 COMPONENTS Interpreter QUIET)
     if(Python3_Interpreter_FOUND)
         add_test(NAME srpcfg_cli_skill COMMAND "${Python3_EXECUTABLE}"
-            "${CMAKE_SOURCE_DIR}/skills/srpcfg-skill/evals/run_cli_checks.py"
+            "${CMAKE_SOURCE_DIR}/skills/srpcfg-cli/evals/run_cli_checks.py"
             --exe "$<TARGET_FILE:srp_cli>" --bundle "${CMAKE_SOURCE_DIR}/config")
         set_tests_properties(srpcfg_cli_skill PROPERTIES TIMEOUT 120)
     endif()

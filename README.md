@@ -159,7 +159,7 @@ pnpm preview
 
 ## Agent Skill
 
-The repository and software bundles include [srpcfg-skill](skills/srpcfg-skill/SKILL.md). The [website download section](https://cfg.srprolin.top/#download) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-skill` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
+The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL.md). The [website download section](https://cfg.srprolin.top/#download) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-cli` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
 
 ## 🤝 Contributing
 

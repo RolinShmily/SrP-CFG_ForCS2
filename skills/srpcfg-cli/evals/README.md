@@ -5,7 +5,7 @@
 The dependency-free Python runner executes those command scenarios against a real CLI in temporary directories:
 
 ```bash
-python skills/srpcfg-skill/evals/run_cli_checks.py --exe build-core/app/cli/Release/srpcfg.exe --bundle config --output build-gui/verification-skill/iteration-1
+python skills/srpcfg-cli/evals/run_cli_checks.py --exe build-core/app/cli/Release/srpcfg.exe --bundle config --output build-gui/verification-skill/iteration-1
 ```
 
 Use the appropriate compiled executable path on Linux or another CMake generator. No Steam account or actual game files are modified. All fixtures are removed after the run. `--output` is optional; review metadata, command traces, grading JSON and Markdown reports remain when specified.

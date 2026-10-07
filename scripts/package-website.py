@@ -59,10 +59,10 @@ def main():
         if package_id == 'srp-cfg':
             files.append(('autoexec.cfg', (REPO/'config/autoexec.cfg').read_bytes()))
         packages[package_id] = build_package(archives, package_id, directory, files)
-    directory = REPO/'skills/srpcfg-skill'
-    files = list(entries(directory, 'srpcfg-skill/'))
-    files.append(('srpcfg-skill/LICENSE.txt', (REPO/'LICENSE').read_bytes()))
-    packages['srpcfg-skill'] = build_package(archives, 'srpcfg-skill', directory, files)
+    directory = REPO/'skills/srpcfg-cli'
+    files = list(entries(directory, 'srpcfg-cli/'))
+    files.append(('srpcfg-cli/LICENSE.txt', (REPO/'LICENSE').read_bytes()))
+    packages['srpcfg-cli'] = build_package(archives, 'srpcfg-cli', directory, files)
     manifest = {'schema_version': 1, 'published_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'packages': packages}
     (output/'packages.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')

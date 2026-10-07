@@ -9,7 +9,7 @@ function Get-PeSubsystem([string]$Executable) {
 }
 if ((Get-PeSubsystem (Join-Path $package 'SrP-CFG.exe')) -ne 2) { throw 'GUI must use the Windows subsystem (no console)' }
 if ((Get-PeSubsystem (Join-Path $package 'srpcfg.exe')) -ne 3) { throw 'CLI must use the console subsystem' }
-foreach ($required in @('vcruntime140.dll', 'msvcp140.dll', 'skills/srpcfg-skill/SKILL.md', 'skills/srpcfg-skill/references/commands.md', 'skills/srpcfg-skill/scripts/inspect_cli.py')) {
+foreach ($required in @('vcruntime140.dll', 'msvcp140.dll', 'skills/srpcfg-cli/SKILL.md', 'skills/srpcfg-cli/references/commands.md', 'skills/srpcfg-cli/scripts/inspect_cli.py')) {
     if (!(Test-Path (Join-Path $package $required))) { throw "Missing required package file: $required" }
 }
 $temporary = Join-Path ([IO.Path]::GetTempPath()) ('srp-portable-' + [Guid]::NewGuid().ToString('N'))

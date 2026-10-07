@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='srpcfg-download-test-') as temporary:
     subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
     manifest = json.loads((output/'packages.json').read_text(encoding='utf-8'))
     assert manifest['schema_version'] == 1
-    assert set(manifest['packages']) == {'srp-cfg', 'video', 'annotations', 'srpcfg-skill'}
+    assert set(manifest['packages']) == {'srp-cfg', 'video', 'annotations', 'srpcfg-cli'}
     for package_id, entry in manifest['packages'].items():
         name = entry['url'].rsplit('/', 1)[1]
         archive = output/'packages'/name
@@ -29,12 +29,12 @@ with tempfile.TemporaryDirectory(prefix='srpcfg-download-test-') as temporary:
             names = zipped.namelist()
             assert not any('..' in Path(name).parts or name.startswith('/') for name in names)
             assert not any('__pycache__' in name or name.endswith(('.pyc', '.bak', '.tmp')) for name in names)
-            if package_id == 'srpcfg-skill':
-                assert all(name.startswith('srpcfg-skill/') for name in names)
+            if package_id == 'srpcfg-cli':
+                assert all(name.startswith('srpcfg-cli/') for name in names)
                 for relative in ['SKILL.md', 'VERSION.txt', 'LICENSE.txt', 'references/commands.md', 'scripts/inspect_cli.py']:
-                    assert f'srpcfg-skill/{relative}' in names
-                assert zipped.read('srpcfg-skill/SKILL.md') == (REPO/'skills/srpcfg-skill/SKILL.md').read_bytes()
-                assert zipped.read('srpcfg-skill/LICENSE.txt') == (REPO/'LICENSE').read_bytes()
+                    assert f'srpcfg-cli/{relative}' in names
+                assert zipped.read('srpcfg-cli/SKILL.md') == (REPO/'skills/srpcfg-cli/SKILL.md').read_bytes()
+                assert zipped.read('srpcfg-cli/LICENSE.txt') == (REPO/'LICENSE').read_bytes()
             elif package_id == 'srp-cfg':
                 assert 'autoexec.cfg' in names and 'srp-cfg/runtime/init.cfg' in names
             elif package_id == 'video':

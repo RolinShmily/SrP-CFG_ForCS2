@@ -75,8 +75,8 @@ h2 { font-size: clamp(32px,3.8vw,53px); line-height: 1.23; letter-spacing: -.045
 .nav-actions button:hover,.github-link:hover { background: #ffffff12; }
 .nav-skill { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 12px; border: 1px solid #ffa52b55; border-radius: 10px; color: #ffd092; font-size: 12px; white-space: nowrap; transition: background .25s,border-color .25s; }
 .nav-skill:hover { background: #ffa52b15; border-color: var(--cs-orange); }
-#srpcfg-skill { scroll-margin-top: 110px; }
-#srpcfg-skill:target { border-color: var(--cs-orange); }
+#srpcfg-cli { scroll-margin-top: 110px; }
+#srpcfg-cli:target { border-color: var(--cs-orange); }
 .nav-download { background: var(--cs-orange); color: #171923; display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; }
 .nav-menu { display: none !important; }
 .is-compact .nav-islands { max-width: 1040px; gap: 0; background: #19212df5; border-radius: 18px; padding: 3px; box-shadow: 0 10px 40px #0006; }

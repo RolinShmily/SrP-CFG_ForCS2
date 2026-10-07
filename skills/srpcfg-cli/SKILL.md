@@ -1,5 +1,5 @@
 ---
-name: srpcfg-skill
+name: srpcfg-cli
 license: MIT
 description: Manage Counter-Strike 2 configuration with the SrP-CFG srpcfg CLI. Use this skill whenever the user asks to diagnose Steam/CS2 paths or accounts, inspect or assemble SrP presets/features, bind mode launchers, update configuration packages, edit/apply cs2_video.txt, deploy/remove map guides, or automate SrP-CFG operations. Keep staging edits separate from game deployment and check binding conflicts before accepting them.
 compatibility: Requires srpcfg (Windows srpcfg.exe) and its bundled config directory. Windows is required for Steam detection, online updates, game launch, and Explorer integration; Python 3 is optional for the inspection helper.

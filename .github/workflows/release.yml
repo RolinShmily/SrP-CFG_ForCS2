@@ -88,7 +88,7 @@ jobs:
           New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
           Copy-Item "build/app/cli/srpcfg.exe" -Destination "$cliDir/srpcfg.exe"
           New-Item -ItemType Directory -Path "$cliDir/skills" -Force | Out-Null
-          Copy-Item "skills/srpcfg-skill" -Destination "$cliDir/skills/srpcfg-skill" -Recurse
+          Copy-Item "skills/srpcfg-cli" -Destination "$cliDir/skills/srpcfg-cli" -Recurse
           Copy-Item "$($crt.FullName)/*.dll" -Destination $cliDir
           Copy-Item "config" -Destination "$cliDir/config" -Recurse -Force
           Copy-Item "LICENSE" -Destination "$cliDir/LICENSE.txt"
@@ -107,7 +107,7 @@ jobs:
           Copy-Item "build/app/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
           Copy-Item "build/app/cli/srpcfg.exe" -Destination "$guiDir/srpcfg.exe"
           New-Item -ItemType Directory -Path "$guiDir/skills" -Force | Out-Null
-          Copy-Item "skills/srpcfg-skill" -Destination "$guiDir/skills/srpcfg-skill" -Recurse
+          Copy-Item "skills/srpcfg-cli" -Destination "$guiDir/skills/srpcfg-cli" -Recurse
           Copy-Item "$($crt.FullName)/*.dll" -Destination $guiDir
 
           # The configured Ninja build produces these exact runtime paths.

@@ -100,7 +100,7 @@ int main(int argc,char** argv){
   for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"version\":\"3.4.0\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://cfg.srprolin.top/packages/"+id+"-latest.zip\"}";}manifest+="}}";
   require(srp::core::parsePackageManifest(manifest,packages,error)&&packages.size()==3,"manifest parses all three packages");
   auto withSkill=manifest;
-  withSkill.insert(withSkill.size()-2,",\"srpcfg-skill\":{\"version\":\"1.0.0\",\"size\":100,\"sha256\":\""+std::string(64,'b')+"\",\"url\":\"https://cfg.srprolin.top/packages/srpcfg-skill-latest.zip\"}");
+  withSkill.insert(withSkill.size()-2,",\"srpcfg-cli\":{\"version\":\"1.0.0\",\"size\":100,\"sha256\":\""+std::string(64,'b')+"\",\"url\":\"https://cfg.srprolin.top/packages/srpcfg-cli-latest.zip\"}");
   require(srp::core::parsePackageManifest(withSkill,packages,error)&&packages.size()==3,"website skill entry does not become an APP configuration package");
   require(srp::core::packageManifestUrl()=="https://cfg.srprolin.top/packages.json","manifest uses official Worker domain");
   auto unsafe=manifest;const std::string trusted="https://cfg.srprolin.top";unsafe.replace(unsafe.find(trusted),trusted.size(),"https://attacker.invalid");
