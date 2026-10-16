@@ -61,6 +61,8 @@ SrP-CFG_ForCS2/
 │   ├── srp-cfg/               # Runtime scripts, catalog.json, presets & modules
 │   ├── video/                 # cs2_video.txt template & versioning
 │   └── annotations/           # Native map guide resources
+├── skills/                    # Agent skills
+│   └── srpcfg-cli/            # srpcfg CLI integration skill for coding agents
 ├── website/                   # Official showcase & documentation (Next.js 16 + React 19 + Tailwind CSS)
 ├── installer/                 # Windows official installer script (Inno Setup)
 ├── scripts/                   # Repository sanity checks, drift detection & local utilities
@@ -70,7 +72,7 @@ SrP-CFG_ForCS2/
 
 ### Safety & Resilience Highlights
 
-1. **Zero Injection · Purely Native**: Operates strictly through CS2 native `+exec`, standard `.cfg`, and KV3 files. **Zero DLL injection, zero memory modification, zero hooks**.
+1. **No Injection · No Memory Modification · Pure Native CFG**: Operates strictly through CS2 native `+exec`, standard `.cfg`, and KV3 files. **Zero DLL injection, zero memory modification, zero hooks**. All features are executed by the game engine's native configuration system. Configuration compatibility follows game updates.
 2. **Multi-Generation Atomic Backups**: Before writing to game files or updating working copies, the backup writer creates `.bak` files and retains up to 20 deduplicated historical snapshots. Failed writes roll back automatically.
 3. **Staging Transaction Model**: Package downloads and updates land in a writable staging area (`Original` / `Work`). Customized working copies are preserved when upstream updates arrive.
 4. **Running Game Guard**: Detects running CS2 processes and pauses video configuration writes to prevent being overwritten on game exit.
@@ -84,7 +86,7 @@ SrP-CFG_ForCS2/
 
 1. Download the installer (`setup.exe`) or portable archive (`gui.zip`) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Official Website](https://cfg.srprolin.top/).
 2. Launch **SrP-CFG**; the application automatically detects Steam, CS2, and active accounts.
-3. Initialize in **Overview**, configure modules in **Presets** or **Free Assembly**, and fine-tune `custom.cfg` in the integrated code editor.
+3. Initialize in **Overview**, configure modules in **Presets** or **Modular Assembly**, and fine-tune `custom.cfg` in the integrated code editor.
 
 ### Option 2: Command Line Interface (CLI)
 
@@ -159,12 +161,14 @@ pnpm preview
 
 ## Agent Skill
 
-The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL.md). The [website download section](https://cfg.srprolin.top/#download) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-cli` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
+The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL.md). The [website download section](https://cfg.srprolin.top/#srpcfg-cli) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-cli` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
+
+---
 
 ## 🤝 Contributing
 
 Issues and Pull Requests are welcome! Before submitting:
-- Follow the architectural boundaries: core logic belongs in `app/core`, GUI in `app/gui`.
+- Follow architectural boundaries: core logic belongs in `app/core`, CLI in `app/cli`, and desktop GUI in `app/gui`.
 - All configuration file writes must use the backup transaction system.
 - For third-party licensing obligations, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

@@ -17,7 +17,7 @@
 
 ## 💡 核心设计理念
 
-> **“把功能展开，把选择留给你；系统属于引擎，偏好属于玩家。”**
+> **“把功能展开，把选择留给你；运行时属于引擎，偏好属于玩家。”**
 
 在 Counter-Strike 2 中，Valve 引入了全新的 VCFG 机制管理键位与引擎变量。传统单体“大包”CFG 往往覆盖玩家个人习惯，或者在 Steam 云存档同步时产生不可逆的冲突。
 
@@ -61,6 +61,8 @@ SrP-CFG_ForCS2/
 │   ├── srp-cfg/               # 运行时脚本、catalog.json、预设与模块
 │   ├── video/                 # cs2_video.txt 模板与版本标识
 │   └── annotations/           # 原生地图标注资源
+├── skills/                    # 智能体技能包
+│   └── srpcfg-cli/            # 适用于各类智能体的 srpcfg CLI 自动化技能
 ├── website/                   # 官方展示与文档站点 (Next.js 16 + React 19 + Tailwind CSS)
 ├── installer/                 # Windows 官方安装器脚本 (Inno Setup)
 ├── scripts/                   # 工程审计、漂移检测与本地辅助脚本
@@ -70,7 +72,7 @@ SrP-CFG_ForCS2/
 
 ### 核心安全与防护特性
 
-1. **零注入 · 纯原生**：仅通过 CS2 原生 `+exec`、标准 `.cfg` 与 KV3 机制运作。**零 DLL 注入、零内存修改、零 Hook**。配置兼容性仍随游戏版本变化。
+1. **不注入 · 不改内存 · 纯原生 CFG**：不注入任何 DLL、不修改游戏内存、不挂钩进程。所有特性与模块严格通过 CS2 原生 `+exec`、标准 `.cfg` 与 KV3 文件格式驱动，完全依赖游戏引擎自带机制。配置兼容性随游戏版本更新。
 2. **多代快照与原子备份**：写入游戏或更新工作副本前，自动建立 `.bak` 并保留最多 20 份不同内容的去重历史备份，写入失败自动回滚。
 3. **暂存区事务机制**：配置包下载更新先落盘到用户可写暂存区（Original / Work），玩家手工微调的工作副本在包更新时受保护。
 4. **游戏运行安全互锁**：探测 CS2 进程状态，游戏运行时暂停画面配置写入，防止退出时被游戏覆盖。
@@ -159,12 +161,14 @@ pnpm preview
 
 ## 智能体 Skill
 
-仓库和软件包随附 [srpcfg-cli](skills/srpcfg-cli/SKILL.md)。[网站下载区](https://cfg.srprolin.top/#download) 另提供独立版本的 Skill ZIP，解压后将 `srpcfg-cli` 文件夹加入智能体的技能目录，即可按 CLI 工作流管理 CS2 配置。技能 ZIP 不包含 CLI 可执行文件。Windows 命令文件为 `srpcfg.exe`，请与随附 `config/` 保持在一起；PowerShell 中未加入 PATH 时使用 `./srpcfg.exe`。游戏内控制台 alias 仍使用原有 `srp_*` 名称。
+仓库和软件包随附 [srpcfg-cli](skills/srpcfg-cli/SKILL.md)。[网站下载区](https://cfg.srprolin.top/#srpcfg-cli) 另提供独立版本的 Skill ZIP，解压后将 `srpcfg-cli` 文件夹加入智能体的技能目录，即可按 CLI 工作流管理 CS2 配置。技能 ZIP 不包含 CLI 可执行文件。Windows 命令文件为 `srpcfg.exe`，请与随附 `config/` 保持在一起；PowerShell 中未加入 PATH 时使用 `./srpcfg.exe`。游戏内控制台 alias 仍使用原有 `srp_*` 名称。
+
+---
 
 ## 🤝 贡献与规范
 
 欢迎提交 Issue 与 Pull Request！在提交之前请注意：
-- 严格遵循逻辑分层原则：核心逻辑沉淀在 `app/core`，界面呈现由 `app/gui` 负责。
+- 严格遵循逻辑分层原则：核心逻辑沉淀在 `app/core`，命令行工具在 `app/cli`，界面呈现由 `app/gui` 负责。
 - 所有对配置文件的写操作必须通过备份器事务，确保提供 `.bak` 与回滚路径。
 - 详情请查阅 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
