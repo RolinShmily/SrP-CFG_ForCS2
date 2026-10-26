@@ -20,7 +20,7 @@ export function Footer() {
     { label: t.footer.project, url: REPOSITORY, icon: GitFork },
     { label: t.footer.docs, url: `${REPOSITORY}#readme`, icon: BookOpen },
     { label: t.footer.releases, url: RELEASES, icon: PackageOpen },
-    { label: t.footer.blog, url: "https://blog.srprolin.top", icon: Rss },
+    { label: t.footer.blog, url: "https://blog.srprolin.com", icon: Rss },
   ];
   return <footer className="site-footer"><div className="content-width">
     <div className="footer-main">

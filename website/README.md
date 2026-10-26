@@ -69,9 +69,9 @@ pnpm build
 
 `deploy-worker.yml` 在 main 更新或手动触发时打包三个配置包与 Skill ZIP、运行解析测试/类型检查、构建 website/out，并使用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg` 和静态资源目录，启用 workers.dev；不声明 Custom Domain，也没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
 
-CI 通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认证；凭据不写入 TOML。Token 需要 Worker 部署权限。CI 不修改官网 DNS 或域名绑定；官网 `cfg.srprolin.top` 由 Cloudflare 控制台单独绑定到该 Worker。官网绑定前，可使用部署日志中的 workers.dev 地址预览网站；APP 配置更新地址需等官网绑定完成后才能验证。
+CI 通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认证；凭据不写入 TOML。Token 需要 Worker 部署权限。CI 不修改官网 DNS 或域名绑定；官网 `cfg.srprolin.com` 由 Cloudflare 控制台单独绑定到该 Worker。官网绑定前，可使用部署日志中的 workers.dev 地址预览网站；APP 配置更新地址需等官网绑定完成后才能验证。
 
-配置清单及 ZIP 下载地址统一为 `https://cfg.srprolin.top/packages.json` 和 `/packages/`。APP core 只信任该 HTTPS 域名下的配置路径。旧版 APP 仍使用原 gh-pages 地址，需要下载包含地址迁移的新软件包。GitHub Releases 继续发布软件制品。
+配置清单及 ZIP 下载地址统一为 `https://cfg.srprolin.com/packages.json` 和 `/packages/`。APP core 只信任该 HTTPS 域名下的配置路径。旧版 APP/CLI 中的 `.top` 或更早 gh-pages 地址编译在程序内，需要下载安装 3.4.3 或后续版本。配置下载器禁止 HTTP 重定向，旧域名 301/302 或直接返回含 `.com` ZIP 地址的新清单均无法兼容旧版；若需保留旧客户端更新，旧域名必须直接提供仍使用旧域名下载 URL 的兼容清单和 ZIP。GitHub Releases 继续发布软件制品。
 
 `website/public/_headers` 禁止缓存配置清单，对 Next.js 内容哈希静态资源启用长期缓存。Wrangler 版本固定在工作流中，不修改网站依赖或锁文件。
 

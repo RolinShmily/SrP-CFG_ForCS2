@@ -11,6 +11,6 @@ int main(){try{
  AppRelease release;
  check(parseAppRelease("\xEF\xBB\xBF{\"version\":\"3.5.0\",\"tag\":\"v3.5.0\",\"notes_zh\":\"测试\",\"notes_en\":\"Test\"}",release)&&release.version=="3.5.0"&&release.notesZh=="测试","workflow BOM UTF-8 manifest parses");
  for(const auto* json:{"{}","{\"version\":\"\",\"tag\":\"v\"}","{\"version\":\"3.5.0\",\"tag\":\"v3.6.0\"}","{\"version\":\"3.5.0-dev\",\"tag\":\"v3.5.0-dev\"}","{\"version\":350,\"tag\":\"v3.5.0\"}","{\"version\":\"3.5.0\",\"version\":\"3.6.0\",\"tag\":\"v3.5.0\"}"})check(!parseAppRelease(json,release),"malformed release refused");
- check(websiteUrl()=="https://cfg.srprolin.top"&&blogUrl()=="https://blog.srprolin.top"&&releasesUrl()==projectUrl()+"/releases","fixed approved navigation URLs");
+ check(websiteUrl()=="https://cfg.srprolin.com"&&blogUrl()=="https://blog.srprolin.com"&&releasesUrl()==projectUrl()+"/releases","fixed approved navigation URLs");
  std::cout<<"ALL APP UPDATE CHECKS PASSED\n";return 0;
  }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}}

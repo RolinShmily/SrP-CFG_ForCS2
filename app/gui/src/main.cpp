@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
     QGuiApplication app(argc, argv);
     app.setOrganizationName("SrP");
-    app.setOrganizationDomain("srprolin.top");
+    app.setOrganizationDomain("srprolin.com");
     app.setApplicationName("SrP-CFG");
     app.setApplicationDisplayName("SrP-CFG");
     app.setApplicationVersion(QString::fromStdString(srp::core::applicationVersion()));

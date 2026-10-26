@@ -59,8 +59,8 @@ bool fetchManifest(std::string& text) {
 #endif
 }
 std::string applicationVersion(){return SRP_APP_VERSION;}
-std::string websiteUrl(){return "https://cfg.srprolin.top";}
-std::string blogUrl(){return "https://blog.srprolin.top";}
+std::string websiteUrl(){return "https://cfg.srprolin.com";}
+std::string blogUrl(){return "https://blog.srprolin.com";}
 std::string projectUrl(){return "https://github.com/RolinShmily/SrP-CFG_ForCS2";}
 std::string releasesUrl(){return projectUrl()+"/releases";}
 std::string appReleaseManifestUrl(){return releasesUrl()+"/latest/download/latest.json";}

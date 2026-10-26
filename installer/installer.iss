@@ -1,8 +1,8 @@
 ; SrP-CFG - Inno Setup Installer Script
-; Defines can be passed from command line via /DMyAppVersion=v3.4.2 /DSourceDir=... /DOutputDir=...
+; Defines can be passed from command line via /DMyAppVersion=v3.4.3 /DSourceDir=... /DOutputDir=...
 
 #ifndef MyAppVersion
-  #define MyAppVersion "v3.4.2"
+  #define MyAppVersion "v3.4.3"
 #endif
 
 #ifndef SourceDir

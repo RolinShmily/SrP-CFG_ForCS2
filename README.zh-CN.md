@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/ci.yml?branch=main&label=CI)](https://github.com/RolinShmily/SrP-CFG_ForCS2/actions)
-[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.top)
+[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-brightgreen.svg)](#)
 
 [简体中文](README.zh-CN.md) | [English](README.md)
@@ -84,7 +84,7 @@ SrP-CFG_ForCS2/
 
 ### 方式 1：使用桌面工作台（推荐）
 
-1. 前往 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或 [官方网站](https://cfg.srprolin.top/) 下载安装版 (`setup.exe`) 或免安装绿色便携版 (`gui.zip`)。
+1. 前往 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或 [官方网站](https://cfg.srprolin.com/) 下载安装版 (`setup.exe`) 或免安装绿色便携版 (`gui.zip`)。
 2. 启动 **SrP-CFG**，程序将自动识别 Steam、CS2 路径以及活跃用户。
 3. 在**总览**中完成初始化装配；在**预设包**或**自由装配**中定制功能；在右侧固定代码编辑器中即时微调 `custom.cfg`。
 
@@ -161,7 +161,7 @@ pnpm preview
 
 ## 智能体 Skill
 
-仓库和软件包随附 [srpcfg-cli](skills/srpcfg-cli/SKILL.md)。[网站下载区](https://cfg.srprolin.top/#srpcfg-cli) 另提供独立版本的 Skill ZIP，解压后将 `srpcfg-cli` 文件夹加入智能体的技能目录，即可按 CLI 工作流管理 CS2 配置。技能 ZIP 不包含 CLI 可执行文件。Windows 命令文件为 `srpcfg.exe`，请与随附 `config/` 保持在一起；PowerShell 中未加入 PATH 时使用 `./srpcfg.exe`。游戏内控制台 alias 仍使用原有 `srp_*` 名称。
+仓库和软件包随附 [srpcfg-cli](skills/srpcfg-cli/SKILL.md)。[网站下载区](https://cfg.srprolin.com/#srpcfg-cli) 另提供独立版本的 Skill ZIP，解压后将 `srpcfg-cli` 文件夹加入智能体的技能目录，即可按 CLI 工作流管理 CS2 配置。技能 ZIP 不包含 CLI 可执行文件。Windows 命令文件为 `srpcfg.exe`，请与随附 `config/` 保持在一起；PowerShell 中未加入 PATH 时使用 `./srpcfg.exe`。游戏内控制台 alias 仍使用原有 `srp_*` 名称。
 
 ---
 

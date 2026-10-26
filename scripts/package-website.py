@@ -10,7 +10,7 @@ import shutil
 import zipfile
 
 REPO = Path(__file__).resolve().parent.parent
-ORIGIN = 'https://cfg.srprolin.top'
+ORIGIN = 'https://cfg.srprolin.com'
 CONFIG_IDS = ('srp-cfg', 'video', 'annotations')
 
 

@@ -6,8 +6,8 @@
 
 关于显示软件图标、构建版本、简介、作者、架构及三个外部入口：
 
-- 官网：https://cfg.srprolin.top
-- 博客：https://blog.srprolin.top
+- 官网：https://cfg.srprolin.com
+- 博客：https://blog.srprolin.com
 - 项目：https://github.com/RolinShmily/SrP-CFG_ForCS2
 
 设置提供简体中文/English、本机普通字体搜索与选择、只读配置暂存库路径及打开文件夹入口。暂存库不提供修改、迁移或恢复默认操作。设置项仅在保存后生效并持久化；取消、右上角关闭与 Esc 放弃待保存值。
@@ -30,7 +30,7 @@
 
 ## 版本与设置存储
 
-顶层 CMake 的 SRP_APP_VERSION 默认为 3.4.2；Release 标签构建传入去 v 的标签版本。core applicationVersion、GUI applicationVersion、关于显示及 CLI version 共享同一来源。
+顶层 CMake 的 SRP_APP_VERSION 默认为 3.4.3；Release 标签构建传入去 v 的标签版本。core applicationVersion、GUI applicationVersion、关于显示及 CLI version 共享同一来源。
 
 设置是用户级 QSettings INI（SrP/SrP-CFG），包含 ui/language、ui/fontFamily；不是游戏配置，不放入暂存库。保存同步失败时不会应用新值。测试可传入独立 INI 文件，避免修改真实用户偏好。
 

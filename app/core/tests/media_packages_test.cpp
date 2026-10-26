@@ -45,7 +45,7 @@ int main(int argc,char** argv){
   require(read(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")))==changed,"edited work copy preserved on update");
   require(srp::core::inspectPackageFile("video","cs2_video.txt").outdated,"edited work marked based on old version");
   require(fs::exists(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")+".bak")),"work history survives generation promotion");
-  require(srp::core::packageVersion("srp-cfg")=="3.4.0","other package version independent");
+  require(srp::core::packageVersion("srp-cfg")=="3.4.1","other package version independent");
 #if defined(_WIN32)
   const auto pointer = root/"store/current.txt";
   HANDLE pointerHandle = CreateFileW(pointer.c_str(),GENERIC_READ,FILE_SHARE_READ | FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
@@ -97,14 +97,16 @@ int main(int argc,char** argv){
 #endif
   std::vector<srp::core::ConfigPackage> packages;std::string error;
   std::string manifest="{\"schema_version\":1,\"packages\":{";
-  for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"version\":\"3.4.0\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://cfg.srprolin.top/packages/"+id+"-latest.zip\"}";}manifest+="}}";
+  for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"version\":\"3.4.0\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://cfg.srprolin.com/packages/"+id+"-latest.zip\"}";}manifest+="}}";
   require(srp::core::parsePackageManifest(manifest,packages,error)&&packages.size()==3,"manifest parses all three packages");
   auto withSkill=manifest;
-  withSkill.insert(withSkill.size()-2,",\"srpcfg-cli\":{\"version\":\"1.0.0\",\"size\":100,\"sha256\":\""+std::string(64,'b')+"\",\"url\":\"https://cfg.srprolin.top/packages/srpcfg-cli-latest.zip\"}");
+  withSkill.insert(withSkill.size()-2,",\"srpcfg-cli\":{\"version\":\"1.0.0\",\"size\":100,\"sha256\":\""+std::string(64,'b')+"\",\"url\":\"https://cfg.srprolin.com/packages/srpcfg-cli-latest.zip\"}");
   require(srp::core::parsePackageManifest(withSkill,packages,error)&&packages.size()==3,"website skill entry does not become an APP configuration package");
-  require(srp::core::packageManifestUrl()=="https://cfg.srprolin.top/packages.json","manifest uses official Worker domain");
-  auto unsafe=manifest;const std::string trusted="https://cfg.srprolin.top";unsafe.replace(unsafe.find(trusted),trusted.size(),"https://attacker.invalid");
-  require(!srp::core::parsePackageManifest(unsafe,packages,error),"untrusted manifest host rejected");
+  require(srp::core::packageManifestUrl()=="https://cfg.srprolin.com/packages.json","manifest uses official Worker domain");
+  for(const std::string host:{"https://attacker.invalid","https://cfg.srprolin.top","https://cfg.srprolin.com.evil.example","http://cfg.srprolin.com"}){
+   auto unsafe=manifest;const std::string trusted="https://cfg.srprolin.com";unsafe.replace(unsafe.find(trusted),trusted.size(),host);
+   require(!srp::core::parsePackageManifest(unsafe,packages,error),"untrusted or retired manifest host rejected");
+  }
   require(!srp::core::parsePackageManifest("{\"schema_version\":1,\"schema_version\":2}",packages,error),"duplicate manifest keys rejected");
   require(!srp::core::importPackageArchive({"video","3.4.0",std::string(64,'0'),"",100},target.u8string()).success,"archive mismatch rejected before extraction");
   std::cout<<"ALL MEDIA AND PACKAGE CHECKS PASSED\n";return 0;

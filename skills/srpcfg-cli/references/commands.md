@@ -84,7 +84,7 @@ Package protocol IDs are `srp-cfg`, `video`, `annotations`; content within them 
 | Command | Effect |
 | --- | --- |
 | `packages` | Initialize offline staging if needed; print versions and working-copy root |
-| `packages-check` | Fetch https://cfg.srprolin.top/packages.json; no update or deployment |
+| `packages-check` | Fetch https://cfg.srprolin.com/packages.json; no update or deployment |
 | `package-update <id>` | Download verified package into a new staging generation; edited copies retain their baseline |
 | `package-reset <id> --file <relative>` | Back up and restore one working file from current package original |
 

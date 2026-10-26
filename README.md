@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/ci.yml?branch=main&label=CI)](https://github.com/RolinShmily/SrP-CFG_ForCS2/actions)
-[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.top)
+[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-brightgreen.svg)](#)
 
 [English](README.md) | [简体中文](README.zh-CN.md)
@@ -84,7 +84,7 @@ SrP-CFG_ForCS2/
 
 ### Option 1: Desktop Workspace (Recommended)
 
-1. Download the installer (`setup.exe`) or portable archive (`gui.zip`) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Official Website](https://cfg.srprolin.top/).
+1. Download the installer (`setup.exe`) or portable archive (`gui.zip`) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Official Website](https://cfg.srprolin.com/).
 2. Launch **SrP-CFG**; the application automatically detects Steam, CS2, and active accounts.
 3. Initialize in **Overview**, configure modules in **Presets** or **Modular Assembly**, and fine-tune `custom.cfg` in the integrated code editor.
 
@@ -161,7 +161,7 @@ pnpm preview
 
 ## Agent Skill
 
-The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL.md). The [website download section](https://cfg.srprolin.top/#srpcfg-cli) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-cli` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
+The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL.md). The [website download section](https://cfg.srprolin.com/#srpcfg-cli) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-cli` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
 
 ---
 

@@ -13,7 +13,7 @@ Use `srpcfg` to carry out the user's requested CS2 configuration operation throu
 
 1. Find `srpcfg` on PATH or the user's extracted/installed software directory. On Windows the name is `srpcfg.exe`; PowerShell needs `& "<absolute-path>/srpcfg.exe"` or `./srpcfg.exe` if it is not on PATH. Quote paths and pass arguments separately.
 2. Run `version` and `--help`. If desired, run `python <skill-dir>/scripts/inspect_cli.py --exe <executable>` for a JSON report of those two read-only calls. Do not execute a similarly named program from an untrusted directory.
-3. Keep the packaged `config/` with the executable. If the CLI is absent, report the missing dependency and link https://cfg.srprolin.top or https://github.com/RolinShmily/SrP-CFG_ForCS2/releases. Do not substitute obsolete `srp`/`srp_cli` binaries, download/run software without authorization, or invent installation commands.
+3. Keep the packaged `config/` with the executable. If the CLI is absent, report the missing dependency and link https://cfg.srprolin.com or https://github.com/RolinShmily/SrP-CFG_ForCS2/releases. Do not substitute obsolete `srp`/`srp_cli` binaries, download/run software without authorization, or invent installation commands.
 4. Match output language with `--zh` or `--en`. Output is human-readable, except the inspection helper; the CLI has no `--json`, `--dry-run` or persistent account selection option.
 
 ## Choose the target before changing files

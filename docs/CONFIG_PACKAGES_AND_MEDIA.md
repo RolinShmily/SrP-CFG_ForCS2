@@ -30,7 +30,7 @@ CLI 与 GUI 均可传入 `--store <path>` 使用独立暂存区。安装目录�
 
 ## 在线更新
 
-读取 Cloudflare Worker 上的 `https://cfg.srprolin.top/packages.json`（schema 1）。只接受已知三个包和官网 `/packages/` 路径的 HTTPS 下载；验证版本、大小和 SHA-256。大小限制为 ZIP 16 MiB、解包总量 64 MiB、单文件 16 MiB、最多 5000 条目。拒绝绝对/越界路径、Windows 非法名称、链接及大小写重复路径。
+读取 Cloudflare Worker 上的 `https://cfg.srprolin.com/packages.json`（schema 1）。只接受已知三个包和官网 `/packages/` 路径的 HTTPS 下载；验证版本、大小和 SHA-256。大小限制为 ZIP 16 MiB、解包总量 64 MiB、单文件 16 MiB、最多 5000 条目。拒绝绝对/越界路径、Windows 非法名称、链接及大小写重复路径。
 
 Windows 网络使用 WinHTTP，哈希使用 BCrypt；解包通过系统 Windows PowerShell/.NET 执行应用生成的校验脚本，配置包本身不提供可执行脚本。当前在线更新只实现 Windows 平台。
 
@@ -43,7 +43,7 @@ Windows 网络使用 WinHTTP，哈希使用 BCrypt；解包通过系统 Windows 
 - 更新只修改暂存区，绝不自动部署到游戏。
 - 内容 SHA-256 也参与更新判断，同版本不同内容可更新，相同哈希不重复导入。
 
-Worker 工作流生成版本 ZIP、latest ZIP，清单下载 URL 使用带 SHA 的内容文件名，避免清单与 mutable latest ZIP 错配。网站与包一起静态部署，不再依赖 gh-pages 分支。旧软件包中的 Pages 地址不会自动改变，需下载安装包含官网地址迁移的新构建。
+Worker 工作流生成版本 ZIP、latest ZIP，清单下载 URL 使用带 SHA 的内容文件名，避免清单与 mutable latest ZIP 错配。网站与包一起静态部署，不再依赖 gh-pages 分支。官网与配置更新已迁至 `.com`；旧软件中的 `.top` 或更早 Pages 地址不会自动改变，需下载安装 3.4.3 或后续版本。配置下载禁止重定向，且旧版仅接受旧域名的 ZIP URL；兼容旧版需要旧域名直接提供兼容清单和 ZIP，单纯 301/302 无法恢复更新。
 
 ## SrP-CFG 接入
 

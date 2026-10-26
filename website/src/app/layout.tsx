@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "HuskarUI",
     "CS2 video settings",
   ],
-  authors: [{ name: "RoL1n_SrP", url: "https://blog.srprolin.top" }],
+  authors: [{ name: "RoL1n_SrP", url: "https://blog.srprolin.com" }],
   creator: "RoL1n_SrP",
   icons: {
     icon: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/favicon.ico`,
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SrP-CFG — 你的 CS2 配置工作台",
     description: "预设、自由装配、视频设置与地图指南。在一个桌面工作台管理你的 CS2 配置。",
-    url: "https://cfg.srprolin.top",
+    url: "https://cfg.srprolin.com",
     siteName: "SrP-CFG",
     locale: "zh_CN",
     type: "website",

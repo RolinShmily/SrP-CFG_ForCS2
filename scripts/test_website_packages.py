@@ -22,7 +22,7 @@ with tempfile.TemporaryDirectory(prefix='srpcfg-download-test-') as temporary:
         data = archive.read_bytes()
         assert len(data) == entry['size']
         assert hashlib.sha256(data).hexdigest() == entry['sha256']
-        assert entry['url'].startswith(f'https://cfg.srprolin.top/packages/{package_id}-v')
+        assert entry['url'].startswith(f'https://cfg.srprolin.com/packages/{package_id}-v')
         assert (output/'packages'/f'{package_id}-latest.zip').read_bytes() == data
         with zipfile.ZipFile(archive) as zipped:
             assert zipped.testzip() is None
