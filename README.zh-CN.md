@@ -167,7 +167,8 @@ pnpm preview
 
 ## 🤝 贡献与规范
 
-欢迎提交 Issue 与 Pull Request！在提交之前请注意：
+欢迎提交 Issue 与 Pull Request！搭建步骤、自检命令与约定见 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)；所有参与者均须遵守[行为准则](CODE_OF_CONDUCT.zh-CN.md)。安全问题请走 [SECURITY.zh-CN.md](SECURITY.zh-CN.md)，不要提交公开 Issue。
+
 - 严格遵循逻辑分层原则：核心逻辑沉淀在 `app/core`，命令行工具在 `app/cli`，界面呈现由 `app/gui` 负责。
 - 所有对配置文件的写操作必须通过备份器事务，确保提供 `.bak` 与回滚路径。
 - 详情请查阅 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

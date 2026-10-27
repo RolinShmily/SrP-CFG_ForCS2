@@ -167,7 +167,8 @@ The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL
 
 ## 🤝 Contributing
 
-Issues and Pull Requests are welcome! Before submitting:
+Issues and Pull Requests are welcome! Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, verification commands, and the conventions below, and note that all participants follow the [Code of Conduct](CODE_OF_CONDUCT.md). Security issues go through [SECURITY.md](SECURITY.md), not public issues.
+
 - Follow architectural boundaries: core logic belongs in `app/core`, CLI in `app/cli`, and desktop GUI in `app/gui`.
 - All configuration file writes must use the backup transaction system.
 - For third-party licensing obligations, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
