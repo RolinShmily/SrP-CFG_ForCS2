@@ -7,6 +7,10 @@ export type DownloadSource = "mirror" | "github";
 // Website downloads include the agent skill; APP config package IDs remain separate.
 export const packageIds = ["srp-cfg", "video", "annotations", "srpcfg-cli"] as const;
 export type PackageId = typeof packageIds[number];
+export const configPackageIds = ["srp-cfg", "video", "annotations"] as const;
+export type ConfigPackageId = typeof configPackageIds[number];
+export const skillId = "srpcfg-cli" as const;
+export type SkillId = typeof skillId;
 export interface DownloadAsset { url: string; sha256?: string; size?: number; }
 export interface AppRelease { version: string; setup?: DownloadAsset; portable?: DownloadAsset; }
 export interface ConfigPackage extends DownloadAsset { version: string; }

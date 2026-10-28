@@ -11,7 +11,7 @@ export interface I18nDictionary {
     packages: string; packageNote: string; source: string; mirror: string; direct: string; sourceNote: string;
     loading: string; unavailable: string; noRelease: string; retry: string; releases: string; download: string; latest: string; size: string; hash: string; copied: string; copyFailed: string;
     packageSource: string; srp: string; video: string; annotations: string; skill: string; skillInstall: string; skillGuide: string;
-    cliTitle: string; cliDescription: string; cliNote: string; instructions: string; readme: string; fallback: string;
+    cliTitle: string; cliDescription: string; cliNote: string; cliCoreTitle: string; cliCoreDesc: string; cliReleases: string; agentSkillBadge: string; instructions: string; readme: string; fallback: string;
   };
-  footer: { description: string; blog: string; project: string; docs: string; releases: string; stack: string; license: string; top: string };
+  footer: { description: string; blog: string; project: string; docs: string; releases: string; license: string; top: string };
 }
