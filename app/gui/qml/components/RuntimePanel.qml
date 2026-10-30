@@ -39,10 +39,10 @@ Rectangle {
         id: body
         anchors.top: parent.top
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.topMargin: 14
         anchors.leftMargin: 16
-        // 内容宽度自适应并靠左；不超过卡宽（英文长文案时自动收缩省略）
-        width: Math.min(implicitWidth, parent.width - 32)
+        anchors.rightMargin: 16
         spacing: 10
 
         // 标题行 + 更新状态徽标
@@ -95,58 +95,62 @@ Rectangle {
             }
         }
 
-        // 装配行：单包 srp-cfg 的部署状态与操作
-        RowLayout {
+        // 状态占弹性列，两行操作共享按钮列，文案换行时仍保持对齐。
+        GridLayout {
             Layout.fillWidth: true
-            spacing: 8
+            columns: 3
+            columnSpacing: 8
+            rowSpacing: 10
 
-            Rectangle {
-                width: 6; height: 6; radius: 3
-                color: panel.installed ? MetaTheme.statusSuccess : MetaTheme.statusWarning
-            }
-
-            Text {
+            RowLayout {
+                Layout.row: 0
+                Layout.column: 0
                 Layout.fillWidth: true
-                elide: Text.ElideRight
-                font.family: MetaTheme.fontFamily
-                text: panel.installed
-                      ? (panel.t("overview.runtime.installed")
-                         + (OverviewController.installedSrpVersion.length > 0 ? " " + OverviewController.installedSrpVersion : ""))
-                      : panel.t("overview.runtime.not_installed")
-                font.pixelSize: 11
-                font.bold: true
-                color: panel.installed ? MetaTheme.textPrimary : MetaTheme.textSecondary
-            }
+                Layout.minimumWidth: 0
+                spacing: 8
 
-            AppButton {
-                visible: !panel.installed
-                text: panel.t("overview.path.btn_install_srp")
-                type: HusButton.Type_Primary
-                sizeHint: "small"
-                iconSource: HusIcon.DownloadOutlined
-                Layout.preferredHeight: 26
-                onClicked: OverviewController.installSrp()
+                Rectangle {
+                    Layout.preferredWidth: 6
+                    Layout.preferredHeight: 6
+                    radius: 3
+                    color: panel.installed ? MetaTheme.statusSuccess : MetaTheme.statusWarning
+                }
 
-                HusToolTip {
-                    text: panel.t("tooltip.install_srp")
+                Text {
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    wrapMode: Text.Wrap
+                    font.family: MetaTheme.fontFamily
+                    text: panel.installed
+                          ? (panel.t("overview.runtime.installed")
+                             + (OverviewController.installedSrpVersion.length > 0 ? " " + OverviewController.installedSrpVersion : ""))
+                          : panel.t("overview.runtime.not_installed")
+                    font.pixelSize: 11
+                    font.bold: true
+                    color: panel.installed ? MetaTheme.textPrimary : MetaTheme.textSecondary
                 }
             }
 
             AppButton {
-                visible: panel.installed
-                text: panel.t("overview.path.btn_reinstall_srp")
-                type: HusButton.Type_Default
+                Layout.row: 0
+                Layout.column: 1
+                Layout.fillWidth: true
+                text: panel.t(panel.installed ? "overview.path.btn_reinstall_srp" : "overview.path.btn_install_srp")
+                type: panel.installed ? HusButton.Type_Default : HusButton.Type_Primary
                 sizeHint: "small"
-                iconSource: HusIcon.SyncOutlined
+                iconSource: panel.installed ? HusIcon.SyncOutlined : HusIcon.DownloadOutlined
                 Layout.preferredHeight: 26
                 onClicked: OverviewController.installSrp()
 
                 HusToolTip {
-                    text: panel.t("tooltip.reinstall_srp")
+                    text: panel.t(panel.installed ? "tooltip.reinstall_srp" : "tooltip.install_srp")
                 }
             }
 
             AppButton {
+                Layout.row: 0
+                Layout.column: 2
+                Layout.fillWidth: true
                 visible: panel.installed
                 text: panel.t("overview.path.btn_uninstall_srp")
                 type: HusButton.Type_Default
@@ -163,16 +167,14 @@ Rectangle {
                     text: panel.t("tooltip.uninstall_srp")
                 }
             }
-        }
 
-        // 暂存行：本地暂存 →（可更新时）远端最新，与检查/更新操作
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 8
-
+            // 暂存版本与远端版本保持完整可读，窄卡片中自动换行。
             Text {
+                Layout.row: 1
+                Layout.column: 0
                 Layout.fillWidth: true
-                elide: Text.ElideRight
+                Layout.minimumWidth: 0
+                wrapMode: Text.Wrap
                 font.family: MetaTheme.fontFamily
                 text: {
                     let s = panel.t("overview.runtime.staged") + " v" + panel.stagedVersion;
@@ -188,6 +190,9 @@ Rectangle {
             }
 
             AppButton {
+                Layout.row: 1
+                Layout.column: 1
+                Layout.fillWidth: true
                 text: panel.t("overview.runtime.btn_check")
                 type: HusButton.Type_Default
                 sizeHint: "small"
@@ -198,6 +203,9 @@ Rectangle {
             }
 
             AppButton {
+                Layout.row: 1
+                Layout.column: 2
+                Layout.fillWidth: true
                 text: panel.t("overview.runtime.btn_update")
                 type: panel.hasUpdate ? HusButton.Type_Primary : HusButton.Type_Default
                 sizeHint: "small"

@@ -22,6 +22,19 @@ bool CodeEditorGutter::eventFilter(QObject* watched, QEvent* event) {
         auto* wheel = static_cast<QWheelEvent*>(event);
         const QPointF local = parentItem()->mapFromScene(wheel->position());
         if (parentItem()->contains(local)) {
+            // The window filter runs before Qt Quick delivers the wheel event.
+            // A popup can overlap this viewport, so geometry alone would scroll
+            // the editor underneath it, even when the popup is at a scroll bound.
+            QQuickItem* hit = m_wheelWindow->contentItem();
+            while (hit) {
+                const QPointF position = hit->mapFromScene(wheel->position());
+                QQuickItem* child = hit->childAt(position.x(), position.y());
+                if (!child) break;
+                hit = child;
+            }
+            if (hit != parentItem() && !parentItem()->isAncestorOf(hit))
+                return QQuickPaintedItem::eventFilter(watched, event);
+
             if (wheel->modifiers().testFlag(Qt::ControlModifier)) {
                 const int delta = wheel->angleDelta().y();
                 if (delta) emit zoomRequested(delta > 0 ? 1 : -1);
