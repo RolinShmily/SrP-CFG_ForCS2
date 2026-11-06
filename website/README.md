@@ -40,7 +40,7 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 默认加速源：
 
-`https://gh.269601.xyz/https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/...`
+`https://gh-proxy.org/https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/...`
 
 可切换 GitHub 原生源并记忆选择。读取最新 release/download/latest.json，失败时尝试 GitHub Releases API（可能受限流影响）。仅启用正式、版本匹配、来自指定仓库的 GUI ZIP / Setup EXE 链接，排除 CLI ZIP 和预发布。
 

@@ -22,7 +22,7 @@ test('GitHub API accepts GUI and setup but never the CLI or a draft release',()=
  assert.equal(parseAppRelease({tag_name:'v3.4.1',assets:value.assets.slice(2)}),undefined);
 });
 test('download source is explicit and portable prefixes the whole release URL',()=>{
- assert.equal(softwareUrl(gui,'mirror'),'https://gh.269601.xyz/'+gui);
+ assert.equal(softwareUrl(gui,'mirror'),'https://gh-proxy.org/'+gui);
  assert.equal(softwareUrl(setup,'github'),setup);
 });
 test('configuration packages keep independent versions, checksums and trusted Worker paths',()=>{

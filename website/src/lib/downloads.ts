@@ -2,7 +2,7 @@ export const REPOSITORY = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
 export const RELEASES = `${REPOSITORY}/releases`;
 export const RELEASE_MANIFEST = `${RELEASES}/latest/download/latest.json`;
 export const RELEASE_API = "https://api.github.com/repos/RolinShmily/SrP-CFG_ForCS2/releases/latest";
-export const MIRROR = "https://gh.269601.xyz/";
+export const MIRROR = "https://gh-proxy.org/";
 export type DownloadSource = "mirror" | "github";
 // Website downloads include the agent skill; APP config package IDs remain separate.
 export const packageIds = ["srp-cfg", "video", "annotations", "srpcfg-cli"] as const;
