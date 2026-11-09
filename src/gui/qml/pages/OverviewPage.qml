@@ -133,10 +133,21 @@ Item {
 
 
 
-    ColumnLayout {
+    Flickable {
         anchors.fill: parent
-        anchors.margins: 16
-        spacing: 16
+        contentWidth: width
+        contentHeight: body.implicitHeight + 32
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+        ScrollBar.vertical: HusScrollBar {}
+
+        ColumnLayout {
+            id: body
+            width: overviewRoot.width - 32
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 16
+            spacing: 16
 
         // ==========================================
         // 1. Hero 主卡片：全包边独立容器 (四周内收 12px，无露角漏馅)
@@ -144,7 +155,8 @@ Item {
         Rectangle {
             id: heroCard
             Layout.fillWidth: true
-            Layout.preferredHeight: 252
+            // Keep the same crop ratio as the default 1160px window when maximized.
+            Layout.preferredHeight: Math.round((body.width - 24) * 176 / 1104) + 76
             color: MetaTheme.cardBg
             border.color: MetaTheme.cardBorder
             border.width: 1
@@ -383,7 +395,9 @@ Item {
                     // 卡片头部
                     RowLayout {
                         Layout.fillWidth: true
+                        spacing: 8
 
+                        AppIcon { source: AppIcons.folderOpen; size: 16; color: MetaTheme.textPrimary; Layout.alignment: Qt.AlignVCenter }
                         Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("overview.path.title", OverviewController.currentLang)
                             font.pixelSize: 13
@@ -540,7 +554,9 @@ Item {
                     // 卡片头部
                     RowLayout {
                         Layout.fillWidth: true
+                        spacing: 8
 
+                        AppIcon { source: AppIcons.slidersHorizontal; size: 16; color: MetaTheme.textPrimary; Layout.alignment: Qt.AlignVCenter }
                         Text { font.family: MetaTheme.fontFamily;
                             text: OverviewController.tr("overview.convars.title", OverviewController.currentLang)
                             font.pixelSize: 13
@@ -666,9 +682,6 @@ Item {
             Layout.alignment: Qt.AlignLeft
         }
 
-        // 下半区自然弹性留白
-        Item {
-            Layout.fillHeight: true
         }
     }
 }

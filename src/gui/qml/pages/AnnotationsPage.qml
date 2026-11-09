@@ -36,7 +36,12 @@ Item {
                 id: content
                 width: scroll.width - 8
                 spacing: 14
-                Text { font.family: MetaTheme.fontFamily; text: page.t("annotations.title"); font.pixelSize: 22; font.bold: true; color: MetaTheme.textPrimary }
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
+                    AppIcon { source: AppIcons.map; size: 22; color: MetaTheme.textPrimary }
+                    Text { font.family: MetaTheme.fontFamily; text: page.t("annotations.title"); font.pixelSize: 22; font.bold: true; color: MetaTheme.textPrimary }
+                }
                 PackagePanel { Layout.fillWidth: true; packageId: "annotations" }
                 Rectangle {
                     Layout.fillWidth: true

@@ -19,7 +19,7 @@ Item {
 
         ColumnLayout {
             id: body
-            width: Math.min(parent.width - 48, 920)
+            width: parent.width - 48
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 24
@@ -28,7 +28,12 @@ Item {
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 4
-                Text { font.family: MetaTheme.fontFamily; text: page.t("nav.about"); font.pixelSize: 22; font.bold: true; color: MetaTheme.textPrimary }
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
+                    AppIcon { source: AppIcons.info; size: 22; color: MetaTheme.textPrimary }
+                    Text { font.family: MetaTheme.fontFamily; text: page.t("nav.about"); font.pixelSize: 22; font.bold: true; color: MetaTheme.textPrimary }
+                }
                 Text { font.family: MetaTheme.fontFamily; text: page.t("about.subtitle"); font.pixelSize: 12; color: MetaTheme.textSecondary; wrapMode: Text.WordWrap; Layout.fillWidth: true }
             }
 
@@ -73,9 +78,16 @@ Item {
                 }
             }
 
-            Rectangle {
+            GridLayout {
                 Layout.fillWidth: true
-                implicitHeight: updateBody.implicitHeight + 32
+                columns: page.width >= 1100 ? 2 : 1
+                columnSpacing: 16
+                rowSpacing: 16
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    implicitHeight: updateBody.implicitHeight + 32
                 color: MetaTheme.cardBg
                 border.color: MetaTheme.cardBorder
                 border.width: 1
@@ -91,7 +103,12 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
+                        RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.refreshCw; size: 16; color: MetaTheme.textPrimary }
                         Text { font.family: MetaTheme.fontFamily; text: page.t("about.software_update"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary; Layout.fillWidth: true }
+                    }
                         AppButton {
                             objectName: "appUpdateCheck"
                             text: AppUpdateController.busy ? page.t("appupdate.checking") : page.t("pkg.check")
@@ -134,9 +151,10 @@ Item {
                 }
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: linksBody.implicitHeight + 32
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    implicitHeight: linksBody.implicitHeight + 32
                 color: MetaTheme.cardBg
                 border.color: MetaTheme.cardBorder
                 border.width: 1
@@ -150,7 +168,12 @@ Item {
                     anchors.margins: 16
                     spacing: 10
 
-                    Text { font.family: MetaTheme.fontFamily; text: page.t("about.links"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.externalLink; size: 16; color: MetaTheme.textPrimary }
+                        Text { font.family: MetaTheme.fontFamily; text: page.t("about.links"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    }
 
                     Repeater {
                         model: [
@@ -185,6 +208,8 @@ Item {
                         AppButton { text: page.t("about.visit"); svgIcon: AppIcons.externalLink; onClicked: Qt.openUrlExternally(AppUpdateController.project + "/blob/main/LICENSE") }
                     }
                 }
+            }
+
             }
 
             Item { Layout.fillHeight: true }

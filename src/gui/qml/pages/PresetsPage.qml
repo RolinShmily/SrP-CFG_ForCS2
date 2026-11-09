@@ -90,11 +90,17 @@ Item {
                     Layout.fillWidth: true
                     spacing: 4
 
-                    Text { font.family: MetaTheme.fontFamily;
-                        text: PresetsController.tr("presets.title", OverviewController.currentLang)
-                        font.pixelSize: 18
-                        font.bold: true
-                        color: MetaTheme.textPrimary
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.layers; size: 18; color: MetaTheme.textPrimary }
+                        Text { font.family: MetaTheme.fontFamily;
+                            text: PresetsController.tr("presets.title", OverviewController.currentLang)
+                            font.pixelSize: 18
+                            font.bold: true
+                            color: MetaTheme.textPrimary
+                            Layout.fillWidth: true
+                        }
                     }
                     Text { font.family: MetaTheme.fontFamily;
                         text: PresetsController.tr("presets.subtitle", OverviewController.currentLang)
@@ -204,6 +210,7 @@ Item {
                         RowLayout {
                             Layout.fillWidth: true
 
+                            AppIcon { source: AppIcons.info; size: 14; color: MetaTheme.textSecondary; Layout.alignment: Qt.AlignVCenter }
                             Text { font.family: MetaTheme.fontFamily;
                                 text: PresetsController.tr("presets.status_card_title", OverviewController.currentLang)
                                 font.pixelSize: 12
@@ -293,7 +300,11 @@ Item {
                         anchors.margins: 10
                         spacing: 3
 
-                        Text { font.family: MetaTheme.fontFamily; text: PresetsController.tr("presets.shortcuts_title", OverviewController.currentLang); font.pixelSize: 10; font.bold: true; color: MetaTheme.textSecondary }
+                        RowLayout {
+                            spacing: 6
+                            AppIcon { source: AppIcons.keyboard; size: 12; color: MetaTheme.textSecondary }
+                            Text { font.family: MetaTheme.fontFamily; text: PresetsController.tr("presets.shortcuts_title", OverviewController.currentLang); font.pixelSize: 10; font.bold: true; color: MetaTheme.textSecondary }
+                        }
                         Text { font.family: MetaTheme.fontFamily; Layout.fillWidth: true; text: PresetsController.tr("presets.shortcuts_body", OverviewController.currentLang); font.pixelSize: 10; color: MetaTheme.textTertiary; wrapMode: Text.WordWrap }
                     }
                 }

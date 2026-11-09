@@ -63,10 +63,12 @@ set(LUCIDE_ICON_RESOURCES
     resources/icons/lucide/blocks.svg
     resources/icons/lucide/info.svg
     resources/icons/lucide/layout-dashboard.svg
+    resources/icons/lucide/keyboard.svg
     resources/icons/lucide/layers.svg
     resources/icons/lucide/map.svg
     resources/icons/lucide/monitor.svg
     resources/icons/lucide/settings.svg
+    resources/icons/lucide/sliders-horizontal.svg
     resources/icons/lucide/check.svg
     resources/icons/lucide/chevron-down.svg
     resources/icons/lucide/chevron-right.svg
@@ -76,6 +78,8 @@ set(LUCIDE_ICON_RESOURCES
     resources/icons/lucide/copy.svg
     resources/icons/lucide/download.svg
     resources/icons/lucide/external-link.svg
+    resources/icons/lucide/file-text.svg
+    resources/icons/lucide/globe.svg
     resources/icons/lucide/folder.svg
     resources/icons/lucide/folder-open.svg
     resources/icons/lucide/languages.svg

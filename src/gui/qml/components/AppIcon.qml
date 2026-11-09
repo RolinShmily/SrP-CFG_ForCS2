@@ -15,6 +15,7 @@ Item {
         id: srcImg
         anchors.fill: parent
         source: iconRoot.source
+        fillMode: Image.PreserveAspectFit
         sourceSize.width: iconRoot.size * 2
         sourceSize.height: iconRoot.size * 2
         visible: false

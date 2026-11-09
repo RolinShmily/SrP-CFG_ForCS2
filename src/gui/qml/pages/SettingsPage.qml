@@ -44,7 +44,7 @@ Item {
 
         ColumnLayout {
             id: body
-            width: Math.min(parent.width - 48, 920)
+            width: parent.width - 48
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 24
@@ -55,15 +55,24 @@ Item {
                 spacing: 4
                 RowLayout {
                     Layout.fillWidth: true
+                    spacing: 10
+                    AppIcon { source: AppIcons.settings; size: 22; color: MetaTheme.textPrimary }
                     Text { font.family: MetaTheme.fontFamily; text: page.t("nav.settings"); font.pixelSize: 22; font.bold: true; color: MetaTheme.textPrimary; Layout.fillWidth: true }
                     Text { font.family: MetaTheme.fontFamily; visible: page.dirty; text: page.t("preferences.dirty"); font.pixelSize: 11; color: MetaTheme.statusWarning }
                 }
                 Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.subtitle"); font.pixelSize: 12; color: MetaTheme.textSecondary; wrapMode: Text.WordWrap; Layout.fillWidth: true }
             }
 
-            Rectangle {
+            GridLayout {
                 Layout.fillWidth: true
-                implicitHeight: languageBody.implicitHeight + 32
+                columns: page.width >= 1100 ? 2 : 1
+                columnSpacing: 16
+                rowSpacing: 16
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    implicitHeight: languageBody.implicitHeight + 32
                 color: MetaTheme.cardBg
                 border.color: MetaTheme.cardBorder
                 border.width: 1
@@ -77,7 +86,12 @@ Item {
                     anchors.margins: 16
                     spacing: 10
 
-                    Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.language"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.globe; size: 16; color: MetaTheme.textPrimary }
+                        Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.language"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    }
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 8
@@ -87,9 +101,10 @@ Item {
                 }
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: themeBody.implicitHeight + 32
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    implicitHeight: themeBody.implicitHeight + 32
                 color: MetaTheme.cardBg
                 border.color: MetaTheme.cardBorder
                 border.width: 1
@@ -103,7 +118,12 @@ Item {
                     anchors.margins: 16
                     spacing: 10
 
-                    Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.theme"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.sun; size: 16; color: MetaTheme.textPrimary }
+                        Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.theme"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    }
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 8
@@ -113,9 +133,10 @@ Item {
                 }
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: fontBody.implicitHeight + 32
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    implicitHeight: fontBody.implicitHeight + 32
                 color: MetaTheme.cardBg
                 border.color: MetaTheme.cardBorder
                 border.width: 1
@@ -129,7 +150,12 @@ Item {
                     anchors.margins: 16
                     spacing: 10
 
-                    Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.font"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.type; size: 16; color: MetaTheme.textPrimary }
+                        Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.font"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    }
                     HusInput {
                         id: fontSearch
                         objectName: "fontSearch"
@@ -156,9 +182,10 @@ Item {
                 }
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: storeBody.implicitHeight + 32
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    implicitHeight: storeBody.implicitHeight + 32
                 color: MetaTheme.cardBg
                 border.color: MetaTheme.cardBorder
                 border.width: 1
@@ -172,7 +199,12 @@ Item {
                     anchors.margins: 16
                     spacing: 10
 
-                    Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.store"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+                        AppIcon { source: AppIcons.folder; size: 16; color: MetaTheme.textPrimary }
+                        Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.store"); font.pixelSize: 13; font.bold: true; color: MetaTheme.textPrimary }
+                    }
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 8
@@ -191,6 +223,8 @@ Item {
                     }
                     Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.store_note"); Layout.fillWidth: true; wrapMode: Text.WordWrap; font.pixelSize: 12; color: MetaTheme.textTertiary }
                 }
+            }
+
             }
 
             RowLayout {

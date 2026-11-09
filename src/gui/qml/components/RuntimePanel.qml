@@ -50,6 +50,7 @@ Rectangle {
             Layout.fillWidth: true
             spacing: 8
 
+            AppIcon { source: AppIcons.blocks; size: 16; color: MetaTheme.textPrimary; Layout.alignment: Qt.AlignVCenter }
             Text {
                 Layout.fillWidth: true
                 elide: Text.ElideRight

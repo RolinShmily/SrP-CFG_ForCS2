@@ -107,7 +107,7 @@ Item {
                     id: valveSection
                     Layout.fillWidth: true
                     spacing: 16
-                    SectionTitle { text: page.t("valve.title") }
+                    SectionTitle { iconSource: AppIcons.slidersHorizontal; text: page.t("valve.title") }
                 Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: choices.implicitHeight + 36
@@ -197,7 +197,7 @@ Item {
                     id: featuresSection
                     Layout.fillWidth: true
                     spacing: 12
-                    SectionTitle { text: page.t("assembly.features") }
+                    SectionTitle { iconSource: AppIcons.blocks; text: page.t("assembly.features") }
                     Repeater {
                         model: AssemblyController.featureIds
                         AssemblyModuleCard {
@@ -212,7 +212,7 @@ Item {
                     id: modesSection
                     Layout.fillWidth: true
                     spacing: 12
-                    SectionTitle { text: page.t("assembly.modes") }
+                    SectionTitle { iconSource: AppIcons.circlePlay; text: page.t("assembly.modes") }
                     Repeater {
                         model: AssemblyController.modeIds
                         AssemblyModuleCard {
@@ -228,7 +228,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.minimumHeight: operationScroll.height
                     spacing: 12
-                    SectionTitle { text: page.t("nav.user_custom") }
+                    SectionTitle { iconSource: AppIcons.user; text: page.t("nav.user_custom") }
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: userContent.implicitHeight + 32
@@ -346,13 +346,27 @@ Item {
         }
     }
 
-    component SectionTitle: Text { font.family: MetaTheme.fontFamily;
+    component SectionTitle: RowLayout {
+        property url iconSource: ""
+        property string text: ""
         Layout.fillWidth: true
-        font.pixelSize: 22
-        font.bold: true
-        color: MetaTheme.textPrimary
-        wrapMode: Text.WordWrap
         Layout.leftMargin: 2
+        spacing: 10
+        AppIcon {
+            source: parent.iconSource
+            size: 20
+            color: MetaTheme.textPrimary
+            visible: String(parent.iconSource).length > 0
+            Layout.alignment: Qt.AlignVCenter
+        }
+        Text { font.family: MetaTheme.fontFamily;
+            text: parent.text
+            Layout.fillWidth: true
+            font.pixelSize: 22
+            font.bold: true
+            color: MetaTheme.textPrimary
+            wrapMode: Text.WordWrap
+        }
     }
     AppModal {
         id: bindingModal

@@ -184,9 +184,10 @@ Rectangle {
                     Layout.alignment: Qt.AlignVCenter
                     visible: control.currentFilePath.length > 0
 
-                    Text { font.family: MetaTheme.fontFamily;
-                        text: "📄"
-                        font.pixelSize: 10
+                    AppIcon {
+                        source: AppIcons.fileText
+                        size: 12
+                        color: MetaTheme.textTertiary
                     }
                     Text {
                         text: control.currentFilePath
