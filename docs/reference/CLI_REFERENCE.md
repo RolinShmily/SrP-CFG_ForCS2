@@ -2,6 +2,12 @@
 
 CLI 可执行文件 `srpcfg` 与 GUI 共用同一 `srp_core`，但运行在不同进程中。参数解析、输出打印和退出码处理完全独立；两者不共享内存状态。语言只由 CLI 的 `--zh` / `--en` 决定，不受 GUI 偏好影响；`--store` 只让两个进程指向同一暂存目录，不传递语言或运行时状态。
 
+## 安装方式
+
+- **Setup 安装包**：会安装 GUI（`SrP-CFG.exe`）与 CLI（`srpcfg.exe`），以及 `config/`、`skills/srpcfg-cli/` 和 Qt 运行时。安装任务“将 SrP-CFG CLI 添加到当前用户 PATH”默认勾选，写入 `HKCU\Environment\Path`；卸载时只移除安装目录这一条，不覆盖用户后来对 PATH 的其他修改。
+- **独立 CLI ZIP**：解压后直接运行 `srpcfg.exe`，不修改 PATH。
+- 取消 PATH 任务后，仍可用完整路径调用，例如 `& "C:\Program Files\SrP-CFG\srpcfg.exe" version`。
+
 ## 调用约定
 
 ```text
