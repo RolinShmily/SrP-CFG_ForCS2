@@ -127,10 +127,11 @@ Rectangle {
                             elide: Text.ElideRight
                         }
 
-                        Text { font.family: MetaTheme.fontFamily;
-                            text: "▶"
-                            font.pixelSize: 8
+                        AppIcon {
+                            source: AppIcons.chevronRight
+                            size: 12
                             color: MetaTheme.textTertiary
+                            Layout.alignment: Qt.AlignVCenter
                             transformOrigin: Item.Center
                             rotation: sidebar.assemblyExpanded ? 90 : 0
 

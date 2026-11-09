@@ -78,14 +78,14 @@ Item {
                                     Layout.fillWidth: true
                                     AppButton {
                                         text: page.t("annotations.edit")
-                                        iconSource: HusIcon.EditOutlined
+                                        svgIcon: AppIcons.pencil
                                         sizeHint: "small"
                                         onClicked: AnnotationsController.setSelectedFileIndex(parent.parent.index)
                                     }
                                     AppButton {
                                         objectName: "guideCopy_" + parent.parent.guide.id
                                         text: page.t("annotations.load")
-                                        iconSource: HusIcon.CopyOutlined
+                                        svgIcon: AppIcons.copy
                                         sizeHint: "small"
                                         onClicked: HusApi.setClipboardText(parent.parent.guide.command)
                                         HusToolTip { text: parent.parent.parent.guide.command }
@@ -101,14 +101,14 @@ Item {
                                 Layout.fillWidth: true
                                 text: page.t("valve.assemble")
                                 type: HusButton.Type_Primary
-                                iconSource: HusIcon.CheckOutlined
+                                svgIcon: AppIcons.check
                                 enabled: page.selection.length > 0 && !PackageController.busy && OverviewController.annotationsPath.length > 0
                                 onClicked: AnnotationsController.deployGuides(page.selection, false)
                             }
                             AppButton {
                                 Layout.fillWidth: true
                                 text: page.t("valve.unload")
-                                iconSource: HusIcon.DeleteOutlined
+                                svgIcon: AppIcons.trash
                                 enabled: page.selection.length > 0 && !PackageController.busy && OverviewController.annotationsPath.length > 0
                                 onClicked: removeModal.openWarning()
                             }

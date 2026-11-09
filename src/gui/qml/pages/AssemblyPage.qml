@@ -170,7 +170,7 @@ Item {
                                 Layout.preferredHeight: 36
                                 text: page.t("valve.assemble")
                                 type: HusButton.Type_Primary
-                                iconSource: HusIcon.CheckOutlined
+                                svgIcon: AppIcons.check
                                 enabled: (settingsChoice.checked || keymapChoice.checked) && !AssemblyController.isBusy
                                 loading: AssemblyController.isBusy
                                 onClicked: AssemblyController.requestAssemble(settingsChoice.checked, keymapChoice.checked)
@@ -180,7 +180,7 @@ Item {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 36
                                 text: page.t("valve.unload")
-                                iconSource: HusIcon.DisconnectOutlined
+                                svgIcon: AppIcons.unplug
                                 enabled: (settingsChoice.checked || keymapChoice.checked) && !AssemblyController.isBusy
                                 onClicked: AssemblyController.requestUnload(settingsChoice.checked, keymapChoice.checked)
                             }
@@ -244,7 +244,7 @@ Item {
                             }
                             AppButton {
                                 text: page.t("assembly.open_custom")
-                                iconSource: HusIcon.EditOutlined
+                                svgIcon: AppIcons.pencil
                                 onClicked: AssemblyController.openFile("user/custom.cfg")
                             }
                         }
@@ -271,7 +271,7 @@ Item {
                     spacing: 8
                     AppButton {
                         objectName: "assemblyExpandButton"
-                        iconSource: page.editorExpanded ? HusIcon.DoubleRightOutlined : HusIcon.DoubleLeftOutlined
+                        svgIcon: page.editorExpanded ? AppIcons.chevronsRight : AppIcons.chevronsLeft
                         sizeHint: "small"
                         type: HusButton.Type_Text
                         contentDescription: page.t(page.editorExpanded ? "assembly.collapse_editor" : "assembly.expand_editor")
@@ -300,7 +300,7 @@ Item {
                         text: page.t("presets.btn_reset")
                         sizeHint: "small"
                         Layout.preferredHeight: 28
-                        iconSource: HusIcon.UndoOutlined
+                        svgIcon: AppIcons.rotateCcw
                         enabled: AssemblyController.canSave
                         onClicked: resetModal.openWarning()
                         HusToolTip { text: page.t("valve.reset_tip") }
@@ -311,7 +311,7 @@ Item {
                         sizeHint: "small"
                         Layout.preferredHeight: 28
                         type: AssemblyController.isEditorDirty ? HusButton.Type_Primary : HusButton.Type_Default
-                        iconSource: HusIcon.SaveOutlined
+                        svgIcon: AppIcons.save
                         enabled: AssemblyController.canSave
                         onClicked: AssemblyController.saveCurrentFile()
                         HusToolTip { text: page.t("valve.save_tip") }
@@ -402,7 +402,7 @@ Item {
                 Layout.preferredHeight: 26
                 type: HusButton.Type_Text
                 sizeHint: "small"
-                iconSource: HusIcon.CopyOutlined
+                svgIcon: AppIcons.copy
                 contentDescription: page.t("valve.copy")
                 onClicked: {
                     HusApi.setClipboardText(row.command);

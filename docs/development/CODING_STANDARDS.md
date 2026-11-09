@@ -109,6 +109,7 @@ cmake --build build-warn --config Release --parallel 2 2>&1 | grep -i "warning C
 
 - 优先用 `HuskarUI.Basic` 提供的 `Hus*` 组件（`HusButton`、`HusInput`、`HusScrollBar`、`HusDivider`、`HusIcon.*`）。标准控件能表达的场景不要自绘。
 - 自研组件只放在 `src/gui/qml/components/`，命名 `App*.qml`（`AppButton`、`AppModal`、`AppCodeEditor`、`AppSidebar`、`AppFeedback`），且必须建立在 HuskarUI 控件或 `MetaTheme` 之上。
+- 动作图标优先使用 `AppIcons` + `AppButton.svgIcon`（Lucide，ISC）；`HusIcon` 字体图标只保留给 HuskarUI 内部图标位，新代码不要继续扩散 `HusIcon.*`。
 - 新增 QML 文件必须加入 `src/gui/CMakeLists.txt` 的 `qt_add_qml_module(... QML_FILES ...)`；新增图标/图片加入 `RESOURCES`。漏加会在发布包里变成「运行时找不到组件」。
 
 ### 3.2 主题（必须）

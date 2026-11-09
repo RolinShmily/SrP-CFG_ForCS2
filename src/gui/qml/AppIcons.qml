@@ -1,0 +1,30 @@
+pragma Singleton
+import QtQuick
+
+QtObject {
+    readonly property string check: "qrc:/SrPGui/resources/icons/lucide/check.svg"
+    readonly property string chevronDown: "qrc:/SrPGui/resources/icons/lucide/chevron-down.svg"
+    readonly property string chevronRight: "qrc:/SrPGui/resources/icons/lucide/chevron-right.svg"
+    readonly property string chevronsLeft: "qrc:/SrPGui/resources/icons/lucide/chevrons-left.svg"
+    readonly property string chevronsRight: "qrc:/SrPGui/resources/icons/lucide/chevrons-right.svg"
+    readonly property string circlePlay: "qrc:/SrPGui/resources/icons/lucide/circle-play.svg"
+    readonly property string copy: "qrc:/SrPGui/resources/icons/lucide/copy.svg"
+    readonly property string download: "qrc:/SrPGui/resources/icons/lucide/download.svg"
+    readonly property string externalLink: "qrc:/SrPGui/resources/icons/lucide/external-link.svg"
+    readonly property string folder: "qrc:/SrPGui/resources/icons/lucide/folder.svg"
+    readonly property string folderOpen: "qrc:/SrPGui/resources/icons/lucide/folder-open.svg"
+    readonly property string languages: "qrc:/SrPGui/resources/icons/lucide/languages.svg"
+    readonly property string moon: "qrc:/SrPGui/resources/icons/lucide/moon.svg"
+    readonly property string pencil: "qrc:/SrPGui/resources/icons/lucide/pencil.svg"
+    readonly property string refreshCw: "qrc:/SrPGui/resources/icons/lucide/refresh-cw.svg"
+    readonly property string rotateCcw: "qrc:/SrPGui/resources/icons/lucide/rotate-ccw.svg"
+    readonly property string rotateCw: "qrc:/SrPGui/resources/icons/lucide/rotate-cw.svg"
+    readonly property string save: "qrc:/SrPGui/resources/icons/lucide/save.svg"
+    readonly property string search: "qrc:/SrPGui/resources/icons/lucide/search.svg"
+    readonly property string sun: "qrc:/SrPGui/resources/icons/lucide/sun.svg"
+    readonly property string trash: "qrc:/SrPGui/resources/icons/lucide/trash.svg"
+    readonly property string type: "qrc:/SrPGui/resources/icons/lucide/type.svg"
+    readonly property string unplug: "qrc:/SrPGui/resources/icons/lucide/unplug.svg"
+    readonly property string user: "qrc:/SrPGui/resources/icons/lucide/user.svg"
+    readonly property string x: "qrc:/SrPGui/resources/icons/lucide/x.svg"
+}

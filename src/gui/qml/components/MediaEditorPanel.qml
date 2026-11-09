@@ -51,7 +51,7 @@ Rectangle {
             }
             AppButton {
                 text: panel.t("presets.btn_reset")
-                iconSource: HusIcon.UndoOutlined
+                svgIcon: AppIcons.rotateCcw
                 sizeHint: "small"
                 enabled: !PackageController.busy
                 onClicked: resetModal.openWarning()
@@ -59,7 +59,7 @@ Rectangle {
             AppButton {
                 objectName: "mediaSaveButton"
                 text: panel.t("presets.btn_save") + (panel.controller.isEditorDirty ? " *" : "")
-                iconSource: HusIcon.SaveOutlined
+                svgIcon: AppIcons.save
                 sizeHint: "small"
                 type: panel.controller.isEditorDirty ? HusButton.Type_Primary : HusButton.Type_Default
                 enabled: !PackageController.busy

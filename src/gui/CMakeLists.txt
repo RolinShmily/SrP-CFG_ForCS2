@@ -18,7 +18,7 @@ if(QT_KNOWN_POLICY_QTP0004)
     qt_policy(SET QTP0004 NEW)
 endif()
 
-set_source_files_properties(qml/MetaTheme.qml qml/components/AppFeedback.qml
+set_source_files_properties(qml/MetaTheme.qml qml/AppIcons.qml qml/components/AppFeedback.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE TRUE
 )
@@ -59,6 +59,34 @@ target_compile_definitions(srp_gui PRIVATE
     HUSKARUI_IMPORT_PATH="${HUSKARUI_IMPORT_PATH}"
 )
 
+set(LUCIDE_ICON_RESOURCES
+    resources/icons/lucide/check.svg
+    resources/icons/lucide/chevron-down.svg
+    resources/icons/lucide/chevron-right.svg
+    resources/icons/lucide/chevrons-left.svg
+    resources/icons/lucide/chevrons-right.svg
+    resources/icons/lucide/circle-play.svg
+    resources/icons/lucide/copy.svg
+    resources/icons/lucide/download.svg
+    resources/icons/lucide/external-link.svg
+    resources/icons/lucide/folder.svg
+    resources/icons/lucide/folder-open.svg
+    resources/icons/lucide/languages.svg
+    resources/icons/lucide/moon.svg
+    resources/icons/lucide/pencil.svg
+    resources/icons/lucide/refresh-cw.svg
+    resources/icons/lucide/rotate-ccw.svg
+    resources/icons/lucide/rotate-cw.svg
+    resources/icons/lucide/save.svg
+    resources/icons/lucide/search.svg
+    resources/icons/lucide/sun.svg
+    resources/icons/lucide/trash.svg
+    resources/icons/lucide/type.svg
+    resources/icons/lucide/unplug.svg
+    resources/icons/lucide/user.svg
+    resources/icons/lucide/x.svg
+)
+
 qt_add_qml_module(srp_gui
     URI SrPGui
     VERSION 1.0
@@ -66,6 +94,7 @@ qt_add_qml_module(srp_gui
     QML_FILES
         qml/Main.qml
         qml/MetaTheme.qml
+        qml/AppIcons.qml
         qml/components/AppModal.qml
         qml/components/AppFeedback.qml
         qml/components/AppButton.qml
@@ -109,6 +138,7 @@ qt_add_qml_module(srp_gui
         resources/icons/minimize.svg
         resources/icons/maximize.svg
         resources/icons/close.svg
+        ${LUCIDE_ICON_RESOURCES}
 )
 
 target_include_directories(srp_gui PRIVATE

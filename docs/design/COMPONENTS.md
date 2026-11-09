@@ -33,7 +33,7 @@
 | `HusDivider` | 关于页“链接”与“作者”分区的分隔 | `colorSplit: MetaTheme.divider`、`animationEnabled: HusTheme.animationEnabled`；卡片内轻分割可直接用 1px `Rectangle color: MetaTheme.divider` |
 | `HusToolTip` | 截断文本、图标按钮、危险动作的解释 | 必须由触发元素自己持有；不要把长文案塞进 `Text.elide` 后不给提示 |
 | `HusTheme` | 主题单例 | 只读 `isDark`、`animationEnabled`、`Primary.fontPrimaryFamily`；配色一律经 `MetaTheme` 间接引用 |
-| `HusIcon` | 图标常量 | 只用作 `iconSource: HusIcon.XxxOutlined` 这类常量，不拼字符串 |
+| `HusIcon` | HuskarUI 字体图标常量 | 仅保留给 `HusCaptionButton` / `HusInput` 等 HuskarUI 内部图标位；普通按钮改用 `AppButton.svgIcon` + `AppIcons` |
 | `HusApi` | 剪贴板 | `HusApi.setClipboardText(...)` 后立即给出 `AppFeedback.success(...)` 反馈 |
 
 ---
@@ -42,8 +42,9 @@
 
 | 组件 | 基类 | 职责 | 使用边界 |
 | :--- | :--- | :--- | :--- |
-| `AppButton` | `HusIconButton` | 把 `HusButton.Type_Primary` / `Type_Default` / `Type_Text` 映射到 `MetaTheme` 令牌；关闭扩散波纹（`effectEnabled: false`）；统一 `radiusBg.all: MetaTheme.radiusMd` | **所有**按钮都用它（含纯图标按钮）。不要直接实例化 `HusButton` / `HusIconButton`，否则会丢掉令牌与动效策略 |
-| `AppIcon` | `Item` + `MultiEffect` | 把 SVG 图标按 `color` 着色，`sourceSize` 按 2× 采样保证清晰 | 只用于**单色**图标；多色品牌图（CS2 logo、头像）直接 `Image` |
+| `AppButton` | `HusIconButton` | 把 `HusButton.Type_Primary` / `Type_Default` / `Type_Text` 映射到 `MetaTheme` 令牌；关闭扩散波纹（`effectEnabled: false`）；统一 `radiusBg.all: MetaTheme.radiusMd`；`svgIcon` 走 `AppIcon` 着色，空值时回退 HuskarUI 字体图标 | **所有**按钮都用它（含纯图标按钮）。新按钮优先 `svgIcon: AppIcons.xxx`；不要直接实例化 `HusButton` / `HusIconButton` |
+| `AppIcon` | `Item` + `MultiEffect` | 把 SVG 图标按 `color` 着色，`sourceSize` 按 2× 采样保证清晰 | 只用于**单色**图标；多色品牌图（CS2 logo、头像）直接 `Image`。图标来源见第 6 节 |
+| `AppIcons` | `QtObject` 单例 | Lucide SVG 的 QRC 路径表（`check`、`save`、`folderOpen`、`refreshCw` 等） | 只放图标路径，不放业务语义；新增图标同时加入 `src/gui/resources/icons/lucide/` 与 CMake `LUCIDE_ICON_RESOURCES` |
 | `AppSidebar` | `Rectangle` | 一体化侧栏：主导航、可折叠的“CFG 自由装配”组、底部运行状态卡与“关于/设置”；对外暴露 `activeRoute`、`assemblyRequested`、`aboutRequested`、`settingsRequested` | 路由状态的唯一持有者。内部 `NavItem` / `NavSubItem` 为私有内联组件，不要跨文件复用 |
 | `AppHeaderExtras` | `RowLayout` | 标题栏右侧账号胶囊（头像 + 名称 + 下拉角标）与主题切换按钮；`onRequestAccountSwitch` 交由 `Main.qml` 处理 | 通过 `captionBar.addInteractionItem` 注入，不要在标题栏区域另起布局 |
 | `AppModal` | `HusModal` | 统一弹窗外观（`colorBg: cardBg`、`radiusLg`）与 `AppButton` 确认/取消 delegate | 所有确认弹窗的唯一入口；用 `openWarning()` 打开，业务逻辑放 `onConfirm` |
@@ -103,3 +104,14 @@
 4. 暴露属性用 `property` / `signal`，内部实现不向上泄漏（不暴露内部 `Rectangle` 或 `TextEdit` 引用）。
 5. 需要被测试或脚本定位的关键节点补 `objectName`，可点击节点补 `Accessible`。
 6. 在浅色、深色、980 × 640 三种条件下确认外观与可用性，再更新截图。
+
+---
+
+## 8. 图标来源
+
+- 普通动作图标使用 [Lucide](https://lucide.dev/) SVG 子集，位于 `src/gui/resources/icons/lucide/`，通过 `AppIcons` 暴露 QRC 路径，再由 `AppButton.svgIcon` / `AppIcon` 着色。
+- Lucide 为 ISC 许可，全文见 [`licenses/Lucide-ISC.txt`](../../licenses/Lucide-ISC.txt)；`THIRD_PARTY_NOTICES.md` 已登记。
+- 导航一级图标仍使用项目自有的 `resources/icons/*.svg`（语义与侧栏绑定）；HuskarUI 的 `HusIcon` 字体仅用于组件库内部图标位（标题栏灯泡、输入框搜索等）。
+- 新增图标必须为 24×24 `viewBox`、单色描边（白色 `#ffffff` 由 `AppIcon` 着色），文件名使用 Lucide 原名。
+
+---

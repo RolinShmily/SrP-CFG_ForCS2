@@ -95,7 +95,7 @@ Item {
                         AppButton {
                             objectName: "appUpdateCheck"
                             text: AppUpdateController.busy ? page.t("appupdate.checking") : page.t("pkg.check")
-                            iconSource: HusIcon.ReloadOutlined
+                            svgIcon: AppIcons.rotateCw
                             enabled: !AppUpdateController.busy
                             onClicked: AppUpdateController.check()
                         }
@@ -164,7 +164,7 @@ Item {
                             spacing: 10
                             Text { font.family: MetaTheme.fontFamily; text: modelData.label; Layout.preferredWidth: 96; font.pixelSize: 12; color: MetaTheme.textTertiary }
                             Text { font.family: MetaTheme.fontFamily; text: modelData.url.replace("https://", ""); Layout.fillWidth: true; elide: Text.ElideMiddle; font.pixelSize: 12; color: MetaTheme.textPrimary; HusToolTip { text: parent.text } }
-                            AppButton { objectName: "aboutLink_" + modelData.kind; text: page.t("about.visit"); iconSource: HusIcon.ExportOutlined; onClicked: AppUpdateController.openLink(modelData.kind) }
+                            AppButton { objectName: "aboutLink_" + modelData.kind; text: page.t("about.visit"); svgIcon: AppIcons.externalLink; onClicked: AppUpdateController.openLink(modelData.kind) }
                         }
                     }
 
@@ -182,7 +182,7 @@ Item {
                         spacing: 10
                         Text { font.family: MetaTheme.fontFamily; text: page.t("about.license"); Layout.preferredWidth: 96; font.pixelSize: 12; color: MetaTheme.textTertiary }
                         Text { font.family: MetaTheme.fontFamily; text: page.t("about.license_name"); Layout.fillWidth: true; font.pixelSize: 12; color: MetaTheme.textPrimary }
-                        AppButton { text: page.t("about.visit"); iconSource: HusIcon.ExportOutlined; onClicked: Qt.openUrlExternally(AppUpdateController.project + "/blob/main/LICENSE") }
+                        AppButton { text: page.t("about.visit"); svgIcon: AppIcons.externalLink; onClicked: Qt.openUrlExternally(AppUpdateController.project + "/blob/main/LICENSE") }
                     }
                 }
             }

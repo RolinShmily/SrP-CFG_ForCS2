@@ -138,7 +138,7 @@ Rectangle {
                 text: panel.t(panel.installed ? "overview.path.btn_reinstall_srp" : "overview.path.btn_install_srp")
                 type: panel.installed ? HusButton.Type_Default : HusButton.Type_Primary
                 sizeHint: "small"
-                iconSource: panel.installed ? HusIcon.SyncOutlined : HusIcon.DownloadOutlined
+                svgIcon: panel.installed ? AppIcons.refreshCw : AppIcons.download
                 Layout.preferredHeight: 26
                 onClicked: OverviewController.installSrp()
 
@@ -155,7 +155,7 @@ Rectangle {
                 text: panel.t("overview.path.btn_uninstall_srp")
                 type: HusButton.Type_Default
                 sizeHint: "small"
-                iconSource: HusIcon.DeleteOutlined
+                svgIcon: AppIcons.trash
                 Layout.preferredHeight: 26
                 colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(247 / 255, 79 / 255, 79 / 255, 0.15) : "#fee2e2") : MetaTheme.btnDefaultBg
                 borderBg.color: hovered ? Qt.rgba(247 / 255, 79 / 255, 79 / 255, 0.45) : MetaTheme.btnDefaultBorder

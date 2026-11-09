@@ -232,7 +232,7 @@ Item {
                     AppButton {
                         text: OverviewController.tr("overview.hero.launch_game", OverviewController.currentLang)
                         type: HusButton.Type_Primary
-                        iconSource: HusIcon.PlayCircleOutlined
+                        svgIcon: AppIcons.circlePlay
                         sizeHint: "normal"
                         Layout.preferredHeight: 36
                         Layout.preferredWidth: 120
@@ -243,7 +243,7 @@ Item {
                     AppButton {
                         text: OverviewController.tr("overview.hero.reset_valve", OverviewController.currentLang)
                         type: HusButton.Type_Default
-                        iconSource: HusIcon.UndoOutlined
+                        svgIcon: AppIcons.rotateCcw
                         sizeHint: "normal"
                         Layout.preferredHeight: 36
                         onClicked: {
@@ -262,7 +262,7 @@ Item {
                     AppButton {
                         text: OverviewController.tr("overview.hero.open_cfg", OverviewController.currentLang)
                         type: HusButton.Type_Default
-                        iconSource: HusIcon.FolderOpenOutlined
+                        svgIcon: AppIcons.folderOpen
                         sizeHint: "normal"
                         Layout.preferredHeight: 36
                         onClicked: OverviewController.openCfgFolder()
@@ -271,7 +271,7 @@ Item {
                     AppButton {
                         text: OverviewController.tr("overview.hero.open_user_cfg", OverviewController.currentLang)
                         type: HusButton.Type_Default
-                        iconSource: HusIcon.UserOutlined
+                        svgIcon: AppIcons.user
                         sizeHint: "normal"
                         Layout.preferredHeight: 36
                         onClicked: OverviewController.openUserFolder()
@@ -396,7 +396,7 @@ Item {
                         AppButton {
                             text: overviewRoot.isPathChecking ? OverviewController.tr("overview.detecting", OverviewController.currentLang) : OverviewController.tr("overview.path.redetect", OverviewController.currentLang)
                             type: HusButton.Type_Text
-                            iconSource: HusIcon.SyncOutlined
+                            svgIcon: AppIcons.refreshCw
                             sizeHint: "small"
                             loading: overviewRoot.isPathChecking
                             onClicked: overviewRoot.doPathDetect()
@@ -450,7 +450,7 @@ Item {
                                 text: OverviewController.tr("overview.path.open", OverviewController.currentLang)
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
-                                iconSource: HusIcon.FolderOutlined
+                                svgIcon: AppIcons.folder
                                 onClicked: OverviewController.openPath(OverviewController.steamPath)
 
                                 HusToolTip {
@@ -506,7 +506,7 @@ Item {
                                 text: OverviewController.tr("overview.path.open", OverviewController.currentLang)
                                 type: HusButton.Type_Default
                                 sizeHint: "small"
-                                iconSource: HusIcon.FolderOutlined
+                                svgIcon: AppIcons.folder
                                 onClicked: OverviewController.openPath(OverviewController.gamePath)
 
                                 HusToolTip {
@@ -553,7 +553,7 @@ Item {
                         AppButton {
                             text: overviewRoot.isConvarsChecking ? OverviewController.tr("overview.parsing", OverviewController.currentLang) : OverviewController.tr("overview.convars.redetect", OverviewController.currentLang)
                             type: HusButton.Type_Text
-                            iconSource: HusIcon.SyncOutlined
+                            svgIcon: AppIcons.refreshCw
                             sizeHint: "small"
                             loading: overviewRoot.isConvarsChecking
                             onClicked: overviewRoot.doConvarsReload()
@@ -622,7 +622,7 @@ Item {
                             text: OverviewController.tr("overview.convars.remove_all", OverviewController.currentLang)
                             type: HusButton.Type_Default
                             sizeHint: "small"
-                            iconSource: HusIcon.DeleteOutlined
+                            svgIcon: AppIcons.trash
                             Layout.fillWidth: true
                             Layout.preferredHeight: 32
                             colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(247/255, 79/255, 79/255, 0.15) : "#fee2e2") : MetaTheme.btnDefaultBg
@@ -641,7 +641,7 @@ Item {
                             text: OverviewController.tr("overview.convars.remove_keybinds", OverviewController.currentLang)
                             type: HusButton.Type_Default
                             sizeHint: "small"
-                            iconSource: HusIcon.DisconnectOutlined
+                            svgIcon: AppIcons.unplug
                             Layout.fillWidth: true
                             Layout.preferredHeight: 32
                             colorBg: hovered ? (HusTheme.isDark ? Qt.rgba(245/255, 158/255, 11/255, 0.15) : "#fef3c7") : MetaTheme.btnDefaultBg

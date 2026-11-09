@@ -32,7 +32,7 @@ Rectangle {
                 Layout.fillWidth: true
             }
             AppButton {
-                iconSource: HusIcon.FolderOpenOutlined
+                svgIcon: AppIcons.folderOpen
                 sizeHint: "small"
                 type: HusButton.Type_Text
                 contentDescription: card.t("assembly.open_folder")
@@ -104,7 +104,7 @@ Rectangle {
                     elide: Text.ElideRight
                 }
                 AppButton {
-                    iconSource: HusIcon.CopyOutlined
+                    svgIcon: AppIcons.copy
                     sizeHint: "small"
                     type: HusButton.Type_Text
                     contentDescription: card.t("valve.copy")
@@ -122,7 +122,7 @@ Rectangle {
                 visible: !!card.state.keymapCommand
                 text: card.t("assembly.edit_keys")
                 sizeHint: "small"
-                iconSource: HusIcon.EditOutlined
+                svgIcon: AppIcons.pencil
                 onClicked: AssemblyController.openFile(card.state.directory + "/keymap.cfg")
             }
             AppButton {
@@ -141,7 +141,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 34
                 text: card.t(card.isMode ? "assembly.bind" : "valve.assemble")
-                iconSource: HusIcon.CheckOutlined
+                svgIcon: AppIcons.check
                 type: HusButton.Type_Primary
                 enabled: !AssemblyController.isBusy && (!card.isMode || launchKey.text.trim().length > 0)
                 onClicked: {

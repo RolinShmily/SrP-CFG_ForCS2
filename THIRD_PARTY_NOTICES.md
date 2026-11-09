@@ -20,6 +20,12 @@ Qt DLLs remain replaceable by compatible builds. Reverse engineering to debug mo
 
 Qt 动态库可替换为兼容版本；为调试 LGPL 组件修改而进行的逆向工程遵循 LGPL 权利。获取源码时应与发布包中的 Qt 版本对应。
 
+## Desktop interface icons / 桌面界面图标
+
+The desktop UI uses a curated subset of [Lucide](https://lucide.dev/) SVG icons under `src/gui/resources/icons/lucide/`. Lucide is distributed under the ISC License; the full text is in [licenses/Lucide-ISC.txt](licenses/Lucide-ISC.txt).
+
+桌面界面使用 [Lucide](https://lucide.dev/) SVG 图标子集，许可证为 ISC，全文见 [licenses/Lucide-ISC.txt](licenses/Lucide-ISC.txt)。
+
 ## Website and fonts / 网站与字体
 
 The website uses React, Vite, Motion, Radix UI, Lucide, Tailwind CSS, Font Awesome and their dependencies. Their terms differ: Font Awesome includes CC-BY-4.0 artwork, fonts use OFL, and build-time native packages may have additional notices. Do not treat the entire dependency graph as MIT.

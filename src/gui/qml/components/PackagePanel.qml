@@ -38,7 +38,7 @@ Rectangle {
                 Layout.fillWidth: true
                 text: panel.t("pkg.check")
                 sizeHint: "small"
-                iconSource: HusIcon.SyncOutlined
+                svgIcon: AppIcons.refreshCw
                 enabled: !PackageController.busy
                 loading: PackageController.busy
                 onClicked: PackageController.checkUpdates()
@@ -48,7 +48,7 @@ Rectangle {
                 text: panel.t("pkg.update")
                 sizeHint: "small"
                 type: panel.info.updateAvailable ? HusButton.Type_Primary : HusButton.Type_Default
-                iconSource: HusIcon.DownloadOutlined
+                svgIcon: AppIcons.download
                 enabled: !PackageController.busy
                 onClicked: PackageController.updatePackage(panel.packageId)
             }

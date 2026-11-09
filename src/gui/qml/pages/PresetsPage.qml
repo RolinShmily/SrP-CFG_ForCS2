@@ -166,7 +166,7 @@ Item {
                         AppButton {
                             type: HusButton.Type_Text
                             sizeHint: "small"
-                            iconSource: HusIcon.CopyOutlined
+                            svgIcon: AppIcons.copy
                             Layout.preferredHeight: 24
                             Layout.preferredWidth: 24
                             onClicked: {
@@ -247,7 +247,7 @@ Item {
                                 Layout.preferredHeight: 32
                                 text: PresetsController.tr("presets.btn_load", OverviewController.currentLang)
                                 type: PresetsController.isPresetLoaded ? HusButton.Type_Default : HusButton.Type_Primary
-                                iconSource: HusIcon.CheckOutlined
+                                svgIcon: AppIcons.check
                                 sizeHint: "small"
                                 onClicked: PresetsController.loadCurrentPreset()
 
@@ -261,7 +261,7 @@ Item {
                                 Layout.preferredHeight: 32
                                 text: PresetsController.tr("presets.btn_unload", OverviewController.currentLang)
                                 type: HusButton.Type_Default
-                                iconSource: HusIcon.CloseOutlined
+                                svgIcon: AppIcons.x
                                 sizeHint: "small"
                                 onClicked: PresetsController.unloadPreset()
 
@@ -359,7 +359,7 @@ Item {
                     AppButton {
                         text: PresetsController.tr("presets.btn_reset", OverviewController.currentLang)
                         type: HusButton.Type_Default
-                        iconSource: HusIcon.UndoOutlined
+                        svgIcon: AppIcons.rotateCcw
                         sizeHint: "small"
                         Layout.preferredHeight: 28
                         onClicked: resetFileModal.openWarning()
@@ -373,7 +373,7 @@ Item {
                     AppButton {
                         text: PresetsController.tr("presets.btn_save", OverviewController.currentLang)
                         type: PresetsController.isEditorDirty ? HusButton.Type_Primary : HusButton.Type_Default
-                        iconSource: HusIcon.SaveOutlined
+                        svgIcon: AppIcons.save
                         sizeHint: "small"
                         Layout.preferredHeight: 28
                         onClicked: PresetsController.saveCurrentFile(codeEditor.text)

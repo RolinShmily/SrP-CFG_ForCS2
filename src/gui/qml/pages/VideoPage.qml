@@ -52,7 +52,7 @@ Item {
                             Layout.fillWidth: true
                             text: page.t("video.apply")
                             type: HusButton.Type_Primary
-                            iconSource: HusIcon.CheckOutlined
+                            svgIcon: AppIcons.check
                             enabled: !PackageController.busy && !VideoController.validationError.length && OverviewController.userCfgPath.length > 0
                             onClicked: applyModal.openWarning()
                         }

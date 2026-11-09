@@ -187,7 +187,7 @@ Item {
                             colorText: MetaTheme.textSecondary
                             HusToolTip { text: PreferencesController.storePath }
                         }
-                        AppButton { objectName: "openStore"; text: page.t("preferences.open_store"); iconSource: HusIcon.FolderOpenOutlined; onClicked: PreferencesController.openStore() }
+                        AppButton { objectName: "openStore"; text: page.t("preferences.open_store"); svgIcon: AppIcons.folderOpen; onClicked: PreferencesController.openStore() }
                     }
                     Text { font.family: MetaTheme.fontFamily; text: page.t("preferences.store_note"); Layout.fillWidth: true; wrapMode: Text.WordWrap; font.pixelSize: 12; color: MetaTheme.textTertiary }
                 }

@@ -72,9 +72,9 @@ RowLayout {
             }
 
             // 轻量下拉指示小角标
-            Text { font.family: MetaTheme.fontFamily;
-                text: "▾"
-                font.pixelSize: 9
+            AppIcon {
+                source: AppIcons.chevronDown
+                size: 12
                 color: accountCapsuleMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textTertiary
                 Layout.alignment: Qt.AlignVCenter
             }

@@ -5,6 +5,9 @@ import SrPGui
 HusIconButton {
     id: control
 
+    // SVG icon from the shared Lucide subset. Leave empty to keep the HuskarUI icon font.
+    property url svgIcon: ""
+
     // 禁用粗糙的外圈扩散波纹动画，消除突兀闪烁与抽搐感
     effectEnabled: false
 
@@ -41,4 +44,49 @@ HusIconButton {
     borderBg.width: (control.type === HusButton.Type_Primary || control.type === HusButton.Type_Text) ? 0 : 1
 
     radiusBg.all: MetaTheme.radiusMd
+
+    iconDelegate: String(control.svgIcon).length > 0 ? svgIconDelegate : fontIconDelegate
+
+    Component {
+        id: svgIconDelegate
+
+        AppIcon {
+            source: control.svgIcon
+            size: control.iconSize
+            color: control.colorText
+            opacity: control.enabled ? 1.0 : 0.5
+
+            NumberAnimation on rotation {
+                running: control.loading
+                from: 0
+                to: 360
+                loops: Animation.Infinite
+                duration: 1000
+                onRunningChanged: if (!running) rotation = 0
+            }
+        }
+    }
+
+    Component {
+        id: fontIconDelegate
+
+        HusIconText {
+            font: control.iconFont
+            color: control.colorIcon
+            iconSource: control.loading ? HusIcon.LoadingOutlined : control.iconSource
+            verticalAlignment: Text.AlignVCenter
+            visible: !empty
+
+            Behavior on color { enabled: control.animationEnabled; ColorAnimation { duration: HusTheme.Primary.durationFast } }
+
+            NumberAnimation on rotation {
+                running: control.loading
+                from: 0
+                to: 360
+                loops: Animation.Infinite
+                duration: 1000
+                onRunningChanged: if (!running) rotation = 0
+            }
+        }
+    }
 }
