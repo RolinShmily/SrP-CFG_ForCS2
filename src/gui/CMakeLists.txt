@@ -60,6 +60,13 @@ target_compile_definitions(srp_gui PRIVATE
 )
 
 set(LUCIDE_ICON_RESOURCES
+    resources/icons/lucide/blocks.svg
+    resources/icons/lucide/info.svg
+    resources/icons/lucide/layout-dashboard.svg
+    resources/icons/lucide/layers.svg
+    resources/icons/lucide/map.svg
+    resources/icons/lucide/monitor.svg
+    resources/icons/lucide/settings.svg
     resources/icons/lucide/check.svg
     resources/icons/lucide/chevron-down.svg
     resources/icons/lucide/chevron-right.svg
@@ -119,25 +126,6 @@ qt_add_qml_module(srp_gui
         resources/font/HuskarUI-Icons.ttf
         resources/images/cs2_logo.svg
         resources/images/cs2_official_banner.jpg
-        resources/icons/overview.svg
-        resources/icons/presets.svg
-        resources/icons/assembly.svg
-        resources/icons/video.svg
-        resources/icons/map.svg
-        resources/icons/info.svg
-        resources/icons/settings.svg
-        resources/icons/sun.svg
-        resources/icons/moon.svg
-        resources/icons/globe.svg
-        resources/icons/play.svg
-        resources/icons/undo.svg
-        resources/icons/folder.svg
-        resources/icons/user.svg
-        resources/icons/refresh.svg
-        resources/icons/trash.svg
-        resources/icons/minimize.svg
-        resources/icons/maximize.svg
-        resources/icons/close.svg
         ${LUCIDE_ICON_RESOURCES}
 )
 

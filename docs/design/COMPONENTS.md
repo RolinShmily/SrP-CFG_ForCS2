@@ -111,7 +111,7 @@
 
 - 普通动作图标使用 [Lucide](https://lucide.dev/) SVG 子集，位于 `src/gui/resources/icons/lucide/`，通过 `AppIcons` 暴露 QRC 路径，再由 `AppButton.svgIcon` / `AppIcon` 着色。
 - Lucide 为 ISC 许可，全文见 [`licenses/Lucide-ISC.txt`](../../licenses/Lucide-ISC.txt)；`THIRD_PARTY_NOTICES.md` 已登记。
-- 导航一级图标仍使用项目自有的 `resources/icons/*.svg`（语义与侧栏绑定）；HuskarUI 的 `HusIcon` 字体仅用于组件库内部图标位（标题栏灯泡、输入框搜索等）。
+- 导航一级图标同样来自 Lucide 子集（`layout-dashboard` / `layers` / `blocks` / `monitor` / `map` / `info` / `settings`），由 `AppSidebar` 通过 `AppIcon` 着色；HuskarUI 的 `HusIcon` 字体仅用于组件库内部图标位（标题栏灯泡、输入框搜索等）。
 - 新增图标必须为 24×24 `viewBox`、单色描边（白色 `#ffffff` 由 `AppIcon` 着色），文件名使用 Lucide 原名。
 
 ---

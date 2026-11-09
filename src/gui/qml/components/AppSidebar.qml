@@ -61,7 +61,7 @@ Rectangle {
 
                 // 1. Overview 总览
                 NavItem {
-                    iconSource: "qrc:/SrPGui/resources/icons/overview.svg"
+                    iconSource: AppIcons.dashboard
                     label: OverviewController.tr("nav.overview", OverviewController.currentLang)
                     selected: sidebar.activeRoute === "overview"
                     onClicked: sidebar.activeRoute = "overview"
@@ -69,7 +69,7 @@ Rectangle {
 
                 // 2. CFG 预设包
                 NavItem {
-                    iconSource: "qrc:/SrPGui/resources/icons/presets.svg"
+                    iconSource: AppIcons.layers
                     label: OverviewController.tr("nav.presets", OverviewController.currentLang)
                     selected: sidebar.activeRoute === "presets"
                     onClicked: sidebar.activeRoute = "presets"
@@ -112,7 +112,7 @@ Rectangle {
                         spacing: 10
 
                         AppIcon {
-                            source: "qrc:/SrPGui/resources/icons/assembly.svg"
+                            source: AppIcons.blocks
                             size: 15
                             color: groupMouse.containsMouse ? MetaTheme.textPrimary : MetaTheme.textSecondary
                             Layout.alignment: Qt.AlignVCenter
@@ -210,7 +210,7 @@ Rectangle {
 
                 // 4. 视频设置
                 NavItem {
-                    iconSource: "qrc:/SrPGui/resources/icons/video.svg"
+                    iconSource: AppIcons.monitor
                     label: OverviewController.tr("nav.video_settings", OverviewController.currentLang)
                     selected: sidebar.activeRoute === "video_settings"
                     onClicked: sidebar.activeRoute = "video_settings"
@@ -218,7 +218,7 @@ Rectangle {
 
                 // 5. 地图标注
                 NavItem {
-                    iconSource: "qrc:/SrPGui/resources/icons/map.svg"
+                    iconSource: AppIcons.map
                     label: OverviewController.tr("nav.map_guides", OverviewController.currentLang)
                     selected: sidebar.activeRoute === "map_guides"
                     onClicked: sidebar.activeRoute = "map_guides"
@@ -323,7 +323,7 @@ Rectangle {
             spacing: 2
 
             NavItem {
-                iconSource: "qrc:/SrPGui/resources/icons/info.svg"
+                iconSource: AppIcons.info
                 label: OverviewController.tr("nav.about", OverviewController.currentLang)
                 objectName: "navAbout"
                 selected: sidebar.activeRoute === "about"
@@ -331,7 +331,7 @@ Rectangle {
             }
 
             NavItem {
-                iconSource: "qrc:/SrPGui/resources/icons/settings.svg"
+                iconSource: AppIcons.settings
                 label: OverviewController.tr("nav.settings", OverviewController.currentLang)
                 objectName: "navSettings"
                 selected: sidebar.activeRoute === "settings"

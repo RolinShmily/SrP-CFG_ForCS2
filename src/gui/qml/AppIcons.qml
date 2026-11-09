@@ -2,6 +2,13 @@ pragma Singleton
 import QtQuick
 
 QtObject {
+    readonly property string blocks: "qrc:/SrPGui/resources/icons/lucide/blocks.svg"
+    readonly property string dashboard: "qrc:/SrPGui/resources/icons/lucide/layout-dashboard.svg"
+    readonly property string info: "qrc:/SrPGui/resources/icons/lucide/info.svg"
+    readonly property string layers: "qrc:/SrPGui/resources/icons/lucide/layers.svg"
+    readonly property string map: "qrc:/SrPGui/resources/icons/lucide/map.svg"
+    readonly property string monitor: "qrc:/SrPGui/resources/icons/lucide/monitor.svg"
+    readonly property string settings: "qrc:/SrPGui/resources/icons/lucide/settings.svg"
     readonly property string check: "qrc:/SrPGui/resources/icons/lucide/check.svg"
     readonly property string chevronDown: "qrc:/SrPGui/resources/icons/lucide/chevron-down.svg"
     readonly property string chevronRight: "qrc:/SrPGui/resources/icons/lucide/chevron-right.svg"
