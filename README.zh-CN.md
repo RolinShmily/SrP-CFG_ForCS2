@@ -15,7 +15,42 @@
 
 ---
 
-## 💡 核心设计理念
+## 🖼️ 界面预览
+
+![SrP-CFG 总览](docs/design/screenshots/overview-light.webp)
+
+<details>
+<summary>更多截图 · 预设、装配、视频、地图标注、设置、关于、深色模式、980×640</summary>
+
+### 预设包
+![预设包](docs/design/screenshots/presets-light.webp)
+
+### 自由装配
+![自由装配](docs/design/screenshots/assembly-light.webp)
+
+### 视频设置
+![视频设置](docs/design/screenshots/video-light.webp)
+
+### 地图标注
+![地图标注](docs/design/screenshots/annotations-light.webp)
+
+### 设置
+![设置](docs/design/screenshots/settings-light.webp)
+
+### 关于
+![关于](docs/design/screenshots/about-light.webp)
+
+### 深色模式
+![深色模式总览](docs/design/screenshots/overview-dark.webp)
+
+### 最小窗口（980×640）
+![最小窗口设置页](docs/design/screenshots/settings-980x640.webp)
+
+</details>
+
+---
+
+## 💡 核心设计理念核心设计理念
 
 > **“把功能展开，把选择留给你；运行时属于引擎，偏好属于玩家。”**
 

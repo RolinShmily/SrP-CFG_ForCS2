@@ -15,7 +15,42 @@
 
 ---
 
-## 💡 Core Philosophy
+## 🖼️ Interface Preview
+
+![SrP-CFG overview](docs/design/screenshots/overview-light.webp)
+
+<details>
+<summary>More screenshots · presets, assembly, video, annotations, settings, about, dark mode, 980×640</summary>
+
+### Presets
+![Presets](docs/design/screenshots/presets-light.webp)
+
+### Assembly
+![Assembly](docs/design/screenshots/assembly-light.webp)
+
+### Video settings
+![Video settings](docs/design/screenshots/video-light.webp)
+
+### Map annotations
+![Map annotations](docs/design/screenshots/annotations-light.webp)
+
+### Settings
+![Settings](docs/design/screenshots/settings-light.webp)
+
+### About
+![About](docs/design/screenshots/about-light.webp)
+
+### Dark mode
+![Overview in dark mode](docs/design/screenshots/overview-dark.webp)
+
+### Minimum window (980×640)
+![Settings at minimum window](docs/design/screenshots/settings-980x640.webp)
+
+</details>
+
+---
+
+## 💡 Core PhilosophyCore Philosophy
 
 > **"Unpack the features, keep the choices; runtime belongs to the engine, preferences belong to the player."**
 
