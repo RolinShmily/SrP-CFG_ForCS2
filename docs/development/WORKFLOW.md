@@ -99,7 +99,7 @@ actionlint -color        # 改动过 .github/workflows/** 时
 | 评审规则、CI、版本与发布节拍 | 本文件与 [CODING_STANDARDS.md](CODING_STANDARDS.md) |
 | 边界/失败路径 | [BOUNDARY_CONDITIONS.md](../reference/BOUNDARY_CONDITIONS.md) |
 
-- 根目录文档成对维护：`README.md` / `README.zh-CN.md`、`CONTRIBUTING.md` / `CONTRIBUTING.zh-CN.md`、`SECURITY.md` / `SECURITY.zh-CN.md`、`CODE_OF_CONDUCT.md` / `CODE_OF_CONDUCT.zh-CN.md`。只改一边视为未完成。
+- 根目录仅 `README.md` / `README.zh-CN.md` 保持双语；`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、`SECURITY.md` 默认英文单语。README 只改一边视为未完成。
 - `docs/**` 以中文为主，新增相对链接必须指向真实存在的文件；重命名文档时用 `git ls-files docs` 找出所有引用并一并更新。
 - 不写「未来会支持」型文档：只描述当前仓库可验证的行为，未实现的计划放 issue。
 

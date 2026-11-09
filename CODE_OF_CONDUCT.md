@@ -1,9 +1,3 @@
-<div align="center">
-
-[English](CODE_OF_CONDUCT.md) | [简体中文](CODE_OF_CONDUCT.zh-CN.md)
-
-</div>
-
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge

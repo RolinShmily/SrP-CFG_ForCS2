@@ -29,7 +29,7 @@
 - `reference/`：格式、协议、命令、事务、i18n 等实现参考。行为变化时必须同步更新。
 - `design/`：设计令牌、组件映射、交互规范、视觉资产。页面截图统一放在 `design/screenshots/`。
 - 图片：界面截图使用 WebP，命名 `页面-主题.webp`；原始草图放 `design/` 根目录。截图不自动更新，UI 改动后按 [`design/screenshots/README.md`](design/screenshots/README.md) 重新生成。
-- 语言：技术文档默认中文，命令、路径、标识符、错误键保留英文；面向贡献者的根目录文档保留中英双语对应文件。
+- 语言：技术文档默认中文，命令、路径、标识符、错误键保留英文；README 保留中英双语；CONTRIBUTING / CODE_OF_CONDUCT / SECURITY 默认英文单语。
 - 链接：使用相对链接，提交前确认目标文件存在。
 
 ## 维护约定
@@ -41,6 +41,7 @@
 
 ## 相关入口
 
-- 贡献流程：[`../CONTRIBUTING.md`](../CONTRIBUTING.md) / [`../CONTRIBUTING.zh-CN.md`](../CONTRIBUTING.zh-CN.md)
-- 安全策略：[`../SECURITY.md`](../SECURITY.md) / [`../SECURITY.zh-CN.md`](../SECURITY.zh-CN.md)
+- 贡献流程：[`../CONTRIBUTING.md`](../CONTRIBUTING.md)
+- 安全策略：[`../SECURITY.md`](../SECURITY.md)
+- 行为准则：[`../CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md)
 - 项目说明：[`../README.md`](../README.md) / [`../README.zh-CN.md`](../README.zh-CN.md)

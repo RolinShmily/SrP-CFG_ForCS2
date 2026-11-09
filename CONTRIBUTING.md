@@ -1,9 +1,3 @@
-<div align="center">
-
-[English](CONTRIBUTING.md) | [简体中文](CONTRIBUTING.zh-CN.md)
-
-</div>
-
 # Contributing to SrP-CFG
 
 Thanks for taking the time to improve SrP-CFG. This guide covers the practical parts:
@@ -29,7 +23,7 @@ issues, follow the [security policy](SECURITY.md) instead of opening a public is
 | Desktop app (Qt 6 / QML) | `src/gui/**` |
 | Website and docs | `website/**`, `docs/**` |
 | Audit and packaging scripts | `scripts/**` |
-| Translation | Any `*.md` file with a `.zh-CN.md` (or English) counterpart |
+| Translation | `README.md` / `README.zh-CN.md` (the only bilingual pair) |
 
 Adding a preset, feature, mode, or map guide usually needs **no C++ or QML change** —
 each package carries a `catalog.json` that drives the CLI lists, GUI cards, and editor

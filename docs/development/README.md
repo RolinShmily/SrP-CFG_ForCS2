@@ -68,7 +68,7 @@ run_gui.bat --store %TEMP%\srp-store --route overview --screenshot %TEMP%\shot.p
 
 ## 与本目录配套的根文件
 
-- [CONTRIBUTING.md](../../CONTRIBUTING.md) / [CONTRIBUTING.zh-CN.md](../../CONTRIBUTING.zh-CN.md)：对外贡献闸门（环境、`config/` 规则、提交前检查、Conventional Commits）。本目录不重复它的环境安装步骤，只把「规则」写成可执行条目。
+- [CONTRIBUTING.md](../../CONTRIBUTING.md)：对外贡献闸门（环境、`config/` 规则、提交前检查、Conventional Commits）。本目录不重复它的环境安装步骤，只把「规则」写成可执行条目。
 - [README.md](../../README.md) 的目录树与 [SECURITY.md](../../SECURITY.md)：仓库结构与漏洞上报渠道。
 - `.github/workflows/*.yml`：CI 的事实来源。[WORKFLOW.md](WORKFLOW.md) 第 5 节的表格抄的是它的触发条件与步骤顺序，改了工作流就要同步回来。
 

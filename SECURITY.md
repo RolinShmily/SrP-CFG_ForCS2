@@ -1,9 +1,3 @@
-<div align="center">
-
-[English](SECURITY.md) | [简体中文](SECURITY.zh-CN.md)
-
-</div>
-
 # Security Policy
 
 ## Supported Versions
