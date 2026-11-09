@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 // Explicit subscription also responds when the OS preference changes after mount.
 // The server and first client render agree; CSS supplies the pre-hydration fallback.

@@ -1,4 +1,3 @@
-"use client";
 import { ArrowUp, ArrowUpRight, BookOpen, GitFork, PackageOpen, Rss, Scale } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 import { assetPath, REPOSITORY, RELEASES } from "@/lib/downloads";
@@ -17,7 +16,6 @@ export function Footer() {
         <div className="footer-main">
           <div className="footer-identity">
             <a href="#overview" className="footer-brand">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={assetPath("/app/icon.webp")} width="40" height="40" alt="" />
               <span>SrP-CFG<span className="text-cs-orange">.</span></span>
             </a>

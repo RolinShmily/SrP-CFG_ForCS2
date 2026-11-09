@@ -1,16 +1,24 @@
 # SrP-CFG 产品展示网站
 
-Next.js / React / TypeScript / Tailwind CSS / Motion / Radix UI / Lucide，静态导出并部署到 Cloudflare Worker。无需应用服务器、Three.js 或新增运行时依赖。
+React 19 / TypeScript / Vite / Tailwind CSS / Motion / Radix UI / Lucide，纯前端静态 SPA 并部署到 Cloudflare Worker。无需应用服务器、SSR 运行时、Three.js 或新增运行时依赖。
 
-## 本地预览
+## 本地开发与预览
 
 ```bash
 cd website
+pnpm dev        # Vite 开发服务器，默认 http://127.0.0.1:5173/
+```
+
+生产构建与静态预览：
+
+```bash
 pnpm build
 pnpm preview
 ```
 
-打开终端显示的地址（默认 `http://127.0.0.1:4173/`）。preview 自动识别构建时的 basePath，并在缺少本地 packages.json 时只为预览代理线上配置清单；这不是部署所需的服务器。
+`pnpm build` 分三步：客户端构建 → `vite build --ssr src/entry-server.tsx` 生成临时 `.ssr/` 目录 → `scripts/prerender.mjs` 用 `renderToString(<App />)` 把静态标记写入 `out/index.html` 的 `#root`，随后删除临时目录。浏览器端 `src/main.tsx` 检测到已有标记时使用 `hydrateRoot`，开发服务器仍走 `createRoot`。首屏在 JavaScript 执行前即可见：Hero 入场动画改为 CSS `@keyframes`，Valve 背景的 `base` 前缀由 Vite 插件在 `<head>` 注入 `<style>`，并在 `<noscript>` 中恢复滚动揭示元素的可见性。
+
+输出位于 `website/out`（Vite `base` 写入 `index.html`、CSS 与资源 URL）。preview 自动识别构建时使用的子路径前缀，并在缺少本地 packages.json 时只为预览代理线上配置清单；这不是部署所需的服务器。
 
 ```bash
 pnpm test
@@ -18,6 +26,8 @@ pnpm lint
 ```
 
 test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript 检查。沿用仓库已有依赖及锁文件。
+
+子路径部署使用 `VITE_BASE_PATH=/prefix/` 构建。Git Bash 会改写以 `/` 开头的环境变量，需同时设置 `MSYS2_ENV_CONV_EXCL=VITE_BASE_PATH`。运行时图片路径由 `src/lib/downloads.ts` 的 `assetPath()` 读取 Vite `BASE_URL`，CSS 中的 Valve 背景变量在 `src/main.tsx` 启动时按同一前缀覆盖。
 
 ## 页面和动效
 
@@ -73,12 +83,12 @@ CI 通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认�
 
 配置清单及 ZIP 下载地址统一为 `https://cfg.srprolin.com/packages.json` 和 `/packages/`。APP core 只信任该 HTTPS 域名下的配置路径。旧版 APP/CLI 中的 `.top` 或更早 gh-pages 地址编译在程序内，需要下载安装 3.4.3 或后续版本。配置下载器禁止 HTTP 重定向，旧域名 301/302 或直接返回含 `.com` ZIP 地址的新清单均无法兼容旧版；若需保留旧客户端更新，旧域名必须直接提供仍使用旧域名下载 URL 的兼容清单和 ZIP。GitHub Releases 继续发布软件制品。
 
-`website/public/_headers` 禁止缓存配置清单，对 Next.js 内容哈希静态资源启用长期缓存。Wrangler 版本固定在工作流中，不修改网站依赖或锁文件。
+`website/public/_headers` 禁止缓存配置清单，对 Vite 内容哈希静态资源（`/assets/*`）启用长期缓存。Wrangler 版本固定在工作流中。
 
-根路径和仓库子路径均已验证图片、CSS、字体、SVG 背景、图标和清单地址。next.config.mjs 继续使用 output: export / unoptimized images。
+根路径和仓库子路径均已验证图片、CSS、字体、SVG 背景、图标和清单地址。`vite.config.ts` 固定 `outDir: out` 与 `assetsDir: assets`，与 `wrangler.toml` 的静态资源目录一致。
 
 ## 验证记录
 
-测试下载元数据的仓库边界、版本错配、制品筛选、配置包 SHA/大小和镜像拼接。真实浏览器验证中英文和来源持久化、键盘切页、手动前后切换、导航聚合、层展开/收起、手机菜单、375/390px 无溢出、减少动态效果、API 失败回退与无水合异常。
+测试下载元数据的仓库边界、版本错配、制品筛选、配置包 SHA/大小和镜像拼接。真实浏览器验证中英文和来源持久化、键盘切页、手动前后切换、导航聚合、层展开/收起、手机菜单、375/390px 无溢出、减少动态效果、API 失败回退与无水合异常。预渲染另验证：静态 HTML 含真实首屏文案与 6 张截图、禁用 JavaScript 时首屏与全部揭示内容可见、启用 JavaScript 后无水合警告且滚动揭示动画正常，根路径与子路径构建一致。
 
-截图及本地验证脚本在 build-gui/verification-website（忽略目录，不参与部署）。未新增依赖。
+截图及本地验证脚本在 build-gui/verification-website（忽略目录，不参与部署）。依赖变更仅为移除 `next` / `next-themes` 并加入 `vite` / `@vitejs/plugin-react`。

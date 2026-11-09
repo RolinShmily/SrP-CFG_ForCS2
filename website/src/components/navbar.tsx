@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useReducedEffects } from "@/lib/use-reduced-effects";
@@ -25,7 +24,6 @@ export function Navbar() {
     <a className="skip-link" href="#main-content">{t.nav.skip}</a>
     <motion.div className="nav-islands" layout transition={{ type: "spring", stiffness: 160, damping: 26, duration: reduce ? 0 : undefined }}>
       <a href="#overview" className="nav-brand" aria-label="SrP-CFG">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={assetPath("/app/icon.webp")} alt="" width="30" height="30" />
         <span>SrP-CFG</span><span className="brand-dot" aria-hidden="true" />
       </a>

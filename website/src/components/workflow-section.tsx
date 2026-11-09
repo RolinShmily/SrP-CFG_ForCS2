@@ -1,4 +1,3 @@
-"use client";
 import { useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useReducedEffects } from "@/lib/use-reduced-effects";

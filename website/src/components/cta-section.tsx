@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { ArrowDownToLine, ArrowUpRight, Archive, BookOpen, Check, Copy, FileCode2, LoaderCircle, Map, Monitor, Package, RefreshCw, Settings2, Terminal } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";

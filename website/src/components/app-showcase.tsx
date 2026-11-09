@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useReducedEffects } from "@/lib/use-reduced-effects";
@@ -34,7 +33,6 @@ export function AppShowcase() {
           <div className="showcase-display">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div key={`${screen.id}-${locale}`} initial={{ opacity: 0, x: reduce ? 0 : 18 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: reduce ? 0 : -18 }} transition={{ duration: .25 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={assetPath(`/app/${screen.id}-${locale}.webp`)} alt={screen.title} width="1160" height="750" loading="lazy" />
               </motion.div>
             </AnimatePresence>

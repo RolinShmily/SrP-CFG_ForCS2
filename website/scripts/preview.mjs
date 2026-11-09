@@ -4,7 +4,7 @@ import { resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../out/', import.meta.url));
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
-const prefix = html.match(/href="([^"]*)\/_next\/static\/[^\"]+\.css"/)?.[1] || '';
+const prefix = html.match(/href="([^"]*)\/assets\/[^"]+\.css"/)?.[1] || '';
 const port = Number(process.env.PORT || 4173);
 const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json; charset=utf-8', '.svg':'image/svg+xml', '.webp':'image/webp', '.png':'image/png', '.ico':'image/x-icon', '.woff2':'font/woff2', '.woff':'font/woff', '.zip':'application/zip' };
 const server = createServer(async(req,res)=>{

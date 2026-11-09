@@ -15,7 +15,9 @@ export interface DownloadAsset { url: string; sha256?: string; size?: number; }
 export interface AppRelease { version: string; setup?: DownloadAsset; portable?: DownloadAsset; }
 export interface ConfigPackage extends DownloadAsset { version: string; }
 export type PackageManifest = Partial<Record<PackageId, ConfigPackage>>;
-export function assetPath(path: string) { return `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`; }
+// Vite injects the deployment prefix; plain Node (unit tests) has no `import.meta.env`.
+const basePath = ((import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env?.BASE_URL ?? "/").replace(/\/+$/, "");
+export function assetPath(path: string) { return `${basePath}${path}`; }
 export function softwareUrl(url: string, source: DownloadSource) { return source === "mirror" ? MIRROR + url : url; }
 function object(value: unknown): Record<string, unknown> | undefined {
   return value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : undefined;

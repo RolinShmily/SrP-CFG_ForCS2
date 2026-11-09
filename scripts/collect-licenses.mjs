@@ -35,9 +35,6 @@ for (const [name, directory] of [...packages].sort(([a], [b]) => a.localeCompare
     const path = join(directory, name);
     if ((await stat(path)).isFile()) texts.push(`## ${name}\n\n${await readFile(path, 'utf8')}`);
   }
-  if (!texts.length && name.startsWith('@next/')) {
-    texts.push(await readFile(resolve(repo, 'website/node_modules/next/license.md'), 'utf8'));
-  }
   if (!texts.length) {
     texts.push(`No separate license text is shipped in this installed package. Consult its upstream distribution: ${JSON.stringify(manifest.repository || manifest.homepage || name)}. Declared terms: ${JSON.stringify(manifest.license)}.`);
     console.warn(`No standalone license file: ${name}`);

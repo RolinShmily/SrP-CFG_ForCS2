@@ -22,9 +22,9 @@ Qt 动态库可替换为兼容版本；为调试 LGPL 组件修改而进行的�
 
 ## Website and fonts / 网站与字体
 
-The website uses Next.js, React, Motion, Radix UI, Lucide, Tailwind CSS, Font Awesome and their dependencies. Their terms differ: Font Awesome includes CC-BY-4.0 artwork, fonts use OFL, and build-time native packages may have additional notices. Do not treat the entire dependency graph as MIT.
+The website uses React, Vite, Motion, Radix UI, Lucide, Tailwind CSS, Font Awesome and their dependencies. Their terms differ: Font Awesome includes CC-BY-4.0 artwork, fonts use OFL, and build-time native packages may have additional notices. Do not treat the entire dependency graph as MIT.
 
-`node scripts/collect-licenses.mjs` collects installed production dependency license files into `website/public/third-party-licenses.txt`; the Pages workflow publishes this generated file. Uninstalled platform-specific dependencies are excluded. Packages without standalone license text retain their declared license and upstream reference in the generated report.
+`node scripts/collect-licenses.mjs` collects installed production dependency license files into `website/public/third-party-licenses.txt`; the website deployment workflow publishes this generated file. Uninstalled platform-specific dependencies are excluded. Packages without standalone license text retain their declared license and upstream reference in the generated report.
 
 | Font | Copyright | Terms |
 | --- | --- | --- |

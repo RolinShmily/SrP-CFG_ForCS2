@@ -42,6 +42,6 @@ test('skill is a separately versioned trusted ZIP alongside the three config pac
 });
 test('small downloads are shown in KB and asset paths honor static subpaths',()=>{
  assert.equal(formatSize(4000),'4 KB');assert.equal(formatSize(3*1024*1024),'3.0 MB');
- const previous=process.env.NEXT_PUBLIC_BASE_PATH;process.env.NEXT_PUBLIC_BASE_PATH='/SrP-CFG_ForCS2';assert.equal(assetPath('/app/overview-zh.webp'),'/SrP-CFG_ForCS2/app/overview-zh.webp');
- if(previous===undefined)delete process.env.NEXT_PUBLIC_BASE_PATH;else process.env.NEXT_PUBLIC_BASE_PATH=previous;
+ // Vite supplies BASE_URL at build time; outside a build the prefix is root.
+ assert.equal(assetPath('/app/overview-zh.webp'),'/app/overview-zh.webp');
 });

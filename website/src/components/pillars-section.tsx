@@ -1,4 +1,3 @@
-"use client";
 import { FileCode2, FolderSync, History, Terminal } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 import { Reveal } from "./reveal";

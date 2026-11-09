@@ -1,4 +1,4 @@
-# Static-only Worker: Next.js export and independent configuration archives.
+# Static-only Worker: Vite SPA build and independent configuration archives.
 name = "srp-cfg"
 compatibility_date = "2026-10-06"
 workers_dev = false
