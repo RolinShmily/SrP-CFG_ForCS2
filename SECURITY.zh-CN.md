@@ -38,7 +38,7 @@ ZIP 均不在支持范围内。
   写入到探测到的 Steam / CS2 目录之外，或覆写 `srp-cfg/user/custom.cfg`。
 - **配置包信任被突破** —— 接受来自 `https://cfg.srprolin.com` 以外来源的清单或压缩包，
   跟随 HTTP 重定向，或绕过
-  [`docs/CONFIG_PACKAGES_AND_MEDIA.md`](docs/CONFIG_PACKAGES_AND_MEDIA.md) 中规定的
+  [`docs/reference/CONFIG_PACKAGES_AND_MEDIA.md`](docs/reference/CONFIG_PACKAGES_AND_MEDIA.md) 中规定的
   版本、大小、SHA-256、条目数量与路径名校验。
 - **任意代码执行**、提权，或通过安装器、更新器、便携包，或构造的输入文件
   （`VCFG`、CFG、KV3、ZIP）实施 DLL / 二进制劫持。

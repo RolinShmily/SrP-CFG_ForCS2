@@ -42,7 +42,7 @@ the following are treated as security issues:
 - **Package trust violations** — accepting a manifest or package archive from any
   origin other than `https://cfg.srprolin.com`, following HTTP redirects, or skipping
   the version, size, SHA-256, entry-count, or path-name validation described in
-  [`docs/CONFIG_PACKAGES_AND_MEDIA.md`](docs/CONFIG_PACKAGES_AND_MEDIA.md).
+  [`docs/reference/CONFIG_PACKAGES_AND_MEDIA.md`](docs/reference/CONFIG_PACKAGES_AND_MEDIA.md).
 - **Arbitrary code execution**, privilege escalation, or DLL / binary hijacking via the
   installer, updater, portable package, or a crafted input file (`VCFG`, CFG, KV3, ZIP).
 - **Release integrity** — tampered release assets, bypassed hash checks, or an update

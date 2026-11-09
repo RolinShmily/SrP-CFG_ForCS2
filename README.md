@@ -53,7 +53,7 @@ The repository enforces clean separation of concerns:
 
 ```text
 SrP-CFG_ForCS2/
-├── app/
+├── src/
 │   ├── core/                  # C++17 pure logic library (VCFG/CFG/KV3 parsing, atomic backups, staging store)
 │   ├── cli/                   # srpcfg CLI tool (automation, CI & script friendly)
 │   └── gui/                   # SrP-CFG desktop app (Qt 6 + HuskarUI + QML + QWindowKit)
@@ -63,12 +63,14 @@ SrP-CFG_ForCS2/
 │   └── annotations/           # Native map guide resources
 ├── skills/                    # Agent skills
 │   └── srpcfg-cli/            # srpcfg CLI integration skill for coding agents
-├── website/                   # Official showcase & documentation (Next.js 16 + React 19 + Tailwind CSS)
+├── website/                   # Official showcase & documentation (React 19 + Vite + Tailwind CSS)
 ├── installer/                 # Windows official installer script (Inno Setup)
 ├── scripts/                   # Repository sanity checks, drift detection & local utilities
-├── docs/                      # Architecture specifications, workspace designs & boundary contracts
+├── docs/                      # Architecture, development standards, technical reference & design system
 └── CMakeLists.txt             # Root unified build file
 ```
+
+Documentation: [docs/README.md](docs/README.md) covers architecture, development standards, technical reference and the design system.
 
 ### Safety & Resilience Highlights
 
@@ -169,7 +171,7 @@ The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL
 
 Issues and Pull Requests are welcome! Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, verification commands, and the conventions below, and note that all participants follow the [Code of Conduct](CODE_OF_CONDUCT.md). Security issues go through [SECURITY.md](SECURITY.md), not public issues.
 
-- Follow architectural boundaries: core logic belongs in `app/core`, CLI in `app/cli`, and desktop GUI in `app/gui`.
+- Follow architectural boundaries: core logic belongs in `src/core`, CLI in `src/cli`, and desktop GUI in `src/gui`.
 - All configuration file writes must use the backup transaction system.
 - For third-party licensing obligations, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

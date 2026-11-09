@@ -53,7 +53,7 @@ CS2 引擎启动
 
 ```text
 SrP-CFG_ForCS2/
-├── app/
+├── src/
 │   ├── core/                  # C++17 纯逻辑核心库 (VCFG/CFG/KV3 解析、原子备份、暂存区事务)
 │   ├── cli/                   # srpcfg 独立命令行工具 (自动化管理、CI 与脚本友好)
 │   └── gui/                   # SrP-CFG 桌面端应用 (Qt 6 + HuskarUI + QML + QWindowKit)
@@ -63,12 +63,14 @@ SrP-CFG_ForCS2/
 │   └── annotations/           # 原生地图标注资源
 ├── skills/                    # 智能体技能包
 │   └── srpcfg-cli/            # 适用于各类智能体的 srpcfg CLI 自动化技能
-├── website/                   # 官方展示与文档站点 (Next.js 16 + React 19 + Tailwind CSS)
+├── website/                   # 官方展示与文档站点 (React 19 + Vite + Tailwind CSS)
 ├── installer/                 # Windows 官方安装器脚本 (Inno Setup)
 ├── scripts/                   # 工程审计、漂移检测与本地辅助脚本
-├── docs/                      # 架构规范、工作区设计与边界约定文档
+├── docs/                      # 架构、开发规范、技术参考与设计规范文档
 └── CMakeLists.txt             # 统一根构建文件
 ```
+
+文档入口：[docs/README.md](docs/README.md) 汇总架构、开发规范、技术参考与设计规范。
 
 ### 核心安全与防护特性
 
@@ -169,7 +171,7 @@ pnpm preview
 
 欢迎提交 Issue 与 Pull Request！搭建步骤、自检命令与约定见 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)；所有参与者均须遵守[行为准则](CODE_OF_CONDUCT.zh-CN.md)。安全问题请走 [SECURITY.zh-CN.md](SECURITY.zh-CN.md)，不要提交公开 Issue。
 
-- 严格遵循逻辑分层原则：核心逻辑沉淀在 `app/core`，命令行工具在 `app/cli`，界面呈现由 `app/gui` 负责。
+- 严格遵循逻辑分层原则：核心逻辑沉淀在 `src/core`，命令行工具在 `src/cli`，界面呈现由 `src/gui` 负责。
 - 所有对配置文件的写操作必须通过备份器事务，确保提供 `.bak` 与回滚路径。
 - 详情请查阅 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 

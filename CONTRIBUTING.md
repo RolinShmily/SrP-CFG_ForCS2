@@ -24,23 +24,23 @@ issues, follow the [security policy](SECURITY.md) instead of opening a public is
 | Feature or mode module | `config/srp-cfg/features/**`, `config/srp-cfg/modes/**` |
 | Video template | `config/video/**` |
 | Map guide (KV3 annotations) | `config/annotations/**` |
-| Core logic, parsers, transactions | `app/core/**` |
-| `srpcfg` CLI | `app/cli/**` |
-| Desktop app (Qt 6 / QML) | `app/gui/**` |
+| Core logic, parsers, transactions | `src/core/**` |
+| `srpcfg` CLI | `src/cli/**` |
+| Desktop app (Qt 6 / QML) | `src/gui/**` |
 | Website and docs | `website/**`, `docs/**` |
 | Audit and packaging scripts | `scripts/**` |
 | Translation | Any `*.md` file with a `.zh-CN.md` (or English) counterpart |
 
 Adding a preset, feature, mode, or map guide usually needs **no C++ or QML change** —
 each package carries a `catalog.json` that drives the CLI lists, GUI cards, and editor
-file options. See [`docs/CONFIG_CATALOG.md`](docs/CONFIG_CATALOG.md).
+file options. See [`docs/reference/CONFIG_CATALOG.md`](docs/reference/CONFIG_CATALOG.md).
 
 ## Environment Setup
 
 **Prerequisites**
 
 - CMake 3.21+ and a C++17 compiler (MSVC 2022 on Windows, GCC/Clang elsewhere).
-- Qt 6.8 with `qtshadertools` — only for `app/gui`. Automated builds use
+- Qt 6.8 with `qtshadertools` — only for `src/gui`. Automated builds use
   `win64_msvc2022_64` on Windows.
 - Node.js 22+ and pnpm 11.3 — only for `website/` and the release scripts.
 - Python 3.12 — only for the audit/packaging scripts, which use the standard library.
@@ -69,7 +69,7 @@ cmake --preset release-msvc
 cmake --build --preset release-msvc
 ```
 
-`app/gui/3rdparty/HuskarUI` is a submodule — clone with `--recurse-submodules`, or run
+`src/gui/3rdparty/HuskarUI` is a submodule — clone with `--recurse-submodules`, or run
 `git submodule update --init --recursive` before configuring the GUI.
 
 Release packaging (`installer/`, portable ZIPs) is out of scope for most
@@ -107,17 +107,17 @@ This is where most contributions land, and where correctness matters most.
 
 ## Ground Rules for Code
 
-- **Respect the boundaries.** `app/core` is C++17 with no Qt dependency; `app/cli` is a
-  thin front-end over it; `app/gui` adds Qt/HuskarUI presentation only. UI code must not
+- **Respect the boundaries.** `src/core` is C++17 with no Qt dependency; `src/cli` is a
+  thin front-end over it; `src/gui` adds Qt/HuskarUI presentation only. UI code must not
   gain filesystem or parsing logic, and core code must not depend on QML.
 - **All configuration writes go through the backup transaction system.** Never write
   into the game directory directly: stage, diff, then commit — and restore the working
   copy on failure.
 - **Do not widen the network surface.** Package manifests and archives are fetched from
   `https://cfg.srprolin.com` only, over HTTPS, without redirects, with size and SHA-256
-  validation. See [`docs/CONFIG_PACKAGES_AND_MEDIA.md`](docs/CONFIG_PACKAGES_AND_MEDIA.md)
-  and [`docs/BOUNDARY_CONDITIONS.md`](docs/BOUNDARY_CONDITIONS.md).
-- **Add tests with the change.** Core behaviour belongs in `app/core/tests/`
+  validation. See [`docs/reference/CONFIG_PACKAGES_AND_MEDIA.md`](docs/reference/CONFIG_PACKAGES_AND_MEDIA.md)
+  and [`docs/reference/BOUNDARY_CONDITIONS.md`](docs/reference/BOUNDARY_CONDITIONS.md).
+- **Add tests with the change.** Core behaviour belongs in `src/core/tests/`
   (CTest), website logic in `website/tests/*.test.mjs`, package rules in
   `scripts/test_website_packages.py`.
 
@@ -149,7 +149,7 @@ python3 scripts/package-website.py
 node scripts/collect-licenses.mjs
 ```
 
-If you touched `app/gui`, build the desktop target with Qt 6.8 (see above); CI builds it
+If you touched `src/gui`, build the desktop target with Qt 6.8 (see above); CI builds it
 on Windows with MSVC 2022 and does not run QML tests.
 
 If you edit anything under `.github/workflows/`, run

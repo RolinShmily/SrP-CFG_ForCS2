@@ -2,8 +2,8 @@ param([string]$BuildDir = 'build-gui', [string]$Configuration = 'Release', [Para
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $build = if ([IO.Path]::IsPathRooted($BuildDir)) { $BuildDir } else { Join-Path $repo $BuildDir }
-$exe = Join-Path $build "app/gui/$Configuration/srp_gui.exe"
-if (!(Test-Path $exe)) { $exe = Join-Path $build 'app/gui/srp_gui.exe' }
+$exe = Join-Path $build "src/gui/$Configuration/srp_gui.exe"
+if (!(Test-Path $exe)) { $exe = Join-Path $build 'src/gui/srp_gui.exe' }
 if (!(Test-Path $exe)) { throw 'Build the GUI first: cmake --preset windows-msvc; cmake --build --preset release-msvc' }
 $cache = Get-Content (Join-Path $build 'CMakeCache.txt')
 $qtConfig = $cache | Where-Object { $_ -match '^Qt6_DIR:[^=]+=' } | Select-Object -First 1

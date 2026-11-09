@@ -23,23 +23,23 @@
 | 新特性或模式模块 | `config/srp-cfg/features/**`、`config/srp-cfg/modes/**` |
 | 画面模板 | `config/video/**` |
 | 地图指南（KV3 标注） | `config/annotations/**` |
-| 核心逻辑、解析器、事务 | `app/core/**` |
-| `srpcfg` 命令行工具 | `app/cli/**` |
-| 桌面端界面（Qt 6 / QML） | `app/gui/**` |
+| 核心逻辑、解析器、事务 | `src/core/**` |
+| `srpcfg` 命令行工具 | `src/cli/**` |
+| 桌面端界面（Qt 6 / QML） | `src/gui/**` |
 | 官网与文档 | `website/**`、`docs/**` |
 | 审计与打包脚本 | `scripts/**` |
 | 翻译 | 任意带 `.zh-CN.md`（或英文）镜像的 `*.md` |
 
 新增预设、特性、模式或地图指南通常**不需要改 C++ 或 QML** —— 每个包都携带
 `catalog.json`，程序据此生成 CLI 列表、GUI 卡片与编辑器文件选项。
-参见 [`docs/CONFIG_CATALOG.md`](docs/CONFIG_CATALOG.md)。
+参见 [`docs/reference/CONFIG_CATALOG.md`](docs/reference/CONFIG_CATALOG.md)。
 
 ## 环境搭建
 
 **环境要求**
 
 - CMake 3.21+ 与 C++17 编译器（Windows 用 MSVC 2022，其他平台 GCC / Clang）。
-- Qt 6.8 及 `qtshadertools` —— 仅构建 `app/gui` 需要；自动化构建在 Windows 上使用
+- Qt 6.8 及 `qtshadertools` —— 仅构建 `src/gui` 需要；自动化构建在 Windows 上使用
   `win64_msvc2022_64`。
 - Node.js 22+ 与 pnpm 11.3 —— 仅 `website/` 与发布脚本需要。
 - Python 3.12 —— 仅审计 / 打包脚本需要，且只依赖标准库。
@@ -68,7 +68,7 @@ cmake --preset release-msvc
 cmake --build --preset release-msvc
 ```
 
-`app/gui/3rdparty/HuskarUI` 是 submodule —— 请以 `--recurse-submodules` 克隆，
+`src/gui/3rdparty/HuskarUI` 是 submodule —— 请以 `--recurse-submodules` 克隆，
 或先执行 `git submodule update --init --recursive` 再配置 GUI。
 
 发布打包（`installer/`、便携 ZIP）不在常规贡献范围内，详见
@@ -103,16 +103,16 @@ cmake --build --preset release-msvc
 
 ## 代码贡献铁律
 
-- **严守职责边界。** `app/core` 为不依赖 Qt 的 C++17 纯逻辑层；`app/cli` 只是它的
-  薄前端；`app/gui` 只负责 Qt / HuskarUI 呈现。界面层不得引入文件系统或解析逻辑，
+- **严守职责边界。** `src/core` 为不依赖 Qt 的 C++17 纯逻辑层；`src/cli` 只是它的
+  薄前端；`src/gui` 只负责 Qt / HuskarUI 呈现。界面层不得引入文件系统或解析逻辑，
   核心层不得依赖 QML。
 - **所有配置写入必须走备份事务。** 禁止直接写入游戏目录：先落暂存区、展示差异、
   再提交；失败时恢复工作副本。
 - **不得扩大联网面。** 配置清单与压缩包只从 `https://cfg.srprolin.com` 获取，
   仅走 HTTPS、不跟随重定向，并校验大小与 SHA-256。参见
-  [`docs/CONFIG_PACKAGES_AND_MEDIA.md`](docs/CONFIG_PACKAGES_AND_MEDIA.md) 与
-  [`docs/BOUNDARY_CONDITIONS.md`](docs/BOUNDARY_CONDITIONS.md)。
-- **改行为就要带测试。** 核心逻辑放在 `app/core/tests/`（CTest），
+  [`docs/reference/CONFIG_PACKAGES_AND_MEDIA.md`](docs/reference/CONFIG_PACKAGES_AND_MEDIA.md) 与
+  [`docs/reference/BOUNDARY_CONDITIONS.md`](docs/reference/BOUNDARY_CONDITIONS.md)。
+- **改行为就要带测试。** 核心逻辑放在 `src/core/tests/`（CTest），
   官网逻辑放在 `website/tests/*.test.mjs`，包规则放在
   `scripts/test_website_packages.py`。
 
@@ -143,7 +143,7 @@ python3 scripts/package-website.py
 node scripts/collect-licenses.mjs
 ```
 
-若改动了 `app/gui`，请用 Qt 6.8 构建桌面端目标（见上）；CI 在 Windows + MSVC 2022
+若改动了 `src/gui`，请用 Qt 6.8 构建桌面端目标（见上）；CI 在 Windows + MSVC 2022
 上构建该目标，但不运行 QML 测试。
 
 若改动了 `.github/workflows/` 下的任何文件，请用

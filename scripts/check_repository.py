@@ -93,9 +93,6 @@ def main():
     # 5. Guard against lingering legacy artifacts
     legacy_markers = [
         "src-tauri",
-        "app/desktop",
-        "app/website",
-        "app/shared",
     ]
     for marker in legacy_markers:
         p = repo_root / marker

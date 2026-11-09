@@ -86,7 +86,7 @@ jobs:
           # ==========================================
           $cliDir = "dist/srp-cfg-$tag-windows-x64-cli"
           New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
-          Copy-Item "build/app/cli/srpcfg.exe" -Destination "$cliDir/srpcfg.exe"
+          Copy-Item "build/src/cli/srpcfg.exe" -Destination "$cliDir/srpcfg.exe"
           New-Item -ItemType Directory -Path "$cliDir/skills" -Force | Out-Null
           Copy-Item "skills/srpcfg-cli" -Destination "$cliDir/skills/srpcfg-cli" -Recurse
           Copy-Item "$($crt.FullName)/*.dll" -Destination $cliDir
@@ -104,8 +104,8 @@ jobs:
           # ==========================================
           $guiDir = "dist/srp-cfg-$tag-windows-x64-gui"
           New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
-          Copy-Item "build/app/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
-          Copy-Item "build/app/cli/srpcfg.exe" -Destination "$guiDir/srpcfg.exe"
+          Copy-Item "build/src/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
+          Copy-Item "build/src/cli/srpcfg.exe" -Destination "$guiDir/srpcfg.exe"
           New-Item -ItemType Directory -Path "$guiDir/skills" -Force | Out-Null
           Copy-Item "skills/srpcfg-cli" -Destination "$guiDir/skills/srpcfg-cli" -Recurse
           Copy-Item "$($crt.FullName)/*.dll" -Destination $guiDir
@@ -130,7 +130,7 @@ jobs:
           Copy-Item "build/HuskarUI/qml/HuskarUI" -Destination "$guiDir/qml/HuskarUI" -Recurse
 
           # 自动收集 Qt 运行时与 QML 模块依赖
-          & "$qtBin/windeployqt.exe" --qmldir "app/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --compiler-runtime "$guiDir/SrP-CFG.exe"
+          & "$qtBin/windeployqt.exe" --qmldir "src/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --compiler-runtime "$guiDir/SrP-CFG.exe"
           if ($LASTEXITCODE -ne 0) { throw 'Qt runtime deployment failed' }
           foreach ($module in @('Basic', 'Impl')) {
               if (!(Test-Path "$guiDir/qml/HuskarUI/$module/qmldir")) { throw "Missing deployed HuskarUI module: $module" }

@@ -24,4 +24,4 @@ if(SRP_BUILD_GUI AND WIN32 AND NOT CMAKE_PREFIX_PATH AND NOT Qt6_ROOT AND NOT DE
         message(STATUS "Auto-detected Qt6 at: ${LATEST_QT}")
     endif()
 endif()
-add_subdirectory(app)
+add_subdirectory(src)
