@@ -35,7 +35,7 @@
 
 ## 版本与设置存储
 
-顶层 CMake 的 SRP_APP_VERSION 默认为 3.4.6；Release 标签构建传入去 v 的标签版本。core applicationVersion、GUI applicationVersion、关于显示及 CLI version 共享同一来源。
+顶层 CMake 的 SRP_APP_VERSION 默认为 3.4.7；Release 标签构建传入去 v 的标签版本。core applicationVersion、GUI applicationVersion、关于显示及 CLI version 共享同一来源。
 
 设置是用户级 QSettings INI（SrP/SrP-CFG），包含 `ui/language`、`ui/darkMode`、`ui/fontFamily`；不是游戏配置，不放入暂存库。保存同步失败时不会应用新值。测试可传入独立 INI 文件，避免修改真实用户偏好。CLI 语言由 `--en` / `--zh` 指定，与 GUI 偏好独立。
 
