@@ -90,7 +90,7 @@ ctest --preset core
 `release.yml` 在 `windows-latest` 上安装 MSVC、Ninja 1.11.1、Inno Setup 6 与 Qt 6.8.0（`win64_msvc2022_64` + `qtshadertools`），用 Ninja 配置并把 tag 版本写入 `-DSRP_APP_VERSION=`，构建后先跑 `ctest`，再产出三类产物：
 
 1. `srp-cfg-<tag>-windows-x64-cli.zip`：`srpcfg.exe` + `config/` + `skills/srpcfg-cli` + MSVC 运行库 + 许可与 README。
-2. `srp-cfg-<tag>-windows-x64-gui.zip`：`SrP-CFG.exe`（由 `srp_gui.exe` 改名）+ `srpcfg.exe` + `config/` + `skills/srpcfg-cli` + HuskarUI 的 DLL 与 `qml/HuskarUI/{Basic,Impl}`；`windeployqt --qmldir src/gui/qml --qmlimport build/HuskarUI/qml` 补齐 Qt 运行时，随后 `scripts/test-portable.ps1` 在剥离 Qt/构建树路径的环境变量下验证 PE 子系统（GUI=2、CLI=3）、必需文件与可运行性。
+2. `srp-cfg-<tag>-windows-x64-gui.zip`：`SrP-CFG.exe`（由 `srp_gui.exe` 改名）+ `srpcfg.exe` + `config/` + `skills/srpcfg-cli` + HuskarUI 的 DLL 与 `qml/HuskarUI/{Basic,Impl}`；`windeployqt --no-opengl-sw --qmldir src/gui/qml --qmlimport build/HuskarUI/qml` 补齐 Qt 运行时，随后删除冗余的 `vc_redist.x64.exe` 与 `opengl32sw.dll`（本地 VC 运行库与 D3D11 后端已覆盖），再由 `scripts/test-portable.ps1` 在剥离 Qt/构建树路径的环境变量下验证 PE 子系统（GUI=2、CLI=3）、必需文件与可运行性。
 3. `srp-cfg-<tag>-windows-x64-setup.exe`：`installer/installer.iss`（Inno Setup）。脚本接受 `/DMyAppVersion`、`/DSourceDir`、`/DOutputDir`，`PrivilegesRequired=lowest` 并允许对话框提权，提供中英双语向导、桌面图标任务与安装后启动；安装内容即第 2 项目录的整树复制。
 
 最后生成 `dist/latest.json`（`version`、`tag`、`published_at`、`gui_zip_url`、`gui_zip_sha256`、`setup_exe_url`、`setup_exe_sha256`、`notes_zh`、`notes_en`），与三个产物一起由 `softprops/action-gh-release` 发布（仅 tag 触发时）。

@@ -130,8 +130,12 @@ jobs:
           Copy-Item "build/HuskarUI/qml/HuskarUI" -Destination "$guiDir/qml/HuskarUI" -Recurse
 
           # 自动收集 Qt 运行时与 QML 模块依赖
-          & "$qtBin/windeployqt.exe" --qmldir "src/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --compiler-runtime "$guiDir/SrP-CFG.exe"
+          & "$qtBin/windeployqt.exe" --qmldir "src/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
           if ($LASTEXITCODE -ne 0) { throw 'Qt runtime deployment failed' }
+          # The local VC runtime DLLs are already deployed; the 18 MB redist installer is redundant.
+          Remove-Item "$guiDir/vc_redist.x64.exe" -Force -ErrorAction SilentlyContinue
+          # D3D11 is the Windows Quick backend; the software OpenGL fallback is unused.
+          Remove-Item "$guiDir/opengl32sw.dll" -Force -ErrorAction SilentlyContinue
           foreach ($module in @('Basic', 'Impl')) {
               if (!(Test-Path "$guiDir/qml/HuskarUI/$module/qmldir")) { throw "Missing deployed HuskarUI module: $module" }
           }
