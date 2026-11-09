@@ -23,8 +23,11 @@ Item {
     Connections {
         target: HusTheme
         function onDarkModeChanged() {
-            PresetsController.updateTheme(HusTheme.isDark);
+            if (presetsPageRoot.visible) PresetsController.updateTheme(HusTheme.isDark);
         }
+    }
+    onVisibleChanged: {
+        if (visible) PresetsController.updateTheme(HusTheme.isDark);
     }
 
     Connections {

@@ -20,7 +20,7 @@ MediaController::MediaController(bool video, QObject* parent) : QObject(parent),
     if (auto* overview = OverviewController::instance()) {
         connect(overview,&OverviewController::detectionChanged,this,&MediaController::refresh);
         connect(overview,&OverviewController::accountChanged,this,[this]{emit stateChanged();});
-        connect(overview,&OverviewController::languageChanged,this,[this]{emit stateChanged();});
+        connect(overview,&OverviewController::languageChanged,this,[this]{m_optionsDirty=true;m_guidesDirty=true;emit stateChanged();});
     }
     refreshCatalog();
     load();
@@ -37,6 +37,7 @@ void MediaController::refreshCatalog() {
         else *existing = m_guides[m_index];
     }
     m_guides = std::move(next); m_index = 0;
+    m_guidesDirty = true;
     for (int i=0;i<static_cast<int>(m_guides.size());++i) if(m_guides[i].id==selected)m_index=i;
     if (previousIds != guideIds()) emit catalogChanged();
 }
@@ -65,6 +66,7 @@ void MediaController::load() {
     m_saved = m_content;
     m_baseContent = srp::core::packageFileBaseline(packageId().toStdString(),relativeFile().toStdString());
     m_baseVersion = srp::core::inspectPackageFile(packageId().toStdString(),relativeFile().toStdString()).baseVersion;
+    m_optionsDirty = true; m_guidesDirty = true;
     watch(); if (m_content != previous) emit editorContentChanged(); emit stateChanged();
 }
 void MediaController::refresh() {
@@ -94,6 +96,7 @@ QVariantList MediaController::availableFiles() const {
     return files;
 }
 QVariantList MediaController::options() const {
+    if (!m_optionsDirty) return m_optionsCache;
     QVariantList result; const auto parsed = srp::core::parseVideoConfig(m_content.toStdString());
     for (const auto& option : srp::core::videoOptions()) {
         QVariantList choices; int index = -1; std::string current;
@@ -105,9 +108,11 @@ QVariantList MediaController::options() const {
         if (index < 0 && !current.empty()) { index = static_cast<int>(choices.size()); choices.append(QVariantMap{{"label",QString::fromStdString(current)},{"value",QString::fromStdString(current)}}); }
         result.append(QVariantMap{{"key",QString::fromStdString(option.key)},{"label",trKey(option.label)},{"choices",choices},{"index",index}});
     }
+    m_optionsCache = result; m_optionsDirty = false;
     return result;
 }
 QVariantList MediaController::guides() const {
+    if (!m_guidesDirty) return m_guidesCache;
     QVariantList result;
     const auto directory = annotationDirectory().toStdString();
     for (const auto& guide : m_guides) {
@@ -115,6 +120,7 @@ QVariantList MediaController::guides() const {
         result.append(QVariantMap{{"id",QString::fromStdString(guide.id)},{"name",QString::fromStdString(guide.name)},
             {"installed",state.installed},{"matches",state.matches},{"command",QString::fromStdString("annotation_load "+guide.directory)}});
     }
+    m_guidesCache = result; m_guidesDirty = false;
     return result;
 }
 bool MediaController::outdated() const { return isEditorDirty() ? m_baseVersion != srp::core::packageVersion(packageId().toStdString()) : srp::core::inspectPackageFile(packageId().toStdString(),relativeFile().toStdString()).outdated; }
@@ -125,7 +131,7 @@ bool MediaController::editable() {
     return true;
 }
 bool MediaController::clean() { return !isEditorDirty() || report(false,"media.save_first"); }
-void MediaController::updateEditorContent(const QString& text) { if (m_content == text) return; m_content=text; emit stateChanged(); }
+void MediaController::updateEditorContent(const QString& text) { if (m_content == text) return; m_content=text; m_optionsDirty=true; emit stateChanged(); }
 bool MediaController::saveCurrentFile() {
     if (!editable()) return false;
     refresh();
@@ -148,7 +154,7 @@ void MediaController::setSelectedFileIndex(int index) {
 void MediaController::setOption(const QString& key,const QString& value) {
     if (!m_video || !editable()) return;
     std::string changed;const auto result=srp::core::changeVideoOption(m_content.toStdString(),key.toStdString(),value.toStdString(),changed);
-    if(!result.success){report(false,result.error);return;}m_content=QString::fromStdString(changed);emit editorContentChanged();emit stateChanged();
+    if(!result.success){report(false,result.error);return;}m_content=QString::fromStdString(changed);m_optionsDirty=true;emit editorContentChanged();emit stateChanged();
 }
 void MediaController::applyVideo() {
     if (!m_video || !editable() || !clean()) return;
@@ -162,7 +168,7 @@ void MediaController::deployGuides(const QStringList& ids,bool remove) {
     std::vector<std::string> selected; for (const auto& id : ids) selected.push_back(id.toStdString());
     const auto result = srp::core::operateAnnotationGuides(selected,directory.toStdString(),remove);
     if (!result.success) { emit stateChanged(); report(false,result.error); return; }
-    emit stateChanged();emit actionCompleted();report(true,remove ? "annotations.removed" : "annotations.deployed");
+    m_guidesDirty=true;emit stateChanged();emit actionCompleted();report(true,remove ? "annotations.removed" : "annotations.deployed");
 }
 void MediaController::attachHighlighter(QQuickTextDocument* document,bool dark) { if(!document)return;delete m_highlighter.data();m_highlighter=new Cs2CfgHighlighter(document->textDocument());m_highlighter->setStructuredMode(true);m_highlighter->setDarkTheme(dark); }
 void MediaController::updateTheme(bool dark) { if(m_highlighter)m_highlighter->setDarkTheme(dark); }

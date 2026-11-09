@@ -72,4 +72,6 @@ private:
     QPointer<Cs2CfgHighlighter> m_highlighter;
     QFileSystemWatcher m_watcher;
     QTimer m_debounce;
+    mutable QVariantList m_optionsCache, m_guidesCache;
+    mutable bool m_optionsDirty = true, m_guidesDirty = true;
 };

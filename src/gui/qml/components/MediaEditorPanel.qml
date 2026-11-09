@@ -7,6 +7,7 @@ Rectangle {
     id: panel
     required property var controller
     property bool pageVisible: visible
+    onPageVisibleChanged: if (pageVisible) panel.controller.updateTheme(HusTheme.isDark)
     Shortcut {
         sequence: "Ctrl+S"
         enabled: panel.pageVisible && panel.controller.isEditorDirty
@@ -15,7 +16,7 @@ Rectangle {
     function t(key) { return OverviewController.tr(key, OverviewController.currentLang); }
     Connections {
         target: HusTheme
-        function onDarkModeChanged() { panel.controller.updateTheme(HusTheme.isDark); }
+        function onDarkModeChanged() { if (panel.pageVisible) panel.controller.updateTheme(HusTheme.isDark); }
     }
     color: MetaTheme.cardBg
     border.color: MetaTheme.cardBorder

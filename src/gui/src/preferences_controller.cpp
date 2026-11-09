@@ -31,6 +31,10 @@ QString PreferencesController::language() const {return srp::core::currentLangua
 QString PreferencesController::storePath() const {return QDir::toNativeSeparators(QString::fromStdString(srp::core::packageStoreRoot()));}
 void PreferencesController::setDarkMode(bool dark){
     if(m_darkMode==dark)return;
+    // Theme changes touch every bound color. Disable HuskarUI's color tweens for
+    // the swap so dozens of hidden controls do not animate at the same time.
+    const bool animations=HusTheme::instance()->animationEnabled();
+    HusTheme::instance()->setAnimationEnabled(false);
     m_darkMode=dark;
     HusTheme::instance()->setDarkMode(dark?HusTheme::DarkMode::Dark:HusTheme::DarkMode::Light);
     QSettings settings(m_settingsFile.isEmpty()?QSettings(QSettings::IniFormat,QSettings::UserScope,"SrP","SrP-CFG").fileName():m_settingsFile,QSettings::IniFormat);
@@ -38,8 +42,10 @@ void PreferencesController::setDarkMode(bool dark){
     if(settings.status()!=QSettings::NoError){
         m_darkMode=!dark;
         HusTheme::instance()->setDarkMode(m_darkMode?HusTheme::DarkMode::Dark:HusTheme::DarkMode::Light);
+        HusTheme::instance()->setAnimationEnabled(animations);
         emit messageNotify(false,translated("preferences.save_failed"));return;
     }
+    HusTheme::instance()->setAnimationEnabled(animations);
     emit preferencesChanged();
 }
 QVariantList PreferencesController::fontChoices(const QString& search) const {

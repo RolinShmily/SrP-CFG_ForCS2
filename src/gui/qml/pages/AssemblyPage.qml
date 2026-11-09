@@ -41,11 +41,16 @@ Item {
         const route = y >= userSection.y ? "assembly_usercfg" : y >= modesSection.y ? "assembly_modes" : y >= featuresSection.y ? "assembly_features" : "assembly_baseline";
         if (route !== activeSection) { activeSection = route; sectionChanged(route); }
     }
-    onVisibleChanged: if (visible) AssemblyController.refresh()
+    onVisibleChanged: {
+        if (visible) {
+            AssemblyController.refresh();
+            AssemblyController.updateTheme(HusTheme.isDark);
+        }
+    }
     Component.onCompleted: Qt.callLater(function() { if (initialSection.startsWith("assembly_")) navigateTo(initialSection); })
     Connections {
         target: HusTheme
-        function onDarkModeChanged() { AssemblyController.updateTheme(HusTheme.isDark); }
+        function onDarkModeChanged() { if (page.visible) AssemblyController.updateTheme(HusTheme.isDark); }
     }
     Connections {
         target: AssemblyController
