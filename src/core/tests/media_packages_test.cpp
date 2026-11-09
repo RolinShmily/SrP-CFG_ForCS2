@@ -36,6 +36,8 @@ int main(int argc,char** argv){
   const auto videoPath=srp::core::packageFilePath("video","cs2_video.txt");const auto video=read(fs::u8path(videoPath));
   require(srp::core::parseVideoConfig(video).success,"bundled video parses");
   std::string changed;require(srp::core::changeVideoOption(video,"setting.msaa_samples","2",changed).success,"structured option change");
+  std::string tenSixteen;require(srp::core::changeVideoOption(video,"resolution","1920x1200",tenSixteen).success,"16:10 resolution option accepted");
+  require(srp::core::parseVideoConfig(tenSixteen).values.at("resolution")=="1920x1200","16:10 resolution round-trips");
   require(srp::core::savePackageFile("video","cs2_video.txt",changed).success,"save staged video");
   require(srp::core::inspectPackageFile("video","cs2_video.txt").modified,"saved modification marker");
   require(srp::core::readPackageFile("video","cs2_video.txt")==changed,"staged read API returns saved bytes");
