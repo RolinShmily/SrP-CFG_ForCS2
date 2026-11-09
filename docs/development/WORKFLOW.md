@@ -42,7 +42,7 @@ refactor(core): return i18n keys instead of formatted messages
 唯一事实来源是根 `CMakeLists.txt`：
 
 ```cmake
-set(SRP_APP_VERSION "3.4.4" CACHE STRING "Application version")
+set(SRP_APP_VERSION "3.4.5" CACHE STRING "Application version")
 if(NOT SRP_APP_VERSION MATCHES "^(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)$")
     message(FATAL_ERROR "SRP_APP_VERSION must be a stable major.minor.patch version")
 endif()
