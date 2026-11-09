@@ -138,7 +138,7 @@ $p.ExitCode   # 期望 0
 便携包整体验证（发布前必跑，需要已打包的目录）：
 
 ```powershell
-scripts/test-portable.ps1 -PackageDir dist/srp-cfg-v3.4.7-windows-x64-gui -Version 3.4.7
+scripts/test-portable.ps1 -PackageDir dist/srp-cfg-v3.4.8-windows-x64-gui -Version 3.4.8
 ```
 
 它会断言 PE 子系统（GUI=2 无控制台、CLI=3 控制台）、必需文件、隔离 `PATH`/`LOCALAPPDATA` 下的 `srpcfg version` 输出、以及在临时目录里复制的副本仍能截图成功。

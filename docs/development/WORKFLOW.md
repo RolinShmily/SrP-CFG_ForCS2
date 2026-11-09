@@ -42,7 +42,7 @@ refactor(core): return i18n keys instead of formatted messages
 唯一事实来源是根 `CMakeLists.txt`：
 
 ```cmake
-set(SRP_APP_VERSION "3.4.7" CACHE STRING "Application version")
+set(SRP_APP_VERSION "3.4.8" CACHE STRING "Application version")
 if(NOT SRP_APP_VERSION MATCHES "^(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)$")
     message(FATAL_ERROR "SRP_APP_VERSION must be a stable major.minor.patch version")
 endif()
@@ -117,7 +117,7 @@ actionlint -color        # 改动过 .github/workflows/** 时
 发布不是“合并后自动”，而是显式的 tag 流程：
 
 1. 发布 PR：同步 `SRP_APP_VERSION` 与三个 `VERSION.txt`，更新 `docs/**` 中受影响的版本描述，跑完第 5 节最小集。
-2. 打 tag 并推送：`git tag v3.4.7 && git push origin v3.4.7`（仅维护者；tag 形如 `vX.Y.Z`）。
+2. 打 tag 并推送：`git tag v3.4.8 && git push origin v3.4.8`（仅维护者；tag 形如 `vX.Y.Z`）。
 3. `release.yml` 自动完成：Ninja Release 构建 → `ctest` → `dist/srp-cfg-vX.Y.Z-windows-x64-cli.zip`、`-gui.zip`、`-setup.exe` → `scripts/test-portable.ps1` 校验便携包 → `dist/latest.json`（含 `gui_zip_sha256`、`setup_exe_sha256`）→ GitHub Release。
 4. 网站与配置包另行由 `deploy-worker.yml` 部署；客户端更新提示读 `latest.json`（机制见 [APP_DIALOGS_AND_UPDATES.md](../reference/APP_DIALOGS_AND_UPDATES.md)）。
 5. 打包脚本、Inno Setup 安装器（`installer/installer.iss`）与本地试装细节见 [构建与发布](../architecture/BUILD_AND_RELEASE.md)。发布/签名操作仅限维护者，普通贡献者不需要也不应该推送 tag。
