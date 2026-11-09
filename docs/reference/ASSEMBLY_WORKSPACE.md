@@ -6,11 +6,11 @@ Valve 基线、Features、Modes、用户配置组成同一个持续存在的工�
 
 最右侧 `HusScrollBar` 控制左侧内容滚动；右侧编辑器固定，文件内容单独滚动。展开按钮隐藏左侧操作区，编辑器占满内容区；再次点击恢复双栏，草稿、光标和缩放状态保留。点击用户配置锚点打开 `user/custom.cfg`，不自动展开。
 
-默认使用亮色主题；保留手动深色切换和 `--dark` 启动参数，不再随 Windows 主题改变应用主题。
+默认使用亮色主题；标题栏或设置页切换后写入 QSettings `ui/darkMode` 并持久化，`--dark` / `--light` 仅覆盖本次启动，不跟随 Windows 主题。
 
-- `app/core/include/srp/core/assembly.h` / `app/core/src/assembly.cpp`：模块目录、命令、状态、配置解析、装配、启动绑定计划、冲突和文件写入规则。
-- `app/cli/src/main.cpp`：调用 core，适用于自动化和手动操作。
-- `app/gui/src/assembly_controller.*`：编辑草稿、文件监控、安装/冲突确认、core 调用及状态通知。
+- `src/core/include/srp/core/assembly.h` / `src/core/src/assembly.cpp`：模块目录、命令、状态、配置解析、装配、启动绑定计划、冲突和文件写入规则。
+- `src/cli/src/main.cpp`：调用 core，适用于自动化和手动操作。
+- `src/gui/src/assembly_controller.*`：编辑草稿、文件监控、安装/冲突确认、core 调用及状态通知。
 - `AssemblyPage.qml` / `AssemblyModuleCard.qml`：布局、锚点、展示和事件转发；不解析或拼接写入 CFG。
 
 ## Features
@@ -74,7 +74,7 @@ srpcfg mode-unbind demo-hlae
 
 ```text
 cmake --build build-gui --config Release --target srp_gui srp_cli srp_config_tests
-build-gui/app/core/Release/srp_config_tests.exe
+build-gui/src/core/Release/srp_config_tests.exe
 ```
 
 核心测试使用临时目录，覆盖 Valve、特性、模式冲突和过期确认、复合绑定保留、用户层保护及备份失败。GUI 联动验证包括真实鼠标点击、固定编辑器、锚点滚动、手动全宽、草稿保护、文件编辑恢复、语言主题切换、Ctrl 滚轮与普通滚动。

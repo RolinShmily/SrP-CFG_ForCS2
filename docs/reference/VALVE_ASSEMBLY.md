@@ -54,7 +54,7 @@ srpcfg valve-unload --settings --en
 
 ```text
 cmake --build build-gui --config Release --target srp_config_tests
-build-gui/app/core/Release/srp_config_tests.exe
+build-gui/src/core/Release/srp_config_tests.exe
 ```
 
 测试创建临时目录，覆盖用户层保护、旧命令兼容、部分卸载、注释/字符串解析、CRLF/BOM、重复操作、20 份历史保留、备份失败、Windows 文件占用、重新安装及恢复默认，不修改真实游戏目录。
