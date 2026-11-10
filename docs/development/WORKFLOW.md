@@ -60,12 +60,15 @@ endif()
 
 | 工作流 | 触发 | 内容 |
 | --- | --- | --- |
-| `ci.yml` | push / PR 到 `main`，`workflow_dispatch` | `core`（Windows + Ubuntu：`SRP_BUILD_GUI=OFF`、`BUILD_TESTING=ON`、`cmake --build`、`ctest`，**含 `srpcfg_cli_skill`**）；`desktop`（Windows + Qt 6.8 `win64_msvc2022_64` + `qtshadertools`，`BUILD_TESTING=OFF` 只编译）；`website`（`pnpm install --frozen-lockfile --ignore-scripts` → `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm test` → `pnpm lint` → `collect-licenses.mjs` → `pnpm build`） |
-| `deploy-worker.yml` | push 到 `main`，且命中 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、`scripts/{package-website,test_website_packages}.py`、`scripts/collect-licenses.mjs`、`LICENSE`、`package.json`、`pnpm-lock.yaml`、`pnpm-workspace.yaml`、本工作流文件 | `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm --filter srp-cfg-website test/lint` → `collect-licenses.mjs` → 构建 → `wrangler deploy`（`wrangler@4.147.0` 固定版本） |
+| `ci.yml` | push / PR 到 `main`，`workflow_dispatch` | `core`（Windows + Ubuntu：`SRP_BUILD_GUI=OFF`、`BUILD_TESTING=ON`、`cmake --build`、`ctest`，**含 `srpcfg_cli_skill`**）；`desktop`（Windows + Qt 6.8 `win64_msvc2022_64` + `qtshadertools`，`BUILD_TESTING=OFF` 只编译）；`website`（`pnpm install --frozen-lockfile --ignore-scripts` → `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm --filter srp-cfg-website test` → `lint` → `licenses:collect` → `build`）；`console-data`（Console 数据单测、契约校验、索引生成） |
+| `deploy-worker.yml` | push 到 `main`，且命中 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、`scripts/{package-website,test_website_packages}.py`、`website/scripts/collect-licenses.mjs`、`LICENSE`、`package.json`、`pnpm-lock.yaml`、`pnpm-workspace.yaml`、本工作流文件 | `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm --filter srp-cfg-website test/lint` → `licenses:collect` → `build` → `wrangler deploy`（`wrangler@4.147.0` 固定版本） |
+| `update-console-data.yml` | 每天 02:00 UTC、手动 | 同步 GameTracking-CS2 → Workers AI 增量翻译 → 数据校验 → 生成 Console 索引 → 有变化才提交 `website/data/console`。需要 `CLOUDFLARE_AI_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` |
 | `release.yml` | tag `v[0-9]+.[0-9]+.[0-9]+`，`workflow_dispatch` | 校验 tag → 带子模块 checkout → Ninja 构建 → `ctest` → 打 CLI / GUI / Inno Setup 安装包 → `test-portable.ps1` → 生成含两个 SHA-256 的 `latest.json` → 发布 Release（**仅 tag 触发才真正发布**；`workflow_dispatch` 只跑构建与打包） |
 | `valve-upstream-drift.yml` | 每周日 02:00 UTC、手动 | `scripts/check_valve_baseline_drift.py`，发现偏差时创建或更新 issue |
 
-必需通过的检查：`ci.yml` 的 `core`（两个 OS）与 `website`。`desktop` 失败通常意味着 Qt/子模块或 QML 模块登记问题，同样必须修好再合并。
+必需通过的检查：`ci.yml` 的 `core`（两个 OS）、`website` 与 `console-data`。`desktop` 失败通常意味着 Qt/子模块或 QML 模块登记问题，同样必须修好再合并。
+
+Console 增量翻译的 GitHub Secrets：`CLOUDFLARE_AI_TOKEN`（Account → Workers AI → Read/Edit）与 `CLOUDFLARE_ACCOUNT_ID`；`GITHUB_TOKEN` 自动注入。部署继续使用 `CLOUDFLARE_API_TOKEN`（Workers Scripts Edit）+ `CLOUDFLARE_ACCOUNT_ID`，建议与 AI token 分开。
 
 本地对齐 CI 的最小集（提交前）：
 
@@ -73,13 +76,16 @@ endif()
 cmake --preset core && cmake --build --preset core && ctest --preset core
 python3 scripts/check_repository.py
 python3 scripts/test_website_packages.py
-pnpm test && pnpm lint && pnpm build
+pnpm --filter srp-cfg-website test
+pnpm --filter srp-cfg-website console:test
+pnpm --filter srp-cfg-website lint
+pnpm --filter srp-cfg-website build   # prebuild 会生成 Console 索引与 sitemap
 actionlint -color        # 改动过 .github/workflows/** 时
 ```
 
 - 动过 `src/gui` 还必须本地编译一次 GUI（CI 只证明「能编译」，不证明「界面对」）：`cmake --preset windows-msvc && cmake --build --preset release-msvc`，再按 [TESTING.md](TESTING.md) 第 5 节截图核对。
 - 动过 `.github/workflows/**` 必须跑 `actionlint`（同时会对每个 `run:` 块跑 `shellcheck`）。缩进、未加引号的变量、`${{ }}` 注入在发布时才会爆炸。
-- `deploy-worker.yml` 只在 `main` 上跑：合并到 `main` 即等于部署到生产站点。合入前确认 `pnpm build` 与许可证清单都是最新的。
+- `deploy-worker.yml` 只在 `main` 上跑：合并到 `main` 即等于部署到生产站点。合入前确认 `pnpm --filter srp-cfg-website build` 与许可证清单都是最新的。
 
 ## 6. 文档同步要求
 
@@ -105,7 +111,7 @@ actionlint -color        # 改动过 .github/workflows/** 时
 
 ## 7. 安全与依赖审计
 
-- Node 依赖：只允许 `pnpm install --frozen-lockfile --ignore-scripts`；`pnpm-lock.yaml` 必须与 `package.json` 同步提交，不手工编辑锁文件。新增包需要说明用途、体积、许可证，并同步 `THIRD_PARTY_NOTICES.md` + `licenses/`（`node scripts/collect-licenses.mjs` 生成物随 PR 更新）。
+- Node 依赖：只允许 `pnpm install --frozen-lockfile --ignore-scripts`；`pnpm-lock.yaml` 必须与 `package.json` 同步提交，不手工编辑锁文件。新增包需要说明用途、体积、许可证，并同步 `THIRD_PARTY_NOTICES.md` + `licenses/`（`pnpm --filter srp-cfg-website licenses:collect` 生成物随 PR 更新）。
 - Python 脚本仅用标准库；不要为了脚本方便引入 `pip` 依赖或全局安装工具。
 - 凭据：仓库不存放任何密钥。CI 只用两个 Secrets —— `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`（仅 `deploy-worker.yml` 使用），由 GitHub 注入；`GITHUB_TOKEN` 用于发布与 issue。本地 `.env*` 已被 `.gitignore` 忽略，不得提交；也不要把 token 写进 `wrangler.toml`、脚本默认值或日志。
 - 网络面不得扩大：配置包与归档只从 `https://cfg.srprolin.com` 获取，HTTPS、禁止重定向、校验大小与 SHA-256（见 [BOUNDARY_CONDITIONS.md](../reference/BOUNDARY_CONDITIONS.md)）。新增任何外部主机（CDN、统计、字体 API）都需要单独评审。

@@ -1,14 +1,5 @@
 {
   "name": "srp-cfg-monorepo",
-  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "pnpm --filter srp-cfg-website dev",
-    "build": "pnpm --filter srp-cfg-website build",
-    "lint": "pnpm --filter srp-cfg-website lint",
-    "test": "pnpm --filter srp-cfg-website test",
-    "preview": "pnpm --filter srp-cfg-website preview",
-    "licenses:collect": "node scripts/collect-licenses.mjs"
-  },
   "packageManager": "pnpm@11.3.0"
 }

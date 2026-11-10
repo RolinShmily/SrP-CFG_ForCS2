@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "SteamTracking/GameTracking-CS2",
+    "commit": "b73cfdeb35e48bb20a5e6b2edc8ee3aad14dcf39",
+    "fetchedAt": "2026-11-10T09:33:51Z",
+    "files": {
+      "convars": {
+        "path": "DumpSource2/convars.txt",
+        "sha256": "sha256:7b8e6217b5cbc2491540113f7cee0d5ec9cfedb880e24a5f43d84d9ac3ad3c06",
+        "bytes": 462984,
+        "records": 4339
+      },
+      "commands": {
+        "path": "DumpSource2/commands.txt",
+        "sha256": "sha256:4cc4dd236e8a8e9b6dadb348d206f14dd894dded9dca0859fc3ba19e987e0282",
+        "bytes": 126666,
+        "records": 1246
+      }
+    }
+  },
+  "counts": {
+    "total": 5585,
+    "convars": 4339,
+    "commands": 1246,
+    "withEnglish": 3348,
+    "withoutEnglish": 2237
+  }
+}

@@ -66,8 +66,23 @@ jobs:
       - run: python3 scripts/check_repository.py
       - run: python3 scripts/test_website_packages.py
       - run: python3 scripts/package-website.py
-      - run: pnpm test
-      - run: pnpm lint
-      - run: node scripts/collect-licenses.mjs
+      - run: pnpm --filter srp-cfg-website test
+      - run: pnpm --filter srp-cfg-website lint
+      - run: pnpm --filter srp-cfg-website licenses:collect
       - name: Build static website
-        run: pnpm build
+        run: pnpm --filter srp-cfg-website build
+
+  console-data:
+    name: Console data contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run console data unit tests
+        run: python3 -m unittest discover -s website/scripts/console -p "test_*.py"
+      - name: Validate console dataset
+        run: python3 website/scripts/console/validate.py
+      - name: Verify search index generation
+        run: python3 website/scripts/console/build_index.py --output "$RUNNER_TEMP/console-index.json"

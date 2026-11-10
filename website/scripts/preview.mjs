@@ -2,11 +2,11 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-const root = fileURLToPath(new URL('../out/', import.meta.url));
+const root = fileURLToPath(new URL('../build/client/', import.meta.url));
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
 const prefix = html.match(/href="([^"]*)\/assets\/[^"]+\.css"/)?.[1] || '';
 const port = Number(process.env.PORT || 4173);
-const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json; charset=utf-8', '.svg':'image/svg+xml', '.webp':'image/webp', '.png':'image/png', '.ico':'image/x-icon', '.woff2':'font/woff2', '.woff':'font/woff', '.zip':'application/zip' };
+const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json; charset=utf-8', '.data':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.webp':'image/webp', '.png':'image/png', '.ico':'image/x-icon', '.woff2':'font/woff2', '.woff':'font/woff', '.zip':'application/zip' };
 const server = createServer(async(req,res)=>{
   try {
     let pathname = decodeURIComponent(new URL(req.url || '/', 'http://localhost').pathname);
@@ -29,7 +29,11 @@ const server = createServer(async(req,res)=>{
     }
     res.writeHead(200,{'Content-Type':types[extname(file)] || 'application/octet-stream','Cache-Control':'no-cache'});res.end(await readFile(file));
   } catch(error) {
-    if(error.code==='ENOENT'){res.writeHead(404);res.end('Not found');}
+    if(error.code==='ENOENT'){
+      let body='Not found';
+      try { body=await readFile(resolve(root,'404.html'),'utf8'); } catch {}
+      res.writeHead(404,{'Content-Type':types['.html']});res.end(body);
+    }
     else{console.error(error);res.writeHead(503);res.end('Preview request unavailable');}
   }
 });

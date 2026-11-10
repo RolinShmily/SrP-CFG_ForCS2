@@ -1,4 +1,5 @@
 import { ArrowUp, ArrowUpRight, BookOpen, GitFork, PackageOpen, Rss, Scale } from "lucide-react";
+import { Link } from "react-router";
 import { useI18n } from "@/context/i18n-context";
 import { assetPath, REPOSITORY, RELEASES } from "@/lib/downloads";
 
@@ -15,10 +16,10 @@ export function Footer() {
       <div className="content-width">
         <div className="footer-main">
           <div className="footer-identity">
-            <a href="#overview" className="footer-brand">
+            <Link prefetch="intent" to="/#overview" className="footer-brand">
               <img src={assetPath("/app/icon.webp")} width="40" height="40" alt="" />
               <span>SrP-CFG<span className="text-cs-orange">.</span></span>
-            </a>
+            </Link>
             <p>{t.footer.description}</p>
           </div>
           <nav className="footer-links" aria-label={t.nav.product}>
@@ -36,9 +37,9 @@ export function Footer() {
           <a className="footer-license" href={`${REPOSITORY}/blob/main/LICENSE`} target="_blank" rel="noreferrer">
             <Scale size={16} aria-hidden="true" />{t.footer.license}<ArrowUpRight size={13} aria-hidden="true" />
           </a>
-          <a href="#overview" className="footer-top">
+          <Link prefetch="intent" to="/#overview" className="footer-top">
             {t.footer.top}<ArrowUp size={16} aria-hidden="true" />
-          </a>
+          </Link>
         </div>
       </div>
     </footer>

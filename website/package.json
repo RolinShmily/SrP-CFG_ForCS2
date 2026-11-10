@@ -4,11 +4,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir .ssr && node scripts/prerender.mjs",
+    "dev": "react-router dev",
+    "predev": "pnpm console:prepare && pnpm seo:build",
+    "prebuild": "pnpm console:prepare && pnpm seo:build",
+    "build": "react-router build",
     "preview": "node scripts/preview.mjs",
     "lint": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "licenses:collect": "node scripts/collect-licenses.mjs",
+    "seo:build": "node scripts/seo/build-sitemap.mjs",
+    "console:prepare": "python3 scripts/console/validate.py --allow-stale && python3 scripts/console/build_index.py",
+    "console:update": "python3 scripts/console/update.py",
+    "console:translate": "python3 scripts/console/translate.py",
+    "console:validate": "python3 scripts/console/validate.py",
+    "console:index": "python3 scripts/console/build_index.py",
+    "console:test": "python3 -m unittest discover -s scripts/console -p \"test_*.py\""
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
@@ -28,13 +38,15 @@
     "motion": "^13.4.4",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "tailwind-merge": "^3.7.0"
+    "react-router": "8.5.1",
+    "tailwind-merge": "^3.7.0",
+    "isbot": "^5"
   },
   "devDependencies": {
+    "@react-router/dev": "8.5.1",
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.2.1",
     "autoprefixer": "^10.6.1",
     "postcss": "^8.5.28",
     "tailwindcss": "^3.4.19",

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /assets/
+Disallow: /data/
+Disallow: /packages/
+Sitemap: https://cfg.srprolin.com/sitemap.xml

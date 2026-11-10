@@ -1,7 +1,7 @@
 export interface ScreenCopy { id: string; title: string; short: string; description: string; points: string[]; }
 export interface I18nDictionary {
-  nav: { product: string; showcase: string; assembly: string; download: string; skill: string; language: string; menu: string; close: string; skip: string };
-  hero: { eyebrow: string; title: string; highlight: string; description: string; download: string; explore: string; platform: string; floatingLabel: string; scroll: string };
+  nav: { product: string; showcase: string; assembly: string; download: string; console: string; skill: string; language: string; menu: string; close: string; skip: string };
+  hero: { eyebrow: string; title: string; highlight: string; description: string; download: string; explore: string; console: string; platform: string; floatingLabel: string; scroll: string };
   showcase: { eyebrow: string; title: string; description: string; previous: string; next: string; actual: string; screens: ScreenCopy[] };
   features: { eyebrow: string; title: string; description: string; items: { title: string; description: string; tag: string }[] };
   assembly: { eyebrow: string; title: string; highlight: string; description: string; layers: { title: string; description: string }[]; expand: string; collapse: string; note: string; codeLabel: string; diagram: string; modeHint: string };

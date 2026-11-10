@@ -50,9 +50,10 @@ ctest --preset core
 
 # Website: type-check, unit tests, static build
 pnpm install --frozen-lockfile --ignore-scripts
-pnpm test
-pnpm lint
-pnpm build
+pnpm --filter srp-cfg-website test
+pnpm --filter srp-cfg-website console:test
+pnpm --filter srp-cfg-website lint
+pnpm --filter srp-cfg-website build
 ```
 
 The Qt application is built through the configured presets. If Qt is not auto-detected
@@ -97,7 +98,7 @@ This is where most contributions land, and where correctness matters most.
 - **No generated files in a pull request.** `config/**` is the source of truth; this
   directory is packaged as-is by `scripts/package-website.py` and the release workflow.
   Do not hand-edit `website/public/third-party-licenses.txt`
-  (produced by `node scripts/collect-licenses.mjs`).
+  (produced by `pnpm --filter srp-cfg-website licenses:collect`).
 
 ## Ground Rules for Code
 
@@ -130,9 +131,10 @@ python3 scripts/check_repository.py
 python3 scripts/test_website_packages.py
 
 # 4. Website: unit tests, type-check, production build
-pnpm test
-pnpm lint
-pnpm build
+pnpm --filter srp-cfg-website test
+pnpm --filter srp-cfg-website console:test
+pnpm --filter srp-cfg-website lint
+pnpm --filter srp-cfg-website build
 ```
 
 If you touched the website's static output or the package layout, also run the packaging
@@ -140,7 +142,7 @@ steps CI runs:
 
 ```bash
 python3 scripts/package-website.py
-node scripts/collect-licenses.mjs
+pnpm --filter srp-cfg-website licenses:collect
 ```
 
 If you touched `src/gui`, build the desktop target with Qt 6.8 (see above); CI builds it

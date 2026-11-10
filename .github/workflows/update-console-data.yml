@@ -1,0 +1,83 @@
+name: Update Console Data
+
+on:
+  schedule:
+    # 每天 02:00 UTC（北京时间 10:00）
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force upstream sync even when the commit is unchanged'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: console-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Sync CS2 console facts and translations
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run console data unit tests
+        run: python3 -m unittest discover -s website/scripts/console -p "test_*.py"
+
+      - name: Sync upstream facts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            python3 website/scripts/console/update.py --force
+          else
+            python3 website/scripts/console/update.py
+          fi
+
+      - name: Pre-flight Workers AI translation
+        continue-on-error: true
+        env:
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python3 website/scripts/console/translate.py --backend workers-ai --preflight
+
+      - name: Translate new or changed records
+        continue-on-error: true
+        env:
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python3 website/scripts/console/translate.py --backend workers-ai
+
+      - name: Validate dataset
+        # A Workers AI outage must not block the upstream fact update. Stale
+        # translations become warnings here and are omitted from the index;
+        # PR CI still runs the strict validator without --allow-stale.
+        run: python3 website/scripts/console/validate.py --allow-stale
+
+      - name: Build search index
+        run: python3 website/scripts/console/build_index.py
+
+      - name: Commit data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add website/data/console
+          if git diff --cached --quiet; then
+            echo "No console data changes."
+            exit 0
+          fi
+          SHA=$(python3 -c "import json; print(json.load(open('website/data/console/metadata.json'))['upstream']['commit'][:12])")
+          git commit -m "chore(console): sync CS2 console data to ${SHA}"
+          git push

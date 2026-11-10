@@ -18,6 +18,7 @@
 | 新增或修改 CLI 命令 | [`reference/CLI_REFERENCE.md`](reference/CLI_REFERENCE.md) + [`development/TESTING.md`](development/TESTING.md) |
 | 修改 QML 页面 / 组件 / 动效 | [`design/DESIGN_SYSTEM.md`](design/DESIGN_SYSTEM.md) + [`design/UX_GUIDELINES.md`](design/UX_GUIDELINES.md) + [`design/COMPONENTS.md`](design/COMPONENTS.md) |
 | 调整配置包、视频或地图标注 | [`reference/CONFIG_PACKAGES_AND_MEDIA.md`](reference/CONFIG_PACKAGES_AND_MEDIA.md) |
+| 修改官网路由 / Console / SEO | [`architecture/WEBSITE.md`](architecture/WEBSITE.md) + [`website/scripts/console/README.md`](../website/scripts/console/README.md) |
 | 准备发布 / 打包 / CI | [`architecture/BUILD_AND_RELEASE.md`](architecture/BUILD_AND_RELEASE.md) + [`development/WORKFLOW.md`](development/WORKFLOW.md) |
 | 新增界面文案 | [`reference/I18N.md`](reference/I18N.md) |
 | 了解暂未实现或已知边界 | [`reference/BOUNDARY_CONDITIONS.md`](reference/BOUNDARY_CONDITIONS.md) |

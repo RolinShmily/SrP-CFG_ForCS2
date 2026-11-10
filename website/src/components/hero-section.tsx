@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useReducedEffects } from "@/lib/use-reduced-effects";
-import { ArrowDown, ArrowDownToLine, ArrowUpRight, Monitor } from "lucide-react";
+import { ArrowDown, ArrowDownToLine, ArrowUpRight, Monitor, SquareTerminal } from "lucide-react";
+import { Link } from "react-router";
 import { useI18n } from "@/context/i18n-context";
 import { assetPath } from "@/lib/downloads";
 
@@ -21,7 +22,7 @@ export function HeroSection() {
         <div className="eyebrow"><span className="status-dot" />{t.hero.eyebrow}</div>
         <h1>{t.hero.title}<br /><span>{t.hero.highlight}</span></h1>
         <p>{t.hero.description}</p>
-        <div className="button-row"><a className="button button-primary" href="#download"><ArrowDownToLine size={18} />{t.hero.download}</a><a className="button button-secondary" href="#showcase">{t.hero.explore}<ArrowUpRight size={18} /></a></div>
+        <div className="button-row"><Link className="button button-primary" to="/#download" prefetch="intent"><ArrowDownToLine size={18} />{t.hero.download}</Link><Link className="button button-secondary" to="/#showcase" prefetch="intent">{t.hero.explore}<ArrowUpRight size={18} /></Link><Link className="button button-console" to="/console" prefetch="intent"><SquareTerminal size={18} />{t.hero.console}</Link></div>
         <div className="hero-platform"><Monitor size={15} />{t.hero.platform}</div>
       </div>
       <div className="hero-stage" aria-label={t.hero.floatingLabel}>
@@ -40,6 +41,6 @@ export function HeroSection() {
         <div className="stage-label"><span className="status-dot" />{t.hero.floatingLabel}<span className="font-mono">Qt + HuskarUI</span></div>
       </div>
     </div>
-    <a href="#showcase" className="hero-scroll"><ArrowDown size={16} />{t.hero.scroll}<span>01 — 04</span></a>
+    <Link prefetch="intent" to="/#showcase" className="hero-scroll"><ArrowDown size={16} />{t.hero.scroll}<span>01 — 04</span></Link>
   </section>;
 }

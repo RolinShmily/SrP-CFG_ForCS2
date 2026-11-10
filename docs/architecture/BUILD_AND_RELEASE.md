@@ -78,8 +78,9 @@ ctest --preset core
 
 | 工作流 | 触发 | 职责 |
 | --- | --- | --- |
-| `ci.yml` | push/PR 到 `main`、手动 | 三个 job：`core`（windows + ubuntu 矩阵，`SRP_BUILD_GUI=OFF` 配置 → 构建 → `ctest`）、`desktop`（windows，Qt 6.8.0 + `qtshadertools` 子模块递归，构建 `srp_gui`，`BUILD_TESTING=OFF`，不跑测试）、`website`（Node 22 + pnpm 11.3.0，`pnpm install --frozen-lockfile --ignore-scripts` → 仓库检查/包校验/站点打包 → `pnpm test`、`pnpm lint` → 收集许可 → `pnpm build`） |
-| `deploy-worker.yml` | 推送到 `main` 且改动 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、相关脚本或工作流；手动 | 重新生成配置包与 `packages.json`，校验站点，收集第三方许可，构建静态站，用 `wrangler@4.147.0` 部署到 Cloudflare Worker（`wrangler.toml` 的 `[assets] directory = "./website/out"`） |
+| `ci.yml` | push/PR 到 `main`、手动 | 四个 job：`core`（windows + ubuntu 矩阵，`SRP_BUILD_GUI=OFF` 配置 → 构建 → `ctest`）、`desktop`（windows，Qt 6.8.0 + `qtshadertools` 子模块递归，构建 `srp_gui`，`BUILD_TESTING=OFF`，不跑测试）、`website`（Node 22 + pnpm 11.3.0，`pnpm install --frozen-lockfile --ignore-scripts` → 仓库检查/包校验/站点打包 → `pnpm --filter srp-cfg-website test`、`lint` → 收集许可 → `build`）、`console-data`（Python 单测 + 数据契约 + 索引生成） |
+| `deploy-worker.yml` | 推送到 `main` 且改动 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、相关脚本或工作流；手动 | 重新生成配置包与 `packages.json`，校验站点，收集第三方许可，构建 React Router 静态站，用 `wrangler@4.147.0` 部署到 Cloudflare Worker（`wrangler.toml` 的 `[assets] directory = "./website/build/client"`） |
+| `update-console-data.yml` | 每天 02:00 UTC、手动 | 同步 GameTracking-CS2 上游事实，Workers AI 增量翻译，校验数据并生成 Console 索引；数据有变化时提交 `website/data/console` |
 | `release.yml` | tag `v[0-9]+.[0-9]+.[0-9]+`、手动 | 见第 7 节 |
 | `valve-upstream-drift.yml` | 每周日 02:00 UTC、手动 | 运行 `scripts/check_valve_baseline_drift.py`，检测 Valve 基线 convar 漂移，必要时创建/更新 issue |
 
@@ -104,12 +105,12 @@ ctest --preset core
 | `scripts/check_repository.py` | 仓库完整性/发布就绪检查：版本一致性、`catalog.json`、声明文件、许可声明 |
 | `scripts/package-website.py` | 生成确定性配置 ZIP（`srp-cfg`、`video`、`annotations`、`srpcfg-cli`）与 `packages.json`，输出目录默认 `website/public` |
 | `scripts/test_website_packages.py` | 校验生成的包与清单（哈希、版本、路径） |
-| `scripts/collect-licenses.mjs` | 汇总前端依赖许可到站点 `third-party-licenses.txt` |
+| `website/scripts/collect-licenses.mjs` | 汇总前端依赖许可到站点 `third-party-licenses.txt` |
 | `scripts/check_valve_baseline_drift.py` | 抓取上游 Valve 基线并与仓库基线比对 |
 
 ## 9. website 与主程序的关系
 
-`website/` 是独立的 pnpm workspace 包（`srp-cfg-website`，React 19 + Vite + Tailwind），构建为纯静态资源并由 Cloudflare Worker 托管在 `cfg.srprolin.com`。它与 C++ 程序**没有编译期依赖**，只有两条运行期契约：
+`website/` 是独立的 pnpm workspace 包（`srp-cfg-website`，React 19 + React Router 8.5.1 Framework Mode + Vite 8 + Tailwind），使用 `ssr: false` + 构建期预渲染，输出纯静态资源并由 Cloudflare Worker 托管在 `cfg.srprolin.com`。路由、Console、SEO 与数据流水线详见 [WEBSITE.md](WEBSITE.md)。它与 C++ 程序**没有编译期依赖**，只有两条运行期契约：
 
 - `https://cfg.srprolin.com/packages.json` → `srp::core::packageManifestUrl()`，供 GUI/CLI 检查并下载配置包 ZIP。
 - `https://github.com/<repo>/releases/latest/download/latest.json` → `srp::core::appReleaseManifestUrl()`，供“关于”页检查新版本。
@@ -120,7 +121,7 @@ ctest --preset core
 
 - C++ 侧：HuskarUI 及其嵌套的 qwindowkit/qmsetup 仅通过 submodule 存在于 `src/gui/3rdparty/` 下，只用 CMake `add_subdirectory` 引入，不打进 `srp_core`，也不影响 CLI。
 - 许可：`licenses/` 保存逐项许可文本（HuskarUI-MIT、QWindowKit-Apache-2.0、Qt-LGPL-3.0、Inter/JetBrainsMono-OFL、QRCodeGenerator-MIT 等），`THIRD_PARTY_NOTICES.md` 为汇总，发布包内同时复制两者。
-- 前端侧：依赖只出现在 `website/package.json`（pnpm workspace 仅含 `website`），与根 `package.json` 的脚本代理分离；CI 使用 `--frozen-lockfile --ignore-scripts`，不在安装阶段执行第三方生命周期脚本。
+- 前端侧：依赖与脚本只出现在 `website/package.json`（pnpm workspace 仅含 `website`）；根 `package.json` 只保留 workspace 元数据，不承载 npm 脚本。CI 使用 `--frozen-lockfile --ignore-scripts`，不在安装阶段执行第三方生命周期脚本。
 
 ## 11. 常用命令速查
 

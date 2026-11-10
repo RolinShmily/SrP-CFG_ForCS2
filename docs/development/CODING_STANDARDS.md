@@ -166,4 +166,4 @@ cmake --build build-warn --config Release --parallel 2 2>&1 | grep -i "warning C
 - `pnpm-lock.yaml`、`.gitmodules`（`src/gui/3rdparty/HuskarUI`）、`wrangler.toml` 视为源码：不手工编辑，不在无说明的 PR 里升级。升级依赖单独成 PR，附 `pnpm why`/变更说明。`skills-lock.json` 属于开发者本地产物（已被 `.gitignore` 忽略），不要提交。
 - HuskarUI 是上游子模块：不在 `src/gui/3rdparty/HuskarUI` 内改动。确需补丁时改为在 `src/gui` 侧包一层组件，并在 PR 描述记录原因。
 - Python 脚本只用标准库（`scripts/*.py` 现状如此），不引入 `pip` 依赖；需要第三方能力就落到 Node 侧或纯 CMake。
-- 依赖清单与许可证：新增运行期依赖必须同步 `THIRD_PARTY_NOTICES.md` 与 `licenses/`，并跑 `node scripts/collect-licenses.mjs` 确认生成物一致。
+- 依赖清单与许可证：新增运行期依赖必须同步 `THIRD_PARTY_NOTICES.md` 与 `licenses/`，并跑 `pnpm --filter srp-cfg-website licenses:collect` 确认生成物一致。

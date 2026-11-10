@@ -1,7 +1,7 @@
 import type { I18nDictionary } from "./types";
 export const zh: I18nDictionary = {
-  nav: { product: "产品", showcase: "APP 演示", assembly: "自由装配", download: "下载", skill: "下载 Skill", language: "Switch to English", menu: "打开导航", close: "关闭导航", skip: "跳到主要内容" },
-  hero: { eyebrow: "为 COUNTER-STRIKE 2 打造", title: "你的配置。", highlight: "你的主场。", description: "从一份 CFG，到一个完整的配置工作台。用 APP 管理预设、组合功能、定制画面，也能通过 srpcfg CLI 和 Skill，让智能体协助处理你的配置。", download: "获取 SrP-CFG", explore: "看看它如何工作", platform: "Windows 10 / 11 · x64 · 开源", floatingLabel: "真实 APP 界面", scroll: "向下探索" },
+  nav: { product: "产品", showcase: "APP 演示", assembly: "自由装配", download: "下载", console: "Console", skill: "下载 Skill", language: "Switch to English", menu: "打开导航", close: "关闭导航", skip: "跳到主要内容" },
+  hero: { eyebrow: "为 COUNTER-STRIKE 2 打造", title: "你的配置。", highlight: "你的主场。", description: "从一份 CFG，到一个完整的配置工作台。用 APP 管理预设、组合功能、定制画面，也能通过 srpcfg CLI 和 Skill，让智能体协助处理你的配置。", download: "获取 SrP-CFG", explore: "看看它如何工作", console: "指令中心", platform: "Windows 10 / 11 · x64 · 开源", floatingLabel: "真实 APP 界面", scroll: "向下探索" },
   showcase: { eyebrow: "MEET YOUR WORKSPACE", title: "配置有序，操作有据。", description: "一个桌面工作台，连接 Steam、游戏目录与你的个人配置。看看每一页如何配合。", previous: "上一页", next: "下一页", actual: "真实 APP 界面", screens: [
     { id: "overview", title: "从总览开始", short: "总览", description: "识别 Steam 与 CS2 路径，选择当前账号，查看 SrP-CFG 装配状态。", points: ["路径与账号集中管理", "配置包与软件独立更新", "挂载 autoexec 时保留用户内容"] },
     { id: "presets", title: "找到你的配置起点", short: "预设包", description: "加载预设，然后在同一工作台编辑设置、按键和 custom.cfg。", points: ["文件修改与未保存草稿分别标记", "语法高亮、行号与字体缩放", "写入游戏文件前建立备份"] },

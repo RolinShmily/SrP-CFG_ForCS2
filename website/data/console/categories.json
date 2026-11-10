@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "categories": [
+    {
+      "slug": "graphics",
+      "zh": "画面与视频",
+      "en": "Graphics & Video"
+    },
+    {
+      "slug": "audio",
+      "zh": "音频",
+      "en": "Audio"
+    },
+    {
+      "slug": "network",
+      "zh": "网络",
+      "en": "Network"
+    },
+    {
+      "slug": "mouse",
+      "zh": "鼠标与输入",
+      "en": "Mouse & Input"
+    },
+    {
+      "slug": "gameplay",
+      "zh": "游戏玩法",
+      "en": "Gameplay"
+    },
+    {
+      "slug": "practice",
+      "zh": "练习与服务端",
+      "en": "Practice & Server"
+    },
+    {
+      "slug": "cheats",
+      "zh": "调试与作弊",
+      "en": "Debug & Cheats"
+    },
+    {
+      "slug": "system",
+      "zh": "系统与引擎",
+      "en": "System & Engine"
+    }
+  ]
+}

@@ -14,12 +14,15 @@ build-*/
 dist/
 out/
 .ssr/
+.react-router/
 *.vcxproj*
 *.sln
 *.tsbuildinfo
 website/public/packages/
 website/public/packages.json
 website/public/third-party-licenses.txt
+website/public/data/console-index.json
+website/public/sitemap.xml
 drift_report.md
 
 # Temporary tooling artifacts
@@ -30,6 +33,7 @@ __pycache__/
 *.py[cod]
 .venv/
 tmp/
+website/data/console/*.tmp
 
 # Developer-local agent configuration
 AGENTS.md

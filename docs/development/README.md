@@ -38,7 +38,7 @@ python3 scripts/check_repository.py
 python3 scripts/test_website_packages.py
 
 # 网站：单元测试、类型检查、静态构建
-pnpm test && pnpm lint && pnpm build
+pnpm --filter srp-cfg-website test && pnpm --filter srp-cfg-website lint && pnpm --filter srp-cfg-website build
 ```
 
 ```bat

@@ -11,8 +11,9 @@
 | CLI skill 契约 | Python 场景脚本 | `srpcfg_cli_skill` test | 是（同一 `core` job，需 Python 3） |
 | 仓库完整性 | Python 脚本 | `python3 scripts/check_repository.py` | 是（`website` job） |
 | 配置包规则 | Python 脚本 | `python3 scripts/test_website_packages.py` | 是（`website` job） |
-| 网站逻辑 | `node --test` + `tsc` | `pnpm test` / `pnpm lint` | 是 |
-| 静态站点产物 | vite 构建 + 预渲染 | `pnpm build` | 是 |
+| 网站逻辑 | `node --test` + `tsc` | `pnpm --filter srp-cfg-website test` / `lint` | 是 |
+| Console 数据契约 | Python `unittest` + 严格校验 | `pnpm --filter srp-cfg-website console:test` / `console:validate` | 是（`console-data` job） |
+| 静态站点产物 | React Router 构建 + 预渲染 + sitemap | `pnpm --filter srp-cfg-website build` | 是 |
 | GUI 编译 | CMake + Qt 6.8 | `cmake --build --preset release-msvc` | 是（`desktop` job，`BUILD_TESTING=OFF`） |
 | GUI 运行时 | 截图冒烟 + 日志关键字 | `scripts/run-gui.ps1` | 否（仅发布前 `scripts/test-portable.ps1` 自动跑一次） |
 | 便携包完整性 | PowerShell 断言 | `scripts/test-portable.ps1` | 仅在 `release.yml` |
@@ -151,10 +152,12 @@ python3 scripts/test_website_packages.py     # 三个包的 manifest：HTTPS 来
 python3 scripts/package-website.py           # 生成确定性 ZIP 与下载清单（写 website/public/packages*，属生成物，勿手改）
 
 pnpm install --frozen-lockfile --ignore-scripts
-pnpm test                                    # node --experimental-strip-types --test website/tests/*.test.mjs
-pnpm lint                                    # tsc --noEmit
-pnpm build                                   # vite build + SSR build + prerender
-node scripts/collect-licenses.mjs            # 第三方许可证清单
+pnpm --filter srp-cfg-website test           # node --experimental-strip-types --test tests/*.test.mjs
+pnpm --filter srp-cfg-website console:test   # Console 数据 Python unittest
+pnpm --filter srp-cfg-website console:validate  # 严格数据契约
+pnpm --filter srp-cfg-website lint           # tsc --noEmit
+pnpm --filter srp-cfg-website build          # prebuild: 索引 + sitemap；react-router build
+pnpm --filter srp-cfg-website licenses:collect  # 第三方许可证清单
 ```
 
 网站断言集中在 `website/tests/downloads.test.mjs`：发布清单只接受本仓库的 release 资源、版本与 tag 必须一致、拒绝 CLI 资源与 pre-release、拒绝非 HTTPS / 非预期主机。

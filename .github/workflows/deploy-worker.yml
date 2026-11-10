@@ -12,7 +12,7 @@ on:
       - 'wrangler.toml'
       - 'scripts/package-website.py'
       - 'scripts/test_website_packages.py'
-      - 'scripts/collect-licenses.mjs'
+      - 'website/scripts/collect-licenses.mjs'
       - 'LICENSE'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -30,7 +30,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     name: Build & Deploy Static Worker
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
           pnpm --filter srp-cfg-website lint
 
       - name: Collect dependency licenses
-        run: node scripts/collect-licenses.mjs
+        run: pnpm --filter srp-cfg-website licenses:collect
 
       - name: Build Static Website
         run: pnpm --filter srp-cfg-website build

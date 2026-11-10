@@ -41,7 +41,7 @@ for (const [name, directory] of [...packages].sort(([a], [b]) => a.localeCompare
   }
   parts.push(`# ${name}\n\nDeclared license: ${typeof manifest.license === 'string' ? manifest.license : JSON.stringify(manifest.license)}\n\n${texts.join('\n\n')}\n`);
 }
-const destination = resolve(repo, process.argv[2] || 'website/public/third-party-licenses.txt');
+const destination = resolve(repo, process.argv[2] || 'public/third-party-licenses.txt');
 await mkdir(resolve(destination, '..'), { recursive: true });
 await writeFile(destination, parts.join('\n---\n\n'));
 console.log(`Collected ${packages.size} production dependencies: ${destination}`);

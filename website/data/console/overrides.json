@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "records": {
+    "convar:bot_stop": {
+      "zh": "停止机器人：`bot_stop 1` 停止一个机器人，`bot_stop all` 停止全部；可用 `<not_bomber>`、`<t>`、`<ct>` 过滤。",
+      "category": "practice",
+      "note": "upstream description is a usage string, reviewed 2026-11-10"
+    },
+    "convar:cl_radar_rotate": {
+      "zh": "推测控制雷达是否随玩家视角旋转；1 表示启用。",
+      "category": "gameplay",
+      "note": "upstream description is only '1', reviewed 2026-11-10"
+    },
+    "convar:r_icon_image_cache_to_disk": {
+      "zh": "推测控制是否将图标图像缓存写入磁盘；1 表示启用。",
+      "category": "graphics",
+      "note": "upstream description is only '1', reviewed 2026-11-10"
+    },
+    "command:cl_matchstats_print_own_data": {
+      "zh": "打印当前玩家的比赛统计；参数 `RANGENAME` 指定统计范围。",
+      "category": "gameplay",
+      "note": "upstream description is only a usage fragment, reviewed 2026-11-10"
+    },
+    "command:localization_quest_item_string_printout": {
+      "zh": "打印任务物品的本地化字符串（开发调试命令）。",
+      "category": "system",
+      "note": "upstream description is only the command name, reviewed 2026-11-10"
+    },
+    "command:playsound": {
+      "zh": "播放指定名称的音效：`playsound <soundname>`。",
+      "category": "audio",
+      "note": "upstream description is only a usage fragment, reviewed 2026-11-10"
+    }
+  }
+}

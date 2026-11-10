@@ -49,8 +49,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Route metadata owns document.title; locale only changes the document
+    // language. This keeps prerendered SEO titles from being overwritten when
+    // a saved language preference rehydrates.
     document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
-    document.title = locale === "zh" ? "SrP-CFG — 你的 CS2 配置工作台" : "SrP-CFG — Your CS2 config workspace";
   }, [locale]);
 
   const t = locale === "zh" ? zh : en;

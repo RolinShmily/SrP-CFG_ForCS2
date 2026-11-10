@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#131923" />
+    <title>404 | SrP-CFG</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #131923;
+        color: #f7f8fa;
+        font-family: Inter, "Microsoft YaHei", system-ui, sans-serif;
+        padding: 24px;
+      }
+      main { max-width: 560px; text-align: center; }
+      .eyebrow { color: #ffa52b; font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .16em; }
+      h1 { margin: 14px 0 10px; font-size: clamp(34px, 8vw, 58px); letter-spacing: -.045em; }
+      p { margin: 0 0 24px; color: #b8c0cd; line-height: 1.8; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+      a { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; }
+      .primary { background: #ffa52b; color: #171a20; }
+      .secondary { border: 1px solid #ffffff30; color: #f7f8fa; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">ERROR 404</div>
+      <h1>页面不存在</h1>
+      <p>这个地址没有对应的页面，可能是链接过期或输入有误。</p>
+      <div class="actions">
+        <a class="primary" href="/">返回首页</a>
+        <a class="secondary" href="/console">打开 Console</a>
+      </div>
+    </main>
+  </body>
+</html>
