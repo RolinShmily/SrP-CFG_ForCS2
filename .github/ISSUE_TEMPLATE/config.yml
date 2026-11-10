@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/RolinShmily/SrP-CFG_ForCS2/blob/main/SECURITY.md
+    about: Report vulnerabilities privately; do not open a public issue.
+  - name: Documentation
+    url: https://github.com/RolinShmily/SrP-CFG_ForCS2/tree/main/docs
+    about: Architecture, config packages, design, and development guides.
+  - name: CS2 Console reference
+    url: https://cfg.srprolin.com/console/
+    about: Search ConVars and commands before filing a data issue.
