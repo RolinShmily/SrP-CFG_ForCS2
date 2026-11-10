@@ -113,7 +113,7 @@ actionlint -color        # 改动过 .github/workflows/** 时
 
 - Node 依赖：只允许 `pnpm install --frozen-lockfile --ignore-scripts`；`pnpm-lock.yaml` 必须与 `package.json` 同步提交，不手工编辑锁文件。新增包需要说明用途、体积、许可证，并同步 `THIRD_PARTY_NOTICES.md` + `licenses/`（`pnpm --filter srp-cfg-website licenses:collect` 生成物随 PR 更新）。
 - Python 脚本仅用标准库；不要为了脚本方便引入 `pip` 依赖或全局安装工具。
-- 凭据：仓库不存放任何密钥。CI 只用两个 Secrets —— `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`（仅 `deploy-worker.yml` 使用），由 GitHub 注入；`GITHUB_TOKEN` 用于发布与 issue。本地 `.env*` 已被 `.gitignore` 忽略，不得提交；也不要把 token 写进 `wrangler.toml`、脚本默认值或日志。
+- 凭据：仓库不存放任何密钥。GitHub Secrets 只有 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`（`deploy-worker.yml` 部署用）与 `CLOUDFLARE_AI_TOKEN`（`update-console-data.yml` 翻译用），由 GitHub 注入；`GITHUB_TOKEN` 用于发布与 issue。本地 `.env*` 已被 `.gitignore` 忽略，不得提交；也不要把 token 写进 `wrangler.toml`、脚本默认值或日志。
 - 网络面不得扩大：配置包与归档只从 `https://cfg.srprolin.com` 获取，HTTPS、禁止重定向、校验大小与 SHA-256（见 [BOUNDARY_CONDITIONS.md](../reference/BOUNDARY_CONDITIONS.md)）。新增任何外部主机（CDN、统计、字体 API）都需要单独评审。
 - 处理子进程/路径时按不可信输入对待：参数以数组传递（`run_cli_checks.py` 的做法），不拼 shell 字符串；路径校验见 [CODING_STANDARDS.md](CODING_STANDARDS.md) 2.5。
 - 安全漏洞走 [SECURITY.md](../../SECURITY.md) 的私密渠道，不要开公开 issue，也不要在 PR 里贴可利用细节。
