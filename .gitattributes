@@ -1,0 +1,38 @@
+# Normalize text to LF in the repository; the working tree stays LF on all platforms.
+* text=auto eol=lf
+
+# Windows scripts and project files keep CRLF.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+
+# Explicit LF for formats parsed by tools that should not see CRLF.
+*.sh text eol=lf
+*.cfg text eol=lf
+*.qml text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+pnpm-lock.yaml text eol=lf
+
+# Binary assets: never diff, merge, or convert.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.7z binary
+*.exe binary
+*.dll binary
+*.lib binary
+*.pdb binary
+*.qm binary
