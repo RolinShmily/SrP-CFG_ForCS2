@@ -9,8 +9,8 @@
 | Core / CLI 单元与集成 | CTest（6 个 test） | `ctest --preset core` | 是（`core` job，Windows + Ubuntu） |
 | Core 独立构建 | 单独配置 `src/core` | `cmake -S src/core -B ...` | 否（靠 `core` job 的根构建间接保证） |
 | CLI skill 契约 | Python 场景脚本 | `srpcfg_cli_skill` test | 是（同一 `core` job，需 Python 3） |
-| 仓库完整性 | Python 脚本 | `python3 scripts/check_repository.py` | 是（`website` job） |
-| 配置包规则 | Python 脚本 | `python3 scripts/test_website_packages.py` | 是（`website` job） |
+| 仓库完整性 | Python 脚本 | `python3 scripts/check_repository.py` | 是（`Website build & deploy` job） |
+| 配置包规则 | Python 脚本 | `python3 scripts/test_website_packages.py` | 是（`Website build & deploy` job） |
 | 网站逻辑 | `node --test` + `tsc` | `pnpm --filter srp-cfg-website test` / `lint` | 是 |
 | Console 数据契约 | Python `unittest` + 严格校验 | `pnpm --filter srp-cfg-website console:test` / `console:validate` | 是（`ci-console.yml` 的 `console-data` job） |
 | 静态站点产物 | React Router 构建 + 预渲染 + sitemap | `pnpm --filter srp-cfg-website build` | 是（`deploy-worker.yml`） |

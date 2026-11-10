@@ -183,7 +183,7 @@ CLOUDFLARE_ACCOUNT_ID="..." \
 python3 scripts/console/translate.py --backend workers-ai --preflight
 ```
 
-注意：`GITHUB_TOKEN` 推送的 commit 不会触发另一个监听 `push` 的 workflow。Console 页面正式接入部署后，需要用 reusable workflow 或 `workflow_dispatch` 显式触发部署。
+注意：`GITHUB_TOKEN` 推送的 commit 不会触发另一个监听 `push` 的 workflow。数据实际变化后，需要用 `workflow_dispatch` 显式触发部署，或改用 PAT / `workflow_run` 串联。
 
 ## 现状与边界
 

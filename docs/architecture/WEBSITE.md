@@ -148,7 +148,7 @@ data/console/metadata.json     上游 commit、文件 SHA-256、计数
 注意：
 
 - 预检和翻译步骤是 `continue-on-error: true`；模型或凭据失败时上游事实仍会更新，缺失/过期译文下次重试。
-- `GITHUB_TOKEN` 推送的 commit 不会触发监听 `push` 的 deploy 工作流；Console 页面正式接入部署后，用 reusable workflow 或 `workflow_dispatch` 显式触发。
+- `GITHUB_TOKEN` 推送的 commit 不会触发监听 `push` 的 deploy 工作流；数据实际变化后需显式 `workflow_dispatch` 触发一次部署，或改用 PAT / `workflow_run` 串联。
 - `update-console-data.yml` 的 `force` 输入只强制上游同步，不强制重译；全量重译需本地 `translate.py --backend workers-ai --force`。
 
 ## 8. 维护规则
