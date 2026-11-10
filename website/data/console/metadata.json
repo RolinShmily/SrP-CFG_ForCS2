@@ -3,7 +3,7 @@
   "upstream": {
     "repository": "SteamTracking/GameTracking-CS2",
     "commit": "b73cfdeb35e48bb20a5e6b2edc8ee3aad14dcf39",
-    "fetchedAt": "2026-11-10T09:33:51Z",
+    "fetchedAt": "2026-11-10T15:03:36Z",
     "files": {
       "convars": {
         "path": "DumpSource2/convars.txt",
