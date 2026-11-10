@@ -89,7 +89,7 @@ pnpm build
 
 ## 部署
 
-`deploy-worker.yml` 在 main 更新或手动触发时打包三个配置包与 Skill ZIP、运行解析测试/类型检查、构建 `website/build/client`，并使用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg` 和静态资源目录，显式关闭 workers.dev 地址和版本预览 URL（`workers_dev = false`、`preview_urls = false`）；不声明 Custom Domain，也没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
+`deploy-worker.yml` 在命中网站相关路径的 PR 与 main 推送、或手动触发时，打包三个配置包与 Skill ZIP、运行解析测试/类型检查、构建 `website/build/client`。PR 只构建验证；main 推送或手动触发才用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg` 和静态资源目录，显式关闭 workers.dev 地址和版本预览 URL（`workers_dev = false`、`preview_urls = false`）；不声明 Custom Domain，也没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
 
 部署通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认证；Console 增量翻译另用 `CLOUDFLARE_AI_TOKEN`（见 [`scripts/console/README.md`](scripts/console/README.md)）。凭据不写入 TOML。部署 Token 需要 Worker 部署权限。CI 不修改官网 DNS 或域名绑定；官网 `cfg.srprolin.com` 由 Cloudflare 控制台单独绑定到该 Worker。官网与 APP 配置更新需在该域名绑定完成后验证；本地预览使用 `pnpm preview`。
 

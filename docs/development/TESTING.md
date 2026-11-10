@@ -12,8 +12,8 @@
 | 仓库完整性 | Python 脚本 | `python3 scripts/check_repository.py` | 是（`website` job） |
 | 配置包规则 | Python 脚本 | `python3 scripts/test_website_packages.py` | 是（`website` job） |
 | 网站逻辑 | `node --test` + `tsc` | `pnpm --filter srp-cfg-website test` / `lint` | 是 |
-| Console 数据契约 | Python `unittest` + 严格校验 | `pnpm --filter srp-cfg-website console:test` / `console:validate` | 是（`console-data` job） |
-| 静态站点产物 | React Router 构建 + 预渲染 + sitemap | `pnpm --filter srp-cfg-website build` | 是 |
+| Console 数据契约 | Python `unittest` + 严格校验 | `pnpm --filter srp-cfg-website console:test` / `console:validate` | 是（`ci-console.yml` 的 `console-data` job） |
+| 静态站点产物 | React Router 构建 + 预渲染 + sitemap | `pnpm --filter srp-cfg-website build` | 是（`deploy-worker.yml`） |
 | GUI 编译 | CMake + Qt 6.8 | `cmake --build --preset release-msvc` | 是（`desktop` job，`BUILD_TESTING=OFF`） |
 | GUI 运行时 | 截图冒烟 + 日志关键字 | `scripts/run-gui.ps1` | 否（仅发布前 `scripts/test-portable.ps1` 自动跑一次） |
 | 便携包完整性 | PowerShell 断言 | `scripts/test-portable.ps1` | 仅在 `release.yml` |

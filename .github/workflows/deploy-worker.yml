@@ -1,4 +1,4 @@
-name: Deploy Website & Packages to Cloudflare Worker
+name: Website Build & Deploy
 
 on:
   push:
@@ -10,6 +10,24 @@ on:
       - 'website/**'
       - '.github/workflows/deploy-worker.yml'
       - 'wrangler.toml'
+      - 'scripts/check_repository.py'
+      - 'scripts/package-website.py'
+      - 'scripts/test_website_packages.py'
+      - 'website/scripts/collect-licenses.mjs'
+      - 'LICENSE'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'config/**'
+      - 'skills/**'
+      - 'website/**'
+      - '.github/workflows/deploy-worker.yml'
+      - 'wrangler.toml'
+      - 'scripts/check_repository.py'
       - 'scripts/package-website.py'
       - 'scripts/test_website_packages.py'
       - 'website/scripts/collect-licenses.mjs'
@@ -23,13 +41,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: worker-production
+  group: website-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build & Deploy Static Worker
+    name: Website build & deploy
     timeout-minutes: 30
     steps:
       - name: Checkout Repository
@@ -67,6 +85,7 @@ jobs:
         run: pnpm --filter srp-cfg-website build
 
       - name: Deploy Cloudflare Worker
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -3,8 +3,24 @@ name: CI
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'config/**'
+      - 'skills/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - '.gitmodules'
+      - '.github/workflows/ci.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'config/**'
+      - 'skills/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - '.gitmodules'
+      - '.github/workflows/ci.yml'
   workflow_dispatch:
 
 permissions:
@@ -49,40 +65,3 @@ jobs:
         run: cmake -S . -B build-gui -A x64 -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DBUILD_TESTING=OFF
       - name: Build
         run: cmake --build build-gui --config Release --parallel 2
-
-  website:
-    name: Website and repository checks
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.3.0
-          run_install: false
-      - run: pnpm install --frozen-lockfile --ignore-scripts
-      - run: python3 scripts/check_repository.py
-      - run: python3 scripts/test_website_packages.py
-      - run: python3 scripts/package-website.py
-      - run: pnpm --filter srp-cfg-website test
-      - run: pnpm --filter srp-cfg-website lint
-      - run: pnpm --filter srp-cfg-website licenses:collect
-      - name: Build static website
-        run: pnpm --filter srp-cfg-website build
-
-  console-data:
-    name: Console data contract
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Run console data unit tests
-        run: python3 -m unittest discover -s website/scripts/console -p "test_*.py"
-      - name: Validate console dataset
-        run: python3 website/scripts/console/validate.py
-      - name: Verify search index generation
-        run: python3 website/scripts/console/build_index.py --output "$RUNNER_TEMP/console-index.json"

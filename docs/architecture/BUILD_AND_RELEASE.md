@@ -78,8 +78,9 @@ ctest --preset core
 
 | 工作流 | 触发 | 职责 |
 | --- | --- | --- |
-| `ci.yml` | push/PR 到 `main`、手动 | 四个 job：`core`（windows + ubuntu 矩阵，`SRP_BUILD_GUI=OFF` 配置 → 构建 → `ctest`）、`desktop`（windows，Qt 6.8.0 + `qtshadertools` 子模块递归，构建 `srp_gui`，`BUILD_TESTING=OFF`，不跑测试）、`website`（Node 22 + pnpm 11.3.0，`pnpm install --frozen-lockfile --ignore-scripts` → 仓库检查/包校验/站点打包 → `pnpm --filter srp-cfg-website test`、`lint` → 收集许可 → `build`）、`console-data`（Python 单测 + 数据契约 + 索引生成） |
-| `deploy-worker.yml` | 推送到 `main` 且改动 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、相关脚本或工作流；手动 | 重新生成配置包与 `packages.json`，校验站点，收集第三方许可，构建 React Router 静态站，用 `wrangler@4.147.0` 部署到 Cloudflare Worker（`wrangler.toml` 的 `[assets] directory = "./website/build/client"`） |
+| `ci.yml` | push/PR 到 `main` 且改动 `src/**`、`config/**`、`skills/**`、CMake 文件或 `.gitmodules`；手动 | 软件构建：`core`（windows + ubuntu 矩阵，`SRP_BUILD_GUI=OFF` 配置 → 构建 → `ctest`）、`desktop`（windows，Qt 6.8.0 + `qtshadertools` 子模块递归，构建 `srp_gui`，`BUILD_TESTING=OFF`，不跑测试） |
+| `deploy-worker.yml` | PR 与 push 到 `main` 且改动 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、相关脚本或工作流；手动 | Node 22 + pnpm 11.3.0：仓库检查 → 配置包/Skill 打包 → 站点测试、`lint` → 收集许可 → 构建 React Router 静态站；PR 只构建，push/手动再用 `wrangler@4.147.0` 部署到 Cloudflare Worker（`wrangler.toml` 的 `[assets] directory = "./website/build/client"`） |
+| `ci-console.yml` | push/PR 命中 `website/data/console/**`、`website/scripts/console/**`、Console 组件/路由/类型/文案；手动 | Console 数据 Python 单测、严格契约校验、索引生成 |
 | `update-console-data.yml` | 每天 02:00 UTC、手动 | 同步 GameTracking-CS2 上游事实，Workers AI 增量翻译，校验数据并生成 Console 索引；数据有变化时提交 `website/data/console` |
 | `release.yml` | tag `v[0-9]+.[0-9]+.[0-9]+`、手动 | 见第 7 节 |
 | `valve-upstream-drift.yml` | 每周日 02:00 UTC、手动 | 运行 `scripts/check_valve_baseline_drift.py`，检测 Valve 基线 convar 漂移，必要时创建/更新 issue |

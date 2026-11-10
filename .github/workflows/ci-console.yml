@@ -1,0 +1,49 @@
+name: Console Data CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'website/data/console/**'
+      - 'website/scripts/console/**'
+      - 'website/src/lib/console/**'
+      - 'website/src/components/console/**'
+      - 'website/src/routes/console/**'
+      - 'website/src/locales/console.ts'
+      - '.github/workflows/ci-console.yml'
+      - '.github/workflows/update-console-data.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'website/data/console/**'
+      - 'website/scripts/console/**'
+      - 'website/src/lib/console/**'
+      - 'website/src/components/console/**'
+      - 'website/src/routes/console/**'
+      - 'website/src/locales/console.ts'
+      - '.github/workflows/ci-console.yml'
+      - '.github/workflows/update-console-data.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: console-data-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  console-data:
+    name: Console data contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run console data unit tests
+        run: python3 -m unittest discover -s website/scripts/console -p "test_*.py"
+      - name: Validate console dataset
+        run: python3 website/scripts/console/validate.py
+      - name: Verify search index generation
+        run: python3 website/scripts/console/build_index.py --output "$RUNNER_TEMP/console-index.json"

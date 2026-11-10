@@ -60,13 +60,14 @@ endif()
 
 | 工作流 | 触发 | 内容 |
 | --- | --- | --- |
-| `ci.yml` | push / PR 到 `main`，`workflow_dispatch` | `core`（Windows + Ubuntu：`SRP_BUILD_GUI=OFF`、`BUILD_TESTING=ON`、`cmake --build`、`ctest`，**含 `srpcfg_cli_skill`**）；`desktop`（Windows + Qt 6.8 `win64_msvc2022_64` + `qtshadertools`，`BUILD_TESTING=OFF` 只编译）；`website`（`pnpm install --frozen-lockfile --ignore-scripts` → `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm --filter srp-cfg-website test` → `lint` → `licenses:collect` → `build`）；`console-data`（Console 数据单测、契约校验、索引生成） |
-| `deploy-worker.yml` | push 到 `main`，且命中 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、`scripts/{package-website,test_website_packages}.py`、`website/scripts/collect-licenses.mjs`、`LICENSE`、`package.json`、`pnpm-lock.yaml`、`pnpm-workspace.yaml`、本工作流文件 | `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm --filter srp-cfg-website test/lint` → `licenses:collect` → `build` → `wrangler deploy`（`wrangler@4.147.0` 固定版本） |
+| `ci.yml` | push / PR 到 `main`，仅当改动 `src/**`、`config/**`、`skills/**`、`CMakeLists.txt`、`CMakePresets.json`、`.gitmodules` 或本工作流；`workflow_dispatch` | 软件构建：`core`（Windows + Ubuntu：`SRP_BUILD_GUI=OFF`、`BUILD_TESTING=ON`、`cmake --build`、`ctest`，**含 `srpcfg_cli_skill`**）；`desktop`（Windows + Qt 6.8 `win64_msvc2022_64` + `qtshadertools`，`BUILD_TESTING=OFF` 只编译） |
+| `deploy-worker.yml` | PR 与 push 到 `main`，且命中 `config/**`、`skills/**`、`website/**`、`wrangler.toml`、`scripts/{check_repository,package-website,test_website_packages}.py`、`website/scripts/collect-licenses.mjs`、`LICENSE`、`package.json`、`pnpm-lock.yaml`、`pnpm-workspace.yaml`、本工作流文件；手动 | `check_repository.py` → `test_website_packages.py` → `package-website.py` → `pnpm --filter srp-cfg-website test/lint` → `licenses:collect` → `build`；PR 到此为止，push/手动再 `wrangler deploy`（`wrangler@4.147.0` 固定版本） |
+| `ci-console.yml` | push / PR 到 `main`，命中 `website/data/console/**`、`website/scripts/console/**`、Console 组件/路由/类型/文案或相关 workflow；手动 | Console 数据单测、严格契约校验、索引生成 |
 | `update-console-data.yml` | 每天 02:00 UTC、手动 | 同步 GameTracking-CS2 → Workers AI 增量翻译 → 数据校验 → 生成 Console 索引 → 有变化才提交 `website/data/console`。需要 `CLOUDFLARE_AI_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` |
 | `release.yml` | tag `v[0-9]+.[0-9]+.[0-9]+`，`workflow_dispatch` | 校验 tag → 带子模块 checkout → Ninja 构建 → `ctest` → 打 CLI / GUI / Inno Setup 安装包 → `test-portable.ps1` → 生成含两个 SHA-256 的 `latest.json` → 发布 Release（**仅 tag 触发才真正发布**；`workflow_dispatch` 只跑构建与打包） |
 | `valve-upstream-drift.yml` | 每周日 02:00 UTC、手动 | `scripts/check_valve_baseline_drift.py`，发现偏差时创建或更新 issue |
 
-必需通过的检查：`ci.yml` 的 `core`（两个 OS）、`website` 与 `console-data`。`desktop` 失败通常意味着 Qt/子模块或 QML 模块登记问题，同样必须修好再合并。
+按改动范围必须通过：`ci.yml` 的 `core`（两个 OS）与 `desktop`（软件路径）、`deploy-worker.yml` 的 `Website build & deploy`（网站路径）、`ci-console.yml` 的 `console-data`（Console 路径）。`desktop` 失败通常意味着 Qt/子模块或 QML 模块登记问题，同样必须修好再合并。
 
 Console 增量翻译的 GitHub Secrets：`CLOUDFLARE_AI_TOKEN`（Account → Workers AI → Read/Edit）与 `CLOUDFLARE_ACCOUNT_ID`；`GITHUB_TOKEN` 自动注入。部署继续使用 `CLOUDFLARE_API_TOKEN`（Workers Scripts Edit）+ `CLOUDFLARE_ACCOUNT_ID`，建议与 AI token 分开。
 
@@ -85,7 +86,7 @@ actionlint -color        # 改动过 .github/workflows/** 时
 
 - 动过 `src/gui` 还必须本地编译一次 GUI（CI 只证明「能编译」，不证明「界面对」）：`cmake --preset windows-msvc && cmake --build --preset release-msvc`，再按 [TESTING.md](TESTING.md) 第 5 节截图核对。
 - 动过 `.github/workflows/**` 必须跑 `actionlint`（同时会对每个 `run:` 块跑 `shellcheck`）。缩进、未加引号的变量、`${{ }}` 注入在发布时才会爆炸。
-- `deploy-worker.yml` 只在 `main` 上跑：合并到 `main` 即等于部署到生产站点。合入前确认 `pnpm --filter srp-cfg-website build` 与许可证清单都是最新的。
+- `deploy-worker.yml` 的 PR 触发只构建、不部署；push 到 `main`（或手动触发）且在路径过滤内才会部署。合并到 `main` 即等于发布生产站点，合入前确认 `pnpm --filter srp-cfg-website build` 与许可证清单都是最新的。
 
 ## 6. 文档同步要求
 

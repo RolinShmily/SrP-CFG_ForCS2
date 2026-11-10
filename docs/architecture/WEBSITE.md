@@ -133,8 +133,8 @@ data/console/metadata.json     上游 commit、文件 SHA-256、计数
 
 | 工作流 | 职责 |
 | --- | --- |
-| `ci.yml` | `website` job 跑测试、lint、licenses、build；`console-data` job 跑 Console 单测、严格校验、索引生成 |
-| `deploy-worker.yml` | 打包配置包 → 测试/lint → 收集许可 → build → Wrangler 部署 `website/build/client` |
+| `deploy-worker.yml` | PR 与 push 到 `main` 且命中网站相关路径：打包配置包 → 测试/lint → 收集许可 → build；PR 只构建，push/手动再 Wrangler 部署 `website/build/client` |
+| `ci-console.yml` | 命中 Console 数据/脚本/组件时跑 Python 单测、严格校验、索引生成 |
 | `update-console-data.yml` | 每天 02:00 UTC + 手动；同步上游、Workers AI 增量翻译、校验、生成索引、提交 `website/data/console` |
 
 `update-console-data.yml` 需要：
