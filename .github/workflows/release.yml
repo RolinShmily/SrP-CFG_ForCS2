@@ -185,7 +185,7 @@ jobs:
       # 5. 发布到 GitHub Releases (仅包含软件制品)
       # ==========================================
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           body_path: dist/release_notes.md
