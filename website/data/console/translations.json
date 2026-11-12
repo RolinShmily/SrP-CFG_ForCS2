@@ -6653,6 +6653,24 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:29:45Z"
     },
+    "command:net_decode_callback_queue_stats_clear": {
+      "zh": "清除每个实体的解码更改回调统计信息",
+      "basis": "english",
+      "sourceHash": "sha256:4ccd92b74c7917d2d76af3183c864bfbed990b53a8c338620b6d0ebb16564794",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "command:net_decode_callback_queue_stats_dump": {
+      "zh": "打印每个实体的解码更改回调统计信息",
+      "basis": "english",
+      "sourceHash": "sha256:6ed3baa80c04c0f986b0df739fe6c54f08c23165793e386c80e73173023d5ced",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:37Z"
+    },
     "command:net_fakeclear": {
       "zh": "清除所有模拟网络状况。",
       "basis": "english",
@@ -7248,13 +7266,13 @@
       "translatedAt": "2026-11-10T09:30:16Z"
     },
     "command:playdemo": {
-      "zh": "播放录制的 demo 文件（.dem）。",
+      "zh": "播放录制的demo文件（.dem）。选项：start=<tick> end=<tick> timescale=<float>（运行无参数以获取详细信息）",
       "basis": "english",
-      "sourceHash": "sha256:5f861a2d8aa5563c94a1ee1540f6035b72590d14884aadb38a0d2a7e0c51dc09",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "sourceHash": "sha256:877055428a4c15489a825d82566da6233e0df5db15adaf8bfb1f6eb1174134d2",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:30:16Z"
+      "translatedAt": "2026-11-12T08:57:37Z"
     },
     "command:player_ping": {
       "zh": "在玩家所看的位置创建一个标记通知。",
@@ -10937,6 +10955,33 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:32:55Z"
     },
+    "command:vprof_lite_dump": {
+      "zh": "vprof_lite_dump [文件名] [stop=1]\n将vprof lite预算组统计信息写入CSV文件，然后停止Profiler并清除其数据。\nstop=0保留Profiler运行的数据。默认文件名为vprof_lite.csv，位于mod目录中；\n绝对路径将按原样使用。将vprof_lite_auto设置为0，因此游戏不会自行停止或转储Profiler",
+      "basis": "english",
+      "sourceHash": "sha256:e6b2bb3c8f3676571d0ccbab9a47aef35174a1ac2467c43c360bf69b7794d370",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:37Z"
+    },
+    "command:vprof_lite_start": {
+      "zh": "vprof_lite_start [clear=1]\n启动vprof liteProfiler，清除其持有的任何数据。clear=0保留数据并继续添加。\n将vprof_lite_auto设置为0，因此游戏不会自行停止或转储Profiler",
+      "basis": "english",
+      "sourceHash": "sha256:11a330ecb2acc572479b023ee8d297fba2aa7317eb27edecce443dd20128daf0",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:37Z"
+    },
+    "command:vprof_lite_stop": {
+      "zh": "vprof_lite_stop [clear=1]\n停止vprof liteProfiler并清除其数据。clear=0保留数据，用于engine_frametime_print_report或vprof_lite_dump。\n将vprof_lite_auto设置为0，因此游戏不会自行启动Profiler",
+      "basis": "english",
+      "sourceHash": "sha256:e4aeecc1bdd86f958376c002ea543c8ae9b71cc5dcac9e759effc5617038e896",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:37Z"
+    },
     "command:vprof_loadhitstore_scale": {
       "zh": "显示 load-hit-store 时使用的缩放比例（0 = 使用默认值）",
       "basis": "english",
@@ -14114,14 +14159,14 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T08:50:29Z"
     },
-    "convar:cl_clockdrift_max_ticks": {
-      "zh": "客户端时钟在强制对齐到服务器时钟之前允许漂移的最大 tick 数。",
+    "convar:cl_clockdrift_max_secs": {
+      "zh": "客户端时钟允许与服务器快照偏移的最大时间长度，超过后客户端将其时钟调整为最新的服务器快照",
       "basis": "english",
-      "sourceHash": "sha256:e5404628bc949cd1bef92e7a905fb8c710510b3509391cb24a7ecc554867dd76",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "sourceHash": "sha256:bce0aefbf4f6f6593a9ff6e78dbede7b7566e4f73dfd87d9df31d09c8911160f",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T08:50:29Z"
+      "translatedAt": "2026-11-12T08:57:14Z"
     },
     "convar:cl_clutch_mode": {
       "zh": "静音语音及其他干扰性声音，直到回合结束或下次死亡。",
@@ -16120,6 +16165,15 @@
       "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T08:52:00Z"
+    },
+    "convar:cl_packetentities_merge_before_decode": {
+      "zh": "解码实体时，是否先合并基线和增量数据再解码（true），或分两步解码（false，旧行为）",
+      "basis": "english",
+      "sourceHash": "sha256:9ceda2f2d15469664846c1ed558816266cf0114501429955a71b52165c1c1e00",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
     },
     "convar:cl_paintkit_override": {
       "zh": "推测：用于覆盖武器涂装（paintkit）的客户端变量。",
@@ -30863,41 +30917,131 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:03:43Z"
     },
-    "convar:net_limit_sv_recv_max_message_size_kb": {
-      "zh": "服务器将拒绝大于 N kb 的消息",
+    "convar:net_gather_child_fields_only": {
+      "zh": "只收集结构体和数组字段，跳过标量字段",
       "basis": "english",
-      "sourceHash": "sha256:5f2034b444b205614b9d133d543843ec5fd9e5dcf71d1db9fdb7b8fa89c9a9e9",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "sourceHash": "sha256:b8bc049d6bd7ee12babd614a3af393432eedc62b4cfb9d3c088937e5e3702bfa",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:03:43Z"
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_listen_max_message_size_kb": {
+      "zh": "服务器：来自未建立netchan的连接的最大SteamNetworkingSockets消息大小（kb）",
+      "basis": "english",
+      "sourceHash": "sha256:358913cb5b42e7c2bbd888096e4119e8aca079d4c8325d8ada8063e983d39a84",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_listen_recvbuffer_kb": {
+      "zh": "服务器：来自未建立netchan的连接的最大缓冲区大小（kb）",
+      "basis": "english",
+      "sourceHash": "sha256:5837fad88c7ebd36808cb6ecff178557799174ca354b569665a9df53648effae",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_listen_recvbuffer_msg": {
+      "zh": "服务器：来自未建立netchan的连接的最大消息缓冲数",
+      "basis": "english",
+      "sourceHash": "sha256:3f6756b159f830e7b345c6cba2269a3c3d5e159f290a240e5a49d064f5611506",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_message_process_time_ms_drop_burst": {
+      "zh": "如果处理客户端消息消耗的CPU时间超过N毫秒，则断开客户端连接（突发情况）",
+      "basis": "english",
+      "sourceHash": "sha256:f51971e5a3418c1080cc24feda0c639098128c08a4ffe416522c346277dac775",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_message_process_time_ms_drop_rate_per_sec": {
+      "zh": "如果处理客户端消息消耗的CPU时间每秒超过N毫秒，则断开客户端连接（持续情况）",
+      "basis": "english",
+      "sourceHash": "sha256:fa8adfaa381118d62900657ced14ed278622cafb9b4313b2694c24f1947c32db",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_message_process_time_ms_warn_burst": {
+      "zh": "如果处理客户端消息消耗的CPU时间超过N毫秒，则警告（突发情况）",
+      "basis": "english",
+      "sourceHash": "sha256:d87967896505ef7cb72b1911a45aa6b8b9052bf0b9824ed5ddb46b9796d61cbf",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_message_process_time_ms_warn_rate_per_sec": {
+      "zh": "如果处理客户端消息消耗的CPU时间每秒超过N毫秒，则警告（持续情况）",
+      "basis": "english",
+      "sourceHash": "sha256:0a7972784b24e961ee4e7d33f652daf8f53925d14f2a5469d128c3ec8d9044bf",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_recv_chan_buffer_messages": {
+      "zh": "普通客户端连接的netchan接收缓冲区中可以排队的最大源引擎消息数",
+      "basis": "english",
+      "sourceHash": "sha256:3cc01f7bd0ab09f9db962897aaa202546115cdb728cf25d885392c91b716efc0",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_recv_chan_msgs_per_frame": {
+      "zh": "普通客户端连接在单个网络帧中可以发送的最大源引擎消息数，超过则断开连接",
+      "basis": "english",
+      "sourceHash": "sha256:948e6eaf0eca2ec5e44dd20484a20b1cbb90dfc3891ae784f8f0e0f59d859eb4",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
+    },
+    "convar:net_limit_sv_recv_max_frame_size_kb": {
+      "zh": "服务器拒绝大于N kb的未压缩源引擎帧，并设置SteamNetworkingSockets消息大小限制",
+      "basis": "english",
+      "sourceHash": "sha256:bf6df70a3d2ccc8528054716a020a9b8aaab4254f8ee4da3b72740b4cd91f5f4",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:14Z"
     },
     "convar:net_limit_sv_recv_segments_per_packet": {
-      "zh": "服务器将拒绝包含超过 N 个分段的数据包",
+      "zh": "服务器：SteamNetworkingSockets拒绝包含超过N个消息段的数据包",
       "basis": "english",
-      "sourceHash": "sha256:d62c5db3681cf65cf7e3f090db86ef6a57ee7e635ca94bb4f89b066114595889",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "sourceHash": "sha256:30ebf5b702fc06044c1c1ea3d0fbb4d10020e56a40b0450811a05c09217d5023",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:03:43Z"
+      "translatedAt": "2026-11-12T08:57:14Z"
     },
     "convar:net_limit_sv_recvbuffer_kb": {
-      "zh": "服务器对已连接客户端的缓冲不会超过 N kb",
+      "zh": "服务器：SteamNetworkingSockets不缓冲来自已连接客户端的数据超过N kb",
       "basis": "english",
-      "sourceHash": "sha256:953af7af18fdc8d35a41a858a254c37840062f2bd980471db30d6270caea0cc8",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "sourceHash": "sha256:96a2c6ed2c0821ff69e920e246122ccdc82ff53d9bbd9882d6b1b951a85c0a54",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:03:43Z"
+      "translatedAt": "2026-11-12T08:57:14Z"
     },
     "convar:net_limit_sv_recvbuffer_msg": {
-      "zh": "服务器对已连接客户端的消息缓冲不会超过 N 条",
+      "zh": "服务器：SteamNetworkingSockets不会缓冲超过N个来自连接客户端的消息",
       "basis": "english",
-      "sourceHash": "sha256:a7aee5cff549227082722b56df93d2abcdb868b0f5c38be277bc71f2b86ba159",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "sourceHash": "sha256:336dab0f95c15d758f9fff377b80c01f4720fcd3309d109cea9551f319a7cf9b",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:03:43Z"
+      "translatedAt": "2026-11-12T08:57:32Z"
     },
     "convar:net_log_processing": {
       "zh": "记录网络处理日志",
@@ -34004,6 +34148,96 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:06:13Z"
     },
+    "convar:r_csgo_frost_dry_time": {
+      "zh": "融化霜冻需要的秒数",
+      "basis": "english",
+      "sourceHash": "sha256:4c0cbd23dbe08663e9dc832d3d5e927b6e8f86982650e2ac257a9d2ed6e4671c",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_force": {
+      "zh": "玩家、武器和鸡的霜冻：-1 = 地图设置（info_map_parameters frostenabled），0 = 关闭，1 = 开启（户外；室内会融化）",
+      "basis": "english",
+      "sourceHash": "sha256:5d337578addb65cc98c9549cb5b5b142d9399f0ba71ed306d70182feda74c62b",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_grow_time": {
+      "zh": "户外霜冻完全生长需要的秒数",
+      "basis": "english",
+      "sourceHash": "sha256:2d8cd12cff379096fe1a3e978ab541b754583831d7be08a162dff75f61679995",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_heat_barrel_position": {
+      "zh": "霜冻：枪管热量位置，从弹壳弹出（0）到枪口（1）",
+      "basis": "english",
+      "sourceHash": "sha256:111c9d4044cab96c9ac3bbbff3168353c509510e305284918cbe37f1e1dbc485",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_heat_cool_time": {
+      "zh": "霜冻：热枪管冷却需要的秒数",
+      "basis": "english",
+      "sourceHash": "sha256:c8bfad605e2f37c9e1104bd68ef4f6a54ce4b2a9f7f1f4d8ac5075eeacdf96e7",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_heat_light_delay": {
+      "zh": "霜冻：燃烧瓶点燃后其布料开始加热的延迟秒数",
+      "basis": "english",
+      "sourceHash": "sha256:1c45b256e6248a57d5e4878be6ec14338718a26e84d6f24e6d648fef874109af",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_heat_light_time": {
+      "zh": "霜冻：点燃燃烧瓶的布料达到最大热量需要的秒数",
+      "basis": "english",
+      "sourceHash": "sha256:c6a581a283642fc4aa44ed087512f10105e219942cb60ee864265d89e0edb5b5",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_heat_per_shot": {
+      "zh": "霜冻：每发射一次的枪管热量（1 = 足以清除整个枪管）",
+      "basis": "english",
+      "sourceHash": "sha256:eead95435c2f4d4274af0d67a2c6b1642976a7459bf06d715209d91658d18a56",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_indoor_distance": {
+      "zh": "霜冻：室内冷却效果消失的距离",
+      "basis": "english",
+      "sourceHash": "sha256:784f8ee343f75f34ec43ba71ba4d5394b276b145842ef6ae057f80e0718c02a9",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
+    "convar:r_csgo_frost_melt_time": {
+      "zh": "室内完全融化霜冻需要的秒数",
+      "basis": "english",
+      "sourceHash": "sha256:cd9698e47b40867ffa5f9f5c5f90f17d474886b46b2c4b7842150137fc627b5e",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
     "convar:r_csgo_fsr_enable_mip_bias": {
       "zh": "使用 FSR 渲染时应用负的 mip 偏移。",
       "basis": "english",
@@ -34372,6 +34606,15 @@
       "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:06:31Z"
+    },
+    "convar:r_csgo_parallax": {
+      "zh": "视差遮挡映射（高级视频设置）：0 = 关闭，1 = 开启",
+      "basis": "english",
+      "sourceHash": "sha256:d57c05b97f036c54d006bddf21e0705aa4b2fd41e7a67c7b8fce807dbcbcc656",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
     },
     "convar:r_csgo_player_occlusion_query": {
       "zh": "推测：控制玩家遮挡查询开关，默认开启。",
@@ -45497,42 +45740,6 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:21:10Z"
     },
-    "convar:sv_net_client_message_process_time_ms_drop_burst": {
-      "zh": "如果处理某客户端的消息在突发中消耗超过 N 毫秒的 CPU 时间（令牌桶容量），则断开该客户端",
-      "basis": "english",
-      "sourceHash": "sha256:f51971e5a3418c1080cc24feda0c639098128c08a4ffe416522c346277dac775",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:21:10Z"
-    },
-    "convar:sv_net_client_message_process_time_ms_drop_rate": {
-      "zh": "如果处理某客户端的消息每秒持续消耗超过 N 毫秒的 CPU 时间（令牌桶填充速率），则断开该客户端",
-      "basis": "english",
-      "sourceHash": "sha256:f1cb1f2d7213b08dffd4d3a51bb804531155d638f501173a6c30f4e7c51e1ea1",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:21:10Z"
-    },
-    "convar:sv_net_client_message_process_time_ms_warn_burst": {
-      "zh": "如果处理某客户端的消息在突发中消耗超过 N 毫秒的 CPU 时间（令牌桶容量），则发出警告",
-      "basis": "english",
-      "sourceHash": "sha256:d87967896505ef7cb72b1911a45aa6b8b9052bf0b9824ed5ddb46b9796d61cbf",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:21:10Z"
-    },
-    "convar:sv_net_client_message_process_time_ms_warn_rate": {
-      "zh": "如果每秒处理来自客户端的消息持续消耗超过 N 毫秒的 CPU 时间，则发出警告（令牌桶填充速率）",
-      "basis": "english",
-      "sourceHash": "sha256:21dadc6b5469e8bfa69b48adc2384e5a53aed5731af586992baf98397f62ef72",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:21:17Z"
-    },
     "convar:sv_netprof_delta_sharing_temp": {
       "zh": "用于测量某些网络改动性能影响的临时计数器。将于 2026 年 9 月底前移除",
       "basis": "english",
@@ -46086,15 +46293,6 @@
       "zh": "开启后将每位玩家的物品时间数据记录到服务器日志中。",
       "basis": "english",
       "sourceHash": "sha256:c9e27764262ab23e8c799d91f7d0aeb5d647b3cdca55f73c14a539c1c3bf0b6f",
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:21:40Z"
-    },
-    "convar:sv_recvbuf_messages": {
-      "zh": "普通客户端连接的网络通道接收缓冲区中可排队的最大消息数。",
-      "basis": "english",
-      "sourceHash": "sha256:42b65dbfba1b9699c53c3600617156a60a27e946017333affccb0b8aa40c2509",
       "producer": "agent-seed",
       "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
       "promptVersion": "console-zh-v1",
@@ -49196,6 +49394,15 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:24:03Z"
     },
+    "convar:videocfg_parallax_detail": {
+      "zh": "可能是视差遮挡映射的详细设置",
+      "basis": "name-flags",
+      "sourceHash": null,
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
+    },
     "convar:videocfg_particle_detail": {
       "zh": "推测为视频配置中的粒子细节等级，仅开发环境可用。",
       "basis": "name-flags",
@@ -49834,6 +50041,15 @@
       "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:24:26Z"
+    },
+    "convar:vprof_lite_auto": {
+      "zh": "允许demo播放和游戏规则自动启动、转储和停止vprof lite性能分析器",
+      "basis": "english",
+      "sourceHash": "sha256:79e6905b8763de200a528c72e28699e482987d095fdb1fdde65992c85f7ea18e",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "promptVersion": "console-zh-v1",
+      "translatedAt": "2026-11-12T08:57:32Z"
     },
     "convar:vprof_scope_entity_clientthink": {
       "zh": "完全不起任何作用。",

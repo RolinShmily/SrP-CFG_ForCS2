@@ -4252,15 +4252,15 @@
     },
     {
       "type": "convar",
-      "name": "cl_clockdrift_max_ticks",
+      "name": "cl_clockdrift_max_secs",
       "flags": [
         "hidden",
         "release"
       ],
-      "default": "3",
+      "default": "0.125",
       "min": "0",
       "max": null,
-      "description": "Maximum number of ticks the clock is allowed to drift before the client snaps its clock to the server's."
+      "description": "Maximum duration the client clock is allowed to drift from server snapshots, before the client snaps its clock to the latest server snapshot received"
     },
     {
       "type": "convar",
@@ -7044,6 +7044,18 @@
       "min": null,
       "max": null,
       "description": "Crosshair shown when observing a bot. 0 = show your crosshair, 1 = show your crosshair only when the bot can be taken over (otherwise default), 2 = always show the default crosshair"
+    },
+    {
+      "type": "convar",
+      "name": "cl_packetentities_merge_before_decode",
+      "flags": [
+        "developmentonly",
+        "defensive"
+      ],
+      "default": "true",
+      "min": null,
+      "max": null,
+      "description": "When an entity is decoded from a baseline plus a wire delta, merge the two and decode once (true), or decode the baseline and then the delta as two passes (false, the old behaviour, which can invoke change callbacks with baseline values for an entity that already exists)."
     },
     {
       "type": "convar",
@@ -19706,7 +19718,7 @@
         "hidden",
         "dontrecord",
         "release",
-        "flag_36"
+        "vconsole_no_change_notify"
       ],
       "default": "false",
       "min": null,
@@ -27767,14 +27779,124 @@
     },
     {
       "type": "convar",
-      "name": "net_limit_sv_recv_max_message_size_kb",
+      "name": "net_gather_child_fields_only",
       "flags": [
         "release"
       ],
-      "default": "32",
+      "default": "false",
       "min": null,
       "max": null,
-      "description": "Server will reject message larger than N kb"
+      "description": "GatherSendProxyResults only walks struct and array fields, skipping scalar fields."
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_listen_max_message_size_kb",
+      "flags": [
+        "release"
+      ],
+      "default": "3",
+      "min": null,
+      "max": null,
+      "description": "Server: max SteamNetworkingSockets message size in kb accepted from a connection that does not yet have a netchan"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_listen_recvbuffer_kb",
+      "flags": [
+        "release"
+      ],
+      "default": "16",
+      "min": null,
+      "max": null,
+      "description": "Server: SteamNetworkingSockets will not buffer more than N kb from a connection that does not yet have a netchan"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_listen_recvbuffer_msg",
+      "flags": [
+        "release"
+      ],
+      "default": "4",
+      "min": null,
+      "max": null,
+      "description": "Server: SteamNetworkingSockets will not buffer more than N messages from a connection that does not yet have a netchan"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_message_process_time_ms_drop_burst",
+      "flags": [
+        "release"
+      ],
+      "default": "300",
+      "min": null,
+      "max": null,
+      "description": "Drop a client if processing their messages consumes more than N ms of CPU time in a burst (token bucket capacity)"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_message_process_time_ms_drop_rate_per_sec",
+      "flags": [
+        "release"
+      ],
+      "default": "500",
+      "min": null,
+      "max": null,
+      "description": "Drop a client if processing their messages consumes more than N ms of CPU time *PER SECOND*, sustained (token bucket fill rate)"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_message_process_time_ms_warn_burst",
+      "flags": [
+        "release"
+      ],
+      "default": "50",
+      "min": null,
+      "max": null,
+      "description": "Warn if processing messages from a client consumes more than N ms of CPU time in a burst (token bucket capacity)"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_message_process_time_ms_warn_rate_per_sec",
+      "flags": [
+        "release"
+      ],
+      "default": "150",
+      "min": null,
+      "max": null,
+      "description": "Warn if processing messages from a client consumes more than N ms of CPU time *PER SECOND*, sustained (token bucket fill rate)"
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_recv_chan_buffer_messages",
+      "flags": [
+        "release"
+      ],
+      "default": "1000",
+      "min": null,
+      "max": null,
+      "description": "Max number of source engine messages that can be queued in a netchan receive buffer for an ordinary connection from a client."
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_recv_chan_msgs_per_frame",
+      "flags": [
+        "release"
+      ],
+      "default": "500",
+      "min": null,
+      "max": null,
+      "description": "Max number of source engine messages an ordinary client connection may put in a single network frame.  Exceeding this disconnects the client."
+    },
+    {
+      "type": "convar",
+      "name": "net_limit_sv_recv_max_frame_size_kb",
+      "flags": [
+        "release"
+      ],
+      "default": "64",
+      "min": null,
+      "max": null,
+      "description": "Server will reject uncompressed Source engine frame larger than N kb.  Also sets limit on SteamNetworkingSockets message size"
     },
     {
       "type": "convar",
@@ -27785,7 +27907,7 @@
       "default": "50",
       "min": null,
       "max": null,
-      "description": "Server will reject packets with more than N segments"
+      "description": "Server: SteamNetworkingSockets will reject packets with more than N message segments"
     },
     {
       "type": "convar",
@@ -27796,7 +27918,7 @@
       "default": "128",
       "min": null,
       "max": null,
-      "description": "Server will not buffer more than N kb from connected clients"
+      "description": "Server: SteamNetworkingSockets will not buffer more than N kb from connected clients"
     },
     {
       "type": "convar",
@@ -27807,7 +27929,7 @@
       "default": "100",
       "min": null,
       "max": null,
-      "description": "Server will not buffer more than N messages from connected clients"
+      "description": "Server: SteamNetworkingSockets will not buffer more than N messages from connected clients"
     },
     {
       "type": "convar",
@@ -32141,6 +32263,126 @@
     },
     {
       "type": "convar",
+      "name": "r_csgo_frost_dry_time",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "20",
+      "min": null,
+      "max": null,
+      "description": "Seconds for the melted frost to dry"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_force",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "-1",
+      "min": null,
+      "max": null,
+      "description": "Frost on players, weapons and chickens: -1 = the map's (info_map_parameters frostenabled), 0 = off, 1 = on (outdoors; melts indoors)"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_grow_time",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "10",
+      "min": null,
+      "max": null,
+      "description": "Seconds outdoors for frost to grow to full"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_heat_barrel_position",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "0.33",
+      "min": null,
+      "max": null,
+      "description": "Frost: where the barrel heat sits, from the shell eject (0) to the muzzle (1)"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_heat_cool_time",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "20",
+      "min": null,
+      "max": null,
+      "description": "Frost: seconds for a hot barrel to cool down"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_heat_light_delay",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "1",
+      "min": null,
+      "max": null,
+      "description": "Frost: seconds after a molotov is lit before its rag starts to heat (the flame shows a moment after)"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_heat_light_time",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "10",
+      "min": null,
+      "max": null,
+      "description": "Frost: seconds for a lit molotov's rag to reach full heat"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_heat_per_shot",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "0.05",
+      "min": null,
+      "max": null,
+      "description": "Frost: barrel heat per shot (1 = hot enough to clear the whole barrel)"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_indoor_distance",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "128",
+      "min": null,
+      "max": null,
+      "description": "Frost: distance under cover (no sky) over which the cold fades out (indoors)"
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_frost_melt_time",
+      "flags": [
+        "developmentonly",
+        "clientdll"
+      ],
+      "default": "10",
+      "min": null,
+      "max": null,
+      "description": "Seconds indoors for full frost to melt"
+    },
+    {
+      "type": "convar",
       "name": "r_csgo_fsr_enable_mip_bias",
       "flags": [
         "developmentonly",
@@ -32644,6 +32886,19 @@
       "min": null,
       "max": null,
       "description": ""
+    },
+    {
+      "type": "convar",
+      "name": "r_csgo_parallax",
+      "flags": [
+        "developmentonly",
+        "clientdll",
+        "defensive"
+      ],
+      "default": "1",
+      "min": null,
+      "max": null,
+      "description": "Parallax occlusion mapping (Advanced Video setting): 0 = off, 1 = on"
     },
     {
       "type": "convar",
@@ -48077,50 +48332,6 @@
     },
     {
       "type": "convar",
-      "name": "sv_net_client_message_process_time_ms_drop_burst",
-      "flags": [
-        "release"
-      ],
-      "default": "500",
-      "min": null,
-      "max": null,
-      "description": "Drop a client if processing their messages consumes more than N ms of CPU time in a burst (token bucket capacity)"
-    },
-    {
-      "type": "convar",
-      "name": "sv_net_client_message_process_time_ms_drop_rate",
-      "flags": [
-        "release"
-      ],
-      "default": "200",
-      "min": null,
-      "max": null,
-      "description": "Drop a client if processing their messages consumes more than N ms of CPU time per second, sustained (token bucket fill rate)"
-    },
-    {
-      "type": "convar",
-      "name": "sv_net_client_message_process_time_ms_warn_burst",
-      "flags": [
-        "release"
-      ],
-      "default": "50",
-      "min": null,
-      "max": null,
-      "description": "Warn if processing messages from a client consumes more than N ms of CPU time in a burst (token bucket capacity)"
-    },
-    {
-      "type": "convar",
-      "name": "sv_net_client_message_process_time_ms_warn_rate",
-      "flags": [
-        "release"
-      ],
-      "default": "5",
-      "min": null,
-      "max": null,
-      "description": "Warn if processing messages from a client consumes more than N ms of CPU time per second, sustained (token bucket fill rate)"
-    },
-    {
-      "type": "convar",
       "name": "sv_netprof_delta_sharing_temp",
       "flags": [
         "release"
@@ -48912,18 +49123,6 @@
       "min": null,
       "max": null,
       "description": "Turn on recording of per player item time data into the server log."
-    },
-    {
-      "type": "convar",
-      "name": "sv_recvbuf_messages",
-      "flags": [
-        "developmentonly",
-        "defensive"
-      ],
-      "default": "1024",
-      "min": null,
-      "max": null,
-      "description": "Max number of messages that can be queued in a netchan receive buffer for an ordinary connection from a client."
     },
     {
       "type": "convar",
@@ -53296,6 +53495,19 @@
     },
     {
       "type": "convar",
+      "name": "videocfg_parallax_detail",
+      "flags": [
+        "developmentonly",
+        "clientdll",
+        "defensive"
+      ],
+      "default": "0",
+      "min": null,
+      "max": null,
+      "description": ""
+    },
+    {
+      "type": "convar",
       "name": "videocfg_particle_detail",
       "flags": [
         "developmentonly",
@@ -54138,6 +54350,17 @@
       "min": null,
       "max": null,
       "description": ""
+    },
+    {
+      "type": "convar",
+      "name": "vprof_lite_auto",
+      "flags": [
+        "release"
+      ],
+      "default": "true",
+      "min": null,
+      "max": null,
+      "description": "Let demo playback and the game rules start, dump and stop the vprof lite profiler on their own.  The vprof_lite_start, vprof_lite_stop and vprof_lite_dump commands set this to 0 so that a script can drive the profiler itself."
     },
     {
       "type": "convar",
