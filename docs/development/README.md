@@ -89,6 +89,6 @@ run_gui.bat --store %TEMP%\srp-store --route overview --screenshot %TEMP%\shot.p
 ## 常见误区
 
 - **以为 GUI 测试会跑在 CI 上**：CI 的 `desktop` job 用 `-DBUILD_TESTING=OFF` 只编译，不跑任何 QML 测试（仓库里也没有）。GUI 验证靠人工截图冒烟，见 [TESTING.md](TESTING.md) 第 5 节。
-- **以为 `docs/` 有自动检查**：`scripts/check_repository.py` 只校验 4 个根文档（`LICENSE`、`README.md`、`README.zh-CN.md`、`THIRD_PARTY_NOTICES.md`）。`docs/**` 的链接与准确性靠评审。
+- **以为 `docs/` 有自动检查**：`scripts/check_repository.py` 只校验 5 个根文档（`LICENSE`、`README.md`、`README.zh-CN.md`、`THIRD_PARTY_NOTICES.md`、`CHANGELOG.md`）。`docs/**` 的链接与准确性靠评审。
 - **在 `src/core` 里用 `QString` 图方便**：`srp_core` 的唯一前置依赖是 C++17 标准库 + 平台 API；引入 Qt 会同时破坏 CLI 包体积、独立构建和 CI 的 `core` job。
 - **直接 `ofstream` 写游戏目录**：所有用户可见写入必须经 `writeConfigWithBackup` / `removeConfigWithBackup`，否则备份、回滚与「无变化不写」三条保证全部失效。

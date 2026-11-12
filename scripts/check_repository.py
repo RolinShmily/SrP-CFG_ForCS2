@@ -17,7 +17,7 @@ def main():
     print("[*] Running SrP-CFG repository integrity check...")
 
     # 1. Essential project documents
-    required_docs = ["LICENSE", "README.md", "README.zh-CN.md", "THIRD_PARTY_NOTICES.md"]
+    required_docs = ["LICENSE", "README.md", "README.zh-CN.md", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md"]
     for doc in required_docs:
         path = repo_root / doc
         if not path.is_file():
@@ -87,6 +87,14 @@ def main():
                 errors.append(f"Invalid SRP_APP_VERSION '{app_ver}' in CMakeLists.txt")
             else:
                 print(f"    [OK] CMake App Version: v{app_ver}")
+                # Verify CHANGELOG contains current app version
+                changelog_path = repo_root / "CHANGELOG.md"
+                if changelog_path.is_file():
+                    changelog_content = changelog_path.read_text(encoding="utf-8")
+                    if not re.search(rf"^##\s+\[?v?{re.escape(app_ver)}\]?", changelog_content, re.MULTILINE):
+                        errors.append(f"CHANGELOG.md is missing entry for current application version v{app_ver}")
+                    else:
+                        print(f"    [OK] CHANGELOG entry for v{app_ver} verified")
         else:
             errors.append("Could not find SRP_APP_VERSION in CMakeLists.txt")
 

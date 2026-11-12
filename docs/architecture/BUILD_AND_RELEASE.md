@@ -103,7 +103,8 @@ ctest --preset core
 | --- | --- |
 | `scripts/run-gui.ps1` | 从 `CMakeCache.txt` 反查 Qt 根，拼好 `PATH`（Qt bin、`HuskarUI/bin`）后启动 `srp_gui.exe`，可透传参数 |
 | `scripts/test-portable.ps1` | 便携包验收：PE 子系统、必需文件、清空 `QML2_IMPORT_PATH`/`QT_PLUGIN_PATH`/`LOCALAPPDATA` 后运行 |
-| `scripts/check_repository.py` | 仓库完整性/发布就绪检查：版本一致性、`catalog.json`、声明文件、许可声明 |
+| `scripts/check_repository.py` | 仓库完整性/发布就绪检查：版本一致性、`CHANGELOG.md` 存在性、`catalog.json`、声明文件、许可声明 |
+| `scripts/extract_changelog.py` | 从 `CHANGELOG.md` 提取指定版本的 Release Markdown 与中英双语摘要（供 CI 和 `latest.json` 使用） |
 | `scripts/package-website.py` | 生成确定性配置 ZIP（`srp-cfg`、`video`、`annotations`、`srpcfg-cli`）与 `packages.json`，输出目录默认 `website/public` |
 | `scripts/test_website_packages.py` | 校验生成的包与清单（哈希、版本、路径） |
 | `website/scripts/collect-licenses.mjs` | 汇总前端依赖许可到站点 `third-party-licenses.txt` |
