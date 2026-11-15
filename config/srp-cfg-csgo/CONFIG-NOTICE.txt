@@ -1,0 +1,16 @@
+CS:GO owns config.cfg persistence (userdata/<id>/730/local/cfg/config.cfg).
+
+- config.cfg records current bindings and archived ConVars; it does not store
+  alias implementations or SrP-CFG module files.
+- A binding such as "p -> srp_practice_keys" persists in config.cfg only as a command
+  string. Runtime (runtime/init.cfg) must register that alias on every launch.
+- Runtime Core does not reassert personal values on its own, so in-game menu changes
+  remain under config.cfg / Steam Cloud control unless custom.cfg overrides them.
+- srp-cfg-csgo/user/custom.cfg may enable srp_apply_default near the top; lines below
+  it act as personal overrides.
+- In CS:GO, Steam may write config.cfg after autoexec.cfg unless autoexec.cfg finishes
+  with host_writeconfig (included in config/autoexec_csgo.cfg).
+- srp_reset_valve uses CS:GO's binddefaults plus explicit Valve CS:GO defaults for every
+  ConVar touched by srp-cfg-csgo. It does not delete unknown config.cfg or video.txt state.
+
+SrP-CFG never distributes user config.cfg or remotecache.vdf files.

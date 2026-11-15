@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "default",
+      "name": "Default (CS:GO)",
+      "category": "presets",
+      "directory": "presets/default",
+      "command": "srp_apply_default",
+      "description_zh": "CS:GO 标准平衡基线。包含经典准星、雷达、音频与常用基础键位设置。",
+      "description_en": "Balanced CS:GO baseline with classic crosshairs, radar, audio and standard bindings.",
+      "tags_zh": ["基础配置", "均衡", "CS:GO"],
+      "tags_en": ["Baseline", "Balanced", "CS:GO"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "apply.cfg"
+      ]
+    },
+    {
+      "id": "crosshair-view",
+      "name": "Crosshair-View",
+      "category": "features",
+      "directory": "features/crosshair-view",
+      "command": "srp_crosshair_view",
+      "keymap_command": "srp_crosshair_view_keys",
+      "description_zh": "CS:GO 经典参数体系的准星与持枪视角预设切换、颜色切换与道具拉长准星切换。",
+      "description_en": "Classic CS:GO crosshair and viewmodel preset library, RGB color helpers and lineup crosshair toggle.",
+      "tags_zh": ["准星", "持枪视角"],
+      "tags_en": ["Crosshair", "Viewmodel"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    },
+    {
+      "id": "knife",
+      "name": "Knife",
+      "category": "features",
+      "directory": "features/knife",
+      "command": "srp_knife",
+      "keymap_command": "srp_knife_keys",
+      "description_zh": "CS:GO 本地跑图切刀功能：使用 weapon_knife_* 与 weapon_knifegg 重命名切换全套经典匕首。",
+      "description_en": "CS:GO offline knife switcher using give weapon_knife_* and weapon_knifegg classname conversion.",
+      "tags_zh": ["匕首切换", "跑图"],
+      "tags_en": ["Knife", "Practice"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg",
+        "equip.cfg"
+      ]
+    },
+    {
+      "id": "practice",
+      "name": "Practice",
+      "category": "modes",
+      "directory": "modes/practice",
+      "command": "srp_practice",
+      "keymap_command": "srp_practice_keys",
+      "description_zh": "CS:GO 本地跑图练习模式：包含投掷物轨迹/实时预览、Bot 控制、出生点传送与训练快捷键。",
+      "description_en": "CS:GO offline practice mode with grenade trajectory/preview, bot control, spawn teleports and hotkeys.",
+      "tags_zh": ["跑图", "道具练习", "出生点传送"],
+      "tags_en": ["Practice", "Utility", "Spawn Teleport"],
+      "files": [
+        "settings.cfg",
+        "keymap.cfg",
+        "runtime.cfg",
+        "with-keymap.cfg"
+      ]
+    }
+  ]
+}
