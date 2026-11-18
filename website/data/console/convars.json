@@ -21984,9 +21984,8 @@
       "name": "mp_endwarmup_player_count",
       "flags": [
         "gamedll",
-        "clientdll",
-        "replicated",
-        "release"
+        "release",
+        "commandline_enforced"
       ],
       "default": "0",
       "min": null,
@@ -22518,8 +22517,6 @@
       "name": "mp_match_end_changelevel",
       "flags": [
         "gamedll",
-        "clientdll",
-        "replicated",
         "release",
         "commandline_enforced"
       ],
@@ -22533,9 +22530,8 @@
       "name": "mp_match_end_restart",
       "flags": [
         "gamedll",
-        "clientdll",
-        "replicated",
-        "release"
+        "release",
+        "commandline_enforced"
       ],
       "default": "false",
       "min": null,
@@ -23962,8 +23958,6 @@
       "name": "mp_verbose_changelevel_spew",
       "flags": [
         "gamedll",
-        "clientdll",
-        "replicated",
         "release"
       ],
       "default": "1",
@@ -24092,8 +24086,6 @@
       "name": "mp_warmuptime_all_players_connected",
       "flags": [
         "gamedll",
-        "clientdll",
-        "replicated",
         "release",
         "commandline_enforced"
       ],
@@ -24107,8 +24099,6 @@
       "name": "mp_warmuptime_match_cancelled",
       "flags": [
         "gamedll",
-        "clientdll",
-        "replicated",
         "release",
         "commandline_enforced"
       ],
@@ -30806,24 +30796,24 @@
     },
     {
       "type": "convar",
-      "name": "player_competitive_maplist_2v2_10_0_D684D4E1",
+      "name": "player_competitive_maplist_2v2_10_0_7B2B4F7",
       "flags": [
         "clientdll",
         "archive"
       ],
-      "default": "mg_de_inferno,mg_de_nuke,mg_de_vertigo,mg_de_debris,mg_de_poseidon,mg_de_eldorado,mg_de_overpass",
+      "default": "mg_de_inferno,mg_de_nuke,mg_de_vertigo,mg_de_debris,mg_de_poseidon,mg_de_eldorado,mg_de_overpass,mg_de_cbble",
       "min": null,
       "max": null,
       "description": ""
     },
     {
       "type": "convar",
-      "name": "player_competitive_maplist_8_10_0_A062AC6A",
+      "name": "player_competitive_maplist_8_10_0_25074C46",
       "flags": [
         "clientdll",
         "archive"
       ],
-      "default": "mg_de_dust2,mg_de_train,mg_de_ancient,mg_de_inferno,mg_de_nuke,mg_de_vertigo,mg_de_mirage,mg_cs_office,mg_cs_italy,mg_de_cache,mg_de_boulder,mg_de_anubis,mg_lobby_mapveto,mg_de_fachwerk,mg_cs_shelter,mg_de_overpass",
+      "default": "mg_de_dust2,mg_de_train,mg_de_ancient,mg_de_inferno,mg_de_nuke,mg_de_vertigo,mg_de_mirage,mg_cs_office,mg_cs_italy,mg_de_cache,mg_de_anubis,mg_lobby_mapveto,mg_de_overpass,mg_de_cbble",
       "min": null,
       "max": null,
       "description": ""
@@ -32260,126 +32250,6 @@
       "min": null,
       "max": null,
       "description": ""
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_dry_time",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "20",
-      "min": null,
-      "max": null,
-      "description": "Seconds for the melted frost to dry"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_force",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "-1",
-      "min": null,
-      "max": null,
-      "description": "Frost on players, weapons and chickens: -1 = the map's (info_map_parameters frostenabled), 0 = off, 1 = on (outdoors; melts indoors)"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_grow_time",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "10",
-      "min": null,
-      "max": null,
-      "description": "Seconds outdoors for frost to grow to full"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_heat_barrel_position",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "0.33",
-      "min": null,
-      "max": null,
-      "description": "Frost: where the barrel heat sits, from the shell eject (0) to the muzzle (1)"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_heat_cool_time",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "20",
-      "min": null,
-      "max": null,
-      "description": "Frost: seconds for a hot barrel to cool down"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_heat_light_delay",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "1",
-      "min": null,
-      "max": null,
-      "description": "Frost: seconds after a molotov is lit before its rag starts to heat (the flame shows a moment after)"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_heat_light_time",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "10",
-      "min": null,
-      "max": null,
-      "description": "Frost: seconds for a lit molotov's rag to reach full heat"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_heat_per_shot",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "0.05",
-      "min": null,
-      "max": null,
-      "description": "Frost: barrel heat per shot (1 = hot enough to clear the whole barrel)"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_indoor_distance",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "128",
-      "min": null,
-      "max": null,
-      "description": "Frost: distance under cover (no sky) over which the cold fades out (indoors)"
-    },
-    {
-      "type": "convar",
-      "name": "r_csgo_frost_melt_time",
-      "flags": [
-        "developmentonly",
-        "clientdll"
-      ],
-      "default": "10",
-      "min": null,
-      "max": null,
-      "description": "Seconds indoors for full frost to melt"
     },
     {
       "type": "convar",

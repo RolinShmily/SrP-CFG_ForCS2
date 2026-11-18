@@ -33041,23 +33041,23 @@
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:05:09Z"
     },
-    "convar:player_competitive_maplist_2v2_10_0_D684D4E1": {
-      "zh": "推测：2v2 竞技模式地图列表，默认包含若干 mg_ 前缀地图。",
+    "convar:player_competitive_maplist_2v2_10_0_7B2B4F7": {
+      "zh": "竞争模式2v2地图列表，可能用于地图选择",
       "basis": "name-flags",
       "sourceHash": null,
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:05:09Z"
+      "translatedAt": "2026-11-18T09:27:49Z"
     },
-    "convar:player_competitive_maplist_8_10_0_A062AC6A": {
-      "zh": "推测：竞技模式地图列表，默认包含若干 mg_ 前缀地图。",
+    "convar:player_competitive_maplist_8_10_0_25074C46": {
+      "zh": "竞争模式地图列表，可能用于地图选择",
       "basis": "name-flags",
       "sourceHash": null,
-      "producer": "agent-seed",
-      "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
+      "producer": "workers-ai",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
       "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-10T09:05:09Z"
+      "translatedAt": "2026-11-18T09:27:49Z"
     },
     "convar:player_debug_off_nav": {
       "zh": "推测：玩家调试时关闭导航相关功能，默认关闭。",
@@ -34147,96 +34147,6 @@
       "model": "remote-magpie/opencode-go/deepseek-v4.1-flash[1m]",
       "promptVersion": "console-zh-v1",
       "translatedAt": "2026-11-10T09:06:13Z"
-    },
-    "convar:r_csgo_frost_dry_time": {
-      "zh": "融化霜冻需要的秒数",
-      "basis": "english",
-      "sourceHash": "sha256:4c0cbd23dbe08663e9dc832d3d5e927b6e8f86982650e2ac257a9d2ed6e4671c",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_force": {
-      "zh": "玩家、武器和鸡的霜冻：-1 = 地图设置（info_map_parameters frostenabled），0 = 关闭，1 = 开启（户外；室内会融化）",
-      "basis": "english",
-      "sourceHash": "sha256:5d337578addb65cc98c9549cb5b5b142d9399f0ba71ed306d70182feda74c62b",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_grow_time": {
-      "zh": "户外霜冻完全生长需要的秒数",
-      "basis": "english",
-      "sourceHash": "sha256:2d8cd12cff379096fe1a3e978ab541b754583831d7be08a162dff75f61679995",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_heat_barrel_position": {
-      "zh": "霜冻：枪管热量位置，从弹壳弹出（0）到枪口（1）",
-      "basis": "english",
-      "sourceHash": "sha256:111c9d4044cab96c9ac3bbbff3168353c509510e305284918cbe37f1e1dbc485",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_heat_cool_time": {
-      "zh": "霜冻：热枪管冷却需要的秒数",
-      "basis": "english",
-      "sourceHash": "sha256:c8bfad605e2f37c9e1104bd68ef4f6a54ce4b2a9f7f1f4d8ac5075eeacdf96e7",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_heat_light_delay": {
-      "zh": "霜冻：燃烧瓶点燃后其布料开始加热的延迟秒数",
-      "basis": "english",
-      "sourceHash": "sha256:1c45b256e6248a57d5e4878be6ec14338718a26e84d6f24e6d648fef874109af",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_heat_light_time": {
-      "zh": "霜冻：点燃燃烧瓶的布料达到最大热量需要的秒数",
-      "basis": "english",
-      "sourceHash": "sha256:c6a581a283642fc4aa44ed087512f10105e219942cb60ee864265d89e0edb5b5",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_heat_per_shot": {
-      "zh": "霜冻：每发射一次的枪管热量（1 = 足以清除整个枪管）",
-      "basis": "english",
-      "sourceHash": "sha256:eead95435c2f4d4274af0d67a2c6b1642976a7459bf06d715209d91658d18a56",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_indoor_distance": {
-      "zh": "霜冻：室内冷却效果消失的距离",
-      "basis": "english",
-      "sourceHash": "sha256:784f8ee343f75f34ec43ba71ba4d5394b276b145842ef6ae057f80e0718c02a9",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
-    },
-    "convar:r_csgo_frost_melt_time": {
-      "zh": "室内完全融化霜冻需要的秒数",
-      "basis": "english",
-      "sourceHash": "sha256:cd9698e47b40867ffa5f9f5c5f90f17d474886b46b2c4b7842150137fc627b5e",
-      "producer": "workers-ai",
-      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "promptVersion": "console-zh-v1",
-      "translatedAt": "2026-11-12T08:57:32Z"
     },
     "convar:r_csgo_fsr_enable_mip_bias": {
       "zh": "使用 FSR 渲染时应用负的 mip 偏移。",
