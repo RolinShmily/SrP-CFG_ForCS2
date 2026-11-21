@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **config**: Bump `srp-cfg` preset baseline package to v3.4.2 (update default preset sensitivity to 0.53, viewmodel to v06, and mwheelup to invprev).
+- **config**: Bump `srp-cfg` preset baseline package to v3.4.3 (update default preset sensitivity to 0.53, viewmodel to v06, and mwheelup to invprev; refine crosshair-view library presets 05/06 and switch the default preset crosshair to c06).
 - **ci**: Integrate CHANGELOG release notes extraction into GitHub Actions release workflow and manifest generation.
 
 ## [3.4.9] - 2026-11-09
