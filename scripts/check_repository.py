@@ -27,14 +27,16 @@ def main():
 
     # 2. Package version numbers
     semver_pattern = re.compile(r"^\d+\.\d+\.\d+$")
-    packages = ["srp-cfg", "video", "annotations"]
+    # Package editions may carry a suffix (for example srp-cfg-csgo's "3.4.2-csgo").
+    package_version_pattern = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$")
+    packages = ["srp-cfg", "video", "annotations", "srp-cfg-csgo"]
     for pkg in packages:
         ver_file = repo_root / "config" / pkg / "VERSION.txt"
         if not ver_file.is_file():
             errors.append(f"Missing package VERSION.txt: config/{pkg}/VERSION.txt")
             continue
         ver = ver_file.read_text(encoding="utf-8").strip()
-        if not semver_pattern.match(ver):
+        if not package_version_pattern.match(ver):
             errors.append(f"Invalid semver '{ver}' in config/{pkg}/VERSION.txt")
         else:
             print(f"    [OK] Package '{pkg}': v{ver}")
@@ -43,6 +45,7 @@ def main():
     catalogs = [
         ("srp-cfg", repo_root / "config" / "srp-cfg" / "catalog.json"),
         ("annotations", repo_root / "config" / "annotations" / "catalog.json"),
+        ("srp-cfg-csgo", repo_root / "config" / "srp-cfg-csgo" / "catalog.json"),
     ]
     for pkg, cat_path in catalogs:
         if not cat_path.is_file():

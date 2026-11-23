@@ -45,8 +45,8 @@ export function CtaSection() {
   },[attempt]);
   function choose(value:DownloadSource){setSource(value);try{localStorage.setItem("srp_download_source",value);}catch(error){if(!(error instanceof DOMException))console.warn(error);}}
   const appAssets=[{name:t.downloads.setup,note:t.downloads.setupNote,asset:release?.setup,Icon:Monitor},{name:t.downloads.portable,note:t.downloads.portableNote,asset:release?.portable,Icon:Archive}];
-  const packageDescriptions={"srp-cfg":t.downloads.srp,video:t.downloads.video,annotations:t.downloads.annotations};
-  const icons={"srp-cfg":FileCode2,video:Settings2,annotations:Map};
+  const packageDescriptions={"srp-cfg":t.downloads.srp,video:t.downloads.video,annotations:t.downloads.annotations,"srp-cfg-csgo":t.downloads.csgo};
+  const icons={"srp-cfg":FileCode2,video:Settings2,annotations:Map,"srp-cfg-csgo":Package};
   const skillEntry=packages["srpcfg-cli"];
   return <section id="download" className="cs2-band cs2-band-orange downloads-section"><div className="content-width section-space">
     <Reveal className="section-heading"><div className="eyebrow">{t.downloads.eyebrow}</div><h2>{t.downloads.title}</h2><p>{t.downloads.description}</p></Reveal>
