@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -32,6 +32,12 @@ jobs:
         run: |
           echo "Has critical removed convars: ${{ steps.detect.outputs.has_critical }}"
           echo "Has unexpected value drifts: ${{ steps.detect.outputs.has_drift }}"
+          # A fetch/parse failure exits non-zero before writing outputs. Do not
+          # let a broken detector masquerade as a clean weekly check.
+          if [ "${{ steps.detect.outcome }}" != "success" ] && [ "${{ steps.detect.outputs.has_critical }}" != "true" ]; then
+            echo "::error::Drift detection did not complete; check the job log for network or parser errors."
+            exit 1
+          fi
 
       - name: Create or Update Issue on Drift
         if: steps.detect.outputs.has_critical == 'true' || steps.detect.outputs.has_drift == 'true'
