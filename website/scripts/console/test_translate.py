@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import io
 import json
 import os
 import sys
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -177,7 +179,7 @@ class TestTranslationLoopTermination(unittest.TestCase):
             },
         ]
         state = {"failures": 0, "max_failures": 100}
-        with mock.patch("translate.time.sleep", return_value=None):
+        with mock.patch("translate.time.sleep", return_value=None), redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             result = translate_chunk(EmptyBackend(), items, state)
         self.assertEqual(result, {})
         self.assertGreater(state["failures"], 0)
