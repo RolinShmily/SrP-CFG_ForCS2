@@ -4,7 +4,7 @@
 
 ## 1. 分支与提交
 
-- 从 `main` 切出，命名 `<类型>/<短横线描述>`：`feat/nuke-spawn-preset`、`fix/vcfg-overwrite`、`docs/development-standards`。
+- 仓库所有者可直接向 `main` 提交已验证的小型改动；外部贡献者与自动化 agent 必须从 `main` 切出分支，命名 `<类型>/<短横线描述>`：`feat/nuke-spawn-preset`、`fix/vcfg-overwrite`、`docs/development-standards`。
 - 一个逻辑一个提交；一个 PR 一个主题。格式化整文件、重排 import 这类无行为变更的改动单独成 PR，否则评审无法看清逻辑。
 - 先讨论再动手的场景：运行时分层、`srp_core` 公共 API（`include/srp/core/*.h`）、配置包布局与 catalog schema、`.github/workflows/**`、`SRP_APP_VERSION` 规则。开 issue 拿到结论再写代码。
 - PR 描述必须包含：改了什么、**为什么**、跑过哪些验证命令（贴命令，不必贴全量日志）、关联 issue。
