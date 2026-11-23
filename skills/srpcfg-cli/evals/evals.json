@@ -25,13 +25,13 @@
     },
     {
       "id": 3,
-      "prompt": "在测试 annotations/local 中装配 mirage 指南，然后卸载它。只操作这个 ID；目录已包含个人 mapguide 和另一张地图指南。执行并验证保留情况和移除备份。",
-      "expected_output": "Discover guide IDs; deploy/remove mirage using the supplied store and annotations target; preserve personal and unrelated files and retain the removed-guide backup.",
+      "prompt": "在测试 annotations/local 中装配随包清单的第一个地图指南，然后卸载它。只操作这个 ID；目录已包含个人 mapguide 和另一张地图指南。执行并验证保留情况和移除备份。",
+      "expected_output": "Discover guide IDs; deploy/remove the first catalog guide using the supplied store and annotations target; preserve personal and unrelated files and retain the removed-guide backup.",
       "files": [],
       "expectations": [
-        "Mirage is discovered and deployed from staging",
+        "Selected guide is discovered and deployed from staging",
         "Only selected guide is removed and its exact bytes are backed up",
-        "Personal mapguide and unrelated Dust2 file remain byte-identical"
+        "Personal mapguide and unrelated guide file remain byte-identical"
       ]
     }
   ]

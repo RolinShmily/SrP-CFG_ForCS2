@@ -37,13 +37,20 @@ jobs:
     name: Console data contract
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
       - name: Run console data unit tests
         run: python3 -m unittest discover -s website/scripts/console -p "test_*.py"
       - name: Validate console dataset
-        run: python3 website/scripts/console/validate.py
+        # The daily sync intentionally commits with --allow-stale so a Workers AI
+        # outage cannot block upstream fact updates. Keep pull requests strict.
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python3 website/scripts/console/validate.py
+          else
+            python3 website/scripts/console/validate.py --allow-stale
+          fi
       - name: Verify search index generation
         run: python3 website/scripts/console/build_index.py --output "$RUNNER_TEMP/console-index.json"

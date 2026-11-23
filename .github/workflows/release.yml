@@ -29,15 +29,19 @@ jobs:
           fi
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
+      - name: Validate CHANGELOG structure
+        shell: bash
+        run: python scripts/extract_changelog.py --check
+
       - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: ilammy/msvc-dev-cmd@v1.13.0
 
       - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
+        uses: ashutoshvarma/setup-ninja@v1.1
         with:
           version: 1.11.1
 
@@ -185,7 +189,7 @@ jobs:
       # 5. 发布到 GitHub Releases (仅包含软件制品)
       # ==========================================
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           body_path: dist/release_notes.md

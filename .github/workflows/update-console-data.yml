@@ -26,10 +26,13 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          # Full history so the retry path can rebase onto a concurrent push.
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -80,4 +83,9 @@ jobs:
           fi
           SHA=$(python3 -c "import json; print(json.load(open('website/data/console/metadata.json'))['upstream']['commit'][:12])")
           git commit -m "chore(console): sync CS2 console data to ${SHA}"
-          git push
+          # A human push may land while the sync runs; rebase once and retry.
+          if ! git push; then
+            git fetch origin main
+            git rebase origin/main
+            git push
+          fi

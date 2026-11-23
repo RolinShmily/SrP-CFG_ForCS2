@@ -5,10 +5,12 @@ export const RELEASE_API = "https://api.github.com/repos/RolinShmily/SrP-CFG_For
 export const MIRROR = "https://gh-proxy.org/";
 export type DownloadSource = "mirror" | "github";
 // Website downloads include the agent skill; APP config package IDs remain separate.
-export const packageIds = ["srp-cfg", "video", "annotations", "srpcfg-cli"] as const;
+export const packageIds = ["srp-cfg", "video", "annotations", "srp-cfg-csgo", "srpcfg-cli"] as const;
 export type PackageId = typeof packageIds[number];
-export const configPackageIds = ["srp-cfg", "video", "annotations"] as const;
+export const configPackageIds = ["srp-cfg", "video", "annotations", "srp-cfg-csgo"] as const;
 export type ConfigPackageId = typeof configPackageIds[number];
+// Package editions may carry a suffix (for example the CS:GO port's "3.4.2-csgo").
+const PACKAGE_VERSION = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/;
 export const skillId = "srpcfg-cli" as const;
 export type SkillId = typeof skillId;
 export interface DownloadAsset { url: string; sha256?: string; size?: number; }
@@ -57,7 +59,7 @@ export function parsePackageManifest(value: unknown): PackageManifest {
   if (obj?.schema_version !== 1 || !packages) return result;
   for (const id of packageIds) {
     const entry = object(packages[id]);
-    if (!entry || typeof entry.version !== "string" || !/^\d+\.\d+\.\d+$/.test(entry.version) || typeof entry.url !== "string") continue;
+    if (!entry || typeof entry.version !== "string" || !PACKAGE_VERSION.test(entry.version) || typeof entry.url !== "string") continue;
     try {
       const url = new URL(entry.url);
       if (url.origin !== "https://cfg.srprolin.com" || url.username || url.password || !url.pathname.startsWith(`/packages/${id}-`) || !url.pathname.endsWith(".zip") || url.search || url.hash) continue;

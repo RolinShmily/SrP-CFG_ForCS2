@@ -4,7 +4,7 @@
 
 ## 1. 分支与提交
 
-- 从 `main` 切出，命名 `<类型>/<短横线描述>`：`feat/nuke-spawn-preset`、`fix/vcfg-overwrite`、`docs/development-standards`。
+- 仓库所有者可直接向 `main` 提交已验证的小型改动；外部贡献者与自动化 agent 必须从 `main` 切出分支，命名 `<类型>/<短横线描述>`：`feat/nuke-spawn-preset`、`fix/vcfg-overwrite`、`docs/development-standards`。
 - 一个逻辑一个提交；一个 PR 一个主题。格式化整文件、重排 import 这类无行为变更的改动单独成 PR，否则评审无法看清逻辑。
 - 先讨论再动手的场景：运行时分层、`srp_core` 公共 API（`include/srp/core/*.h`）、配置包布局与 catalog schema、`.github/workflows/**`、`SRP_APP_VERSION` 规则。开 issue 拿到结论再写代码。
 - PR 描述必须包含：改了什么、**为什么**、跑过哪些验证命令（贴命令，不必贴全量日志）、关联 issue。
@@ -52,7 +52,7 @@ endif()
 
 - 只允许 `major.minor.patch` 三个非负整数，禁止 `-dev`/`-rc`/四位版本/前导零（`3.04.0` 会被拒）。
 - 该值编译进 `srp_core`（`SRP_APP_VERSION="x.y.z"`），`srpcfg version` 原样输出，`scripts/test-portable.ps1` 用它断言包版本，`scripts/check_repository.py` 校验格式。
-- 功能 PR 不动版本号。发布 PR 才把根 `CMakeLists.txt` 与三个配置包的 `config/{srp-cfg,video,annotations}/VERSION.txt` 一起调整，并核对这些包内容确实变了。
+- 功能 PR 不动版本号。发布 PR 才把根 `CMakeLists.txt` 与四个配置包的 `config/{srp-cfg,video,annotations,srp-cfg-csgo}/VERSION.txt` 一起调整，并核对这些包内容确实变了。
 - 发布时 tag 必须与版本号一致：`release.yml` 从 tag 提取 `vX.Y.Z` 并通过 `-DSRP_APP_VERSION=X.Y.Z` 覆盖缓存；tag 与源码版本不一致会造成 `latest.json`、安装器文件名、`srpcfg version` 三处互相矛盾。
 - 不要在任何 `.cpp/.h/.qml` 里另写版本字符串；读 `srp::core::applicationVersion()`。
 

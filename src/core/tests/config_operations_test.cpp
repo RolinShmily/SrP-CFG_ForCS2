@@ -8,6 +8,7 @@
 #include <chrono>
 #include <stdexcept>
 #include <set>
+#include <algorithm>
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -100,7 +101,9 @@ int main() {
         require(get(custom).find(userLayer) != std::string::npos, "preset operations preserve user layer");
 
         put(custom, "// SrP-CFG Preset Layer\nsrp_apply_echo\n// Preset Layer End\n// SrP-CFG User Layer\nsensitivity 2\nbind mouse4 +voicerecord\n");
-        require(assemblyModules().size() == 9, "core module registry contains four features and five modes");
+        const auto modules = assemblyModules();
+        for (const std::string id : {"autoview", "crosshair-view", "knife", "zeus", "demo-hlae", "guidemake", "practice", "preview", "pwa-prac"})
+            require(std::any_of(modules.begin(), modules.end(), [&](const auto& module) { return module.id == id; }), "core module registry contains documented module");
         require(assembleFeature(dir.u8string(), "autoview", true).success, "feature settings and keymap assembly");
         auto feature = inspectModuleAssembly(dir.u8string(), "autoview");
         require(feature.settings && feature.keymap && get(custom).find("srp_apply_echo") != std::string::npos, "feature assembly preserves preset and personal layer");

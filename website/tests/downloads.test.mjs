@@ -29,11 +29,14 @@ test('configuration packages keep independent versions, checksums and trusted Wo
  const entry={version:'3.4.0',sha256:'b'.repeat(64),size:4200,url:'https://cfg.srprolin.com/packages/video-v3.4.0-test.zip'};
  const manifest={schema_version:1,packages:{video:entry}};
  assert.equal(parsePackageManifest(manifest).video?.version,'3.4.0');
+ const csgo={...entry,version:'3.4.2-csgo',url:'https://cfg.srprolin.com/packages/srp-cfg-csgo-v3.4.2-csgo-test.zip'};
+ assert.equal(parsePackageManifest({schema_version:1,packages:{'srp-cfg-csgo':csgo}})['srp-cfg-csgo']?.version,'3.4.2-csgo');
+ assert.equal(parsePackageManifest({schema_version:1,packages:{'srp-cfg-csgo':{...csgo,version:'3.4.2-'}}})['srp-cfg-csgo'],undefined);
  for(const update of [{url:'https://evil.example/video.zip'},{url:entry.url.replace('srprolin.com','srprolin.top')},{url:entry.url.replace('srprolin.com','srprolin.com.evil.example')},{url:entry.url.replace('https:','http:')},{url:'https://user:pass@cfg.srprolin.com/packages/video-v3.4.0-test.zip'},{url:'https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v3.4.0-test.zip'},{sha256:'bad'},{size:-1},{url:entry.url+'?redirect=evil'},{url:entry.url.replace('video-','annotations-')}])assert.equal(parsePackageManifest({...manifest,packages:{video:{...entry,...update}}}).video,undefined);
  assert.deepEqual(parsePackageManifest({...manifest,schema_version:2}),{});
 });
-test('skill is a separately versioned trusted ZIP alongside the three config packages',()=>{
- assert.deepEqual(packageIds,['srp-cfg','video','annotations','srpcfg-cli']);
+test('skill is a separately versioned trusted ZIP alongside the config packages',()=>{
+ assert.deepEqual(packageIds,['srp-cfg','video','annotations','srp-cfg-csgo','srpcfg-cli']);
  const skill={version:'1.0.0',sha256:'c'.repeat(64),size:18000,url:'https://cfg.srprolin.com/packages/srpcfg-cli-v1.0.0-test.zip'};
  const manifest={schema_version:1,packages:{'srpcfg-cli':skill,video:{...skill,version:'3.4.0',url:'https://cfg.srprolin.com/packages/video-v3.4.0-test.zip'}}};
  assert.equal(parsePackageManifest(manifest)['srpcfg-cli']?.version,'1.0.0');

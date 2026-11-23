@@ -9,6 +9,7 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 namespace fs=std::filesystem;
 void require(bool ok,const char* label){if(!ok)throw std::runtime_error(label);std::cout<<"PASS: "<<label<<'\n';}
@@ -20,6 +21,9 @@ int main(int argc,char** argv){
  try{
   // Generate the extension fixture from tracked configs; no developer-local files needed.
   const auto fixture=argc>1 ? fs::u8path(argv[1]) : root/"fixture";
+  // Expected counts are derived from the shipped catalog, so adding official
+  // presets/features/modes/guides never breaks these checks.
+  std::size_t expectedGuides=0,expectedModules=0,expectedPresets=0,expectedLegacy=0;
   if(argc<=1){
    const auto bundle=fs::u8path(srp::core::findBundledConfigDir());
    require(!bundle.empty(),"bundled configs available");
@@ -42,12 +46,30 @@ int main(int argc,char** argv){
     put(commands,read(commands)+"\nalias \""+command+"\" \"exec srp-cfg/"+directory+"/"+(category=="presets" ? "apply.cfg" : "settings.cfg")+"\"\n");
    }
    put(fixture/"srp-cfg/catalog.json",catalog);
+   // Legacy discovery must still find every baseline entry without catalog.json.
+   const auto legacyBaseline=root/"legacy-baseline";
+   fs::copy(bundle/"srp-cfg",legacyBaseline,fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+   fs::remove(legacyBaseline/"catalog.json");
+   const auto legacyBaselineCatalog=srp::core::readConfigCatalog("srp-cfg",legacyBaseline.u8string());
+   require(legacyBaselineCatalog.success,"baseline legacy catalog is discoverable");
+   expectedLegacy=legacyBaselineCatalog.entries.size()+3;
+  }
+  {
+   const auto fixtureCfg=srp::core::readConfigCatalog("srp-cfg",(fixture/"srp-cfg").u8string());
+   const auto fixtureGuides=srp::core::readConfigCatalog("annotations",(fixture/"annotations").u8string());
+   require(fixtureCfg.success && fixtureGuides.success,"fixture catalogs parse");
+   expectedGuides=fixtureGuides.entries.size();
+   for(const auto& entry:fixtureCfg.entries){
+    if(entry.category=="features"||entry.category=="modes")++expectedModules;
+    else if(entry.category=="presets")++expectedPresets;
+   }
+   if(argc>1)expectedLegacy=fixtureCfg.entries.size();
   }
   srp::core::setPackageStoreRoot((root/"store").u8string());srp::core::setBundledConfigDir(fixture.u8string());
   require(srp::core::initializePackages().success,"initialize expanded package without application changes");
-  const auto guides=srp::core::annotationGuides();require(guides.size()==5 && guides.front().id=="nuke" && guides.front().file=="nuke-notes.txt","new map custom filename and ordering driven by catalog");
-  const auto modules=srp::core::assemblyModules();require(modules.size()==11,"new feature and mode discovered");
-  const auto presets=srp::core::scanPresets("");require(presets.size()==5 && presets.front().id=="future-preset" && presets.front().descriptionEn=="New preset description","new preset description and order driven by catalog");
+  const auto guides=srp::core::annotationGuides();require(guides.size()==expectedGuides && guides.front().id=="nuke" && guides.front().file=="nuke-notes.txt","new map custom filename and ordering driven by catalog");
+  const auto modules=srp::core::assemblyModules();require(modules.size()==expectedModules,"new feature and mode discovered");
+  const auto presets=srp::core::scanPresets("");require(presets.size()==expectedPresets && presets.front().id=="future-preset" && presets.front().descriptionEn=="New preset description","new preset description and order driven by catalog");
   const auto cfg=root/"game-cfg";require(srp::core::installSrp(cfg.u8string()).success,"expanded CFG package installs");
   const auto undeployed=root/"older-game";require(srp::core::installSrp(undeployed.u8string(),srp::core::findBundledConfigDir()).success,"older installation fixture");
   fs::remove(undeployed/"srp-cfg/features/future-feature/settings.cfg");
@@ -68,9 +90,9 @@ int main(int argc,char** argv){
   require(srp::core::removeAnnotation("nuke",local.u8string()).success,"new map selective uninstall works");
   auto invalid=root/"invalid";fs::copy(fixture/"annotations",invalid,fs::copy_options::recursive);
   auto catalog=read(invalid/"catalog.json");const auto directory=catalog.find("nuke-notes");catalog.replace(directory,std::string("nuke-notes").size(),"../escape");put(invalid/"catalog.json",catalog);
-  require(!srp::core::promotePackageDirectory("annotations",invalid.u8string()).success && srp::core::annotationGuides().size()==5,"unsafe metadata fails update and retains expanded package");
+  require(!srp::core::promotePackageDirectory("annotations",invalid.u8string()).success && srp::core::annotationGuides().size()==expectedGuides,"unsafe metadata fails update and retains expanded package");
   auto legacy=root/"legacy";fs::copy(fixture/"srp-cfg",legacy,fs::copy_options::recursive);fs::remove(legacy/"catalog.json");
-  const auto found=srp::core::readConfigCatalog("srp-cfg",legacy.u8string());require(found.success && found.entries.size()==16,"legacy CFG discovery supports new directory aliases");
+  const auto found=srp::core::readConfigCatalog("srp-cfg",legacy.u8string());require(found.success && found.entries.size()==expectedLegacy,"legacy CFG discovery supports new directory aliases");
   auto legacyGuides=root/"legacy-guides";fs::copy(fixture/"annotations",legacyGuides,fs::copy_options::recursive);fs::remove(legacyGuides/"catalog.json");
   // Old convention discovers <directory>/<directory>.txt with MapName, never a fixed map whitelist.
   const auto newLegacy=legacyGuides/"SrP-Overpass-Guide";put(newLegacy/"SrP-Overpass-Guide.txt",text.substr(0,text.find("de_nuke"))+"de_overpass"+text.substr(text.find("de_nuke")+7));

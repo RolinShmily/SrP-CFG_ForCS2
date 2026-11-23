@@ -11,7 +11,13 @@ import zipfile
 
 REPO = Path(__file__).resolve().parent.parent
 ORIGIN = 'https://cfg.srprolin.com'
-CONFIG_IDS = ('srp-cfg', 'video', 'annotations')
+CONFIG_IDS = ('srp-cfg', 'video', 'annotations', 'srp-cfg-csgo')
+# Packages rooted in a named directory inside the game's cfg folder use that prefix.
+PREFIXED = {'srp-cfg', 'srp-cfg-csgo'}
+AUTOEXEC = {
+    'srp-cfg': ('autoexec.cfg', REPO/'config/autoexec.cfg'),
+    'srp-cfg-csgo': ('autoexec_csgo.cfg', REPO/'config/autoexec_csgo.cfg'),
+}
 
 
 def entries(directory, prefix=''):
@@ -27,7 +33,7 @@ def entries(directory, prefix=''):
 
 def build_package(output, package_id, directory, files):
     version = (directory/'VERSION.txt').read_text(encoding='utf-8').strip()
-    if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', version):
+    if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?', version):
         raise ValueError(f'Invalid version for {package_id}: {version}')
     archive = output/f'{package_id}-v{version}.zip'
     with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
@@ -55,9 +61,11 @@ def main():
     packages = {}
     for package_id in CONFIG_IDS:
         directory = REPO/'config'/package_id
-        files = list(entries(directory, 'srp-cfg/' if package_id == 'srp-cfg' else ''))
-        if package_id == 'srp-cfg':
-            files.append(('autoexec.cfg', (REPO/'config/autoexec.cfg').read_bytes()))
+        prefix = f'{package_id}/' if package_id in PREFIXED else ''
+        files = list(entries(directory, prefix))
+        if package_id in AUTOEXEC:
+            name, path = AUTOEXEC[package_id]
+            files.append((name, path.read_bytes()))
         packages[package_id] = build_package(archives, package_id, directory, files)
     directory = REPO/'skills/srpcfg-cli'
     files = list(entries(directory, 'srpcfg-cli/'))

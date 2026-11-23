@@ -9,13 +9,19 @@ import tempfile
 import zipfile
 
 REPO = Path(__file__).resolve().parent.parent
+# Derive the expected set from the repository so a newly added config package
+# cannot be silently omitted from the published manifest.
+CONFIG_PACKAGES = {
+    path.name for path in (REPO/'config').iterdir()
+    if path.is_dir() and (path/'VERSION.txt').is_file()
+}
 with tempfile.TemporaryDirectory(prefix='srpcfg-download-test-') as temporary:
     output = Path(temporary)
     command = [sys.executable, str(REPO/'scripts/package-website.py'), '--output', str(output)]
     subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
     manifest = json.loads((output/'packages.json').read_text(encoding='utf-8'))
     assert manifest['schema_version'] == 1
-    assert set(manifest['packages']) == {'srp-cfg', 'video', 'annotations', 'srpcfg-cli'}
+    assert set(manifest['packages']) == CONFIG_PACKAGES | {'srpcfg-cli'}
     for package_id, entry in manifest['packages'].items():
         name = entry['url'].rsplit('/', 1)[1]
         archive = output/'packages'/name
@@ -37,6 +43,8 @@ with tempfile.TemporaryDirectory(prefix='srpcfg-download-test-') as temporary:
                 assert zipped.read('srpcfg-cli/LICENSE.txt') == (REPO/'LICENSE').read_bytes()
             elif package_id == 'srp-cfg':
                 assert 'autoexec.cfg' in names and 'srp-cfg/runtime/init.cfg' in names
+            elif package_id == 'srp-cfg-csgo':
+                assert 'autoexec_csgo.cfg' in names and 'srp-cfg-csgo/runtime/init.cfg' in names and 'srp-cfg-csgo/catalog.json' in names
             elif package_id == 'video':
                 assert 'cs2_video.txt' in names
             else:
