@@ -95,21 +95,29 @@ def main():
         personal = local/'mapguide/mapguide.txt'
         personal.parent.mkdir(parents=True)
         personal.write_bytes(b'personal guide\r\n')
-        other = local/'SrP-Dust2-Guide/SrP-Dust2-Guide.txt'
+        # Guide identity comes from the shipped catalog; renames must not break CI.
+        catalog = json.loads((bundle/'annotations/catalog.json').read_text(encoding='utf-8'))
+        chosen = catalog['entries'][0]
+        guide_id = chosen['id']
+        guide_file = f"{chosen['directory']}/{chosen['files'][0]}"
+        other_name = 'SrP-Unrelated-Guide'
+        if other_name == chosen['directory']:
+            other_name = 'SrP-Second-Guide'
+        other = local/other_name/f'{other_name}.txt'
         other.parent.mkdir()
         other.write_bytes(b'unrelated guide\r\n')
         personal_before, other_before = personal.read_bytes(), other.read_bytes()
         guides = run('annotations', '--annotations-dir', local, '--store', store).stdout
-        run('annotation-deploy', 'mirage', '--annotations-dir', local, '--store', store)
-        target = local/'SrP-Mirage-Guide/SrP-Mirage-Guide.txt'
+        run('annotation-deploy', guide_id, '--annotations-dir', local, '--store', store)
+        target = local/guide_file
         deployed = target.read_bytes()
         listed = run('annotations', '--annotations-dir', local, '--store', store, '--en').stdout
-        run('annotation-remove', 'mirage', '--annotations-dir', local, '--store', store)
+        run('annotation-remove', guide_id, '--annotations-dir', local, '--store', store)
         run('annotations', '--annotations-dir', local, '--store', store, '--en')
         finish(3, 'selective-guide-removal', [
-            {'text': 'Mirage is discovered and deployed from staging', 'passed': 'mirage:' in guides and deployed==(bundle/'annotations/SrP-Mirage-Guide/SrP-Mirage-Guide.txt').read_bytes() and bool(re.search(r'^mirage: Deployed$', listed, re.MULTILINE)), 'evidence': 'Listing, deployed source bytes and Deployed state checked'},
-            {'text': 'Only selected guide is removed and its exact bytes are backed up', 'passed': not target.exists() and Path(str(target)+'.bak').read_bytes()==deployed, 'evidence': 'Mirage live file absent; .bak matches deployed bytes'},
-            {'text': 'Personal mapguide and unrelated Dust2 file remain byte-identical', 'passed': personal.read_bytes()==personal_before and other.read_bytes()==other_before, 'evidence': 'Both unrelated fixture files compared after deploy/remove'}
+            {'text': 'Selected guide is discovered and deployed from staging', 'passed': f'{guide_id}:' in guides and deployed==(bundle/'annotations'/guide_file).read_bytes() and bool(re.search(rf'^{re.escape(guide_id)}: Deployed$', listed, re.MULTILINE)), 'evidence': 'Listing, deployed source bytes and Deployed state checked'},
+            {'text': 'Only selected guide is removed and its exact bytes are backed up', 'passed': not target.exists() and Path(str(target)+'.bak').read_bytes()==deployed, 'evidence': 'Selected live file absent; .bak matches deployed bytes'},
+            {'text': 'Personal mapguide and unrelated guide file remain byte-identical', 'passed': personal.read_bytes()==personal_before and other.read_bytes()==other_before, 'evidence': 'Both unrelated fixture files compared after deploy/remove'}
         ], start)
     print('ALL SRPCFG SKILL COMMAND SCENARIOS PASSED')
 
