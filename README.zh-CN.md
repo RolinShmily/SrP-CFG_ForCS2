@@ -70,7 +70,7 @@ CS2 引擎启动
 
 ---
 
-## 📦 三大独立配置包
+## 📦 独立配置包
 
 所有功能组件完全解耦，独立版本管理、独立分发，不强制捆绑：
 
@@ -79,6 +79,7 @@ CS2 引擎启动
 | **`srp-cfg`** | `game/csgo/cfg/` | **运行时核心底座**。包含命令引擎、特性模块、模式会话、社区预设及 `custom.cfg` 用户专属层。 |
 | **`video`** | `Steam/userdata/<ID>/730/local/cfg/` | **竞技画面模板**。结构化解析 `cs2_video.txt`，自动保留本机显卡/屏幕硬件标识与未知字段。 |
 | **`annotations`** | `game/csgo/annotations/local/` | **原生地图标注指南**。标准 CS2 KV3 格式，多图并存且绝不覆盖玩家个人 `mapguide`。 |
+| **`srp-cfg-csgo`** | `csgo/cfg/` | **CS:GO 版本**。运行时核心的 Source 1 移植，含预设、模块与 `autoexec_csgo.cfg`；不由 CS2 桌面端管理。 |
 
 ---
 

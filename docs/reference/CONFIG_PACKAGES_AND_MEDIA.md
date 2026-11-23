@@ -9,7 +9,7 @@
 
 ## 配置包与暂存区
 
-三个包独立管理：`srp-cfg`、`video`、`annotations`，Valve 包含在 `srp-cfg` 内。软件版本与包版本相互独立。地图、预设和模块由包内清单驱动，新增步骤见 [CONFIG_CATALOG.md](CONFIG_CATALOG.md)。
+四个包独立管理：`srp-cfg`、`video`、`annotations`、`srp-cfg-csgo`，Valve 包含在 `srp-cfg` 内。其中 `srp-cfg-csgo` 是面向 CS:GO 的 Source 1 移植发行包，桌面应用只管理前三个 CS2 包，官网单独提供下载。软件版本与包版本相互独立。地图、预设和模块由包内清单驱动，新增步骤见 [CONFIG_CATALOG.md](CONFIG_CATALOG.md)。
 
 GUI 安装/便携包及 CLI 包随附完整 `config/`。首次运行离线初始化到 Windows 当前用户的：
 
@@ -30,7 +30,7 @@ CLI 与 GUI 均可传入 `--store <path>` 使用独立暂存区。安装目录�
 
 ## 在线更新
 
-读取 Cloudflare Worker 上的 `https://cfg.srprolin.com/packages.json`（schema 1）。只接受已知三个包和官网 `/packages/` 路径的 HTTPS 下载；验证版本、大小和 SHA-256。大小限制为 ZIP 16 MiB、解包总量 64 MiB、单文件 16 MiB、最多 5000 条目。拒绝绝对/越界路径、Windows 非法名称、链接及大小写重复路径。
+读取 Cloudflare Worker 上的 `https://cfg.srprolin.com/packages.json`（schema 1）。桌面应用只接受已知的三个 CS2 包（`srp-cfg`、`video`、`annotations`）和官网 `/packages/` 路径的 HTTPS 下载；验证版本、大小和 SHA-256。网站额外发布的 `srp-cfg-csgo` 与 Skill 条目会被忽略。大小限制为 ZIP 16 MiB、解包总量 64 MiB、单文件 16 MiB、最多 5000 条目。拒绝绝对/越界路径、Windows 非法名称、链接及大小写重复路径。
 
 Windows 网络使用 WinHTTP，哈希使用 BCrypt；解包通过系统 Windows PowerShell/.NET 执行应用生成的校验脚本，配置包本身不提供可执行脚本。当前在线更新只实现 Windows 平台。
 

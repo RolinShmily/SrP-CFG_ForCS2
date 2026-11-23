@@ -147,8 +147,8 @@ scripts/test-portable.ps1 -PackageDir dist/srp-cfg-v3.4.9-windows-x64-gui -Versi
 ## 6. 仓库与网站测试
 
 ```bash
-python3 scripts/check_repository.py          # 根文档、三个包 VERSION.txt、catalog 文件存在性、SRP_APP_VERSION、遗留目录
-python3 scripts/test_website_packages.py     # 三个包的 manifest：HTTPS 来源、大小、SHA-256、ZIP 内 SKILL.md 一致性
+python3 scripts/check_repository.py          # 根文档、四个配置包 VERSION.txt、catalog 文件存在性、SRP_APP_VERSION、遗留目录
+python3 scripts/test_website_packages.py     # 四个配置包与 CLI skill 的 manifest：HTTPS 来源、大小、SHA-256、ZIP 内容一致性
 python3 scripts/package-website.py           # 生成确定性 ZIP 与下载清单（写 website/public/packages*，属生成物，勿手改）
 
 pnpm install --frozen-lockfile --ignore-scripts

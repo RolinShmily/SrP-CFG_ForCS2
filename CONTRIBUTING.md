@@ -127,7 +127,7 @@ cmake --preset core && cmake --build --preset core && ctest --preset core
 # 2. Repository integrity: versions, catalogs, declared files, doc presence
 python3 scripts/check_repository.py
 
-# 3. Package manifest rules (three packages, HTTPS origin, sizes, hashes)
+# 3. Package manifest rules (four config packages plus the CLI skill, HTTPS origin, sizes, hashes)
 python3 scripts/test_website_packages.py
 
 # 4. Website: unit tests, type-check, production build

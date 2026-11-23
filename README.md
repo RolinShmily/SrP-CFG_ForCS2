@@ -70,7 +70,7 @@ CS2 Engine Boot
 
 ---
 
-## 📦 Three Decoupled Packages
+## 📦 Decoupled Packages
 
 All configuration components are completely decoupled, versioned independently, and distributed separately:
 
@@ -79,6 +79,7 @@ All configuration components are completely decoupled, versioned independently, 
 | **`srp-cfg`** | `game/csgo/cfg/` | **Runtime Core Base**. Includes command engine, feature modules, mode sessions, community presets, and `custom.cfg` user layer. |
 | **`video`** | `Steam/userdata/<ID>/730/local/cfg/` | **Competitive Video Template**. Structured parser for `cs2_video.txt` that preserves local GPU/monitor hardware IDs and unknown fields. |
 | **`annotations`** | `game/csgo/annotations/local/` | **Native Map Guides**. Standard CS2 KV3 format; multiple guides coexist without clobbering personal `mapguide` files. |
+| **`srp-cfg-csgo`** | `csgo/cfg/` | **CS:GO Edition**. Source 1 port of the runtime core, presets, and modules; ships `autoexec_csgo.cfg`. Not managed by the CS2 desktop app. |
 
 ---
 

@@ -35,7 +35,7 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 - 产品特性：原生文件、暂存、备份及 Skill 协助配置四项能力。
 - APP 展示：五个页面、中英文真实截图、带图标的手动标签与前后切换、键盘切页。无自动轮播或放大弹窗。
 - 配置装配：四个配置职责层的空间展示，展开/收起及层选择。只有装饰面板接受 3D 倾斜，文字和代码保持原生尺寸正向渲染，避免整层缩放引起的模糊。模式以按键触发，不暗示启动时立即执行。
-- 下载中心：桌面软件、srpcfg CLI 介绍、三个独立配置包和 srpcfg-cli ZIP；Skill 卡片附安装说明。
+- 下载中心：桌面软件、srpcfg CLI 介绍、四个独立配置包和 srpcfg-cli ZIP；Skill 卡片附安装说明。
 - Console：`/console` 独立布局，提供总览、ConVars、Commands、分类、Flags 与数据更新；支持浏览器端搜索、筛选、详情、复制配置片段和上游来源展示。
 - 顶部是一条统一导航条：品牌、站点分区、Console 与操作区共用同一个圆角容器，`/` 与 `/console` 使用同一组件；滚动后收紧但不拆成多个浮岛。GitHub 旁的 Skill 按钮直达 `#srpcfg-cli` 下载卡片；手机保留带无障碍名称的紧凑 Skill 图标和可键盘关闭的菜单。
 - 保留既有 Valve CS2 SVG 背景；没有复制参考站的图片或品牌资源。
@@ -78,7 +78,7 @@ test 使用 Node >=22.18 内置 TypeScript stripping；lint 是严格 TypeScript
 
 网站介绍 `srpcfg.exe` 的命令行工作流，并提供独立 `srpcfg-cli` ZIP。下载后解压，将 `srpcfg-cli/` 放入智能体的技能目录；运行技能仍需安装 CLI，ZIP 不包含可执行文件。游戏内 alias 继续使用 `srp_*`。
 
-Skill 的版本来自 `skills/srpcfg-cli/VERSION.txt`，独立于软件和配置包。`scripts/package-website.py` 使用 Python 标准库生成四种 ZIP、带 SHA 的文件名及 packages.json，Skill ZIP 含顶层目录和 MIT LICENSE.txt，过滤缓存/备份。APP core 只处理原有三个游戏配置包，忽略网站清单中的 Skill 条目。
+Skill 的版本来自 `skills/srpcfg-cli/VERSION.txt`，独立于软件和配置包。`scripts/package-website.py` 使用 Python 标准库生成五种 ZIP、带 SHA 的文件名及 packages.json，Skill ZIP 含顶层目录和 MIT LICENSE.txt，过滤缓存/备份。APP core 只处理三个 CS2 游戏配置包，忽略 CS:GO 包与 Skill 条目。
 
 本地生成可下载资源：
 
@@ -89,7 +89,7 @@ pnpm build
 
 ## 部署
 
-`deploy-worker.yml` 在命中网站相关路径的 PR 与 main 推送、或手动触发时，打包三个配置包与 Skill ZIP、运行解析测试/类型检查、构建 `website/build/client`。PR 只构建验证；main 推送或手动触发才用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg` 和静态资源目录，显式关闭 workers.dev 地址和版本预览 URL（`workers_dev = false`、`preview_urls = false`）；不声明 Custom Domain，也没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
+`deploy-worker.yml` 在命中网站相关路径的 PR 与 main 推送、或手动触发时，打包四个配置包与 Skill ZIP、运行解析测试/类型检查、构建 `website/build/client`。PR 只构建验证；main 推送或手动触发才用 Cloudflare Wrangler 部署静态 Worker。根目录 `wrangler.toml` 定义 Worker `srp-cfg` 和静态资源目录，显式关闭 workers.dev 地址和版本预览 URL（`workers_dev = false`、`preview_urls = false`）；不声明 Custom Domain，也没有服务器入口脚本。网站从 `/` 加载资源，缺失路径返回真正的 404，不将 ZIP/JSON 请求回退成首页。
 
 部署通过仓库 Secrets `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` 认证；Console 增量翻译另用 `CLOUDFLARE_AI_TOKEN`（见 [`scripts/console/README.md`](scripts/console/README.md)）。凭据不写入 TOML。部署 Token 需要 Worker 部署权限。CI 不修改官网 DNS 或域名绑定；官网 `cfg.srprolin.com` 由 Cloudflare 控制台单独绑定到该 Worker。官网与 APP 配置更新需在该域名绑定完成后验证；本地预览使用 `pnpm preview`。
 

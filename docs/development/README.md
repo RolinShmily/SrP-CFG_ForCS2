@@ -34,7 +34,7 @@ cmake --preset core && cmake --build --preset core && ctest --preset core
 # 仓库完整性（必需文档、包版本、catalog 文件、SRP_APP_VERSION）
 python3 scripts/check_repository.py
 
-# 配置包规则（三个包、HTTPS 来源、大小、SHA-256）
+# 配置包规则（四个配置包、HTTPS 来源、大小、SHA-256）
 python3 scripts/test_website_packages.py
 
 # 网站：单元测试、类型检查、静态构建

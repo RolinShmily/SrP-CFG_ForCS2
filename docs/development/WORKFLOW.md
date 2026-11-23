@@ -52,7 +52,7 @@ endif()
 
 - 只允许 `major.minor.patch` 三个非负整数，禁止 `-dev`/`-rc`/四位版本/前导零（`3.04.0` 会被拒）。
 - 该值编译进 `srp_core`（`SRP_APP_VERSION="x.y.z"`），`srpcfg version` 原样输出，`scripts/test-portable.ps1` 用它断言包版本，`scripts/check_repository.py` 校验格式。
-- 功能 PR 不动版本号。发布 PR 才把根 `CMakeLists.txt` 与三个配置包的 `config/{srp-cfg,video,annotations}/VERSION.txt` 一起调整，并核对这些包内容确实变了。
+- 功能 PR 不动版本号。发布 PR 才把根 `CMakeLists.txt` 与四个配置包的 `config/{srp-cfg,video,annotations,srp-cfg-csgo}/VERSION.txt` 一起调整，并核对这些包内容确实变了。
 - 发布时 tag 必须与版本号一致：`release.yml` 从 tag 提取 `vX.Y.Z` 并通过 `-DSRP_APP_VERSION=X.Y.Z` 覆盖缓存；tag 与源码版本不一致会造成 `latest.json`、安装器文件名、`srpcfg version` 三处互相矛盾。
 - 不要在任何 `.cpp/.h/.qml` 里另写版本字符串；读 `srp::core::applicationVersion()`。
 
