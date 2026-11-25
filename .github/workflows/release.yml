@@ -10,195 +10,68 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
-    name: Build & Publish Release
-    runs-on: windows-latest
+  validate:
+    name: Validate Tag & Changelog
+    runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
-
+    outputs:
+      version: ${{ steps.tag.outputs.version }}
     steps:
       - name: Validate SemVer tag format
+        id: tag
         shell: bash
         run: |
           TAG="${GITHUB_REF_NAME}"
-          echo "Triggered tag: ${TAG}"
-          if [[ "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "Tag validation passed."
+          echo "Triggered ref: ${TAG}"
+          if [[ "${TAG}" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "version=" >> "$GITHUB_OUTPUT"
           else
-            echo "::error::Tag '${TAG}' does not match required semver format vMAJOR.MINOR.PATCH (regex: ^v[0-9]+\.[0-9]+\.[0-9]+$)"
+            echo "::error::Tag '${TAG}' does not match required semver format vMAJOR.MINOR.PATCH"
             exit 1
           fi
 
       - name: Checkout repository
         uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
         with:
-          submodules: recursive
+          python-version: '3.12'
 
-      - name: Validate CHANGELOG structure
-        shell: bash
-        run: python scripts/extract_changelog.py --check
+      - name: Validate CHANGELOG and repository integrity
+        run: |
+          python3 scripts/extract_changelog.py --check
+          python3 scripts/check_repository.py
+          python3 tests/content/test_content_packages.py
 
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1.13.0
+  build:
+    name: Build Windows Artifacts
+    needs: validate
+    uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ needs.validate.outputs.version }}
 
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@v1.1
+  publish:
+    name: Publish GitHub Release
+    needs: [validate, build]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
         with:
-          version: 1.11.1
+          name: release-bundle
+          path: dist
 
-      - name: Setup Inno Setup
-        shell: pwsh
-        run: |
-          choco install innosetup --no-progress -y
-          echo "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-      - name: Install Qt 6
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: '6.8.0'
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2022_64'
-          modules: qtshadertools
-
-      - name: Configure CMake
-        run: |
-          $versionArgs = @()
-          if ("${{ github.ref_name }}" -match "^v([0-9]+\.[0-9]+\.[0-9]+)$") { $versionArgs += "-DSRP_APP_VERSION=$($Matches[1])" }
-          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release @versionArgs -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
-
-      - name: Build Release Targets
-        run: |
-          cmake --build build --config Release --parallel 2
-          if ($LASTEXITCODE -ne 0) { throw 'Release build failed' }
-          ctest --test-dir build -C Release --output-on-failure
-          if ($LASTEXITCODE -ne 0) { throw 'Release regression tests failed' }
-
-      - name: Package CLI, GUI, and Setup Installer
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $qtBin = "$env:QT_ROOT_DIR/bin"
-          $versionLine = (Select-String -Path 'build/CMakeCache.txt' -Pattern '^SRP_APP_VERSION:STRING=(.+)$').Matches
-          if (!$versionLine) { throw 'Build application version is missing' }
-          $tag = "v$($versionLine[0].Groups[1].Value)"
-          New-Item -ItemType Directory -Path "dist" -Force | Out-Null
-          $crt = Get-ChildItem "$env:VCToolsRedistDir/x64/Microsoft.VC*.CRT" -Directory | Select-Object -First 1
-          if (!$crt) { throw 'MSVC x64 redistributable DLL directory not found' }
-
-          # ==========================================
-          # 1. 打包 Standalone CLI 独立命令行包
-          # ==========================================
-          $cliDir = "dist/srp-cfg-$tag-windows-x64-cli"
-          New-Item -ItemType Directory -Path $cliDir -Force | Out-Null
-          Copy-Item "build/src/cli/srpcfg.exe" -Destination "$cliDir/srpcfg.exe"
-          New-Item -ItemType Directory -Path "$cliDir/skills" -Force | Out-Null
-          Copy-Item "skills/srpcfg-cli" -Destination "$cliDir/skills/srpcfg-cli" -Recurse
-          Copy-Item "$($crt.FullName)/*.dll" -Destination $cliDir
-          Copy-Item "config" -Destination "$cliDir/config" -Recurse -Force
-          Copy-Item "LICENSE" -Destination "$cliDir/LICENSE.txt"
-          Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$cliDir/THIRD_PARTY_NOTICES.md"
-          Copy-Item "licenses" -Destination "$cliDir/licenses" -Recurse
-          Copy-Item "README.md" -Destination "$cliDir/README.md"
-          Copy-Item "README.zh-CN.md" -Destination "$cliDir/README.zh-CN.md"
-          $cliZip = "dist/srp-cfg-$tag-windows-x64-cli.zip"
-          Compress-Archive -Path "$cliDir" -DestinationPath $cliZip -Force
-
-          # ==========================================
-          # 2. 打包 Standalone GUI 绿色便携免安装包 (自带离线出厂预设)
-          # ==========================================
-          $guiDir = "dist/srp-cfg-$tag-windows-x64-gui"
-          New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
-          Copy-Item "build/src/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
-          Copy-Item "build/src/cli/srpcfg.exe" -Destination "$guiDir/srpcfg.exe"
-          New-Item -ItemType Directory -Path "$guiDir/skills" -Force | Out-Null
-          Copy-Item "skills/srpcfg-cli" -Destination "$guiDir/skills/srpcfg-cli" -Recurse
-          Copy-Item "$($crt.FullName)/*.dll" -Destination $guiDir
-
-          # The configured Ninja build produces these exact runtime paths.
-          Copy-Item "build/HuskarUI/bin/HuskarUIBasic.dll" -Destination "$guiDir/"
-          Copy-Item "build/HuskarUI/bin/HuskarUIImpl.dll" -Destination "$guiDir/"
-
-          # 三个独立离线包；客户端首次运行初始化到用户可写暂存区。
-          python scripts/check_repository.py
-          if ($LASTEXITCODE -ne 0) { throw 'Repository validation failed' }
-          Copy-Item "config" -Destination "$guiDir/config" -Recurse -Force
-
-          Copy-Item "LICENSE" -Destination "$guiDir/LICENSE.txt"
-          Copy-Item "THIRD_PARTY_NOTICES.md" -Destination "$guiDir/THIRD_PARTY_NOTICES.md"
-          Copy-Item "licenses" -Destination "$guiDir/licenses" -Recurse
-          Copy-Item "README.md" -Destination "$guiDir/README.md"
-          Copy-Item "README.zh-CN.md" -Destination "$guiDir/README.zh-CN.md"
-
-          # Qt 6.8 scans custom imports but does not reliably copy third-party modules.
-          New-Item -ItemType Directory -Path "$guiDir/qml" -Force | Out-Null
-          Copy-Item "build/HuskarUI/qml/HuskarUI" -Destination "$guiDir/qml/HuskarUI" -Recurse
-
-          # 自动收集 Qt 运行时与 QML 模块依赖
-          & "$qtBin/windeployqt.exe" --qmldir "src/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
-          if ($LASTEXITCODE -ne 0) { throw 'Qt runtime deployment failed' }
-          # The local VC runtime DLLs are already deployed; the 18 MB redist installer is redundant.
-          Remove-Item "$guiDir/vc_redist.x64.exe" -Force -ErrorAction SilentlyContinue
-          # D3D11 is the Windows Quick backend; the software OpenGL fallback is unused.
-          Remove-Item "$guiDir/opengl32sw.dll" -Force -ErrorAction SilentlyContinue
-          foreach ($module in @('Basic', 'Impl')) {
-              if (!(Test-Path "$guiDir/qml/HuskarUI/$module/qmldir")) { throw "Missing deployed HuskarUI module: $module" }
-          }
-
-          # Verify the package with no build-tree / Qt SDK paths available.
-          & scripts/test-portable.ps1 -PackageDir $guiDir -Version $tag.TrimStart('v')
-
-          $guiZip = "dist/srp-cfg-$tag-windows-x64-gui.zip"
-          Compress-Archive -Path "$guiDir" -DestinationPath $guiZip -Force
-
-          # ==========================================
-          # 3. 构建 Windows 安装器 (Inno Setup)
-          # ==========================================
-          $absGuiDir = (Resolve-Path "$guiDir").Path
-          $absDistDir = (Resolve-Path "dist").Path
-          ISCC.exe /DMyAppVersion="$tag" /DSourceDir="$absGuiDir" /DOutputDir="$absDistDir" installer/installer.iss
-          if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed' }
-
-          # ==========================================
-          # 4. 生成客户端升级清单 latest.json 与更新日志
-          # ==========================================
-          $guiSha256 = (Get-FileHash -Path $guiZip -Algorithm SHA256).Hash.ToLower()
-          $setupExePath = "dist/srp-cfg-$tag-windows-x64-setup.exe"
-          $setupSha256 = (Get-FileHash -Path $setupExePath -Algorithm SHA256).Hash.ToLower()
-          $cleanAppVer = $tag.TrimStart('v')
-
-          $notesZh = & python scripts/extract_changelog.py --version $cleanAppVer --notes-zh
-          if (!$notesZh) { $notesZh = "SrP-CFG $tag 发布" }
-          $notesEn = & python scripts/extract_changelog.py --version $cleanAppVer --notes-en
-          if (!$notesEn) { $notesEn = "SrP-CFG $tag Release" }
-          & python scripts/extract_changelog.py --version $cleanAppVer --body-file "dist/release_notes.md"
-
-          $latest = @{
-              version = $cleanAppVer
-              tag = $tag
-              published_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-              gui_zip_url = "https://github.com/${{ github.repository }}/releases/download/$tag/srp-cfg-$tag-windows-x64-gui.zip"
-              gui_zip_sha256 = $guiSha256
-              setup_exe_url = "https://github.com/${{ github.repository }}/releases/download/$tag/srp-cfg-$tag-windows-x64-setup.exe"
-              setup_exe_sha256 = $setupSha256
-              notes_zh = $notesZh
-              notes_en = $notesEn
-          } | ConvertTo-Json -Depth 4
-          $latest | Set-Content -Path "dist/latest.json" -Encoding utf8
-
-      # ==========================================
-      # 5. 发布到 GitHub Releases (仅包含软件制品)
-      # ==========================================
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
-        if: startsWith(github.ref, 'refs/tags/v')
         with:
           body_path: dist/release_notes.md
           fail_on_unmatched_files: true
           files: |
-            dist/srp-cfg-*-windows-x64-cli.zip
-            dist/srp-cfg-*-windows-x64-gui.zip
-            dist/srp-cfg-*-windows-x64-setup.exe
-            dist/latest.json
+            dist/release/*
           draft: false
           prerelease: false
           generate_release_notes: false

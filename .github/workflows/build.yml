@@ -1,0 +1,167 @@
+name: Build Windows Artifacts
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Optional SemVer version override (e.g. 3.4.9)
+        required: false
+        type: string
+        default: ''
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Optional SemVer version override (e.g. 3.4.9)
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    name: Build GUI ZIP & Setup Installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1.13.0
+
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1.1
+        with:
+          version: 1.11.1
+
+      - name: Setup Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          echo "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+          modules: qtshadertools
+
+      - name: Configure CMake
+        shell: pwsh
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          $versionArgs = @()
+          if ($env:INPUT_VERSION -match "^v?([0-9]+\.[0-9]+\.[0-9]+)$") {
+              $versionArgs += "-DSRP_APP_VERSION=$($Matches[1])"
+          }
+          cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release @versionArgs -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+
+      - name: Build & Run Core Tests
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --parallel 2
+          if ($LASTEXITCODE -ne 0) { throw 'Release build failed' }
+          ctest --test-dir build -C Release --output-on-failure
+          if ($LASTEXITCODE -ne 0) { throw 'Release regression tests failed' }
+
+      - name: Package GUI & Setup Installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $qtBin = "$env:QT_ROOT_DIR/bin"
+          $versionLine = (Select-String -Path 'build/CMakeCache.txt' -Pattern '^SRP_APP_VERSION:STRING=(.+)$').Matches
+          if (!$versionLine) { throw 'Build application version is missing' }
+          $cleanAppVer = $versionLine[0].Groups[1].Value
+          $tag = "v$cleanAppVer"
+
+          New-Item -ItemType Directory -Path "dist/release" -Force | Out-Null
+          $crt = Get-ChildItem "$env:VCToolsRedistDir/x64/Microsoft.VC*.CRT" -Directory | Select-Object -First 1
+          if (!$crt) { throw 'MSVC x64 redistributable DLL directory not found' }
+
+          # Validate repository before bundling content/
+          python scripts/check_repository.py
+          if ($LASTEXITCODE -ne 0) { throw 'Repository validation failed' }
+
+          # ==========================================
+          # 1. Portable GUI bundle (with latest bundled content/)
+          # ==========================================
+          $guiDir = "dist/srp-cfg-$tag-windows-x64-gui"
+          New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
+          Copy-Item "build/src/gui/srp_gui.exe" -Destination "$guiDir/SrP-CFG.exe"
+          Copy-Item "$($crt.FullName)/*.dll" -Destination $guiDir
+          Copy-Item "build/HuskarUI/bin/HuskarUIBasic.dll" -Destination "$guiDir/"
+          Copy-Item "build/HuskarUI/bin/HuskarUIImpl.dll" -Destination "$guiDir/"
+          Copy-Item "content" -Destination "$guiDir/content" -Recurse -Force
+
+          Copy-Item "LICENSE" -Destination "$guiDir/LICENSE.txt"
+          Copy-Item "THIRD_PARTY_NOTICES" -Destination "$guiDir/THIRD_PARTY_NOTICES.txt"
+          if (Test-Path "README.md") { Copy-Item "README.md" -Destination "$guiDir/README.md" }
+          if (Test-Path "README.zh-CN.md") { Copy-Item "README.zh-CN.md" -Destination "$guiDir/README.zh-CN.md" }
+
+          New-Item -ItemType Directory -Path "$guiDir/qml" -Force | Out-Null
+          Copy-Item "build/HuskarUI/qml/HuskarUI" -Destination "$guiDir/qml/HuskarUI" -Recurse
+
+          & "$qtBin/windeployqt.exe" --qmldir "src/gui/qml" --qmlimport "build/HuskarUI/qml" --release --no-translations --no-opengl-sw --compiler-runtime "$guiDir/SrP-CFG.exe"
+          if ($LASTEXITCODE -ne 0) { throw 'Qt runtime deployment failed' }
+          Remove-Item "$guiDir/vc_redist.x64.exe" -Force -ErrorAction SilentlyContinue
+          Remove-Item "$guiDir/opengl32sw.dll" -Force -ErrorAction SilentlyContinue
+          foreach ($module in @('Basic', 'Impl')) {
+              if (!(Test-Path "$guiDir/qml/HuskarUI/$module/qmldir")) { throw "Missing deployed HuskarUI module: $module" }
+          }
+
+          # Verify portable GUI bundle in an isolated environment
+          & tests/gui/test-portable.ps1 -PackageDir $guiDir
+
+          $guiZip = "dist/release/srp-cfg-$tag-windows-x64-gui.zip"
+          Compress-Archive -Path "$guiDir" -DestinationPath $guiZip -Force
+
+          # ==========================================
+          # 2. Windows Setup Installer (Inno Setup)
+          # ==========================================
+          $absGuiDir = (Resolve-Path "$guiDir").Path
+          $absReleaseDir = (Resolve-Path "dist/release").Path
+          ISCC.exe /DMyAppVersion="$tag" /DSourceDir="$absGuiDir" /DOutputDir="$absReleaseDir" installer/installer.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed' }
+
+          # ==========================================
+          # 3. Generate latest.json & release_notes.md
+          # ==========================================
+          $guiSha256 = (Get-FileHash -Path $guiZip -Algorithm SHA256).Hash.ToLower()
+          $setupExePath = "dist/release/srp-cfg-$tag-windows-x64-setup.exe"
+          $setupSha256 = (Get-FileHash -Path $setupExePath -Algorithm SHA256).Hash.ToLower()
+
+          $notesZh = & python scripts/extract_changelog.py --version $cleanAppVer --notes-zh
+          if (!$notesZh) { $notesZh = "SrP-CFG $tag 发布" }
+          $notesEn = & python scripts/extract_changelog.py --version $cleanAppVer --notes-en
+          if (!$notesEn) { $notesEn = "SrP-CFG $tag Release" }
+          & python scripts/extract_changelog.py --version $cleanAppVer --body-file "dist/release_notes.md"
+
+          $latest = @{
+              version = $cleanAppVer
+              tag = $tag
+              published_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+              gui_zip_url = "https://github.com/${{ github.repository }}/releases/download/$tag/srp-cfg-$tag-windows-x64-gui.zip"
+              gui_zip_sha256 = $guiSha256
+              setup_exe_url = "https://github.com/${{ github.repository }}/releases/download/$tag/srp-cfg-$tag-windows-x64-setup.exe"
+              setup_exe_sha256 = $setupSha256
+              notes_zh = $notesZh
+              notes_en = $notesEn
+          } | ConvertTo-Json -Depth 4
+          $latest | Set-Content -Path "dist/release/latest.json" -Encoding utf8
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-bundle
+          path: |
+            dist/release/*
+            dist/release_notes.md
+          if-no-files-found: error

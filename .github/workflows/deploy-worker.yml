@@ -5,14 +5,15 @@ on:
     branches:
       - main
     paths:
-      - 'config/**'
-      - 'skills/**'
+      - 'content/**'
       - 'website/**'
+      - 'worker/**'
+      - 'tests/worker/**'
       - '.github/workflows/deploy-worker.yml'
       - 'wrangler.toml'
       - 'scripts/check_repository.py'
-      - 'scripts/package-website.py'
-      - 'scripts/test_website_packages.py'
+      - 'scripts/package_content.py'
+      - 'tests/content/test_content_packages.py'
       - 'website/scripts/collect-licenses.mjs'
       - 'LICENSE'
       - 'package.json'
@@ -22,14 +23,15 @@ on:
     branches:
       - main
     paths:
-      - 'config/**'
-      - 'skills/**'
+      - 'content/**'
       - 'website/**'
+      - 'worker/**'
+      - 'tests/worker/**'
       - '.github/workflows/deploy-worker.yml'
       - 'wrangler.toml'
       - 'scripts/check_repository.py'
-      - 'scripts/package-website.py'
-      - 'scripts/test_website_packages.py'
+      - 'scripts/package_content.py'
+      - 'tests/content/test_content_packages.py'
       - 'website/scripts/collect-licenses.mjs'
       - 'LICENSE'
       - 'package.json'
@@ -67,14 +69,15 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      - name: Package Configs & Agent Skill
+      - name: Package Content Archives
         run: |
           python3 scripts/check_repository.py
-          python3 scripts/test_website_packages.py
-          python3 scripts/package-website.py
+          python3 tests/content/test_content_packages.py
+          python3 scripts/package_content.py --output website/public
 
-      - name: Validate Website
+      - name: Validate Worker & Website
         run: |
+          node --experimental-strip-types --test tests/worker/*.test.mjs
           pnpm --filter srp-cfg-website test
           pnpm --filter srp-cfg-website lint
 
