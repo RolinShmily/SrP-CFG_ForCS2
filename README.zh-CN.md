@@ -1,224 +1,80 @@
 <h1 align="center">SrP-CFG</h1>
-<h4 align="center">模块化 Counter-Strike 2 配置工作台 · 现代 Qt 桌面套件 · 纯净开源引擎</h4>
 
-<div align="center">
+<p align="center">
+  <a href="README.md">English</a> | <b>简体中文</b>
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-[![Downloads](https://img.shields.io/github/downloads/RolinShmily/SrP-CFG_ForCS2/total?label=Downloads&color=blue)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/ci.yml?branch=main&label=CI)](https://github.com/RolinShmily/SrP-CFG_ForCS2/actions)
-[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.com)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-brightgreen.svg)](#)
+<p align="center">
+  <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/test.yml"><img alt="Test" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"><img alt="Release" src="https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange"></a>
+  <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/RolinShmily/SrP-CFG_ForCS2/total?label=Downloads&color=blue"></a>
+  <a href="https://cfg.srprolin.com"><img alt="Website" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/deploy-worker.yml/badge.svg"></a>
+  <img alt="Windows x64" src="https://img.shields.io/badge/platform-Windows%2010%20%2F%2011%20x64-brightgreen">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
+</p>
 
-[简体中文](README.zh-CN.md) | [English](README.md)
-
-</div>
-
----
-
-## 🖼️ 界面预览
-
-![SrP-CFG 总览](docs/design/screenshots/overview-light.webp)
+<p align="center">
+  <img src="assets/preview.webp" alt="SrP-CFG 桌面工作台预览" width="1200">
+</p>
 
 <details>
-<summary>更多截图 · 预设、装配、视频、地图标注、设置、关于、深色模式、980×640</summary>
+<summary>更多截图 · 预设包、自由装配、视频设置、地图标注、设置、关于、深色模式</summary>
 
-### 预设包
-![预设包](docs/design/screenshots/presets-light.webp)
-
-### 自由装配
-![自由装配](docs/design/screenshots/assembly-light.webp)
-
-### 视频设置
-![视频设置](docs/design/screenshots/video-light.webp)
-
-### 地图标注
-![地图标注](docs/design/screenshots/annotations-light.webp)
-
-### 设置
-![设置](docs/design/screenshots/settings-light.webp)
-
-### 关于
-![关于](docs/design/screenshots/about-light.webp)
-
-### 深色模式
-![深色模式总览](docs/design/screenshots/overview-dark.webp)
-
-### 最小窗口（980×640）
-![最小窗口设置页](docs/design/screenshots/settings-980x640.webp)
+- **预设包**：![预设包](assets/screenshots/presets-light.webp)
+- **自由装配**：![自由装配](assets/screenshots/assembly-light.webp)
+- **视频设置**：![视频设置](assets/screenshots/video-light.webp)
+- **地图标注**：![地图标注](assets/screenshots/annotations-light.webp)
+- **设置 / 关于 / 深色模式**：![设置](assets/screenshots/settings-light.webp) ![关于](assets/screenshots/about-light.webp) ![深色模式](assets/screenshots/overview-dark.webp)
 
 </details>
 
----
+**SrP-CFG** 是一套面向 Counter-Strike 2 的模块化配置内容套件（`content/`），搭配自带包管理器的 Windows Qt 6 桌面工作台与安全编辑器，并附带在线 **CS2 控制台指令参考站**（[`cfg.srprolin.com/console`](https://cfg.srprolin.com/console/)）。
 
-## 💡 核心设计理念核心设计理念
+- **模块化且可逆**：按需装配预设、功能模块与按键触发模式，不覆盖个人键位，物理隔离 `user/custom.cfg`。
+- **内置内容包管理器**：通过 `Original / Work` 暂存区管理 `srp-cfg`、`video`、`annotations`，在线更新内容包时不丢失手工微调，每次写入前保留最多 20 份去重 `.bak` 备份。
+- **纯原生 CS2 文件**：零 DLL 注入、零内存修改、零挂钩，仅操作原生 `.cfg`、`cs2_video.txt` 与 KV3 地图标注。
+- **附加 `/console` 指令站**：写个人 `custom.cfg` 时可在 [`cfg.srprolin.com/console`](https://cfg.srprolin.com/console/) 按分类与标记检索中英文 ConVar / Command 说明并复制配置片段。
 
-> **“把功能展开，把选择留给你；运行时属于引擎，偏好属于玩家。”**
+## 使用方法
 
-在 Counter-Strike 2 中，Valve 引入了全新的 VCFG 机制管理键位与引擎变量。传统单体“大包”CFG 往往覆盖玩家个人习惯，或者在 Steam 云存档同步时产生不可逆的冲突。
+### 1. 下载并启动
 
-**SrP-CFG** 彻底解耦功能逻辑与个人偏好，构建清晰的分层执行模型与独立模块化配置包：
+从 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或官网 [cfg.srprolin.com](https://cfg.srprolin.com/) 下载安装版（`setup.exe`）或便携版（`gui.zip`），打开 **SrP-CFG** 后会自动识别 Steam、CS2 目录与当前账号。
 
-```text
-CS2 引擎启动
-  ↓ 加载 Steam Cloud VCFG（游戏原生持久化状态）
-  ↓ 执行 autoexec.cfg（无感透明挂载）
-  ↓ Layer 1: Valve 基线 / 预设模板（可选起步基准，可完全卸载）
-  ↓ Layer 2: 特性模块（AutoView / 准星视角 / Knife / Zeus 等独立加载）
-  ↓ Layer 3: 模式入口（练习 / 预览 / Demo 等绑定按键按需触发，启动时不直接执行）
-  ↓ Layer 4: user/custom.cfg（最高优先级个人覆盖层，物理隔离绝不破坏）
+### 2. 在桌面端装配与定制
+
+1. **总览**：点击安装/初始化，将 `srp-cfg` 运行时部署到 `game/csgo/cfg/`（后续更新与卸载均保护 `user/custom.cfg`）。
+2. **预设包 / 自由装配**：选择一套起步预设，或按需启用特性模块（AutoView、Crosshair-View、Knife、Zeus）并为练习/检视/Demo/制图等模式绑定启动键。
+3. **视频设置与地图标注**：关闭 CS2 后在软件内调整并应用 `cs2_video.txt`（自动保留本机显卡与显示器标识），并按需部署原生地图标注指南（Ancient / Dust2 / Inferno / Mirage）。
+4. **个人覆盖**：在内置语法高亮编辑器中直接编辑 `user/custom.cfg`；需要查参数含义或默认值时可查阅 [`cfg.srprolin.com/console`](https://cfg.srprolin.com/console/)。
+
+### 3. 游戏内使用
+
+在 Steam 的 CS2 启动项中加入 `+exec autoexec`（或在游戏控制台手动执行 `exec autoexec`）。日常开关与按键可在桌面端直接装配查看（每个 `.cfg` 文件内也都有中文注释），游戏内按需使用少量入口指令即可：
+
+```cfg
+srp_reload                         // 立即重新加载 autoexec 与 user/custom.cfg
+srp_practice / srp_practice_keys   // 进入离线跑图练习模式（或直接按绑定的模式启动键）
+srp_preview  / srp_preview_keys    // 进入皮肤 / 武器检视预览环境
+srp_demo     / srp_demo_keys       // 进入 Demo / HLAE 录像回放模式
+annotation_load SrP-Mirage-Guide   // 加载已部署的原生地图标注指南
 ```
 
----
+> **不使用桌面端（或用于 CS:GO）**：可直接从 [cfg.srprolin.com](https://cfg.srprolin.com/) 或 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 下载独立内容包（`srp-cfg`、`video`、`annotations`、`srp-cfg-csgo`），按 [`docs/reference.md`](docs/reference.md) 中的目标路径解压即可。
 
-## 📦 独立配置包
+## 文档
 
-所有功能组件完全解耦，独立版本管理、独立分发，不强制捆绑：
+| 文档 | 内容范围 |
+| :--- | :--- |
+| [`docs/architecture.md`](docs/architecture.md) | 仓库分层契约、四层 CFG 模型、暂存区事务与 `/console` 数据管线 |
+| [`docs/design.md`](docs/design.md) | 产品定位、架构取舍与核心设计思路 |
+| [`docs/reference.md`](docs/reference.md) | 内容包清单协议、完整指令表、桌面端诊断参数与网络契约 |
+| [`docs/development.md`](docs/development.md) | 本地编译、测试门禁、扩展 `content/`、许可证与发布工作流 |
 
-| 配置包标识 | 目标部署路径 | 说明 |
-| :--- | :--- | :--- |
-| **`srp-cfg`** | `game/csgo/cfg/` | **运行时核心底座**。包含命令引擎、特性模块、模式会话、社区预设及 `custom.cfg` 用户专属层。 |
-| **`video`** | `Steam/userdata/<ID>/730/local/cfg/` | **竞技画面模板**。结构化解析 `cs2_video.txt`，自动保留本机显卡/屏幕硬件标识与未知字段。 |
-| **`annotations`** | `game/csgo/annotations/local/` | **原生地图标注指南**。标准 CS2 KV3 格式，多图并存且绝不覆盖玩家个人 `mapguide`。 |
-| **`srp-cfg-csgo`** | `csgo/cfg/` | **CS:GO 版本**。运行时核心的 Source 1 移植，含预设、模块与 `autoexec_csgo.cfg`；不由 CS2 桌面端管理。 |
+另见 [`THIRD_PARTY_NOTICES`](THIRD_PARTY_NOTICES) 与 [`CHANGELOG.md`](CHANGELOG.md)。
 
----
+## 开源许可证
 
-## 🖥️ 现代化工程架构
-
-工程采用模块化目录设计，严格遵循职责边界分离：
-
-```text
-SrP-CFG_ForCS2/
-├── src/
-│   ├── core/                  # C++17 纯逻辑核心库 (VCFG/CFG/KV3 解析、原子备份、暂存区事务)
-│   ├── cli/                   # srpcfg 独立命令行工具 (自动化管理、CI 与脚本友好)
-│   └── gui/                   # SrP-CFG 桌面端应用 (Qt 6 + HuskarUI + QML + QWindowKit)
-├── config/                    # 源码内置的离线出厂配置包
-│   ├── srp-cfg/               # 运行时脚本、catalog.json、预设与模块
-│   ├── video/                 # cs2_video.txt 模板与版本标识
-│   └── annotations/           # 原生地图标注资源
-├── skills/                    # 智能体技能包
-│   └── srpcfg-cli/            # 适用于各类智能体的 srpcfg CLI 自动化技能
-├── website/                   # 官方展示与文档站点 (React 19 + Vite + Tailwind CSS)
-├── installer/                 # Windows 官方安装器脚本 (Inno Setup)
-├── scripts/                   # 工程审计、漂移检测与本地辅助脚本
-├── docs/                      # 架构、开发规范、技术参考与设计规范文档
-└── CMakeLists.txt             # 统一根构建文件
-```
-
-文档入口：[docs/README.md](docs/README.md) 汇总架构、开发规范、技术参考与设计规范。
-
-### 核心安全与防护特性
-
-1. **不注入 · 不改内存 · 纯原生 CFG**：不注入任何 DLL、不修改游戏内存、不挂钩进程。所有特性与模块严格通过 CS2 原生 `+exec`、标准 `.cfg` 与 KV3 文件格式驱动，完全依赖游戏引擎自带机制。配置兼容性随游戏版本更新。
-2. **多代快照与原子备份**：写入游戏或更新工作副本前，自动建立 `.bak` 并保留最多 20 份不同内容的去重历史备份，写入失败自动回滚。
-3. **暂存区事务机制**：配置包下载更新先落盘到用户可写暂存区（Original / Work），玩家手工微调的工作副本在包更新时受保护。
-4. **游戏运行安全互锁**：探测 CS2 进程状态，游戏运行时暂停画面配置写入，防止退出时被游戏覆盖。
-5. **双语支持与主题随心**：默认浅色界面（更清晰专业），支持一键切换深色模式与中英文实时语言切换。
-
----
-
-## 🚀 快速上手
-
-### 方式 1：使用桌面工作台（推荐）
-
-1. 前往 [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) 或 [官方网站](https://cfg.srprolin.com/) 下载安装版 (`setup.exe`) 或免安装绿色便携版 (`gui.zip`)。
-2. 启动 **SrP-CFG**，程序将自动识别 Steam、CS2 路径以及活跃用户。
-3. 在**总览**中完成初始化装配；在**预设包**或**自由装配**中定制功能；在右侧固定代码编辑器中即时微调 `custom.cfg`。
-
-### 方式 2：使用命令行工具 (CLI)
-
-```bash
-# 查看帮助与子命令
-srpcfg --help
-
-# 查看所有模块状态
-srpcfg modules
-
-# 装配特定功能模块 (如 autoview)
-srpcfg feature-assemble autoview --keymap
-
-# 为练习模式绑定启动键；遇冲突先查看，再明确批准 --confirm
-srpcfg mode-bind practice --key p
-
-# 部署特定地图标注 (如 mirage)
-srpcfg annotation-deploy mirage
-```
-
----
-
-## 🎮 常用游戏内控制台指令
-
-| 控制台命令 | 作用说明 | 覆盖物理按键 |
-| :--- | :--- | :---: |
-| `srp_help` | 打开游戏内帮助与命令索引菜单 | 否 |
-| `srp_practice` | 进入离线跑图训练模式（无限弹药、投掷物轨迹、Bot 控制） | 否 |
-| `srp_preview` | 激活检视与换肤预览环境 | 否 |
-| `srp_demo` | 启动 DEMO / HLAE 录像观战增强模式 | 否 |
-| `srp_apply_default` | 应用官方精选竞技预设 | 是 |
-| `srp_apply_echo` / `srp_apply_visionl` / `srp_apply_yszh` | 应用精选社区知名模板 | 是 |
-| `srp_reload` | 重新执行 `Runtime → User` 启动链立即重载 | 视用户配置 |
-
----
-
-## 🛠️ 本地编译与开发
-
-### 环境要求
-- **C++ 编译器**：支持 C++17 的 MSVC (Visual Studio 2022) 或 GCC / Clang
-- **CMake**：>= 3.21
-- **Qt 6**：>= 6.5 (桌面 GUI 需要 Core、Gui、Quick、QuickControls2、Concurrent、ShaderTools 及私有开发头文件)
-- **Node.js & pnpm**：Node >= 22, pnpm 11+ (官方网站需要)
-
-### 编译核心与命令行 (无需 Qt)
-```bash
-cmake --preset core
-cmake --build --preset core
-ctest --preset core
-```
-
-### 编译桌面完整版 (Visual Studio 2022)
-```bash
-git submodule update --init --recursive
-cmake --preset windows-msvc
-cmake --build --preset release-msvc
-# 运行桌面客户端
-run_gui.bat
-```
-
-### 运行官方网站本地预览
-```bash
-cd website
-pnpm install --frozen-lockfile --ignore-scripts
-pnpm test
-pnpm lint
-pnpm build
-pnpm preview
-```
-
----
-
-## 智能体 Skill
-
-仓库和软件包随附 [srpcfg-cli](skills/srpcfg-cli/SKILL.md)。[网站下载区](https://cfg.srprolin.com/#srpcfg-cli) 另提供独立版本的 Skill ZIP，解压后将 `srpcfg-cli` 文件夹加入智能体的技能目录，即可按 CLI 工作流管理 CS2 配置。技能 ZIP 不包含 CLI 可执行文件。Windows 命令文件为 `srpcfg.exe`，请与随附 `config/` 保持在一起；PowerShell 中未加入 PATH 时使用 `./srpcfg.exe`。游戏内控制台 alias 仍使用原有 `srp_*` 名称。
-
----
-
-## 🤝 贡献与规范
-
-欢迎提交 Issue 与 Pull Request！搭建步骤、自检命令与约定见 [CONTRIBUTING.md](CONTRIBUTING.md)（英文）；所有参与者均须遵守 [Code of Conduct](CODE_OF_CONDUCT.md)。安全问题请走 [Security Policy](SECURITY.md)，不要提交公开 Issue。
-
-- 严格遵循逻辑分层原则：核心逻辑沉淀在 `src/core`，命令行工具在 `src/cli`，界面呈现由 `src/gui` 负责。
-- 所有对配置文件的写操作必须通过备份器事务，确保提供 `.bak` 与回滚路径。
-- 详情请查阅 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
-
----
-
-## 📄 开源许可证
-
-本项目基于 **[MIT License](LICENSE)** 开源发布。  
-Copyright (c) 2025-2026 **RoL1n_SrP**.
-
-第三方组件遵循其各自的开源许可证要求，详细声明参见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+本项目基于 **[MIT License](LICENSE)** 开源发布，Copyright (c) 2025–2026 **RoL1n_SrP**。第三方组件许可详见 [`THIRD_PARTY_NOTICES`](THIRD_PARTY_NOTICES)。
 
 *Counter-Strike, Counter-Strike 2, CS2, Steam, Valve 均为 Valve Corporation 的注册商标。本项目为独立开源工具，与 Valve Corporation 没有任何关联或官方背书。*

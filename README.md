@@ -1,224 +1,80 @@
 <h1 align="center">SrP-CFG</h1>
-<h4 align="center">Modular Counter-Strike 2 Configuration Workspace · Modern Qt Desktop Suite · Pure Open-Source Engine</h4>
 
-<div align="center">
+<p align="center">
+  <b>English</b> | <a href="README.zh-CN.md">简体中文</a>
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-[![Downloads](https://img.shields.io/github/downloads/RolinShmily/SrP-CFG_ForCS2/total?label=Downloads&color=blue)](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/ci.yml?branch=main&label=CI)](https://github.com/RolinShmily/SrP-CFG_ForCS2/actions)
-[![Deploy Worker](https://img.shields.io/github/actions/workflow/status/RolinShmily/SrP-CFG_ForCS2/deploy-worker.yml?branch=main&label=Cloudflare)](https://cfg.srprolin.com)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-brightgreen.svg)](#)
+<p align="center">
+  <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/test.yml"><img alt="Test" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"><img alt="Release" src="https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange"></a>
+  <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/RolinShmily/SrP-CFG_ForCS2/total?label=Downloads&color=blue"></a>
+  <a href="https://cfg.srprolin.com"><img alt="Website" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/deploy-worker.yml/badge.svg"></a>
+  <img alt="Windows x64" src="https://img.shields.io/badge/platform-Windows%2010%20%2F%2011%20x64-brightgreen">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
+</p>
 
-[English](README.md) | [简体中文](README.zh-CN.md)
-
-</div>
-
----
-
-## 🖼️ Interface Preview
-
-![SrP-CFG overview](docs/design/screenshots/overview-light.webp)
+<p align="center">
+  <img src="assets/preview.webp" alt="SrP-CFG desktop workbench preview" width="1200">
+</p>
 
 <details>
-<summary>More screenshots · presets, assembly, video, annotations, settings, about, dark mode, 980×640</summary>
+<summary>More screenshots · presets, assembly, video, annotations, settings, about, dark mode</summary>
 
-### Presets
-![Presets](docs/design/screenshots/presets-light.webp)
-
-### Assembly
-![Assembly](docs/design/screenshots/assembly-light.webp)
-
-### Video settings
-![Video settings](docs/design/screenshots/video-light.webp)
-
-### Map annotations
-![Map annotations](docs/design/screenshots/annotations-light.webp)
-
-### Settings
-![Settings](docs/design/screenshots/settings-light.webp)
-
-### About
-![About](docs/design/screenshots/about-light.webp)
-
-### Dark mode
-![Overview in dark mode](docs/design/screenshots/overview-dark.webp)
-
-### Minimum window (980×640)
-![Settings at minimum window](docs/design/screenshots/settings-980x640.webp)
+- **Presets**: ![Presets](assets/screenshots/presets-light.webp)
+- **Modular Assembly**: ![Assembly](assets/screenshots/assembly-light.webp)
+- **Video Settings**: ![Video settings](assets/screenshots/video-light.webp)
+- **Map Annotations**: ![Map annotations](assets/screenshots/annotations-light.webp)
+- **Settings / About / Dark Mode**: ![Settings](assets/screenshots/settings-light.webp) ![About](assets/screenshots/about-light.webp) ![Dark mode](assets/screenshots/overview-dark.webp)
 
 </details>
 
----
+**SrP-CFG** is a modular Counter-Strike 2 content suite (`content/`) paired with a Windows Qt 6 desktop package manager and safe editor, plus an online **CS2 Console Reference** at [`cfg.srprolin.com/console`](https://cfg.srprolin.com/console/).
 
-## 💡 Core PhilosophyCore Philosophy
+- **Modular & Reversible**: Assemble presets, feature modules, and key-bound modes on demand without overwriting personal keybinds or `user/custom.cfg`.
+- **Built-in Package Manager**: Manages `srp-cfg`, `video`, and `annotations` via an `Original / Work` staging store—update content packages without losing local edits, with up to 20 deduplicated `.bak` backups before every write.
+- **Pure Native CS2 Files**: Zero DLL injection, zero memory modification, zero hooks—only native `.cfg`, `cs2_video.txt`, and KV3 map guides.
+- **Companion `/console` Reference**: Search bilingual CS2 ConVars, Commands, categories, and flags at [`cfg.srprolin.com/console`](https://cfg.srprolin.com/console/) when writing your own `custom.cfg`.
 
-> **"Unpack the features, keep the choices; runtime belongs to the engine, preferences belong to the player."**
+## Usage
 
-In Counter-Strike 2, Valve introduced the VCFG mechanism to manage players' keybindings and engine convars. Traditional monolithic "all-in-one" CFG packs frequently overwrite personal habits or cause irreversible conflicts with Steam Cloud synchronization.
+### 1. Download & Launch
 
-**SrP-CFG** decouples functional logic from personal preferences through an explicit layered execution model and independent modular packages:
+Download `setup.exe` (installer) or `gui.zip` (portable) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or [cfg.srprolin.com](https://cfg.srprolin.com/). Launch **SrP-CFG**—it automatically detects Steam, CS2, and your Steam accounts.
 
-```text
-CS2 Engine Boot
-  ↓ Loads Steam Cloud VCFG (native persistent game state)
-  ↓ Executes autoexec.cfg (non-invasive transparent mount)
-  ↓ Layer 1: Valve Baseline / Presets (optional starting baseline, cleanly unloadable)
-  ↓ Layer 2: Feature Modules (AutoView, crosshair view, Knife, Zeus, etc.)
-  ↓ Layer 3: Mode Launchers (Practice, Preview, Demo bound to keys; not executed on game boot)
-  ↓ Layer 4: user/custom.cfg (highest-priority user override layer, strictly isolated & preserved)
+### 2. Assemble & Customize in the App
+
+1. **Overview**: Click install/initialize to deploy the `srp-cfg` runtime into `game/csgo/cfg/` (updates and uninstalls preserve `user/custom.cfg`).
+2. **Presets / Modular Assembly**: Pick a starting preset, or enable individual features (AutoView, Crosshair-View, Knife, Zeus) and bind launch keys for session modes (Practice, Preview, Demo, GuideMake).
+3. **Video Settings & Map Annotations**: Tune `cs2_video.txt` while CS2 is closed (hardware IDs are preserved) and deploy native KV3 map guides (Ancient, Dust2, Inferno, Mirage).
+4. **Personal Overrides**: Edit `user/custom.cfg` in the built-in syntax-highlighted editor; check [`cfg.srprolin.com/console`](https://cfg.srprolin.com/console/) whenever you need ConVar names or defaults.
+
+### 3. Use In-Game
+
+Add `+exec autoexec` to CS2's Steam launch options (or run `exec autoexec` in the console). Most switches and keybinds are configured directly in the desktop app (every `.cfg` file also includes inline comments), so in-game you only need a few entry commands when needed:
+
+```cfg
+srp_reload                         // Reload autoexec and user/custom.cfg immediately
+srp_practice / srp_practice_keys   // Enter offline practice mode (or press your bound mode key)
+srp_preview  / srp_preview_keys    // Enter skin / weapon inspect preview mode
+srp_demo     / srp_demo_keys       // Enter Demo / HLAE playback mode
+annotation_load SrP-Mirage-Guide   // Load a deployed native map guide
 ```
 
----
+> **Without the desktop app (or for CS:GO)**: Download standalone archives (`srp-cfg`, `video`, `annotations`, `srp-cfg-csgo`) from [cfg.srprolin.com](https://cfg.srprolin.com/) or [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) and extract them to the paths listed in [`docs/reference.md`](docs/reference.md).
 
-## 📦 Decoupled Packages
+## Documentation
 
-All configuration components are completely decoupled, versioned independently, and distributed separately:
+| Document | Scope |
+| :--- | :--- |
+| [`docs/architecture.md`](docs/architecture.md) | Repository layers, 4-layer CFG model, staging transactions & `/console` pipeline |
+| [`docs/design.md`](docs/design.md) | Product positioning, architectural rationale & key trade-offs |
+| [`docs/reference.md`](docs/reference.md) | Content catalogs, full command list, GUI diagnostic flags & network contracts |
+| [`docs/development.md`](docs/development.md) | Local build, test gates, extending `content/`, licensing & release workflows |
 
-| Package Identifier | Target Installation Path | Description |
-| :--- | :--- | :--- |
-| **`srp-cfg`** | `game/csgo/cfg/` | **Runtime Core Base**. Includes command engine, feature modules, mode sessions, community presets, and `custom.cfg` user layer. |
-| **`video`** | `Steam/userdata/<ID>/730/local/cfg/` | **Competitive Video Template**. Structured parser for `cs2_video.txt` that preserves local GPU/monitor hardware IDs and unknown fields. |
-| **`annotations`** | `game/csgo/annotations/local/` | **Native Map Guides**. Standard CS2 KV3 format; multiple guides coexist without clobbering personal `mapguide` files. |
-| **`srp-cfg-csgo`** | `csgo/cfg/` | **CS:GO Edition**. Source 1 port of the runtime core, presets, and modules; ships `autoexec_csgo.cfg`. Not managed by the CS2 desktop app. |
+Also see [`THIRD_PARTY_NOTICES`](THIRD_PARTY_NOTICES) and [`CHANGELOG.md`](CHANGELOG.md).
 
----
+## License
 
-## 🖥️ Modern Architecture
-
-The repository enforces clean separation of concerns:
-
-```text
-SrP-CFG_ForCS2/
-├── src/
-│   ├── core/                  # C++17 pure logic library (VCFG/CFG/KV3 parsing, atomic backups, staging store)
-│   ├── cli/                   # srpcfg CLI tool (automation, CI & script friendly)
-│   └── gui/                   # SrP-CFG desktop app (Qt 6 + HuskarUI + QML + QWindowKit)
-├── config/                    # Shipped offline bundled configuration packages
-│   ├── srp-cfg/               # Runtime scripts, catalog.json, presets & modules
-│   ├── video/                 # cs2_video.txt template & versioning
-│   └── annotations/           # Native map guide resources
-├── skills/                    # Agent skills
-│   └── srpcfg-cli/            # srpcfg CLI integration skill for coding agents
-├── website/                   # Official showcase & documentation (React 19 + Vite + Tailwind CSS)
-├── installer/                 # Windows official installer script (Inno Setup)
-├── scripts/                   # Repository sanity checks, drift detection & local utilities
-├── docs/                      # Architecture, development standards, technical reference & design system
-└── CMakeLists.txt             # Root unified build file
-```
-
-Documentation: [docs/README.md](docs/README.md) covers architecture, development standards, technical reference and the design system.
-
-### Safety & Resilience Highlights
-
-1. **No Injection · No Memory Modification · Pure Native CFG**: Operates strictly through CS2 native `+exec`, standard `.cfg`, and KV3 files. **Zero DLL injection, zero memory modification, zero hooks**. All features are executed by the game engine's native configuration system. Configuration compatibility follows game updates.
-2. **Multi-Generation Atomic Backups**: Before writing to game files or updating working copies, the backup writer creates `.bak` files and retains up to 20 deduplicated historical snapshots. Failed writes roll back automatically.
-3. **Staging Transaction Model**: Package downloads and updates land in a writable staging area (`Original` / `Work`). Customized working copies are preserved when upstream updates arrive.
-4. **Running Game Guard**: Detects running CS2 processes and pauses video configuration writes to prevent being overwritten on game exit.
-5. **Bilingual UI & Flexible Theming**: Clean light theme default with optional dark mode and live Simplified Chinese / English language switching.
-
----
-
-## 🚀 Quick Start
-
-### Option 1: Desktop Workspace (Recommended)
-
-1. Download the installer (`setup.exe`) or portable archive (`gui.zip`) from [GitHub Releases](https://github.com/RolinShmily/SrP-CFG_ForCS2/releases) or the [Official Website](https://cfg.srprolin.com/).
-2. Launch **SrP-CFG**; the application automatically detects Steam, CS2, and active accounts.
-3. Initialize in **Overview**, configure modules in **Presets** or **Modular Assembly**, and fine-tune `custom.cfg` in the integrated code editor.
-
-### Option 2: Command Line Interface (CLI)
-
-```bash
-# View help and available subcommands
-srpcfg --help
-
-# List module statuses
-srpcfg modules
-
-# Assemble a feature module (e.g. autoview)
-srpcfg feature-assemble autoview --keymap
-
-# Bind a launch key; inspect any conflict before approving --confirm
-srpcfg mode-bind practice --key p
-
-# Deploy a map guide (e.g. mirage)
-srpcfg annotation-deploy mirage
-```
-
----
-
-## 🎮 Essential Game Console Commands
-
-| Console Command | Description | Overwrites Keybinds |
-| :--- | :--- | :---: |
-| `srp_help` | Open the in-game command index and menu | No |
-| `srp_practice` | Enter offline practice mode (infinite ammo, grenade trajectories, bot controls) | No |
-| `srp_preview` | Activate inspect and skin preview environment | No |
-| `srp_demo` | Start DEMO / HLAE playback enhancement mode | No |
-| `srp_apply_default` | Apply official competitive preset | Yes |
-| `srp_apply_echo` / `srp_apply_visionl` / `srp_apply_yszh` | Apply popular community presets | Yes |
-| `srp_reload` | Re-execute the `Runtime → User` boot chain immediately | Depends on custom.cfg |
-
----
-
-## 🛠️ Local Build & Development
-
-### Requirements
-- **C++ Compiler**: C++17 compatible compiler (MSVC 2022 on Windows, or GCC / Clang)
-- **CMake**: >= 3.21
-- **Qt 6**: >= 6.5 (desktop GUI needs Core, Gui, Quick, QuickControls2, Concurrent and ShaderTools, including private development headers)
-- **Node.js & pnpm**: Node >= 22, pnpm 11+ (required for official website)
-
-### Building Core and CLI (No Qt Required)
-```bash
-cmake --preset core
-cmake --build --preset core
-ctest --preset core
-```
-
-### Building Full Desktop Application (Visual Studio 2022)
-```bash
-git submodule update --init --recursive
-cmake --preset windows-msvc
-cmake --build --preset release-msvc
-# Launch the desktop client
-run_gui.bat
-```
-
-### Running Website Local Preview
-```bash
-cd website
-pnpm install --frozen-lockfile --ignore-scripts
-pnpm test
-pnpm lint
-pnpm build
-pnpm preview
-```
-
----
-
-## Agent Skill
-
-The repository and software bundles include [srpcfg-cli](skills/srpcfg-cli/SKILL.md). The [website download section](https://cfg.srprolin.com/#srpcfg-cli) also provides an independently versioned skill ZIP. Extract it and add `srpcfg-cli` to your agent's skill directory to manage CS2 configuration through the verified CLI workflow. The skill ZIP does not include the CLI executable. The executable is `srpcfg.exe` on Windows; keep it with the bundled `config/` directory. In PowerShell, use `./srpcfg.exe` unless it is on PATH. Game console aliases retain their `srp_*` names.
-
----
-
-## 🤝 Contributing
-
-Issues and Pull Requests are welcome! Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, verification commands, and the conventions below, and note that all participants follow the [Code of Conduct](CODE_OF_CONDUCT.md). Security issues go through [SECURITY.md](SECURITY.md), not public issues.
-
-- Follow architectural boundaries: core logic belongs in `src/core`, CLI in `src/cli`, and desktop GUI in `src/gui`.
-- All configuration file writes must use the backup transaction system.
-- For third-party licensing obligations, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
----
-
-## 📄 License
-
-SrP-CFG is open source software released under the **[MIT License](LICENSE)**.  
-Copyright (c) 2025-2026 **RoL1n_SrP**.
-
-Third-party components follow their respective open-source licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full details.
+MIT — Copyright (c) 2025–2026 **RoL1n_SrP**. See [`LICENSE`](LICENSE) and [`THIRD_PARTY_NOTICES`](THIRD_PARTY_NOTICES).
 
 *Counter-Strike, Counter-Strike 2, CS2, Steam, and Valve are registered trademarks of Valve Corporation. This project is an independent open-source tool and is not affiliated with or endorsed by Valve Corporation.*

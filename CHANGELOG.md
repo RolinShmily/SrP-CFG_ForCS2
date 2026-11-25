@@ -10,20 +10,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **config**: Add the `srp-cfg-csgo` package (v3.4.2-csgo), a Source 1 port of the runtime core with presets, modules, and `autoexec_csgo.cfg` for the CS:GO edition.
 - **website**: Offer `srp-cfg-csgo` as a fourth downloadable configuration package with localized copy and ZIP layout validation.
-- **ci**: Fail the Valve upstream drift workflow when detection crashes instead of reporting a silent success.
+- **worker**: Add Cloudflare Worker `/releases/latest.json` and `/releases/download/<tag>/<file>` streaming proxy (`worker/index.ts`, `run_worker_first = ["/releases/*"]`) so desktop and website software downloads share `https://cfg.srprolin.com` with byte-identical GitHub Release SHA-256 digests.
+- **tests**: Consolidate tests under top-level `tests/` (`tests/core`, `tests/gui`, `tests/content`, `tests/worker`).
+- **ci**: Split lightweight `test.yml` (repo/content/worker checks + dual-OS core CTest) and reusable Windows `build.yml` from `release.yml`; fail the Valve upstream drift workflow when detection crashes instead of reporting a silent success.
 
 ### Changed
+- **content**: Rename `config/` to `content/` and decouple packaging into `scripts/package_content.py`, publishing the isolated manifest at `/packages/manifest.json` (retaining `/packages.json` as a compatibility alias).
+- **core**: Flatten `src/core/include/srp/core/` and `src/core/src/` into `src/core/` with `#include "core/<header>"`; point desktop update and package checks to `https://cfg.srprolin.com/releases/latest.json` and `/packages/manifest.json` with redirects disabled.
+- **website**: Route software downloads through `cfg.srprolin.com` by default (replacing third-party `gh-proxy.org`) while keeping direct GitHub Releases switching.
 - **config**: Bump `srp-cfg` preset baseline package to v3.4.3 (update default preset sensitivity to 0.53, viewmodel to v06, and mwheelup to invprev; refine crosshair-view library presets 05/06 and switch the default preset crosshair to c06).
 - **ci**: Integrate CHANGELOG release notes extraction into GitHub Actions release workflow and manifest generation.
 - **ci**: Update actions to checkout/setup-node/setup-python v7, pnpm/action-setup v6, and action-gh-release v3; pin previously floating action refs.
 - **ci**: Keep console dataset validation strict for pull requests but allow stale translations during scheduled upstream syncs, and retry the sync push once after rebasing.
-- **release**: Validate CHANGELOG structure before building release artifacts.
-- **docs**: Document the four-package layout, the CS2 app's three-package scope, and the updated CI checks.
+- **release**: Validate CHANGELOG structure before building release artifacts; keep GitHub Releases focused on software binaries (`gui.zip`, `setup.exe`, `latest.json`).
+- **repo**: Consolidate `THIRD_PARTY_NOTICES.md` and `licenses/` into a single self-contained plain-text `THIRD_PARTY_NOTICES`; move `run_gui.bat` to `scripts/run-gui.bat`; simplify GitHub issue templates.
+- **docs**: Streamline `docs/` into four flat guides (`architecture.md`, `design.md`, `reference.md`, `development.md`), move showcase images to `assets/`, and rewrite bilingual READMEs with player-first usage steps.
+
+### Removed
+- **cli**: Remove `src/cli/`, `skills/srpcfg-cli/`, CLI release archives, and installer PATH registry integration to focus the product on the desktop workbench.
+- **repo**: Remove redundant root and GitHub boilerplate (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `.github/dependabot.yml`, `.github/PULL_REQUEST_TEMPLATE.md`).
 
 ### Fixed
 - **tests**: Derive expected package versions, catalog counts, and module IDs from shipped content instead of pinning release numbers, eliminating false CI failures after config bumps.
-- **skill**: Resolve eval guide IDs and files from the annotations catalog so renamed guides no longer break the harness.
 - **console**: Silence expected translation-failure output in unit tests.
+- **website**: Fix package readiness check after removing `srpcfg-cli` from the content manifest.
 
 ## [3.4.9] - 2026-11-09
 
