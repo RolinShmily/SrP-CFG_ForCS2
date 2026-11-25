@@ -15,12 +15,6 @@ bool openFolderInExplorer(const std::string& folderPath);
 // 检测指定游戏 cfg 目录下是否已装配 SrP-CFG 运行环境
 bool isSrpInstalled(const std::string& gameCfgDir);
 
-// 获取游戏目录下已安装的 SrP-CFG 版本号 (若未安装则返回空字符串)
-std::string getInstalledSrpVersion(const std::string& gameCfgDir);
-
-// 获取随附/内置的源 SrP-CFG 版本号
-std::string getSourceSrpVersion();
-
 // 定位随附的源 config 目录路径
 std::string findSourceConfigDir();
 

@@ -88,12 +88,11 @@ void copyTree(const fs::path& from, const fs::path& to, bool preserveBackups = f
         } else throw std::runtime_error("pkg.invalid_package");
     }
 }
-bool validVersion(const std::string& version) {
-    if (version.empty() || version.size() > 40) return false;
-    return std::all_of(version.begin(), version.end(), [](unsigned char c) { return std::isalnum(c) || c == '.' || c == '-'; });
+bool validDate(const std::string& value) {
+    return value.size() == 8 && std::all_of(value.begin(), value.end(), [](unsigned char c) { return std::isdigit(c); });
 }
 void validateDirectory(const std::string& id, const fs::path& path) {
-    if (!validId(id) || !validVersion(trim(read(path / "VERSION.txt")))) throw std::runtime_error("pkg.invalid_package");
+    if (!validId(id) || !fs::is_directory(path)) throw std::runtime_error("pkg.invalid_package");
     if (id == "video") {
         if (!parseVideoConfig(read(path / "cs2_video.txt")).success) throw std::runtime_error("pkg.invalid_package");
         return;
@@ -149,25 +148,25 @@ ConfigWriteResult publishGeneration(const fs::path& next, const fs::path& old, c
     return result;
 }
 ConfigWriteResult transactDocument(const std::string& id, const std::string& rel, const std::string& content,
-    const std::string& version, const std::string& baseline, const char* reason) {
+    const std::string& baseline, const char* reason) {
     const auto old = current();
     if (old.empty()) return {false,false,"pkg.no_bundle"};
     const auto target = old / "work" / id / fs::u8path(rel);
-    const auto metadata = old / "base-version" / id / fs::u8path(rel + ".version");
     const auto base = old / "base" / id / fs::u8path(rel);
-    if (version.empty() || (trim(read(metadata)) == version && read(base) == baseline)) return writeConfigWithBackup(target.u8string(),content,reason);
+    if (baseline.empty() || read(base) == baseline) return writeConfigWithBackup(target.u8string(),content,reason);
     const std::string name = stamp();
     const auto next = old.parent_path() / name; Cleanup cleanup{next};
     copyTree(old,next,true);
     const auto changed = writeConfigWithBackup((next / "work" / id / fs::u8path(rel)).u8string(),content,reason);
     if (!changed.success) return changed;
     write(next / "base" / id / fs::u8path(rel),baseline);
-    write(next / "base-version" / id / fs::u8path(rel + ".version"),version);
     const auto published = publishGeneration(next,old,name);
     if (published.success) cleanup.keep = true;
     return published;
 }
-ConfigWriteResult promote(const std::map<std::string, fs::path>& replacements, const std::map<std::string, std::string>& digests = {}) {
+ConfigWriteResult promote(const std::map<std::string, fs::path>& replacements,
+    const std::map<std::string, std::string>& digests = {},
+    const std::map<std::string, std::string>& updatedAts = {}) {
     StoreLock lock(fs::u8path(packageStoreRoot()));
     const auto old = current();
     const std::string name = stamp();
@@ -188,9 +187,10 @@ ConfigWriteResult promote(const std::map<std::string, fs::path>& replacements, c
         }
         fs::remove_all(original);
         copyTree(source, original);
-        const std::string version = trim(read(original / "VERSION.txt"));
         fs::remove(next / "digest" / id);
         if (digests.count(id)) write(next / "digest" / id, digests.at(id));
+        fs::remove(next / "updated_at" / id);
+        if (updatedAts.count(id) && validDate(updatedAts.at(id))) write(next / "updated_at" / id, updatedAts.at(id));
         for (const auto& entry : fs::recursive_directory_iterator(original)) {
             if (!entry.is_regular_file()) continue;
             const auto rel = entry.path().lexically_relative(original);
@@ -199,7 +199,6 @@ ConfigWriteResult promote(const std::map<std::string, fs::path>& replacements, c
             // Base snapshots record exactly which default a local file was edited from.
             if (!fs::exists(work) || (fs::exists(base) && read(work) == read(base))) {
                 write(work, read(entry.path())); write(base, read(entry.path()));
-                write(next / "base-version" / id / fs::u8path(rel.u8string() + ".version"), version);
             }
         }
     }
@@ -349,7 +348,7 @@ ConfigWriteResult initializePackages() {
 }
 std::string packageOriginalDir() { std::lock_guard<std::recursive_mutex> guard(storeMutex); const auto p = current(); return p.empty() ? std::string() : (p / "original").u8string(); }
 std::string packageWorkDir() { std::lock_guard<std::recursive_mutex> guard(storeMutex); const auto p = current(); return p.empty() ? std::string() : (p / "work").u8string(); }
-std::string packageVersion(const std::string& id) { const auto root = packageOriginalDir(); if (!validId(id) || root.empty()) return {}; return trim(read(fs::u8path(root) / id / "VERSION.txt")); }
+std::string packageUpdatedAt(const std::string& id) { std::lock_guard<std::recursive_mutex> guard(storeMutex); return !validId(id) || current().empty() ? std::string() : trim(read(current() / "updated_at" / id)); }
 std::string packageDigest(const std::string& id) { std::lock_guard<std::recursive_mutex> guard(storeMutex); return !validId(id) || current().empty() ? std::string() : read(current() / "digest" / id); }
 std::string packageFileBaseline(const std::string& id, const std::string& relative) { std::lock_guard<std::recursive_mutex> guard(storeMutex); return !editable(id, relative) || current().empty() ? std::string() : read(current() / "base" / id / fs::u8path(relative)); }
 std::string packageFilePath(const std::string& id, const std::string& rel, bool original) {
@@ -365,11 +364,13 @@ std::string readPackageFile(const std::string& id, const std::string& relative, 
 PackageFileState inspectPackageFile(const std::string& id, const std::string& rel) {
     std::lock_guard<std::recursive_mutex> guard(storeMutex);
     if (!editable(id, rel) || current().empty()) return {};
+    const auto original = current() / "original" / id / fs::u8path(rel);
     const auto base = current() / "base" / id / fs::u8path(rel);
     const auto work = current() / "work" / id / fs::u8path(rel);
-    return {read(work) != read(base), trim(read(current() / "base-version" / id / fs::u8path(rel + ".version"))) != packageVersion(id), trim(read(current() / "base-version" / id / fs::u8path(rel + ".version")))};
+    const auto baseBytes = read(base);
+    return {read(work) != baseBytes, baseBytes != read(original)};
 }
-ConfigWriteResult savePackageFile(const std::string& id, const std::string& rel, const std::string& content, const std::string& baselineVersion, const std::string& baselineContent) {
+ConfigWriteResult savePackageFile(const std::string& id, const std::string& rel, const std::string& content, const std::string& baselineContent) {
     std::lock_guard<std::recursive_mutex> guard(storeMutex);
     if (!editable(id, rel)) return {false, false, "pkg.invalid_file"};
     if (id == "video" && !parseVideoConfig(content).success) return {false,false,"video.invalid"};
@@ -377,7 +378,7 @@ ConfigWriteResult savePackageFile(const std::string& id, const std::string& rel,
     if (current().empty()) return {false, false, "pkg.no_bundle"};
     try {
         StoreLock lock(fs::u8path(packageStoreRoot()));
-        return transactDocument(id,rel,content,baselineVersion,baselineContent,"staging-save");
+        return transactDocument(id,rel,content,baselineContent,"staging-save");
     }
     catch (const fs::filesystem_error&) { return {false, false, "pkg.write_failed"}; }
     catch (const std::runtime_error& e) { return {false, false, e.what()}; }
@@ -388,7 +389,7 @@ ConfigWriteResult resetPackageFile(const std::string& id, const std::string& rel
     try {
         StoreLock lock(fs::u8path(packageStoreRoot()));
         const auto content = readRequired(fs::u8path(packageFilePath(id, rel, true)));
-        return transactDocument(id,rel,content,packageVersion(id),content,"staging-reset");
+        return transactDocument(id,rel,content,content,"staging-reset");
     } catch (const fs::filesystem_error&) { return {false, false, "pkg.write_failed"}; }
       catch (const std::runtime_error& e) { return {false, false, e.what()}; }
 }
@@ -401,11 +402,11 @@ bool parsePackageManifest(const std::string& json, std::vector<ConfigPackage>& p
         std::vector<ConfigPackage> result;
         for (const auto& id : ids) {
             const auto& p = doc.object.at("packages").object.at(id);
-            ConfigPackage item; item.id = id; item.version = p.object.at("version").scalar; item.url = p.object.at("url").scalar;
+            ConfigPackage item; item.id = id; item.updatedAt = p.object.at("updated_at").scalar; item.url = p.object.at("url").scalar;
             item.sha256 = p.object.at("sha256").scalar;
             const auto size = p.object.at("size").scalar;
-            if (p.type != '{' || p.object.at("version").type != '"' || p.object.at("url").type != '"' || p.object.at("sha256").type != '"' || p.object.at("size").type == '"') throw std::runtime_error("pkg.invalid_manifest");
-            if (!validVersion(item.version) || !allowedUrl(item.url) || item.sha256.size() != 64 || !std::all_of(item.sha256.begin(), item.sha256.end(), [](unsigned char c) { return std::isxdigit(c); }) || size.empty() || !std::all_of(size.begin(), size.end(), [](unsigned char c) { return std::isdigit(c); })) throw std::runtime_error("pkg.invalid_manifest");
+            if (p.type != '{' || p.object.at("updated_at").type != '"' || p.object.at("url").type != '"' || p.object.at("sha256").type != '"' || p.object.at("size").type == '"') throw std::runtime_error("pkg.invalid_manifest");
+            if (!validDate(item.updatedAt) || !allowedUrl(item.url) || item.sha256.size() != 64 || !std::all_of(item.sha256.begin(), item.sha256.end(), [](unsigned char c) { return std::isxdigit(c); }) || size.empty() || !std::all_of(size.begin(), size.end(), [](unsigned char c) { return std::isdigit(c); })) throw std::runtime_error("pkg.invalid_manifest");
             item.size = std::stoull(size); if (!item.size || item.size > 16 * 1024 * 1024) throw std::runtime_error("pkg.invalid_manifest");
             std::transform(item.sha256.begin(), item.sha256.end(), item.sha256.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
             result.push_back(item);
@@ -444,9 +445,8 @@ ConfigWriteResult importPackageArchive(const ConfigPackage& package, const std::
         const auto extracted = temporary.path / "extracted";
         if (!extract(copy, extracted)) return {false, false, "pkg.invalid_package"};
         const auto source = package.id == "srp-cfg" ? extracted / "srp-cfg" : extracted;
-        if (trim(read(source / "VERSION.txt")) != package.version) return {false, false, "pkg.invalid_package"};
         std::lock_guard<std::recursive_mutex> guard(storeMutex);
-        return promote({{package.id,source}},{{package.id,package.sha256}});
+        return promote({{package.id,source}},{{package.id,package.sha256}},{{package.id,package.updatedAt}});
     } catch (const fs::filesystem_error&) { return {false, false, "pkg.write_failed"}; }
       catch (const std::runtime_error& e) { return {false, false, e.what()}; }
 #else

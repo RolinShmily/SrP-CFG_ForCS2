@@ -15,7 +15,7 @@ export const skillId = "srpcfg-cli" as const;
 export type SkillId = typeof skillId;
 export interface DownloadAsset { url: string; sha256?: string; size?: number; }
 export interface AppRelease { version: string; setup?: DownloadAsset; portable?: DownloadAsset; }
-export interface ConfigPackage extends DownloadAsset { version: string; }
+export interface ConfigPackage extends DownloadAsset { version?: string; updatedAt?: string; }
 export type PackageManifest = Partial<Record<PackageId, ConfigPackage>>;
 // Vite injects the deployment prefix; plain Node (unit tests) has no `import.meta.env`.
 const basePath = ((import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env?.BASE_URL ?? "/").replace(/\/+$/, "");
@@ -78,18 +78,30 @@ export function parseAppRelease(value: unknown): AppRelease | undefined {
   }
   return result.setup || result.portable ? result : undefined;
 }
+function compactDate(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  if (/^\d{8}$/.test(value)) return value;
+  const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  return iso ? `${iso[1]}${iso[2]}${iso[3]}` : undefined;
+}
 export function parsePackageManifest(value: unknown): PackageManifest {
   const obj = object(value); const packages = object(obj?.packages);
   const result: PackageManifest = {};
   if (obj?.schema_version !== 1 || !packages) return result;
+  const publishedDate = compactDate(obj.published_at);
   for (const id of packageIds) {
     const entry = object(packages[id]);
-    if (!entry || typeof entry.version !== "string" || !PACKAGE_VERSION.test(entry.version) || typeof entry.url !== "string") continue;
+    if (!entry || typeof entry.url !== "string") continue;
+    const version = entry.version === undefined ? undefined : (typeof entry.version === "string" && PACKAGE_VERSION.test(entry.version) ? entry.version : null);
+    if (version === null) continue;
+    const updatedAt = entry.updated_at === undefined ? publishedDate : compactDate(entry.updated_at);
+    if (entry.updated_at !== undefined && !updatedAt) continue;
+    if (!version && !updatedAt) continue;
     try {
       const url = new URL(entry.url);
       if (url.origin !== "https://cfg.srprolin.com" || url.username || url.password || !url.pathname.startsWith(`/packages/${id}-`) || !url.pathname.endsWith(".zip") || url.search || url.hash) continue;
       const hash = checksum(entry.sha256), bytes = size(entry.size);
-      if (hash && bytes) result[id] = { version: entry.version, url: entry.url, sha256: hash, size: bytes };
+      if (hash && bytes) result[id] = { ...(version ? { version } : {}), ...(updatedAt ? { updatedAt } : {}), url: entry.url, sha256: hash, size: bytes };
     } catch (error) { if (!(error instanceof TypeError)) throw error; }
   }
   return result;

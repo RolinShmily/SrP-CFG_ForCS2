@@ -97,8 +97,6 @@ void OverviewController::redetectPaths() {
 
 bool OverviewController::checkSrpInstalled() {
     bool installed = !m_cfgPath.isEmpty() && srp::core::isSrpInstalled(m_cfgPath.toStdString());
-    m_sourceSrpVersion = QString::fromStdString(srp::core::getSourceSrpVersion());
-    m_installedSrpVersion = installed ? QString::fromStdString(srp::core::getInstalledSrpVersion(m_cfgPath.toStdString())) : QString();
     if (m_isSrpInstalled != installed) {
         m_isSrpInstalled = installed;
     }

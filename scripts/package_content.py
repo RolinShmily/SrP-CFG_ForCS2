@@ -5,8 +5,9 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
-import re
 import shutil
+import subprocess
+import tempfile
 import zipfile
 
 REPO = Path(__file__).resolve().parent.parent
@@ -31,23 +32,40 @@ def entries(directory, prefix=''):
             yield prefix + relative.as_posix(), path.read_bytes()
 
 
-def build_package(output, package_id, directory, files):
-    version = (directory/'VERSION.txt').read_text(encoding='utf-8').strip()
-    if not re.fullmatch(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?', version):
-        raise ValueError(f'Invalid version for {package_id}: {version}')
-    archive = output/f'{package_id}-v{version}.zip'
-    with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
-        for name, content in sorted(files):
-            info = zipfile.ZipInfo(name, date_time=(2025, 1, 1, 0, 0, 0))
-            info.compress_type = zipfile.ZIP_DEFLATED
-            info.external_attr = 0o100644 << 16
-            zipped.writestr(info, content)
-    content = archive.read_bytes()
-    digest = hashlib.sha256(content).hexdigest()
-    addressed = output/f'{package_id}-v{version}-{digest}.zip'
-    shutil.copyfile(archive, addressed)
-    shutil.copyfile(archive, output/f'{package_id}-latest.zip')
-    return {'version': version, 'size': len(content), 'sha256': digest,
+def last_updated_date(paths, fallback):
+    rel_paths = [path.relative_to(REPO).as_posix() for path in paths]
+    try:
+        output = subprocess.check_output(
+            ['git', 'log', '-1', '--format=%ct', '--', *rel_paths],
+            cwd=REPO,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        if output.isdigit():
+            return datetime.fromtimestamp(int(output), tz=timezone.utc).strftime('%Y%m%d')
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return fallback
+
+
+def build_package(output, package_id, files, updated_at):
+    with tempfile.NamedTemporaryFile(dir=output, prefix=f'.{package_id}-', suffix='.zip', delete=False) as tmp:
+        archive = Path(tmp.name)
+    try:
+        with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
+            for name, content in sorted(files):
+                info = zipfile.ZipInfo(name, date_time=(2025, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0o100644 << 16
+                zipped.writestr(info, content)
+        content = archive.read_bytes()
+        digest = hashlib.sha256(content).hexdigest()
+        addressed = output/f'{package_id}-{updated_at}-{digest}.zip'
+        shutil.copyfile(archive, addressed)
+        shutil.copyfile(archive, output/f'{package_id}-latest.zip')
+    finally:
+        archive.unlink(missing_ok=True)
+    return {'updated_at': updated_at, 'size': len(content), 'sha256': digest,
             'url': f'{ORIGIN}/packages/{addressed.name}'}
 
 
@@ -58,22 +76,27 @@ def main():
     output = args.output.resolve()
     archives = output/'packages'
     archives.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc)
+    today = now.strftime('%Y%m%d')
     packages = {}
     for package_id in CONTENT_IDS:
         directory = REPO/'content'/package_id
         prefix = f'{package_id}/' if package_id in PREFIXED else ''
         files = list(entries(directory, prefix))
+        tracked_paths = [directory]
         if package_id in AUTOEXEC:
             name, path = AUTOEXEC[package_id]
             files.append((name, path.read_bytes()))
-        packages[package_id] = build_package(archives, package_id, directory, files)
-    manifest = {'schema_version': 1, 'published_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            tracked_paths.append(path)
+        updated_at = last_updated_date(tracked_paths, today)
+        packages[package_id] = build_package(archives, package_id, files, updated_at)
+    manifest = {'schema_version': 1, 'published_at': now.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'packages': packages}
     manifest_json = json.dumps(manifest, ensure_ascii=False, indent=2) + '\n'
     (archives/'manifest.json').write_text(manifest_json, encoding='utf-8')
     (output/'packages.json').write_text(manifest_json, encoding='utf-8')
     for package_id, entry in packages.items():
-        print(f"{package_id} v{entry['version']} {entry['size']} bytes SHA-256 {entry['sha256']}")
+        print(f"{package_id} ({entry['updated_at']}) {entry['size']} bytes SHA-256 {entry['sha256']}")
 
 
 if __name__ == '__main__':

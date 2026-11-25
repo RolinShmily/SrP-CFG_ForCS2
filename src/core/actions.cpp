@@ -33,22 +33,6 @@ std::string trimString(const std::string& str) {
     return str.substr(first, (last - first + 1));
 }
 
-std::string readVersionFile(const fs::path& verPath) {
-    std::error_code ec;
-    if (!fs::exists(verPath, ec)) return "";
-    std::ifstream file(verPath);
-    if (!file) return "";
-    std::string line;
-    if (std::getline(file, line)) {
-        line = trimString(line);
-        if (!line.empty() && line[0] != 'v' && line[0] != 'V') {
-            line = "v" + line;
-        }
-        return line;
-    }
-    return "";
-}
-
 ConfigWriteResult mountAutoexecHook(const fs::path& autoexecPath) {
     std::error_code ec;
     const std::string block = std::string(SRP_HOOK_START) + "\n" + SRP_HOOK_CMD1 + "\n"
@@ -196,13 +180,6 @@ bool isSrpInstalled(const std::string& gameCfgDir) {
     return false;
 }
 
-std::string getInstalledSrpVersion(const std::string& gameCfgDir) {
-    if (!isSrpInstalled(gameCfgDir)) return "";
-    fs::path verPath = fs::u8path(gameCfgDir) / "srp-cfg" / "VERSION.txt";
-    std::string ver = readVersionFile(verPath);
-    return ver.empty() ? "v3.4.0" : ver;
-}
-
 std::string findSourceConfigDir() {
     // Defaults are immutable; installed editors still target game files.
     if (initializePackages().success) return packageOriginalDir();
@@ -238,14 +215,6 @@ std::string findSourceConfigDir() {
         }
     }
     return {};
-}
-
-std::string getSourceSrpVersion() {
-    std::string src = findSourceConfigDir();
-    if (src.empty()) return "v3.4.0";
-    fs::path verPath = fs::u8path(src) / "srp-cfg" / "VERSION.txt";
-    std::string ver = readVersionFile(verPath);
-    return ver.empty() ? "v3.4.0" : ver;
 }
 
 ConfigWriteResult installSrp(const std::string& gameCfgDir, const std::string& sourceConfigDir) {

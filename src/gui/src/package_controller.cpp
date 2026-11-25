@@ -29,10 +29,12 @@ PackageController::~PackageController() { m_future.waitForFinished(); if (curren
 void PackageController::refresh() {
     m_packages.clear();
     for (const std::string id : {"srp-cfg","video","annotations"}) {
-        const auto local = srp::core::packageVersion(id); std::string remote, remoteHash;
-        for (const auto& item : m_latest) if (item.id == id) { remote = item.version; remoteHash = item.sha256; }
-        m_packages.append(QVariantMap{{"id",QString::fromStdString(id)},{"version",QString::fromStdString(local)},
-            {"latest",QString::fromStdString(remote)},{"updateAvailable",!remote.empty() && (remote != local || remoteHash != srp::core::packageDigest(id))}});
+        const auto localDate = srp::core::packageUpdatedAt(id);
+        const auto localHash = srp::core::packageDigest(id);
+        std::string remoteDate, remoteHash;
+        for (const auto& item : m_latest) if (item.id == id) { remoteDate = item.updatedAt; remoteHash = item.sha256; }
+        m_packages.append(QVariantMap{{"id",QString::fromStdString(id)},{"updatedAt",QString::fromStdString(localDate)},
+            {"latest",QString::fromStdString(remoteDate)},{"updateAvailable",!remoteHash.empty() && remoteHash != localHash}});
     }
     emit stateChanged();
 }

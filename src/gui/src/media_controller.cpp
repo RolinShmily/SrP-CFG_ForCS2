@@ -65,7 +65,6 @@ void MediaController::load() {
     m_content = QString::fromStdString(document.body);
     m_saved = m_content;
     m_baseContent = srp::core::packageFileBaseline(packageId().toStdString(),relativeFile().toStdString());
-    m_baseVersion = srp::core::inspectPackageFile(packageId().toStdString(),relativeFile().toStdString()).baseVersion;
     m_optionsDirty = true; m_guidesDirty = true;
     watch(); if (m_content != previous) emit editorContentChanged(); emit stateChanged();
 }
@@ -123,8 +122,12 @@ QVariantList MediaController::guides() const {
     m_guidesCache = result; m_guidesDirty = false;
     return result;
 }
-bool MediaController::outdated() const { return isEditorDirty() ? m_baseVersion != srp::core::packageVersion(packageId().toStdString()) : srp::core::inspectPackageFile(packageId().toStdString(),relativeFile().toStdString()).outdated; }
-QString MediaController::baseVersion() const { return QString::fromStdString(isEditorDirty() ? m_baseVersion : srp::core::inspectPackageFile(packageId().toStdString(),relativeFile().toStdString()).baseVersion); }
+bool MediaController::outdated() const {
+    if (isEditorDirty()) {
+        return m_baseContent != srp::core::readPackageFile(packageId().toStdString(), relativeFile().toStdString(), true);
+    }
+    return srp::core::inspectPackageFile(packageId().toStdString(), relativeFile().toStdString()).outdated;
+}
 bool MediaController::report(bool success,const std::string& key) { emit messageNotify(success,trKey(key)); return success; }
 bool MediaController::editable() {
     if (auto* packages=PackageController::instance(); packages && packages->busy()) return report(false,"pkg.busy");
@@ -138,7 +141,7 @@ bool MediaController::saveCurrentFile() {
     if (m_externalConflict) return report(false,"media.external_conflict");
     if (!validationError().isEmpty()) return report(false,m_video ? "video.invalid" : "annotations.invalid");
     const std::string text = srp::core::encodeDocument(m_content.toStdString(), m_bom, m_newline == "\r\n");
-    const auto result=srp::core::savePackageFile(packageId().toStdString(),relativeFile().toStdString(),text,m_baseVersion,m_baseContent);
+    const auto result=srp::core::savePackageFile(packageId().toStdString(),relativeFile().toStdString(),text,m_baseContent);
     if (!result.success) return report(false,result.error);
     load(); return report(true,"media.saved");
 }

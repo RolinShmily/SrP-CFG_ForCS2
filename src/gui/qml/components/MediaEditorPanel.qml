@@ -70,7 +70,7 @@ Rectangle {
         Text { font.family: MetaTheme.fontFamily;
             visible: panel.controller.outdated
             Layout.fillWidth: true
-            text: panel.t("pkg.outdated").arg(panel.controller.baseVersion)
+            text: panel.t("pkg.outdated")
             color: MetaTheme.statusWarning
             font.pixelSize: 11
             wrapMode: Text.WordWrap

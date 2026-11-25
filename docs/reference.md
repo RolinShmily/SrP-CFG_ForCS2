@@ -50,7 +50,7 @@
 
 1. **内容包清单**：`https://cfg.srprolin.com/packages/manifest.json`（兼容别名 `/packages.json`）
    - 下载地址必须严格落在 `https://cfg.srprolin.com/packages/` 下；
-   - 强制校验包大小（≤ 16 MB）、SHA-256、ZIP 条目路径安全与解包后 `catalog.json` / `VERSION.txt`。
+   - 强制校验包大小（≤ 16 MB）、SHA-256、ZIP 条目路径安全与解包后目录内容 / `catalog.json`。
 2. **软件版本与下载**：
    - 清单：`https://cfg.srprolin.com/releases/latest.json`（由 `worker/index.ts` 回源 GitHub Release 的 `latest.json` 并将下载链接改写为同源地址，保持原始 SHA-256）；
    - 下载：`https://cfg.srprolin.com/releases/download/<tag>/<file>`（严格白名单匹配 `srp-cfg-<tag>-windows-x64-{gui.zip,setup.exe}`，流式透传 GitHub Releases）；

@@ -25,21 +25,21 @@ def main():
         elif path.stat().st_size == 0:
             errors.append(f"Project document is empty: {doc}")
 
-    # 2. Content package version numbers
+    # 2. Content package directories
     semver_pattern = re.compile(r"^\d+\.\d+\.\d+$")
-    # Package editions may carry a suffix (for example srp-cfg-csgo's "3.4.2-csgo").
-    package_version_pattern = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$")
     packages = ["srp-cfg", "video", "annotations", "srp-cfg-csgo"]
     for pkg in packages:
-        ver_file = repo_root / "content" / pkg / "VERSION.txt"
-        if not ver_file.is_file():
-            errors.append(f"Missing package VERSION.txt: content/{pkg}/VERSION.txt")
+        pkg_dir = repo_root / "content" / pkg
+        if not pkg_dir.is_dir():
+            errors.append(f"Missing content package directory: content/{pkg}")
             continue
-        ver = ver_file.read_text(encoding="utf-8").strip()
-        if not package_version_pattern.match(ver):
-            errors.append(f"Invalid semver '{ver}' in content/{pkg}/VERSION.txt")
-        else:
-            print(f"    [OK] Package '{pkg}': v{ver}")
+        if (pkg_dir / "VERSION.txt").exists():
+            errors.append(f"Unexpected legacy VERSION.txt in content/{pkg}/VERSION.txt")
+            continue
+        if pkg == "video" and not (pkg_dir / "cs2_video.txt").is_file():
+            errors.append("Missing video config template: content/video/cs2_video.txt")
+            continue
+        print(f"    [OK] Package '{pkg}' verified")
 
     # 3. Catalog integrity
     catalogs = [

@@ -3,6 +3,7 @@
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -13,7 +14,7 @@ REPO = Path(__file__).resolve().parent.parent.parent
 # cannot be silently omitted from the published manifest.
 CONTENT_PACKAGES = {
     path.name for path in (REPO/'content').iterdir()
-    if path.is_dir() and (path/'VERSION.txt').is_file()
+    if path.is_dir()
 }
 with tempfile.TemporaryDirectory(prefix='srp-content-test-') as temporary:
     output = Path(temporary)
@@ -27,9 +28,11 @@ with tempfile.TemporaryDirectory(prefix='srp-content-test-') as temporary:
         name = entry['url'].rsplit('/', 1)[1]
         archive = output/'packages'/name
         data = archive.read_bytes()
+        assert 'version' not in entry
         assert len(data) == entry['size']
         assert hashlib.sha256(data).hexdigest() == entry['sha256']
-        assert entry['url'].startswith(f'https://cfg.srprolin.com/packages/{package_id}-v')
+        assert re.fullmatch(r'\d{8}', entry['updated_at'])
+        assert entry['url'] == f"https://cfg.srprolin.com/packages/{package_id}-{entry['updated_at']}-{entry['sha256']}.zip"
         assert (output/'packages'/f'{package_id}-latest.zip').read_bytes() == data
         with zipfile.ZipFile(archive) as zipped:
             assert zipped.testzip() is None

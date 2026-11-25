@@ -25,8 +25,6 @@ class OverviewController : public QObject {
     Q_PROPERTY(int totalBindings READ totalBindings NOTIFY convarsChanged)
     Q_PROPERTY(bool isScanning READ isScanning NOTIFY isScanningChanged)
     Q_PROPERTY(bool isSrpInstalled READ isSrpInstalled NOTIFY srpInstallStateChanged)
-    Q_PROPERTY(QString installedSrpVersion READ installedSrpVersion NOTIFY srpInstallStateChanged)
-    Q_PROPERTY(QString sourceSrpVersion READ sourceSrpVersion NOTIFY srpInstallStateChanged)
     Q_PROPERTY(QString currentLang READ currentLang NOTIFY languageChanged)
 
 public:
@@ -50,8 +48,6 @@ public:
     int totalBindings() const { return m_totalBindings; }
     bool isScanning() const { return m_isScanning; }
     bool isSrpInstalled() const { return m_isSrpInstalled; }
-    QString installedSrpVersion() const { return m_installedSrpVersion; }
-    QString sourceSrpVersion() const { return m_sourceSrpVersion; }
     QString currentLang() const { return m_currentLang; }
 
     Q_INVOKABLE void refresh();
@@ -105,8 +101,6 @@ private:
     int m_totalBindings = 0;
     bool m_isScanning = false;
     bool m_isSrpInstalled = false;
-    QString m_installedSrpVersion;
-    QString m_sourceSrpVersion;
     QString m_currentLang = "zh";
 };
 

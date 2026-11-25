@@ -8,7 +8,7 @@ Rectangle {
     property string packageId: ""
     property var info: {
         for (let item of PackageController.packages) if (item.id === packageId) return item;
-        return { version: "", latest: "", updateAvailable: false };
+        return { updatedAt: "", latest: "", updateAvailable: false };
     }
     function t(key) { return OverviewController.tr(key, OverviewController.currentLang); }
     implicitHeight: body.implicitHeight + 28
@@ -24,11 +24,11 @@ Rectangle {
             Layout.fillWidth: true
             Text { font.family: MetaTheme.fontFamily; text: panel.packageId; font.bold: true; font.pixelSize: 13; color: MetaTheme.textPrimary }
             Item { Layout.fillWidth: true }
-            Text { font.family: MetaTheme.fontFamily; text: panel.t("pkg.local") + " · v" + panel.info.version; font.pixelSize: 11; color: MetaTheme.textSecondary }
+            Text { font.family: MetaTheme.fontFamily; text: panel.t("pkg.local") + (panel.info.updatedAt.length > 0 ? " · " + panel.info.updatedAt : ""); font.pixelSize: 11; color: MetaTheme.textSecondary }
         }
         Text { font.family: MetaTheme.fontFamily;
             visible: panel.info.latest.length > 0
-            text: panel.t("pkg.latest") + " · v" + panel.info.latest
+            text: panel.t("pkg.latest") + " · " + panel.info.latest
             font.pixelSize: 11
             color: panel.info.updateAvailable ? MetaTheme.statusWarning : MetaTheme.textSecondary
         }

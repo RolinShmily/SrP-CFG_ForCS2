@@ -20,7 +20,6 @@ class MediaController : public QObject {
     Q_PROPERTY(QStringList guideIds READ guideIds NOTIFY catalogChanged)
     Q_PROPERTY(int optionCount READ optionCount CONSTANT)
     Q_PROPERTY(bool outdated READ outdated NOTIFY stateChanged)
-    Q_PROPERTY(QString baseVersion READ baseVersion NOTIFY stateChanged)
 public:
     explicit MediaController(bool video, QObject* parent = nullptr);
     QString editorContent() const { return m_content; }
@@ -34,7 +33,6 @@ public:
     QStringList guideIds() const;
     int optionCount() const { return static_cast<int>(srp::core::videoOptions().size()); }
     bool outdated() const;
-    QString baseVersion() const;
     Q_INVOKABLE void updateEditorContent(const QString& text);
     Q_INVOKABLE bool saveCurrentFile();
     Q_INVOKABLE void resetCurrentFileToDefault();
@@ -65,7 +63,7 @@ private:
     bool m_video;
     int m_index = 0;
     QString m_content, m_saved, m_path;
-    std::string m_baseContent, m_baseVersion;
+    std::string m_baseContent;
     bool m_bom = false;
     bool m_externalConflict = false;
     QString m_newline = "\n";

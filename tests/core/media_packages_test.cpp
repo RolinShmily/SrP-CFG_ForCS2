@@ -16,36 +16,21 @@ namespace fs=std::filesystem;
 void require(bool ok,const char* message){if(!ok)throw std::runtime_error(message);std::cout<<"PASS: "<<message<<'\n';}
 std::string read(const fs::path& p){std::ifstream f(p,std::ios::binary);return {std::istreambuf_iterator<char>(f),std::istreambuf_iterator<char>()};}
 void put(const fs::path& p,const std::string& text){fs::create_directories(p.parent_path());std::ofstream f(p,std::ios::binary);f<<text;}
-// Expected package versions come from the bundle itself; tests must not pin release numbers.
-std::string bundleVersion(const fs::path& bundle,const std::string& package){
- std::string version=read(bundle/package/"VERSION.txt");
- while(!version.empty()&&(version.back()=='\n'||version.back()=='\r'||version.back()==' '))version.pop_back();
- return version;
-}
-std::string bumpPatch(const std::string& version,int delta){
- const auto dot=version.rfind('.');
- if(dot==std::string::npos)return version;
- return version.substr(0,dot+1)+std::to_string(std::stoi(version.substr(dot+1))+delta);
-}
 int main(int argc,char** argv){
  const fs::path root=fs::temp_directory_path()/ ("srp-media-test-"+std::to_string(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
  struct Cleanup{fs::path root;~Cleanup(){std::error_code ec;fs::remove_all(root,ec);}} cleanup{root};
  try{
   const auto bundle=argc>1 ? fs::u8path(argv[1]) : fs::absolute("content");
-  const auto baseVideoVersion=bundleVersion(bundle,"video");
-  const auto baseSrpVersion=bundleVersion(bundle,"srp-cfg");
-  require(!baseVideoVersion.empty()&&!baseSrpVersion.empty(),"bundled package versions available");
   srp::core::setBundledConfigDir(bundle.u8string());srp::core::setPackageStoreRoot((root/"store").u8string());
   require(srp::core::initializePackages().success,"offline bundled initialization");
   if (argc >= 7 && std::string(argv[2]) == "--archive") {
-      srp::core::ConfigPackage p{"video",baseVideoVersion,argv[4],"",static_cast<size_t>(std::stoull(argv[5]))};
+      srp::core::ConfigPackage p{"video","20261125",argv[4],"",static_cast<size_t>(std::stoull(argv[5]))};
       const auto result = srp::core::importPackageArchive(p,argv[3]);
       const bool expected = std::string(argv[6]) == "valid";
       require(result.success == expected,"ZIP fixture accepted or rejected as expected");
-      require(srp::core::packageVersion("video") == baseVideoVersion,"valid baseline retained");
+      if (expected) require(srp::core::packageUpdatedAt("video") == "20261125","updated_at recorded on valid import");
       std::cout << "ARCHIVE CHECK PASSED\n"; return 0;
   }
-  require(srp::core::packageVersion("video")==baseVideoVersion,"staged independent version");
   require(srp::core::findSourceConfigDir()==srp::core::packageOriginalDir(),"SrP clean defaults use package original");
   require(srp::core::initializePackages().success,"idempotent initialization");
   require(srp::core::packageFilePath("video","../other").empty(),"traversal blocked");
@@ -59,13 +44,12 @@ int main(int argc,char** argv){
   require(srp::core::readPackageFile("video","cs2_video.txt")==changed,"staged read API returns saved bytes");
   require(srp::core::readPackageFile("video","../other").empty(),"staged read rejects traversal");
   require(read(bundle/"video/cs2_video.txt")==video,"factory bundle untouched");
-  auto next=root/"new-video";fs::copy(bundle/"video",next,fs::copy_options::recursive);put(next/"VERSION.txt",bumpPatch(baseVideoVersion,1)+"\n");
-  std::string newer;require(srp::core::changeVideoOption(video,"setting.mat_vsync","1",newer).success,"build new version fixture");put(next/"cs2_video.txt",newer);
+  auto next=root/"new-video";fs::copy(bundle/"video",next,fs::copy_options::recursive);
+  std::string newer;require(srp::core::changeVideoOption(video,"setting.mat_vsync","1",newer).success,"build updated video fixture");put(next/"cs2_video.txt",newer);
   require(srp::core::promotePackageDirectory("video",next.u8string()).success,"promote updated package");
   require(read(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")))==changed,"edited work copy preserved on update");
-  require(srp::core::inspectPackageFile("video","cs2_video.txt").outdated,"edited work marked based on old version");
+  require(srp::core::inspectPackageFile("video","cs2_video.txt").outdated,"edited work marked outdated against updated original");
   require(fs::exists(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")+".bak")),"work history survives generation promotion");
-  require(srp::core::packageVersion("srp-cfg")==baseSrpVersion,"other package version independent");
 #if defined(_WIN32)
   const auto pointer = root/"store/current.txt";
   HANDLE pointerHandle = CreateFileW(pointer.c_str(),GENERIC_READ,FILE_SHARE_READ | FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
@@ -76,11 +60,11 @@ int main(int argc,char** argv){
 #endif
   require(srp::core::resetPackageFile("video","cs2_video.txt").success,"reset staged default");
   require(read(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")))==newer && !srp::core::inspectPackageFile("video","cs2_video.txt").outdated,"restore adopts newest default");
-  put(next/"VERSION.txt",bumpPatch(baseVideoVersion,2)+"\n");put(next/"cs2_video.txt",video);
+  put(next/"cs2_video.txt",video);
   require(srp::core::promotePackageDirectory("video",next.u8string()).success,"second promotion");
   require(read(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")))==video,"untouched work follows update automatically");
-  auto invalid=root/"invalid";put(invalid/"VERSION.txt",bumpPatch(baseVideoVersion,3));
-  require(!srp::core::promotePackageDirectory("video",invalid.u8string()).success && srp::core::packageVersion("video")==bumpPatch(baseVideoVersion,2),"invalid package retains prior generation");
+  auto invalid=root/"invalid";put(invalid/"cs2_video.txt","not valid keyvalues");
+  require(!srp::core::promotePackageDirectory("video",invalid.u8string()).success && read(fs::u8path(srp::core::packageFilePath("video","cs2_video.txt")))==video,"invalid package retains prior generation");
   auto target=root/"user/cs2_video.txt";
   std::string hardware="\xEF\xBB\xBF\"video.cfg\"\r\n{\r\n\t\"VendorID\" \"1002\"\r\n\t\"DeviceID\" \"9876\"\r\n\t\"setting.monitor_index\" \"2\"\r\n\t\"setting.refreshrate_numerator\" \"240\"\r\n\t\"future.option\" \"unknown\"\r\n\t\"setting.msaa_samples\" \"8\"\r\n}\r\n";put(target,hardware);
   std::string merged;
@@ -127,13 +111,13 @@ int main(int argc,char** argv){
 #endif
   std::vector<srp::core::ConfigPackage> packages;std::string error;
   std::string manifest="{\"schema_version\":1,\"packages\":{";
-  for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"version\":\"3.4.0\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://cfg.srprolin.com/packages/"+id+"-latest.zip\"}";}manifest+="}}";
+  for(const std::string id:{"srp-cfg","video","annotations"}){if(id!="srp-cfg")manifest+=",";manifest+="\""+id+"\":{\"updated_at\":\"20261125\",\"sha256\":\""+std::string(64,'a')+"\",\"size\":100,\"url\":\"https://cfg.srprolin.com/packages/"+id+"-latest.zip\"}";}manifest+="}}";
   require(srp::core::parsePackageManifest(manifest,packages,error)&&packages.size()==3,"manifest parses all three packages");
   auto withSkill=manifest;
-  withSkill.insert(withSkill.size()-2,",\"srpcfg-cli\":{\"version\":\"1.0.0\",\"size\":100,\"sha256\":\""+std::string(64,'b')+"\",\"url\":\"https://cfg.srprolin.com/packages/srpcfg-cli-latest.zip\"}");
+  withSkill.insert(withSkill.size()-2,",\"srpcfg-cli\":{\"updated_at\":\"20261125\",\"size\":100,\"sha256\":\""+std::string(64,'b')+"\",\"url\":\"https://cfg.srprolin.com/packages/srpcfg-cli-latest.zip\"}");
   require(srp::core::parsePackageManifest(withSkill,packages,error)&&packages.size()==3,"website skill entry does not become an APP configuration package");
   auto withCsgo=manifest;
-  withCsgo.insert(withCsgo.size()-2,",\"srp-cfg-csgo\":{\"version\":\"3.4.2-csgo\",\"size\":100,\"sha256\":\""+std::string(64,'c')+"\",\"url\":\"https://cfg.srprolin.com/packages/srp-cfg-csgo-latest.zip\"}");
+  withCsgo.insert(withCsgo.size()-2,",\"srp-cfg-csgo\":{\"updated_at\":\"20261125\",\"size\":100,\"sha256\":\""+std::string(64,'c')+"\",\"url\":\"https://cfg.srprolin.com/packages/srp-cfg-csgo-latest.zip\"}");
   require(srp::core::parsePackageManifest(withCsgo,packages,error)&&packages.size()==3,"website CS:GO entry does not become an APP configuration package");
   require(srp::core::packageManifestUrl()=="https://cfg.srprolin.com/packages/manifest.json","manifest uses official Worker domain");
   for(const std::string host:{"https://attacker.invalid","https://cfg.srprolin.top","https://cfg.srprolin.com.evil.example","http://cfg.srprolin.com"}){
@@ -141,7 +125,7 @@ int main(int argc,char** argv){
    require(!srp::core::parsePackageManifest(unsafe,packages,error),"untrusted or retired manifest host rejected");
   }
   require(!srp::core::parsePackageManifest("{\"schema_version\":1,\"schema_version\":2}",packages,error),"duplicate manifest keys rejected");
-  require(!srp::core::importPackageArchive({"video","3.4.0",std::string(64,'0'),"",100},target.u8string()).success,"archive mismatch rejected before extraction");
+  require(!srp::core::importPackageArchive({"video","20261125",std::string(64,'0'),"",100},target.u8string()).success,"archive mismatch rejected before extraction");
   std::cout<<"ALL MEDIA AND PACKAGE CHECKS PASSED\n";return 0;
  }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}
 }

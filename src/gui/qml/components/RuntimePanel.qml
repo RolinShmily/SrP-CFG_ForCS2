@@ -16,13 +16,13 @@ Rectangle {
     readonly property var info: {
         for (let item of PackageController.packages)
             if (item.id === "srp-cfg") return item;
-        return { version: "", latest: "", updateAvailable: false };
+        return { updatedAt: "", latest: "", updateAvailable: false };
     }
 
     readonly property bool installed: OverviewController.isSrpInstalled
-    readonly property string stagedVersion: info.version !== undefined ? info.version : ""
-    readonly property string latestVersion: info.latest !== undefined ? info.latest : ""
-    readonly property bool hasLatest: latestVersion.length > 0
+    readonly property string stagedDate: info.updatedAt !== undefined ? info.updatedAt : ""
+    readonly property string latestDate: info.latest !== undefined ? info.latest : ""
+    readonly property bool hasLatest: latestDate.length > 0
     readonly property bool hasUpdate: hasLatest && info.updateAvailable === true
     // 0 = 未检查（未知）1 = 已是最新 2 = 可更新
     readonly property int badgeState: !hasLatest ? 0 : (hasUpdate ? 2 : 1)
@@ -83,7 +83,7 @@ Rectangle {
 
                     Text {
                         font.family: MetaTheme.fontFamily
-                        text: panel.badgeState === 2 ? panel.t(panel.stagedVersion === panel.latestVersion ? "overview.runtime.badge_content" : "overview.runtime.badge_update")
+                        text: panel.badgeState === 2 ? panel.t("overview.runtime.badge_update")
                             : panel.badgeState === 1 ? panel.t("overview.runtime.badge_latest")
                             : panel.t("overview.runtime.badge_unknown")
                         font.pixelSize: 10
@@ -123,8 +123,7 @@ Rectangle {
                     wrapMode: Text.Wrap
                     font.family: MetaTheme.fontFamily
                     text: panel.installed
-                          ? (panel.t("overview.runtime.installed")
-                             + (OverviewController.installedSrpVersion.length > 0 ? " " + OverviewController.installedSrpVersion : ""))
+                          ? panel.t("overview.runtime.installed")
                           : panel.t("overview.runtime.not_installed")
                     font.pixelSize: 11
                     font.bold: true
@@ -169,7 +168,7 @@ Rectangle {
                 }
             }
 
-            // 暂存版本与远端版本保持完整可读，窄卡片中自动换行。
+            // 暂存更新日期与远端最近更新日期保持完整可读，窄卡片中自动换行。
             Text {
                 Layout.row: 1
                 Layout.column: 0
@@ -178,9 +177,9 @@ Rectangle {
                 wrapMode: Text.Wrap
                 font.family: MetaTheme.fontFamily
                 text: {
-                    let s = panel.t("overview.runtime.staged") + " v" + panel.stagedVersion;
+                    let s = panel.t("overview.runtime.staged") + (panel.stagedDate.length > 0 ? " " + panel.stagedDate : "");
                     if (panel.hasLatest)
-                        s += (panel.hasUpdate && panel.stagedVersion !== panel.latestVersion ? "  →  " : "  ·  ") + panel.t("overview.runtime.latest") + " v" + panel.latestVersion;
+                        s += (panel.hasUpdate ? "  →  " : "  ·  ") + panel.t("overview.runtime.latest") + " " + panel.latestDate;
                     else
                         s += "  ·  " + panel.t("overview.runtime.latest") + " —";
                     return s;
