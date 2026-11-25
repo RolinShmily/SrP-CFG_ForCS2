@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowDownToLine, ArrowUpRight, Archive, BookOpen, Check, Copy, FileCode2, LoaderCircle, Map, Monitor, Package, RefreshCw, Settings2, Terminal } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
-import { assetPath, configPackageIds, fetchJson, formatSize, packageIds, parseAppRelease, parsePackageManifest, RELEASE_API, RELEASE_MANIFEST, RELEASES, REPOSITORY, softwareUrl, type AppRelease, type DownloadAsset, type DownloadSource, type PackageManifest } from "@/lib/downloads";
+import { assetPath, configPackageIds, fetchJson, formatSize, parseAppRelease, parsePackageManifest, RELEASE_API, RELEASES, REPOSITORY, softwareUrl, type AppRelease, type DownloadAsset, type DownloadSource, type PackageManifest } from "@/lib/downloads";
 import { Reveal } from "./reveal";
 
 function Checksum({ hash }: { hash?: string }) {
@@ -30,8 +30,10 @@ export function CtaSection() {
     setAppState("loading");setRelease(undefined);
     (async()=>{
       let found:AppRelease|undefined;
-      try { found=parseAppRelease(await fetchJson(softwareUrl(RELEASE_MANIFEST,source),controller.signal)); }
-      catch(error){if(controller.signal.aborted)return;console.info("Release manifest unavailable; trying GitHub API",error);}
+      if (source === "mirror") {
+        try { found=parseAppRelease(await fetchJson(assetPath("/releases/latest.json"),controller.signal)); }
+        catch(error){if(controller.signal.aborted)return;console.info("Site release manifest unavailable; trying GitHub API",error);}
+      }
       if(found){setRelease(found);setAppState("ready");return;}
       try {found=parseAppRelease(await fetchJson(RELEASE_API,controller.signal));if(controller.signal.aborted)return;setRelease(found);setAppState(found?"ready":"empty");}
       catch(error){if(!controller.signal.aborted){console.info("Software release information unavailable",error);setAppState("error");}}
@@ -40,7 +42,7 @@ export function CtaSection() {
   },[source,attempt,restored]);
   useEffect(()=>{
     const controller=new AbortController();setPackageState("loading");setPackages({});
-    fetchJson(assetPath("/packages.json"),controller.signal).then(value=>{if(controller.signal.aborted)return;const entries=parsePackageManifest(value);setPackages(entries);setPackageState(packageIds.every(id=>!!entries[id])?"ready":"error");}).catch(error=>{if(!controller.signal.aborted){console.info("Package metadata unavailable",error);setPackageState("error");}});
+    fetchJson(assetPath("/packages/manifest.json"),controller.signal).then(value=>{if(controller.signal.aborted)return;const entries=parsePackageManifest(value);setPackages(entries);setPackageState(configPackageIds.every(id=>!!entries[id])?"ready":"error");}).catch(error=>{if(!controller.signal.aborted){console.info("Package metadata unavailable",error);setPackageState("error");}});
     return()=>controller.abort();
   },[attempt]);
   function choose(value:DownloadSource){setSource(value);try{localStorage.setItem("srp_download_source",value);}catch(error){if(!(error instanceof DOMException))console.warn(error);}}

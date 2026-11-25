@@ -1,3 +1,6 @@
+/packages/manifest.json
+  Cache-Control: no-store
+
 /packages.json
   Cache-Control: no-store
 

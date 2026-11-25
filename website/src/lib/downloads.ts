@@ -1,8 +1,8 @@
+export const SITE_ORIGIN = "https://cfg.srprolin.com";
 export const REPOSITORY = "https://github.com/RolinShmily/SrP-CFG_ForCS2";
 export const RELEASES = `${REPOSITORY}/releases`;
-export const RELEASE_MANIFEST = `${RELEASES}/latest/download/latest.json`;
+export const RELEASE_MANIFEST = `${SITE_ORIGIN}/releases/latest.json`;
 export const RELEASE_API = "https://api.github.com/repos/RolinShmily/SrP-CFG_ForCS2/releases/latest";
-export const MIRROR = "https://gh-proxy.org/";
 export type DownloadSource = "mirror" | "github";
 // Website downloads include the agent skill; APP config package IDs remain separate.
 export const packageIds = ["srp-cfg", "video", "annotations", "srp-cfg-csgo", "srpcfg-cli"] as const;
@@ -20,7 +20,29 @@ export type PackageManifest = Partial<Record<PackageId, ConfigPackage>>;
 // Vite injects the deployment prefix; plain Node (unit tests) has no `import.meta.env`.
 const basePath = ((import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env?.BASE_URL ?? "/").replace(/\/+$/, "");
 export function assetPath(path: string) { return `${basePath}${path}`; }
-export function softwareUrl(url: string, source: DownloadSource) { return source === "mirror" ? MIRROR + url : url; }
+const GITHUB_DOWNLOAD_PREFIX = "/RolinShmily/SrP-CFG_ForCS2/releases/download/";
+const SITE_DOWNLOAD_PREFIX = "/releases/download/";
+function extractReleaseSuffix(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    if (parsed.search || parsed.hash || parsed.username || parsed.password) return undefined;
+    if (parsed.origin === "https://github.com" && parsed.pathname.startsWith(GITHUB_DOWNLOAD_PREFIX)) {
+      return parsed.pathname.slice(GITHUB_DOWNLOAD_PREFIX.length);
+    }
+    if (parsed.origin === SITE_ORIGIN && parsed.pathname.startsWith(SITE_DOWNLOAD_PREFIX)) {
+      return parsed.pathname.slice(SITE_DOWNLOAD_PREFIX.length);
+    }
+    return undefined;
+  } catch (error) {
+    if (error instanceof TypeError) return undefined;
+    throw error;
+  }
+}
+export function softwareUrl(url: string, source: DownloadSource) {
+  const suffix = extractReleaseSuffix(url);
+  if (!suffix) return url;
+  return source === "mirror" ? `${SITE_ORIGIN}${SITE_DOWNLOAD_PREFIX}${suffix}` : `${RELEASES}/download/${suffix}`;
+}
 function object(value: unknown): Record<string, unknown> | undefined {
   return value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : undefined;
 }
@@ -28,10 +50,8 @@ function checksum(value: unknown) { return typeof value === "string" && /^[a-f0-
 function size(value: unknown) { return typeof value === "number" && Number.isSafeInteger(value) && value > 0 ? value : undefined; }
 function releaseAsset(url: unknown, extension: string): url is string {
   if (typeof url !== "string") return false;
-  try {
-    const parsed = new URL(url);
-    return parsed.origin === "https://github.com" && parsed.pathname.startsWith("/RolinShmily/SrP-CFG_ForCS2/releases/download/") && parsed.pathname.endsWith(extension) && !parsed.search && !parsed.hash && !parsed.username && !parsed.password;
-  } catch (error) { if (error instanceof TypeError) return false; throw error; }
+  const suffix = extractReleaseSuffix(url);
+  return Boolean(suffix && suffix.endsWith(extension));
 }
 export function parseAppRelease(value: unknown): AppRelease | undefined {
   const obj = object(value);
@@ -50,7 +70,12 @@ export function parseAppRelease(value: unknown): AppRelease | undefined {
     if (releaseAsset(asset.browser_download_url, "-setup.exe")) result.setup = { url: asset.browser_download_url, size: size(asset.size), sha256: sha };
     if (releaseAsset(asset.browser_download_url, "-gui.zip")) result.portable = { url: asset.browser_download_url, size: size(asset.size), sha256: sha };
   }
-  for (const entry of [result.setup, result.portable]) if (entry && !new URL(entry.url).pathname.startsWith(`/RolinShmily/SrP-CFG_ForCS2/releases/download/v${version}/`)) return undefined;
+  for (const entry of [result.setup, result.portable]) {
+    if (entry) {
+      const suffix = extractReleaseSuffix(entry.url);
+      if (!suffix || !suffix.startsWith(`v${version}/`)) return undefined;
+    }
+  }
   return result.setup || result.portable ? result : undefined;
 }
 export function parsePackageManifest(value: unknown): PackageManifest {

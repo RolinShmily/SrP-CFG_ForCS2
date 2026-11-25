@@ -4,10 +4,14 @@ import { parseAppRelease, parsePackageManifest, packageIds, softwareUrl, formatS
 const base='https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/download/v3.4.1/';
 const gui=base+'srp-cfg-v3.4.1-windows-x64-gui.zip';
 const setup=base+'srp-cfg-v3.4.1-windows-x64-setup.exe';
-test('workflow manifest accepts only the expected repository and matching version',()=>{
+const siteBase='https://cfg.srprolin.com/releases/download/v3.4.1/';
+test('workflow manifest accepts GitHub or cfg.srprolin.com and matching version',()=>{
  const value={version:'3.4.1',tag:'v3.4.1',gui_zip_url:gui,gui_zip_sha256:'a'.repeat(64),setup_exe_url:setup};
  assert.equal(parseAppRelease(value)?.portable?.url,gui);
  assert.equal(parseAppRelease(value)?.setup?.url,setup);
+ const siteValue={...value,gui_zip_url:siteBase+'srp-cfg-v3.4.1-windows-x64-gui.zip',setup_exe_url:siteBase+'srp-cfg-v3.4.1-windows-x64-setup.exe'};
+ assert.equal(parseAppRelease(siteValue)?.portable?.url,siteValue.gui_zip_url);
+ assert.equal(parseAppRelease(siteValue)?.setup?.url,siteValue.setup_exe_url);
  assert.equal(parseAppRelease({...value,tag:'v4.0.0'}),undefined);
  assert.equal(parseAppRelease({...value,gui_zip_url:gui.replace('v3.4.1','v3.4.2'),setup_exe_url:undefined}),undefined);
  assert.equal(parseAppRelease({...value,gui_zip_url:'https://evil.example/desktop-gui.zip',setup_exe_url:undefined}),undefined);
@@ -21,8 +25,9 @@ test('GitHub API accepts GUI and setup but never the CLI or a draft release',()=
  assert.equal(parseAppRelease({...value,draft:true}),undefined);
  assert.equal(parseAppRelease({tag_name:'v3.4.1',assets:value.assets.slice(2)}),undefined);
 });
-test('download source is explicit and portable prefixes the whole release URL',()=>{
- assert.equal(softwareUrl(gui,'mirror'),'https://gh-proxy.org/'+gui);
+test('download source switches cleanly between cfg.srprolin.com Worker proxy and GitHub direct',()=>{
+ assert.equal(softwareUrl(gui,'mirror'),siteBase+'srp-cfg-v3.4.1-windows-x64-gui.zip');
+ assert.equal(softwareUrl(siteBase+'srp-cfg-v3.4.1-windows-x64-setup.exe','github'),setup);
  assert.equal(softwareUrl(setup,'github'),setup);
 });
 test('configuration packages keep independent versions, checksums and trusted Worker paths',()=>{
