@@ -50,6 +50,6 @@ CS2 启动
 
 ## 4. 官网、Worker 分发接口与 `/console` 数据管线
 
-- **静态托管与内容分发**：`website/` 使用 React 19 + React Router 8（`ssr: false` + 构建期预渲染）输出静态产物到 `website/build/client`；`deploy-worker.yml` 调用 `scripts/package_content.py` 生成 `packages/manifest.json`（同时保留 `packages.json` 兼容别名）与内容寻址 ZIP 随静态资源部署至 `cfg.srprolin.com`。
+- **静态托管与内容分发**：`website/` 使用 React 19 + React Router 8（`ssr: false` + 构建期预渲染 + Pagefind 分片索引）输出静态产物到 `website/build/client`；`deploy.yml` 调用 `scripts/package_content.py` 生成 `packages/manifest.json`（同时保留 `packages.json` 兼容别名）与内容寻址 ZIP 随 Worker 统一部署至 `cfg.srprolin.com`。
 - **软件分发代理（`worker/index.ts`）**：`run_worker_first = ["/releases/*"]` 仅将 `/releases/latest.json` 与 `/releases/download/<tag>/<file>` 交由 Worker 严格白名单校验并流式透传 GitHub Releases（绕开 25 MiB 静态资源上限且保证字节级 SHA-256 一致）；其余静态路径与 `/packages/*` 直接走 Cloudflare Assets 零开销分发。
-- **`/console` 附加模块**：独立布局的 CS2 ConVar / Command 参考站。上游事实数据每日通过 `update-console-data.yml` 从 `SteamDatabase/GameTracking-CS2` 同步，使用 Cloudflare Workers AI 增量翻译，经校验后在构建期生成浏览器搜索索引与预渲染页面。
+- **`/console` 指令中心模块**：与官网共享统一设计系统的 CS2 ConVar / Command 参考站。上游事实数据每日通过 `update.yml` 从 `SteamDatabase/GameTracking-CS2` 同步，使用 Cloudflare Workers AI 增量翻译，经校验后在构建期生成 Pagefind 搜索分片与预渲染页面。

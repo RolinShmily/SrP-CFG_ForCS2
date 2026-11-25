@@ -6,7 +6,9 @@ import os
 import sys
 import unittest
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "website" / "scripts" / "console"))
 
 from parse_upstream import ParseError, parse_file, source_hash  # noqa: E402
 

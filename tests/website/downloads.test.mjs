@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseAppRelease, parsePackageManifest, packageIds, softwareUrl, formatSize, assetPath } from '../src/lib/downloads.ts';
+import { parseAppRelease, parsePackageManifest, packageIds, softwareUrl, formatSize, assetPath } from '../../website/src/lib/downloads.ts';
 const base='https://github.com/RolinShmily/SrP-CFG_ForCS2/releases/download/v3.4.1/';
 const gui=base+'srp-cfg-v3.4.1-windows-x64-gui.zip';
 const setup=base+'srp-cfg-v3.4.1-windows-x64-setup.exe';
@@ -30,14 +30,18 @@ test('download source switches cleanly between cfg.srprolin.com Worker proxy and
  assert.equal(softwareUrl(siteBase+'srp-cfg-v3.4.1-windows-x64-setup.exe','github'),setup);
  assert.equal(softwareUrl(setup,'github'),setup);
 });
-test('configuration packages keep independent versions, checksums and trusted Worker paths',()=>{
- const entry={version:'3.4.0',sha256:'b'.repeat(64),size:4200,url:'https://cfg.srprolin.com/packages/video-v3.4.0-test.zip'};
- const manifest={schema_version:1,packages:{video:entry}};
+test('configuration packages keep independent dates, checksums and trusted Worker paths',()=>{
+ const entry={version:'3.4.0',updated_at:'20261125',sha256:'b'.repeat(64),size:4200,url:'https://cfg.srprolin.com/packages/video-v3.4.0-test.zip'};
+ const manifest={schema_version:1,published_at:'2026-11-24T00:00:00Z',packages:{video:entry}};
  assert.equal(parsePackageManifest(manifest).video?.version,'3.4.0');
+ assert.equal(parsePackageManifest(manifest).video?.updatedAt,'20261125');
+ const dateOnly={updated_at:'20261125',sha256:'b'.repeat(64),size:4200,url:'https://cfg.srprolin.com/packages/video-latest.zip'};
+ assert.equal(parsePackageManifest({schema_version:1,packages:{video:dateOnly}}).video?.updatedAt,'20261125');
+ assert.equal(parsePackageManifest({schema_version:1,published_at:'2026-11-24T00:00:00Z',packages:{video:{...entry,updated_at:undefined}}}).video?.updatedAt,'20261124');
  const csgo={...entry,version:'3.4.2-csgo',url:'https://cfg.srprolin.com/packages/srp-cfg-csgo-v3.4.2-csgo-test.zip'};
  assert.equal(parsePackageManifest({schema_version:1,packages:{'srp-cfg-csgo':csgo}})['srp-cfg-csgo']?.version,'3.4.2-csgo');
  assert.equal(parsePackageManifest({schema_version:1,packages:{'srp-cfg-csgo':{...csgo,version:'3.4.2-'}}})['srp-cfg-csgo'],undefined);
- for(const update of [{url:'https://evil.example/video.zip'},{url:entry.url.replace('srprolin.com','srprolin.top')},{url:entry.url.replace('srprolin.com','srprolin.com.evil.example')},{url:entry.url.replace('https:','http:')},{url:'https://user:pass@cfg.srprolin.com/packages/video-v3.4.0-test.zip'},{url:'https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v3.4.0-test.zip'},{sha256:'bad'},{size:-1},{url:entry.url+'?redirect=evil'},{url:entry.url.replace('video-','annotations-')}])assert.equal(parsePackageManifest({...manifest,packages:{video:{...entry,...update}}}).video,undefined);
+ for(const update of [{url:'https://evil.example/video.zip'},{url:entry.url.replace('srprolin.com','srprolin.top')},{url:entry.url.replace('srprolin.com','srprolin.com.evil.example')},{url:entry.url.replace('https:','http:')},{url:'https://user:pass@cfg.srprolin.com/packages/video-v3.4.0-test.zip'},{url:'https://rolinshmily.github.io/SrP-CFG_ForCS2/packages/video-v3.4.0-test.zip'},{sha256:'bad'},{size:-1},{updated_at:'not-a-date'},{url:entry.url+'?redirect=evil'},{url:entry.url.replace('video-','annotations-')}])assert.equal(parsePackageManifest({...manifest,packages:{video:{...entry,...update}}}).video,undefined);
  assert.deepEqual(parsePackageManifest({...manifest,schema_version:2}),{});
 });
 test('skill is a separately versioned trusted ZIP alongside the config packages',()=>{

@@ -67,5 +67,6 @@ pnpm --filter srp-cfg-website build
   - `test.yml`：改动 `src/`、`content/`、`worker/`、`tests/`、`scripts/` 时运行仓库/内容/Worker 校验与双平台 Core CTest；
   - `build.yml`：构建 Windows 便携 GUI ZIP（内置最新 `content/`）、Inno Setup 安装器与 `latest.json`，并跑 `tests/gui/test-portable.ps1`；支持手动触发与 `release.yml` 复用；
   - `release.yml`：推送 `vX.Y.Z` tag 时先校验 tag 与 `CHANGELOG.md`，调用 `build.yml`，仅将软件制品（`gui.zip`、`setup.exe`、`latest.json`）发布至 GitHub Releases；
-  - `deploy-worker.yml`：推送到 `main` 且改动 `content/`、`worker/` 或 `website/` 时，调用 `scripts/package_content.py --output website/public` 生成内容包并随 Worker 部署至 `cfg.srprolin.com`；
-  - `ci-console.yml` / `update-console-data.yml` / `valve-upstream-drift.yml`：分别负责 `/console` 数据校验、上游同步翻译与 Valve 基线漂移巡检。
+  - `test.yml`：统一运行仓库完整性、内容包、`tests/core` CTest、`tests/worker`、`tests/website`、`website` 类型检查与 `tests/console` 数据契约测试；
+  - `deploy.yml`：推送到 `main` 且改动 `content/`、`worker/` 或 `website/` 时，打包内容包并构建静态网站与 Pagefind 索引，随 Cloudflare Worker（含 `/releases/*` 反代）部署至 `cfg.srprolin.com`；
+  - `update.yml`：定时执行上游同步——每日同步 `/console` 指令数据并增量翻译，每周日巡检 Valve 默认参数基线漂移（支持 `workflow_dispatch` 按需触发）。

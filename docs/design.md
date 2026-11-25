@@ -26,7 +26,7 @@ CS2 玩家实际会高频维护三类原生文件（CFG、画面配置、地图�
 
 玩家在 `user/custom.cfg` 中自定义参数时，最常遇到的问题是查不到 CS2 ConVar / Command 的真实含义、默认值和标记（如 `cheat`、`archive`）。`/console` 将 `SteamDatabase/GameTracking-CS2` 上游数据加工成可搜索、带中文说明和可复制片段的在线词典，与桌面端形成互补：
 - 工程上完全隔离在 `website/` 内部，不影响 `src/` 编译与发版；
-- 独立通过 `ci-console.yml` 与 `update-console-data.yml` 维护数据新鲜度。
+- 统一通过 `test.yml` 校验数据契约、通过 `update.yml` 维护上游数据新鲜度。
 
 ## 5. 为什么 `src/core` 严禁依赖 Qt
 

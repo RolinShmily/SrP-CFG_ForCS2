@@ -1,0 +1,161 @@
+name: Scheduled Upstream Updates
+
+on:
+  schedule:
+    # 每天 02:00 UTC（北京时间 10:00）；valve-baseline 在定时触发时仅周日执行
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Which upstream sync job to run'
+        type: choice
+        default: all
+        options:
+          - all
+          - console
+          - valve
+      force:
+        description: 'Force console upstream sync even when commit is unchanged'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: scheduled-update
+  cancel-in-progress: false
+
+jobs:
+  console-data:
+    name: Sync CS2 Console Data & Translations
+    if: github.event_name == 'schedule' || inputs.target == 'all' || inputs.target == 'console'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          # Full history so the retry path can rebase onto a concurrent push.
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Run console unit tests
+        run: python3 -m unittest discover -s tests/console -p "test_*.py"
+
+      - name: Sync upstream facts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            python3 website/scripts/console/update.py --force
+          else
+            python3 website/scripts/console/update.py
+          fi
+
+      - name: Pre-flight Workers AI translation
+        continue-on-error: true
+        env:
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python3 website/scripts/console/translate.py --backend workers-ai --preflight
+
+      - name: Translate new or changed records
+        continue-on-error: true
+        env:
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python3 website/scripts/console/translate.py --backend workers-ai
+
+      - name: Validate dataset
+        # A Workers AI outage must not block upstream fact updates.
+        run: python3 website/scripts/console/validate.py --allow-stale
+
+      - name: Build console index
+        run: python3 website/scripts/console/build_index.py
+
+      - name: Commit data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add website/data/console
+          if git diff --cached --quiet; then
+            echo "No console data changes."
+            exit 0
+          fi
+          SHA=$(python3 -c "import json; print(json.load(open('website/data/console/metadata.json'))['upstream']['commit'][:12])")
+          git commit -m "chore(console): sync CS2 console data to ${SHA}"
+          if ! git push; then
+            git fetch origin main
+            git rebase origin/main
+            git push
+          fi
+
+  valve-baseline:
+    name: Check CS2 Valve Baseline Drift
+    if: github.event_name == 'schedule' || inputs.target == 'all' || inputs.target == 'valve'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check weekly schedule gate
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%u)" != "7" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping weekly Valve baseline drift check (scheduled on Sundays UTC)."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout repository
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Run drift detection
+        id: detect
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        run: python3 scripts/check_valve_baseline_drift.py
+
+      - name: Verify detection completed
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          echo "Has critical removed convars: ${{ steps.detect.outputs.has_critical }}"
+          echo "Has unexpected value drifts: ${{ steps.detect.outputs.has_drift }}"
+          if [ "${{ steps.detect.outcome }}" != "success" ] && [ "${{ steps.detect.outputs.has_critical }}" != "true" ]; then
+            echo "::error::Drift detection did not complete; check the job log for network or parser errors."
+            exit 1
+          fi
+
+      - name: Create or update issue on drift
+        if: steps.gate.outputs.run == 'true' && (steps.detect.outputs.has_critical == 'true' || steps.detect.outputs.has_drift == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_TITLE="[Upstream Drift] CS2 Valve 基线参数变动提示 (${{ steps.detect.outputs.commit_sha }})"
+          EXISTING_ISSUE=$(gh issue list --state open --search "$ISSUE_TITLE" --json number -q '.[0].number')
+          if [ -n "$EXISTING_ISSUE" ]; then
+            echo "Updating existing issue #$EXISTING_ISSUE..."
+            gh issue comment "$EXISTING_ISSUE" --body-file drift_report.md
+          else
+            echo "Creating new issue..."
+            gh issue create --title "$ISSUE_TITLE" --body-file drift_report.md --label "upstream-drift" || \
+            gh issue create --title "$ISSUE_TITLE" --body-file drift_report.md
+          fi
+
+      - name: Fail job if critical ConVars removed
+        if: steps.gate.outputs.run == 'true' && steps.detect.outputs.has_critical == 'true'
+        run: |
+          echo "::error::Deprecated or removed ConVars detected in Valve baseline! Please check the drift report."
+          exit 1

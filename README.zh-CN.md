@@ -8,7 +8,7 @@
   <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/test.yml"><img alt="Test" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/test.yml/badge.svg"></a>
   <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"><img alt="Release" src="https://img.shields.io/github/v/release/RolinShmily/SrP-CFG_ForCS2?color=orange"></a>
   <a href="https://github.com/RolinShmily/SrP-CFG_ForCS2/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/RolinShmily/SrP-CFG_ForCS2/total?label=Downloads&color=blue"></a>
-  <a href="https://cfg.srprolin.com"><img alt="Website" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/deploy-worker.yml/badge.svg"></a>
+  <a href="https://cfg.srprolin.com"><img alt="Website" src="https://github.com/RolinShmily/SrP-CFG_ForCS2/actions/workflows/deploy.yml/badge.svg"></a>
   <img alt="Windows x64" src="https://img.shields.io/badge/platform-Windows%2010%20%2F%2011%20x64-brightgreen">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
 </p>

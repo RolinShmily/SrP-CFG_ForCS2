@@ -7,10 +7,15 @@ on:
       - 'src/**'
       - 'content/**'
       - 'worker/**'
+      - 'website/**'
       - 'tests/**'
       - 'scripts/**'
       - 'CMakeLists.txt'
       - 'CMakePresets.json'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'wrangler.toml'
       - '.github/workflows/test.yml'
   pull_request:
     branches: [main]
@@ -18,10 +23,15 @@ on:
       - 'src/**'
       - 'content/**'
       - 'worker/**'
+      - 'website/**'
       - 'tests/**'
       - 'scripts/**'
       - 'CMakeLists.txt'
       - 'CMakePresets.json'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'wrangler.toml'
       - '.github/workflows/test.yml'
   workflow_dispatch:
 
@@ -34,25 +44,20 @@ concurrency:
 
 jobs:
   repo-and-content:
-    name: Repository & Content checks
+    name: Repository & Content
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
       - name: Check repository integrity
         run: python3 scripts/check_repository.py
       - name: Verify content packaging
         run: python3 tests/content/test_content_packages.py
-      - name: Test Worker release routes
-        run: node --experimental-strip-types --test tests/worker/*.test.mjs
 
   core:
-    name: Core tests (${{ matrix.os }})
+    name: C++ Core (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -66,3 +71,46 @@ jobs:
         run: cmake --build build-core --config Release --parallel 2
       - name: Run CTest
         run: ctest --test-dir build-core -C Release --output-on-failure
+
+  worker-and-website:
+    name: Worker & Website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.3.0
+          run_install: false
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Test Worker release proxy
+        run: node --experimental-strip-types --test tests/worker/*.test.mjs
+      - name: Test website download parsers
+        run: node --experimental-strip-types --test tests/website/*.test.mjs
+      - name: Typecheck website
+        run: pnpm --filter srp-cfg-website lint
+
+  console-data:
+    name: Console Data Contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Run console unit tests
+        run: python3 -m unittest discover -s tests/console -p "test_*.py"
+      - name: Validate console dataset
+        # Daily sync commits with --allow-stale so a Workers AI outage cannot
+        # block upstream fact updates; keep pull requests strict.
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python3 website/scripts/console/validate.py
+          else
+            python3 website/scripts/console/validate.py --allow-stale
+          fi
+      - name: Verify console index generation
+        run: python3 website/scripts/console/build_index.py --output "$RUNNER_TEMP/console-index.json"

@@ -156,7 +156,7 @@ python3 scripts/console/translate.py --backend workers-ai
 
 ## CI
 
-`.github/workflows/update-console-data.yml` 每天 02:00 UTC 运行，也支持手动触发：
+`.github/workflows/update.yml`（`console-data` 任务）每天 02:00 UTC 运行，也支持手动触发：
 
 1. Python 单元测试
 2. `update.py`（先更新上游事实）
@@ -174,7 +174,7 @@ python3 scripts/console/translate.py --backend workers-ai
 - `CLOUDFLARE_AI_TOKEN`：Account → Workers AI → Read/Edit
 - `GITHUB_TOKEN`：自动注入，用于读取上游 commit 和 push，无需手动创建
 
-`deploy-worker.yml` 继续使用 `CLOUDFLARE_API_TOKEN`（Workers Scripts Edit）+ `CLOUDFLARE_ACCOUNT_ID`；建议 AI token 与部署 token 分开。本地预检：
+`deploy.yml` 继续使用 `CLOUDFLARE_API_TOKEN`（Workers Scripts Edit）+ `CLOUDFLARE_ACCOUNT_ID`；建议 AI token 与部署 token 分开。本地预检：
 
 ```bash
 cd website
