@@ -15,9 +15,9 @@ import { MotionProvider } from "@/components/motion-provider";
 import { I18nProvider } from "@/context/i18n-context";
 import "./globals.css";
 
-const DEFAULT_TITLE = "SrP-CFG — 你的 CS2 配置工作台";
+const DEFAULT_TITLE = "SrP-CFG — CS2 模块化配置套件与控制台指令中心";
 const DEFAULT_DESCRIPTION =
-  "管理 CS2 预设、自由装配功能、定制视频设置与地图指南。下载 Windows 桌面软件及独立 srp-cfg、video、annotations 配置包。";
+  "Windows CS2 模块化配置工作台与 5,500+ 条 CS2 控制台指令参考中心。安全装配预设、特性、视频模板与地图标注，随时检索 ConVars 与 Commands。";
 
 export const meta: MetaFunction = () => [
   { title: DEFAULT_TITLE },
@@ -31,15 +31,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="dark" />
-        <meta name="theme-color" content="#131923" />
+        <meta name="theme-color" content="#090b10" />
         <Meta />
         <Links />
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
-        </noscript>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -81,11 +78,16 @@ export function ErrorBoundary() {
       : "请求未能完成。可以返回首页，或稍后重试。";
 
   return (
-    <main className="error-page">
-      <p className="eyebrow">ERROR {status}</p>
-      <h1>{title}</h1>
-      <p>{detail}</p>
-      <a className="button button-primary" href="/">返回首页</a>
+    <main className="mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6 text-center">
+      <p className="font-mono text-xs font-semibold tracking-widest text-cs-orange">ERROR {status}</p>
+      <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink">{title}</h1>
+      <p className="mt-2 text-sm text-dim">{detail}</p>
+      <a
+        href="/"
+        className="mt-6 inline-flex items-center rounded-xl bg-cs-orange px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-amber-400"
+      >
+        返回首页
+      </a>
     </main>
   );
 }

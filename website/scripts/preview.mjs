@@ -6,7 +6,7 @@ const root = fileURLToPath(new URL('../build/client/', import.meta.url));
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
 const prefix = html.match(/href="([^"]*)\/assets\/[^"]+\.css"/)?.[1] || '';
 const port = Number(process.env.PORT || 4173);
-const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json; charset=utf-8', '.data':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.webp':'image/webp', '.png':'image/png', '.ico':'image/x-icon', '.woff2':'font/woff2', '.woff':'font/woff', '.zip':'application/zip' };
+const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.json':'application/json; charset=utf-8', '.data':'text/plain; charset=utf-8', '.svg':'image/svg+xml', '.webp':'image/webp', '.png':'image/png', '.ico':'image/x-icon', '.woff2':'font/woff2', '.woff':'font/woff', '.zip':'application/zip', '.wasm':'application/wasm', '.pf_fragment':'application/octet-stream', '.pf_index':'application/octet-stream', '.pf_meta':'application/octet-stream', '.pagefind':'application/octet-stream' };
 const server = createServer(async(req,res)=>{
   try {
     let pathname = decodeURIComponent(new URL(req.url || '/', 'http://localhost').pathname);
@@ -18,10 +18,10 @@ const server = createServer(async(req,res)=>{
     let file=target;
     try {if((await stat(file)).isDirectory())file=resolve(file,'index.html');}
     catch(error){
-      if(error.code==='ENOENT' && pathname==='/packages.json'){
-        // Local preview only: CI generates the real same-origin manifest before building.
-        const response=await fetch('https://cfg.srprolin.com/packages.json',{signal:AbortSignal.timeout(10000)});
-        if(!response.ok)throw new Error(`Package manifest: HTTP ${response.status}`);
+      if(error.code==='ENOENT' && (pathname==='/packages/manifest.json' || pathname==='/packages.json' || pathname==='/releases/latest.json')){
+        // Local preview only: fetch live manifests when local build did not stage them.
+        const response=await fetch(`https://cfg.srprolin.com${pathname}`,{signal:AbortSignal.timeout(10000)});
+        if(!response.ok)throw new Error(`Manifest ${pathname}: HTTP ${response.status}`);
         const body=await response.text();if(body.length>262144)throw new Error('Manifest size limit');
         res.writeHead(200,{'Content-Type':types['.json']});res.end(body);return;
       }

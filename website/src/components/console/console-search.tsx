@@ -1,127 +1,161 @@
-import { Search } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { CornerDownLeft, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { useI18n } from "@/context/i18n-context";
 import { consoleCopy } from "@/locales/console";
-import { detailPath } from "@/lib/console/paths";
-import type { ConsoleIndexRecord } from "@/lib/console/types";
-import { StatusBadge, TypeBadge } from "./status-badge";
+import type { ConsoleRecordType } from "@/lib/console/types";
+import { searchConsole, type SearchHit } from "@/lib/pagefind";
+import { TypeBadge } from "./status-badge";
 
-export function ConsoleSearch({
-  records,
-  loading,
-  error,
-  onRetry,
-}: {
-  records: ConsoleIndexRecord[] | null;
-  loading: boolean;
-  error: string | null;
-  onRetry?: () => void;
-}) {
+const QUICK_CHIPS = ["cl_crosshair", "viewmodel", "fps_max", "sv_cheats", "mp_warmup", "cl_radar"];
+
+export function ConsoleSearch() {
   const { locale } = useI18n();
   const copy = consoleCopy[locale];
   const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
+  const [filterType, setFilterType] = useState<"all" | ConsoleRecordType>("all");
+  const [hits, setHits] = useState<SearchHit[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        inputRef.current?.focus();
-      }
-      if (event.key === "Escape" && document.activeElement === inputRef.current) {
-        setQuery("");
-        inputRef.current?.blur();
-      }
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setHits([]);
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    const timer = setTimeout(async () => {
+      const result = await searchConsole(trimmed, filterType, 10);
+      if (cancelled) return;
+      setHits(result.hits);
+      setLoading(false);
+    }, 100);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [query, filterType]);
 
-  const matches = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    if (!needle || !records) return [];
-    return records
-      .filter((record) => {
-        return (
-          record.name.toLowerCase().includes(needle) ||
-          record.summary.toLowerCase().includes(needle) ||
-          record.category.toLowerCase().includes(needle) ||
-          record.flags.some((flag) => flag.toLowerCase().includes(needle))
-        );
-      })
-      .slice(0, 12);
-  }, [query, records]);
-
-  function submit(event: React.FormEvent) {
+  function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const first = matches[0];
-    if (first) {
-      navigate(detailPath(first.type, first.name));
+    if (hits[0]) {
+      navigate(hits[0].url);
       return;
     }
     if (query.trim()) {
-      navigate(`/console/convars?q=${encodeURIComponent(query.trim())}`);
+      const target = filterType === "command" ? "/console/commands" : "/console/convars";
+      navigate(`${target}?q=${encodeURIComponent(query.trim())}`);
     }
   }
 
-  const showResults = query.trim().length > 0;
-
   return (
-    <div className="console-search-row">
-      <form className="console-search" onSubmit={submit} role="search">
-        <Search size={17} aria-hidden="true" />
-        <input
-          ref={inputRef}
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={copy.overview.searchPlaceholder}
-          aria-label={copy.common.search}
-          autoComplete="off"
-          spellCheck={false}
-        />
-      </form>
-      <p className="console-search-hint">{copy.overview.searchHint}</p>
+    <div className="mt-6">
+      <form
+        onSubmit={onSubmit}
+        role="search"
+        className="flex flex-col gap-2 rounded-2xl border border-line-strong bg-surface p-2 shadow-lg shadow-black/30 sm:flex-row sm:items-center"
+      >
+        <div className="flex flex-1 items-center gap-2.5 px-2.5">
+          <Search size={17} className="shrink-0 text-muted" aria-hidden="true" />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={copy.overview.searchPlaceholder}
+            aria-label={copy.common.search}
+            autoComplete="off"
+            spellCheck={false}
+            className="h-10 w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Clear"
+              className="rounded-md p-1 text-muted transition hover:text-ink"
+            >
+              <X size={15} />
+            </button>
+          )}
+        </div>
 
-      {showResults && (
-        <div className="console-search-results" aria-live="polite">
-          {loading ? (
-            <div className="console-loading" style={{ border: 0, background: "transparent" }}>
-              {copy.common.loading}
-            </div>
-          ) : error ? (
-            <div className="console-error" style={{ border: 0, background: "transparent" }}>
-              {copy.common.error} <span className="console-muted">{error}</span>
-              {onRetry && (
-                <button type="button" className="console-retry" onClick={onRetry}>
-                  {copy.common.retry}
-                </button>
-              )}
-            </div>
-          ) : matches.length === 0 ? (
-            <div className="console-empty" style={{ border: 0, background: "transparent" }}>
-              {copy.common.noResults}
-            </div>
-          ) : (
-            matches.map((record) => (
-              <Link prefetch="intent"
-                key={record.key}
-                className="console-search-result"
-                to={detailPath(record.type, record.name)}
+        <div className="flex items-center gap-1 border-t border-line px-1 pt-2 sm:border-l sm:border-t-0 sm:pl-2 sm:pt-0">
+          {(["all", "convar", "command"] as const).map((item) => {
+            const active = filterType === item;
+            return (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setFilterType(item)}
+                className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
+                  active
+                    ? "bg-cs-orange/15 text-cs-orange"
+                    : "text-dim hover:bg-white/[0.04] hover:text-ink"
+                }`}
               >
-                <div className="console-search-result-main">
-                  <strong>{record.name}</strong>
-                  <span>{record.summary || copy.detail.missingTranslation}</span>
-                </div>
-                <div className="console-search-result-meta">
-                  <TypeBadge type={record.type} />
-                  <StatusBadge status={record.translationStatus} />
-                </div>
-              </Link>
-            ))
+                {item === "all" ? (locale === "zh" ? "全部" : "All") : item === "convar" ? "ConVars" : "Commands"}
+              </button>
+            );
+          })}
+        </div>
+      </form>
+
+      {/* Quick chips */}
+      <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs">
+        <span className="mr-1 text-muted">{locale === "zh" ? "试试：" : "Try:"}</span>
+        {QUICK_CHIPS.map((chip) => (
+          <button
+            key={chip}
+            type="button"
+            onClick={() => setQuery(chip)}
+            className="rounded-md border border-line bg-surface px-2 py-0.5 font-mono text-[11px] text-dim transition hover:border-cs-orange/40 hover:text-ink"
+          >
+            {chip}
+          </button>
+        ))}
+      </div>
+
+      {/* Live Pagefind results dropdown */}
+      {query.trim().length > 0 && (
+        <div
+          aria-live="polite"
+          className="mt-3 overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-2xl shadow-black/50"
+        >
+          {loading ? (
+            <div className="px-4 py-6 text-center text-xs text-dim">{copy.common.loading}</div>
+          ) : hits.length === 0 ? (
+            <div className="px-4 py-6 text-center text-xs text-dim">{copy.common.noResults}</div>
+          ) : (
+            <div className="divide-y divide-line">
+              {hits.map((hit) => (
+                <Link
+                  key={hit.url}
+                  to={hit.url}
+                  prefetch="intent"
+                  className="flex items-start justify-between gap-4 px-4 py-3 transition hover:bg-white/[0.04]"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate font-mono text-sm font-semibold text-ink">{hit.title}</span>
+                      {hit.type && <TypeBadge type={hit.type} />}
+                    </div>
+                    {hit.excerpt && (
+                      <p
+                        className="pagefind-excerpt mt-1 line-clamp-2 text-xs leading-relaxed text-dim"
+                        dangerouslySetInnerHTML={{ __html: hit.excerpt }}
+                      />
+                    )}
+                  </div>
+                  <CornerDownLeft size={14} className="mt-1 shrink-0 text-muted" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
           )}
         </div>
       )}

@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import type { MetaFunction } from "react-router";
 import { Link, useLoaderData, type LoaderFunctionArgs } from "react-router";
 
@@ -51,34 +52,39 @@ export default function CategoryDetailRoute() {
   const label = locale === "zh" ? category.zh : category.en;
 
   return (
-    <>
-      <nav className="console-breadcrumb">
-        <Link prefetch="intent" to="/console">{copy.detail.breadcrumb}</Link>
-        <span>/</span>
-        <Link prefetch="intent" to="/console/categories">{copy.categories.title}</Link>
-        <span>/</span>
-        <span>{label}</span>
+    <div className="space-y-6">
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-muted">
+        <Link prefetch="intent" to="/console" className="transition hover:text-ink">
+          {copy.detail.breadcrumb}
+        </Link>
+        <ChevronRight size={13} aria-hidden="true" />
+        <Link prefetch="intent" to="/console/categories" className="transition hover:text-ink">
+          {copy.categories.title}
+        </Link>
+        <ChevronRight size={13} aria-hidden="true" />
+        <span className="text-ink">{label}</span>
       </nav>
-      <header className="console-list-head" style={{ marginTop: 16 }}>
+
+      <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="console-eyebrow">CATEGORY</p>
-          <h1 className="console-list-title">{label}</h1>
-          <p className="console-list-note">
-            {data.category.records.length.toLocaleString()} {copy.common.records}
+          <p className="font-mono text-xs font-semibold uppercase tracking-wider text-cs-orange">
+            CATEGORY
           </p>
-          <p className="console-section-note" style={{ marginTop: 8 }}>
-            {copy.common.hiddenInternal}
-          </p>
+          <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{label}</h1>
+          <p className="mt-1.5 text-xs text-muted">{copy.common.hiddenInternal}</p>
+        </div>
+        <div className="shrink-0 rounded-xl border border-line bg-surface px-3.5 py-2 font-mono text-xs text-dim">
+          <span className="font-semibold text-ink">{data.category.records.length.toLocaleString()}</span>{" "}
+          {copy.common.records}
         </div>
       </header>
-      <div style={{ marginTop: 18 }}>
-        <RecordTable
-          records={data.category.records}
-          empty={copy.categories.empty}
-          showType
-          categories={data.categories}
-        />
-      </div>
-    </>
+
+      <RecordTable
+        records={data.category.records}
+        empty={copy.categories.empty}
+        showType
+        categories={data.categories}
+      />
+    </div>
   );
 }

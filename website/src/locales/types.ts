@@ -1,17 +1,120 @@
-export interface ScreenCopy { id: string; title: string; short: string; description: string; points: string[]; }
-export interface I18nDictionary {
-  nav: { product: string; showcase: string; assembly: string; download: string; console: string; skill: string; language: string; menu: string; close: string; skip: string };
-  hero: { eyebrow: string; title: string; highlight: string; description: string; download: string; explore: string; console: string; platform: string; floatingLabel: string; scroll: string };
-  showcase: { eyebrow: string; title: string; description: string; previous: string; next: string; actual: string; screens: ScreenCopy[] };
-  features: { eyebrow: string; title: string; description: string; items: { title: string; description: string; tag: string }[] };
-  assembly: { eyebrow: string; title: string; highlight: string; description: string; layers: { title: string; description: string }[]; expand: string; collapse: string; note: string; codeLabel: string; diagram: string; modeHint: string };
-  workflow: { title: string; steps: { title: string; description: string }[] };
-  downloads: {
-    eyebrow: string; title: string; description: string; app: string; appNote: string; setup: string; setupNote: string; portable: string; portableNote: string;
-    packages: string; packageNote: string; source: string; mirror: string; direct: string; sourceNote: string;
-    loading: string; unavailable: string; noRelease: string; retry: string; releases: string; download: string; latest: string; size: string; hash: string; copied: string; copyFailed: string;
-    packageSource: string; srp: string; video: string; annotations: string; csgo: string; skill: string; skillInstall: string; skillGuide: string;
-    cliTitle: string; cliDescription: string; cliNote: string; cliCoreTitle: string; cliCoreDesc: string; cliReleases: string; agentSkillBadge: string; instructions: string; readme: string; fallback: string;
+export type Locale = "zh" | "en";
+
+export interface ShowcaseSlide {
+  id: string;
+  label: string;
+  summary: string;
+  image: string;
+}
+
+export interface SiteCopy {
+  nav: {
+    home: string;
+    console: string;
+    download: string;
+    product: string;
+    language: string;
+    menu: string;
+    close: string;
+    skip: string;
   };
-  footer: { description: string; blog: string; project: string; docs: string; releases: string; license: string; top: string };
+  search: {
+    title: string;
+    trigger: string;
+    placeholder: string;
+    clear: string;
+    filterLabel: string;
+    filterAll: string;
+    popular: string;
+    quickNav: string;
+    searching: string;
+    empty: string;
+    searchInTable: string;
+    hintNavigate: string;
+    hintOpen: string;
+    hintClose: string;
+    openFullList: string;
+  };
+  home: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    primaryCta: string;
+    secondaryCta: string;
+    searchCta: string;
+    showcaseCaption: string;
+    slides: ShowcaseSlide[];
+    servicesTitle: string;
+    servicesSubtitle: string;
+    services: Array<{
+      id: string;
+      badge: string;
+      title: string;
+      description: string;
+      action: string;
+      to: string;
+    }>;
+    consoleTitle: string;
+    consoleSubtitle: string;
+    consoleAction: string;
+    consoleConvars: string;
+    consoleCommands: string;
+    consoleCategories: string;
+    consoleUpstream: string;
+    bannerTitle: string;
+    bannerDesc: string;
+  };
+  download: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    appTitle: string;
+    appDesc: string;
+    sourceLabel: string;
+    sourceMirror: string;
+    sourceGithub: string;
+    sourceNote: string;
+    loading: string;
+    latest: string;
+    unavailable: string;
+    noRelease: string;
+    retry: string;
+    releases: string;
+    setupTitle: string;
+    setupDesc: string;
+    portableTitle: string;
+    portableDesc: string;
+    downloadBtn: string;
+    hashCopy: string;
+    hashCopied: string;
+    hashFailed: string;
+    packagesTitle: string;
+    packagesDesc: string;
+    packagesNote: string;
+    updatedAt: string;
+    targetPath: string;
+    packages: Record<"srp-cfg" | "video" | "annotations" | "srp-cfg-csgo", { title: string; target: string; desc: string }>;
+    usageTitle: string;
+    usageSteps: string[];
+  };
+  footer: {
+    description: string;
+    siteHeading: string;
+    projectHeading: string;
+    changes: string;
+    project: string;
+    releases: string;
+    docs: string;
+    blog: string;
+    license: string;
+    thirdParty: string;
+    disclaimer: string;
+  };
+  notFound: {
+    eyebrow: string;
+    title: string;
+    desc: string;
+    home: string;
+    console: string;
+  };
 }

@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import type { MetaFunction } from "react-router";
 import { Link, useLoaderData, type LoaderFunctionArgs } from "react-router";
 
@@ -47,34 +48,41 @@ export default function FlagDetailRoute() {
   const copy = consoleCopy[locale];
 
   return (
-    <>
-      <nav className="console-breadcrumb">
-        <Link prefetch="intent" to="/console">{copy.detail.breadcrumb}</Link>
-        <span>/</span>
-        <Link prefetch="intent" to="/console/flags">{copy.flags.title}</Link>
-        <span>/</span>
-        <span className="console-mono">{data.flag.flag}</span>
+    <div className="space-y-6">
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-muted">
+        <Link prefetch="intent" to="/console" className="transition hover:text-ink">
+          {copy.detail.breadcrumb}
+        </Link>
+        <ChevronRight size={13} aria-hidden="true" />
+        <Link prefetch="intent" to="/console/flags" className="transition hover:text-ink">
+          {copy.flags.title}
+        </Link>
+        <ChevronRight size={13} aria-hidden="true" />
+        <span className="font-mono text-ink">{data.flag.flag}</span>
       </nav>
-      <header className="console-list-head" style={{ marginTop: 16 }}>
+
+      <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="console-eyebrow">FLAG</p>
-          <h1 className="console-list-title console-mono">{data.flag.flag}</h1>
-          <p className="console-list-note">
-            {data.flag.records.length.toLocaleString()} {copy.common.records}
+          <p className="font-mono text-xs font-semibold uppercase tracking-wider text-cs-orange">
+            FLAG
           </p>
-          <p className="console-section-note" style={{ marginTop: 8 }}>
-            {copy.common.hiddenInternal}
-          </p>
+          <h1 className="mt-1.5 font-mono text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+            {data.flag.flag}
+          </h1>
+          <p className="mt-1.5 text-xs text-muted">{copy.common.hiddenInternal}</p>
+        </div>
+        <div className="shrink-0 rounded-xl border border-line bg-surface px-3.5 py-2 font-mono text-xs text-dim">
+          <span className="font-semibold text-ink">{data.flag.records.length.toLocaleString()}</span>{" "}
+          {copy.common.records}
         </div>
       </header>
-      <div style={{ marginTop: 18 }}>
-        <RecordTable
-          records={data.flag.records}
-          empty={copy.flags.empty}
-          showType
-          categories={data.categories}
-        />
-      </div>
-    </>
+
+      <RecordTable
+        records={data.flag.records}
+        empty={copy.flags.empty}
+        showType
+        categories={data.categories}
+      />
+    </div>
   );
 }

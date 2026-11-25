@@ -4,6 +4,7 @@ import { useI18n } from "@/context/i18n-context";
 import { consoleCopy } from "@/locales/console";
 import { categoryPath, detailPath } from "@/lib/console/paths";
 import type { ConsoleCategory, ConsoleIndexRecord } from "@/lib/console/types";
+import { CopyButton } from "./copy-button";
 import { FlagList } from "./flag-list";
 import { StatusBadge, TypeBadge } from "./status-badge";
 
@@ -22,7 +23,11 @@ export function RecordTable({
   const copy = consoleCopy[locale];
 
   if (!records.length) {
-    return <div className="console-empty">{empty}</div>;
+    return (
+      <div className="rounded-2xl border border-line bg-surface px-6 py-12 text-center text-sm text-dim">
+        {empty}
+      </div>
+    );
   }
 
   function categoryLabel(slug: string) {
@@ -32,46 +37,63 @@ export function RecordTable({
   }
 
   return (
-    <div className="console-table-wrap">
-      <table className="console-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>{copy.common.category}</th>
-            <th>{copy.common.flags}</th>
-            <th>{copy.common.description}</th>
-            <th>{copy.common.status}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {records.map((record) => (
-            <tr key={record.key}>
-              <td>
-                <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
-                  <Link prefetch="intent" className="console-name" to={detailPath(record.type, record.name)}>
-                    {record.name}
-                  </Link>
-                  {showType && <TypeBadge type={record.type} />}
-                </div>
-              </td>
-              <td>
-                <Link prefetch="intent" className="console-muted" to={categoryPath(record.category)}>
-                  {categoryLabel(record.category)}
-                </Link>
-              </td>
-              <td>
-                <FlagList flags={record.flags.slice(0, 4)} />
-              </td>
-              <td>
-                <span className="console-summary">{record.summary || "—"}</span>
-              </td>
-              <td>
-                <StatusBadge status={record.translationStatus} />
-              </td>
+    <div className="overflow-hidden rounded-2xl border border-line bg-surface">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-left text-sm">
+          <thead>
+            <tr className="border-b border-line bg-canvas/70 text-[11px] font-semibold uppercase tracking-wider text-muted">
+              <th className="px-4 py-3">Name</th>
+              <th className="px-4 py-3">{copy.common.description}</th>
+              <th className="hidden px-4 py-3 md:table-cell">{copy.common.category}</th>
+              <th className="hidden px-4 py-3 lg:table-cell">{copy.common.flags}</th>
+              <th className="hidden px-4 py-3 xl:table-cell">{copy.common.status}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-line">
+            {records.map((record) => (
+              <tr key={record.key} className="group transition hover:bg-white/[0.025]">
+                <td className="whitespace-nowrap px-4 py-3 align-top">
+                  <div className="flex items-center gap-1.5">
+                    <Link
+                      prefetch="intent"
+                      to={detailPath(record.type, record.name)}
+                      className="font-mono text-[13px] font-semibold text-ink transition hover:text-cs-orange"
+                    >
+                      {record.name}
+                    </Link>
+                    <CopyButton value={record.name} compact />
+                  </div>
+                  {showType && (
+                    <div className="mt-1">
+                      <TypeBadge type={record.type} />
+                    </div>
+                  )}
+                </td>
+                <td className="max-w-md px-4 py-3 align-top">
+                  <p className="line-clamp-2 text-xs leading-relaxed text-dim">
+                    {record.summary || "—"}
+                  </p>
+                </td>
+                <td className="hidden whitespace-nowrap px-4 py-3 align-top md:table-cell">
+                  <Link
+                    prefetch="intent"
+                    to={categoryPath(record.category)}
+                    className="text-xs text-dim transition hover:text-ink"
+                  >
+                    {categoryLabel(record.category)}
+                  </Link>
+                </td>
+                <td className="hidden px-4 py-3 align-top lg:table-cell">
+                  <FlagList flags={record.flags.slice(0, 3)} />
+                </td>
+                <td className="hidden whitespace-nowrap px-4 py-3 align-top xl:table-cell">
+                  <StatusBadge status={record.translationStatus} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

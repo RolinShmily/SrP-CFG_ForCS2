@@ -1,14 +1,13 @@
-import { Boxes, Database, Flag, FolderTree, Terminal } from "lucide-react";
+import { ArrowUpRight, Boxes, Database, Flag, FolderTree, Terminal } from "lucide-react";
 import type { MetaFunction } from "react-router";
 import { Link, useLoaderData } from "react-router";
 
 import { ConsoleSearch } from "@/components/console/console-search";
 import { useI18n } from "@/context/i18n-context";
 import { consoleCopy } from "@/locales/console";
-import { categoryPath, flagPath } from "@/lib/console/paths";
+import { categoryPath } from "@/lib/console/paths";
 import { getCategories, getFlags, getIndex } from "@/lib/console/catalog.server";
 import { collectionPageJsonLd, pageMeta } from "@/lib/console/seo";
-import { useConsoleIndex } from "@/lib/console/use-console-index";
 
 export async function loader() {
   const index = getIndex();
@@ -43,111 +42,202 @@ export default function ConsoleIndexRoute() {
   const data = useLoaderData<typeof loader>();
   const { locale } = useI18n();
   const copy = consoleCopy[locale];
-  const { index, loading, error, reload } = useConsoleIndex();
+
+  const stats = [
+    {
+      to: "/console/convars",
+      icon: Boxes,
+      value: data.counts.convars.toLocaleString(),
+      label: copy.overview.convars,
+      accent: "text-cs-orange bg-cs-orange/10 border-cs-orange/25",
+    },
+    {
+      to: "/console/commands",
+      icon: Terminal,
+      value: data.counts.commands.toLocaleString(),
+      label: copy.overview.commands,
+      accent: "text-cs-blue bg-cs-blue/10 border-cs-blue/25",
+    },
+    {
+      to: "/console/categories",
+      icon: FolderTree,
+      value: data.categories.length.toLocaleString(),
+      label: copy.overview.categories,
+      accent: "text-cs-emerald bg-cs-emerald/10 border-cs-emerald/25",
+    },
+    {
+      to: "/console/flags",
+      icon: Flag,
+      value: data.flags.length.toLocaleString(),
+      label: copy.overview.flags,
+      accent: "text-ink bg-white/[0.06] border-line-strong",
+    },
+  ];
 
   return (
-    <>
-      <section className="console-hero">
-        <p className="console-eyebrow">
-          <span className="status-dot" />
-          {copy.overview.eyebrow}
+    <div className="space-y-12">
+      {/* Hero + Pagefind instant search */}
+      <section className="rounded-3xl border border-line bg-surface/80 p-6 sm:p-8 lg:p-10">
+        <div className="inline-flex items-center gap-2 rounded-full border border-cs-orange/30 bg-cs-orange/10 px-3 py-1 text-xs font-medium text-cs-orange">
+          <span className="h-1.5 w-1.5 rounded-full bg-cs-orange" aria-hidden="true" />
+          <span>{copy.overview.eyebrow}</span>
+        </div>
+
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          {copy.overview.title}
+        </h1>
+        <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-dim sm:text-base">
+          {copy.overview.subtitle}
         </p>
-        <h1 className="console-title">{copy.overview.title}</h1>
-        <p className="console-subtitle">{copy.overview.subtitle}</p>
-        <ConsoleSearch
-          records={index?.records ?? null}
-          loading={loading}
-          error={error}
-          onRetry={reload}
-        />
+
+        <ConsoleSearch />
       </section>
 
-      <section className="console-stats" aria-label="Console statistics">
-        <Link prefetch="intent" className="console-stat" to="/console/convars">
-          <div className="console-stat-icon"><Boxes size={18} /></div>
-          <div className="console-stat-value">{data.counts.convars.toLocaleString()}</div>
-          <div className="console-stat-label">{copy.overview.convars}</div>
-        </Link>
-        <Link prefetch="intent" className="console-stat" to="/console/commands">
-          <div className="console-stat-icon"><Terminal size={18} /></div>
-          <div className="console-stat-value">{data.counts.commands.toLocaleString()}</div>
-          <div className="console-stat-label">{copy.overview.commands}</div>
-        </Link>
-        <Link prefetch="intent" className="console-stat" to="/console/categories">
-          <div className="console-stat-icon"><FolderTree size={18} /></div>
-          <div className="console-stat-value">{data.categories.length}</div>
-          <div className="console-stat-label">{copy.overview.categories}</div>
-        </Link>
-        <Link prefetch="intent" className="console-stat" to="/console/flags">
-          <div className="console-stat-icon"><Flag size={18} /></div>
-          <div className="console-stat-value">{data.flags.length}</div>
-          <div className="console-stat-label">{copy.overview.flags}</div>
-        </Link>
+      {/* Stat cards */}
+      <section aria-label="Console statistics" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {stats.map(({ to, icon: Icon, value, label, accent }) => (
+          <Link
+            key={to}
+            prefetch="intent"
+            to={to}
+            className="group rounded-2xl border border-line bg-surface p-4 transition hover:border-cs-orange/40 hover:bg-card sm:p-5"
+          >
+            <div className="flex items-center justify-between">
+              <div className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border ${accent}`}>
+                <Icon size={17} aria-hidden="true" />
+              </div>
+              <ArrowUpRight
+                size={15}
+                className="text-muted transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-cs-orange"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="mt-4 font-mono text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+              {value}
+            </div>
+            <div className="mt-1 text-xs text-dim">{label}</div>
+          </Link>
+        ))}
       </section>
 
-      <section className="console-section">
-        <div className="console-section-head">
+      {/* Categories grid */}
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="console-section-title">{copy.overview.categoryTitle}</h2>
-            <p className="console-section-note">{copy.overview.categoryNote}</p>
+            <h2 className="text-xl font-bold tracking-tight text-ink">{copy.overview.categoryTitle}</h2>
+            <p className="mt-1 text-sm text-dim">{copy.overview.categoryNote}</p>
           </div>
-          <Link prefetch="intent" className="console-muted" to="/console/categories">
+          <Link
+            prefetch="intent"
+            to="/console/categories"
+            className="inline-flex items-center gap-1 text-xs font-medium text-cs-orange transition hover:underline"
+          >
             {copy.common.viewAll}
+            <ArrowUpRight size={13} aria-hidden="true" />
           </Link>
         </div>
-        <div className="console-grid">
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data.categories.map((category) => (
-            <Link prefetch="intent" key={category.slug} className="console-card" to={categoryPath(category.slug)}>
-              <div className="console-card-title">
-                <span>{locale === "zh" ? category.zh : category.en}</span>
-                <FolderTree size={15} aria-hidden="true" />
+            <Link
+              key={category.slug}
+              prefetch="intent"
+              to={categoryPath(category.slug)}
+              className="group flex items-center justify-between rounded-2xl border border-line bg-surface px-4 py-4 transition hover:border-cs-orange/40 hover:bg-card"
+            >
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 font-medium text-ink group-hover:text-cs-orange">
+                  <FolderTree size={15} className="shrink-0 text-muted group-hover:text-cs-orange" aria-hidden="true" />
+                  <span className="truncate">{locale === "zh" ? category.zh : category.en}</span>
+                </div>
+                <p className="mt-1 font-mono text-xs text-muted">
+                  <span className="font-semibold text-dim">{category.count.toLocaleString()}</span>{" "}
+                  {copy.common.records}
+                </p>
               </div>
-              <div className="console-card-meta">
-                <span className="console-card-count">{category.count}</span>{" "}
-                {copy.common.records}
-              </div>
+              <ArrowUpRight
+                size={15}
+                className="shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-cs-orange"
+                aria-hidden="true"
+              />
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="console-section">
-        <div className="console-section-head">
-          <h2 className="console-section-title">{copy.overview.quickTitle}</h2>
-        </div>
-        <div className="console-quick">
-          <Link prefetch="intent" to="/console/convars"><Boxes size={15} />{copy.overview.quickConvars}</Link>
-          <Link prefetch="intent" to="/console/commands"><Terminal size={15} />{copy.overview.quickCommands}</Link>
-          <Link prefetch="intent" to="/console/categories"><FolderTree size={15} />{copy.overview.quickCategories}</Link>
-          <Link prefetch="intent" to="/console/flags"><Flag size={15} />{copy.overview.quickFlags}</Link>
+      {/* Quick jump links */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-bold tracking-tight text-ink">{copy.overview.quickTitle}</h2>
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          <Link
+            prefetch="intent"
+            to="/console/convars"
+            className="flex items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-3 text-sm font-medium text-dim transition hover:border-line-strong hover:bg-card hover:text-ink"
+          >
+            <Boxes size={15} className="text-cs-orange" aria-hidden="true" />
+            <span>{copy.overview.quickConvars}</span>
+          </Link>
+          <Link
+            prefetch="intent"
+            to="/console/commands"
+            className="flex items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-3 text-sm font-medium text-dim transition hover:border-line-strong hover:bg-card hover:text-ink"
+          >
+            <Terminal size={15} className="text-cs-blue" aria-hidden="true" />
+            <span>{copy.overview.quickCommands}</span>
+          </Link>
+          <Link
+            prefetch="intent"
+            to="/console/categories"
+            className="flex items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-3 text-sm font-medium text-dim transition hover:border-line-strong hover:bg-card hover:text-ink"
+          >
+            <FolderTree size={15} className="text-cs-emerald" aria-hidden="true" />
+            <span>{copy.overview.quickCategories}</span>
+          </Link>
+          <Link
+            prefetch="intent"
+            to="/console/flags"
+            className="flex items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-3 text-sm font-medium text-dim transition hover:border-line-strong hover:bg-card hover:text-ink"
+          >
+            <Flag size={15} className="text-muted" aria-hidden="true" />
+            <span>{copy.overview.quickFlags}</span>
+          </Link>
         </div>
       </section>
 
-      <section className="console-section">
-        <div className="console-panel">
-          <div className="console-panel-title">
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
-              <Database size={14} /> {copy.overview.upstream}
+      {/* Upstream snapshot provenance */}
+      <section className="space-y-3">
+        <div className="rounded-2xl border border-line bg-surface p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-dim">
+              <Database size={14} className="text-cs-orange" aria-hidden="true" />
+              {copy.overview.upstream}
             </span>
-            <Link prefetch="intent" to="/console/changes">{copy.common.open}</Link>
+            <Link
+              prefetch="intent"
+              to="/console/changes"
+              className="inline-flex items-center gap-1 text-xs font-medium text-cs-orange transition hover:underline"
+            >
+              {copy.common.open}
+              <ArrowUpRight size={13} aria-hidden="true" />
+            </Link>
           </div>
-          <div className="console-source-list">
-            <div className="console-source-row">
-              <span>{copy.common.source}</span>
-              <span className="console-mono">{data.upstream.repository}</span>
+          <dl className="mt-3 grid gap-3 text-xs sm:grid-cols-3">
+            <div>
+              <dt className="text-muted">{copy.common.source}</dt>
+              <dd className="mt-1 font-mono text-ink">{data.upstream.repository}</dd>
             </div>
-            <div className="console-source-row">
-              <span>{copy.common.commit}</span>
-              <span className="console-mono">{data.upstream.commit.slice(0, 12)}</span>
+            <div>
+              <dt className="text-muted">{copy.common.commit}</dt>
+              <dd className="mt-1 font-mono text-ink">{data.upstream.commit.slice(0, 12)}</dd>
             </div>
-            <div className="console-source-row">
-              <span>{copy.common.fetchedAt}</span>
-              <span className="console-mono">{formatTimestamp(data.upstream.fetchedAt)}</span>
+            <div>
+              <dt className="text-muted">{copy.common.fetchedAt}</dt>
+              <dd className="mt-1 font-mono text-ink">{formatTimestamp(data.upstream.fetchedAt)}</dd>
             </div>
-          </div>
+          </dl>
         </div>
-        <p className="console-note">{copy.overview.inferredNote}</p>
+        <p className="text-xs leading-relaxed text-muted">{copy.overview.inferredNote}</p>
       </section>
-    </>
+    </div>
   );
 }

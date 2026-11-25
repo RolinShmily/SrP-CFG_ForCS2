@@ -1,4 +1,4 @@
-import { FolderTree } from "lucide-react";
+import { ArrowUpRight, FolderTree } from "lucide-react";
 import type { MetaFunction } from "react-router";
 import { Link, useLoaderData } from "react-router";
 
@@ -35,26 +35,43 @@ export default function CategoriesRoute() {
   const copy = consoleCopy[locale];
 
   return (
-    <>
-      <header className="console-hero">
-        <p className="console-eyebrow">CS2 CONSOLE</p>
-        <h1 className="console-title">{copy.categories.title}</h1>
-        <p className="console-subtitle">{copy.categories.subtitle}</p>
+    <div className="space-y-8">
+      <header>
+        <p className="font-mono text-xs font-semibold uppercase tracking-wider text-cs-orange">
+          CS2 CONSOLE · CATEGORIES
+        </p>
+        <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+          {copy.categories.title}
+        </h1>
+        <p className="mt-1.5 max-w-2xl text-sm text-dim">{copy.categories.subtitle}</p>
       </header>
-      <div className="console-grid">
+
+      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
         {data.categories.map((category) => (
-          <Link prefetch="intent" key={category.slug} className="console-card" to={categoryPath(category.slug)}>
-            <div className="console-card-title">
-              <span>{locale === "zh" ? category.zh : category.en}</span>
-              <FolderTree size={15} />
+          <Link
+            key={category.slug}
+            prefetch="intent"
+            to={categoryPath(category.slug)}
+            className="group flex items-center justify-between rounded-2xl border border-line bg-surface p-5 transition hover:border-cs-orange/40 hover:bg-card"
+          >
+            <div className="min-w-0">
+              <div className="flex items-center gap-2.5 text-base font-semibold text-ink group-hover:text-cs-orange">
+                <FolderTree size={16} className="shrink-0 text-muted group-hover:text-cs-orange" aria-hidden="true" />
+                <span className="truncate">{locale === "zh" ? category.zh : category.en}</span>
+              </div>
+              <div className="mt-2 font-mono text-xs text-muted">
+                <span className="font-semibold text-dim">{category.count.toLocaleString()}</span>{" "}
+                {copy.categories.count}
+              </div>
             </div>
-            <div className="console-card-meta">
-              <span className="console-card-count">{category.count}</span>{" "}
-              {copy.categories.count}
-            </div>
+            <ArrowUpRight
+              size={16}
+              className="shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-cs-orange"
+              aria-hidden="true"
+            />
           </Link>
         ))}
       </div>
-    </>
+    </div>
   );
 }

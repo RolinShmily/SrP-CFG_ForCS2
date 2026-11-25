@@ -19,6 +19,7 @@ const lastmod = metadata.upstream.fetchedAt.slice(0, 10);
 
 const paths = new Set([
   "/",
+  "/download/",
   "/console/",
   "/console/convars/",
   "/console/commands/",
@@ -52,8 +53,8 @@ function escapeXml(value) {
 const urls = [...paths]
   .sort((left, right) => left.localeCompare(right))
   .map((path) => {
-    const priority = path === "/" ? "1.0" : path === "/console/" ? "0.9" : "0.6";
-    const changefreq = path === "/" || path === "/console/" ? "weekly" : "monthly";
+    const priority = path === "/" ? "1.0" : path === "/console/" || path === "/download/" ? "0.9" : "0.6";
+    const changefreq = path === "/" || path === "/console/" || path === "/download/" ? "weekly" : "monthly";
     return [
       "  <url>",
       `    <loc>${escapeXml(SITE + path)}</loc>`,

@@ -1,189 +1,158 @@
+import { ArrowDownToLine, Globe2, Menu, Search, SquareTerminal, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useMotionValueEvent, useScroll } from "motion/react";
-import {
-  ArrowDownToLine,
-  Globe2,
-  Menu,
-  SquareTerminal,
-  Terminal,
-  X,
-} from "lucide-react";
 import { Link, useLocation } from "react-router";
 
 import { useI18n } from "@/context/i18n-context";
-import { consoleCopy } from "@/locales/console";
 import { assetPath, REPOSITORY } from "@/lib/downloads";
-import { GithubIcon } from "./icons";
+import { openCommandPalette } from "./command-palette";
+
+function GithubMark() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a10.97 10.97 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.26 5.68.42.36.79 1.06.79 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z" />
+    </svg>
+  );
+}
 
 export function Navbar() {
   const { locale, toggleLocale, t } = useI18n();
   const location = useLocation();
-  const [compact, setCompact] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
-    const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", close);
-    return () => document.removeEventListener("keydown", close);
-  }, [open]);
-
-  useEffect(() => {
-    setOpen(false);
+    setMobileOpen(false);
   }, [location.pathname, location.hash]);
 
-  const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, "change", (value) => setCompact(value > 90));
-
-  const isConsole = location.pathname.startsWith("/console");
   const isHome = location.pathname === "/";
-  const consoleCopyText = consoleCopy[locale];
+  const isConsole = location.pathname.startsWith("/console");
+  const isDownload = location.pathname.startsWith("/download");
 
-  const links = [
-    { to: "/#showcase", label: t.nav.showcase, hash: "#showcase" },
-    { to: "/#assembly", label: t.nav.assembly, hash: "#assembly" },
-    { to: "/#download", label: t.nav.download, hash: "#download" },
-  ];
-
-  const consoleLinks = [
-    { to: "/console", label: consoleCopyText.nav.overview, end: true },
-    { to: "/console/convars", label: consoleCopyText.nav.convars, end: false },
-    { to: "/console/commands", label: consoleCopyText.nav.commands, end: false },
-    { to: "/console/categories", label: consoleCopyText.nav.categories, end: false },
-    { to: "/console/flags", label: consoleCopyText.nav.flags, end: false },
-    { to: "/console/changes", label: consoleCopyText.nav.changes, end: false },
+  const navItems = [
+    { to: "/", label: t.nav.home, active: isHome },
+    { to: "/console", label: t.nav.console, active: isConsole, icon: SquareTerminal },
+    { to: "/download", label: t.nav.download, active: isDownload, icon: ArrowDownToLine },
   ];
 
   return (
-    <header className={`site-header ${compact ? "is-compact" : ""}`}>
-      <a className="skip-link" href="#main-content">{t.nav.skip}</a>
+    <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-xl">
+      <a
+        href="#main-content"
+        className="sr-only-focusable fixed left-4 top-3 z-50 rounded-lg bg-cs-orange px-3 py-1.5 text-xs font-semibold text-black"
+      >
+        {t.nav.skip}
+      </a>
 
-      <div className={`nav-bar ${isConsole ? "nav-bar-console" : ""}`}>
-        <div className="nav-bar-main">
-          <Link to="/#overview" className="nav-brand" prefetch="intent" aria-label="SrP-CFG">
-            <img src={assetPath("/app/icon.webp")} alt="" width="30" height="30" />
-            <span>SrP-CFG</span><span className="brand-dot" aria-hidden="true" />
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        {/* Brand + primary links */}
+        <div className="flex min-w-0 items-center gap-5">
+          <Link
+            to="/"
+            prefetch="intent"
+            className="flex shrink-0 items-center gap-2.5 whitespace-nowrap text-sm font-semibold tracking-tight text-ink"
+          >
+            <img
+              src={assetPath("/app/icon.webp")}
+              alt=""
+              width="28"
+              height="28"
+              className="shrink-0 rounded-lg"
+            />
+            <span>
+              SrP-CFG<span className="text-cs-orange">.</span>
+            </span>
           </Link>
 
-          <nav className="nav-links" aria-label={t.nav.product}>
-            {links.map((link) => (
+          <nav className="hidden items-center gap-1 md:flex" aria-label={t.nav.product}>
+            {navItems.map(({ to, label, active, icon: Icon }) => (
               <Link
-                key={link.to}
-                to={link.to}
+                key={to}
+                to={to}
                 prefetch="intent"
-                className={isHome && location.hash === link.hash ? "active" : undefined}
+                aria-current={active ? "page" : undefined}
+                className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                  active
+                    ? "bg-white/[0.08] text-ink"
+                    : "text-dim hover:bg-white/[0.04] hover:text-ink"
+                }`}
               >
-                {link.label}
+                {Icon && <Icon size={14} className={active ? "text-cs-orange" : "text-muted"} aria-hidden="true" />}
+                {label}
               </Link>
             ))}
-            <Link
-              to="/console"
-              prefetch="intent"
-              className={`nav-console-link ${isConsole ? "active" : ""}`}
-              aria-current={isConsole ? "page" : undefined}
-            >
-              <SquareTerminal size={15} aria-hidden="true" />
-              {t.nav.console}
-            </Link>
           </nav>
-
-          <div className="nav-actions">
-            <button
-              type="button"
-              onClick={toggleLocale}
-              aria-label={t.nav.language}
-              title={t.nav.language}
-            >
-              <Globe2 size={16} />
-              <span>{locale === "zh" ? "EN" : "中"}</span>
-            </button>
-            <a
-              className="github-link"
-              href={REPOSITORY}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-            >
-              <GithubIcon />
-            </a>
-            <Link
-              className="nav-skill"
-              to="/#srpcfg-cli"
-              prefetch="intent"
-              aria-label={t.nav.skill}
-              title={t.nav.skill}
-            >
-              <Terminal size={16} aria-hidden="true" />
-              <span>Skill</span>
-            </Link>
-            <Link
-              className="nav-download"
-              to="/#download"
-              prefetch="intent"
-              aria-label={t.nav.download}
-            >
-              <ArrowDownToLine size={15} aria-hidden="true" />
-              <span>{t.nav.download}</span>
-            </Link>
-            <button
-              className="nav-menu"
-              aria-expanded={open}
-              aria-controls="mobile-nav"
-              aria-label={open ? t.nav.close : t.nav.menu}
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <X size={19} /> : <Menu size={19} />}
-            </button>
-          </div>
         </div>
 
-        {isConsole && (
-          <nav className="console-subnav" aria-label="Console">
-            {consoleLinks.map((link) => {
-              const active = link.end
-                ? location.pathname === link.to || location.pathname === `${link.to}/`
-                : location.pathname === link.to || location.pathname.startsWith(`${link.to}/`);
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  prefetch="intent"
-                  className={active ? "active" : undefined}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-        )}
+        {/* Right controls */}
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openCommandPalette()}
+            className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-line bg-surface px-3 text-xs text-dim transition hover:border-line-strong hover:text-ink"
+            aria-label={t.search.trigger}
+          >
+            <Search size={14} className="shrink-0 text-muted" aria-hidden="true" />
+            <span className="hidden lg:inline">{t.search.trigger}</span>
+            <kbd className="hidden whitespace-nowrap rounded border border-line bg-card px-1.5 py-0.5 font-mono text-[10px] text-muted sm:inline">
+              Ctrl K
+            </kbd>
+          </button>
 
-        {open && (
-          <nav id="mobile-nav" className="mobile-nav" aria-label={t.nav.product}>
-            {links.map((link) => (
+          <button
+            type="button"
+            onClick={toggleLocale}
+            aria-label={t.nav.language}
+            title={t.nav.language}
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-2.5 text-xs font-medium text-dim transition hover:border-line-strong hover:text-ink"
+          >
+            <Globe2 size={14} aria-hidden="true" />
+            <span>{locale === "zh" ? "EN" : "中"}</span>
+          </button>
+
+          <a
+            href={REPOSITORY}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface text-dim transition hover:border-line-strong hover:text-ink"
+          >
+            <GithubMark />
+          </a>
+
+          <button
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-expanded={mobileOpen}
+            aria-label={mobileOpen ? t.nav.close : t.nav.menu}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface text-dim transition hover:text-ink md:hidden"
+          >
+            {mobileOpen ? <X size={17} /> : <Menu size={17} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile navigation drawer */}
+      {mobileOpen && (
+        <nav
+          aria-label={t.nav.product}
+          className="border-t border-line bg-surface px-4 py-3 md:hidden"
+        >
+          <div className="flex flex-col gap-1">
+            {navItems.map(({ to, label, active, icon: Icon }) => (
               <Link
-                to={link.to}
-                key={link.to}
+                key={to}
+                to={to}
                 prefetch="intent"
-                className={isHome && location.hash === link.hash ? "active" : undefined}
-                onClick={() => setOpen(false)}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
+                  active ? "bg-white/[0.08] text-ink" : "text-dim hover:bg-white/[0.04] hover:text-ink"
+                }`}
               >
-                {link.label}
+                {Icon && <Icon size={15} className={active ? "text-cs-orange" : "text-muted"} aria-hidden="true" />}
+                {label}
               </Link>
             ))}
-            <Link
-              to="/console"
-              prefetch="intent"
-              className={isConsole ? "active" : undefined}
-              onClick={() => setOpen(false)}
-            >
-              {t.nav.console}
-            </Link>
-          </nav>
-        )}
-      </div>
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

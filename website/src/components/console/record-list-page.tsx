@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight, RefreshCw, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 
@@ -33,9 +34,6 @@ export function RecordListPage({
   const qParam = searchParams.get("q") ?? "";
   const categoryParam = searchParams.get("category") ?? "";
   const flagParam = searchParams.get("flag") ?? "";
-  // Start with empty filters so the first client render matches the static
-  // prerendered HTML. URL parameters are applied after hydration; reading them
-  // during the first render causes React #418 on direct `?q=` links.
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [flag, setFlag] = useState("");
@@ -53,8 +51,6 @@ export function RecordListPage({
 
   function updateParam(key: string, value: string) {
     const next = new URLSearchParams(searchParams);
-    // Preserve a typed query when a category/flag select changes it; the query
-    // itself is local-only until a reload or a link supplies `?q=`.
     if (query) next.set("q", query);
     if (value) next.set(key, value);
     else next.delete(key);
@@ -82,8 +78,7 @@ export function RecordListPage({
   }, [index, type, query, category, flag, includeInternal]);
 
   const total = type === "convar" ? data.counts.convars : data.counts.commands;
-  const publicTotal =
-    type === "convar" ? data.publicCounts.convars : data.publicCounts.commands;
+  const publicTotal = type === "convar" ? data.publicCounts.convars : data.publicCounts.commands;
   const visibleTotal = includeInternal ? total : publicTotal;
   const pageCount = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount);
@@ -94,38 +89,47 @@ export function RecordListPage({
     type === "convar" ? copy.list.convarsDescription : copy.list.commandsDescription;
 
   return (
-    <>
-      <div className="console-list-head">
+    <div className="space-y-6">
+      <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="console-eyebrow">CS2 CONSOLE</p>
-          <h1 className="console-list-title">{title}</h1>
-          <p className="console-list-note">{description}</p>
+          <p className="font-mono text-xs font-semibold uppercase tracking-wider text-cs-orange">
+            CS2 CONSOLE · {type === "convar" ? "CONVARS" : "COMMANDS"}
+          </p>
+          <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h1>
+          <p className="mt-1.5 text-sm text-dim">{description}</p>
         </div>
-        <div className="console-card-count">
-          {visibleTotal.toLocaleString()} {copy.common.records}
+        <div className="shrink-0 rounded-xl border border-line bg-surface px-3.5 py-2 font-mono text-xs text-dim">
+          <span className="font-semibold text-ink">{visibleTotal.toLocaleString()}</span> {copy.common.records}
         </div>
-      </div>
+      </header>
 
-      <div className="console-filters">
-        <div className="console-field" style={{ flex: 1 }}>
+      {/* Filter workbench toolbar */}
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-line bg-surface p-3 lg:flex-row lg:items-center">
+        <div className="relative flex-1">
+          <Search
+            size={15}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+            aria-hidden="true"
+          />
           <input
-            className="console-input"
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={copy.list.searchPlaceholder}
             aria-label={copy.common.search}
+            className="h-9 w-full rounded-lg border border-line bg-canvas pl-9 pr-3 text-xs text-ink placeholder:text-muted focus:border-cs-orange/50 focus:outline-none"
           />
         </div>
-        <div className="console-field">
+
+        <div className="flex flex-wrap items-center gap-2">
           <select
-            className="console-select"
             value={category}
             onChange={(event) => {
               setCategory(event.target.value);
               updateParam("category", event.target.value);
             }}
             aria-label={copy.list.filterCategory}
+            className="h-9 rounded-lg border border-line bg-canvas px-2.5 text-xs text-ink focus:border-cs-orange/50 focus:outline-none"
           >
             <option value="">{copy.list.filterCategory}</option>
             {data.categories.map((item) => (
@@ -134,16 +138,15 @@ export function RecordListPage({
               </option>
             ))}
           </select>
-        </div>
-        <div className="console-field">
+
           <select
-            className="console-select"
             value={flag}
             onChange={(event) => {
               setFlag(event.target.value);
               updateParam("flag", event.target.value);
             }}
             aria-label={copy.list.filterFlag}
+            className="h-9 rounded-lg border border-line bg-canvas px-2.5 font-mono text-xs text-ink focus:border-cs-orange/50 focus:outline-none"
           >
             <option value="">{copy.list.filterFlag}</option>
             {data.flags.map((item) => (
@@ -152,78 +155,98 @@ export function RecordListPage({
               </option>
             ))}
           </select>
+
+          <label className="inline-flex h-9 cursor-pointer select-none items-center gap-2 rounded-lg border border-line bg-canvas px-3 text-xs text-dim transition hover:border-line-strong hover:text-ink">
+            <input
+              type="checkbox"
+              checked={includeInternal}
+              onChange={(event) => setIncludeInternal(event.target.checked)}
+              className="accent-amber-500"
+            />
+            <span>{copy.list.includeInternal}</span>
+          </label>
+
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchParams(new URLSearchParams(), { replace: true });
+                setQuery("");
+                setCategory("");
+                setFlag("");
+                setIncludeInternal(false);
+              }}
+              className="inline-flex h-9 items-center gap-1 rounded-lg border border-line bg-card px-2.5 text-xs text-dim transition hover:border-line-strong hover:text-ink"
+            >
+              <X size={13} />
+              {copy.list.clearFilters}
+            </button>
+          )}
         </div>
-        <label className="console-toggle">
-          <input
-            type="checkbox"
-            checked={includeInternal}
-            onChange={(event) => setIncludeInternal(event.target.checked)}
-          />
-          <span>{copy.list.includeInternal}</span>
-        </label>
-        {hasFilters && (
-          <button
-            type="button"
-            className="console-clear"
-            onClick={() => {
-              setSearchParams(new URLSearchParams(), { replace: true });
-              setQuery("");
-              setCategory("");
-              setFlag("");
-              setIncludeInternal(false);
-            }}
-          >
-            {copy.list.clearFilters}
-          </button>
-        )}
       </div>
 
-      <div className="console-muted" style={{ fontSize: 12, marginBottom: 10 }}>
-        {copy.list.showing} {matches.length.toLocaleString()} {copy.common.of}{" "}
-        {visibleTotal.toLocaleString()}
+      {/* Count summary */}
+      <div className="flex items-center justify-between text-xs text-muted">
+        <span>
+          {copy.list.showing}{" "}
+          <strong className="font-mono text-dim">{matches.length.toLocaleString()}</strong>{" "}
+          {copy.common.of}{" "}
+          <span className="font-mono">{visibleTotal.toLocaleString()}</span>
+        </span>
       </div>
 
       {loading ? (
-        <div className="console-loading">{copy.list.loadingIndex}</div>
+        <div className="rounded-2xl border border-line bg-surface px-6 py-14 text-center text-sm text-dim">
+          {copy.list.loadingIndex}
+        </div>
       ) : error ? (
-        <div className="console-error">
-          {copy.common.error} <span className="console-muted">{error}</span>
-          <button type="button" className="console-retry" onClick={reload}>
+        <div className="flex items-center justify-between rounded-2xl border border-rose-500/30 bg-rose-500/10 px-5 py-4 text-sm text-rose-200">
+          <span>
+            {copy.common.error} <span className="text-rose-300/80">{error}</span>
+          </span>
+          <button
+            type="button"
+            onClick={reload}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-rose-400/30 bg-canvas px-3 py-1.5 text-xs font-medium text-ink"
+          >
+            <RefreshCw size={12} />
             {copy.common.retry}
           </button>
         </div>
       ) : (
         <>
-          <RecordTable
-            records={visible}
-            empty={copy.list.noResults}
-            categories={data.categories}
-          />
+          <RecordTable records={visible} empty={copy.list.noResults} categories={data.categories} />
+
           {pageCount > 1 && (
-            <div className="console-pager">
+            <div className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-2.5 text-xs text-dim">
               <span>
-                {copy.common.page} {safePage} {copy.common.of} {pageCount}
+                {copy.common.page} <strong className="font-mono text-ink">{safePage}</strong>{" "}
+                {copy.common.of} <span className="font-mono">{pageCount}</span>
               </span>
-              <div className="console-pager-actions">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   disabled={safePage <= 1}
                   onClick={() => setPage((value) => Math.max(1, value - 1))}
+                  className="inline-flex items-center gap-1 rounded-lg border border-line bg-canvas px-3 py-1.5 font-medium text-ink transition hover:border-line-strong disabled:cursor-not-allowed disabled:opacity-40"
                 >
+                  <ChevronLeft size={14} />
                   {copy.common.previous}
                 </button>
                 <button
                   type="button"
                   disabled={safePage >= pageCount}
                   onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+                  className="inline-flex items-center gap-1 rounded-lg border border-line bg-canvas px-3 py-1.5 font-medium text-ink transition hover:border-line-strong disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {copy.common.next}
+                  <ChevronRight size={14} />
                 </button>
               </div>
             </div>
           )}
         </>
       )}
-    </>
+    </div>
   );
 }

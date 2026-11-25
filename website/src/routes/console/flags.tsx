@@ -1,4 +1,4 @@
-import { Flag } from "lucide-react";
+import { ArrowUpRight, Flag } from "lucide-react";
 import type { MetaFunction } from "react-router";
 import { Link, useLoaderData } from "react-router";
 
@@ -35,26 +35,43 @@ export default function FlagsRoute() {
   const copy = consoleCopy[locale];
 
   return (
-    <>
-      <header className="console-hero">
-        <p className="console-eyebrow">CS2 CONSOLE</p>
-        <h1 className="console-title">{copy.flags.title}</h1>
-        <p className="console-subtitle">{copy.flags.subtitle}</p>
+    <div className="space-y-8">
+      <header>
+        <p className="font-mono text-xs font-semibold uppercase tracking-wider text-cs-orange">
+          CS2 CONSOLE · FLAGS
+        </p>
+        <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+          {copy.flags.title}
+        </h1>
+        <p className="mt-1.5 max-w-2xl text-sm text-dim">{copy.flags.subtitle}</p>
       </header>
-      <div className="console-grid">
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {data.flags.map((flag) => (
-          <Link prefetch="intent" key={flag.flag} className="console-card" to={flagPath(flag.flag)}>
-            <div className="console-card-title">
-              <span className="console-mono">{flag.flag}</span>
-              <Flag size={14} />
+          <Link
+            key={flag.flag}
+            prefetch="intent"
+            to={flagPath(flag.flag)}
+            className="group flex items-center justify-between rounded-2xl border border-line bg-surface p-4 transition hover:border-cs-orange/40 hover:bg-card"
+          >
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 font-mono text-sm font-semibold text-ink group-hover:text-cs-orange">
+                <Flag size={14} className="shrink-0 text-muted group-hover:text-cs-orange" aria-hidden="true" />
+                <span className="truncate">{flag.flag}</span>
+              </div>
+              <div className="mt-1.5 font-mono text-xs text-muted">
+                <span className="font-semibold text-dim">{flag.count.toLocaleString()}</span>{" "}
+                {copy.flags.count}
+              </div>
             </div>
-            <div className="console-card-meta">
-              <span className="console-card-count">{flag.count}</span>{" "}
-              {copy.flags.count}
-            </div>
+            <ArrowUpRight
+              size={15}
+              className="shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-cs-orange"
+              aria-hidden="true"
+            />
           </Link>
         ))}
       </div>
-    </>
+    </div>
   );
 }

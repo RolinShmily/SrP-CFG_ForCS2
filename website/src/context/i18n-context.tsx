@@ -2,13 +2,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { zh } from "@/locales/zh";
 import { en } from "@/locales/en";
-import { I18nDictionary } from "@/locales/types";
+import type { SiteCopy } from "@/locales/types";
 
 export type Locale = "zh" | "en";
 
 interface I18nContextType {
   locale: Locale;
-  t: I18nDictionary;
+  t: SiteCopy;
   setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
 }
