@@ -1,8 +1,8 @@
 #include "preferences_controller.h"
 #include "overview_controller.h"
-#include "srp/core/packages.h"
-#include "srp/core/actions.h"
-#include "srp/core/i18n.h"
+#include "core/packages.h"
+#include "core/actions.h"
+#include "core/i18n.h"
 #include "hustheme.h"
 #include <QGuiApplication>
 #include <QFontDatabase>

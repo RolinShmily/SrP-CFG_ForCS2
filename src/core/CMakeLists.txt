@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-# Allow configuring src/core on its own (no root project, no Qt, no CLI).
+# Allow configuring src/core on its own (no root project, no Qt).
 if(NOT DEFINED SRP_APP_VERSION)
     set(SRP_APP_VERSION "0.0.0" CACHE STRING "Application release version")
     message(STATUS "srp_core standalone build: SRP_APP_VERSION defaults to ${SRP_APP_VERSION}")
@@ -20,24 +20,25 @@ endif()
 find_package(Threads REQUIRED)
 
 add_library(srp_core STATIC
-    src/detection.cpp
-    src/i18n.cpp
-    src/vcfg.cpp
-    src/actions.cpp
-    src/preset.cpp
-    src/config_backup.cpp
-    src/assembly.cpp
-    src/catalog.cpp
-    src/packages.cpp
-    src/media_config.cpp
-    src/app_update.cpp
-    src/text_document.cpp
+    detection.cpp
+    i18n.cpp
+    vcfg.cpp
+    actions.cpp
+    preset.cpp
+    config_backup.cpp
+    assembly.cpp
+    catalog.cpp
+    packages.cpp
+    media_config.cpp
+    app_update.cpp
+    text_document.cpp
 )
 
 target_compile_definitions(srp_core PRIVATE SRP_APP_VERSION="${SRP_APP_VERSION}")
 
-target_include_directories(srp_core PUBLIC
-    include
+target_include_directories(srp_core
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/.."
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 target_link_libraries(srp_core PRIVATE Threads::Threads)
@@ -47,6 +48,7 @@ if(WIN32)
 endif()
 
 if(BUILD_TESTING)
+    set(SRP_CORE_TESTS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../tests/core")
     foreach(name IN ITEMS config media catalog app_update text_document)
         if(name STREQUAL "config")
             set(source config_operations_test.cpp)
@@ -55,11 +57,11 @@ if(BUILD_TESTING)
         else()
             set(source ${name}_test.cpp)
         endif()
-        add_executable(srp_${name}_tests tests/${source})
+        add_executable(srp_${name}_tests "${SRP_CORE_TESTS_DIR}/${source}")
         target_link_libraries(srp_${name}_tests PRIVATE srp_core)
     endforeach()
     add_test(NAME config_operations COMMAND srp_config_tests)
-    add_test(NAME media_packages COMMAND srp_media_tests "${PROJECT_SOURCE_DIR}/../../config")
+    add_test(NAME media_packages COMMAND srp_media_tests "${PROJECT_SOURCE_DIR}/../../content")
     add_test(NAME catalog_extension COMMAND srp_catalog_tests)
     add_test(NAME app_update COMMAND srp_app_update_tests)
     add_test(NAME text_document COMMAND srp_text_document_tests)

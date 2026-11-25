@@ -1,8 +1,8 @@
 #include "overview_controller.h"
-#include "srp/core/detection.h"
-#include "srp/core/vcfg.h"
-#include "srp/core/actions.h"
-#include "srp/core/i18n.h"
+#include "core/detection.h"
+#include "core/vcfg.h"
+#include "core/actions.h"
+#include "core/i18n.h"
 #include "package_controller.h"
 #include <QUrl>
 

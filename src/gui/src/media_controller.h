@@ -5,7 +5,7 @@
 #include <QQuickTextDocument>
 #include <QFileSystemWatcher>
 #include <QTimer>
-#include "srp/core/media_config.h"
+#include "core/media_config.h"
 class Cs2CfgHighlighter;
 class MediaController : public QObject {
     Q_OBJECT

@@ -2,11 +2,11 @@
 #include "cs2_cfg_highlighter.h"
 #include "overview_controller.h"
 #include "package_controller.h"
-#include "srp/core/preset.h"
-#include "srp/core/text_document.h"
-#include "srp/core/actions.h"
-#include "srp/core/detection.h"
-#include "srp/core/i18n.h"
+#include "core/preset.h"
+#include "core/text_document.h"
+#include "core/actions.h"
+#include "core/detection.h"
+#include "core/i18n.h"
 #include <QTextBlockFormat>
 #include <QTextCursor>
 #include <QFileSystemWatcher>

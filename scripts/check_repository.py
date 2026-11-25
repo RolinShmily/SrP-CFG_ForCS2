@@ -17,7 +17,7 @@ def main():
     print("[*] Running SrP-CFG repository integrity check...")
 
     # 1. Essential project documents
-    required_docs = ["LICENSE", "README.md", "README.zh-CN.md", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md"]
+    required_docs = ["LICENSE", "README.md", "README.zh-CN.md", "THIRD_PARTY_NOTICES", "CHANGELOG.md"]
     for doc in required_docs:
         path = repo_root / doc
         if not path.is_file():
@@ -25,27 +25,27 @@ def main():
         elif path.stat().st_size == 0:
             errors.append(f"Project document is empty: {doc}")
 
-    # 2. Package version numbers
+    # 2. Content package version numbers
     semver_pattern = re.compile(r"^\d+\.\d+\.\d+$")
     # Package editions may carry a suffix (for example srp-cfg-csgo's "3.4.2-csgo").
     package_version_pattern = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$")
     packages = ["srp-cfg", "video", "annotations", "srp-cfg-csgo"]
     for pkg in packages:
-        ver_file = repo_root / "config" / pkg / "VERSION.txt"
+        ver_file = repo_root / "content" / pkg / "VERSION.txt"
         if not ver_file.is_file():
-            errors.append(f"Missing package VERSION.txt: config/{pkg}/VERSION.txt")
+            errors.append(f"Missing package VERSION.txt: content/{pkg}/VERSION.txt")
             continue
         ver = ver_file.read_text(encoding="utf-8").strip()
         if not package_version_pattern.match(ver):
-            errors.append(f"Invalid semver '{ver}' in config/{pkg}/VERSION.txt")
+            errors.append(f"Invalid semver '{ver}' in content/{pkg}/VERSION.txt")
         else:
             print(f"    [OK] Package '{pkg}': v{ver}")
 
     # 3. Catalog integrity
     catalogs = [
-        ("srp-cfg", repo_root / "config" / "srp-cfg" / "catalog.json"),
-        ("annotations", repo_root / "config" / "annotations" / "catalog.json"),
-        ("srp-cfg-csgo", repo_root / "config" / "srp-cfg-csgo" / "catalog.json"),
+        ("srp-cfg", repo_root / "content" / "srp-cfg" / "catalog.json"),
+        ("annotations", repo_root / "content" / "annotations" / "catalog.json"),
+        ("srp-cfg-csgo", repo_root / "content" / "srp-cfg-csgo" / "catalog.json"),
     ]
     for pkg, cat_path in catalogs:
         if not cat_path.is_file():

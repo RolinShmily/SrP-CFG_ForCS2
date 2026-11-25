@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 CS2 Valve Baseline Drift Detector
-Compares config/srp-cfg/valve/settings.cfg against SteamDatabase/GameTracking-CS2 DumpSource2
+Compares content/srp-cfg/valve/settings.cfg against SteamDatabase/GameTracking-CS2 DumpSource2
 to detect deprecated convars and upstream default value changes.
 """
 
@@ -114,12 +114,12 @@ def normalize_val(v: str) -> str:
 
 def main():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    local_cfg = os.path.join(repo_root, "config", "srp-cfg", "valve", "settings.cfg")
+    local_cfg = os.path.join(repo_root, "content", "srp-cfg", "valve", "settings.cfg")
 
     print("[*] Fetching latest GameTracking-CS2 commit metadata...")
     sha, commit_date, commit_msg = fetch_latest_commit()
 
-    print("[*] Reading local config/srp-cfg/valve/settings.cfg...")
+    print("[*] Reading local content/srp-cfg/valve/settings.cfg...")
     local_dict = parse_local_settings(local_cfg)
     print(f"    Loaded {len(local_dict)} entries from local baseline.")
 
@@ -160,7 +160,7 @@ def main():
     lines = []
     lines.append("# CS2 Valve Baseline Upstream Drift Report")
     lines.append(f"**Tracking Commit:** [`{sha}`](https://github.com/SteamDatabase/GameTracking-CS2/commit/{sha}) - *{commit_msg}* ({commit_date})  ")
-    lines.append(f"**Checked File:** `config/srp-cfg/valve/settings.cfg` ({len(local_dict)} entries)\n")
+    lines.append(f"**Checked File:** `content/srp-cfg/valve/settings.cfg` ({len(local_dict)} entries)\n")
 
     has_critical = len(missing_convars) > 0
     unexpected_drifts = [d for d in drifted_convars if not d["intentional"]]

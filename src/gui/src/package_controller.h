@@ -2,7 +2,7 @@
 #include <QObject>
 #include <QVariantList>
 #include <QFutureWatcher>
-#include "srp/core/packages.h"
+#include "core/packages.h"
 class PackageController : public QObject {
     Q_OBJECT
     Q_PROPERTY(QVariantList packages READ packages NOTIFY stateChanged)

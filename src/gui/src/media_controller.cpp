@@ -2,10 +2,10 @@
 #include "package_controller.h"
 #include "overview_controller.h"
 #include "cs2_cfg_highlighter.h"
-#include "srp/core/packages.h"
-#include "srp/core/media_config.h"
-#include "srp/core/text_document.h"
-#include "srp/core/i18n.h"
+#include "core/packages.h"
+#include "core/media_config.h"
+#include "core/text_document.h"
+#include "core/i18n.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>

@@ -1,6 +1,6 @@
 #include "app_update_controller.h"
 #include "overview_controller.h"
-#include "srp/core/i18n.h"
+#include "core/i18n.h"
 #include <QtConcurrent>
 #include <QDesktopServices>
 #include <QUrl>

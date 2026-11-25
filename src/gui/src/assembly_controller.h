@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QPointer>
 #include <QQuickTextDocument>
-#include "srp/core/assembly.h"
+#include "core/assembly.h"
 class Cs2CfgHighlighter;
 
 class AssemblyController : public QObject {

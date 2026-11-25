@@ -2,11 +2,11 @@
 #include "overview_controller.h"
 #include "package_controller.h"
 #include "cs2_cfg_highlighter.h"
-#include "srp/core/assembly.h"
-#include "srp/core/actions.h"
-#include "srp/core/i18n.h"
-#include "srp/core/catalog.h"
-#include "srp/core/text_document.h"
+#include "core/assembly.h"
+#include "core/actions.h"
+#include "core/i18n.h"
+#include "core/catalog.h"
+#include "core/text_document.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>

@@ -2,7 +2,7 @@
 #include <QObject>
 #include <QFutureWatcher>
 #include <functional>
-#include "srp/core/app_update.h"
+#include "core/app_update.h"
 class AppUpdateController : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString version READ version CONSTANT)

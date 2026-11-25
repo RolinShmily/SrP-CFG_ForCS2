@@ -1,6 +1,6 @@
 #include "package_controller.h"
 #include "overview_controller.h"
-#include "srp/core/i18n.h"
+#include "core/i18n.h"
 #include <QtConcurrentRun>
 namespace { PackageController* currentController = nullptr; QString translated(const char* key) { return QString::fromStdString(srp::core::tr(key)); } }
 PackageController* PackageController::instance() { return currentController; }
