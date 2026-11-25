@@ -7,31 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.0] - 2026-11-25
+
+> **zh**: 官网与指令中心重构为统一现代暗色 UI 并集成 Pagefind 全文检索；内容包移除 VERSION.txt 改为 SHA-256 与更新日期校验；Cloudflare Worker 新增 /releases/* 流式反代；精简 CLI、扁平化 core 并统一 tests/ 与 CI/CD 工作流。  
+> **en**: Rebuilt website and CS2 Console Hub with a unified dark UI and Pagefind full-text search; replaced content package VERSION.txt with SHA-256 and update dates; added Cloudflare Worker /releases/* proxy; dropped CLI, flattened core, and unified tests/ and CI/CD workflows.
+
 ### Added
-- **config**: Add the `srp-cfg-csgo` package (v3.4.2-csgo), a Source 1 port of the runtime core with presets, modules, and `autoexec_csgo.cfg` for the CS:GO edition.
-- **website**: Offer `srp-cfg-csgo` as a fourth downloadable configuration package with localized copy and ZIP layout validation.
+- **website**: Rebuild the site with a unified dark-slate & CS2 amber design system, dedicated `/download` center, global `Ctrl+K` command palette, and chunked **Pagefind** static full-text search (Chinese/English + ConVar/Command filters) across 5,500+ CS2 console records.
 - **worker**: Add Cloudflare Worker `/releases/latest.json` and `/releases/download/<tag>/<file>` streaming proxy (`worker/index.ts`, `run_worker_first = ["/releases/*"]`) so desktop and website software downloads share `https://cfg.srprolin.com` with byte-identical GitHub Release SHA-256 digests.
-- **tests**: Consolidate tests under top-level `tests/` (`tests/core`, `tests/gui`, `tests/content`, `tests/worker`).
-- **ci**: Split lightweight `test.yml` (repo/content/worker checks + dual-OS core CTest) and reusable Windows `build.yml` from `release.yml`; fail the Valve upstream drift workflow when detection crashes instead of reporting a silent success.
+- **content**: Add the `srp-cfg-csgo` package, a Source 1 port of the runtime core with presets, modules, and `autoexec_csgo.cfg` for the CS:GO edition, available in the website Download Center.
+- **tests**: Consolidate all test suites under top-level `tests/` (`tests/core`, `tests/gui`, `tests/content`, `tests/worker`, `tests/website`, `tests/console`).
 
 ### Changed
-- **content**: Rename `config/` to `content/` and decouple packaging into `scripts/package_content.py`, publishing the isolated manifest at `/packages/manifest.json` (retaining `/packages.json` as a compatibility alias).
-- **core**: Flatten `src/core/include/srp/core/` and `src/core/src/` into `src/core/` with `#include "core/<header>"`; point desktop update and package checks to `https://cfg.srprolin.com/releases/latest.json` and `/packages/manifest.json` with redirects disabled.
+- **content**: Rename `config/` to `content/`, remove per-package `VERSION.txt`, and switch content packaging (`scripts/package_content.py`) and desktop staging/update checks to pure SHA-256 + `updated_at` (`YYYYMMDD`), published at `/packages/manifest.json` (retaining `/packages.json` as a compatibility alias).
+- **core**: Flatten `src/core/include/srp/core/` and `src/core/src/` into `src/core/` with `#include "core/<header>"`; point desktop update and package checks to `https://cfg.srprolin.com/releases/latest.json` and `/packages/manifest.json` with redirects disabled; detect outdated staged edits by byte comparison against package originals.
 - **website**: Route software downloads through `cfg.srprolin.com` by default (replacing third-party `gh-proxy.org`) while keeping direct GitHub Releases switching.
-- **config**: Bump `srp-cfg` preset baseline package to v3.4.3 (update default preset sensitivity to 0.53, viewmodel to v06, and mwheelup to invprev; refine crosshair-view library presets 05/06 and switch the default preset crosshair to c06).
-- **ci**: Integrate CHANGELOG release notes extraction into GitHub Actions release workflow and manifest generation.
-- **ci**: Update actions to checkout/setup-node/setup-python v7, pnpm/action-setup v6, and action-gh-release v3; pin previously floating action refs.
-- **ci**: Keep console dataset validation strict for pull requests but allow stale translations during scheduled upstream syncs, and retry the sync push once after rebasing.
-- **release**: Validate CHANGELOG structure before building release artifacts; keep GitHub Releases focused on software binaries (`gui.zip`, `setup.exe`, `latest.json`).
+- **content**: Update default `srp-cfg` preset baseline (sensitivity 0.53, viewmodel v06, mwheelup invprev, refined crosshair presets 05/06 with default c06).
+- **ci**: Consolidate GitHub Actions into 5 focused workflows (`test.yml`, `deploy.yml`, `update.yml`, `build.yml`, `release.yml`); merge console validation into `test.yml` and combine scheduled console sync + weekly Valve baseline drift checks into `update.yml`; update actions to v6/v7 and integrate CHANGELOG extraction into `release.yml`.
 - **repo**: Consolidate `THIRD_PARTY_NOTICES.md` and `licenses/` into a single self-contained plain-text `THIRD_PARTY_NOTICES`; move `run_gui.bat` to `scripts/run-gui.bat`; simplify GitHub issue templates.
 - **docs**: Streamline `docs/` into four flat guides (`architecture.md`, `design.md`, `reference.md`, `development.md`), move showcase images to `assets/`, and rewrite bilingual READMEs with player-first usage steps.
 
 ### Removed
 - **cli**: Remove `src/cli/`, `skills/srpcfg-cli/`, CLI release archives, and installer PATH registry integration to focus the product on the desktop workbench.
-- **repo**: Remove redundant root and GitHub boilerplate (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `.github/dependabot.yml`, `.github/PULL_REQUEST_TEMPLATE.md`).
+- **content**: Remove `content/*/VERSION.txt` and legacy SemVer version tracking for content packages.
+- **repo**: Remove redundant root and GitHub boilerplate (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `.github/dependabot.yml`, `.github/PULL_REQUEST_TEMPLATE.md`) and legacy Valve SVG background assets (`website/public/cs2/`).
 
 ### Fixed
-- **tests**: Derive expected package versions, catalog counts, and module IDs from shipped content instead of pinning release numbers, eliminating false CI failures after config bumps.
+- **tests**: Derive expected packages, catalog counts, and module IDs from shipped content instead of pinning release numbers, eliminating false CI failures after content updates.
 - **console**: Silence expected translation-failure output in unit tests.
 - **website**: Fix package readiness check after removing `srpcfg-cli` from the content manifest.
 
