@@ -1,0 +1,34 @@
+name: Bug
+description: Report broken behaviour or a regression
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Remove Steam paths, tokens, or other personal data before pasting logs.
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Desktop UI action or content/website steps.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Expected vs actual behaviour
+      description: Include verbatim error output or relevant `srp_gui_debug.log` lines if available.
+    validations:
+      required: true
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, release tag / app version, and affected area (Desktop / Content / Website).
+      render: shell
+    validations:
+      required: true

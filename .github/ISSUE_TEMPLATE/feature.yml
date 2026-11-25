@@ -1,0 +1,25 @@
+name: Feature
+description: Propose a new capability, preset, package entry, or improvement
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        SrP-CFG is MIT licensed and operates strictly via native CS2 `.cfg` / VCFG / KV3 files (no DLL injection or memory modification).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem & proposal
+      description: What problem or gameplay scenario are you solving, and how should it work?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / compatibility notes (optional)
+      description: Affected component (Desktop / Content / Website), keybind impact, or external references.
+    validations:
+      required: false
